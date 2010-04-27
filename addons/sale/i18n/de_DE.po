@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:37:16+0000\n"
-"PO-Revision-Date: 2010-04-06 10:37:16+0000\n"
+"POT-Creation-Date: 2010-04-27 11:22:09+0000\n"
+"PO-Revision-Date: 2010-04-27 11:22:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -132,7 +132,7 @@ msgstr "Nach Bestätigung des Auftrags, Erzeuge Rechnung"
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr "Zwischenbetrag"
+msgstr "Zwischensumme"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_confirmquotation0
@@ -164,10 +164,9 @@ msgid "Notes"
 msgstr "Bemerkungen"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "Cannot delete Sale Order(s) which are already confirmed !"
-msgstr "Kann keinen Verkaufsauftrag löschen der bereits bestätigt wurde!"
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+msgid "Invoice after delivery"
+msgstr "Rechnung nach Auslieferung"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -183,7 +182,7 @@ msgstr "Referenz Bestellung"
 #. module: sale
 #: rml:sale.order:0
 msgid "Net Total :"
-msgstr "Gesamtsumme Netto:"
+msgstr "Gesamt Netto:"
 
 #. module: sale
 #: field:sale.order,order_policy:0
@@ -409,9 +408,9 @@ msgid "Error !"
 msgstr "Fehler !"
 
 #. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Complete Delivery"
-msgstr "Beende Ausliefervorgang"
+#: model:process.node,name:sale.process_node_saleorderprocurement0
+msgid "Sale Order Procurement"
+msgstr "Auftragsbezogene Beschaffung"
 
 #. module: sale
 #: view:sale.order:0
@@ -439,11 +438,6 @@ msgstr ""
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Bestellmenge"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleorderprocurement0
-msgid "Sale Order Procurement"
-msgstr "Auftragsbezogene Beschaffung"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
@@ -505,9 +499,9 @@ msgid "Payment Accounts"
 msgstr "Zahlung Konten"
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Fehler: UOS sollte in einer anderen Kategorie sein als UOM"
+#: selection:sale.order,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Beende Ausliefervorgang"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -547,7 +541,6 @@ msgid "Draft Invoice"
 msgstr "Entwurf Rechnung"
 
 #. module: sale
-#: wizard_field:sale.order.line.make_invoice,init,grouped:0
 #: wizard_field:sale.order.make_invoice,init,grouped:0
 msgid "Group the invoices"
 msgstr "Gruppiere Rechnungen"
@@ -711,11 +704,6 @@ msgid "Create invoices"
 msgstr "Erzeuge Rechnungen"
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Fehler: Die Standard UOM sowie die Beschaffungs UOM muss in derselben Kategorie sein."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
 #: model:ir.ui.menu,name:sale.menu_action_order_tree7
 msgid "My sales in shipping exception"
@@ -865,11 +853,6 @@ msgstr "Eigenschaften"
 #: selection:sale.order,state:0
 msgid "Quotation"
 msgstr "Angebot"
-
-#. module: sale
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Advance Product"
-msgstr "Produktfortschritt"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1173,9 +1156,10 @@ msgid "Tel. :"
 msgstr "Tel.:"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Quotation N°"
-msgstr "Angebot Nr."
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this sale order."
+msgstr "BItte zuerst alle Lieferungen für diesen Verkaufsauftrag löschen"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1226,9 +1210,10 @@ msgid "Purchase Pricelists"
 msgstr "Preisliste Einkauf"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-msgid "Invoice after delivery"
-msgstr "Rechnung nach Auslieferung"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Cannot delete Sale Order(s) which are already confirmed !"
+msgstr "Kann keinen Verkaufsauftrag löschen der bereits bestätigt wurde!"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1239,12 +1224,6 @@ msgstr "Bezeichnung"
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
 msgstr "Rechnung für"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr "BItte zuerst alle Lieferungen für diesen Verkaufsauftrag löschen"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
@@ -1306,7 +1285,7 @@ msgstr "Rechnungskorrektur"
 #. module: sale
 #: field:sale.order,amount_total:0
 msgid "Total"
-msgstr "Betrag gesammt"
+msgstr "Betrag gesamt"
 
 #. module: sale
 #: view:sale.order:0
@@ -1351,9 +1330,9 @@ msgid "Weight"
 msgstr "Gewicht"
 
 #. module: sale
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Fehler: Falscher EAN code"
+#: rml:sale.order:0
+msgid "Quotation N°"
+msgstr "Angebot Nr."
 
 #. module: sale
 #: field:sale.order,picked_rate:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:37:15+0000\n"
-"PO-Revision-Date: 2010-04-06 10:37:15+0000\n"
+"POT-Creation-Date: 2010-04-27 11:22:09+0000\n"
+"PO-Revision-Date: 2010-04-27 11:22:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -271,6 +271,11 @@ msgid "Recurrent Entries"
 msgstr "Wiederkehrende Buchungen"
 
 #. module: account
+#: model:account.tax,name:account.t_vat
+msgid "x VAT"
+msgstr ""
+
+#. module: account
 #: field:account.analytic.line,amount:0
 #: field:account.bank.statement.line,amount:0
 #: field:account.bank.statement.reconcile.line,amount:0
@@ -377,6 +382,7 @@ msgid "Delta Debit"
 msgstr "Delta Soll"
 
 #. module: account
+#: model:account.account.type,name:account.account_type_tax
 #: rml:account.invoice:0
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
@@ -416,11 +422,10 @@ msgid "Tax on Children"
 msgstr "Steuer auf untergeordnete Datensätze"
 
 #. module: account
-#: rml:account.central.journal:0
-#: rml:account.general.journal:0
-#: field:account.journal,name:0
-msgid "Journal Name"
-msgstr "Journal Bezeichnung"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -834,7 +839,7 @@ msgstr "Journal Beleg"
 #. module: account
 #: view:account.move.line:0
 msgid "St."
-msgstr "Steuer"
+msgstr "Beleg"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplieranalyticcost0
@@ -1122,7 +1127,7 @@ msgstr "Standard Debitoren Konto"
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree
 msgid "Entries by Statements"
-msgstr "Buchen Bankauszug"
+msgstr "Buchungen Beleg"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_analyticinvoice0
@@ -1208,6 +1213,23 @@ msgstr "Ein Partner pro Seite"
 #: field:account.account.template,child_parent_ids:0
 msgid "Children"
 msgstr "(Sub-)"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            # Check that the move balances, the tolerance for debit/credit must\n"
+"            # be smaller than the smallest value according to price accuracy\n"
+"            # (hence the +1 below)\n"
+"            # Example:\n"
+"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
+"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
+"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                self.pool.get('account.move.line"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -1991,7 +2013,7 @@ msgstr "Aufwandskonto für Periode"
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree2
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree2
 msgid "New Statement"
-msgstr "Neuer Bankauszug"
+msgstr "neuer Beleg"
 
 #. module: account
 #: field:account.move.line,move_id:0
@@ -2129,15 +2151,14 @@ msgid "x Expenses Credit Notes Journal"
 msgstr "x Journal Lieferantengutschriften"
 
 #. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            if abs(amount) < 10 ** -int(config['price_accuracy']):\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
+#: field:account.analytic.journal,type:0
+#: field:account.bank.statement.line,type:0
+#: field:account.invoice,type:0
+#: field:account.journal,type:0
+#: field:account.move,type:0
+#: field:account.move.reconcile,type:0
+msgid "Type"
+msgstr "Typ"
 
 #. module: account
 #: view:account.journal:0
@@ -2639,7 +2660,7 @@ msgstr "Steuerart"
 #. module: account
 #: model:process.transition,name:account.process_transition_statemententries0
 msgid "Statement Entries"
-msgstr "Bankauszug Erfassung"
+msgstr "Beleg Erfassen"
 
 #. module: account
 #: code:addons/account/wizard/wizard_fiscalyear_close.py:0
@@ -2810,7 +2831,7 @@ msgstr "Gültig ab"
 #: model:process.node,name:account.process_node_bankstatement0
 #: model:process.node,name:account.process_node_supplierbankstatement0
 msgid "Bank Statement"
-msgstr "Bankauszug"
+msgstr "Bank beleg"
 
 #. module: account
 #: wizard_view:account.invoice.pay,addendum:0
@@ -2919,9 +2940,11 @@ msgid "Information"
 msgstr "Information"
 
 #. module: account
-#: help:account.journal,currency:0
-msgid "The currency used to enter statement"
-msgstr "Währung bei Erfassung des Kontoauszugs"
+#: rml:account.central.journal:0
+#: rml:account.general.journal:0
+#: field:account.journal,name:0
+msgid "Journal Name"
+msgstr "Journal Bezeichnung"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_tax_report
@@ -3290,7 +3313,7 @@ msgstr "Entwurf Lieferanten Gutschriften"
 #. module: account
 #: model:process.node,name:account.process_node_accountingstatemententries0
 msgid "Accounting Statement"
-msgstr "Bankauszug"
+msgstr "Buchungsbeleg"
 
 #. module: account
 #: rml:account.overdue:0
@@ -3528,6 +3551,12 @@ msgstr "Buchungsvorlage Bezeichnung"
 #: selection:account.account.template,type:0
 msgid "Others"
 msgstr "Sachkonto"
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "UnknownError"
+msgstr ""
 
 #. module: account
 #: selection:account.automatic.reconcile,init,power:0
@@ -3831,6 +3860,11 @@ msgstr "Python Code"
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
 msgid "Bank statements"
 msgstr "Bankauszug"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.act_account_invoice_account_move_unreconciled
+msgid "Unreconciled Receivables & Payables"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -4170,16 +4204,6 @@ msgid "Maturity date"
 msgstr "Fälligkeitstermin"
 
 #. module: account
-#: field:account.analytic.journal,type:0
-#: field:account.bank.statement.line,type:0
-#: field:account.invoice,type:0
-#: field:account.journal,type:0
-#: field:account.move,type:0
-#: field:account.move.reconcile,type:0
-msgid "Type"
-msgstr "Typ"
-
-#. module: account
 #: view:account.subscription:0
 msgid "Entry Subscription"
 msgstr "Eingabe automat. Buchung"
@@ -4352,7 +4376,7 @@ msgstr "Wir können keine Modifizierung einer bereits bestätigten Position vorn
 #. module: account
 #: model:process.node,note:account.process_node_manually0
 msgid "Encode manually the statement"
-msgstr "Bankauszug manuell erfassen"
+msgstr "manuelle Belegerfassung"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -4506,7 +4530,7 @@ msgstr "Belegnummer"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,line_ids:0
 msgid "Statement lines"
-msgstr "Buchungszeilen"
+msgstr "Belegzeilen"
 
 #. module: account
 #: help:account.analytic.account.balance.report,init,empty_acc:0
@@ -4722,6 +4746,11 @@ msgid "Ok"
 msgstr "OK"
 
 #. module: account
+#: help:account.journal,currency:0
+msgid "The currency used to enter statement"
+msgstr "Währung bei Erfassung des Kontoauszugs"
+
+#. module: account
 #: rml:account.invoice:0
 msgid "Taxes:"
 msgstr "Steuern:"
@@ -4815,6 +4844,11 @@ msgid "Running Subscriptions"
 msgstr "Entwurf"
 
 #. module: account
+#: help:account.invoice.refund,init,date:0
+msgid "This date will be used as the invoice date for Refund Invoice and Period will be chosen accordingly!"
+msgstr ""
+
+#. module: account
 #: selection:account.move,type:0
 msgid "Bank Payment"
 msgstr "Zahlungen Bank"
@@ -4842,6 +4876,12 @@ msgid "End Date"
 msgstr "End Datum"
 
 #. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You cannot change the type of account from 'Closed' to any other type which contains account entries!"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.wizard,name:account.wizard_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_open_closed_fy
 msgid "Cancel Opening Entries"
@@ -4850,7 +4890,7 @@ msgstr "Abbrechen Buchen Jahreseröffnung"
 #. module: account
 #: model:process.transition,name:account.process_transition_invoicemanually0
 msgid "Manually statement"
-msgstr "Manuelle Ausgabe"
+msgstr "Manueller Beleg"
 
 #. module: account
 #: field:account.payment.term.line,days2:0
@@ -5052,7 +5092,7 @@ msgstr "Automatische Konfiguration Ihres Kontenplans, Bankkontos, Steuern und Jo
 #: field:account.bank.statement.line,statement_id:0
 #: field:account.move.line,statement_id:0
 msgid "Statement"
-msgstr "Bankkontoauszug"
+msgstr "Beleg"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form_encode_by_move
@@ -5080,6 +5120,12 @@ msgstr "Steuer im Preis"
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Entries by Journal"
 msgstr "Analytische Buchungen nach Journal"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You cannot change the type of account from '%s' to '%s' type as it contains account entries!"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
@@ -5130,7 +5176,7 @@ msgstr "Zeigt an, ob die Steuerberechung für weitere folgende Berechnungen zu b
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
 msgid "Draft statement"
-msgstr "Entwurf Bankauszug"
+msgstr "Beleg Entwurf"
 
 #. module: account
 #: field:account.analytic.journal,name:0
@@ -5267,7 +5313,7 @@ msgstr "Abgebrochen"
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_draft_tree
 msgid "Draft statements"
-msgstr "Buchen Bankauszug Entwurf"
+msgstr "Beleg Entwurf"
 
 #. module: account
 #: wizard_field:populate_statement_from_inv,init,date:0
@@ -5779,7 +5825,7 @@ msgstr "Anzeige Zahlungen"
 #. module: account
 #: model:process.node,note:account.process_node_accountingstatemententries0
 msgid "Accounting entries at statement's confirmation"
-msgstr "Buchungen nach Bestätigung Bankauszug"
+msgstr "Buchungen nach Bestätigung Beleg"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_tax_code_line_open
@@ -5870,7 +5916,7 @@ msgstr "Teilbuchung"
 #. module: account
 #: help:account.move.line,statement_id:0
 msgid "The bank statement used for bank reconciliation"
-msgstr "Bankauszug für Ausbuchen offener Posten (Debitoren/Kreditoren)"
+msgstr ""
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -6316,6 +6362,12 @@ msgid "Opening/Closing Period"
 msgstr "Eröffnungs- / Schlussperiode"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "There is no Accounting Journal of type Sale/Purchase defined!"
+msgstr ""
+
+#. module: account
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece."
@@ -6536,12 +6588,12 @@ msgstr "Positionen Summen & Salden"
 #. module: account
 #: model:process.process,name:account.process_process_statementprocess0
 msgid "Statement Process"
-msgstr "Ausgabe Prozessansicht"
+msgstr "Beleg Prozess"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_reconcile
 msgid "Statement reconcile"
-msgstr "Offene Posten Buchungen Bankauszug"
+msgstr "Beleg OP-Ausgleich"
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,sure:0

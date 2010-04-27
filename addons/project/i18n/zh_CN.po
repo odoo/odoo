@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:28:12+0000\n"
-"PO-Revision-Date: 2010-04-06 10:28:12+0000\n"
+"POT-Creation-Date: 2010-04-27 11:13:21+0000\n"
+"PO-Revision-Date: 2010-04-27 11:13:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,12 +34,12 @@ msgstr "这用户的任务委派新标题"
 #: code:addons/project/wizard/close_task.py:0
 #, python-format
 msgid "Couldn't send mail because the contact for this task (%s) has no email address!"
-msgstr ""
+msgstr "任务 %s 无法发送邮件因为联系人没有邮箱地址"
 
 #. module: project
 #: view:config.compute.remaining:0
 msgid "Change Remaining Hours"
-msgstr "改变剩余时间"
+msgstr "修改剩余时间"
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_close_task
@@ -49,13 +49,13 @@ msgstr "关闭任务"
 #. module: project
 #: view:project.task:0
 msgid "Project Tasks"
-msgstr "项目任务"
+msgstr "项目任务列表"
 
 #. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "Operation Not Permitted !"
-msgstr ""
+msgstr "不允许的操作"
 
 #. module: project
 #: code:addons/project/wizard/task_delegate.py:0
@@ -82,7 +82,7 @@ msgstr "进展"
 #: help:config.compute.remaining,remaining_hours:0
 #: help:project.task,remaining_hours:0
 msgid "Total remaining time, can be re-estimated periodically by the assignee of the task."
-msgstr "总剩余时间.能由任务分派人重新估计"
+msgstr "总剩余时间,任务接收者能重新估计"
 
 #. module: project
 #: field:project.project,child_id:0
@@ -92,7 +92,7 @@ msgstr "子项目"
 #. module: project
 #: field:project.project,members:0
 msgid "Project Members"
-msgstr "项目管理"
+msgstr "项目成员"
 
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
@@ -304,7 +304,7 @@ msgstr "在这用户任务中包含任务说明"
 #. module: project
 #: field:project.project,category_id:0
 msgid "Analytic Account"
-msgstr "辅助核算项目"
+msgstr "辅助核算科目"
 
 #. module: project
 #: field:project.task.work,user_id:0
@@ -358,7 +358,7 @@ msgstr "委派"
 #. module: project
 #: help:project.project,members:0
 msgid "Project's member. Not used in any computation, just for information purpose."
-msgstr "项目成员不用于任何计算,只是为了信息"
+msgstr "项目成员不使用任何计算只是为了显示"
 
 #. module: project
 #: view:project.project:0
@@ -404,7 +404,7 @@ msgstr "上级项目"
 #. module: project
 #: help:project.task,total_hours:0
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr "计算:花费时间 + 剩余时间"
+msgstr "计算:花费的时间 + 剩余的时间"
 
 #. module: project
 #: field:project.task,type:0
@@ -432,7 +432,7 @@ msgstr "新项目"
 #. module: project
 #: selection:project.task,priority:0
 msgid "Medium"
-msgstr "媒体"
+msgstr "普通"
 
 #. module: project
 #: view:config.compute.remaining:0
@@ -449,19 +449,19 @@ msgstr "项目任务类型"
 #. module: project
 #: field:project.project,planned_hours:0
 msgid "Planned Time"
-msgstr "已计划时间"
+msgstr "已计划的时间"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 #: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
-msgstr "工作任务"
+msgstr "任务工作"
 
 #. module: project
 #: selection:res.company,project_time_mode:0
 msgid "Hours"
-msgstr "小时"
+msgstr "小时数"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_pending
@@ -496,7 +496,7 @@ msgstr "我的项目"
 #. module: project
 #: help:project.task.delegate,init,planned_hours:0
 msgid "Estimated time to close this task by the delegated user."
-msgstr "关闭这授权用户的任务估计时间"
+msgstr "委托用户结束这任务的估计时间"
 
 #. module: project
 #: selection:project.project,state:0
@@ -549,7 +549,7 @@ msgstr "用户：%(user_id)s"
 #. module: project
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
-msgstr "延迟时间"
+msgstr "延迟的小时数"
 
 #. module: project
 #: field:project.project,contact_id:0
@@ -601,13 +601,13 @@ msgstr "新任务"
 #. module: project
 #: help:project.project,timesheet_id:0
 msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr "时间表工作小时数甘特图"
+msgstr "时间表工作时间调整甘特图报表"
 
 #. module: project
 #: code:addons/project/project.py:0
 #, python-format
 msgid "Task '%s' set in progress"
-msgstr ""
+msgstr "任务 '%s' 设置进度"
 
 #. module: project
 #: view:project.project:0
@@ -715,7 +715,7 @@ msgstr "状态"
 #. module: project
 #: help:project.task.delegate,init,state:0
 msgid "New state of your own task. Pending will be reopened automatically when the delegated task is closed."
-msgstr "你自己任务的新状态.未决的项目将被自动重新委派任务是关闭的."
+msgstr "你任务的新状态.未决的任务将会自动重新开始.委派的任务结束."
 
 #. module: project
 #: field:res.company,project_time_mode:0

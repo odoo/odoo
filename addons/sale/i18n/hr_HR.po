@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:29:48+0000\n"
-"PO-Revision-Date: 2010-04-06 10:29:48+0000\n"
+"POT-Creation-Date: 2010-04-27 11:14:54+0000\n"
+"PO-Revision-Date: 2010-04-27 11:14:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -164,10 +164,9 @@ msgid "Notes"
 msgstr "Bilješke"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "Cannot delete Sale Order(s) which are already confirmed !"
-msgstr ""
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+msgid "Invoice after delivery"
+msgstr "Račun nakon isporuke"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -409,9 +408,9 @@ msgid "Error !"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Complete Delivery"
-msgstr "Zaključite Isporuku"
+#: model:process.node,name:sale.process_node_saleorderprocurement0
+msgid "Sale Order Procurement"
+msgstr "Pribavljanje Prodajne Narudžbe"
 
 #. module: sale
 #: view:sale.order:0
@@ -439,11 +438,6 @@ msgstr ""
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Količine Narudžbe"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleorderprocurement0
-msgid "Sale Order Procurement"
-msgstr "Pribavljanje Prodajne Narudžbe"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
@@ -505,9 +499,9 @@ msgid "Payment Accounts"
 msgstr "Račun Plaćanja"
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Greška: UOS mora biti u kategoriji drogačijoj od one u kojoj je UOM"
+#: selection:sale.order,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Zaključite Isporuku"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -547,7 +541,6 @@ msgid "Draft Invoice"
 msgstr "Nacrt računa"
 
 #. module: sale
-#: wizard_field:sale.order.line.make_invoice,init,grouped:0
 #: wizard_field:sale.order.make_invoice,init,grouped:0
 msgid "Group the invoices"
 msgstr "Grupa računa"
@@ -711,11 +704,6 @@ msgid "Create invoices"
 msgstr "Napravi Račune"
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Greška: Predefinirani UOM i UOM kupnje moraju biti u istoj kategoriji."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
 #: model:ir.ui.menu,name:sale.menu_action_order_tree7
 msgid "My sales in shipping exception"
@@ -865,11 +853,6 @@ msgstr "Svojstva"
 #: selection:sale.order,state:0
 msgid "Quotation"
 msgstr "Ponuda"
-
-#. module: sale
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Advance Product"
-msgstr ""
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1173,9 +1156,10 @@ msgid "Tel. :"
 msgstr "Tel:"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Quotation N°"
-msgstr "Ponuda Broj"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this sale order."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1226,9 +1210,10 @@ msgid "Purchase Pricelists"
 msgstr "Kupovni cjenici"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-msgid "Invoice after delivery"
-msgstr "Račun nakon isporuke"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Cannot delete Sale Order(s) which are already confirmed !"
+msgstr ""
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1239,12 +1224,6 @@ msgstr "Ime"
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
 msgstr "Račun za"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
@@ -1351,9 +1330,9 @@ msgid "Weight"
 msgstr "Težina"
 
 #. module: sale
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Greška: Nepravilan ean kod"
+#: rml:sale.order:0
+msgid "Quotation N°"
+msgstr "Ponuda Broj"
 
 #. module: sale
 #: field:sale.order,picked_rate:0

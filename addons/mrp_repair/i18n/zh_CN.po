@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:28:11+0000\n"
-"PO-Revision-Date: 2010-04-06 10:28:11+0000\n"
+"POT-Creation-Date: 2010-04-27 11:13:20+0000\n"
+"PO-Revision-Date: 2010-04-27 11:13:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -141,6 +141,12 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_quotation_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_quotation
 msgid "Repairs in quotation"
@@ -209,6 +215,12 @@ msgid "Start Repair"
 msgstr "开始修理"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
 msgid "Quantity (UoM)"
 msgstr "数量(计量单位)"
@@ -240,9 +252,9 @@ msgid "Pricelist"
 msgstr "价格表"
 
 #. module: mrp_repair
-#: help:mrp.repair,state:0
-msgid "Gives the state of the Repair Order"
-msgstr "修理单的状态"
+#: field:mrp.repair,name:0
+msgid "Repair Ref"
+msgstr "修理参考"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -415,14 +427,20 @@ msgid "Confirm Repair"
 msgstr "确认修理"
 
 #. module: mrp_repair
-#: rml:repair.order:0
-msgid "Repair Quotation"
-msgstr "修理报价单"
+#: wizard_view:mrp.repair.cancel,display:0
+msgid "Cancel Repair...??"
+msgstr "取消修理?"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "End Repair"
 msgstr "结束修理"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -575,9 +593,9 @@ msgid "Make invoices"
 msgstr "建立发票"
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Ref"
-msgstr "修理参考"
+#: help:mrp.repair,state:0
+msgid "Gives the state of the Repair Order"
+msgstr "修理单的状态"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -591,9 +609,9 @@ msgid "Remove"
 msgstr "删除"
 
 #. module: mrp_repair
-#: wizard_view:mrp.repair.cancel,display:0
-msgid "Cancel Repair...??"
-msgstr "取消修理?"
+#: rml:repair.order:0
+msgid "Repair Quotation"
+msgstr "修理报价单"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom:0

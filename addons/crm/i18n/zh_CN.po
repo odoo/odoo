@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:28:12+0000\n"
-"PO-Revision-Date: 2010-04-06 10:28:12+0000\n"
+"POT-Creation-Date: 2010-04-27 11:13:20+0000\n"
+"PO-Revision-Date: 2010-04-27 11:13:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -88,12 +88,12 @@ msgstr "默认满意度在周期前以最大间隔计算.如果这业务伙伴�
 #. module: crm
 #: selection:crm.segmentation,state:0
 msgid "Running"
-msgstr "运行中"
+msgstr "正在运行"
 
 #. module: crm
 #: field:crm.case.history,email:0
 msgid "Email"
-msgstr "电子邮件"
+msgstr "Email"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -135,7 +135,7 @@ msgstr "业务关系管理"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Segmentation Description"
-msgstr "分割说明"
+msgstr "细分说明"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -150,7 +150,7 @@ msgstr "允许删除"
 #. module: crm
 #: field:crm.case.rule,act_email_cc:0
 msgid "Add watchers (Cc)"
-msgstr "新增监察者"
+msgstr "新增关注者"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu1:0
@@ -164,7 +164,7 @@ msgstr "我的 "
 #: model:ir.actions.act_window,name:crm.crm_case_section_open_act
 #: model:ir.ui.menu,name:crm.next_id_51
 msgid "Cases"
-msgstr "案例"
+msgstr "业务个案"
 
 #. module: crm
 #: selection:crm.case,priority:0
@@ -219,7 +219,7 @@ msgstr "计划成本"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_history
 msgid "Case history"
-msgstr "案例记录"
+msgstr "业务个案日志"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -235,7 +235,7 @@ msgstr "设置状态为"
 #. module: crm
 #: field:crm.case.categ,name:0
 msgid "Case Category Name"
-msgstr "案例分类名称"
+msgstr "业务个案分类名称"
 
 #. module: crm
 #: selection:crm.case.rule,trg_date_type:0
@@ -245,7 +245,7 @@ msgstr "无"
 #. module: crm
 #: field:crm.segmentation,som_interval_max:0
 msgid "Max Interval"
-msgstr "最长时间间隔"
+msgstr "最大值"
 
 #. module: crm
 #: field:crm.case.section,reply_to:0
@@ -261,7 +261,7 @@ msgstr "分"
 #: wizard_field:crm.case.section.menu,design_menu,menu16:0
 #: wizard_field:crm.case.section.menu,design_menu,menu16_option:0
 msgid "All Unclosed and Unassigned "
-msgstr "所有未关闭和未指定 "
+msgstr "所有未结束和未分配 "
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -282,7 +282,7 @@ msgstr "如果你想发提醒电子邮件给业务伙伴勾选此项"
 #. module: crm
 #: field:crm.case.rule,trg_priority_to:0
 msgid "Maximim Priority"
-msgstr "最大优先2"
+msgstr "最大优先"
 
 #. module: crm
 #: help:crm.segmentation,som_interval_decrease:0
@@ -308,7 +308,7 @@ msgstr "业务个案条件字段"
 #. module: crm
 #: field:crm.case,date_action_next:0
 msgid "Next Action"
-msgstr "下个行动日期"
+msgstr "下一动作"
 
 #. module: crm
 #: view:crm.case:0
@@ -324,7 +324,7 @@ msgstr "截止日期"
 #. module: crm
 #: field:crm.segmentation.line,expr_operator:0
 msgid "Operator"
-msgstr "操作员"
+msgstr "运算符"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -344,7 +344,7 @@ msgstr "业务个案沟通日志"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
 msgid "Category of case"
-msgstr "案例分类"
+msgstr "业务个案分类"
 
 #. module: crm
 #: view:crm.case:0
@@ -359,7 +359,7 @@ msgstr "额外信息"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_subject)s = Case subject"
-msgstr "%(case_subject)s = 案例主题"
+msgstr "%(case_subject)s = 业务个案主题"
 
 #. module: crm
 #: model:ir.module.module,description:crm.module_meta_information
@@ -410,7 +410,7 @@ msgstr "业务个案状态"
 #: field:crm.case.log,section_id:0
 #: field:crm.case.rule,trg_section_id:0
 msgid "Section"
-msgstr "案例分部"
+msgstr "项"
 
 #. module: crm
 #: field:crm.case.rule,act_mail_to_email:0
@@ -436,7 +436,7 @@ msgstr "内容使用的特别关键字"
 #. module: crm
 #: field:crm.case,priority:0
 msgid "Priority"
-msgstr "优先级"
+msgstr "优先级(0=紧急)"
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
@@ -457,7 +457,7 @@ msgstr "条件"
 #. module: crm
 #: field:crm.case,description:0
 msgid "Your action"
-msgstr "您的方式"
+msgstr "你的动作"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -473,7 +473,7 @@ msgstr "项"
 #. module: crm
 #: view:crm.case.section:0
 msgid "Case section"
-msgstr "案例分部"
+msgstr "业务个案项"
 
 #. module: crm
 #: field:crm.case,canal_id:0
@@ -484,7 +484,7 @@ msgstr "渠道"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Compute Segmentation"
-msgstr "计算分割"
+msgstr "计算细分"
 
 #. module: crm
 #: selection:crm.case,priority:0
@@ -502,7 +502,7 @@ msgstr "电子邮件提醒(含业务个案内容)"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Profiling"
-msgstr "轮廓"
+msgstr "特征"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -524,7 +524,7 @@ msgstr "业务个案日志"
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act_my
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act_my
 msgid "My cases"
-msgstr "我的案例"
+msgstr "我的业务个案"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu15:0
@@ -535,12 +535,12 @@ msgstr "所有草稿 "
 #. module: crm
 #: help:crm.segmentation,som_interval_max:0
 msgid "The computation is made on all events that occured during this interval, the past X periods."
-msgstr "计算是建立在此会计期间发生的所有事件.在过去X会计期间"
+msgstr "对在此期间所有事件进行计算"
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(partner_email)s = Partner email"
-msgstr "%(partner_email)s = Partner email"
+msgstr "%(partner_email)s = 业务伙伴电子邮箱"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
@@ -561,7 +561,7 @@ msgstr "小时"
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act_my_open
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act_my_open
 msgid "My Open Cases"
-msgstr "我的待办案例"
+msgstr "我待处理的业务个案"
 
 #. module: crm
 #: field:crm.case.rule,act_remind_attach:0
@@ -592,7 +592,7 @@ msgstr "设置"
 #: model:ir.actions.act_window,name:crm.act_res_partner_canal_2_crm_case_opened
 #: model:ir.actions.act_window,name:crm.act_res_users_2_crm_case_opened
 msgid "Open cases"
-msgstr "待办案例"
+msgstr "待处理业务个案"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ-act
@@ -619,7 +619,7 @@ msgstr "日期"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Segmentation Test"
-msgstr "分割测试"
+msgstr "细分测试"
 
 #. module: crm
 #: field:crm.case,create_date:0
@@ -639,13 +639,13 @@ msgstr "发送邮件到负责人"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Profiling Options"
-msgstr "轮廓选项"
+msgstr "特征选项"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu6:0
 #: wizard_field:crm.case.section.menu,design_menu,menu6_option:0
 msgid "My Pending "
-msgstr "我未决 "
+msgstr "我未决 的 "
 
 #. module: crm
 #: selection:crm.case.section.menu,design_menu,menu10_option:0
@@ -686,17 +686,17 @@ msgstr "设置责任人"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab."
-msgstr "使用规则和操作.这业务个案必须符合所有非空字段所以这规则执行动作描述在动作标签."
+msgstr "该规则使用AND操作符.这业务个案必须是非空字段,而且该规则的执行动作描述在动作标签."
 
 #. module: crm
 #: field:crm.case,history_line:0
 msgid "Communication"
-msgstr "通讯"
+msgstr "沟通"
 
 #. module: crm
 #: field:crm.segmentation,partner_id:0
 msgid "Max Partner ID processed"
-msgstr "已处理最大伙伴标识码"
+msgstr "已处理最大业务伙伴ID"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -715,7 +715,7 @@ msgstr "%(email_from)s = 业务伙伴电子邮箱"
 #: wizard_field:crm.case.section.menu,init,section_id:0
 #: model:ir.model,name:crm.model_crm_case_section
 msgid "Case Section"
-msgstr "案例组"
+msgstr "业务个案项"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_rule-act
@@ -732,7 +732,7 @@ msgstr "调用对象方法"
 #: view:crm.segmentation:0
 #: field:crm.segmentation.line,segmentation_id:0
 msgid "Segmentation"
-msgstr "分割"
+msgstr "细分"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -749,7 +749,7 @@ msgstr "完成"
 #. module: crm
 #: field:crm.segmentation,som_interval:0
 msgid "Days per Periode"
-msgstr "每段日期的天数"
+msgstr "周期天数"
 
 #. module: crm
 #: selection:crm.case.section.menu,design_menu,menu10_option:0
@@ -776,23 +776,23 @@ msgstr ""
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "No E-Mail ID Found for the Responsible Partner or missing reply address in section!"
-msgstr ""
+msgstr "没有找到业务伙伴的邮箱地址"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address or missing reply address in section!"
-msgstr ""
+msgstr "无您公司地址的邮箱ID或缺少该项的回复地址!"
 
 #. module: crm
 #: field:crm.case,ref:0
 msgid "Reference"
-msgstr "参照"
+msgstr "参考"
 
 #. module: crm
 #: field:crm.case,ref2:0
 msgid "Reference 2"
-msgstr "参照2"
+msgstr "参考2"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -813,7 +813,7 @@ msgstr "日志"
 #. module: crm
 #: help:crm.case.rule,act_email_cc:0
 msgid "These people will receive a copy of the futur communication between partner and users by email"
-msgstr "将收到一份未来业务伙伴和用户之间沟通的电子邮件"
+msgstr "这些人将收到一份将来业务伙伴和用户之间沟通的电子邮件的拷贝"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -825,7 +825,7 @@ msgstr "日志"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(partner)s = Partner name"
-msgstr "%(partner)s = Partner name"
+msgstr "%(partner)s = 业务伙伴名称"
 
 #. module: crm
 #: selection:crm.case.section.menu,design_menu,menu10_option:0
@@ -921,7 +921,7 @@ msgstr "条件"
 #: model:ir.actions.act_window,name:crm.crm_case_categ0-act_open
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act_open
 msgid "Open Cases"
-msgstr "待办案例"
+msgstr "待处理业务个案"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -948,12 +948,12 @@ msgstr ""
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr ""
+msgstr "您的公司找不到邮箱ID"
 
 #. module: crm
 #: field:crm.case.rule,act_section_id:0
 msgid "Set section to"
-msgstr "设置分部为"
+msgstr "设置项为"
 
 #. module: crm
 #: field:crm.segmentation,state:0
@@ -963,7 +963,7 @@ msgstr "执行状态"
 #. module: crm
 #: help:crm.segmentation,som_interval:0
 msgid "A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionality for recurring businesses."
-msgstr "在销售和采购两个周期的平均天数.它主要用来检查一个业务伙伴没有采购或购买的最长时间,所以我们假设他找了另一个供应商."
+msgstr "在两个购买或者采购间的平均天数。它主要用来检查一个业务伙伴没有采购或购买的最长时间。如果很长那么我们假设他找了另一个供应商买到了好的货物对我们的满意度下降。这个功能用在经常性的业务中。"
 
 #. module: crm
 #: selection:crm.case,priority:0
@@ -971,7 +971,7 @@ msgstr "在销售和采购两个周期的平均天数.它主要用来检查一�
 #: selection:crm.case.rule,trg_priority_from:0
 #: selection:crm.case.rule,trg_priority_to:0
 msgid "Normal"
-msgstr "一般"
+msgstr "普通"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -1035,12 +1035,12 @@ msgstr "所有未指定 "
 #. module: crm
 #: help:crm.case.rule,act_remind_attach:0
 msgid "Check this if you want that all documents attached to the case be attached to the reminder email sent."
-msgstr "如果你想将业务个案的所有附属文档附在提醒电子邮件发送估计勾选此项"
+msgstr "如果你想将业务个案的所有附属文档附在提醒电子邮件发送勾选此项"
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Mandatory Expression"
-msgstr "不可省略表达式"
+msgstr "必填表达式"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -1056,7 +1056,7 @@ msgstr ">"
 #. module: crm
 #: field:crm.case.section,parent_id:0
 msgid "Parent Section"
-msgstr "上级分部"
+msgstr "上级项"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,init,menu_parent_id:0
@@ -1066,7 +1066,7 @@ msgstr "上级菜单"
 #. module: crm
 #: field:crm.segmentation,exclusif:0
 msgid "Exclusive"
-msgstr "排除的"
+msgstr "唯一的"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -1082,7 +1082,7 @@ msgstr "包括回答:"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_id)s = Case ID"
-msgstr "%(case_id)s = 案例标识符"
+msgstr "%(case_id)s = 业务个案ID"
 
 #. module: crm
 #: selection:crm.case.rule,trg_date_type:0
@@ -1140,12 +1140,12 @@ msgstr ""
 #. module: crm
 #: view:crm.case.categ:0
 msgid "Case Category"
-msgstr "案例分类"
+msgstr "业务个案分类"
 
 #. module: crm
 #: field:crm.segmentation,som_interval_decrease:0
 msgid "Decrease (0>1)"
-msgstr "下降系数(0.0－1.0)"
+msgstr "下降因子(0.0>1.0)"
 
 #. module: crm
 #: view:crm.segmentation.line:0
@@ -1156,7 +1156,7 @@ msgstr "业务伙伴细分明细"
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "You must define a responsible user for this case in order to use this action!"
-msgstr "您必须指定负责这个案例的用户，才能够执行此行动！"
+msgstr "您必须指定业务个案的责任用户，才能够执行此动作！"
 
 #. module: crm
 #: view:crm.case:0
@@ -1166,7 +1166,7 @@ msgstr "历史记录"
 #. module: crm
 #: field:crm.case,partner_address_id:0
 msgid "Partner Contact"
-msgstr "业务伙伴分类"
+msgstr "业务伙伴联系方式"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu12:0
@@ -1177,13 +1177,13 @@ msgstr "所有未关闭 "
 #. module: crm
 #: wizard_field:crm.case.section.menu,init,view_tree:0
 msgid "Tree View"
-msgstr "树"
+msgstr "目录视图"
 
 #. module: crm
 #: field:crm.case.rule,sequence:0
 #: field:crm.case.section,sequence:0
 msgid "Sequence"
-msgstr "序列"
+msgstr "序号"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -1242,7 +1242,7 @@ msgstr "关闭"
 #. module: crm
 #: model:ir.actions.report.xml,name:crm.crm_business_opportunities_report
 msgid "Business Opportunities"
-msgstr "销售机会"
+msgstr "商机"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -1273,7 +1273,7 @@ msgstr "项代码"
 #. module: crm
 #: field:crm.case.section,user_id:0
 msgid "Responsible User"
-msgstr "负责人"
+msgstr "负责用户"
 
 #. module: crm
 #: constraint:ir.model:0
@@ -1283,13 +1283,13 @@ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 #. module: crm
 #: view:res.partner.events:0
 msgid "General Description"
-msgstr "一般说明"
+msgstr "普通说明"
 
 #. module: crm
 #: field:crm.case,user_id:0
 #: field:crm.case.rule,trg_user_id:0
 msgid "Responsible"
-msgstr "责任人"
+msgstr "负责人"
 
 #. module: crm
 #: wizard_view:crm.case.section.menu,init:0
@@ -1363,7 +1363,7 @@ msgstr "细分名称"
 #. module: crm
 #: field:crm.case.rule,act_mail_body:0
 msgid "Mail body"
-msgstr "邮件正文"
+msgstr "邮件内容"
 
 #. module: crm
 #: help:crm.case.rule,act_remind_user:0
@@ -1387,7 +1387,7 @@ msgstr "细分"
 #. module: crm
 #: field:crm.segmentation.line,operator:0
 msgid "Mandatory / Optional"
-msgstr "命令/非强制的"
+msgstr "命令/可选的"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -1403,12 +1403,12 @@ msgstr "这电子邮件地址设定在这业务个案项所有'回复'的电子�
 #: view:crm.case.rule:0
 #: model:ir.model,name:crm.model_crm_case_rule
 msgid "Case Rule"
-msgstr "案例规则"
+msgstr "业务个案规则"
 
 #. module: crm
 #: help:crm.case,date_deadline:0
 msgid "Deadline Date is automatically computed from Start Date + Duration"
-msgstr "计算开始时间+持续时间"
+msgstr "截止日期为自动计算：开始时间+持续时间"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_operator:0
@@ -1422,7 +1422,7 @@ msgstr "="
 #: model:res.request.link,name:crm.req_link_case
 #, python-format
 msgid "Case"
-msgstr "案例"
+msgstr "业务个案"
 
 #. module: crm
 #: selection:crm.case.rule,trg_date_range_type:0
@@ -1484,7 +1484,7 @@ msgstr "发送到业务伙伴和记载"
 #. module: crm
 #: field:crm.case.log,user_id:0
 msgid "User Responsible"
-msgstr "责任人"
+msgstr "负责的用户"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_history-act
@@ -1511,12 +1511,12 @@ msgstr "最近的电子邮件"
 #. module: crm
 #: view:crm.case.log:0
 msgid "Case logs"
-msgstr "案例记录"
+msgstr "业务个案日志"
 
 #. module: crm
 #: field:crm.case,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: crm
 #: help:crm.segmentation,exclusif:0
@@ -1551,12 +1551,12 @@ msgstr "继续处理"
 #. module: crm
 #: view:crm.case.history:0
 msgid "Case Description"
-msgstr "案例描述"
+msgstr "业务个案说明"
 
 #. module: crm
 #: field:crm.case.rule,act_mail_to_watchers:0
 msgid "Mail to watchers (Cc)"
-msgstr "发送到监察者"
+msgstr "发送到关注者"
 
 #. module: crm
 #: view:crm.case:0
@@ -1581,12 +1581,12 @@ msgstr "控制变量"
 #: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
 #: model:ir.ui.menu,name:crm.menu_crm_case_section_act_tree
 msgid "Cases by section"
-msgstr "按分部排列的案例"
+msgstr "业务个案项"
 
 #. module: crm
 #: field:crm.case,date_action_last:0
 msgid "Last Action"
-msgstr "最后行动日期"
+msgstr "最近动作"
 
 #. module: crm
 #: field:crm.case,partner_id:0

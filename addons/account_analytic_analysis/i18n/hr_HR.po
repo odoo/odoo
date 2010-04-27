@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:29:48+0000\n"
-"PO-Revision-Date: 2010-04-06 10:29:48+0000\n"
+"POT-Creation-Date: 2010-04-27 11:14:54+0000\n"
+"PO-Revision-Date: 2010-04-27 11:14:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,22 +23,22 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours summary by user"
-msgstr ""
+msgstr "Sati sažetak od strane korisnika"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr ""
+msgstr "Zadnji Datum fakture"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
+msgstr "Izračunato pomoću formule: Max Cijena  Iznos - Iznos dostavnice."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-msgstr ""
+msgstr "Izračunato  pomoću formule: Najveća količina - Ukupno vrijeme"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all
@@ -60,12 +60,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "Date of the last invoice created for this analytic account."
-msgstr ""
+msgstr "Datum zadnje fakture kreirana za ovaj analitički račun."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theorical Revenue"
-msgstr ""
+msgstr "Prihodi teorijski"
 
 #. module: account_analytic_analysis
 #: constraint:ir.actions.act_window:0
@@ -75,7 +75,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
-msgstr ""
+msgstr "Izračunato  pomoću formule: Prihodi Teorijski - Ukupni troškovi"
 
 #. module: account_analytic_analysis
 #: constraint:ir.model:0
@@ -91,12 +91,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theorical Margin"
-msgstr ""
+msgstr "Teorijska margina"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr ""
+msgstr "Realna margina Stopa (%)"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_open
@@ -107,12 +107,12 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr ""
+msgstr "Datum najnovijeg rada obavljenog na ovom računu."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
 msgid "If invoice from the costs, this is the date of the latest work or cost that have been invoiced."
-msgstr ""
+msgstr "Ako račun od troškova, to je datum najnoviji rad ili cijene koje su fakturirane."
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
@@ -122,7 +122,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr ""
+msgstr "Datum Zadnja cijena / Posao"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -132,17 +132,17 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
 msgid "Number of hours you spent on the analytic account (from timesheet). It computes on all journal of type 'general'."
-msgstr ""
+msgstr "Broj sati provedenih na tom analitičkom račun (iz timesheet). Izračunava se iz svih dnevnih knjiga za tip 'Općenito'."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Preostalo vrijeme"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
 msgid "Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist."
-msgstr ""
+msgstr "Na temelju troškova koje ste imali na projektu, što bi bio prihod ako svi ovi troškovi su obračunati po normalnoj  prodajnoj cijeni proistekli iz cjenika."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -160,7 +160,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_my
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_my
 msgid "My Uninvoiced Entries"
-msgstr ""
+msgstr "Moji nefakturirani Ulazi"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -178,7 +178,9 @@ msgstr ""
 msgid "Modify account analytic view to show\n"
 "important data for project manager of services companies.\n"
 "Add menu to show relevant information for each manager."
-msgstr ""
+msgstr "Promijeni račun analitički prikaz \n"
+"za važne podatke za projekt menadžer od usluznih tvrtki.\n"
+"Dodaj izbornik za prikaz relevantne informacije za svakog menadžera."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
@@ -234,7 +236,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr ""
+msgstr "Reanal margina"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0

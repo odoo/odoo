@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:42:24+0000\n"
-"PO-Revision-Date: 2010-04-06 10:42:24+0000\n"
+"POT-Creation-Date: 2010-04-27 11:27:58+0000\n"
+"PO-Revision-Date: 2010-04-27 11:27:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -164,10 +164,9 @@ msgid "Notes"
 msgstr "Uwagi"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "Cannot delete Sale Order(s) which are already confirmed !"
-msgstr "Nie można usunąć zamówień sprzedaży, które są potwierdzone !"
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+msgid "Invoice after delivery"
+msgstr "Faktura po dostawie"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -409,9 +408,9 @@ msgid "Error !"
 msgstr "Błąd !"
 
 #. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Complete Delivery"
-msgstr "Dostawa kompletna"
+#: model:process.node,name:sale.process_node_saleorderprocurement0
+msgid "Sale Order Procurement"
+msgstr "Nabycie dla zamówienia sprzedaży"
 
 #. module: sale
 #: view:sale.order:0
@@ -439,11 +438,6 @@ msgstr ""
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Zamówione ilości"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleorderprocurement0
-msgid "Sale Order Procurement"
-msgstr "Nabycie dla zamówienia sprzedaży"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
@@ -505,9 +499,9 @@ msgid "Payment Accounts"
 msgstr "Konta płatności"
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Błąd: JS musi być innej kategorii niż JM."
+#: selection:sale.order,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Dostawa kompletna"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -547,7 +541,6 @@ msgid "Draft Invoice"
 msgstr "Projekt faktury"
 
 #. module: sale
-#: wizard_field:sale.order.line.make_invoice,init,grouped:0
 #: wizard_field:sale.order.make_invoice,init,grouped:0
 msgid "Group the invoices"
 msgstr "Grupuj faktury"
@@ -711,11 +704,6 @@ msgid "Create invoices"
 msgstr "Utwórz faktury"
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Błąd: domyślna JM i zakupowa JM muszą być tej samej kategorii."
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
 #: model:ir.ui.menu,name:sale.menu_action_order_tree7
 msgid "My sales in shipping exception"
@@ -865,11 +853,6 @@ msgstr "Właściwości"
 #: selection:sale.order,state:0
 msgid "Quotation"
 msgstr "Oferta"
-
-#. module: sale
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Advance Product"
-msgstr ""
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1173,9 +1156,10 @@ msgid "Tel. :"
 msgstr "Tel. :"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Quotation N°"
-msgstr "Nr oferty"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this sale order."
+msgstr "Musisz najpierw anulować wszystkie listy przesunięć związane z tym zamówieniem sprzedaży."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1226,9 +1210,10 @@ msgid "Purchase Pricelists"
 msgstr "Cennik zakupu"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-msgid "Invoice after delivery"
-msgstr "Faktura po dostawie"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Cannot delete Sale Order(s) which are already confirmed !"
+msgstr "Nie można usunąć zamówień sprzedaży, które są potwierdzone !"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1239,12 +1224,6 @@ msgstr "Nazwa"
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
 msgstr "Faktura na"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr "Musisz najpierw anulować wszystkie listy przesunięć związane z tym zamówieniem sprzedaży."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
@@ -1351,9 +1330,9 @@ msgid "Weight"
 msgstr "Waga"
 
 #. module: sale
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Błąd: Niedozwolony kod EAN"
+#: rml:sale.order:0
+msgid "Quotation N°"
+msgstr "Nr oferty"
 
 #. module: sale
 #: field:sale.order,picked_rate:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:50:22+0000\n"
-"PO-Revision-Date: 2010-04-06 10:50:22+0000\n"
+"POT-Creation-Date: 2010-04-27 11:35:45+0000\n"
+"PO-Revision-Date: 2010-04-27 11:35:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -164,10 +164,9 @@ msgid "Notes"
 msgstr "Anteckningar"
 
 #. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "Cannot delete Sale Order(s) which are already confirmed !"
-msgstr ""
+#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
+msgid "Invoice after delivery"
+msgstr "Fakturera efter leverans"
 
 #. module: sale
 #: field:sale.order,amount_tax:0
@@ -209,7 +208,7 @@ msgstr "Ursprung"
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
-msgstr "Faktura adress"
+msgstr "Fakturaadress"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
@@ -362,7 +361,7 @@ msgstr "Kundorderrader"
 #. module: sale
 #: rml:sale.order:0
 msgid "Disc.(%)"
-msgstr "Rabatt (%)"
+msgstr "Rab.(%)"
 
 #. module: sale
 #: view:sale.order:0
@@ -384,7 +383,7 @@ msgstr "Belopp ex. moms"
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
 msgid "Packing list is created when 'Assign' is being clicked after confirming the sale order. This transaction moves the sale order to packing list."
-msgstr ""
+msgstr "Packlista uppstår när 'Tilldelad' klickas efter att ha bekräftat försäljningenordern. Denna transaktion flyttar försäljningsorder till plocklista."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree8
@@ -406,12 +405,12 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Fel !"
 
 #. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Complete Delivery"
-msgstr "Komplett leverans"
+#: model:process.node,name:sale.process_node_saleorderprocurement0
+msgid "Sale Order Procurement"
+msgstr "Kundorderanskaffning"
 
 #. module: sale
 #: view:sale.order:0
@@ -439,11 +438,6 @@ msgstr ""
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
 msgstr "Beställt antal"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleorderprocurement0
-msgid "Sale Order Procurement"
-msgstr "Kundorderanskaffning"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
@@ -505,9 +499,9 @@ msgid "Payment Accounts"
 msgstr "Betalningskonton"
 
 #. module: sale
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
+#: selection:sale.order,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Komplett leverans"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -547,7 +541,6 @@ msgid "Draft Invoice"
 msgstr "Preliminär faktura"
 
 #. module: sale
-#: wizard_field:sale.order.line.make_invoice,init,grouped:0
 #: wizard_field:sale.order.make_invoice,init,grouped:0
 msgid "Group the invoices"
 msgstr "Gruppera fakturorna"
@@ -609,7 +602,7 @@ msgstr "Administrerar leveransen och faktureringen"
 #. module: sale
 #: rml:sale.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "Moms :"
 
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
@@ -709,11 +702,6 @@ msgstr "Kundorderprocess"
 #: wizard_button:sale.order.make_invoice,init,invoice:0
 msgid "Create invoices"
 msgstr "Skapa fakturor"
-
-#. module: sale
-#: constraint:product.template:0
-msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
@@ -867,11 +855,6 @@ msgid "Quotation"
 msgstr "Offert"
 
 #. module: sale
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Advance Product"
-msgstr "Avancerad produkt"
-
-#. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
 msgstr "Undantag"
@@ -1022,7 +1005,7 @@ msgstr "Avbryt"
 #. module: sale
 #: help:sale.order,state:0
 msgid "Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'."
-msgstr ""
+msgstr "Visar status för en offert eller kundorder. Status 'undantag' sätts automatiskt om en faktura eller packlista inte kan skapas. Status 'väntar på schemalagkörning' sätts när fakturan är godkänd men väntar på den schemalagda körningen för aktuellt datum."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1076,7 +1059,7 @@ msgstr "Godkänn kundordern och skapa en faktura."
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Packing List & Delivery Order"
-msgstr "Packlista och leveransorder"
+msgstr "Plocklista & Leveransorder"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
@@ -1103,7 +1086,7 @@ msgstr "Vill du verkligen skapa fakturor?"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
 msgid "Invoice based on packing lists"
-msgstr "Skapa fakturor utgående från packlistor"
+msgstr "Skapa fakturor baserad på plocklistor"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1173,9 +1156,10 @@ msgid "Tel. :"
 msgstr "Tel. :"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "Quotation N°"
-msgstr "Offertnummer"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this sale order."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1226,9 +1210,10 @@ msgid "Purchase Pricelists"
 msgstr "Inköpsprislista"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-msgid "Invoice after delivery"
-msgstr "Fakturera efter leverans"
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "Cannot delete Sale Order(s) which are already confirmed !"
+msgstr ""
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1239,12 +1224,6 @@ msgstr "Namn"
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
 msgstr "Fakturera utgående från"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
@@ -1351,9 +1330,9 @@ msgid "Weight"
 msgstr "Vikt"
 
 #. module: sale
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: rml:sale.order:0
+msgid "Quotation N°"
+msgstr "Offertnummer"
 
 #. module: sale
 #: field:sale.order,picked_rate:0

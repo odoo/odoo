@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:42:24+0000\n"
-"PO-Revision-Date: 2010-04-06 10:42:24+0000\n"
+"POT-Creation-Date: 2010-04-27 11:27:58+0000\n"
+"PO-Revision-Date: 2010-04-27 11:27:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "Proces zadań"
 #. module: project
 #: help:project.task.delegate,init,name:0
 msgid "New title of the task delegated to the user."
-msgstr "Nowy tytułzadania delegowanego na użytkownika"
+msgstr "Nowy tytuł zadania przydzielonego użytkownikowi"
 
 #. module: project
 #: code:addons/project/wizard/close_task.py:0
@@ -97,7 +97,7 @@ msgstr "Członkowie projektu"
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
 msgid "Task by delegate"
-msgstr ""
+msgstr "Zadania wg przydzieleń"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_my_project_my_run
@@ -108,7 +108,7 @@ msgstr ""
 #. module: project
 #: field:project.task,child_ids:0
 msgid "Delegated Tasks"
-msgstr ""
+msgstr "Przydzielone zadania"
 
 #. module: project
 #: help:project.project,warn_header:0
@@ -128,7 +128,7 @@ msgstr "Uaktualnij"
 #. module: project
 #: help:project.task.delegate,init,user_id:0
 msgid "User you want to delegate this task to."
-msgstr "Użytkownik, któremu chcesz delegować to zadanie."
+msgstr "Użytkownik, któremu chcesz przydzielić to zadanie."
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_attachment_task
@@ -190,7 +190,7 @@ msgstr "Moduł zarządzania projektami pozwalający prowadzić wielopoziomowe\n"
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_prog
 #: model:ir.ui.menu,name:project.menu_tasks_yours_prog_prog
 msgid "My Tasks in Progress"
-msgstr "Moje zadania w trakcie przetwarzania"
+msgstr "Moje zadania w toku"
 
 #. module: project
 #: view:project.project:0
@@ -210,7 +210,7 @@ msgstr "Zadanie"
 #. module: project
 #: help:project.task.delegate,init,planned_hours_me:0
 msgid "Estimated time for you to validate the work done by the user to whom you delegate this task."
-msgstr "Szacowany czas na zatwierdzenie pracy wykonanej przez użytkownika, któremu delegowałeś to zadania."
+msgstr "Szacowany czas na zatwierdzenie pracy wykonanej przez użytkownika, któremu przydzieliłeś to zadanie."
 
 #. module: project
 #: view:project.project:0
@@ -279,7 +279,7 @@ msgstr "Zadanie zostało wypełnione"
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
 msgid "Delegates tasks to the other user"
-msgstr "Deleguje zadanie na innego użytkownika"
+msgstr "Przydziela zadanie innemu użytkownikowi"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -354,7 +354,7 @@ msgstr "Przywróć jako projekt"
 #. module: project
 #: view:project.task:0
 msgid "Delegations"
-msgstr "Delegacje"
+msgstr "Przydziały"
 
 #. module: project
 #: help:project.project,members:0
@@ -380,7 +380,7 @@ msgstr "Ze stanu Projekt przechodzi w stan Otwarty"
 #. module: project
 #: wizard_view:project.task.delegate,init:0
 msgid "Delegated Task"
-msgstr "Zadania oddelegowane"
+msgstr "Przydzielone zadanie"
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -457,7 +457,7 @@ msgstr "Czas planowany"
 #: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
-msgstr "Praca zadania"
+msgstr "Przebieg zadania"
 
 #. module: project
 #: selection:res.company,project_time_mode:0
@@ -475,7 +475,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_view_task6_prog
 #: model:ir.ui.menu,name:project.menu_action_view_task6_prog
 msgid "Tasks in Progress"
-msgstr "Zadania w trakcie przetwarzania"
+msgstr "Zadania w toku"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -486,7 +486,7 @@ msgstr "Operacja wykonana"
 #. module: project
 #: wizard_field:project.task.delegate,init,name:0
 msgid "Delegated Title"
-msgstr ""
+msgstr "Przydzielony tytuł"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_my_project
@@ -497,7 +497,7 @@ msgstr "Moje projekty"
 #. module: project
 #: help:project.task.delegate,init,planned_hours:0
 msgid "Estimated time to close this task by the delegated user."
-msgstr "Szacowany czas do zamknięcia tego zadania przez delegowanego użytkownika."
+msgstr "Szacowany czas do zamknięcia tego zadania przez przydzielonego użytkownika."
 
 #. module: project
 #: selection:project.project,state:0
@@ -550,7 +550,7 @@ msgstr "Użytkownik: %(user_id)s"
 #. module: project
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
-msgstr ""
+msgstr "Opóźnienie"
 
 #. module: project
 #: field:project.project,contact_id:0
@@ -561,7 +561,7 @@ msgstr "Kontakt"
 #: model:process.transition,name:project.process_transition_delegate0
 #: view:project.task:0
 msgid "Delegate"
-msgstr "Deleguj"
+msgstr "Przydziel"
 
 #. module: project
 #: constraint:ir.ui.view:0
@@ -655,7 +655,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Delegated tasks"
-msgstr "Delegowane zadania"
+msgstr "Przydzielone zadania"
 
 #. module: project
 #: view:project.task:0
@@ -665,7 +665,7 @@ msgstr "Informacja"
 #. module: project
 #: view:project.task:0
 msgid "Review"
-msgstr "Przegląd"
+msgstr "Rewiduj"
 
 #. module: project
 #: view:project.project:0
@@ -706,7 +706,7 @@ msgstr "Menedżer projektu"
 #: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
-msgstr "Oczekujący"
+msgstr "Oczekiwanie"
 
 #. module: project
 #: field:project.task,state:0
@@ -716,7 +716,7 @@ msgstr "Stan"
 #. module: project
 #: help:project.task.delegate,init,state:0
 msgid "New state of your own task. Pending will be reopened automatically when the delegated task is closed."
-msgstr ""
+msgstr "Nowy stan twojego zadania. Oczekujące zostanie automatycznie otwarte kiedy przydzielone zadanie zostanie zamknięte."
 
 #. module: project
 #: field:res.company,project_time_mode:0
@@ -827,12 +827,12 @@ msgstr "Nie można wysłać maila, bo twój adres nie jest skonfigurowany!"
 #. module: project
 #: wizard_view:project.task.delegate,init:0
 msgid "Delegate this task to a user"
-msgstr "Deleguj to zadanie na użytkownika"
+msgstr "Przydziel to zadanie użytkownikowi"
 
 #. module: project
 #: field:project.task,delegated_user_id:0
 msgid "Delegated To"
-msgstr "Delegowane na"
+msgstr "Przydzielono"
 
 #. module: project
 #: field:project.task,date_close:0
@@ -847,7 +847,7 @@ msgstr "Przypisano do"
 #. module: project
 #: help:project.task,planned_hours:0
 msgid "Estimated time to do the task, usually set by the project manager when the task is in draft state."
-msgstr "Szacowany czas wykonania zadania. Zwykle ustalany przez menedżera projektu kiesy zadanie jest w stanie projektu."
+msgstr "Szacowany czas wykonania zadania. Zwykle ustalany przez menedżera projektu kiedy zadanie jest w stanie projektu."
 
 #. module: project
 #: help:project.project,effective_hours:0
@@ -944,7 +944,7 @@ msgstr ""
 #. module: project
 #: selection:project.task,state:0
 msgid "In Progress"
-msgstr "W trakcie przetwarzania"
+msgstr "W toku"
 
 #. module: project
 #: constraint:ir.model:0
@@ -1160,7 +1160,7 @@ msgstr "Spodziewany koniec"
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
 msgid "Delegate your task to the other user"
-msgstr "Przydziel swoje zadania na innego użytkownika"
+msgstr "Przydziel swoje zadania innemu użytkownikowi"
 
 #. module: project
 #: view:project.project:0
@@ -1172,5 +1172,5 @@ msgstr "Stopka wiadomości"
 #: model:ir.actions.act_window,name:project.open_view_project_open
 #: model:ir.ui.menu,name:project.menu_open_view_project_open
 msgid "Running projects"
-msgstr "Projekty w trakcie przetwarzania"
+msgstr "Bieżące projekty"
 

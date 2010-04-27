@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:40:39+0000\n"
-"PO-Revision-Date: 2010-04-06 10:40:39+0000\n"
+"POT-Creation-Date: 2010-04-27 11:25:28+0000\n"
+"PO-Revision-Date: 2010-04-27 11:25:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -133,11 +133,8 @@ msgid "Directly"
 msgstr ""
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment Line"
+#: model:ir.module.module,shortdesc:account_payment.module_meta_information
+msgid "Payment Management"
 msgstr ""
 
 #. module: account_payment
@@ -278,8 +275,9 @@ msgid "Communication Type"
 msgstr ""
 
 #. module: account_payment
-#: model:ir.module.module,shortdesc:account_payment.module_meta_information
-msgid "Payment Management"
+#: field:payment.line,partner_id:0
+#: rml:payment.order:0
+msgid "Partner"
 msgstr ""
 
 #. module: account_payment
@@ -319,12 +317,6 @@ msgid "Draft"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: rml:payment.order:0
-msgid "Partner"
-msgstr ""
-
-#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr ""
@@ -341,8 +333,8 @@ msgid "Address of the Ordering Customer."
 msgstr ""
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
+#: wizard_field:populate_statement,init,date_select:0
+msgid "Select Date"
 msgstr ""
 
 #. module: account_payment
@@ -363,6 +355,7 @@ msgstr ""
 
 #. module: account_payment
 #: rml:payment.order:0
+#: wizard_field:populate_statement,init,d_date:0
 msgid "Date"
 msgstr ""
 
@@ -388,12 +381,13 @@ msgstr ""
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
+#: selection:populate_statement,init,date_select:0
 msgid "Maturity Date"
 msgstr ""
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
+#: selection:populate_statement,init,date_select:0
+msgid "Fixed Date"
 msgstr ""
 
 #. module: account_payment
@@ -491,6 +485,11 @@ msgid "Search Payment lines"
 msgstr ""
 
 #. module: account_payment
+#: selection:populate_statement,init,date_select:0
+msgid "Current Date"
+msgstr ""
+
+#. module: account_payment
 #: field:payment.line,amount_currency:0
 msgid "Amount in Partner Currency"
 msgstr ""
@@ -527,6 +526,14 @@ msgid "Company Currency"
 msgstr ""
 
 #. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:0
+#: view:payment.order:0
+msgid "Payment Line"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.ui.menu,name:account_payment.menu_main
 #: model:ir.ui.menu,name:account_payment.next_id_44
 #: view:payment.line:0
@@ -548,6 +555,11 @@ msgstr ""
 #: field:payment.mode,name:0
 #: field:payment.type,name:0
 msgid "Name"
+msgstr ""
+
+#. module: account_payment
+#: view:account.move.line:0
+msgid "Total credit"
 msgstr ""
 
 #. module: account_payment
@@ -595,6 +607,11 @@ msgid "Total"
 msgstr ""
 
 #. module: account_payment
+#: selection:populate_statement,init,date_select:0
+msgid "Payment Order Date"
+msgstr ""
+
+#. module: account_payment
 #: wizard_button:populate_statement,init,add:0
 msgid "_Add"
 msgstr ""
@@ -611,6 +628,11 @@ msgid "Payment mode"
 msgstr ""
 
 #. module: account_payment
+#: view:account.bank.statement:0
+msgid "Import payment lines"
+msgstr ""
+
+#. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr ""
@@ -618,5 +640,10 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,journal:0
 msgid "Journal"
+msgstr ""
+
+#. module: account_payment
+#: help:populate_statement,init,date_select:0
+msgid "The selected date will be used for statement lines"
 msgstr ""
 

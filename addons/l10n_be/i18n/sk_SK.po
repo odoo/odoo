@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:46:48+0000\n"
-"PO-Revision-Date: 2010-04-06 10:46:48+0000\n"
+"POT-Creation-Date: 2010-04-27 11:32:15+0000\n"
+"PO-Revision-Date: 2010-04-27 11:32:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_be
-#: selection:vat.intra.xml,init,trimester:0
-msgid "Oct/Nov/Dec"
+#: wizard_view:list.vat.detail,go:0
+#: wizard_view:vat.intra.xml,go:0
+msgid "XML File has been Created."
 msgstr ""
 
 #. module: l10n_be
@@ -39,8 +40,8 @@ msgid "No partner has a VAT Number asociated with him."
 msgstr ""
 
 #. module: l10n_be
-#: wizard_field:vat.intra.xml,init,trimester:0
-msgid "Trimester Number"
+#: help:wizard.account.xml.vat.declaration,init,client_nihil:0
+msgid "Thick this case only if it concerns only the last statement on the civil or cessation of activity"
 msgstr ""
 
 #. module: l10n_be
@@ -84,18 +85,30 @@ msgid "File created"
 msgstr ""
 
 #. module: l10n_be
-#: selection:vat.intra.xml,init,trimester:0
-msgid "Apr/May/Jun"
+#: code:addons/l10n_be/wizard/wizard_vat_intra.py:0
+#, python-format
+msgid "Wrong Period Code"
+msgstr ""
+
+#. module: l10n_be
+#: model:ir.module.module,shortdesc:l10n_be.module_meta_information
+msgid "Belgium - Plan Comptable Minimum Normalise"
+msgstr ""
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/wizard_vat_intra.py:0
+#, python-format
+msgid "The period code you entered is not valid."
+msgstr ""
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_stock
+msgid "Stock et Encours"
 msgstr ""
 
 #. module: l10n_be
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
-msgstr ""
-
-#. module: l10n_be
-#: selection:vat.intra.xml,init,trimester:0
-msgid "Jul/Aug/Sep"
 msgstr ""
 
 #. module: l10n_be
@@ -116,13 +129,18 @@ msgid "This wizard will create an XML file for Vat Intra"
 msgstr ""
 
 #. module: l10n_be
-#: model:ir.module.module,shortdesc:l10n_be.module_meta_information
-msgid "Belgium - Plan Comptable Minimum Normalise"
+#: wizard_field:wizard.account.xml.vat.declaration,init,client_nihil:0
+msgid "Last Declaration of Entreprise"
 msgstr ""
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
 msgid "Select Fiscal Year"
+msgstr ""
+
+#. module: l10n_be
+#: wizard_field:wizard.account.xml.vat.declaration,init,ask_resitution:0
+msgid "Ask Restitution"
 msgstr ""
 
 #. module: l10n_be
@@ -157,6 +175,11 @@ msgid "Select Period"
 msgstr ""
 
 #. module: l10n_be
+#: help:vat.intra.xml,init,period_ids:0
+msgid "Select here the period(s) you want to include in your intracom declaration"
+msgstr ""
+
+#. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_produit
 msgid "Produit"
 msgstr ""
@@ -179,6 +202,11 @@ msgid "Ok"
 msgstr ""
 
 #. module: l10n_be
+#: wizard_field:wizard.account.xml.vat.declaration,init,ask_payment:0
+msgid "Ask Payment"
+msgstr ""
+
+#. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
 msgid "This wizard will create an XML file for Vat details and total invoiced amounts per partner."
 msgstr ""
@@ -195,8 +223,12 @@ msgid "Annual Listing of VAT-Subjected Customers"
 msgstr ""
 
 #. module: l10n_be
+#: wizard_field:vat.intra.xml,init,period_ids:0
+msgid "Period(s)"
+msgstr ""
+
+#. module: l10n_be
 #: wizard_field:list.vat.detail,init,fyear:0
-#: wizard_field:vat.intra.xml,init,fyear:0
 msgid "Fiscal Year"
 msgstr ""
 
@@ -206,8 +238,16 @@ msgid "XML Flie has been Created."
 msgstr ""
 
 #. module: l10n_be
-#: model:account.account.type,name:l10n_be.user_type_stock
-msgid "Stock et Encours"
+#: help:vat.intra.xml,init,period_code:0
+msgid "This is where you have to set the period code for the intracom declaration using the format: ppyyyy\n"
+"\n"
+"  PP can stand for a month: from '01' to '12'.\n"
+"  PP can stand for a trimester: '31','32','33','34'\n"
+"      The first figure means that it is a trimester,\n"
+"      The second figure identify the trimester.\n"
+"  PP can stand for a complete fiscal year: '00'.\n"
+"  YYYY stands for the year (4 positions).\n"
+""
 msgstr ""
 
 #. module: l10n_be
@@ -224,7 +264,6 @@ msgstr ""
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,test_xml:0
-#: wizard_field:vat.intra.xml,init,test_xml:0
 msgid "Test XML file"
 msgstr ""
 
@@ -264,9 +303,8 @@ msgid "General Information"
 msgstr ""
 
 #. module: l10n_be
-#: wizard_view:list.vat.detail,go:0
-#: wizard_view:vat.intra.xml,go:0
-msgid "XML File has been Created."
+#: wizard_field:vat.intra.xml,init,period_code:0
+msgid "Period Code"
 msgstr ""
 
 #. module: l10n_be
@@ -290,10 +328,5 @@ msgstr ""
 #: model:ir.actions.wizard,name:l10n_be.partner_vat_intra
 #: model:ir.ui.menu,name:l10n_be.partner_intra_vat_menu
 msgid "Partner VAT intra"
-msgstr ""
-
-#. module: l10n_be
-#: selection:vat.intra.xml,init,trimester:0
-msgid "Jan/Feb/Mar"
 msgstr ""
 

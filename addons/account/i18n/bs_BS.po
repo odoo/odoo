@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:25:50+0000\n"
-"PO-Revision-Date: 2010-04-06 10:25:50+0000\n"
+"POT-Creation-Date: 2010-04-27 11:11:03+0000\n"
+"PO-Revision-Date: 2010-04-27 11:11:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -271,6 +271,11 @@ msgid "Recurrent Entries"
 msgstr "Ponavljajuće stavke"
 
 #. module: account
+#: model:account.tax,name:account.t_vat
+msgid "x VAT"
+msgstr ""
+
+#. module: account
 #: field:account.analytic.line,amount:0
 #: field:account.bank.statement.line,amount:0
 #: field:account.bank.statement.reconcile.line,amount:0
@@ -377,6 +382,7 @@ msgid "Delta Debit"
 msgstr "Delta duguje"
 
 #. module: account
+#: model:account.account.type,name:account.account_type_tax
 #: rml:account.invoice:0
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
@@ -416,11 +422,10 @@ msgid "Tax on Children"
 msgstr ""
 
 #. module: account
-#: rml:account.central.journal:0
-#: rml:account.general.journal:0
-#: field:account.journal,name:0
-msgid "Journal Name"
-msgstr "Naziv naloga za knjiženje"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -1204,6 +1209,23 @@ msgstr "Jedan partner po stranici"
 #: field:account.account.template,child_parent_ids:0
 msgid "Children"
 msgstr "Potomci"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            # Check that the move balances, the tolerance for debit/credit must\n"
+"            # be smaller than the smallest value according to price accuracy\n"
+"            # (hence the +1 below)\n"
+"            # Example:\n"
+"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
+"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
+"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                self.pool.get('account.move.line"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -2124,15 +2146,14 @@ msgid "x Expenses Credit Notes Journal"
 msgstr "x Nalog za knjiženje knjižnih odobrenja troškova"
 
 #. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            if abs(amount) < 10 ** -int(config['price_accuracy']):\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
+#: field:account.analytic.journal,type:0
+#: field:account.bank.statement.line,type:0
+#: field:account.invoice,type:0
+#: field:account.journal,type:0
+#: field:account.move,type:0
+#: field:account.move.reconcile,type:0
+msgid "Type"
+msgstr "Tip"
 
 #. module: account
 #: view:account.journal:0
@@ -2914,9 +2935,11 @@ msgid "Information"
 msgstr "Obavijest"
 
 #. module: account
-#: help:account.journal,currency:0
-msgid "The currency used to enter statement"
-msgstr "Valuta koja se koristi pri unosu stavke"
+#: rml:account.central.journal:0
+#: rml:account.general.journal:0
+#: field:account.journal,name:0
+msgid "Journal Name"
+msgstr "Naziv naloga za knjiženje"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_tax_report
@@ -3524,6 +3547,12 @@ msgid "Others"
 msgstr "Ostali"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "UnknownError"
+msgstr ""
+
+#. module: account
 #: selection:account.automatic.reconcile,init,power:0
 msgid "8"
 msgstr "8"
@@ -3825,6 +3854,11 @@ msgstr "Python kod"
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
 msgid "Bank statements"
 msgstr "Bankovni izvodi"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.act_account_invoice_account_move_unreconciled
+msgid "Unreconciled Receivables & Payables"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -4162,16 +4196,6 @@ msgstr "Konto pretplate"
 #: rml:account.overdue:0
 msgid "Maturity date"
 msgstr "Datum dospijeća"
-
-#. module: account
-#: field:account.analytic.journal,type:0
-#: field:account.bank.statement.line,type:0
-#: field:account.invoice,type:0
-#: field:account.journal,type:0
-#: field:account.move,type:0
-#: field:account.move.reconcile,type:0
-msgid "Type"
-msgstr "Tip"
 
 #. module: account
 #: view:account.subscription:0
@@ -4708,6 +4732,11 @@ msgid "Ok"
 msgstr "Uredu"
 
 #. module: account
+#: help:account.journal,currency:0
+msgid "The currency used to enter statement"
+msgstr "Valuta koja se koristi pri unosu stavke"
+
+#. module: account
 #: rml:account.invoice:0
 msgid "Taxes:"
 msgstr "Porezi:"
@@ -4801,6 +4830,11 @@ msgid "Running Subscriptions"
 msgstr "Pretplate koje su u tijeku"
 
 #. module: account
+#: help:account.invoice.refund,init,date:0
+msgid "This date will be used as the invoice date for Refund Invoice and Period will be chosen accordingly!"
+msgstr ""
+
+#. module: account
 #: selection:account.move,type:0
 msgid "Bank Payment"
 msgstr "Bankovno plaćanje"
@@ -4826,6 +4860,12 @@ msgstr "Knjižna odobrenja"
 #: field:account.fiscalyear,date_stop:0
 msgid "End Date"
 msgstr "Završni datum"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You cannot change the type of account from 'Closed' to any other type which contains account entries!"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_open_closed_fiscalyear
@@ -5066,6 +5106,12 @@ msgstr "Porez uključen u cijenu"
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Entries by Journal"
 msgstr "Analitički unosi po knjižnom nalogu"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You cannot change the type of account from '%s' to '%s' type as it contains account entries!"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
@@ -6300,6 +6346,12 @@ msgstr "Konto prihoda"
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
 msgstr "Otvaranje/Zatvaranje razdoblja"
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "There is no Accounting Journal of type Sale/Purchase defined!"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_move_line.py:0

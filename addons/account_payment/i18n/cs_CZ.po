@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:30:37+0000\n"
-"PO-Revision-Date: 2010-04-06 10:30:37+0000\n"
+"POT-Creation-Date: 2010-04-27 11:15:41+0000\n"
+"PO-Revision-Date: 2010-04-27 11:15:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgstr "Špatný název modelu v definici akce"
 #: field:payment.line,info_owner:0
 #: view:payment.order:0
 msgid "Owner Account"
-msgstr ""
+msgstr "Majitel účtu"
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -61,17 +61,17 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred date"
-msgstr ""
+msgstr "Preferované datum"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr ""
+msgstr "Volný"
 
 #. module: account_payment
 #: wizard_field:populate_payment,search,entries:0
 msgid "Entries"
-msgstr ""
+msgstr "Příspěvky"
 
 #. module: account_payment
 #: wizard_field:populate_payment,init,duedate:0
@@ -92,7 +92,7 @@ msgstr ""
 #: rml:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
-msgstr ""
+msgstr "Částka"
 
 #. module: account_payment
 #: rml:payment.order:0
@@ -107,7 +107,7 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
@@ -119,7 +119,7 @@ msgstr ""
 #: rml:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
-msgstr ""
+msgstr "Odkaz"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -130,14 +130,11 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
-msgstr ""
+msgstr "Přímo"
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment Line"
+#: model:ir.module.module,shortdesc:account_payment.module_meta_information
+msgid "Payment Management"
 msgstr ""
 
 #. module: account_payment
@@ -153,7 +150,7 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Potvrzeno"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
@@ -173,12 +170,12 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
-msgstr ""
+msgstr "Strukturované"
 
 #. module: account_payment
 #: field:payment.order,state:0
 msgid "State"
-msgstr ""
+msgstr "Stav"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -222,17 +219,17 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution date"
-msgstr ""
+msgstr "Datum představení"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
-msgstr ""
+msgstr "Pevné datum"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
 msgid "Destination Account"
-msgstr ""
+msgstr "Protiúčet"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -250,12 +247,12 @@ msgstr ""
 #: wizard_button:populate_payment,search,end:0
 #: wizard_button:populate_statement,init,end:0
 msgid "_Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
-msgstr ""
+msgstr "Vytvořeno"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -278,14 +275,15 @@ msgid "Communication Type"
 msgstr ""
 
 #. module: account_payment
-#: model:ir.module.module,shortdesc:account_payment.module_meta_information
-msgid "Payment Management"
+#: field:payment.line,partner_id:0
+#: rml:payment.order:0
+msgid "Partner"
 msgstr ""
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
-msgstr ""
+msgstr "Termín dokončení"
 
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
@@ -306,7 +304,7 @@ msgstr ""
 #: view:payment.type:0
 #: help:payment.type,name:0
 msgid "Payment Type"
-msgstr ""
+msgstr "Typ platby"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -316,12 +314,6 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Draft"
-msgstr ""
-
-#. module: account_payment
-#: field:payment.line,partner_id:0
-#: rml:payment.order:0
-msgid "Partner"
 msgstr ""
 
 #. module: account_payment
@@ -341,8 +333,8 @@ msgid "Address of the Ordering Customer."
 msgstr ""
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
+#: wizard_field:populate_statement,init,date_select:0
+msgid "Select Date"
 msgstr ""
 
 #. module: account_payment
@@ -363,6 +355,7 @@ msgstr ""
 
 #. module: account_payment
 #: rml:payment.order:0
+#: wizard_field:populate_statement,init,d_date:0
 msgid "Date"
 msgstr ""
 
@@ -388,12 +381,13 @@ msgstr ""
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
+#: selection:populate_statement,init,date_select:0
 msgid "Maturity Date"
 msgstr ""
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
+#: selection:populate_statement,init,date_select:0
+msgid "Fixed Date"
 msgstr ""
 
 #. module: account_payment
@@ -445,7 +439,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,communication:0
 msgid "Communication"
-msgstr ""
+msgstr "Komunikace"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -491,6 +485,11 @@ msgid "Search Payment lines"
 msgstr ""
 
 #. module: account_payment
+#: selection:populate_statement,init,date_select:0
+msgid "Current Date"
+msgstr ""
+
+#. module: account_payment
 #: field:payment.line,amount_currency:0
 msgid "Amount in Partner Currency"
 msgstr ""
@@ -527,6 +526,14 @@ msgid "Company Currency"
 msgstr ""
 
 #. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:0
+#: view:payment.order:0
+msgid "Payment Line"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.ui.menu,name:account_payment.menu_main
 #: model:ir.ui.menu,name:account_payment.next_id_44
 #: view:payment.line:0
@@ -548,6 +555,11 @@ msgstr ""
 #: field:payment.mode,name:0
 #: field:payment.type,name:0
 msgid "Name"
+msgstr ""
+
+#. module: account_payment
+#: view:account.move.line:0
+msgid "Total credit"
 msgstr ""
 
 #. module: account_payment
@@ -595,6 +607,11 @@ msgid "Total"
 msgstr ""
 
 #. module: account_payment
+#: selection:populate_statement,init,date_select:0
+msgid "Payment Order Date"
+msgstr ""
+
+#. module: account_payment
 #: wizard_button:populate_statement,init,add:0
 msgid "_Add"
 msgstr ""
@@ -611,6 +628,11 @@ msgid "Payment mode"
 msgstr ""
 
 #. module: account_payment
+#: view:account.bank.statement:0
+msgid "Import payment lines"
+msgstr ""
+
+#. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr ""
@@ -618,5 +640,10 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,journal:0
 msgid "Journal"
+msgstr ""
+
+#. module: account_payment
+#: help:populate_statement,init,date_select:0
+msgid "The selected date will be used for statement lines"
 msgstr ""
 

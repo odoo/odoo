@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:27:23+0000\n"
-"PO-Revision-Date: 2010-04-06 10:27:23+0000\n"
+"POT-Creation-Date: 2010-04-27 11:12:34+0000\n"
+"PO-Revision-Date: 2010-04-27 11:12:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -141,6 +141,12 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_quotation_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_quotation
 msgid "Repairs in quotation"
@@ -209,6 +215,12 @@ msgid "Start Repair"
 msgstr "Inici reparació"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
 msgid "Quantity (UoM)"
 msgstr "Quantitat (UdM)"
@@ -240,9 +252,9 @@ msgid "Pricelist"
 msgstr "Tarifa"
 
 #. module: mrp_repair
-#: help:mrp.repair,state:0
-msgid "Gives the state of the Repair Order"
-msgstr "Indica l'estat de la comanda de reparació"
+#: field:mrp.repair,name:0
+msgid "Repair Ref"
+msgstr "Ref. reparació"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -415,14 +427,20 @@ msgid "Confirm Repair"
 msgstr "Confirma reparació"
 
 #. module: mrp_repair
-#: rml:repair.order:0
-msgid "Repair Quotation"
-msgstr "Pressupost de reparació"
+#: wizard_view:mrp.repair.cancel,display:0
+msgid "Cancel Repair...??"
+msgstr "Cancel·la reparació... ?"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "End Repair"
 msgstr "Fi reparació"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -575,9 +593,9 @@ msgid "Make invoices"
 msgstr "Realitza factures"
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Ref"
-msgstr "Ref. reparació"
+#: help:mrp.repair,state:0
+msgid "Gives the state of the Repair Order"
+msgstr "Indica l'estat de la comanda de reparació"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -591,9 +609,9 @@ msgid "Remove"
 msgstr "Elimina"
 
 #. module: mrp_repair
-#: wizard_view:mrp.repair.cancel,display:0
-msgid "Cancel Repair...??"
-msgstr "Cancel·la reparació... ?"
+#: rml:repair.order:0
+msgid "Repair Quotation"
+msgstr "Pressupost de reparació"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom:0
