@@ -96,7 +96,8 @@ class crm_send_new_email(osv.osv_memory):
                 'Reply-To':"%s" % case.section_id.reply_to,
             }
             if message_id:
-                'References':"%s" % (message_id)
+                x_headers['References'] = "%s" % (message_id)
+
             flag = False
             if case.section_id and case.section_id.server_id:
                 flag = smtp_pool.send_email(

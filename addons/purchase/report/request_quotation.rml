@@ -88,7 +88,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title) or '' ]] [[ order.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ order.partner_id.name ]] [[ order.partner_id.title or '' ]]</para>
           <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.title) or '' ]] [[ order.partner_address_id.name ]] </para>
           <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.street) or '']] [[ order.partner_address_id.street2 ]]</para>
           <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.zip) or '' ]] [[ (order.partner_address_id and order.partner_address_id.city) or '' ]]</para>
