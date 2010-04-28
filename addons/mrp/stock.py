@@ -101,7 +101,6 @@ class StockMove(osv.osv):
     _columns = {
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
         'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
-        'scraped': fields.related('location_dest_id','scraped',type='boolean',relation='stock.location',string='Scraped'),
     }
     
     def copy(self, cr, uid, id, default=None, context=None):
@@ -205,10 +204,6 @@ class StockMove(osv.osv):
         """  
         res = []
         production_obj = self.pool.get('mrp.production')
-        location_obj = self.pool.get('stock.location')
-        location = location_obj.browse(cr, uid, location_id)
-        if not location.scraped:
-            raise osv.except_osv(_('Warning !'),_('Please select scraped location.')) 
         wf_service = netsvc.LocalService("workflow")
         for move in self.browse(cr, uid, ids):
             new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)

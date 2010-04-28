@@ -1214,7 +1214,7 @@ class stock_move(osv.osv):
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
         'delivered_id': fields.many2one('stock.delivery', 'Product delivered'),
-        'scraped': fields.boolean('Scraped'),
+        'scraped': fields.related('location_dest_id','scraped',type='boolean',relation='stock.location',string='Scraped'),
     }
     _constraints = [
         (_check_tracking,
@@ -1251,7 +1251,6 @@ class stock_move(osv.osv):
         'location_dest_id': _default_location_destination,
         'state': lambda *a: 'draft',
         'priority': lambda *a: '1',
-        'scraped' : lambda *a:False,
         'product_qty': lambda *a: 1.0,
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
