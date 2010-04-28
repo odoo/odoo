@@ -97,6 +97,7 @@ module named account_voucherss
         'project/wizard/account_analytic_inverted_balance_report.xml',
         'project/wizard/account_analytic_journal_report_view.xml',
         'project/wizard/account_analytic_cost_ledger_for_journal_report_view.xml',
+        'project/wizard/account_analytic_chart_view.xml',
         'product_view.xml',
         'account_assert_test.xml',
         'process/statement_process.xml',
