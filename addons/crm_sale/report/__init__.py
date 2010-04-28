@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,18 +15,18 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-import crm_send_email
-import crm_email_add_cc
-
-import crm_lead_to_partner
-import crm_lead_to_opportunity
-import crm_opportunity_to_phonecall
-
-import crm_partner_to_opportunity
+#import report_businessopp
+#import crm_report
+#import crm_claim_report
+import crm_lead_report
+#import crm_phonecall_report
+#import crm_fundraising_report
+import crm_opportunity_report
+#import crm_helpdesk_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

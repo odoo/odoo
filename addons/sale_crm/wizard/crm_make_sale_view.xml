@@ -1,0 +1,41 @@
+<openerp>
+   <data>
+
+        <!-- crm make sale's view -->
+
+       <record id="view_crm_make_sale" model="ir.ui.view">
+          <field name="name">crm.make.sale.form</field>
+          <field name="model">crm.make.sale</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+              <form string="Convert to Quote">
+                <field name="partner_id"/>
+                <field name="shop_id"/>
+                <field name="analytic_account"/>
+                <field name="picking_policy"/>
+                <field name="close"/>
+                <newline/>
+                <field name="product_ids" colspan="4"/>
+                <separator colspan="4"/>
+                <group col="4" colspan="4">
+                    <label string="" colspan="2"/>
+                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <button name="makeOrder" string="Create Quote" type="object" icon='gtk-go-forward'/>
+                </group>
+            </form>
+          </field>
+       </record>
+       
+       <!-- crm make sale's  action -->
+       
+       <record id="action_crm_make_sale" model="ir.actions.act_window">
+          <field name="name">Make Quotation</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">crm.make.sale</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+       </record>
+       
+   </data>
+</openerp>

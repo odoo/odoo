@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
+from crm.report import crm_report
 from osv import fields,osv
 import tools
+
 
 AVAILABLE_STATES = [
     ('draft','Draft'),

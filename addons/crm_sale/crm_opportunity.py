@@ -19,10 +19,12 @@
 #
 ##############################################################################
 
+
+from crm.report import crm_report
 from datetime import datetime
 from osv import fields,osv,orm
 from tools.translate import _
-import crm
+from crm import crm
 import time
 import mx.DateTime
 
@@ -119,7 +121,7 @@ class crm_opportunity(osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                      domain="[('section_id','=',section_id), \
                     ('object_id.model', '=', 'crm.opportunity')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
         'referred': fields.char('Referred By', size=64),
         'probability': fields.float('Probability (%)'),
         'planned_revenue': fields.float('Expected Revenue'),
@@ -231,7 +233,7 @@ class crm_opportunity(osv.osv):
             }
             value = {
                 'name': _('Meetings'),
-                'domain': "[('user_id','=',%s),('opportunity_id','=',%s)]" % (uid,opp.id),
+                'domain': "[('user_id','=',%s)]" % (uid),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'calendar,form,tree',
@@ -242,6 +244,7 @@ class crm_opportunity(osv.osv):
                 'search_view_id': res['res_id'],
                 'nodestroy': True
             }
+
         return value
 
 crm_opportunity()

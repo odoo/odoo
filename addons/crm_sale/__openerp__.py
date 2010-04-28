@@ -19,14 +19,38 @@
 #
 ##############################################################################
 
-import crm_send_email
-import crm_email_add_cc
 
-import crm_lead_to_partner
-import crm_lead_to_opportunity
-import crm_opportunity_to_phonecall
+{
+    'name': 'Customer & Supplier Relationship Management',
+    'version': '1.0',
+    'category': 'Generic Modules/CRM & SRM',
+    'description': """Lead and business Opportunity """,
 
-import crm_partner_to_opportunity
-
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['crm'],
+    'init_xml': [
+         'crm_lead_data.xml',
+          'crm_opportunity_data.xml',
+    ],
+    'update_xml': [
+        'wizard/crm_lead_to_partner_view.xml',
+        'wizard/crm_lead_to_opportunity_view.xml',
+        'wizard/crm_opportunity_to_phonecall_view.xml',
+        'crm_lead_view.xml',
+        'crm_lead_menu.xml',
+        'crm_opportunity_view.xml',
+        'crm_opportunity_menu.xml',
+    ],
+    'demo_xml': [
+        'crm_lead_demo.xml',
+        'crm_opportunity_demo.xml',
+    ],
+    'test': ['test/test_crm_lead.yml',
+            #'test/test_crm_opportunity.yml',
+             ],
+    'installable': True,
+    'active': False,
+    'certificate': '0079056041421',
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
