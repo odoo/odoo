@@ -11,16 +11,23 @@ class project_issue_report(osv.osv):
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
         'nbr': fields.integer('# of Issues', readonly=True),
         'delay_close': fields.float('Avg Closing Delay', digits=(16,2), readonly=True, group_operator="avg",
-                                       help="Number of Days to close the project issue"),
+                                           help="Number of Days to close the project issue"),
+        'delay_open': fields.float('Avg Opening Delay', digits=(16,2), readonly=True, group_operator="avg",
+                                       help="Number of Days to open the project issue"),
         'company_id' : fields.many2one('res.company', 'Company'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'type_id': fields.many2one('crm.case.resource.type', 'Type', domain="[('object_id.model', '=', 'project.issue')]"),
         'date_closed': fields.datetime('Close Date', readonly=True),
+        'date_open': fields.datetime('Opened', readonly=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
-        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" )
+        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
+        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
+                                                domain="[('partner_id', '=', partner_id)]",
+                                                required=True),
+        'partner_address_id': fields.many2one('res.partner.address','Contact ',readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'project_issue_report')
@@ -46,8 +53,12 @@ class project_issue_report(osv.osv):
                     c.partner_id,
                     c.canal_id,
                     c.task_id,
+                    c.analytic_account_id as analytic_account_id,
+                    c.partner_address_id as partner_address_id,
+                    c.date_open as date_open,
                     date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
+                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
+                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
                 from
                     project_issue c
                 left join
@@ -70,7 +81,10 @@ class project_issue_report(osv.osv):
                     c.assigned_to,
                     c.partner_id,
                     c.canal_id,
-                    c.task_id
+                    c.task_id,
+                    c.date_open,
+                    c.analytic_account_id,
+                    c.partner_address_id
             )""")
 
 
