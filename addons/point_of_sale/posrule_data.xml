@@ -80,16 +80,12 @@
             <field eval="&quot;&quot;&quot;shop2&quot;&quot;&quot;" name="login"/>
             <field model="ir.actions.actions" name="action_id" search="[('name','=','Menu')]"/>
         </record>
-		<record id="ir_rule_group_posline0" model="ir.rule.group">
-			<field name="model_id" ref="point_of_sale.model_pos_order_line"/>
-			<field eval="&quot;&quot;&quot;POS line&quot;&quot;&quot;" name="name"/>
-			<field eval="1" name="global"/>
-		</record>
+
 		<record id="ir_rule_0" model="ir.rule">
-			<field eval="&quot;&quot;&quot;child_of&quot;&quot;&quot;" name="operator"/>
-			<field eval="&quot;&quot;&quot;user.company_id.id&quot;&quot;&quot;" name="operand"/>
-			<field name="field_id" ref="point_of_sale.field_pos_order_line_company_id"/>
-			<field name="rule_group" ref="ir_rule_group_posline0"/>
+			<field name="model_id" ref="point_of_sale.model_pos_order_line"/>
+			<field name="name">POS line</field>
+			<field eval="1" name="global"/>
+			<field name="domain_force">[(point_of_sale.field_pos_order_line_company_id, 'child_of', [user.company_id.id])]</field>
 		</record>
 	</data>
 
@@ -121,42 +117,25 @@
 	</data>
 
 	<data>
-		<record id="ir_rule_group_point0" model="ir.rule.group">
-			<field name="model_id" ref="point_of_sale.model_pos_order"/>
-			<field eval="&quot;&quot;&quot;point&quot;&quot;&quot;" name="name"/>
-			<field eval="1" name="global"/>
-		</record>
 		<record id="ir_rule_0" model="ir.rule">
-			<field eval="&quot;&quot;&quot;child_of&quot;&quot;&quot;" name="operator"/>
-			<field eval="&quot;&quot;&quot;user.company_id.id&quot;&quot;&quot;" name="operand"/>
-			<field name="field_id" ref="point_of_sale.field_pos_order_company_id"/>
-			<field name="rule_group" ref="ir_rule_group_point0"/>
-		</record>
-
-
-		 <record id="ir_rule_group_poslinecompany0" model="ir.rule.group">
-			<field name="model_id" ref="point_of_sale.model_pos_order_line"/>
-			<field eval="&quot;&quot;&quot;POS line company&quot;&quot;&quot;" name="name"/>
+			<field name="model_id" ref="point_of_sale.model_pos_order"/>
+			<field name="name">point</field>
 			<field eval="1" name="global"/>
+			<field name="domain_force">[(point_of_sale.field_pos_order_company_id, 'child_of', [user.company_id.id])]</field>
 		</record>
+
 		<record id="ir_rule_4" model="ir.rule">
-			<field eval="&quot;&quot;&quot;child_of&quot;&quot;&quot;" name="operator"/>
-			<field eval="&quot;&quot;&quot;user.company_id.id&quot;&quot;&quot;" name="operand"/>
-			<field name="field_id" ref="point_of_sale.field_pos_order_line_company_id"/>
-			<field name="rule_group" ref="ir_rule_group_poslinecompany0"/>
-		</record>
-
-		<record id="ir_rule_group_posreporting0" model="ir.rule.group">
-			<field name="model_id" ref="point_of_sale.model_report_transaction_pos"/>
-			<field eval="&quot;&quot;&quot;POS Reporting&quot;&quot;&quot;" name="name"/>
+			<field name="model_id" ref="point_of_sale.model_pos_order_line"/>
+			<field name="name">POS line</field>
 			<field eval="1" name="global"/>
+			<field name="domain_force">[(point_of_sale.field_pos_order_line_company_id, 'child_of', [user.company_id.id])]</field>
 		</record>
 
 		<record id="ir_rule_5" model="ir.rule">
-			<field eval="&quot;&quot;&quot;=&quot;&quot;&quot;" name="operator"/>
-			<field eval="&quot;&quot;&quot;user.id&quot;&quot;&quot;" name="operand"/>
-			<field name="field_id" ref="point_of_sale.field_report_transaction_pos_user_id"/>
-			<field name="rule_group" ref="ir_rule_group_posreporting0"/>
+			<field name="model_id" ref="point_of_sale.model_report_transaction_pos"/>
+			<field name="name">POS Reporting</field>
+			<field eval="1" name="global"/>
+			<field name="domain_force">[(point_of_sale.field_report_transaction_pos_user_id, '=', user.id)]</field>
 		</record>
 
 	</data>
