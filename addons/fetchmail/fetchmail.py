@@ -321,10 +321,15 @@ class email_server(osv.osv):
             his_id = history_pool.create(cr, uid, res)
             
         return res_id
-    
-    def __fetch_mail(self, cr, uid, ids, context={}):
-        sendmail_thread = threading.Thread(target=self.fetch_mail, args=(cr, uid, ids))
-        sendmail_thread.start()
+
+    def set_draft(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids , {'state':'draft'})
+        return True
+        
+    def button_fetch_mail(self, cr, uid, ids, context={}):
+        self.fetch_mail(cr, uid, ids)
+#        sendmail_thread = threading.Thread(target=self.fetch_mail, args=(cr, uid, ids))
+#        sendmail_thread.start()
         return True
         
     def _fetch_mails(self, cr, uid, ids=False, context={}):
