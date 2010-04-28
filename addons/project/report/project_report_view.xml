@@ -88,7 +88,7 @@
 	                        		help="Non Assigned Tasks to users"
 	                        		domain="[('user_id','=',False)]"/>
 	                    </field>
-	                    <field name="project_id">
+	                    <field name="project_id" widget="selection">
 	                        <filter icon="terp-project"
 	                        		string="My Task"
 	                        		help="My Tasks"
@@ -111,7 +111,7 @@
                     	<separator orientation="vertical"/>
 	                    <field name="type" widget="selection"/>
 	                    <field name="priority"/>
-	                    <field name="partner_id" widget="selection"/>
+	                    <field name="partner_id" />
 	                    <separator orientation="vertical"/>
 	                    <field name="date_deadline"/>
 	                    <newline/>
