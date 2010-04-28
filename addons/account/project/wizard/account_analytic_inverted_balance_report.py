@@ -18,14 +18,39 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
 
-import account_analytic_journal_report
-import account_analytic_balance_report
-import account_analytic_inverted_balance_report
-import account_analytic_cost_ledger_report
-import account_analytic_cost_ledger_for_journal_report
-import account_analytic_check
-import project_account_analytic_line
-import wizard_analytic_account_chart
+from osv import osv, fields
 
+class account_analytic_inverted_balance(osv.osv_memory):
+    _name = 'account.analytic.inverted.balance'
+    _description = 'Account Analytic Inverted Balance'
+
+    _columns = {
+        'date1': fields.date('Start of period', required=True),
+        'date2': fields.date('End of period', required=True),
+        }
+
+    _defaults = {
+        'date1':time.strftime('%Y-01-01'),
+        'date2':time.strftime('%Y-%m-%d')
+        }
+
+    def check_report(self, cr, uid, ids, context=None):
+        datas = {}
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids)[0]
+        datas = {
+             'ids': context.get('active_ids',[]),
+             'model': 'account.analytic.account',
+             'form': data
+                 }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'account.analytic.account.inverted.balance',
+            'datas': datas,
+            }
+
+account_analytic_inverted_balance()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
