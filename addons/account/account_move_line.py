@@ -925,7 +925,7 @@ class account_move_line(osv.osv):
                         'account_id': vals.get('analytic_account_id', False),
                         'unit_amount': vals.get('quantity', 1.0),
                         'amount': vals.get('debit', 0.0) or vals.get('credit', 0.0),
-                        'general_account_id': vals['account_id'],
+                        'general_account_id': vals.get('account_id', False),
                         'journal_id': journal.analytic_journal_id.id,
                         'ref': vals.get('ref', False),
                     })]
