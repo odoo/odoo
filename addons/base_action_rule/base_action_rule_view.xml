@@ -17,51 +17,6 @@
                     <field name="name" select="1"/>
                     <field name="active"/>
                     <field name="max_level" />
-                    <separator colspan="4" string="Rule lines"/>
-                    <field name="rule_lines" colspan="4" nolabel="1"/>
-                </form>
-            </field>
-           </record>
-
-<!-- Action Rule Tree View -->
-
-           <record id="view_base_action_rule_tree" model="ir.ui.view">
-               <field name="name">base.action.rule.tree</field>
-            <field name="model">base.action.rule</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Action Rule">
-                    <field name="name" colspan="4"/>
-                    <field name="max_level"/>
-                    <field name="rule_lines" colspan="4" nolabel="1"/>
-                </tree>
-            </field>
-           </record>
-
-<!-- Action Rule Action -->
-
-           <record id="base_action_rule_act" model="ir.actions.act_window">
-            <field name="name">Action Rules</field>
-            <field name="res_model">base.action.rule</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_base_action_rule_tree"/>
-        </record>
-
-           <menuitem id="menu_base_action_rule_form"
-               parent="menu_base_action_rule" action="base_action_rule_act" />
-
-           <!--
-            Action Rule Lines Form View
-        -->
-        <record id="view_base_action_rule_line_form" model="ir.ui.view">
-            <field name="name">base.action.rule.line.form</field>
-            <field name="model">base.action.rule.line</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Action Rule Line">
-                    <field name="name" select="1"/>
-                    <field name="active"/>
                     <notebook colspan="4">
                         <page string="Conditions">
                             <group col="2" colspan="2" name="model">
@@ -133,29 +88,35 @@
                     </notebook>
                 </form>
             </field>
-        </record>
+           </record>
 
-<!-- Action Rule Lines Tree View -->
+<!-- Action Rule Tree View -->
 
-        <record id="view_base_action_rule_line_tree" model="ir.ui.view">
-            <field name="name">base.action.rule.line.tree</field>
-            <field name="model">base.action.rule.line</field>
+           <record id="view_base_action_rule_tree" model="ir.ui.view">
+               <field name="name">base.action.rule.tree</field>
+            <field name="model">base.action.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Action Rule Lines">
-                    <field name="name"/>
-                    <field name="active"/>
+                <tree string="Action Rule">
+                    <field name="name" colspan="4"/>
+                    <field name="max_level"/>
                 </tree>
             </field>
+           </record>
+
+<!-- Action Rule Action -->
+
+           <record id="base_action_rule_act" model="ir.actions.act_window">
+            <field name="name">Action Rules</field>
+            <field name="res_model">base.action.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_base_action_rule_tree"/>
         </record>
 
-        <act_window
-            domain="[('rule_id', '=', active_id)]"
-            id="act_rule_lines_open"
-            name="Open Rule Lines"
-            context="{'rule_id': active_id}"
-            res_model="base.action.rule.line"
-            src_model="base.action.rule"/>
+           <menuitem id="menu_base_action_rule_form"
+               parent="menu_base_action_rule" action="base_action_rule_act" />
+
 
     </data>
 </openerp>

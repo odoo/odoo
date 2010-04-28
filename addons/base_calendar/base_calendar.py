@@ -1213,7 +1213,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         if isinstance(select, (str, int, long)):
             return ids and ids[0] or False
         return ids
-
+    
     def compute_rule_string(self, cr, uid, datas, context=None, *args):
         """
         Compute rule string.

@@ -33,7 +33,7 @@
         <record id="view_report_crm_claim_form" model="ir.ui.view">
             <field name="name">crm.claim.report.form</field>
             <field name="model">crm.claim.report</field>
-            <field name="inherit_id" ref="view_crm_case_form"/>
+            <field name="inherit_id" ref="crm.view_crm_case_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="nbr" position="after">
@@ -66,7 +66,7 @@
         <record id="view_report_crm_claim_filter" model="ir.ui.view">
             <field name="name">crm.claim.report.select</field>
             <field name="model">crm.claim.report</field>
-            <field name="inherit_id" ref="view_crm_case_filter"/>
+            <field name="inherit_id" ref="crm.view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
             <data>

@@ -22,7 +22,7 @@
 from osv import fields
 from osv import orm
 from osv import osv
-import crm
+from crm import crm
 
 class crm_helpdesk(osv.osv):
     """ Helpdesk Cases """

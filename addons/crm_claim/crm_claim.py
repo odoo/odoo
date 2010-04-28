@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-import crm
+from crm import crm
 
 class crm_claim(osv.osv):
     """

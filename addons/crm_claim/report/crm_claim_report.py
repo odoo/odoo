@@ -21,7 +21,7 @@
 
 from osv import fields,osv
 import tools
-import crm_report
+from crm.report import crm_report
 
 
 class crm_claim_report(osv.osv):

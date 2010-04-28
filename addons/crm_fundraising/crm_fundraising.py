@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv, orm
-import crm
+from crm import crm
 
 class crm_fundraising(osv.osv):
     """ Fund Raising Cases """
@@ -73,5 +73,3 @@ class crm_fundraising(osv.osv):
     }
 
 crm_fundraising()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
