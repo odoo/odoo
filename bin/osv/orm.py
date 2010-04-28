@@ -3281,8 +3281,8 @@ class orm(orm_template):
                 del vals[self._inherits[table]]
 
             record_id = tocreate[table].pop('id', None)
-
-            if record_id is None:
+            
+            if record_id is None or not record_id:
                 record_id = self.pool.get(table).create(cr, user, tocreate[table], context=context)
             else:
                 self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=context)
