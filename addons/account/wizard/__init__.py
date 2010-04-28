@@ -22,7 +22,7 @@
 import account_automatic_reconcile
 import account_move_line_reconcile_select
 import account_move_line_unreconcile_select
-import wizard_reconcile
+import account_reconcile
 import account_unreconcile
 import account_invoice_refund
 import account_pay_invoice
