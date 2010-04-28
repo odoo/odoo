@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- Leads by user and section Tree View -->
+
+        <record id="view_report_crm_lead_tree" model="ir.ui.view">
+            <field name="name">crm.lead.report.tree</field>
+            <field name="model">crm.lead.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            <tree string="Leads">
+				<field name="name" invisible="1"/>
+				<field name="month" invisible="1"/>
+				<field name="section_id" invisible="1"/>
+				<field name="user_id" invisible="1"/>
+    			<field name="company_id" invisible="1"/>
+				<field name="partner_id" invisible="1"/>
+				<field name="day" invisible="1"/>
+				<field name="nbr" string="#Leads" sum="#Leads"/>
+                <field name="delay_close" sum='Avg Closing Delay'/>
+                <field name="state"  invisible="1"/>
+                <field name="stage_id"  invisible="1"/>
+                <field name="categ_id" invisible="1"/>
+             </tree>
+            </field>
+        </record>
+
+<!-- Leads by user and section Form View -->
+
+        <record id="view_report_crm_lead_form" model="ir.ui.view">
+            <field name="name">crm.lead.report.form</field>
+            <field name="model">crm.lead.report</field>
+            <field name="inherit_id" ref="view_crm_case_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="nbr" position="after">
+                    <field name="delay_close"/>
+                    <field name="stage_id"/>
+                </field>
+            </field>
+        </record>
+
+<!-- Leads by user and section Graph View -->
+
+        <record id="view_report_crm_lead_graph" model="ir.ui.view">
+            <field name="name">crm.lead.report.graph</field>
+            <field name="model">crm.lead.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Leads" type="bar">
+                    <field name="state"/>
+                    <field name="nbr" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
+
+<!-- Leads by user and section Search View -->
+
+        <record id="view_report_crm_lead_filter" model="ir.ui.view">
+            <field name="name">crm.lead.report.select</field>
+            <field name="model">crm.lead.report</field>
+            <field name="inherit_id" ref="view_crm_case_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr='//search[@string="Search"]/group[@string="Extended options..."]/filter[@string="Cancel"]' position='after'>
+                <group>
+            	    <separator orientation="vertical"/>
+            	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+	            </group>
+            	</xpath>
+			<xpath
+				expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
+				position='after'>
+				<filter string="Stage" icon="terp-sale" domain="[]"
+					context="{'group_by':'stage_id'}" />
+			</xpath>
+			</data>
+            </field>
+        </record>
+
+<!-- Leads by user and section Action -->
+
+        <record id="action_report_crm_lead" model="ir.actions.act_window">
+            <field name="name">Leads</field>
+            <field name="res_model">crm.lead.report</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="view_report_crm_lead_filter"/>
+
+        </record>
+
+       <record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_crm_lead_tree"/>
+            <field name="act_window_id" ref="action_report_crm_lead"/>
+       </record>
+
+       <record model="ir.actions.act_window.view" id="action_report_crm_lead_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_lead_graph"/>
+            <field name="act_window_id" ref="action_report_crm_lead"/>
+       </record>
+
+       <menuitem name="Leads" id="menu_report_crm_leads_tree"
+           groups="base.group_extended"
+           parent="base.next_id_64" action="action_report_crm_lead" />
+
+    </data>
+</openerp>

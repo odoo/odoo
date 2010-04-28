@@ -152,6 +152,18 @@ class base_action_rule(osv.osv):
     """ Base Action Rule """
     _inherit = 'base.action.rule'
     _description = 'Action Rules'
+    
+    _columns = {
+        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'trg_max_history': fields.integer('Maximum Communication History'),
+        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),
+        'regex_history' : fields.char('Regular Expression on Case History', size=128),
+        'act_section_id': fields.many2one('crm.case.section', 'Set Team to'),
+        'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
+        'act_mail_to_partner': fields.boolean('Mail to partner',help="Check this \
+                                if you want the rule to send an email to the partner."),
+    }
+    
 
     def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from',False), context={}):
         body = self.format_mail(obj, body)
@@ -168,6 +180,17 @@ class base_action_rule(osv.osv):
         if not emailfrom:
             raise osv.except_osv(_('Error!'),
                     _("No E-Mail ID Found for your Company address!"))
+        if hasattr(obj, 'section_id'):
+            smtp_pool = self.pool.get('email.smtpclient')
+            if obj.section_id and obj.section_id.server_id:
+                flag = smtp_pool.send_email(
+                    cr=cr,
+                    uid=uid, 
+                    server_id=obj.section_id.server_id.id,
+                    emailto=emails,
+                    subject=name, 
+                    body="<pre>%s</pre>" % body,
+                )
         return tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, openobject_id=str(obj.id))
     
     def do_check(self, cr, uid, action, obj, context={}):
@@ -207,7 +230,7 @@ class base_action_rule(osv.osv):
         res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
         
-        if hasattr(action, act_section_id) and action.act_section_id:
+        if hasattr(action, 'act_section_id') and action.act_section_id:
             obj.section_id = action.act_section_id
             write['section_id'] = action.act_section_id.id
 
@@ -231,13 +254,6 @@ class base_action_rule(osv.osv):
         return True
 
 
-base_action_rule()
-
-class base_action_rule_line(osv.osv):
-    """ Base Action Rule Line """
-    _inherit = 'base.action.rule.line'
-    _description = 'Base Action Rule Line'
-
     def state_get(self, cr, uid, context={}):
 
         """@param self: The object pointer
@@ -245,28 +261,8 @@ class base_action_rule_line(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
 
-        res = super(base_action_rule_line, self).state_get(cr, uid, context=context)
-        return res + [('escalate','Escalate')] + crm.AVAILABLE_STATES
+        res = super(base_action_rule, self).state_get(cr, uid, context=context)
+        return res + [('escalate', 'Escalate')] + crm.AVAILABLE_STATES
 
-    def priority_get(self, cr, uid, context={}):
 
-        """@param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values """
-
-        res = super(base_action_rule_line, self).priority_get(cr, uid, context=context)
-        return res + crm.AVAILABLE_PRIORITIES
-
-    _columns = {
-        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'trg_max_history': fields.integer('Maximum Communication History'),
-        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),
-        'regex_history' : fields.char('Regular Expression on Case History', size=128),
-        'act_section_id': fields.many2one('crm.case.section', 'Set Team to'),
-        'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
-        'act_mail_to_partner': fields.boolean('Mail to partner',help="Check this \
-                                if you want the rule to send an email to the partner."),
-    }
-
-base_action_rule_line()
+base_action_rule()

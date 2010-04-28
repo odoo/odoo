@@ -16,52 +16,9 @@
                 <form string="Action Rule">
                     <field name="name" select="1"/>
                     <field name="active"/>
+                    <field name="sequence"/>
                     <field name="max_level" />
-                    <separator colspan="4" string="Rule lines"/>
-                    <field name="rule_lines" colspan="4" nolabel="1"/>
-                </form>
-            </field>
-           </record>
-
-<!-- Action Rule Tree View -->
-
-           <record id="view_base_action_rule_tree" model="ir.ui.view">
-               <field name="name">base.action.rule.tree</field>
-            <field name="model">base.action.rule</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Action Rule">
-                    <field name="name" colspan="4"/>
-                    <field name="max_level"/>
-                    <field name="rule_lines" colspan="4" nolabel="1"/>
-                </tree>
-            </field>
-           </record>
-
-<!-- Action Rule Action -->
-
-           <record id="base_action_rule_act" model="ir.actions.act_window">
-            <field name="name">Action Rules</field>
-            <field name="res_model">base.action.rule</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_base_action_rule_tree"/>
-        </record>
-
-           <menuitem id="menu_base_action_rule_form"
-               parent="menu_base_action_rule" action="base_action_rule_act" />
-
-           <!--
-            Action Rule Lines Form View
-        -->
-        <record id="view_base_action_rule_line_form" model="ir.ui.view">
-            <field name="name">base.action.rule.line.form</field>
-            <field name="model">base.action.rule.line</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Action Rule Line">
-                    <field name="name" select="1"/>
-                    <field name="active"/>
+                    <field name="domain" colspan="4"/>
                     <notebook colspan="4">
                         <page string="Conditions">
                             <group col="2" colspan="2" name="model">
@@ -80,11 +37,6 @@
                                 <field name="trg_state_to"/>
                             </group>
                             <group col="2" colspan="2">
-                                <separator colspan="4" string="Conditions on Priority Range"/>
-                                <field name="trg_priority_from"/>
-                                <field name="trg_priority_to"/>
-                            </group>
-                            <group col="2" colspan="2">
                                 <separator colspan="4" string="Conditions on Timing"/>
                                 <field name="trg_date_type"/>
                                 <label align="1.0" string="Delay After Trigger Date:"/>
@@ -100,7 +52,6 @@
                             <separator colspan="4" string="Fields to Change"/>
                             <field name="act_user_id"/>
                             <field name="act_state"/>
-                            <field name="act_priority"/>
                             <separator colspan="4" string="E-Mail Reminders (includes the content of the object)"/>
                             <field name="act_remind_partner"/>
                             <field name="act_remind_attach"/>
@@ -117,7 +68,9 @@
                             <field name="act_mail_to_user"/>
                             <field name="act_mail_to_watchers"/>
                             <field colspan="4" name="act_mail_to_email"/>
-                            <field colspan="4" name="act_mail_body" attrs="{'required':[('act_remind_user','=',True)]}"/>
+                            <separator colspan="4" string="Mail Body"/>
+                            <field colspan="4" name="act_mail_body"
+                            	nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
                             <separator colspan="4" string="Special Keywords to Be Used in The Body"/>
                             <label align="0.0" string="%%(object_id)s = Object ID" colspan="2"/>
                             <label align="0.0" string="%%(object_subject)s = Object subject" colspan="2"/>
@@ -133,29 +86,37 @@
                     </notebook>
                 </form>
             </field>
-        </record>
+           </record>
 
-<!-- Action Rule Lines Tree View -->
+<!-- Action Rule Tree View -->
 
-        <record id="view_base_action_rule_line_tree" model="ir.ui.view">
-            <field name="name">base.action.rule.line.tree</field>
-            <field name="model">base.action.rule.line</field>
+           <record id="view_base_action_rule_tree" model="ir.ui.view">
+               <field name="name">base.action.rule.tree</field>
+            <field name="model">base.action.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Action Rule Lines">
-                    <field name="name"/>
-                    <field name="active"/>
+                <tree string="Action Rule">
+                    <field name="name" colspan="4"/>
+                    <field name="sequence"/>
+                    <field name="max_level"/>
+                    <field name="domain"/>
                 </tree>
             </field>
+           </record>
+
+<!-- Action Rule Action -->
+
+           <record id="base_action_rule_act" model="ir.actions.act_window">
+            <field name="name">Action Rules</field>
+            <field name="res_model">base.action.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_base_action_rule_tree"/>
         </record>
 
-        <act_window
-            domain="[('rule_id', '=', active_id)]"
-            id="act_rule_lines_open"
-            name="Open Rule Lines"
-            context="{'rule_id': active_id}"
-            res_model="base.action.rule.line"
-            src_model="base.action.rule"/>
+           <menuitem id="menu_base_action_rule_form"
+               parent="menu_base_action_rule" action="base_action_rule_act" />
+
 
     </data>
 </openerp>
