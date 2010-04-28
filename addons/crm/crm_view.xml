@@ -11,7 +11,7 @@
             <field name="model">crm.case.section</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Case Section">
+                <form string="Sales Team">
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
@@ -19,22 +19,24 @@
                         <field name="resource_calendar_id" select="2"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Case section">
-                            <group col="2" colspan="2">
+                        <page string="Sales Team">
+                            <group col="2" colspan="1">
                                 <separator string="Responsible" colspan="2"/>
                                 <field name="parent_id" select="2" widget="selection"/>
                                 <field name="user_id" select="2"/>
                             </group>
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="1">
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="server_id" select="2"/>
                                 <field name="reply_to" select="2"/>
                             </group>
-                            <group col="2" colspan="2">
-                                <separator string="Section Property" colspan="2"/>
+                            <group col="2" colspan="1">
+                                <separator string="Sales Team Property" colspan="2"/>
                                 <field name="active" select="2"/>
                                 <field name="allow_unlink" select="2"/>
                             </group>
+                            <separator string="Members List" colspan="4"/>
+                            <field name="member_ids" nolabel="1" colspan="4"/>
                             <separator string="Note" colspan="4"/>
                             <field name="note" select="1" colspan="4" nolabel="1"/>
                         </page>
@@ -51,7 +53,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree string="Case Section">
+                <tree string="Sales Team">
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
                     <field name="user_id" select="1"/>
@@ -62,7 +64,7 @@
 <!-- Case Sections Action -->
 
         <record id="crm_case_section_act" model="ir.actions.act_window">
-            <field name="name">Sections</field>
+            <field name="name">Sales Team</field>
             <field name="res_model">crm.case.section</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>

@@ -59,6 +59,7 @@ class crm_case_section(osv.osv):
                         true, it will allow you to hide the sales team without removing it."), 
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"), 
         'user_id': fields.many2one('res.users', 'Responsible User'), 
+        'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put \
                         in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
@@ -66,6 +67,7 @@ class crm_case_section(osv.osv):
         'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
         'server_id':fields.many2one('email.smtpclient', 'Server ID'),
         'note': fields.text('Description'),
+        
     }
 
     _defaults = {
@@ -78,15 +80,16 @@ class crm_case_section(osv.osv):
     ]
 
     def _check_recursion(self, cr, uid, ids):
+
         """
-        Checks for recursion level for sections
+        Checks for recursion level for sales team
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of section ids
+        @param ids: List of Sales team ids
         """
         level = 100
-
+ 
         while len(ids):
             cr.execute('select distinct parent_id from crm_case_section where id =ANY(%s)', (ids,))
             ids = filter(None, map(lambda x: x[0], cr.fetchall()))
@@ -97,7 +100,7 @@ class crm_case_section(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive sections.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive Sales team.', ['parent_id'])
     ]
 
     def name_get(self, cr, uid, ids, context=None):
@@ -105,7 +108,7 @@ class crm_case_section(osv.osv):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of section ids
+        @param ids: List of sales team ids
         """
         if not context:
             context = {}
@@ -136,8 +139,8 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
         'object_id': fields.many2one('ir.model', 'Object Name'), 
     }
-    def _find_object_id(self, cr, uid, context=None):
 
+    def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -151,8 +154,8 @@ class crm_case_categ(osv.osv):
 
     _defaults = {
         'object_id' : _find_object_id
-    }
 
+    }
 crm_case_categ()
 
 
@@ -282,6 +285,7 @@ class crm_case(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Case IDs
         @param context: A standard dictionary for contextual values
+        @return:Dictionary of History Ids
         """
         if not context:
             context = {}
@@ -524,7 +528,6 @@ class crm_case(osv.osv):
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
-
         model_obj = self.pool.get('ir.model')
         obj = self.pool.get('crm.case.log')
         for case in cases:

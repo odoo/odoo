@@ -92,8 +92,8 @@ class crm_opportunity(osv.osv):
                             resource_id = resource_ids[0]
 
                     duration = float(ans.days)
-                    if opportunity.section_id.resource_calendar_id:
-                        duration =  float(ans.days) * 24
+                    if opportunity.section_id and opportunity.section_id.resource_calendar_id:
+                        duration =  float(ans.days) * 24                        
                         new_dates = cal_obj.interval_get(cr,
                             uid,
                             opportunity.section_id.resource_calendar_id and opportunity.section_id.resource_calendar_id.id or False,
@@ -231,7 +231,7 @@ class crm_opportunity(osv.osv):
             }
             value = {
                 'name': _('Meetings'),
-                'domain': "[('user_id','=',%s)]" % (uid),
+                'domain': "[('user_id','=',%s),('opportunity_id','=',%s)]" % (uid,opp.id),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'calendar,form,tree',
@@ -242,7 +242,6 @@ class crm_opportunity(osv.osv):
                 'search_view_id': res['res_id'],
                 'nodestroy': True
             }
-
         return value
 
 crm_opportunity()
