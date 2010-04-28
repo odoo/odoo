@@ -7,7 +7,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Account Report">
-                <field name="name" invisible="1"/>
+                <field name="name" invisible="1" string="Account"/>
                 <field name="code" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="company_id" invisible="1"/>
@@ -48,8 +48,8 @@
 	                    	string="Average Rate"
 	                    	domain="[('currency_mode','=','average')]"/>
 	            <separator orientation="vertical"/>
+            	<field name="name" string="Account"/>
             	<field name="code"/>
-            	<field name="name"/>
                 <field name="company_id" widget="selection"/>
                 </group>
                 <newline/>
@@ -59,8 +59,11 @@
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                	<filter string="Company" name="Company" icon="terp-account" context="{'group_by':'company_id'}"/>
-                	<filter string="Outgoing Currencies Rate" icon="terp-account" context="{'group_by':'currency_mode'}"/>
+                	<filter string="Account" name="Account" icon="terp-account" context="{'group_by':'name'}"/>
+                	<filter string="Code"  icon="terp-account" context="{'group_by':'code'}"/>
+                	<filter string="Company"  icon="terp-account" context="{'group_by':'company_id'}"/>
+                	<separator orientation="vertical"/>
+                	<filter string="Currencies Rate" icon="terp-account" context="{'group_by':'currency_mode'}"/>
                     <filter string="Internal Type" icon="terp-account" context="{'group_by':'type'}"/>
                     <filter string="Account Type" icon="terp-account" context="{'group_by':'user_type'}"/>
                 </group>
@@ -73,7 +76,7 @@
         <field name="res_model">account.account.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{"search_default_Company":1,"search_default_At Date":1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{"search_default_Account":1,"search_default_At Date":1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_account_account_report_search"/>
     </record>
 
