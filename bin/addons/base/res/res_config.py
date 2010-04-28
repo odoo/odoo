@@ -58,8 +58,18 @@ class res_config_configurable(osv.osv_memory):
                                   'getting next %s' % todos)
         active_todos = todos.search(cr, uid, [('state','=','open')],
                                     limit=1)
+        dont_skip_todo = True
         if active_todos:
-            return todos.browse(cr, uid, active_todos[0], context=None)
+            todo_obj = todos.browse(cr, uid, active_todos[0], context=None)
+            todo_groups = map(lambda x:x.id, todo_obj.groups_id)
+            if todo_groups:
+                cr.execute("select 1 from res_groups_users_rel where uid=%s and gid=ANY(%s)",(uid, todo_groups,))
+                dont_skip_todo = bool(cr.fetchone())
+            if dont_skip_todo:
+                return todos.browse(cr, uid, active_todos[0], context=None)
+            else:
+                todos.write(cr, uid, active_todos[0], {'state':'skip'}, context=None)
+                return self._next_action(cr, uid)
         return None
 
     def _set_previous_todo(self, cr, uid, state):
