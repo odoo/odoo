@@ -95,6 +95,8 @@ between mails and Open ERP.""",
         'report/crm_phonecall_report_view.xml',
 
         'process/crm_configuration_process.xml',
+        
+        'crm_installer_view.xml', 
     ],
     'demo_xml': [
         'crm_demo.xml',
@@ -103,8 +105,8 @@ between mails and Open ERP.""",
         'crm_opportunity_demo.xml',
         'crm_phonecall_demo.xml'
     ],
-    'test': [
-            'test/test_crm_meeting.yml', 
+    'test1': [
+#            'test/test_crm_meeting.yml', 
             'test/test_crm_lead.yml',
             'test/test_crm_opportunity.yml',
             'test/test_crm_phonecall.yml', 
