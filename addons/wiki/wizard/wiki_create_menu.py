@@ -28,9 +28,9 @@ class wiki_create_menu(osv.osv_memory):
     _description = "Wizard Create Menu"
 
     _columns = {
-        'menu_name': fields.char('Menu Name', size=256, select=True, required=True), 
-        'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True), 
-        'page': fields.many2one('wiki.wiki', 'Group Home Page'), 
+        'menu_name': fields.char('Menu Name', size=256, select=True, required=True),
+        'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
+        'page': fields.many2one('wiki.wiki', 'Group Home Page'),
     }
 
     def wiki_menu_create(self, cr, uid, ids, context):
@@ -46,21 +46,21 @@ class wiki_create_menu(osv.osv_memory):
 
         for menu in self.browse(cr, uid, ids):
             menu_id = self.pool.get('ir.ui.menu').create(cr, uid, {
-                            'name':menu.menu_name, 
-                            'parent_id':menu.menu_parent_id.id, 
-                            'icon': 'STOCK_DIALOG_QUESTION', 
+                            'name': menu.menu_name,
+                            'parent_id':menu.menu_parent_id.id,
+                            'icon': 'STOCK_DIALOG_QUESTION',
                             'action': 'ir.actions.act_window,'+ str(action_id)
                             }, context)
             home = menu.page.id
             group_id = menu.id
             res = {
-                    'home':home, 
+                    'home': home,
                     }
             self.pool.get('wiki.groups').write(cr, uid, ids, res)
-            self.pool.get('wiki.groups.link').create(cr, uid, 
+            self.pool.get('wiki.groups.link').create(cr, uid,
                                 {'group_id': group_id, 'action_id': menu_id})
-
         return {}
+
 
 wiki_create_menu()
 

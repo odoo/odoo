@@ -30,19 +30,26 @@ import tools
 #objects_proxy = netsvc.ExportService.getService('object').__class__
 class recording_objects_proxy(osv_pool):
     def execute(self, *args, **argv):
-        if len(args) >= 6 and isinstance(args[5], dict):
+        if args[3] == 'create':
+            _old_args = args[4].copy()
+        elif args[3] == 'write':
             _old_args = args[5].copy()
+        elif len(args) >= 5 and isinstance(args[4], dict):
+            _old_args = args[4].copy()
         else:
             _old_args = None
         res = super(recording_objects_proxy, self).execute(*args, **argv)
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
+        
         if mod and mod.recording:
             if args[3] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink'):
                 if _old_args is not None:
-                    args[5].update(_old_args)
-                    if args[5]:
-                        mod.recording_data.append(('query', args, argv,res))
+                    if args[3] == 'create':
+                        args[4].update(_old_args)
+                    elif args[3] == 'write':
+                        args[5].update(_old_args)
+                    mod.recording_data.append(('query', args, argv,res))
         return res
 
     def exec_workflow(self, *args, **argv):
@@ -125,7 +132,8 @@ class base_module_record(osv.osv):
                 name = filter(lambda x: x in string.letters, (data.get('name','') or '').lower())
             except:
                 name=''
-            val = model.replace('.','_')+'_'+name+ str(i)
+#            name=data.get('name','') or ''.lower()
+            val = model.replace('.','_')+'_'+ name + str(i)
             i+=1
             if val not in self.ids.values():
                 break
@@ -146,7 +154,6 @@ class base_module_record(osv.osv):
     
     def _create_record(self, cr, uid, doc, model, data, record_id, noupdate=False):
         
-        data_pool = self.pool.get('ir.model.data')
         model_pool = self.pool.get(model)
         
         record = doc.createElement('record')
@@ -196,12 +203,26 @@ class base_module_record(osv.osv):
                             fname = model_pool._columns[key]._fields_id
                         else:
                             fname = model_pool._inherit_fields[key][2]._fields_id
-                        valitem[2][fname] = record_id
-                        newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
-                        if not newid:
+                        if valitem[0] == 0:
                             newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
+                            valitem[1]=newid
+                        else:
+                            newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
+                            if not newid:
+                                newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
+                                valitem[1]=newid
                         self.ids[(fields[key]['relation'], valitem[1])] = newid
-
+#                    if valitem[0] in (0,1):
+#                        if key in model_pool._columns:
+#                            fname = model_pool._columns[key]._fields_id
+#                        else:
+#                            fname = model_pool._inherit_fields[key][2]._fields_id
+#                        valitem[2][fname] = record_id
+#                        newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
+#                        if not newid:
+#                            newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
+#                        self.ids[(fields[key]['relation'], valitem[1])] = newid
+#
                         childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
                         noupdate = noupdate or update
                         record_list += childrecord
@@ -245,7 +266,7 @@ class base_module_record(osv.osv):
         for key,val in data.items():  
             if ((key in defaults[model]) and (val ==  defaults[model][key])) and not(fields[key].get('required',False)):
                 continue
-            if not (val or (fields[key]['type']=='boolean')):
+            if not (val or (fields[key]['type']=='function')):
                 continue
             elif fields[key]['type'] in ('boolean',):
                 if not val:
@@ -267,12 +288,9 @@ class base_module_record(osv.osv):
                             fname = model_pool._columns[key]._fields_id
                         else:
                             fname = model_pool._inherit_fields[key][2]._fields_id
-                        valitem[2][fname] = record_id
-                        newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
-                        if not newid:
-                            newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
-                        self.ids[(fields[key]['relation'], valitem[1])] = newid
-                        childrecord = self._create_yaml_record(cr, uid, fields[key]['relation'],valitem[2], newid)
+                        del valitem[2][fname] #delete parent_field from child's fields list
+                        
+                        childrecord = self._create_yaml_record(cr, uid, fields[key]['relation'],valitem[2], None)
                         items[0].append(childrecord['attrs'])
                 attrs[key] = items
             elif fields[key]['type'] in ('many2many',):
@@ -289,11 +307,11 @@ class base_module_record(osv.osv):
                 if m2m[0]:
                     attrs[key] = m2m
             else:
-                val=val.replace('"','\'')
                 try:
                     attrs[key]=str(val)
                 except:
                     attrs[key]=tools.ustr(val)
+                attrs[key]=attrs[key].replace('"','\'')
         record['attrs'] = attrs
         return record
 
@@ -311,7 +329,7 @@ class base_module_record(osv.osv):
         for f in filter(lambda a: isinstance(obj._columns[a], fields.function)\
                     and (not obj._columns[a].store),obj._columns):
             del data[f]
-
+            
         for key,val in data.items():
             if result.has_key(key):
                 continue
@@ -361,16 +379,16 @@ class base_module_record(osv.osv):
     def _generate_object_xml(self, cr, uid, rec, recv, doc, result=None):
         record_list = []
         noupdate = False
-        if rec[4]=='write':
-            for id in rec[5]:
-                id,update = self._get_id(cr, uid, rec[3], id)
+        if rec[3]=='write':
+            for id in rec[4]:
+                id,update = self._get_id(cr, uid, rec[2], id)
                 noupdate = noupdate or update
                 if not id:
                     continue
-                record,update = self._create_record(cr, uid, doc, rec[3], rec[6], id)
+                record,update = self._create_record(cr, uid, doc, rec[2], rec[5], id)
                 noupdate = noupdate or update
                 record_list += record
-
+                
         elif rec[4] in ('menu_create',):
             for id in rec[5]:
                 id,update = self._get_id(cr, uid, rec[3], id)
@@ -487,7 +505,10 @@ class base_module_record(osv.osv):
                     yaml_file += str(object) + '''\n\n'''
                 else:
                     record= self._generate_object_yaml(cr, uid, rec[1],rec[3])
-                    yaml_file+="!comment Creating an %s record"%(record['model']) + '''\n'''
+                    if self.mode == "create" or self.mode == "copy":
+                        yaml_file+="!comment Creating a %s record"%(record['model']) + '''\n'''
+                    else:
+                        yaml_file+="!comment Modifying a %s record"%(record['model']) + '''\n'''
                     object= yaml.load(unicode('''\n !record %s \n'''%record,'iso-8859-1'))
                     yaml_file += str(object) + '''\n'''
                     attrs=yaml.dump(object.attrs, default_flow_style=False)
