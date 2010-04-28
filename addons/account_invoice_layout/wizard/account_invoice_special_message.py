@@ -18,7 +18,31 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import osv, fields
 
-import account_invoice_special_message
+class account_invoice_special_msg(osv.osv_memory):
+    _name = 'account.invoice.special.msg'
+    _description = 'Account Invoice Special Message'
+
+    _columns = {
+        'message': fields.many2one('notify.message', 'Message', required = True, help="Message to Print at the bottom of report"),
+        }
+
+    def check_report(self, cr, uid, ids, context=None):
+        datas = {}
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids, [])[0]
+        datas = {
+             'ids': context.get('active_ids',[]),
+             'model': 'account.invoice',
+             'form': data
+                 }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'notify_account.invoice',
+            'datas': datas,
+            }
+
+account_invoice_special_msg()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
