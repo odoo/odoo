@@ -289,7 +289,7 @@ class email_server(osv.osv):
         else:
             model_pool = self.pool.get(server.object_id.model)
             if hasattr(model_pool, 'message_new'):
-                res_id = model_pool.message_new(cr, uid, msg, context)fetchmail/fetchmail.py
+                res_id = model_pool.message_new(cr, uid, msg, context)
             else:
                 logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s' % (model_pool._name))
                 return False
