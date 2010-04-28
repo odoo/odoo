@@ -7,10 +7,9 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Timesheet" type="bar">
-                    <field name="name" />
-                	<field name="total_att" operator = "+"/>
-                	<field name="total_ts" operator = "+"/>
-                	<field name="user_id" group = "True"/>
+                    <field name="user_id" />
+                	<field name="quantity" operator = "+"/>
+                	<field name="state" group = "True"/>
                 </graph>
             </field>
         </record>
@@ -25,9 +24,8 @@
                     <field name="user_id" invisible="1"/>
                     <field name="date_from" invisible="1"/>
                     <field name="date_to" invisible="1"/>
-					<field name="total_att" sum="Total Timesheet"/>
-					<field name="total_diff" sum="Total Attendance"/>
-                    <field name="total_ts" sum="Difference"/>
+					<field name="quantity" sum="#Quantity"/>
+					<field name="cost" sum="#Cost"/>
                     <field name="state" invisible="1"/>
                     <field name="department_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
