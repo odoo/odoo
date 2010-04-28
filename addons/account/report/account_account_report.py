@@ -42,7 +42,8 @@ class account_account_report(osv.osv):
       'user_type': fields.many2one('account.account.type', 'Account Type',readonly=True),
       'credit': fields.float('Credit', readonly=True),
       'debit': fields.float('Debit', readonly=True),
-      'balance': fields.float('Balance', readonly=True)
+      'balance': fields.float('Balance', readonly=True),
+      'nbr': fields.integer('#Accounts', readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_account_report')
@@ -50,6 +51,7 @@ class account_account_report(osv.osv):
             create or replace view account_account_report as (
                 select
                     min(a.id) as id,
+                    count(distinct a.id) as nbr,
                     a.name,
                     a.code,
                     a.type as type,

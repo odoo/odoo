@@ -54,6 +54,10 @@ class crm_lead_report(osv.osv):
                         ('object_id.model', '=', 'crm.lead')]"),
          'date_closed': fields.datetime('Closed', readonly=True),
          'date_open': fields.datetime('Opened', readonly=True),
+         'date_deadline': fields.date('Deadline', readonly=True),
+         'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity',readonly=True),
+         'country_id': fields.many2one('res.country', 'Country' , readonly=True),
+         'state_id': fields.many2one('res.country.state', 'State' , readonly=True)
     }
     def init(self, cr):
 
@@ -85,6 +89,10 @@ class crm_lead_report(osv.osv):
                     c.type_id as type_id,
                     c.date_closed as date_closed,
                     c.date_open as date_open,
+                    c.opportunity_id as opportunity_id,
+                    c.country_id as country_id,
+                    c.state_id as state_id,
+                    c.date_deadline as date_deadline,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
@@ -93,6 +101,7 @@ class crm_lead_report(osv.osv):
                      c.state, c.user_id,c.section_id,c.stage_id,categ_id,c.partner_id,c.company_id
                      ,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
                      ,c.priority,c.type_id,c.date_closed,c.date_open
+                     ,c.opportunity_id,c.country_id,c.state_id,c.date_deadline
             )""")
 
 crm_lead_report()

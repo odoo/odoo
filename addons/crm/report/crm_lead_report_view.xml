@@ -26,6 +26,10 @@
                 <field name="type_id" invisible="1"/>
                 <field name="date_closed" invisible="1"/>
                 <field name="date_open" invisible="1"/>
+                <field name="opportunity_id" invisible="1"/>
+                <field name="country_id" invisible="1"/>
+                <field name="state_id" invisible="1"/>
+                <field name="date_deadline" invisible="1"/>
              </tree>
             </field>
         </record>
@@ -78,7 +82,16 @@
             	    <field name="priority" />
 	                <field name="type_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
 	                <newline/>
+            	    <field name="opportunity_id" />
+            	    <field name="partner_id" />
+            	    <separator orientation="vertical"/>
+            	    <field name="country_id" />
+            	    <field name="state_id" />
+            	    <separator orientation="vertical"/>
+            	    <field name="date_deadline" />
+	                <newline/>
 	                <field name="date_closed" />
+	                <separator orientation="vertical"/>
 	                <field name="date_open" />
 	            </group>
             	</xpath>
@@ -96,6 +109,16 @@
                      context="{'group_by':'priority'}" />
                  <filter string="Type" icon="terp-sale" domain="[]"
                      context="{'group_by':'type_id'}" />
+                 <separator orientation="vertical"/>
+                 <filter string="Opportunity" icon="terp-sale" domain="[]"
+                     context="{'group_by':'opportunity_id'}" />
+                 <filter string="Partner" icon="terp-sale" domain="[]"
+                     context="{'group_by':'partner_id'}" />
+                 <newline/>
+                 <filter string="Country" icon="terp-sale" domain="[]"
+                     context="{'group_by':'country_id'}" />
+                 <filter string="State" icon="terp-sale" domain="[]"
+                     context="{'group_by':'state_id'}" />
              </xpath>
 			</data>
             </field>
