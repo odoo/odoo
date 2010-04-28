@@ -43,7 +43,7 @@ class pos_make_payment(osv.osv_memory):
          @return: A dictionary which of fields with values. 
         """
         res = super(pos_make_payment, self).default_get(cr, uid, fields, context=context)
-        record_id = context and context.get('active_id',False)  
+        record_id = context and context.get('record_id',False)  
         j_obj = self.pool.get('account.journal')
         company_id = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
         journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
@@ -81,7 +81,7 @@ class pos_make_payment(osv.osv_memory):
         
     def view_init(self, cr, uid, fields_list, context=None):
         res = super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
-        record_id = context and context.get('active_id', False) or False        
+        record_id = context and context.get('record_id', False) or False        
         order = self.pool.get('pos.order').browse(cr, uid, record_id)
         if not order.lines:
                 raise osv.except_osv('Error!','No order lines defined for this sale ')
@@ -103,8 +103,7 @@ class pos_make_payment(osv.osv_memory):
         res = super(pos_make_payment, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         if record_id:
             order = self.pool.get('pos.order').browse(cr, uid, record_id)
-            amount = order.amount_total - order.amount_paid
-            if amount==0.0:
+            if order.amount_total == order.amount_paid:
                 res['arch'] = """ <form string="Make Payment" colspan="4">
                                 <group col="2" colspan="2">
                                     <label string="Do you want to print the Receipt?" colspan="4"/>
@@ -122,13 +121,13 @@ class pos_make_payment(osv.osv_memory):
         if the order is not paid: continue payment,
         if the order is paid print invoice (if wanted) or ticket.
         """
-        record_id = context and context.get('active_id',False)      
+        record_id = context and context.get('record_id',False)      
         order_obj = self.pool.get('pos.order')
         jrnl_obj = self.pool.get('account.journal')        
         order = order_obj.browse(cr, uid, record_id, context)
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids)[0]
-
+        
         # Todo need to check ...
         if amount !=0.0:
             invoice_wanted = data['invoice_wanted']
@@ -145,6 +144,7 @@ class pos_make_payment(osv.osv_memory):
             if order.partner_id and order.invoice_wanted:
                 return self.create_invoice(cr,uid,ids,context)
             else:
+                context.update({'flag': True})                
                 order_obj.action_paid(cr,uid,[record_id],context)                
                 order_obj.write(cr, uid, [record_id],{'state':'paid'})                            
                 return self.print_report(cr, uid, ids, context)  
@@ -159,10 +159,10 @@ class pos_make_payment(osv.osv_memory):
     
     def create_invoice(self, cr, uid, ids, context):
         wf_service = netsvc.LocalService("workflow")
-        record_ids = context and context.get('active_ids',False)      
+        record_ids = [context and context.get('record_id',False)]      
         for i in record_ids:
             wf_service.trg_validate(uid, 'pos.order', i, 'invoice', cr)
-        datas = {'ids' : context.get('active_ids', [])}        
+        datas = {'ids' : context.get('record_id', [])}        
         return { 
                 'type' : 'ir.actions.report.xml',
                 'report_name':'pos.invoice',
@@ -180,7 +180,8 @@ class pos_make_payment(osv.osv_memory):
          @param context: A standard dictionary 
          @return : retrun report
         """        
-        datas = {'ids' : context.get('active_ids',[])}
+        record_id=context.get('record_id',[])        
+        datas = {'ids' : [record_id]}
         res =  {}        
         datas['form'] = res
 
