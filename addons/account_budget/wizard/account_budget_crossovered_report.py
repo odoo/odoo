@@ -18,37 +18,41 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
-import wizard
 
-dates_form = '''<?xml version="1.0"?>
-<form string="Select Options">
-    <field name="date_from"/>
-    <field name="date_to"/>
-</form>'''
+from osv import fields, osv
 
-dates_fields = {
-    'date_from': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-    'date_to': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-}
+class account_budget_crossvered_report(osv.osv_memory):
 
-class wizard_report_summary(wizard.interface):
-
-    def _default(self, cr, uid, data, context):
-        data['form']['report']='analytic-one'
-        return data['form']
-
-    states = {
-        'init': {
-            'actions': [_default],
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel', 'gtk-cancel'),('report','Print', 'gtk-print', True)]}
-        },
-        'report': {
-            'actions': [],
-            'result': {'type':'print', 'report':'crossovered.budget.report', 'state':'end'}
+    _name = 'account.budget.crossvered.report'
+    _description = 'Account Budget crossvered report'
+    _columns = {
+        'date_from': fields.date('Start of period', required=True),
+        'date_to': fields.date('End of period', required=True),
         }
-    }
-wizard_report_summary('wizard.crossovered.budget.summary')
+    _defaults= {
+        'date_from': time.strftime('%Y-01-01'),
+        'date_to': time.strftime('%Y-%m-%d'),
+        }
+
+    def check_report(self, cr, uid, ids, context=None):
+        datas = {}
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids)[0]
+        datas = {
+             'ids': context.get('active_ids',[]),
+             'model': 'crossovered.budge',
+             'form': data
+                 }
+        datas['form']['report']='analytic-full'
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'crossovered.budget.report',
+            'datas': datas,
+            }
+
+account_budget_crossvered_report()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

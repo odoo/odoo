@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -51,9 +51,15 @@ Three reports are available:
         'security/ir.model.access.csv',
         'security/account_budget_security.xml',
         'account_budget_wizard.xml',
+        'wizard/account_budget_spread_view.xml',
         'crossovered_budget_view.xml',
         'crossovered_budget_report.xml',
-        'crossovered_budget_workflow.xml'
+        'crossovered_budget_workflow.xml',
+        'wizard/account_budget_analytic_view.xml',
+        'wizard/account_budget_report_view.xml',
+        'wizard/account_budget_spread_view.xml',
+        'wizard/account_budget_crossovered_summary_report_view.xml',
+        'wizard/account_budget_crossovered_report_view.xml',
     ],
     'demo_xml': ['crossovered_budget_demo.xml'],
     'installable': True,

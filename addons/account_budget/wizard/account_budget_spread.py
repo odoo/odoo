@@ -18,40 +18,27 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import wizard
 import netsvc
+from osv import fields, osv
+import decimal_precision as dp
 
-_spread_form = '''<?xml version="1.0"?>
-<form string="Spread">
-    <field name="fiscalyear"/>
-    <field name="amount"/>
-</form>'''
+class account_budget_spread(osv.osv_memory):
 
-_spread_fields = {
-    'fiscalyear': {'string':'Fiscal Year', 'type':'many2one', 'relation':'account.fiscalyear', 'required':True},
-    'amount': {'string':'Amount', 'type':'float', 'digits':(16,2)},
-}
+    _name = 'account.budget.spread'
+    _description = 'Account Budget spread '
+    _columns = {
+        'fiscalyear': fields.many2one('account.fiscalyear','Fiscal Year', required=True),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
+        }
 
-class wizard_budget_spread(wizard.interface):
-    def _spread(self, cr, uid, data, context):
+    def check_spread(self, cr, uid, ids, context=None):
         service = netsvc.LocalService("object_proxy")
-        form = data['form']
-        res = service.execute(cr.dbname, uid, 'account.budget.post', 'spread', data['ids'], form['fiscalyear'], form['amount'])
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids, [])[0]
+        res = service.execute(cr.dbname, uid, 'account.budget.post', 'spread', context['active_ids'], data['fiscalyear'], data['amount'])
         return {}
 
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type':'form', 'arch':_spread_form, 'fields':_spread_fields, 'state':[('end','Cancel'),('spread','Spread','',True)]}
-        },
-        'spread': {
-            'actions': [_spread],
-            'result': {'type':'state', 'state':'end'}
-        }
-    }
-wizard_budget_spread('account.budget.spread')
-
+account_budget_spread()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
