@@ -40,7 +40,6 @@ class olap_load_column(osv.osv_memory):
         model_data_ids = self.pool.get('ir.model.data').search(cr, uid, \
                             [('model', '=', 'ir.ui.view'), \
                             ('name', '=', 'view_olap_database_columns_form')], context={})
-        print "model_ids", model_data_ids
         resource_id = self.pool.get('ir.model.data').read(cr, uid, \
                                 model_data_ids, fields=['res_id'])[0]['res_id']
         return {
