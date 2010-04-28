@@ -461,13 +461,13 @@ property or property parameter."),
             body = html_invitation % body_vals
             if mail_to and email_from:
                 tools.email_send(
-                        email_from, 
-                        mail_to, 
-                        sub, 
-                        body, 
-                        subtype='html', 
-                        reply_to=email_from
-                    )
+                    email_from,
+                    mail_to,
+                    sub,
+                    body,
+                    subtype='html',
+                    reply_to=email_from
+                )
             return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
@@ -659,41 +659,41 @@ class calendar_alarm(osv.osv):
     __attribute__ = {}
 
     _columns = {
-            'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'), 
-            'name': fields.char('Summary', size=124, help="""Contains the text to be \
-                        used as the message subject for email \
-                        or contains the text to be used for display"""), 
-            'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
-                    ('procedure', 'Procedure'), ('email', 'Email') ], 'Action', \
-                    required=True, help="Defines the action to be invoked when an alarm is triggered"), 
-            'description': fields.text('Description', help='Provides a more complete \
-                                description of the calendar component, than that \
-                                provided by the "SUMMARY" property'), 
-            'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
-                                          'alarm_id', 'attendee_id', 'Attendees', readonly=True), 
-            'attach': fields.binary('Attachment', help="""* Points to a sound resource,\
-                         which is rendered when the alarm is triggered for audio,
-                        * File which is intended to be sent as message attachments for email,
-                        * Points to a procedure resource, which is invoked when\
-                          the alarm is triggered for procedure."""), 
-            'res_id': fields.integer('Resource ID'), 
-            'model_id': fields.many2one('ir.model', 'Model'), 
-            'user_id': fields.many2one('res.users', 'Owner'), 
-            'event_date': fields.datetime('Event Date'), 
-            'event_end_date': fields.datetime('Event End Date'), 
-            'trigger_date': fields.datetime('Trigger Date', readonly="True"), 
-            'state':fields.selection([('draft', 'Draft'), 
-                                        ('run', 'Run'), 
-                                        ('stop', 'Stop'), 
-                                        ('done', 'Done'), 
-                                    ], 'State', select=True, readonly=True), 
-        }
+        'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'),
+        'name': fields.char('Summary', size=124, help="""Contains the text to be \
+                     used as the message subject for email \
+                     or contains the text to be used for display"""),
+        'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
+                ('procedure', 'Procedure'), ('email', 'Email') ], 'Action', \
+                required=True, help="Defines the action to be invoked when an alarm is triggered"),
+        'description': fields.text('Description', help='Provides a more complete \
+                            description of the calendar component, than that \
+                            provided by the "SUMMARY" property'),
+        'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
+                                      'alarm_id', 'attendee_id', 'Attendees', readonly=True),
+        'attach': fields.binary('Attachment', help="""* Points to a sound resource,\
+                     which is rendered when the alarm is triggered for audio,
+                    * File which is intended to be sent as message attachments for email,
+                    * Points to a procedure resource, which is invoked when\
+                      the alarm is triggered for procedure."""),
+        'res_id': fields.integer('Resource ID'),
+        'model_id': fields.many2one('ir.model', 'Model'),
+        'user_id': fields.many2one('res.users', 'Owner'),
+        'event_date': fields.datetime('Event Date'),
+        'event_end_date': fields.datetime('Event End Date'),
+        'trigger_date': fields.datetime('Trigger Date', readonly="True"),
+        'state':fields.selection([
+                    ('draft', 'Draft'),
+                    ('run', 'Run'),
+                    ('stop', 'Stop'),
+                    ('done', 'Done'),
+                ], 'State', select=True, readonly=True),
+     }
 
     _defaults = {
-                'action': lambda *x: 'email', 
-                'state': lambda *x: 'run', 
-                }
-
+        'action': lambda *x: 'email', 
+        'state': lambda *x: 'run', 
+     }
     def create(self, cr, uid, vals, context={}):
         """
         create new record.
@@ -981,7 +981,7 @@ class calendar_event(osv.osv):
                                                 'Show as'), 
         'base_calendar_url': fields.char('Caldav URL', size=264), 
         'exdate': fields.text('Exception Date/Times', help="This property \
-defines the list of date/time exceptions for arecurring calendar component."), 
+                    defines the list of date/time exceptions for arecurring calendar component."), 
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
                     rule or repeating pattern for anexception to a recurrence set"), 
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, \

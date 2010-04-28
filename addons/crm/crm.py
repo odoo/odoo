@@ -80,6 +80,7 @@ class crm_case_section(osv.osv):
     ]
 
     def _check_recursion(self, cr, uid, ids):
+
         """
         Checks for recursion level for sales team
         @param self: The object pointer
@@ -138,8 +139,8 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
         'object_id': fields.many2one('ir.model', 'Object Name'), 
     }
-    def _find_object_id(self, cr, uid, context=None):
 
+    def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -153,8 +154,8 @@ class crm_case_categ(osv.osv):
 
     _defaults = {
         'object_id' : _find_object_id
-    }
 
+    }
 crm_case_categ()
 
 
@@ -284,6 +285,7 @@ class crm_case(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Case IDs
         @param context: A standard dictionary for contextual values
+        @return:Dictionary of History Ids
         """
         if not context:
             context = {}
@@ -526,7 +528,6 @@ class crm_case(osv.osv):
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
-
         model_obj = self.pool.get('ir.model')
         obj = self.pool.get('crm.case.log')
         for case in cases:
