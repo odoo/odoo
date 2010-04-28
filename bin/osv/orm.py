@@ -3281,8 +3281,8 @@ class orm(orm_template):
                 del vals[self._inherits[table]]
 
             record_id = tocreate[table].pop('id', None)
-
-            if record_id is None:
+            
+            if record_id is None or not record_id:
                 record_id = self.pool.get(table).create(cr, user, tocreate[table], context=context)
             else:
                 self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=context)
@@ -3356,15 +3356,7 @@ class orm(orm_template):
             upd1 += ',%s,now()'
             upd2.append(user)
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
-        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'create', context=context)
-        if d1:
-            d1 = ' AND '+' AND '.join(d1)
-            cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                    'WHERE '+self._table+'.id = ' +str(id_new)+d1,d2)
-            if not cr.rowcount:
-                raise except_orm(_('AccessError'),
-                                 _('You try to bypass an access rule to create (Document type: %s).') \
-                                  % self._name)
+        self.check_access_rule(cr, user, [id_new], 'create', context=context)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store:
