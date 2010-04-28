@@ -1,0 +1,103 @@
+<openerp>
+  <data>
+
+    <record id="view_thunderbird_installer" model="ir.ui.view">
+      <field name="name">thunderbird.installer.view</field>
+      <field name="model">thunderbird.installer</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="arch" type="xml">
+          <data>
+              <form position="attributes">
+                  <attribute name="string">Thunderbird Module Installation</attribute>
+              </form>
+              <separator string="title" position="attributes">
+                   <attribute name="string">Configure Thunderbird Module</attribute>
+              </separator>
+              <xpath expr="//label[@string='description']" position="attributes">
+                  <attribute name="string">This module is required for the thuderbird plug-in to work properly.This allows you to select an object that you had like to add to your email and its attachments. You can select a partner, a task, a project, an analytical account, or any other object and attach selected mail as .eml file in attachment of selected record.</attribute>
+              </xpath>
+              <group colspan="8">
+                  <separator string="Thunderbird" colspan="4"/>
+                  <field name="thunderbird"/>
+                  <field name="name" invisible="1"/>
+                  <newline/>
+
+                  <field name="plugin_file"/>
+                  <button name="process_plugin"  icon="gtk-execute" string="Get Plugin File" type="object"/>
+                  <newline/>
+                  <separator string="Thunderbird plugin installation note." colspan="4"/>
+                  <label colspan="8" string="Save The thunderbird plug­in Follow the following step to install thunderbird plug­in ? 1. From Menu Bar, Open Tools ­> Add ons. 2. Now click on install button and a browser window will appear. 3. Just select the (.xpi) file from thunderbird/plugin directory and click ok, a new software installation window will appear and within a short time Install Now  button will be enabled. 4. Click on Install Now and restart Thunderbird. 5. Now Thunderbird plug­in is installed."/>
+              </group>
+          </data>
+      </field>
+    </record>
+
+    <record id="action_thunderbird_installer" model="ir.actions.act_window">
+      <field name="name">Thunderbird Module Installation</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">thunderbird.installer</field>
+      <field name="view_id" ref="view_thunderbird_installer"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="thunderbird_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="action_thunderbird_installer"/>
+      <field name="sequence">3</field>
+    </record>
+
+	<!--  Configuration wizard.  -->
+
+    <record id="view_thunderbird_wizard" model="ir.ui.view">
+      <field name="name">thunderbird.wizard</field>
+      <field name="model">thunderbird.installer</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+          <form string= "Thunderbird Installation">
+              <group colspan="4">
+                  <separator string="Configure Thunderbird Module" colspan="4"/>
+                  <group colspan="4" col="10">
+                      <group colspan="2">
+                          <image name="gtk-dialog-info"/>
+                          <newline/>
+                          <label align="0.0" string="This module is required for the thuderbird plug-in to work properly.This allows you to select an object that you had like to add to your email and its attachments. You can select a partner, a task, a project, an analytical account, or any other object and attach selected mail as .eml file in attachment of selected record." width="200"/>
+                       </group>
+                       <group colspan="8">
+                           <separator string="Thunderbird" colspan="4"/>
+                           <field name="thunderbird"/>
+                           <field name="name" invisible="1"/>
+                           <newline/>
+                           <field name="plugin_file"/>
+                           <button name="process_plugin"  icon="gtk-execute" string="Get Plugin File" type="object"/>
+                           <newline/>
+                           <separator string="Thunderbird plugin installation note." colspan="4"/>
+                           <label colspan="8" string="Save The thunderbird plug­in Follow the following step to install thunderbird plug­in ? 1. From Menu Bar, Open Tools ­> Add ons. 2. Now click on install button and a browser window will appear. 3. Just select the (.xpi) file from thunderbird/plugin directory and click ok, a new software installation window will appear and within a short time Install Now  button will be enabled. 4. Click on Install Now and restart Thunderbird. 5. Now Thunderbird plug­in is installed."/>
+                       </group>
+                   </group>
+             </group>
+             <separator string="" colspan="4"/>
+             <group colspan="4">
+                 <label align="0.0" string="" colspan="3"/>
+                 <button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
+             </group>
+         </form>
+      </field>
+    </record>
+
+    <record id="action_thunderbird_wizard" model="ir.actions.act_window">
+      <field name="name">Thunderbird Module Installation</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">thunderbird.installer</field>
+      <field name="view_id" ref="view_thunderbird_wizard"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+	<menuitem id="menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10" />
+	<menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_wizard" name="Thunderbird" parent="menu_base_config_plugins" sequence="10" />
+
+  </data>
+</openerp>
