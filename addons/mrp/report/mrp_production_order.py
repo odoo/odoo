@@ -33,6 +33,8 @@ class mrp_production_order(osv.osv):
         'day': fields.char('Day',size=64,readonly=True),
         'origin': fields.char('Source Document', size=64),
         'nbr': fields.integer('# of Orders', readonly=True),
+        'products_to_consumme': fields.integer('Products to Consumme', readonly=True),
+        'consummed_products': fields.integer('Consummed Products', readonly=True),
         'date': fields.date('Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty': fields.float('Product Qty', readonly=True),
@@ -53,6 +55,7 @@ class mrp_production_order(osv.osv):
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material',readonly=True),
         'routing_id': fields.many2one('mrp.routing', string='Routing',readonly=True),
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Product UOM', readonly=True),
         'priority': fields.selection([('0','Not urgent'),
                                       ('1','Normal'),
                                       ('2','Urgent'),
@@ -72,9 +75,20 @@ class mrp_production_order(osv.osv):
                      to_char(s.create_date, 'MM') as month,
                      to_char(s.create_date, 'YYYY-MM-DD') as day,
                      l.product_id as product_id,
+                     l.product_uom,
                      sum(l.product_qty * u.factor) as product_qty,
                      s.company_id as company_id,
                      count(*) as nbr,
+                     (select count(ll.id) from mrp_production_move_ids as mv
+                          left join stock_move as sm ON (sm.id=mv.move_id)
+                          left join mrp_production_product_line as ll ON (ll.id=mv.production_id)
+                          where sm.state not in ('done','cancel') and ll.id=l.id
+                          group by ll.id) as products_to_consumme,
+                     (select count(ll.id) from mrp_production_move_ids as mv
+                          left join stock_move as sm ON (sm.id=mv.move_id)
+                          left join mrp_production_product_line as ll ON (ll.id=mv.production_id)
+                          where sm.state in ('done','cancel') and ll.id=l.id
+                          group by ll.id) as consummed_products,
                      s.location_src_id,
                      s.location_dest_id,
                      s.bom_id,
@@ -86,11 +100,9 @@ class mrp_production_order(osv.osv):
                      s.origin,
                      s.priority,
                      s.state
-                     from
-                 mrp_production_product_line l
-                 left join
-                     mrp_production s on (s.id=l.production_id)
-                     left join product_uom u on (u.id=l.product_uom)
+                 from mrp_production_product_line l
+                 left join mrp_production s on (s.id=l.production_id)
+                 left join product_uom u on (u.id=l.product_uom)
                  group by
                      to_char(s.create_date, 'YYYY'),
                      to_char(s.create_date, 'MM'),
@@ -98,6 +110,7 @@ class mrp_production_order(osv.osv):
                      to_date(to_char(s.create_date, 'MM-dd-YYYY'),'MM-dd-YYYY'),
                      l.product_id,
                      l.product_uom,
+                     l.id,
                      s.bom_id,
                      s.routing_id,
                      s.picking_id,

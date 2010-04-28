@@ -16,6 +16,8 @@
 					<field name="bom_id" invisible="1"/>
 					<field name="product_id" invisible="1"/>
 					<field name="product_qty" sum='Product Qty'/>
+					<field name="products_to_consumme" sum='Products to Consumme'/>
+					<field name="consummed_products" sum='Consummed Products'/>
 					<field name="nbr" string="#Production Orders" sum='#Production Orders'/>
 					<field name="state" invisible="1"/>
 					<field name="routing_id" invisible="1"/>
@@ -28,6 +30,8 @@
 					<field name="date" invisible="1"/>
 					<field name="location_src_id" invisible="1"/>
 					<field name="location_dest_id" invisible="1"/>
+					<field name="priority" invisible="1"/>
+					<field name="product_uom" invisible="1"/>
 				</tree>
             </field>
         </record>
@@ -81,25 +85,30 @@
 						<field name="origin"/>
 						<field name="product_id"/>
 	                    <field name="bom_id"/>
+	                    <field name="picking_id"/>
                    </group>
                    <newline/>
 	                <group expand="0" string="Extended options..." colspan="10" col="12">
 	                    <filter icon="terp-mrp" string="Picking Exception" domain="[('state','=','picking_except')]"/>
 	                    <filter icon="terp-mrp" string="Done" domain="[('state','=','done')]"/>
 	                    <separator orientation="vertical"/>
-	                    <field name="location_src_id" widget="selection"/>
-	                    <field name="picking_id" widget="selection"/>
+
 	                    <field name="date_start"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="product_uom" widget="selection"/>
+	                    <field name="location_src_id" widget="selection"/>
+	                    <field name="priority"/>
 	                    <newline/>
 	                    <filter icon="terp-mrp" string="Ready to Produce " domain="[('state','=','ready')]"/>
 	                    <filter icon="terp-mrp" string="Cancelled" domain="[('state','=','cancel')]"/>
 	                    <separator orientation="vertical"/>
+	                    <field name="date_finnished"/>
+	                    <separator orientation="vertical"/>
 	                    <field name="location_dest_id" widget="selection"/>
 	                    <field name="routing_id" widget="selection"/>
-	                    <field name="date_finnished"/>
+	                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
 	                    <newline/>
 	                    <field name="date_planned"/>
-	                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
 	                </group>
                    <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="6">
@@ -113,6 +122,7 @@
                         <filter string="BOM" icon="terp-mrp" context="{'group_by':'bom_id'}"/>
                         <filter string="State" icon="terp-mrp" context="{'group_by':'state'}"/>
                     	<separator orientation="vertical"/>
+                    	<filter string="Product UOM" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
                     	<filter string="Day" icon="terp-mrp" context="{'group_by':'day'}"/>
                     	<filter string="Month" icon="terp-mrp" context="{'group_by':'month'}"/>
                     	<filter string="Year" icon="terp-mrp" context="{'group_by':'year'}"/>
