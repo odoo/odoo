@@ -62,10 +62,10 @@ class crm_lead2opportunity(osv.osv_memory):
         model_obj = self.pool.get('ir.model')
 
         # Get Opportunity views
-        result = data_obj._get_id(cr, uid, 'crm_sale', 'view_crm_case_opportunities_filter')
+        result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
         res = data_obj.read(cr, uid, result, ['res_id'])
-        id2 = data_obj._get_id(cr, uid, 'crm_sale', 'crm_case_form_view_oppor')
-        id3 = data_obj._get_id(cr, uid, 'crm_sale', 'crm_case_tree_view_oppor')
+        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_oppor')
+        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_oppor')
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
@@ -182,6 +182,7 @@ Leads Could not convert into Opportunity"))
 
 crm_lead2opportunity()
 
+
 class crm_lead2opportunity_partner(osv.osv_memory):
     _name = 'crm.lead2opportunity.partner'
     _description = 'Lead To Opportunity Partner'
@@ -247,8 +248,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         res = mod_obj.read(cr, uid, result, ['res_id'])
         value = {}
         data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm_sale', 'view_crm_lead2opportunity_create')
-       
+        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
         view_id = False
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
@@ -280,7 +280,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         """
         value = {}
         data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm_sale', 'view_crm_lead2opportunity_create')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
         view_id = False
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id

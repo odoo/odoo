@@ -25,7 +25,6 @@ import crm_email_add_cc
 import crm_lead_to_partner
 import crm_lead_to_opportunity
 import crm_opportunity_to_phonecall
-
 import crm_partner_to_opportunity
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -27,15 +27,6 @@ import time
 import mx.DateTime
 from tools.translate import _
 
-
-AVAILABLE_PRIORITIES = [
-    ('5', 'Lowest'),
-    ('4', 'Low'),
-    ('3', 'Normal'),
-    ('2', 'High'),
-    ('1', 'Highest')
-]
-
 class crm_lead(osv.osv):
     """ CRM Lead Case """
 
@@ -124,11 +115,7 @@ class crm_lead(osv.osv):
                         ('object_id.model', '=', 'crm.lead')]"),
         'partner_name': fields.char("Contact Name", size=64),
 
-        'priority': fields.selection([('5', 'Lowest'),
-                                      ('4', 'Low'),
-                                      ('3', 'Normal'),
-                                      ('2', 'High'),
-                                      ('1', 'Highest')], 'Priority'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', \
                             domain="[('section_id','=',section_id),\
@@ -147,8 +134,9 @@ class crm_lead(osv.osv):
 
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
-       # 'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
+
 
     def convert_opportunity(self, cr, uid, ids, context=None):
         """ Precomputation for converting lead to opportunity
@@ -163,7 +151,7 @@ class crm_lead(osv.osv):
         context.update({'active_ids': ids})
 
         data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm_sale', 'view_crm_lead2opportunity_create')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
         value = {}
 
         view_id = False
@@ -173,7 +161,7 @@ class crm_lead(osv.osv):
             context.update({'opportunity_id': case.id})
             context.update({'active_id': case.id})
             if not case.partner_id:
-                data_id = data_obj._get_id(cr, uid, 'crm_sale', 'view_crm_lead2opportunity_partner')
+                data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_partner')
                 view_id1 = False
                 if data_id:
                     view_id1 = data_obj.browse(cr, uid, data_id, context=context).res_id
