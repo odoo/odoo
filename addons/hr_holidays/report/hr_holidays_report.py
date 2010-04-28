@@ -63,6 +63,7 @@ class hr_holidays_report(osv.osv):
                      s.state
                      from
                  hr_holidays s
+                 where type='remove'
                  group by
                      s.create_date,s.state,s.date_from,s.date_to,
                      s.number_of_days_temp,s.employee_id,s.user_id
@@ -70,3 +71,37 @@ class hr_holidays_report(osv.osv):
         """)
 hr_holidays_report()
 
+class hr_holidays_remaining_leaves_user(osv.osv):
+    _name = "hr.holidays.remaining.leaves.user"
+    _description = "Total holidays by type"
+    _auto = False
+    _columns = {
+        'name': fields.char('Employee',size=64),
+        'no_of_leaves': fields.integer('Remaining leaves'),
+        'user_id': fields.many2one('res.users','User'),
+        'leave_type': fields.char('Leave Type',size=64),
+
+    }
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'hr_holidays_remaining_leaves_user')
+        cr.execute("""
+            create or replace view hr_holidays_remaining_leaves_user as (
+                 select
+                    min(hrs.id) as id,
+                    rr.name as name,
+                    sum(hrs.number_of_days) as no_of_leaves,
+                    rr.user_id as user_id,
+                    hhs.name as leave_type
+                from
+                    hr_holidays as hrs, hr_employee as hre,
+                    resource_resource as rr,hr_holidays_status as hhs
+                where
+                    hrs.employee_id = hre.id and
+                    hre.resource_id =  rr.id and
+                    hhs.id = hrs.holiday_status_id  
+                group by
+                    rr.name,rr.user_id,hhs.name
+            )
+        """)
+
+hr_holidays_remaining_leaves_user()

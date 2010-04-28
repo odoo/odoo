@@ -36,14 +36,14 @@
         <field name="view_id" ref="crm_case_form_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet_create_partner"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_crm_tag_gantt_meet_partner">
+	<record model="ir.actions.act_window.view" id="action_crm_tag_gantt_meet_partner">
         <field name="sequence" eval="3"/>
         <field name="view_mode">gantt</field>
         <field name="view_id" ref="crm_case_gantt_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet_create_partner"/>
     </record>
 
-    <act_window
+	<act_window
         id="crm_case_categ_meet_case"
         name="Schedule a Meeting"
         res_model="crm.meeting"
@@ -74,7 +74,7 @@
         <field name="view_id" ref="crm_case_form_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet_case"/>
     </record>
-    <record model="ir.actions.act_window.view" id="action_crm_tag_gantt_meet_case">
+	<record model="ir.actions.act_window.view" id="action_crm_tag_gantt_meet_case">
         <field name="sequence" eval="3"/>
         <field name="view_mode">gantt</field>
         <field name="view_id" ref="crm_case_gantt_view_meet"/>
@@ -85,7 +85,6 @@
         <field name="res_model">crm.meeting</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
-        <field name="context">{"search_default_current":1,"search_default_section_id":section_id}</field>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet">
@@ -116,27 +115,26 @@
 <!-- ALL MEETINGS -->
 
     <menuitem name="Meetings" id="menu_meeting_sale"
-        parent="base.menu_base_partner" sequence="3" />
+    	parent="base.menu_base_partner" sequence="3" />
 
     <menuitem name="Meetings" id="menu_crm_case_categ_meet"
-        action="crm_case_categ_meet" parent="menu_meeting_sale"
-        sequence="1" />
+    	action="crm_case_categ_meet" parent="menu_meeting_sale"
+    	sequence="1" />
 
     <record id="action_view_attendee_form" model="ir.actions.act_window">
-         <field name="name">Meeting Invitations</field>
-         <field name="type">ir.actions.act_window</field>
-         <field name="res_model">calendar.attendee</field>
-         <field name="view_type">form</field>
-         <field name="view_mode">tree,form</field>
-         <field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view" />
+	 	<field name="name">Meeting Invitations</field>
+	 	<field name="type">ir.actions.act_window</field>
+	 	<field name="res_model">calendar.attendee</field>
+	 	<field name="view_type">form</field>
+	 	<field name="view_mode">tree,form</field>
+	 	<field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view" />
         <field name="domain">[('ref','like','crm.meeting,')]</field>
-         <field name="context">{'default_sent_by_uid': uid}</field>
-     </record>
+	 	<field name="context">{'default_sent_by_uid': uid}</field>
+	 </record>
 
     <menuitem id="menu_attendee_invitations"
-            name="Meeting Invitations" parent="crm.menu_meeting_sale"
-            groups="base.group_extended"
-            sequence="10" action="action_view_attendee_form" />
+			name="Meeting Invitations" parent="crm.menu_meeting_sale"
+			sequence="10" action="action_view_attendee_form" />
 
 
     <record model="ir.actions.act_window" id="crm_case_category_act_meetall3">
@@ -146,7 +144,7 @@
         <field name="view_mode">tree,calendar,form,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
         <field name="domain"
-            eval="[('state','in',('pending','draft','open')),('date','>=',time.strftime('%Y-%m-%d'))]" />
+        	eval="[('state','in',('pending','draft','open')),('date','>=',time.strftime('%Y-%m-%d'))]" />
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_meetall3">
@@ -170,7 +168,7 @@
         <field name="act_window_id" ref="crm_case_category_act_meetall3"/>
     </record>
 
-    <record model="ir.actions.act_window.view" id="action_crm_tag_gantt_view_meetall3">
+	<record model="ir.actions.act_window.view" id="action_crm_tag_gantt_view_meetall3">
         <field name="sequence" eval="2"/>
         <field name="view_mode">gantt</field>
         <field name="view_id" ref="crm_case_gantt_view_meet"/>

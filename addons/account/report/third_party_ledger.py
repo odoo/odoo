@@ -59,10 +59,10 @@ class third_party_ledger(rml_parse.rml_parse):
 	#
 	def transform_period_into_date_array(self,data):
 		## Get All Period Date
-		if not data['form']['periods'][0][2] :
+		if not data['form']['periods']:
 			periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
 		else:
-			periods_id = data['form']['periods'][0][2]
+			periods_id = data['form']['periods']
 		date_array = []
 		for period_id in periods_id:
 			period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
@@ -77,10 +77,10 @@ class third_party_ledger(rml_parse.rml_parse):
 
 	def transform_both_into_date_array(self,data):
 
-		if not data['form']['periods'][0][2] :
+		if not data['form']['periods']:
 			periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
 		else:
-			periods_id = data['form']['periods'][0][2]
+			periods_id = data['form']['periods']
 		date_array = []
 		for period_id in periods_id:
 			period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)

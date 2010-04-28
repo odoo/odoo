@@ -368,15 +368,15 @@ class account_balance(report_sxw.rml_parse):
         self.total_for_perc=self.linesForTotal(form,ids={},doneAccount={},level=1)
         self.done_total=0
 
-        for t1 in range(0,len(form['fiscalyear'][0][2])):
+        for t1 in range(0,len(form['fiscalyear'])):
             locale.setlocale(locale.LC_ALL, '')
             self.result_total["sum_credit" + str(t1)]=locale.format("%.2f", self.result_total["sum_credit" + str(t1)], grouping=True)
             self.result_total["sum_debit" + str(t1)]=locale.format("%.2f", self.result_total["sum_debit" + str(t1)], grouping=True)
 #           self.flag=1
 #           self.result_total = {}
 
-        for temp in range(0,len(form['fiscalyear'][0][2])):
-            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][0][2][temp])
+        for temp in range(0,len(form['fiscalyear'])):
+            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][temp])
             years["year"+str(temp)]=fy[0][1][12:16]
 
         return [years]
@@ -395,11 +395,11 @@ class account_balance(report_sxw.rml_parse):
         ctx = self.context.copy()
         result_total_parent=[]
 
-        for id in form['fiscalyear'][0][2]:
+        for id in form['fiscalyear']:
             tmp=[]
 
             ctx['fiscalyear'] = id
-            ctx['periods'] = form['periods'][0][2]
+            ctx['periods'] = form['periods']
             ctx['period_manner'] = form['period_manner']
             ctx['state'] = form['context'].get('state','all')
             tmp = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx.copy())
@@ -453,10 +453,10 @@ class account_balance(report_sxw.rml_parse):
         result = []
         ctx = self.context.copy()
         tmp1=[]
-        for id in form['fiscalyear'][0][2]:
+        for id in form['fiscalyear']:
 
             ctx['fiscalyear'] = id
-            ctx['periods'] = form['periods'][0][2]
+            ctx['periods'] = form['periods']
             ctx['period_manner']=form['period_manner']
             ctx['state'] = form['context'].get('state','all')
             tmp1 = self.pool.get('account.account').browse(self.cr, self.uid, ids,ctx.copy())
@@ -571,7 +571,7 @@ class account_balance(report_sxw.rml_parse):
 
             if entry[0].child_id:
 
-                for q in range(0,len(form['fiscalyear'][0][2])):
+                for q in range(0,len(form['fiscalyear'])):
                     self.baldiv["baldiv"+str(level)+str(q)]=entry[q].balance
 
                 ids2 = [(x.code,x.id) for x in entry[0].child_id]
@@ -579,7 +579,7 @@ class account_balance(report_sxw.rml_parse):
                 dir=[]
                 dir += self.lines(form, [x[1] for x in ids2], done, level+1)
                 if dir==[]:
-                    for w in range(0,len(form['fiscalyear'][0][2])):
+                    for w in range(0,len(form['fiscalyear'])):
                         if entry[w].credit <> 0.0 or entry[w].debit <> 0.0 or entry[w].balance<>0.00:
                             dont_pop=1
                             break
@@ -597,9 +597,9 @@ class account_balance(report_sxw.rml_parse):
     def get_years(self,form):
         result =[]
         res={}
-        for temp in range(0,len(form['fiscalyear'][0][2])):
+        for temp in range(0,len(form['fiscalyear'])):
             res={}
-            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][0][2][temp])
+            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][temp])
             res['year']=fy[0][1]
             res['last_str']=temp
 

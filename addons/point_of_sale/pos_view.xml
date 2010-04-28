@@ -11,7 +11,7 @@
                     <notebook >
                         <page string="Order lines">
                             <group colspan="4" col="6">
-                                <field name="user_id1" />
+                                <field name="user_saleman" />
                                 <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
                                 <field name="contract_number" select="1" groups="base.group_extended"/>
                             </group>
@@ -58,28 +58,14 @@
                                     states="paid, draft"
                                         attrs="{'invisible':[('state_2','=','accepted')]}"/>
                               </group>
-
                             <separator colspan="4" string="Actions"/>
                             <group colspan="4" col="6">
-
                                 <field name="state" select="1"/>
-
-                                <!--
-                                <button name="%(pos_add_product)d" string="_Add product" type="action" states="draft"/>
-                                -->
-
                                 <button name="%(action_pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance" context="{'record_id':'active_id'}" />
                                 <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
-
-
-                                <!--
-                                <button name="action_cancel" string="Cancel" type="object" states="paid" />
-                                -->
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
-
-                                <button name="%(pos_return_picking)d" string="Return Picking" type="action" icon="gtk-ok" states="paid"
-                                    attrs="{'invisible':[('state','!=','paid'),('state','!=','invoiced')]}"/>
-
+                                <button name="%(action_view_pos_return)d" string="Return Picking" type="action" icon="gtk-ok" states="paid"
+                                    attrs="{'invisible':[('state','!=','paid'),('state','!=','invoiced')]}"  context="{'record_id':'active_id'}" />                             
                             </group>
                         </page>
 
@@ -90,14 +76,14 @@
                                 <field name="shop_id" widget="selection"  />
                                 <field name="name" select="1"/>
                                 <field name="user_id" />
-                                <field name="user_id2" />
+                                <field name="sale_manager" />
                                 <field name="price_type" />
                             </group>
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Dates" colspan="4"/>
                                 <field name="date_order" select="1" />
-                                <field name="date_payment" select="1"  />
-                                <field name="date_payment2" select="1"  groups="base.group_extended"/>
+                                <field name="date_validation" select="1"  />
+                                <field name="date_payment" select="1"  groups="base.group_extended"/>
                             </group>
                             <group colspan="4">
                                 <separator string="Invoicing" colspan="4"/>
@@ -122,7 +108,6 @@
                                 </form>
                             </field>
                         </page>
-
                         <page string="Notes" >
                             <separator string="Notes" colspan="4" />
                             <group colspan="4">
@@ -135,8 +120,6 @@
                 </form>
             </field>
         </record>
-
-
         <record model="ir.actions.act_window" id="action_pos_pos_form">
             <field name="name">Point of Sale</field>
             <field name="type">ir.actions.act_window</field>
@@ -145,8 +128,6 @@
             <field name="view_id" ref="view_pos_pos_form"/>
             <field name="domain">[['date_order','>=',time.strftime('%Y-%m-%d')]]</field>
         </record>
-
-
         <record model="ir.ui.view" id="view_pos_order_tree">
             <field name="name">Sales</field>
             <field name="model">pos.order</field>
@@ -155,8 +136,8 @@
                 <tree string="POS Orders">
                     <field name="name"/>
                     <field name="date_order" select="1"/>
+                    <field name="date_validation"/>
                     <field name="date_payment"/>
-                    <field name="date_payment2"/>
                     <field name="user_id"/>
                     <field name="invoice_id"/>
                     <field name="state" select="1"/>
@@ -165,6 +146,32 @@
                 </tree>
             </field>
         </record>
+        <record id="view_pos_order_filter" model="ir.ui.view">
+            <field name="name">pos.order.list.select</field>
+            <field name="model">pos.order</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Sales Order">
+                    <filter icon="terp-sale" string="Quotations" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-sale" string="Running" domain="[('state','in',('payment','advance'))]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name" select="1"/>
+                    <field name="partner_id" select="1"/>
+                    <field name="user_id" select="1" widget="selection">
+                        <filter icon="terp-partner" string="My Sale" domain="[('user_id','=',uid)]" help="My Sale Orders" />
+                    </field>
+                    <field name="date_order" select="1" string="Order date" />
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="11" col="11">
+                        <filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+        
         <menuitem name="Point of Sale" id="menu_point_root" sequence="10"/>
         <menuitem name="Point of Sale" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
         <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
@@ -176,10 +183,12 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
             <field name="domain">['|',('state_2','=','to_verify'),('state','=','advance')]</field>
+			<field name="search_view_id" ref="view_pos_order_filter"/>	             
+ 				           
         </record>
-invoiced
 
         <record model="ir.actions.act_window" id="action_pos_order_tobinvoiced">
             <field name="name">Sales to Invoice</field>
@@ -189,6 +198,8 @@ invoiced
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
             <field name="domain">[('state','!=', 'invoiced')]</field>
+			<field name="search_view_id" ref="view_pos_order_filter"/>	             
+		    	             
         </record>
         <menuitem name="Invoicing" id="menu_point_of_sale_invoicing" parent="menu_point_root" sequence="4" />
         <menuitem name="Sales to Invoice" action="action_pos_order_tobinvoiced" id="menu_point_of_sale_tobinvoiced" parent="menu_point_of_sale_invoicing"/>
@@ -198,8 +209,8 @@ invoiced
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_pos_order_tree"/>
             <field name="domain">[('state','=', 'paid')]</field>
+ 			<field name="search_view_id" ref="view_pos_order_filter"/>	               
         </record>
         <record model="ir.actions.act_window" id="action_pos_order_tree2">
             <field name="name">Point of Sale</field>
@@ -207,11 +218,9 @@ invoiced
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_pos_order_tree"/>
             <field name="domain">[('date_order','&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
+ 			<field name="search_view_id" ref="view_pos_order_filter"/>	               
         </record>
-
-<!--        <menuitem name="Orders of the day" parent="menu_point_ofsale" id="menu_action_pos_order_tree2" action="action_pos_order_tree2"/-->
 
         <record model="ir.actions.act_window" id="action_pos_order_tree3">
             <field name="name">Point of Sale</field>
@@ -219,17 +228,15 @@ invoiced
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_pos_order_tree"/>
+			<field name="search_view_id" ref="view_pos_order_filter"/>            
         </record>
-<!--        <menuitem name="All orders" parent="menu_point_ofsale" id="menu_action_pos_order_tree3" action="action_pos_order_tree3"/-->
-
         <record model="ir.actions.act_window" id="action_pos_order_tree_open">
             <field name="name">Opened Sales</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="view_pos_pos_form"/>
+			<field name="search_view_id" ref="view_pos_order_filter"/>            
         </record>
 
         <record model="ir.ui.view" id="view_pos_order_line">
@@ -663,58 +670,10 @@ invoiced
                     <page string="Other">
                       <field  name="company_discount" colspan="4"/>
                       <field  name="max_diff" colspan="4"/>
-                      <field  name="account_receivable" required="1" colspan="4"/>
                     </page>
                 </notebook>
             </field>
            </record>
-
-
-        <record model="ir.ui.view" id="form_mode_p_contact">
-            <field name="name">Contact Mode</field>
-            <field name="model">res.mode.contact</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-             <form string="Contact Mode">
-                    <field  name="name" select="1"/>
-                    <field  name="active"/>
-              </form>
-            </field>
-          </record>
-
-        <record model="ir.ui.view" id="tree_mode_p_contact">
-            <field name="name">Contact Mode</field>
-            <field name="model">res.mode.contact</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-             <tree string="Contact Mode">
-                    <field  name="name"/>
-                    <field  name="active"/>
-              </tree>
-            </field>
-          </record>
-
-        <record model="ir.actions.act_window" id="action_mode_p">
-            <field name="name">Contact Mode</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.mode.contact</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem name="Contact Mode" parent="base.menu_base_config" action="action_mode_p" id="menu_mode_po"/>
-
-        <record model="ir.ui.view" id="view_partner_contact">
-            <field name="name">view.partner.contact</field>
-            <field name="model">res.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-              <field name="website" position="after">
-                    <field  name="contact_mode_id"/>
-              </field>
-            </field>
-          </record>
 
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
@@ -748,7 +707,6 @@ invoiced
                         <field name="default_code" select="1"/>
                         <field groups="base.group_extended" name="ean13"/>
                     </group>
-
                    </group>
                    <notebook colspan="4">
                         <page string="Information">
@@ -829,13 +787,6 @@ invoiced
                     parent="menu_point_config_product"
                     action="action_product_output"
                     id="products_for_output_operations"/>
-
-<!--        <wizard
-            string="Refloat Box entries"
-            model="account.bank.statement"
-            name="pos.entry"
-            menu="False"
-            id="pos_entries"/>-->
             
         <menuitem name="Register Management" parent="menu_point_root"
             id="menu_point_config" sequence="3"/>
@@ -845,21 +796,11 @@ invoiced
             action="action_box_entries"
             id="menu_wizard_enter_jrnl" sequence="3" />
             
-    <!--    <wizard
-            string="Enter negative operations"
-            model="account.bank.statement"
-            name="pos.out"
-            menu="False"
-            id="pos_entries2"/>-->
         <menuitem
             name="Output Operations" parent="menu_point_config"
             string="Refloat"
             action="action_box_out"
             id="menu_wizard_enter_jrnl2" sequence="3" />
-
-<!--        <menuitem name="Sales Waiting Validation" parent="menu_point_config" id="menu_point_ofsale_date_payment"-->
-<!--            action="action_pos_pos_form_user" sequence="4"/>-->
-
 
         <record model="ir.ui.view" id="view_pos_order_tree_all_sales">
             <field name="name">POS Sales</field>
@@ -870,8 +811,8 @@ invoiced
                     <field name="name"/>
                     <field name="date_order" select="1"/>
                     <field name="partner_id" />
+                    <field name="date_validation"/>
                     <field name="date_payment"/>
-                    <field name="date_payment2"/>
                     <field name="user_id"/>
                     <field name="invoice_id"/>
                     <field name="note" select="1" />
@@ -888,8 +829,6 @@ invoiced
             <field name="view_type">form</field>
             <field name="view_id" ref="view_pos_order_tree_all_sales" />
         </record>
-<!--        <menuitem name="All Sales" parent="menu_point_of_sale" id="menu_pos_all_sales" action="action_pos_all_sales" sequence="5" />-->
-
         <record model="ir.ui.view" id="view_pos_order_tree_all_sales_lines">
             <field name="name">POS Sales Lines</field>
             <field name="model">pos.order.line</field>
@@ -912,7 +851,6 @@ invoiced
             <field name="view_type">form</field>
             <field name="view_id" ref="view_pos_order_tree_all_sales_lines" />
         </record>
-<!--        <menuitem name="Toutes les lignes de ventes" parent="menu_point_root" id="menu_pos_all_sales_lines" action="action_pos_all_sales_lines" sequence="5" />-->
 
         <!--  Miscelleanous Operations/Reporting -->
         <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="5"/>
@@ -926,8 +864,6 @@ invoiced
                         id="menu_action_sale_of_day_tree2" action="action_trans_pos_tree_today"/>
         <menuitem name="Accepted Sales" parent="menu_action_all_sales_tree3"
                         id="menu_action_sale_of_day_accept" action="action_pos_order_accepted"/>
-<!--        <menuitem name="Open Sales" parent="menu_action_all_sales_tree3"
-                        id="menu_action_open_sales_treeop" action="action_pos_order_tree_open"/-->
 
         <menuitem name="Sales Reports" parent="menu_point_report_sale" id="menu_sales_report" sequence="2"/>
 
@@ -975,11 +911,6 @@ invoiced
         <menuitem name="Sales Lines of the day" parent="menu_action_pos_order_line"
                     id="menu_action_pos_order_line_day" action="action_pos_order_line_day"/>
 
-<!--        <menuitem name="Open Sales Line" parent="menu_action_pos_order_line"
-                    id="menu_action_open_sales_line" action="action_pos_order_line_form"/-->
-
-<!--        <menuitem icon="STOCK_PRINT" action="wizard_pos_payment_report"
-                id="menu_pos_payment_report" parent="menu_cashboxes_by_day" type="wizard" sequence="4"/-->
 
         <menuitem icon="STOCK_PRINT" action="action_report_pos_sale_user"
                 id="menu_pos_sales_user" parent="menu_trans_pos_tree" sequence="3" groups="base.group_extended" />

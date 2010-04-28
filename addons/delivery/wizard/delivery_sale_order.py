@@ -50,7 +50,11 @@ class make_delivery(osv.osv_memory):
         res = super(make_delivery, self).default_get(cr, uid, fields, context=context)
         order_obj = self.pool.get('sale.order')
         for order in order_obj.browse(cr, uid, context.get('active_ids', [])):
-             res.update({'carrier_id': order.partner_id.property_delivery_carrier.id})
+             carrier = order.carrier_id.id
+             if not carrier:
+                  carrier = order.partner_id.property_delivery_carrier.id
+             res.update({'carrier_id': carrier})
+             
         return res
     
     def view_init(self, cr , uid , fields, context=None):

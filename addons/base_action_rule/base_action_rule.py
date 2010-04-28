@@ -310,6 +310,7 @@ class base_action_rule_line(osv.osv):
             ('create','Creation Date'),
             ('action_last','Last Action Date'),
             ('date','Date'),
+            ('deadline', 'Deadline'),
             ], 'Trigger Date', size=16),
         'trg_date_range': fields.integer('Delay after trigger date',help="Delay After Trigger Date,\
                              specifies you can put a negative number " \

@@ -94,7 +94,7 @@
                                     <field name="price_unit"/>
  									<field name="price_subtotal" groups="base.group_extended"/>
                                     <field name="invoiced"/>
-                        			<field name="state"/>                                    
+                        			<field name="state"/>
                                 </tree>
                                 <!-- default form view -->
                             </field>
@@ -161,13 +161,13 @@
                     <field name="partner_id" select="1"/>
                     <field name="product_id" select="1"/>
                     <field name="create_uid" select="1" widget="selection">
-                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>                        
+                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>
                     </field>
                 </group>
                 <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="10">
-                    <filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>    
-                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>                
+                    <filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
                 </group>
               </search>
@@ -203,7 +203,7 @@
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
         </record>
-        <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management" 
+        <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management"
                 sequence="6"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
@@ -247,12 +247,12 @@
 	                        <separator colspan="4" string="Manual Invoices"/>
 	                        <field name="invoiced"/>
 	                        <newline/>
-	                        <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>                            
+	                        <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>
                         </page>
                     </notebook>
 					<group>
 						<field name="state" />
-                    </group>                    
+                    </group>
                 </form>
             </field>
         </record>
@@ -290,7 +290,7 @@
             name="Product purchases"
             res_model="purchase.order.line"
             src_model="product.product"/>
-<!-- 
+<!--
 	<record model="ir.values" id="action_merge_purchase_order">
                 <field name="object" eval="1" />
                 <field name="name">Purchase Order</field>
@@ -322,7 +322,7 @@
             <field name="act_window_id" ref="purchase_line_form_action2"/>
         </record>
          <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_procurement_management_invoice"/>
-          
+
 
     </data>
 </openerp>

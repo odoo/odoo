@@ -104,7 +104,7 @@
                                 <separator colspan="4" string="Action Information"/>
                                 <field colspan="4" name="name"/>
                                 <field name="date"/>
-                                <field name="user_id"/>                                
+                                <field name="user_id"/>
                             </form>
                         </field>
                     </page>
@@ -126,7 +126,7 @@
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
-                                       string="Reply to Email"
+                                       string="Reply to Last Email"
                                        name="%(action_crm_send_mail)d"
                                        context="{'mail':'reply', 'model': 'crm.helpdesk'}"
                                        icon="gtk-undo" type="action" />
@@ -224,8 +224,9 @@
                 <field name="name" select='1' string="Query"/>
                 <field name="partner_id" />
                 <field name="user_id" select="1" widget="selection">
-                    <filter icon="terp-partner" name="my_hd_request" 
-                    domain="[('user_id','=',uid)]" help="My Helpdesk Requests"/>
+                    <filter icon="terp-partner"
+                        domain="[('user_id','=',uid)]"
+                        help="My Helpdesk Requests" default="1" />
                 </field>
                 <field name="section_id" select="1" widget="selection" string="Sales Team">
                     <filter icon="terp-crm"

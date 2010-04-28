@@ -117,7 +117,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
         html += '[%s] %s\n' % (i+1, url)
     return html
     
-class mail_server(osv.osv):
+class email_server(osv.osv):
     
     _name = 'email.server'
     _description = "POP/IMAP Server"
@@ -137,20 +137,22 @@ class mail_server(osv.osv):
             ('imap','IMAP Server'),
         ],'State', select=True, readonly=False),
         'is_ssl':fields.boolean('SSL ?', required=False),
-        'date': fields.date('Date'),
+        'attach':fields.boolean('Add Attachments ?', required=False),
+        'date': fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}),
         'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'note': fields.text('Description'),
         'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]"),
         'object_id': fields.many2one('ir.model',"Model", required=True),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly',False)]}, help="Priority between 0 to 10, select define the order of Processing"),
+        'user_id':fields.many2one('res.users', 'User', required=False),
     }
     _defaults = {
-#        'type': lambda *a: "imap",
         'state': lambda *a: "draft",
         'active': lambda *a: True,
         'priority': lambda *a: 5,
         'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'user_id': lambda self, cr, uid, ctx: uid,
     }
     
     def check_duplicate(self, cr, uid, ids):
@@ -176,6 +178,9 @@ class mail_server(osv.osv):
         return {'value':{'port':port}}
     
     def _process_email(self, cr, uid, server, message, context={}):
+        context.update({
+            'server_id':server.id
+        })
         history_pool = self.pool.get('mail.server.history')
         msg_txt = email.message_from_string(message)
         message_id = msg_txt.get('Message-ID', False)
@@ -288,17 +293,18 @@ class mail_server(osv.osv):
             else:
                 logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s' % (model_pool._name))
                 return False
-                
-            for attactment in attachents or []:
-                data_attach = {
-                    'name': attactment,
-                    'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                    'datas_fname': attactment,
-                    'description': 'Mail attachment',
-                    'res_model': server.object_id.model,
-                    'res_id': res_id,
-                }
-                self.pool.get('ir.attachment').create(cr, uid, data_attach)
+            
+            if server.attach:
+                for attactment in attachents or []:
+                    data_attach = {
+                        'name': attactment,
+                        'datas':binascii.b2a_base64(str(attachents.get(attactment))),
+                        'datas_fname': attactment,
+                        'description': 'Mail attachment',
+                        'res_model': server.object_id.model,
+                        'res_id': res_id,
+                    }
+                    self.pool.get('ir.attachment').create(cr, uid, data_attach)
             
             if server.action_id:
                 action_pool = self.pool.get('ir.actions.server')
@@ -315,20 +321,32 @@ class mail_server(osv.osv):
             his_id = history_pool.create(cr, uid, res)
             
         return res_id
-    
+
+    def set_draft(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids , {'state':'draft'})
+        return True
+        
+    def button_fetch_mail(self, cr, uid, ids, context={}):
+        self.fetch_mail(cr, uid, ids)
+#        sendmail_thread = threading.Thread(target=self.fetch_mail, args=(cr, uid, ids))
+#        sendmail_thread.start()
+        return True
+        
     def _fetch_mails(self, cr, uid, ids=False, context={}):
         if not ids:
             ids = self.search(cr, uid, [])
         return self.fetch_mail(cr, uid, ids, context)
     
     def fetch_mail(self, cr, uid, ids, context={}):
+
         fp = os.popen('ping www.google.com -c 1 -w 5',"r")
         if not fp.read():
-            logger.notifyChannel('imap', netsvc.LOG_WARNING, 'No address associated with hostname !')
+            logger.notifyChannel('imap', netsvc.LOG_WARNING, 'lost internet connection !')
 
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             
+            count = 0
             try:
                 if server.type == 'imap':
                     imap_server = None
@@ -355,7 +373,7 @@ class mail_server(osv.osv):
                         pop_server = POP3_SSL(server.server, int(server.port))
                     else:
                         pop_server = POP3(server.server, int(server.port))
-                    
+                   
                     #TODO: use this to remove only unread messages
                     #pop_server.user("recent:"+server.user)
                     pop_server.user(server.user)
@@ -363,7 +381,6 @@ class mail_server(osv.osv):
                     pop_server.list()
 
                     (numMsgs, totalSize) = pop_server.stat()
-                    count = 0
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
@@ -373,13 +390,14 @@ class mail_server(osv.osv):
                     pop_server.quit()
                     
                     logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
-                    
+                
+                self.write(cr, uid, [server.id], {'state':'done'})
             except Exception, e:
-                logger.notifyChannel('IMAP', netsvc.LOG_WARNING, '%s' % (e))
+                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
                 
         return True
 
-mail_server()
+email_server()
 
 class mail_server_history(osv.osv):
 
@@ -404,10 +422,7 @@ class mail_server_history(osv.osv):
 mail_server_history()
 
 class fetchmail_tool(osv.osv):
-    """
-    OpenERP Model : fetchmail_tool
-    """
-    
+
     _name = 'email.server.tools'
     _description = "Email Tools"
     _auto = False

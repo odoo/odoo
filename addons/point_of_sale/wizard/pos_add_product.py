@@ -61,7 +61,27 @@ class add_product(osv.osv_memory):
             'views': False,
             'type': 'ir.actions.act_window',
         }
+    def close_action(self, cr, uid, ids, context):
 
+        record_id = context and context.get('record_id', False)
+        order_obj= self.pool.get('pos.order')
+        order_line_obj= self.pool.get('pos.order.line')
+        obj=order_obj.browse(cr,uid, record_id)
+        order_obj.write(cr,uid,[record_id],{'state':'done'})
+        if obj.amount_total != obj.amount_paid:
+            return {
+            'name': _('Make Payment'),
+            'context ':context and context.get('record_id', False),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.make.payment',
+            'view_id': False,
+            'target': 'new',
+            'views': False,
+            'type': 'ir.actions.act_window',
+            
+            }
+        return {}   
 add_product()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

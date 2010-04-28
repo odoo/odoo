@@ -432,11 +432,20 @@ class crm_case(osv.osv):
         """
         if not context:
             context = {}
+        
+        hist_obj = self.pool.get('crm.case.history') 
+        log_obj = self.pool.get('crm.case.log')
 
         for case in self.browse(cr, uid, ids, context):
             if (not case.section_id.allow_unlink) and (case.state <> 'draft'):
                 raise osv.except_osv(_('Warning !'), 
                     _('You can not delete this case. You should better cancel it.'))
+
+            # Also removing history and logs 
+            history_ids = map(lambda x: x.id, case.history_line)
+            log_ids = map(lambda x: x.id, case.log_ids)
+            hist_obj.unlink(cr, uid, history_ids, context=context)
+            log_obj.unlink(cr, uid, log_ids, context=context)
         return super(crm_case, self).unlink(cr, uid, ids, context)
 
     def stage_next(self, cr, uid, ids, context=None):
@@ -620,7 +629,9 @@ class crm_case(osv.osv):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.__history(cr, uid, cases, _('Close'))
-        self.write(cr, uid, ids, {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, ids, {'state': 'done',
+                                  'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                  'probability' : 100.0})
         #
         # We use the cache of cases to keep the old case state
         #
@@ -681,7 +692,9 @@ class crm_case(osv.osv):
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.__history(cr, uid, cases, _('Cancel'))
-        self.write(cr, uid, ids, {'state': 'cancel', 'active': True})
+        self.write(cr, uid, ids, {'state': 'cancel',
+                                  'active': True,
+                                  'probability' : 0.0})
         self._action(cr, uid, cases, 'cancel')
         return True
 
@@ -764,7 +777,7 @@ class crm_case_history(osv.osv):
     _columns = {
         'description': fields.text('Description'),
         'note': fields.function(_note_get, method=True, string="Description", type="text"),
-        'email_to': fields.char('Email TO', size=84),
+        'email_to': fields.char('Email To', size=84),
         'email_from' : fields.char('Email From', size=84),
         'log_id': fields.many2one('crm.case.log','Log',ondelete='cascade'),
         'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True),
