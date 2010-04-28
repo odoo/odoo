@@ -30,7 +30,7 @@ class account_automatic_reconcile(osv.osv_memory):
     _description = 'Automatic Reconcile'
 
     _columns = {
-        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Account to reconcile', domain = [('reconcile','=',1)],
+        'account_ids': fields.many2many('account.account', 'reconcile_account_rel', 'reconcile_id', 'account_id', 'Account to reconcile', domain = [('reconcile','=',1)], \
                                         help = 'If no account is specified, the reconciliation will be made using every accounts that can be reconcilied'),
         'writeoff_acc_id': fields.many2one('account.account', 'Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
@@ -41,24 +41,20 @@ class account_automatic_reconcile(osv.osv_memory):
         'date2': fields.date('End of period', required=True),
         'reconciled': fields.integer('Reconciled transactions', readonly=True),
         'unreconciled': fields.integer('Not reconciled transactions', readonly=True),
-        }
+    }
 
-    def _get_reconciled(self, cr, uid, context=None):
-        if context and 'reconciled' in context:
-            return context['reconciled']
-        return 0
+    def _get_reconciled(self, cr, uid, context={}):
+        return context.get('reconciled', 0)
 
-    def _get_unreconciled(self, cr, uid, context=None):
-        if context and 'unreconciled' in context:
-            return context['unreconciled']
-        return 0
+    def _get_unreconciled(self, cr, uid, context={}):
+        return context.get('unreconciled', 0)
 
     _defaults = {
         'date1': time.strftime('%Y-01-01'),
         'date2': time.strftime('%Y-%m-%d'),
         'reconciled': _get_reconciled,
         'unreconciled': _get_unreconciled,
-               }
+    }
 
     #TODO: cleanup and comment this code... For now, it is awfulllll
     # (way too complex, and really slow)...
