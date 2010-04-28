@@ -44,7 +44,10 @@ class crm_fundraising_report(osv.osv):
         'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'canal_id': fields.many2one('res.partner.canal','Channel',domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]"),
-        'som': fields.many2one('res.partner.som', 'State of Mind')
+        'som': fields.many2one('res.partner.som', 'State of Mind'),
+        'type_id': fields.many2one('crm.case.resource.type', 'Fundraising Type', \
+                             domain="[('section_id','=',section_id),\
+                             ('object_id.model', '=', 'crm.fundraising')]"),
     }
 
     def init(self, cr):
@@ -75,6 +78,7 @@ class crm_fundraising_report(osv.osv):
                     c.date_closed as date_closed,
                     c.canal_id as canal_id,
                     c.som as som,
+                    c.type_id as type_id,
                     date_trunc('day',c.create_date) as create_date,
                     sum(planned_revenue) as amount_revenue,
                     sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
@@ -85,7 +89,7 @@ class crm_fundraising_report(osv.osv):
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
                      c.state, c.user_id,c.section_id,c.categ_id,c.partner_id,c.company_id,
                      c.create_date,to_char(c.create_date, 'YYYY-MM-DD'),c.priority,c.date_closed
-                     ,c.canal_id,c.som
+                     ,c.canal_id,c.som,c.type_id
             )""")
 
 crm_fundraising_report()

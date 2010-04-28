@@ -27,6 +27,9 @@
                     <field name="date_closed" invisible="1"/>
                     <field name="canal_id" invisible="1"/>
                     <field name="som" invisible="1"/>
+                    <field name="claim_date" invisible="1"/>
+                    <field name="deadline_date" invisible="1"/>
+                    <field name="partner_address_id" string="Contact" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -81,11 +84,16 @@
 	                <separator orientation="vertical"/>
 	                <field name="priority" />
 	                <field name="type_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
-	                <separator orientation="vertical"/>
+	                <newline/>
 	                <field name="canal_id" widget="selection" />
 	                <field name="som" widget="selection" />
+	                <separator orientation="vertical"/>
+	                <field name="partner_id"  />
+	                <field name="partner_address_id" />
 	                <newline/>
+	                <field name="claim_date" />
 	                <field name="date_closed" />
+	                <field name="deadline_date" />
                 </group>
             	</xpath>
              <xpath
@@ -107,6 +115,11 @@
                      context="{'group_by':'canal_id'}" />
                 <filter string="State of Mind" icon="terp-sale" domain="[]"
                      context="{'group_by':'som'}" />
+                <newline/>
+                <filter string="Partner" icon="terp-sale" domain="[]"
+                     context="{'group_by':'partner_id'}" />
+                <filter string="Contact" icon="terp-sale" domain="[]"
+                     context="{'group_by':'partner_address_id'}" />
              </xpath>
              </data>
             </field>

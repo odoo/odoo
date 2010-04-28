@@ -48,7 +48,10 @@ class crm_claim_report(osv.osv):
                          ('object_id.model', '=', 'crm.claim')]"),
         'date_closed': fields.datetime('Closed', readonly=True),
         'canal_id': fields.many2one('res.partner.canal','Channel',domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.claim')]"),
-        'som': fields.many2one('res.partner.som', 'State of Mind')
+        'som': fields.many2one('res.partner.som', 'State of Mind'),
+        'claim_date': fields.datetime('Date Of Claim',readonly=True),
+        'deadline_date': fields.datetime('Deadline ',readonly=True),
+        'partner_address_id': fields.many2one('res.partner.address','Contact ',readonly=True),
     }
 
     def init(self, cr):
@@ -81,6 +84,9 @@ class crm_claim_report(osv.osv):
                     c.date_closed as date_closed,
                     c.canal_id as canal_id,
                     c.som as som,
+                    c.create_date as claim_date,
+                    c.date_deadline as deadline_date,
+                    c.partner_address_id as partner_address_id,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
@@ -89,6 +95,7 @@ class crm_claim_report(osv.osv):
                         c.state, c.user_id,c.section_id, c.stage_id,\
                         c.categ_id,c.partner_id,c.company_id,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
                         ,c.priority,c.type_id,c.date_closed,c.canal_id,c.som
+                        ,c.create_date,c.date_deadline,c.partner_address_id
             )""")
 
 crm_claim_report()

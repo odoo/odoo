@@ -28,6 +28,7 @@
                     <field name="date_closed" invisible="1"/>
                     <field name="canal_id" invisible="1"/>
                     <field name="som" invisible="1"/>
+                    <field name="type_id" invisible="1" string="Payment Mode"/>
                </tree>
             </field>
 
@@ -81,6 +82,7 @@
 	                <separator orientation="vertical"/>
 	                <field name="canal_id" widget="selection" />
 	                <field name="som" widget="selection" />
+	                <field name="type_id" widget="selection" string="Payment Mode" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
 	                <newline/>
 	                <field name="date_closed" />
 	             </group>
@@ -95,6 +97,8 @@
                      context="{'group_by':'canal_id'}" />
                 <filter string="State of Mind" icon="terp-sale" domain="[]"
                      context="{'group_by':'som'}" />
+                <filter string="Payment Mode" icon="terp-sale" domain="[]"
+                     context="{'group_by':'type_id'}" />
              </xpath>
                 </data>
             </field>
