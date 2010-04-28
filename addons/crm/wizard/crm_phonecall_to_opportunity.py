@@ -75,10 +75,10 @@ Call Could not convert into Opportunity"))
             phonecall_obj = self.pool.get('crm.phonecall')
             case = phonecall_obj.browse(cr, uid, record_id, context=context)
             data_obj = self.pool.get('ir.model.data')
-            result = data_obj._get_id(cr, uid, 'crm_sale', 'view_crm_case_opportunities_filter')
+            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
             res = data_obj.read(cr, uid, result, ['res_id'])
-            id2 = data_obj._get_id(cr, uid, 'crm_sale', 'crm_case_form_view_oppor')
-            id3 = data_obj._get_id(cr, uid, 'crm_sale', 'crm_case_tree_view_oppor')
+            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_oppor')
+            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_oppor')
             if id2:
                 id2 = data_obj.browse(cr, uid, id2, context=context).res_id
             if id3:

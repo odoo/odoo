@@ -8,13 +8,13 @@
 	-->
 	<record model="crm.case.categ" id="categ_phone1">
 		<field name="name">Inbound</field>
-		<field name="section_id" ref="crm.section_sales_department"/>
+		<field name="section_id" ref="section_sales_department"/>
 		<field name="object_id" search="[('model','=','crm.phonecall')]" model="ir.model"/>
 		
 	</record>
 	<record model="crm.case.categ" id="categ_phone2">
 		<field name="name">Outbound</field>
-		<field name="section_id" ref="crm.section_sales_department"/>
+		<field name="section_id" ref="section_sales_department"/>
 		<field name="object_id" search="[('model','=','crm.phonecall')]" model="ir.model"/>		
 	</record>
 	
@@ -23,17 +23,17 @@
 	-->
 	<record model="crm.case.stage" id="stage_phone1">
 		<field name="name">Planned</field>
-		<field name="section_id" ref="crm.section_sales_department"/>
+		<field name="section_id" ref="section_sales_department"/>
 		<field name="object_id" search="[('model','=','crm.phonecall')]" model="ir.model"/>		
 	</record>	
 	<record model="crm.case.stage" id="stage_phone2">
 		<field name="name">Held</field>
-		<field name="section_id" ref="crm.section_sales_department"/>
+		<field name="section_id" ref="section_sales_department"/>
 		<field name="object_id" search="[('model','=','crm.phonecall')]" model="ir.model"/>		
 	</record>	
 	<record model="crm.case.stage" id="stage_phone3">
 		<field name="name">Not Held</field>
-		<field name="section_id" ref="crm.section_sales_department"/>
+		<field name="section_id" ref="section_sales_department"/>
 		<field name="object_id" search="[('model','=','crm.phonecall')]" model="ir.model"/>
 	</record>
 </data>

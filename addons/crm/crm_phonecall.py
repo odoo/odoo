@@ -21,7 +21,7 @@
 
 from osv import fields, osv
 from tools.translate import _
-from crm import crm
+import crm
 import time
 
 class crm_phonecall(osv.osv):

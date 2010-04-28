@@ -58,10 +58,10 @@ class crm_phonecall2phonecall(osv.osv_memory):
             data_obj = self.pool.get('ir.model.data')
 
             # Get Phonecall views
-            result = data_obj._get_id(cr, uid, 'crm_phonecall', 'view_crm_case_phonecalls_filter')
+            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
             res = data_obj.read(cr, uid, result, ['res_id'])
-            id2 = data_obj._get_id(cr, uid, 'crm_phonecall', 'crm_case_phone_form_view')
-            id3 = data_obj._get_id(cr, uid, 'crm_phonecall', 'crm_case_phone_tree_view')
+            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
+            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
             if id2:
                 id2 = data_obj.browse(cr, uid, id2, context=context).res_id
             if id3:

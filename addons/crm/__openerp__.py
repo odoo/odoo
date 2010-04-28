@@ -26,7 +26,7 @@
     'category': 'Generic Modules/CRM & SRM',
     'description': """The generic Open ERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
-leads, opportunities, claims, meeting, phonecall etc.
+leads, opportunities, meeting, phonecall etc.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
@@ -54,35 +54,63 @@ between mails and Open ERP.""",
     ],
     'init_xml': [
         'crm_data.xml',
+        'crm_meeting_data.xml',
+        'crm_lead_data.xml',
+        'crm_meeting_data.xml',
+        'crm_opportunity_data.xml',
+        'crm_phonecall_data.xml',
     ],
 
     'update_xml': [
+        'wizard/crm_lead_to_partner_view.xml',
+        'wizard/crm_lead_to_opportunity_view.xml',
+
+        'wizard/crm_phonecall_to_phonecall_view.xml',
+        'wizard/crm_phonecall_to_partner_view.xml',
+        'wizard/crm_phonecall_to_opportunity_view.xml',
+
+        'wizard/crm_opportunity_to_phonecall_view.xml',
+        'wizard/crm_partner_to_opportunity_view.xml',
+
         'wizard/crm_send_email_view.xml',
         'wizard/crm_email_add_cc_view.xml',
         'crm_view.xml',
+
         'crm_action_rule_view.xml',
+        'crm_lead_view.xml',
+        'crm_lead_menu.xml',
+        'crm_meeting_view.xml',
+        'crm_meeting_menu.xml',
+        'crm_phonecall_view.xml',
+        'crm_phonecall_menu.xml',
+        'crm_opportunity_view.xml',
+        'crm_opportunity_menu.xml',
 
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
         'report/crm_report_view.xml',
+        'report/crm_lead_report_view.xml',
+        'report/crm_opportunity_report_view.xml' ,
+        'report/crm_phonecall_report_view.xml',
 
         'process/crm_configuration_process.xml',
     ],
     'demo_xml': [
-        'test/test_crm_meeting.yml',         
         'crm_demo.xml',
+        'crm_lead_demo.xml',
+        'crm_meeting_demo.xml',
+        'crm_opportunity_demo.xml',
+        'crm_phonecall_demo.xml'
     ],
-    'test': ['test/test_crm_lead.yml',
+    'test': [
+            'test/test_crm_meeting.yml', 
+            'test/test_crm_lead.yml',
             'test/test_crm_opportunity.yml',
             'test/test_crm_phonecall.yml', 
-            'test/test_crm_fund.yml',    
-            'test/test_crm_claim.yml',
-            'test/test_crm_helpdesk.yml',  
              ],
     'installable': True,
     'active': False,
     'certificate': '0079056041421',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

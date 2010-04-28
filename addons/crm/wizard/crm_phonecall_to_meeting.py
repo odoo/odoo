@@ -37,9 +37,9 @@ class phonecall2meeting(wizard.interface):
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
-        id1 = data_obj._get_id(cr, uid, 'crm_meeting', 'crm_case_calendar_view_meet')
-        id2 = data_obj._get_id(cr, uid, 'crm_meeting', 'crm_case_form_view_meet')
-        id3 = data_obj._get_id(cr, uid, 'crm_meeting', 'crm_case_tree_view_meet')
+        id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
+        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
+        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
         if id1:
             id1 = data_obj.browse(cr, uid, id1, context=context).res_id
         if id2:
@@ -115,9 +115,9 @@ class crm_phonecall2meeting(osv.osv_memory):
             # Get meeting views
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
             res = data_obj.read(cr, uid, result, ['res_id'])
-            id1 = data_obj._get_id(cr, uid, 'crm_meeting', 'crm_case_calendar_view_meet')
-            id2 = data_obj._get_id(cr, uid, 'crm_meeting', 'crm_case_form_view_meet')
-            id3 = data_obj._get_id(cr, uid, 'crm_meeting', 'crm_case_tree_view_meet')
+            id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
+            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
+            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
             if id1:
                 id1 = data_obj.browse(cr, uid, id1, context=context).res_id
             if id2:
