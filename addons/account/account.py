@@ -1062,7 +1062,7 @@ class account_move(osv.osv):
             # Example:
             #    difference == 0.01 is OK iff price_accuracy <= 1!
             #    difference == 0.0001 is OK iff price_accuracy <= 3!
-            if abs(amount) < 10 ** -(int(config['price_accuracy'])):
+            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):
                 if not len(line_draft_ids):
                     continue
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
