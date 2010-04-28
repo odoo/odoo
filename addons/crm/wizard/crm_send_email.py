@@ -76,7 +76,8 @@ class crm_send_new_email(osv.osv_memory):
             
             case = case_pool.browse(cr, uid, res_id)
             if context.get('mail', 'new') == 'new':
-                message_id = case.history_line[0].message_id
+                if len(case.history_line):
+                    message_id = case.history_line[0].message_id
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id
@@ -92,9 +93,11 @@ class crm_send_new_email(osv.osv_memory):
             case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from, message_id=message_id)
 
             x_headers = {
-                'References':"%s" % (message_id),
                 'Reply-To':"%s" % case.section_id.reply_to,
             }
+            if message_id:
+                x_headers['References'] = "%s" % (message_id)
+
             flag = False
             if case.section_id and case.section_id.server_id:
                 flag = smtp_pool.send_email(
@@ -159,13 +162,15 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_from' in fields:
                 res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
                             (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from',False)})
+                             case.user_id.address_id.email and \
+                             "%s <%s>" % (case.user_id.name, case.user_id.address_id.email)) or \
+                            tools.config.get('email_from',False)})
             if 'subject' in fields:
                 res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')})
             if 'email_cc' in fields:
                 res.update({'email_cc': case.email_cc or ''})
             if 'text' in fields:
-                res.update({'text': '\n\n'+(case.user_id.signature or '') + '\n\n' +  (case.description or '')})
+                res.update({'text': '\n\n'+(case.user_id.signature or '')})
             if 'state' in fields:
                 res.update({'state': 'pending'})
         return res
