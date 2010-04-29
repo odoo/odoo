@@ -1214,7 +1214,7 @@ class stock_move(osv.osv):
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
         'delivered_id': fields.many2one('stock.delivery', 'Product delivered'),
-        'scraped': fields.related('location_dest_id','scraped',type='boolean',relation='stock.location',string='Scraped'),
+        'scraped': fields.boolean('Scraped'),
     }
     _constraints = [
         (_check_tracking,
@@ -1252,6 +1252,7 @@ class stock_move(osv.osv):
         'state': lambda *a: 'draft',
         'priority': lambda *a: '1',
         'product_qty': lambda *a: 1.0,
+        'scraped' : lambda *a: False,
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c)
