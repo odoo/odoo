@@ -57,6 +57,7 @@ class account_vat_declaration(osv.osv_memory):
 			'type': 'ir.actions.report.xml',
 			'report_name': 'account.vat.declaration',
 			'datas': datas,
+            'nodestroy':True,
 			}
 
 account_vat_declaration()

@@ -84,6 +84,7 @@ class account_partner_balance(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.partner.balance',
             'datas': data,
+            'nodestroy':True,
             }
 
     def _check_date(self, cr, uid, data, context):
@@ -99,6 +100,7 @@ class account_partner_balance(osv.osv_memory):
                     'type': 'ir.actions.report.xml',
                     'report_name': 'account.partner.balance',
                     'datas': data,
+                    'nodestroy':True,
                     }
         else:
             raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))

@@ -59,6 +59,7 @@ class account_print_journal(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.journal.period.print',
             'datas': datas,
+            'nodestroy':True,
             }
 
 account_print_journal()

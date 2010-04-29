@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import osv, fields
 from tools.translate import _
 
@@ -53,8 +52,8 @@ class account_general_journal(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.general.journal',
             'datas': datas,
+            'nodestroy':True,
             }
 
 account_general_journal()
-
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

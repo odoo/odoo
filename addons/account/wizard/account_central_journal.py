@@ -53,6 +53,7 @@ class account_central_journal(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.central.journal',
             'datas': datas,
+            'nodestroy':True,
             }
 
 account_central_journal()

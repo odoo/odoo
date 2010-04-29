@@ -235,7 +235,8 @@ class account_automatic_reconcile(osv.osv_memory):
             'views': [(resource_id,'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': context
+            'context': context,
+            'nodestroy':True,
         }
 
 account_automatic_reconcile()

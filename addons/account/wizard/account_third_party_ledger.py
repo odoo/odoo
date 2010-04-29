@@ -97,12 +97,14 @@ class account_partner_ledger(osv.osv_memory):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger',
                 'datas': data,
+                'nodestroy':True,
             }
         else:
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger_other',
                 'datas': data,
+                'nodestroy':True,
             }
 
     def _check_date(self, cr, uid, data, context=None):
@@ -120,6 +122,7 @@ class account_partner_ledger(osv.osv_memory):
                     'type': 'ir.actions.report.xml',
                     'report_name': 'account.third_party_ledger',
                     'datas': data,
+                    'nodestroy':True,
                 }
         else:
             raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
