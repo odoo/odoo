@@ -61,6 +61,11 @@ class account_invoice_report(osv.osv):
             ('paid','Done'),
             ('cancel','Cancelled')
             ], 'Order State', readonly=True),
+        'date_due': fields.date('Due Date', readonly=True),
+        'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True),
+        'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True),
+        'account_id': fields.many2one('account.account', 'Account',readonly=True),
+        'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',readonly=True)
     }
     _order = 'date desc'
     def init(self, cr):
@@ -87,8 +92,13 @@ class account_invoice_report(osv.osv):
                      (sum(l.quantity*l.price_unit)/sum(l.quantity * u.factor))::decimal(16,2) as price_average,
                      count(*) as nbr,
                      s.type as type,
-                     s.state
-                     from
+                     s.state,
+                     s.date_due as date_due,
+                     s.address_contact_id as address_contact_id,
+                     s.address_invoice_id as address_invoice_id,
+                     s.account_id as account_id,
+                     s.partner_bank as partner_bank
+                 from
                  account_invoice_line l
                  left join
                      account_invoice s on (s.id=l.invoice_id)
@@ -106,7 +116,12 @@ class account_invoice_report(osv.osv):
                      s.period_id,
                      s.fiscal_position,
                      s.currency_id,
-                     s.journal_id
+                     s.journal_id,
+                     s.date_due,
+                     s.address_contact_id,
+                     s.address_invoice_id,
+                     s.account_id,
+                     s.partner_bank
             )
         """)
 account_invoice_report()
