@@ -72,6 +72,7 @@ between mails and Open ERP.""",
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
+        'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_send_email_view.xml',
         'wizard/crm_email_add_cc_view.xml',
         'crm_view.xml',
