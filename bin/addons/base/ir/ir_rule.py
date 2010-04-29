@@ -50,12 +50,12 @@ class ir_rule(osv.osv):
             obj = self.pool.get(model)
             if isinstance(obj, osv.osv_memory):
                 return False
-            return True
+        return True
 
     _columns = {
         'name': fields.char('Name', size=128, select=1),
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True),
-        'global': fields.function(_get_value, method=True, string='Global', type='boolean', store=True, help="Make the rule global, otherwise it needs to be put on a group"),
+        'global': fields.function(_get_value, method=True, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
         'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
         'domain_force': fields.char('Domain', size=250),
         'domain': fields.function(_domain_force_get, method=True, string='Domain', type='char', size=250),
@@ -75,7 +75,7 @@ class ir_rule(osv.osv):
         'global': True,
     }
     _sql_constraints = [
-        ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have atleast one checked access right'),
+        ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have at least one checked access right'),
     ]
     _constraints = [
         (_check_model_obj, 'Rules are not supported for osv_memory objects !', ['model_id'])
@@ -87,12 +87,13 @@ class ir_rule(osv.osv):
             dom += rule.domain
         return dom
 
-    def domain_get(self, cr, uid, model_name, mode='read', context={}):
+    @tools.cache()
+    def _compute_domain(self, cr, uid, model_name, mode="read"):
         group_rule = {}
         global_rules = []
 
         if uid == 1:
-            return [], [], ['"'+self.pool.get(model_name)._table+'"']
+            return None
         cr.execute("""SELECT r.id
                 FROM ir_rule r
                 JOIN ir_model m ON (r.model_id = m.id)
@@ -111,28 +112,32 @@ class ir_rule(osv.osv):
         dom += ['|'] * (len(group_rule)-1)
         for value in group_rule.values():
             dom += self.domain_create(cr, uid, value)
-        d1,d2,tables = self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
-        return d1, d2, tables
-    domain_get = tools.cache()(domain_get)
+        return dom
+
+    def domain_get(self, cr, uid, model_name, mode='read', context={}):
+        dom = self._compute_domain(cr, uid, model_name, mode=mode)
+        if dom:
+            return self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
+        return [], [], ['"'+self.pool.get(model_name)._table+'"']
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_rule, self).unlink(cr, uid, ids, context=context)
-        # Restart the cache on the domain_get method of ir.rule
-        self.domain_get.clear_cache(cr.dbname)
+        # Restart the cache on the _compute_domain method of ir.rule
+        self._compute_domain.clear_cache(cr.dbname)
         return res
 
     def create(self, cr, user, vals, context=None):
         res = super(ir_rule, self).create(cr, user, vals, context=context)
-        # Restart the cache on the domain_get method of ir.rule
-        self.domain_get.clear_cache(cr.dbname)
+        # Restart the cache on the _compute_domain method of ir.rule
+        self._compute_domain.clear_cache(cr.dbname)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
             context={}
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
-        # Restart the cache on the domain_get method
-        self.domain_get.clear_cache(cr.dbname)
+        # Restart the cache on the _compute_domain method
+        self._compute_domain.clear_cache(cr.dbname)
         return res
 
 ir_rule()
