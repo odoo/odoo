@@ -35,7 +35,7 @@ class account_automatic_reconcile(osv.osv_memory):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'period_id': fields.many2one('account.period', 'Period', required=True),
         'max_amount': fields.float('Maximum write-off amount'),
-        'power': fields.selection([(p, str(p)) for p in range(2, 10)], required=True),
+        'power': fields.selection([(p, str(p)) for p in range(2, 10)], 'Power', required=True),
         'date1': fields.date('Start of period', required=True),
         'date2': fields.date('End of period', required=True),
         'reconciled': fields.integer('Reconciled transactions', readonly=True),
