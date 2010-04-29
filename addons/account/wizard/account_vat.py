@@ -33,7 +33,7 @@ class account_vat_declaration(osv.osv_memory):
 		'periods': fields.many2many('account.period', 'vat_period_rel', 'vat_id', 'period_id', 'Periods', help="All periods if empty"),
 		}
 
-	def _get_company(self, cr, uid, ids, context={}):
+	def _get_company(self, cr, uid, context={}):
 		user_obj = self.pool.get('res.users')
 		company_obj = self.pool.get('res.company')
 		user = user_obj.browse(cr, uid, uid, context=context)
