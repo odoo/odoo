@@ -417,8 +417,6 @@ class sale_order(osv.osv):
             for line in o.order_line:
                 if (line.state in states) and not line.invoiced:
                     lines.append(line.id)
-            if not lines:
-                 raise osv.except_osv(_('Warning'),_('Invoice cannot be created for this Sale Order due to one of the following reasons:\n1.The state is not in %s!\n2.The Sale Order Lines are Invoiced!')%(states,))
             created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
             if created_lines:
                 invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
