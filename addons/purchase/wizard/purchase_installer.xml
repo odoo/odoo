@@ -11,7 +11,10 @@
 	          <form position="attributes">
 	            <attribute name="string">Purchase Modules Installation</attribute>
 	          </form>
-
+			  <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='rowspan'>6</attribute>
+	          	  <attribute name='string'></attribute>
+	      		</xpath>
 	          <separator string="title" position="attributes">
 	            <attribute name="string"
 	                       >Configure Your Purchase System</attribute>
@@ -22,7 +25,6 @@
 	          </xpath>
 
                 <group colspan="8">
-                  <separator string="Purchase Application" colspan="4"/>
                   <field name="purchase_requisition"/>
                 </group>
               </data>

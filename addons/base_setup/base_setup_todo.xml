@@ -10,16 +10,20 @@
           <form position="attributes">
             <attribute name="string">Main Company Setup</attribute>
           </form>
-
+		  <xpath expr="//label[@string='description']" position="attributes">
+	            <attribute name="string">Information of your company will be used to custiomize your documents like Invoices, Sale Orders,...</attribute>
+	      </xpath>
+	      <xpath expr='//separator[@string="title"]' position='attributes'>
+	          	  <attribute name='string'>Configure Your Company</attribute>
+	      </xpath>
+	      <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='rowspan'>25</attribute>
+	          	  <attribute name='string'></attribute>
+	      </xpath>
           <group string="res_config_contents" position="replace">
-          	<group colspan="4">
-          		<group colspan="2">
-          			<image name="gtk-dialog-info"/>
-          			<label colspan="4" align="0.0" width= "100" string="Information of your company will be used to custiomize your documents like Invoices, Sale Orders,..."/>
-          		</group>
+          	<group colspan="5">
           		<group colspan="2">
 	            	<field name="company_id" invisible="1"/>
-		            <separator string="Configure Your Company" colspan="4"/>
 		            <field name="name" colspan="4" required="True"/>
 		            <newline/>
 		            <field name="street"/>

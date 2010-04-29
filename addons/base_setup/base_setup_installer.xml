@@ -10,9 +10,6 @@
           <form position="attributes">
             <attribute name="string">Base Setup Modules Installation</attribute>
           </form>
-          <separator string="title" position="attributes">
-            <attribute name="string">Install Modules</attribute>
-          </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
             <attribute name="string"
@@ -20,8 +17,14 @@
 
 If you don't think you need any of these right now, you can easily install them later on.</attribute>
           </xpath>
+          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='rowspan'>15</attribute>
+	          	  <attribute name='string'></attribute>
+	      </xpath>
+	      <separator string="title" position="attributes">
+            <attribute name="string">Install Generic Modules</attribute>
+          </separator>
           <group colspan="8">
-            <separator string="Install Generic Modules" colspan="4"/>
             <field name="crm"/> <field name="sale"/>
             <field name="project"/> <field name="knowledge"/>
             <field name="stock"/> <field name="mrp"/>
