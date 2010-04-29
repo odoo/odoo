@@ -72,37 +72,24 @@
     </record>
 
 
-    <record model="ir.rule.group" id="res_partner_address_rule_group">
+    <record model="ir.rule" id="res_partner_address_rule">
         <field name="name">res.partner.address company</field>
         <field name="model_id" ref="model_res_partner_address"/>
         <field name="global" eval="True"/>
-    </record>
-    <record model="ir.rule" id="res_partner_address_comp_rule">
-        <field name="field_id" search="[('model','=','res.partner.address'),('name','=','company_id')]" model="ir.model.fields"/>
-        <field name="rule_group" ref="res_partner_address_rule_group"/>
         <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-    <record model="ir.rule.group" id="res_partner_rule_group">
+    <record model="ir.rule" id="res_partner_rule">
         <field name="name">res.partner company</field>
         <field name="model_id" ref="model_res_partner"/>
         <field name="global" eval="True"/>
-    </record>
-    <record model="ir.rule" id="res_partner_comp_rule">
-        <field name="field_id" search="[('model','=','res.partner'),('name','=','company_id')]" model="ir.model.fields"/>
-        <field name="rule_group" ref="res_partner_rule_group"/>
         <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
-
-    <record model="ir.rule.group" id="multi_company_default_rule_group">
+    <record model="ir.rule" id="multi_company_default_rule">
         <field name="name">Multi_company_default company</field>
         <field name="model_id" ref="model_multi_company_default"/>
         <field name="global" eval="True"/>
-    </record>
-    <record model="ir.rule" id="multi_company_default_comp_rule">
-        <field name="field_id" search="[('model','=','multi_company.default'),('name','=','company_id')]" model="ir.model.fields"/>
-        <field name="rule_group" ref="multi_company_default_rule_group"/>
         <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
     </record>
 

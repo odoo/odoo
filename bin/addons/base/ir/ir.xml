@@ -1147,67 +1147,48 @@
 
         <!-- Rules -->
 
-        <record id="view_rule_group_form" model="ir.ui.view">
+        <record id="view_rule_form" model="ir.ui.view">
             <field name="name">Record rules</field>
-            <field name="model">ir.rule.group</field>
+            <field name="model">ir.rule</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Record rules">
-                    <field name="model_id" select="1"/>
-                    <field name="global" select="1"/>
-                    <field colspan="4" name="name"/>
-                    <group col="6" colspan="4" expand="1">
-                        <field colspan="6" name="rules" nolabel="1"/>
-                        <label align="0.0" colspan="6" string="The rule is satisfied if all test are True (AND)"/>
-                        <label align="0.0" colspan="6" string="Multiple rules on same objects are joined using operator OR"/>
+                	<label align="0.0" angle="2" colspan="4" string="Rules will be applied on following scenario : "/>
+                	<label align="0.0" angle="2" colspan="4" string="GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"/>
+                	<separator colspan="4"/>
+                	<group col="6" colspan="4">
+	                	<field colspan="4" name="name"/>
+	                    <field name="model_id" select="1"/>
                     </group>
+                    <separator colspan="4" string="Access Rights"/>
+                    <group col="8" colspan="4" expand="1">
+                    	<field name="perm_read"/>
+                    	<field name="perm_write"/>
+                    	<field name="perm_create"/>
+                    	<field name="perm_unlink"/>
+                    </group>
+                    <separator colspan="4" string="Domain Setup"/>
+                    <group colspan="4" expand="1">
+	                    <field name="domain_force" colspan="4"/>
+                    </group>
+                    <separator colspan="4" string="Groups"/>
+                    <group colspan="4" expand="1">
+                        <field name="global" select="1"/>
+	                   	<field name="groups" select="1" nolabel="1" colspan="4"/>
+                   	</group>
                 </form>
             </field>
         </record>
-        <record id="view_rule_group_tree" model="ir.ui.view">
+        <record id="view_rule_tree" model="ir.ui.view">
             <field name="name">Record rules</field>
-            <field name="model">ir.rule.group</field>
+            <field name="model">ir.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Record rules">
                     <field name="model_id"/>
                     <field name="name"/>
                     <field name="global"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_rule_form" model="ir.ui.view">
-            <field name="name">Rule Definition</field>
-            <field name="model">ir.rule</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Test">
-                    <separator colspan="4" string="Simple domain setup"/>
-                    <group col="6" colspan="4">
-                        <field name="field_id"/>
-                        <field name="operator"/>
-                        <field name="operand"/>
-                    </group>
-                    <separator colspan="4" string="Manual domain setup"/>
                     <field name="domain_force"/>
-                    <label colspan="4" string="If you don't force the domain, it will use the simple domain setup"/>
-                    <newline/>
-                    <field name="perm_read"/>
-                    <field name="perm_write"/>
-                    <field name="perm_create"/>
-                    <field name="perm_unlink"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_rule_tree" model="ir.ui.view">
-            <field name="name">Rules</field>
-            <field name="model">ir.rule</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Test">
-                    <field name="domain"/>
                     <field name="perm_read"/>
                     <field name="perm_write"/>
                     <field name="perm_create"/>
@@ -1215,22 +1196,20 @@
                 </tree>
             </field>
         </record>
+
         <record id="action_rule" model="ir.actions.act_window">
             <field name="name">Record Rules</field>
-            <field name="res_model">ir.rule.group</field>
+            <field name="res_model">ir.rule</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_rule_group_tree"/>
+            <field name="view_id" ref="view_rule_tree"/>
         </record>
         <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_security"/>
 
-        <record id="property_rule_group" model="ir.rule.group">
+        <record id="property_rule" model="ir.rule">
             <field name="name">Property multi-company</field>
             <field model="ir.model" name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
-        </record>
-        <record id="property_rule" model="ir.rule">
             <field name="domain_force">['|',('company_id','child_of',user.company_id.id),('company_id','=',False)]</field>
-            <field name="rule_group" ref="property_rule_group"/>
         </record>
 
         <!--server action view-->

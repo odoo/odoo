@@ -23,132 +23,94 @@ from osv import fields,osv
 import time
 import tools
 
-
-class ir_rule_group(osv.osv):
-    _name = 'ir.rule.group'
-
-    _columns = {
-        'name': fields.char('Name', size=128, select=1),
-        'model_id': fields.many2one('ir.model', 'Object',select=1, required=True),
-        'global': fields.boolean('Global', select=1, help="Make the rule global, otherwise it needs to be put on a group"),
-        'rules': fields.one2many('ir.rule', 'rule_group', 'Tests', help="The rule is satisfied if at least one test is True"),
-        'groups': fields.many2many('res.groups', 'group_rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
-        'users': fields.many2many('res.users', 'user_rule_group_rel', 'rule_group_id', 'user_id', 'Users'),
-    }
-
-    _order = 'model_id, global DESC'
-
-    _defaults={
-        'global': lambda *a: True,
-    }
-
-ir_rule_group()
-
-
 class ir_rule(osv.osv):
     _name = 'ir.rule'
-    _rec_name = 'field_id'
-
-    def _operand(self,cr,uid,context):
-
-        def get(object, level=3, recur=None, root_tech='', root=''):
-            res = []
-            if not recur:
-                recur = []
-            fields = self.pool.get(object).fields_get(cr,uid)
-            key = fields.keys()
-            key.sort()
-            for k in key:
-
-                if fields[k]['type'] in ('many2one'):
-                    res.append((root_tech+'.'+k+'.id',
-                        root+'/'+fields[k]['string']))
-
-                elif fields[k]['type'] in ('many2many', 'one2many'):
-                    res.append(('\',\'.join(map(lambda x: str(x.id), '+root_tech+'.'+k+'))',
-                        root+'/'+fields[k]['string']))
-
-                else:
-                    res.append((root_tech+'.'+k,
-                        root+'/'+fields[k]['string']))
-
-                if (fields[k]['type'] in recur) and (level>0):
-                    res.extend(get(fields[k]['relation'], level-1,
-                        recur, root_tech+'.'+k, root+'/'+fields[k]['string']))
-
-            return res
-
-        res = [("False", "False"), ("True", "True"), ("user.id", "User")]
-        res += get('res.users', level=1,
-                recur=['many2one'], root_tech='user', root='User')
-        return res
 
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context={}):
         res = {}
         for rule in self.browse(cr, uid, ids, context):
             eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
                             'time':time}
-
-            if rule.domain_force:
-                res[rule.id] = eval(rule.domain_force, eval_user_data)
-            else:
-                if rule.operand and rule.operand.startswith('user.') and rule.operand.count('.') > 1:
-                    #Need to check user.field.field1.field2(if field  is False,it will break the chain)
-                    op = rule.operand[5:]
-                    rule.operand = rule.operand[:5+len(op[:op.find('.')])] +' and '+ rule.operand + ' or False'
-                if rule.operator in ('in', 'child_of'):
-                    dom = eval("[('%s', '%s', [%s])]" % (rule.field_id.name, rule.operator,
-                        eval(rule.operand,eval_user_data)), eval_user_data)
-                else:
-                    dom = eval("[('%s', '%s', %s)]" % (rule.field_id.name, rule.operator,
-                        rule.operand), eval_user_data)
-                res[rule.id] = dom
+            res[rule.id] = eval(rule.domain_force, eval_user_data)
         return res
 
+    def _get_value(self, cr, uid, ids, field_name, arg, context={}):
+        res = {}
+        for rule in self.browse(cr, uid, ids, context):
+            if not rule.groups:
+                res[rule.id] = True
+            else:
+                res[rule.id] = False
+        return res
+
+    def _check_model_obj(self, cr, uid, ids, context={}):
+        model_obj = self.pool.get('ir.model')
+        for rule in self.browse(cr, uid, ids, context):
+            model = model_obj.browse(cr, uid, rule.model_id.id, context).model
+            obj = self.pool.get(model)
+            if isinstance(obj, osv.osv_memory):
+                return False
+            return True
+
     _columns = {
-        'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]", select=1),
-        'operator':fields.selection((('=', '='), ('<>', '<>'), ('<=', '<='), ('>=', '>='), ('in', 'in'), ('child_of', 'child_of')), 'Operator'),
-        'operand':fields.selection(_operand,'Operand', size=64),
-        'rule_group': fields.many2one('ir.rule.group', 'Group', select=2, required=True, ondelete="cascade"),
-        'domain_force': fields.char('Force Domain', size=250),
+        'name': fields.char('Name', size=128, select=1),
+        'model_id': fields.many2one('ir.model', 'Object',select=1, required=True),
+        'global': fields.function(_get_value, method=True, string='Global', type='boolean', store=True, help="Make the rule global, otherwise it needs to be put on a group"),
+        'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
+        'domain_force': fields.char('Domain', size=250),
         'domain': fields.function(_domain_force_get, method=True, string='Domain', type='char', size=250),
-        'perm_read': fields.boolean('Read Access'),
-        'perm_write': fields.boolean('Write Access'),
-        'perm_create': fields.boolean('Create Access'),
-        'perm_unlink': fields.boolean('Delete Access')
+        'perm_read': fields.boolean('Apply For Read'),
+        'perm_write': fields.boolean('Apply For Write'),
+        'perm_create': fields.boolean('Apply For Create'),
+        'perm_unlink': fields.boolean('Apply For Delete')
     }
+
+    _order = 'model_id DESC'
+
     _defaults = {
-        'perm_read': lambda *a: True,
-        'perm_write': lambda *a: True,
-        'perm_create': lambda *a: True,
-        'perm_unlink': lambda *a: True,
+        'perm_read': True,
+        'perm_write': True,
+        'perm_create': True,
+        'perm_unlink': True,
+        'global': True,
     }
     _sql_constraints = [
         ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have atleast one checked access right'),
     ]
+    _constraints = [
+        (_check_model_obj, 'Rules are not supported for osv_memory objects !', ['model_id'])
+    ]
 
-    def onchange_all(self, cr, uid, ids, field_id, operator, operand):
-        if not (field_id or operator or operand):
-            return {}
+    def domain_create(self, cr, uid, rule_ids):
+        dom = ['&'] * (len(rule_ids)-1)
+        for rule in self.browse(cr, uid, rule_ids):
+            dom += rule.domain
+        return dom
 
     def domain_get(self, cr, uid, model_name, mode='read', context={}):
+        group_rule = {}
+        global_rules = []
+
         if uid == 1:
             return [], [], ['"'+self.pool.get(model_name)._table+'"']
-
         cr.execute("""SELECT r.id
                 FROM ir_rule r
-                JOIN (ir_rule_group g
-                    JOIN ir_model m ON (g.model_id = m.id))
-                    ON (g.id = r.rule_group)
+                JOIN ir_model m ON (r.model_id = m.id)
                 WHERE m.model = %s
                 AND r.perm_""" + mode + """
-                AND (g.id IN (SELECT rule_group_id FROM group_rule_group_rel g_rel
+                AND (r.id IN (SELECT rule_group_id FROM rule_group_rel g_rel
                             JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
-                            WHERE u_rel.uid = %s) OR g.global)""", (model_name, uid))
+                            WHERE u_rel.uid = %s) OR r.global)""", (model_name, uid))
         ids = map(lambda x: x[0], cr.fetchall())
-        dom = []
         for rule in self.browse(cr, uid, ids):
-            dom += rule.domain
+            for group in rule.groups:
+                group_rule.setdefault(group.id, []).append(rule.id)
+            if not rule.groups:
+              global_rules.append(rule.id)
+        dom = self.domain_create(cr, uid, global_rules)
+        dom += ['|'] * (len(group_rule)-1)
+        for value in group_rule.values():
+            dom += self.domain_create(cr, uid, value)
         d1,d2,tables = self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
         return d1, d2, tables
     domain_get = tools.cache()(domain_get)
