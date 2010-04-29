@@ -32,7 +32,7 @@
     * Easy Integration with any Module""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['smtpclient', 'fetchmail'],
+    'depends': ['smtpclient'],
     'init_xml': [],
     'update_xml': [
         
