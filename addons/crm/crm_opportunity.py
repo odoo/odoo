@@ -37,10 +37,10 @@ AVAILABLE_STATES = [
 class crm_opportunity(osv.osv):
     """ Opportunity Cases """
 
-    _name = "crm.opportunity"
+    _name = "crm.lead"
     _description = "Opportunity Cases"
     _order = "priority,date_action,id desc"
-    _inherit = 'crm.case'
+    _inherit = 'crm.lead'
 
     def case_open(self, cr, uid, ids, *args):
         """
@@ -115,10 +115,10 @@ class crm_opportunity(osv.osv):
     _columns = {
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
                      domain="[('section_id','=',section_id),\
-                    ('object_id.model', '=', 'crm.opportunity')]"),
+                    ('object_id.model', '=', 'crm.lead')]"),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                      domain="[('section_id','=',section_id), \
-                    ('object_id.model', '=', 'crm.opportunity')]"),
+                    ('object_id.model', '=', 'crm.lead')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'referred': fields.char('Referred By', size=64),
         'probability': fields.float('Probability (%)'),
@@ -188,7 +188,7 @@ class crm_opportunity(osv.osv):
         return res
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.opportunity', context=c),
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'state' : 'draft',
     }

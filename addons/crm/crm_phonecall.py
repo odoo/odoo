@@ -49,7 +49,7 @@ class crm_phonecall(osv.osv):
                          the canall which is this opportunity source."),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
-        'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
+        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'),
     }
 
     _defaults = {

@@ -97,7 +97,6 @@
                             icon="gtk-index" type="action"
                             string="Create"
                             attrs="{'invisible':[('partner_id','!=',False)]}"/>
-                        <field name="opportunity_id"/>
                     </group>
                     <separator colspan="4" string="Notes"/>
                     <field name="description" nolabel="1" colspan="4"/>
@@ -133,7 +132,7 @@
                             widget="selection" colspan="2" />
                         <field name="categ_id"
                             widget="selection"
-                            domain="[('object_id.model', '=', 'crm.opportunity')]" />
+                            domain="[('object_id.model', '=', 'crm.lead')]" />
                         <field name="type_id" string="Campaign" select="1"/>
                         <field name="referred"/>
                     </group>

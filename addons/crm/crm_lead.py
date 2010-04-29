@@ -109,19 +109,21 @@ class crm_lead(osv.osv):
 
         'categ_id': fields.many2one('crm.case.categ', 'Lead Source', \
                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.opportunity')]"),
+                        ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', \
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
         'partner_name': fields.char("Contact Name", size=64),
-
+        'type':fields.selection([
+            ('lead','Lead'),
+            ('opportunity','Opportunity'),
+            
+        ],'Type', help="Type is used to separate Leads and Opportunities"),        
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.lead')]"),
-        'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'),
-
         'user_id': fields.many2one('res.users', 'Salesman'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -158,7 +160,6 @@ class crm_lead(osv.osv):
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
         for case in self.browse(cr, uid, ids):
-            context.update({'opportunity_id': case.id})
             context.update({'active_id': case.id})
             if not case.partner_id:
                 data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_partner')

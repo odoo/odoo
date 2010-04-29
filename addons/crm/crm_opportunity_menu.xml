@@ -6,7 +6,7 @@
             id="act_crm_opportunity_crm_meeting_new"
             name="Meetings"
             res_model="crm.meeting"
-            src_model="crm.opportunity"
+            src_model="crm.lead"
             view_mode="tree,form,calendar,"
             context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
             domain="[('user_id','=',uid), ('opportunity_id', '=', active_id)]"
@@ -16,7 +16,7 @@
             id="act_crm_opportunity_crm_phonecall_new"
             name="Phone calls"
             res_model="crm.phonecall"
-            src_model="crm.opportunity"
+            src_model="crm.lead"
             view_mode="calendar,tree,form"
             context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
             domain="[('user_id','=',uid),('opportunity_id', '=', active_id)]"
@@ -24,8 +24,9 @@
 
      <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
           <field name="name">Opportunities</field>
-          <field name="res_model">crm.opportunity</field>
+          <field name="res_model">crm.lead</field>
           <field name="view_mode">tree,form,graph</field>
+          <field name="domain">[('type','=','opportunity')]</field>
           <field name="view_id" ref="crm_case_tree_view_oppor"/>
           <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
      </record>

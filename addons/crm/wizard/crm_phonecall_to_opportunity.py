@@ -71,7 +71,7 @@ Call Could not convert into Opportunity"))
         """
         record_id = context and context.get('active_id', False) or False
         if record_id:
-            opp_obj = self.pool.get('crm.opportunity')
+            opp_obj = self.pool.get('crm.lead')
             phonecall_obj = self.pool.get('crm.phonecall')
             case = phonecall_obj.browse(cr, uid, record_id, context=context)
             data_obj = self.pool.get('ir.model.data')
@@ -94,6 +94,7 @@ Call Could not convert into Opportunity"))
                                 'description': case.description or False,
                                 'phonecall_id': case.id,
                                 'priority': case.priority,
+                                'type': 'opportunity', 
                                 'phone': case.partner_phone or False,
                             })
                 new_opportunity = opp_obj.browse(cr, uid, new_opportunity_id)
@@ -109,7 +110,7 @@ Call Could not convert into Opportunity"))
             'name': _('Opportunity'),
             'view_type': 'form',
             'view_mode': 'form,tree',
-            'res_model': 'crm.opportunity',
+            'res_model': 'crm.lead',
             'res_id': int(new_opportunity_id),
             'view_id': False,
             'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],

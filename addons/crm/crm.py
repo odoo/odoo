@@ -345,7 +345,7 @@ class crm_case(osv.osv):
                          multi="log_ids", relation="crm.case.log", string="Logs History"), 
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
                          domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.opportunity')]"), 
+                        ('object_id.model', '=', 'crm.lead')]"), 
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
