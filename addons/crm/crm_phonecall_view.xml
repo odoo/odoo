@@ -53,7 +53,7 @@
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
                     states="draft,open,pending"
-                     name="action_make_meeting" type="action" />
+                     name="action_make_meeting" type="object" />
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                 <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
