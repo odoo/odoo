@@ -19,18 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv,fields
-
-class company(osv.osv):
-    _inherit = 'res.company'
-    _columns = {
-        'manufacturing_lead': fields.float('Manufacturing Lead Time', required=True,
-            help="Security days for each manufacturing operation."),
-    }
-    _defaults = {
-        'manufacturing_lead': lambda *a: 1.0,
-    }
-company()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import mrp_procurement
+import wizard
+import schedulers
+import company

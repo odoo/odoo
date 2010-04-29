@@ -24,11 +24,12 @@ from osv import osv,fields
 class company(osv.osv):
     _inherit = 'res.company'
     _columns = {
-        'manufacturing_lead': fields.float('Manufacturing Lead Time', required=True,
-            help="Security days for each manufacturing operation."),
+        'security_lead': fields.float('Security Days', required=True,
+            help="This is the days added to what you promise to customers "\
+            "for security purpose"),
     }
     _defaults = {
-        'manufacturing_lead': lambda *a: 1.0,
+        'security_lead': lambda *a: 5.0,
     }
 company()
 

@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from mx import DateTime
 from osv import fields
 from osv import osv
 import time
@@ -691,6 +692,87 @@ class purchase_order_line(osv.osv):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
         return True    
 purchase_order_line()
+
+class mrp_procurement(osv.osv):
+    _inherit = 'mrp.procurement'
+    _columns = {
+        'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
+    }
+    
+    def action_po_assign(self, cr, uid, ids, context={}):
+        """ This is action which call from workflow to assign purchase order to procurements
+        @return: True
+        """
+        res = self.make_po(cr, uid, ids, context=context)
+        res = res.values()
+        return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
+
+    def make_po(self, cr, uid, ids, context={}):
+        """ Make purchase order from procurement
+        @return: New created Purchase Orders procurement wise
+        """
+        res = {}
+        company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
+        partner_obj = self.pool.get('res.partner')
+        uom_obj = self.pool.get('product.uom')
+        pricelist_obj = self.pool.get('product.pricelist')
+        prod_obj = self.pool.get('product.product')
+        acc_pos_obj = self.pool.get('account.fiscal.position')
+        po_obj = self.pool.get('purchase.order')
+        for procurement in self.browse(cr, uid, ids):
+            res_id = procurement.move_id.id
+            partner = procurement.product_id.seller_ids[0].name
+            partner_id = partner.id
+            address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
+            pricelist_id = partner.property_product_pricelist_purchase.id
+
+            uom_id = procurement.product_id.uom_po_id.id
+
+            qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
+            if procurement.product_id.seller_ids[0].qty:
+                qty = max(qty,procurement.product_id.seller_ids[0].qty)
+
+            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
+
+            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
+            newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
+            newdate = newdate - procurement.product_id.seller_ids[0].delay
+
+            #Passing partner_id to context for purchase order line integrity of Line name
+            context.update({'lang': partner.lang, 'partner_id': partner_id})
+
+            product = prod_obj.browse(cr, uid, procurement.product_id.id, context=context)
+
+            line = {
+                'name': product.partner_ref,
+                'product_qty': qty,
+                'product_id': procurement.product_id.id,
+                'product_uom': uom_id,
+                'price_unit': price,
+                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
+                'move_dest_id': res_id,
+                'notes': product.description_purchase,
+            }
+
+            taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
+            taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
+            line.update({
+                'taxes_id': [(6,0,taxes)]
+            })
+            purchase_id = po_obj.create(cr, uid, {
+                'origin': procurement.origin,
+                'partner_id': partner_id,
+                'partner_address_id': address_id,
+                'location_id': procurement.location_id.id,
+                'pricelist_id': pricelist_id,
+                'order_line': [(0,0,line)],
+                'company_id': procurement.company_id.id,
+                'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
+            })
+            res[procurement.id] = purchase_id
+            self.write(cr, uid, [procurement.id], {'state': 'running'}) #, 'purchase_id': purchase_id
+        return res
+mrp_procurement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

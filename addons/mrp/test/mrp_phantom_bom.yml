@@ -1,0 +1,228 @@
+-
+  In order to test the mrp phantom bom type in OpenERP, I will create products 
+  and then I will create Phantom bom structure for those products.
+-
+  I create the products required to produce some orange juices: Oranges, Sugar and Water.
+-
+  !record {model: product.uom, id: product_uom_litre0}:
+    category_id: product.product_uom_categ_kgm
+    factor: 1.0
+    name: Litre
+    rounding: 0.01 
+- 
+  !record {model: product.product, id: product_product_orangejuice0}:
+    categ_id: product.cat1
+    name: Orange Juice
+    procure_method: make_to_order
+    supply_method: produce
+    type: product
+    uom_id: product_uom_litre0
+    uom_po_id: product_uom_litre0
+- 
+  !record {model: product.product, id: product_product_orange0}:
+    categ_id: product.cat1
+    name: Orange
+    procure_method: make_to_stock
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_asus
+        qty: 1.0
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+- 
+  !record {model: product.product, id: product_product_sugar0}:
+    categ_id: product.cat1
+    name: Sugar
+    procure_method: make_to_stock
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_desertic_hispafuentes
+        qty: 2.0
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+- 
+  !record {model: product.product, id: product_product_water0}:
+    categ_id: product.cat1
+    name: Water
+    procure_method: make_to_stock
+    supply_method: buy
+    type: consu
+    uom_id: product_uom_litre0
+    uom_po_id: product_uom_litre0
+-
+  I define the BoM to produce an orange juice
+- 
+  !record {model: mrp.bom, id: mrp_bom_orangejuice0}:
+    company_id: base.main_company
+    name: Orange Juice
+    product_efficiency: 1.0
+    product_id: product_product_orangejuice0
+    product_qty: 1.0
+    product_uom: product_uom_litre0
+    type: phantom
+- 
+  !record {model: mrp.bom, id: mrp_bom_orangejuice0}:
+    bom_lines:
+      - bom_id: mrp_bom_orangejuice0
+        company_id: base.main_company
+        name: Orange
+        product_efficiency: 1.0
+        product_id: product_product_orange0
+        product_qty: 0.5
+        product_uom: product.product_uom_kgm
+        type: normal
+      - bom_id: mrp_bom_orangejuice0
+        company_id: base.main_company
+        name: Sugar
+        product_efficiency: 1.0
+        product_id: product_product_sugar0
+        product_qty: 0.02
+        product_uom: product.product_uom_kgm
+        type: normal
+      - bom_id: mrp_bom_orangejuice0
+        company_id: base.main_company
+        name: Water
+        product_efficiency: 1.0
+        product_id: product_product_water0
+        product_qty: 0.80000000000000004
+        product_uom: product_uom_litre0
+        type: normal
+-
+  I define Minimum stock rules for my stockable products orange and sugar
+- 
+  !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
+    company_id: base.main_company
+    location_id: stock.stock_location_stock
+    logic: max
+    name: OP/00002
+    product_id: product_product_orange0
+    product_max_qty: 10.0
+    product_min_qty: 5.0
+    product_uom: product.product_uom_kgm
+    qty_multiple: 1
+    warehouse_id: stock.warehouse0
+- 
+  !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op1}:
+    company_id: base.main_company
+    location_id: stock.stock_location_stock
+    logic: max
+    name: OP/00003
+    product_id: product_product_sugar0
+    product_max_qty: 4.0
+    product_min_qty: 2.0
+    product_uom: product.product_uom_kgm
+    qty_multiple: 1
+    warehouse_id: stock.warehouse0
+-
+  I want to produce 100 litres of Orange juice. I am creating a manufacturing order for this. 
+  I want to see how much quantities of sub products I need, to produce the Orange juice. 
+-
+  I compute the data. I get the bill of material of Orange juice and list of 
+  scheduled products according to my bom.
+- 
+  !record {model: mrp.production, id: mrp_production_mo0}:
+    company_id: base.main_company
+    date_planned: '2010-04-16 15:53:36'
+    location_dest_id: stock.stock_location_output
+    location_src_id: stock.stock_location_stock
+    name: MO/00002
+    product_id: product_product_orangejuice0
+    product_qty: 100.0
+    product_uom: product_uom_litre0
+- 
+  Creating an mrp.production record. Computing Bills of materials.
+- 
+  !record {model: mrp.production, id: mrp_production_mo0}:
+    bom_id: mrp.mrp_bom_orangejuice0
+    company_id: base.main_company
+    date_planned: '2010-04-16 15:53:36'
+    location_dest_id: stock.stock_location_output
+    location_src_id: stock.stock_location_stock
+    name: MO/00002
+    product_id: mrp.product_product_orangejuice0
+    product_lines:
+      - name: Orange
+        product_id: mrp.product_product_orange0
+        product_qty: 50.0
+        product_uom: product.product_uom_kgm
+        production_id: mrp_production_mo0
+      - name: Sugar
+        product_id: mrp.product_product_sugar0
+        product_qty: 2.0
+        product_uom: product.product_uom_kgm
+        production_id: mrp_production_mo0
+      - name: Water
+        product_id: mrp.product_product_water0
+        product_qty: 80.0
+        product_uom: mrp.product_uom_litre0
+        production_id: mrp_production_mo0
+    product_qty: 100.0
+    product_uom: mrp.product_uom_litre0
+-
+  I confirm the order.
+- 
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo0}
+-
+  I am checking Procurement orders. There are 3 orders generated for Oranges, Sugar and Water.
+-
+  !python {model: mrp.procurement}: |
+    from tools.translate import _
+    proc_ids = self.search(cr, uid, [('origin','=',':MO/00002')])
+    assert proc_ids, _('No Procurements!')
+-
+  The scheduler runs.
+-
+  !function {model: mrp.procurement, name: run_scheduler}:
+    - model: mrp.procurement
+      search: "[('origin','=',':MO/00002')]"
+-
+  I am checking Internal picking. I see one picking for Orange juice and its 
+  stock moves for Oranges, Sugar and Water made correctly.
+-
+  !python {model: stock.picking}: |
+    from tools.translate import _
+    pick_ids = self.search(cr, uid, [('origin','=',':MO/00002'),('type','=','internal')])
+    assert pick_ids, _('No Internal Pickings!')
+-
+  According to minimum stock rules. I have 2 purchase orders for 
+  Sugar with 6 Kg from Axelor and Orange 60 Kg from ASUStek.
+-
+  I confirm the purchase order of Sugar and Orange.
+-
+  !python {model: purchase.order}: |
+    from tools.translate import _
+    import netsvc
+    purch_ids = self.search(cr, uid, [('origin','in',['SCHEDULER','OP/00002','OP/00003'])])
+    assert purch_ids, _('No Purchase Orders were made!')
+    wf_service = netsvc.LocalService("workflow")
+    for p_id in purch_ids:
+    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
+-
+  I get the approval from both the suppliers. So I approve my purchase orders.
+-
+  !python {model: purchase.order}: |
+    from tools.translate import _
+    import netsvc
+    purch_ids = self.search(cr, uid, [('origin','in',['SCHEDULER','OP/00002','OP/00003']),('state','=','confirmed')])
+    assert purch_ids, _('No Confirmed Purchase Orders found!')
+    wf_service = netsvc.LocalService("workflow")
+    for p_id in purch_ids:
+    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_approve', cr)
+-
+  I see two incoming pickings for Orange and Sugar.
+-
+  !python {model: stock.picking}: |
+    from tools.translate import _
+    pick_ids = self.search(cr, uid, [('origin','in',['PO00001:SCHEDULER','PO00002:SCHEDULER','PO00003:OP/00002','PO00004:OP/00003']),('type','=','in')])
+    assert pick_ids, _('No Incoming Shipments found!')
+-
+  I receive both the products. My incoming pickings are done.
+-
+  !function {model: stock.move.split, name: split_lot}:
+    - model: stock.picking
+      search: "[('origin','in',['PO00001:SCHEDULER','PO00002:SCHEDULER','PO00003:OP/00002','PO00004:OP/00003']),('type','=','in')]"
+   

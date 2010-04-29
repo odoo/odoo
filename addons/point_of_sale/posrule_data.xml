@@ -174,7 +174,7 @@
       ref('stock.menu_action_picking_tree7'),
 	 		ref('stock.menu_action_picking_tree8'),
       ref('stock.menu_action_picking_tree9'),
-	 		ref('mrp.menu_mrp_procurement_action3'),
+	 		ref('mrp_procurement.menu_mrp_procurement_action3'),
 	 		ref('point_of_sale.menu_point_root')])]" name="menu_access"/>
 			<field eval="[(6,0,[ref('res_users_shopuser0'),ref('res_users_shopuser1')])]" name="users"/>
  				<field eval="[(6,0,[ref('point_of_sale.ir_rule_group_point0'),ref('point_of_sale.ir_rule_group_poslinecompany0'),ref('point_of_sale.ir_rule_group_posreporting0')])]" name="rule_groups"/>
@@ -211,7 +211,7 @@
 		</record>
 
 		<record id="ir_modelsmrp_pdt0" model="ir.model.access">
-			<field name="model_id" ref="mrp.model_mrp_procurement"/>
+			<field name="model_id" ref="mrp_procurement.model_mrp_procurement"/>
 			<field eval="1" name="perm_read"/>
 			<field eval="&quot;&quot;&quot;MRP - Procurement&quot;&quot;&quot;" name="name"/>
 			<field eval="0" name="perm_unlink"/>
@@ -553,7 +553,7 @@
 			<field name="group_id" ref="res_groups_posuser0"/>
 		</record>
         <record id="ir_model_access_procurement0" model="ir.model.access">
-            <field name="model_id" ref="mrp.model_mrp_procurement" />
+            <field name="model_id" ref="mrp_procurement.model_mrp_procurement" />
             <field eval="1" name="perm_read" />
             <field eval="1" name="perm_write" />
             <field eval="1" name="perm_create" />

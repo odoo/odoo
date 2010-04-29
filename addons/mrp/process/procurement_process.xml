@@ -2,114 +2,100 @@
 <openerp>
     <data>
 
-        <!--
-            Process
-        -->
-
-        <record id="process_process_procurementprocess0" model="process.process">
-            <field eval="&quot;&quot;&quot;Procurement&quot;&quot;&quot;" name="name"/>
-            <field name="model_id" ref="mrp.model_mrp_procurement"/>
-            <field eval="1" name="active"/>
-        </record>
-
-        <!--
-            Process Node
-        -->
-
-        <record id="process_node_stockproduct1" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
-            <field name="model_id" ref="mrp.model_mrp_procurement"/>
-            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;For stockable products and consumables&quot;&quot;&quot;" name="note"/>
-            <field eval="&quot;&quot;&quot;Stockable Product&quot;&quot;&quot;" name="name"/>
-            <field name="process_id" ref="mrp.process_process_stockableproductprocess0"/>
-            <field name="subflow_id" ref="process_process_procurementprocess0"/>
-            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
-            <field eval="1" name="flow_start"/>
-        </record>
-
-        <record id="process_node_serviceproduct1" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
-            <field name="model_id" ref="mrp.model_mrp_procurement"/>
-            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;For Services.&quot;&quot;&quot;" name="note"/>
-            <field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
-            <field name="process_id" ref="mrp.process_process_serviceproductprocess0"/>
-            <field name="subflow_id" ref="process_process_procurementprocess0"/>
-            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
-            <field eval="1" name="flow_start"/>
-        </record>
-
         <record id="process_node_productionorder0" model="process.node">
             <field name="menu_id" ref="mrp.menu_mrp_production_action"/>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Drives the procurement orders for raw material.&quot;&quot;&quot;" name="note"/>
             <field eval="&quot;&quot;&quot;Production Order&quot;&quot;&quot;" name="name"/>
-            <field name="process_id" ref="process_process_procurementprocess0"/>
+            <field name="process_id" ref="mrp_procurement.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'picking_except', 'confirmed', 'ready', 'in_production', 'cancel', 'done')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
 
-        <record id="process_node_minimumstockrule0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
-            <field name="model_id" ref="mrp.model_stock_warehouse_orderpoint"/>
-            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-            <field eval="&quot;&quot;&quot;Linked to the 'Minimum stock rule' supplying method.&quot;&quot;&quot;" name="note"/>
-            <field eval="&quot;&quot;&quot;Minimum Stock&quot;&quot;&quot;" name="name"/>
-            <field name="process_id" ref="process_process_procurementprocess0"/>
-            <field eval="1" name="flow_start"/>
-        </record>
-
         <record id="process_node_procureproducts0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;The way to procurement depends on the product type.&quot;&quot;&quot;" name="note"/>
             <field eval="&quot;&quot;&quot;Procure Products&quot;&quot;&quot;" name="name"/>
-            <field name="process_id" ref="process_process_procurementprocess0"/>
+            <field name="process_id" ref="mrp_procurement.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
+        
+        <record id="process_node_minimumstockrule0" model="process.node">
+            <field name="menu_id" ref="mrp_procurement.menu_action_orderpoint_form"/>
+            <field name="model_id" ref="mrp_procurement.model_stock_warehouse_orderpoint"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Linked to the 'Minimum stock rule' supplying method.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Minimum Stock&quot;&quot;&quot;" name="name"/>
+            <field name="process_id" ref="mrp_procurement.process_process_procurementprocess0"/>
+            <field eval="1" name="flow_start"/>
+        </record>
 
         <record id="process_node_stockproduct0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Product type is Stockable or Consumable.&quot;&quot;&quot;" name="note"/>
             <field eval="&quot;&quot;&quot;Stockable Product&quot;&quot;&quot;" name="name"/>
             <field name="subflow_id" ref="process_process_stockableproductprocess0"/>
-            <field name="process_id" ref="process_process_procurementprocess0"/>
+            <field name="process_id" ref="mrp_procurement.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
+        
+        <record id="process_node_stockproduct1" model="process.node">
+            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
+            <field name="model_id" ref="mrp.model_mrp_procurement"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;For stockable products and consumables&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Stockable Product&quot;&quot;&quot;" name="name"/>
+            <field name="process_id" ref="mrp.process_process_stockableproductprocess0"/>
+            <field name="subflow_id" ref="mrp_procurement.process_process_procurementprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
+            <field eval="1" name="flow_start"/>
+        </record>
 
         <record id="process_node_serviceproduct0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Product type is service&quot;&quot;&quot;" name="note"/>
             <field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
             <field name="subflow_id" ref="process_process_serviceproductprocess0"/>
-            <field name="process_id" ref="process_process_procurementprocess0"/>
+            <field name="process_id" ref="mrp_procurement.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
+        
+        <record id="process_node_serviceproduct1" model="process.node">
+            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
+            <field name="model_id" ref="mrp.model_mrp_procurement"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;For Services.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
+            <field name="process_id" ref="mrp.process_process_serviceproductprocess0"/>
+            <field name="subflow_id" ref="mrp_procurement.process_process_procurementprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
+            <field eval="1" name="flow_start"/>
+        </record>
 
         <record id="process_node_purchaseprocure0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement Orders&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;For purchased material&quot;&quot;&quot;" name="note"/>
-            <field name="subflow_id" ref="process_process_procurementprocess0"/>
+            <field name="subflow_id" ref="mrp_procurement.process_process_procurementprocess0"/>
             <field name="process_id" ref="purchase.process_process_purchaseprocess0"/>
             <field eval="1" name="flow_start"/>
         </record>
 
         <record id="process_node_productminimumstockrule0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
-            <field name="model_id" ref="mrp.model_stock_warehouse_orderpoint"/>
+            <field name="menu_id" ref="mrp_procurement.menu_action_orderpoint_form"/>
+            <field name="model_id" ref="mrp_procurement.model_stock_warehouse_orderpoint"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Minimum Stock&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Automatic procurement rule&quot;&quot;&quot;" name="note"/>
