@@ -44,6 +44,8 @@ class hr_recruitment_report(osv.osv):
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
         'salary_prop' : fields.float("Salary Proposed"),
         'salary_exp' : fields.float("Salary Expected"),
+        'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact',readonly=True),
         'available' : fields.float("Availability")
 
     }
@@ -60,7 +62,9 @@ class hr_recruitment_report(osv.osv):
                      to_char(s.create_date, 'MM') as month,
                      to_char(s.create_date, 'YYYY-MM-DD') as day,
                      s.state,
+                     s.partner_id,
                      s.company_id,
+                     s.partner_address_id,
                      s.user_id,
                      s.job_id,
                      s.type_id,
@@ -79,6 +83,8 @@ class hr_recruitment_report(osv.osv):
                      date_trunc('day',s.create_date),
                      date_trunc('day',s.date_closed),
                      s.state,
+                     s.partner_id,
+                     s.partner_address_id,
                      s.company_id,
                      s.user_id,
                      s.stage_id,
