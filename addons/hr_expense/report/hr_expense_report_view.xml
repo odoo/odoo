@@ -14,9 +14,11 @@
                 <field name="month" invisible="1"/>
                 <field name="day" invisible="1"/>
                 <field name="invoice_id" invisible="1"/>
+                <field name="analytic_account" invisible="1"/>
                 <field name="department_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="product_qty" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
@@ -115,7 +117,10 @@
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
+                    <filter string="Analytic account" icon="terp-hr" context="{'group_by':'analytic_account'}"/>
+                    <filter string="Currency" icon="terp-hr" context="{'group_by':'currency_id'}"/>
                     <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
+                    <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
                     <filter string="Force Journal" icon="terp-hr" context="{'group_by':'journal_id'}"/>
