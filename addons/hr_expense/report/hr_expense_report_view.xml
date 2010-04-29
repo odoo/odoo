@@ -87,6 +87,8 @@
 	                        		help="Expenses Non Assigned User"
 	                        		domain="[('user_id','=',False)]"/>
                     </field>
+                    <field name="product_id"/>
+                    <field name="employee_id" widget="selection"/>
 				</group>
 				<newline/>
 				<group expand="0" string="Extended options..." colspan="10" col="12">
@@ -103,13 +105,11 @@
 	                   		domain="[('state','=','cancelled')]"
 	                   		help = "Cancelled Expenses"/>
 	                <separator orientation="vertical"/>
-                    <field name="employee_id" widget="selection"/>
-                    <field name="product_id" widget="selection"/>
                     <field name="department_id" widget="selection"/>
-                    <newline/>
                     <field name="journal_id" widget="selection"/>
+                    <field name="currency_id" widget="selection"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-  				    <separator orientation="vertical"/>
+                    <newline/>
                     <field name="date_confirm"/>
                     <field name="date_valid"/>
                 </group>
