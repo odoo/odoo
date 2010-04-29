@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 import logging
@@ -80,7 +80,7 @@ class ir_model(osv.osv):
         if context:
             context.pop('__last_update', None)
         return super(ir_model,self).write(cr, user, ids, vals, context)
-        
+
     def create(self, cr, user, vals, context=None):
         if context and context.get('manual',False):
             vals['state']='manual'
@@ -226,7 +226,7 @@ class ir_model_fields(osv.osv):
         'domain': fields.char('Domain', size=256),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
-        'selectable': fields.boolean('Selectable'),        
+        'selectable': fields.boolean('Selectable'),
     }
     _rec_name='field_description'
     _defaults = {
@@ -278,7 +278,7 @@ class ir_model_fields(osv.osv):
                 self.pool.get(vals['model'])._auto_init(cr, ctx)
 
         return res
-    
+
 ir_model_fields()
 
 class ir_model_access(osv.osv):
@@ -378,6 +378,7 @@ class ir_model_access(osv.osv):
                 'create': _('You can not create this kind of document! (%s)'),
                 'unlink': _('You can not delete this document! (%s)'),
             }
+
             raise except_orm(_('AccessError'), msgs[mode] % model_name )
         return r
 
