@@ -88,7 +88,6 @@ class account_move_journal(osv.osv_memory):
                 'search_view_id': res['res_id']
                 }
 
-
     _defaults = {
         'period_id': _get_period
                 }

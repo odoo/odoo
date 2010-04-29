@@ -30,7 +30,7 @@ class account_general_journal(osv.osv_memory):
         'period_id': fields.many2many('account.period', 'account_period_rel', 'account_id', 'period_id', 'Periods',  required=True),
         }
 
-    def check_data(self, cr, uid, ids, context={}):
+    def check_data(self, cr, uid, ids, context=None):
         obj_jperiod = self.pool.get('account.journal.period')
         datas = {}
         datas['ids'] = []

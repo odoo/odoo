@@ -55,11 +55,11 @@ class account_aged_trial_balance(osv.osv_memory):
            return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'company_id' : _get_company,
-        'period_length' : 30,
+        'company_id': _get_company,
+        'period_length': 30,
         'date1' : time.strftime('%Y-%m-%d'),
-        'result_selection' : 'all',
-        'direction_selection' : 'past',
+        'result_selection': 'all',
+        'direction_selection': 'past',
                  }
 
     def calc_dates(self, cr, uid, ids, context=None):
@@ -103,4 +103,5 @@ class account_aged_trial_balance(osv.osv_memory):
             }
 
 account_aged_trial_balance()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

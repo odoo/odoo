@@ -38,7 +38,7 @@ class account_chart(osv.osv_memory):
                                      ], 'Target Moves', required = True),
 
               }
-    def _get_defaults(self, cr, uid, context={}):
+    def _get_defaults(self, cr, uid, context=None):
             """Return default Fiscalyear value"""
             fiscalyear_obj = self.pool.get('account.fiscalyear')
             fiscalyear = fiscalyear_obj.find(cr, uid)
@@ -64,10 +64,10 @@ class account_chart(osv.osv_memory):
                     result['name'] += ':' + self.pool.get('account.fiscalyear').read(cr, uid, [data['fiscalyear']],context=context)[0]['code']
                 return result
 
-
     _defaults = {
         'fiscalyear': _get_defaults,
-        'target_move': lambda * a: 'all'
+        'target_move': 'all'
                 }
 account_chart()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

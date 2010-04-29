@@ -19,13 +19,12 @@
 #
 ##############################################################################
 import time
-import netsvc
 
+import netsvc
 from osv import osv, fields
 from tools.translate import _
 
 class account_automatic_reconcile(osv.osv_memory):
-
     _name = 'account.automatic.reconcile'
     _description = 'Automatic Reconcile'
 
@@ -240,4 +239,5 @@ class account_automatic_reconcile(osv.osv_memory):
         }
 
 account_automatic_reconcile()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
