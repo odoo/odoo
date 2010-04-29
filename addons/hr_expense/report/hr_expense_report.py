@@ -50,6 +50,7 @@ class hr_expense_report(osv.osv):
         'analytic_account': fields.many2one('account.analytic.account','Analytic account',readonly=True),
         'price_average':fields.float('Average Price', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
+        'no_of_products':fields.integer('# of Products', readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Waiting confirmation'),
@@ -85,6 +86,7 @@ class hr_expense_report(osv.osv):
                      sum(l.unit_quantity*l.unit_amount) as price_total,
                      (sum(l.unit_quantity*l.unit_amount)/sum(l.unit_quantity * u.factor))::decimal(16,2) as price_average,
                      count(*) as nbr,
+                     (select unit_quantity from hr_expense_line where id=l.id and product_id is not null) as no_of_products,
                      s.state
                  from hr_expense_line l
                  left join hr_expense_expense s on (s.id=l.expense_id)
@@ -102,6 +104,7 @@ class hr_expense_report(osv.osv):
                      s.currency_id,
                      s.department_id,
                      l.uom_id,
+                     l.id,
                      s.user_id,
                      s.state,
                      s.journal_id,
