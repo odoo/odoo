@@ -35,7 +35,7 @@
     'depends': ['smtpclient'],
     'init_xml': [],
     'update_xml': [
-        
+        "mail_gateway_view.xml"
     ],
     'demo_xml': [],
     'installable': True,
