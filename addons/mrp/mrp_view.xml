@@ -453,10 +453,10 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                     <group colspan="4" col="6">
-                        <field name="name" select="1" string="Reference"/>
-                        <field name="date_planned" select="1"/>
-                        <field name="origin" select="1"/>
-                        <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
+                        <field name="name" string="Reference"/>
+                        <field name="date_planned"/>
+                        <field name="origin"/>
+                        <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
                         <field name="product_uom"/>
@@ -475,7 +475,7 @@
                     <notebook colspan="4">
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
-                            <field name="routing_id" groups="base.group_extended" select="1"/>
+                            <field name="routing_id" groups="base.group_extended"/>
                             <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <separator string="" colspan="4"/>
@@ -574,8 +574,8 @@
                         <page string="Work Orders" groups="base.group_extended">
                             <field colspan="4" name="workcenter_lines" nolabel="1">
                                 <form string="Production Work Centers">
-                                    <field colspan="4" name="name" select="1"/>
-                                    <field colspan="4" name="workcenter_id" select="1"/>
+                                    <field colspan="4" name="name"/>
+                                    <field colspan="4" name="workcenter_id"/>
                                     <field name="sequence"/>
                                     <field name="cycle"/>
                                     <field name="hour"/>
@@ -593,7 +593,7 @@
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
-                            <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="priority" groups="base.group_extended"/>
                             <newline/>
                             <field name="date_start"/>
@@ -794,20 +794,20 @@
                 <form string="Procurement">
                     <group col="2" colspan="2">
                         <separator colspan="2" string="References"/>
-                        <field name="name" select="1" string="Procurement Reason"/>
+                        <field name="name" string="Procurement Reason"/>
                         <field name="origin"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Planification"/>
-                        <field name="date_planned" select="1"/>
+                        <field name="date_planned"/>
                         <field name="procure_method"/>
                         <field name="priority" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Procurement Details">
                         <separator colspan="4" string="Product &amp; Location"/>
-                        <field name="product_id" select="1" on_change="onchange_product_id(product_id)"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
                         <field name="location_id" domain="[('usage','=','internal')]"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
@@ -950,11 +950,11 @@
             <field name="arch" type="xml">
                 <search string="Minimum Stock Rules Search">
                     <group col="10" colspan="4">
-                        <field name="name" select="1" />
-                        <field name="warehouse_id" select="1" widget="selection"/>
-                        <field name="location_id" select="1" />
-                        <field name="company_id" select="1" widget="selection"/>
-                        <field name="product_id" select="1"/>
+                        <field name="name"/>
+                        <field name="warehouse_id" widget="selection"/>
+                        <field name="location_id"/>
+                        <field name="company_id" widget="selection"/>
+                        <field name="product_id"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="10">
