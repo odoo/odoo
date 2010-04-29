@@ -58,8 +58,6 @@ class singer_statement(osv.osv):
         @param arg: User defined arguments
         @return: Dictionary of values.
         """
-        if context==None:
-            context={}            
         res = {}
         for obj in self.browse(cr, uid, ids):
             res[obj.id] = obj.pieces * obj.number
@@ -94,9 +92,7 @@ class account_bank_statement(osv.osv):
         @param name: Names of fields.
         @param arg: User defined arguments
         @return: Dictionary of values.
-        """    
-        if context==None:
-            context={}    
+        """          
         res ={}
         for statement in self.browse(cr, uid, ids):
             amount_total=0.0
@@ -111,9 +107,7 @@ class account_bank_statement(osv.osv):
         @param name: Names of fields.
         @param arg: User defined arguments
         @return: Dictionary of values.
-        """          
-        if context==None:
-            context={}    
+        """              
         res2={}
         for statement in self.browse(cr, uid, ids):
             encoding_total=0.0
@@ -128,9 +122,6 @@ class account_bank_statement(osv.osv):
         @param name: Names of fields.
         @return: journal 
         """  
-        if context==None:
-            context={}    
-                    
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         journal = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('auto_cash','=',False), ('company_id', '=', company_id)])
         if journal:
@@ -141,6 +132,8 @@ class account_bank_statement(osv.osv):
     _columns = {
           'journal_id': fields.many2one('account.journal', 'Journal', required=True),
           'balance_start': fields.function(_get_starting_balance, method=True, string='Starting Balance', type='float',digits=(16,2)),
+         # 'balance_start': fields.float('Starting Balance',digits=(16,2)),
+         # 'balance_end': fields.float('Balance',digits=(16,2)),
           'state': fields.selection([('draft', 'Draft'),('confirm', 'Confirm'),('open','Open')],
                                     'State', required=True, states={'confirm': [('readonly', True)]}, readonly="1"),
           'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, string="Total of Entry encoding"),
@@ -161,8 +154,6 @@ class account_bank_statement(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         
-        if context==None:
-            context={}            
         company_id = vals and vals.get('company_id',False)
         if company_id:
             open_jrnl = self.search(cr, uid, [('company_id', '=', vals['company_id']), ('journal_id', '=', vals['journal_id']), ('state', '=', 'open')])
@@ -183,17 +174,17 @@ class account_bank_statement(osv.osv):
         @param journal_id: Changed journal_id
         @return:  Dictionary of changed values
         """  
-        if context==None:
-            context={}            
         id_s=[]
         if not journal_id:
             return {'value': {'balance_start': 0.0}}
         balance_start=0.0
         cash_obj = self.pool.get('singer.statement')
         statement_obj = self.pool.get('account.bank.statement')
-        statement_ids=statement_obj.search(cursor, user, [('journal_id','=',journal_id), ('user_id','=',user)])
-        if statement_ids:
-            statmt_id=statement_obj.browse(cursor,user,statement_ids[0])
+        cursor.execute("Select a.id from account_bank_statement a where journal_id=%d and user_id=%d order by a.id desc limit 1"%(journal_id,user))
+        res2=cursor.fetchone()
+        res2=res2 and res2[0] or None
+        if res2:
+            statmt_id=statement_obj.browse(cursor,user,res2)
             check_det=statmt_id.journal_id.check_dtls
             if not check_det:
                 balance_start=statmt_id.balance_end_real or 0.0
@@ -218,17 +209,15 @@ class account_bank_statement(osv.osv):
         """ Changes statement state to Running.
         @return: True 
         """       
-        if context==None:
-            context={}            
         obj_inv = self.browse(cr, uid, ids)[0]
-        sequence_obj=self.pool.get('ir.sequence')
         s_id=obj_inv.journal_id
         if s_id.statement_sequence_id:
             s_id=s_id.id
-            number = sequence_obj.get_id(cr, uid, s_id)
+            number = self.pool.get('ir.sequence').get_id(cr, uid, s_id)
         else:
-            number = sequence_obj.get(cr, uid,
+            number = self.pool.get('ir.sequence').get(cr, uid,
                             'account.bank.statement')
+
         self.write(cr, uid, ids, {'date':time.strftime("%Y-%m-%d %H:%M:%S"), 'state':'open', 'name':number})
         return True
 
@@ -237,8 +226,6 @@ class account_bank_statement(osv.osv):
         """ Check the starting and ending detail of  statement 
         @return: True 
         """         
-        if context==None:
-            context={}            
         val = 0.0
         val2 = 0.0
         val_statement_line = 0.0
@@ -257,7 +244,17 @@ class account_bank_statement(osv.osv):
                     raise osv.except_osv(_('Invalid action !'), _(' You can not confirm your cashbox, Please enter ending details, missing value matches to "%s"')%(abs(Decimal(str(val))-(Decimal(str(val_statement_line))+Decimal(str(val2))))))
 
             self.write(cr, uid, statement.id, {'balance_end_real':Decimal(str(val_statement_line))+Decimal(str(val2)),'closing_date':time.strftime("%Y-%m-%d %H:%M:%S"),'state':'draft'})
-        return  super(account_bank_statement, self).button_confirm(cr, uid, ids, context=context)
+           # self.write(cr, uid, statement.id, {'balance_end_real':bal_st+val_statement_line,'closing_date':time.strftime("%Y-%m-%d %H:%M:%S"),'state':'draft'})
+        return  super(account_bank_statement, self).button_confirm(cr, uid, ids, context=None)
 
 account_bank_statement()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+#class singer_account_bank_statement_line(osv.osv):
+#    _inherit = 'account.bank.statement.line'
+#    _columns = {
+#           'pos_statement_id': fields.many2one('pos.order',ondelete='cascade'),
+#     }
+#
+#singer_account_bank_statement_line()
+
+
