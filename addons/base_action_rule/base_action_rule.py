@@ -33,18 +33,115 @@ class base_action_rule(osv.osv):
 
     _name = 'base.action.rule'
     _description = 'Action Rules'
+    
+    def _state_get(self, cr, uid, context={}):
+        """ Get State
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param context: A standard dictionary for contextual values """
+
+        return self.state_get(cr, uid, context=context)
+
+   
+    def _priority_get(self, cr, uid, context={}):
+        """ Get Priority
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param context: A standard dictionary for contextual values """
+
+        return self.priority_get(cr, uid, context=context)
+
+    def state_get(self, cr, uid, context={}):
+        """ Get State
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param context: A standard dictionary for contextual values """
+
+        return [('','')]
+  
+    def priority_get(self, cr, uid, context={}):
+        """ Get Priority
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param context: A standard dictionary for contextual values """
+
+        return [('','')]
 
     _columns = {
         'name': fields.many2one('ir.model', 'Model', required=True),
         'max_level': fields.integer('Max Level', help='Specifies maximum level.'),
-        'rule_lines': fields.one2many('base.action.rule.line','rule_id','Rule Lines'),
         'create_date': fields.datetime('Create Date', readonly=1),
-        'active': fields.boolean('Active')
+        'active': fields.boolean('Active', help="If the active field is set to true,\
+                     it will allow you to hide the rule without removing it."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when\
+                     displaying a list of rules."),
+
+        'trg_date_type':  fields.selection([
+            ('none','None'),
+            ('create','Creation Date'),
+            ('action_last','Last Action Date'),
+            ('date','Date'),
+            ('deadline', 'Deadline'),
+            ], 'Trigger Date', size=16),
+        'trg_date_range': fields.integer('Delay after trigger date',help="Delay After Trigger Date,\
+                             specifies you can put a negative number " \
+                             "if you need a delay before the trigger date, like sending a reminder 15 minutes before a meeting."),
+        'trg_date_range_type': fields.selection([('minutes', 'Minutes'),('hour','Hours'),\
+                                ('day','Days'),('month','Months')], 'Delay type'),
+
+
+        'trg_user_id':  fields.many2one('res.users', 'Responsible'),
+
+        'trg_partner_id': fields.many2one('res.partner', 'Partner'),
+        'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
+        'trg_state_from': fields.selection(_state_get, 'State', size=16),
+        'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16),
+        'trg_priority_from': fields.selection(_priority_get, 'Minimum Priority'),
+        'trg_priority_to': fields.selection(_priority_get, 'Maximum Priority'),
+
+        'act_method': fields.char('Call Object Method', size=64),
+        'act_user_id': fields.many2one('res.users', 'Set responsible to'),
+        'act_state': fields.selection(_state_get, 'Set state to', size=16),
+        'act_priority': fields.selection(_priority_get, 'Set priority to'),
+        'act_email_cc': fields.char('Add watchers (Cc)', size=250, help="These people\
+                         will receive a copy of the future communication between partner and users by email"),
+
+        'act_remind_partner': fields.boolean('Remind Partner', help="Check this if\
+                         you want the rule to send a reminder by email to the partner."),
+        'act_remind_user': fields.boolean('Remind responsible', help="Check this if \
+                        you want the rule to send a reminder by email to the user."),
+        'act_reply_to': fields.char('Reply-To', size=64),
+        'act_remind_attach': fields.boolean('Remind with attachment', help="Check this if\
+                         you want that all documents attached to the object be attached \
+                        to the reminder email sent."),
+
+        'act_mail_to_user': fields.boolean('Mail to responsible',help="Check this if \
+                            you want the rule to send an email to the responsible person."),
+        'act_mail_to_watchers': fields.boolean('Mail to watchers (CC)',help="Check this\
+                                 if you want the rule to mark CC(mail to any other person\
+                                  defined in actions)."),
+        'act_mail_to_email': fields.char('Mail to these emails', size=128,help="Email-id \
+                                of the persons whom mail is to be sent"),
+        'act_mail_body': fields.text('Mail body',help="Content of mail"),
+        'regex_name': fields.char('Regular Expression on Model Name', size=128),
+        'server_action_id': fields.many2one('ir.actions.server','Server Action',help="Describes the\
+                                 action name." \
+                                "eg:on which object which action to be taken on basis of which condition"),
     }
 
     _defaults = {
         'active': lambda *a: True,
         'max_level': lambda *a: 15,
+        'trg_date_type': lambda *a: 'none',
+        'trg_date_range_type': lambda *a: 'day',
+        'act_mail_to_user': lambda *a: 0,
+        'act_remind_partner': lambda *a: 0,
+        'act_remind_user': lambda *a: 0,
+        'act_mail_to_watchers': lambda *a: 0,
     }
 
     def format_body(self, body):
@@ -201,175 +298,56 @@ class base_action_rule(osv.osv):
 
         if not scrit:
             scrit = []
-        rule_line_obj = self.pool.get('base.action.rule.line')
-        for rule in self.browse(cr, uid, ids):
-            level = rule.max_level
+        for action in self.browse(cr, uid, ids):
+            level = action.max_level
             if not level:
                 break
-            newactions = []
-            scrit += [('rule_id','=',rule.id)]
-            line_ids = rule_line_obj.search(cr, uid, scrit)
-            actions = rule_line_obj.browse(cr, uid, line_ids, context=context)
-            model_obj = self.pool.get(rule.name.model)
+            model_obj = self.pool.get(action.name.model)
             for obj in objects:
-                for action in actions:
-                    ok = self.do_check(cr, uid, action, obj, context=context)
-                    if not ok:
-                        continue
+                ok = self.do_check(cr, uid, action, obj, context=context)
+                if not ok:
+                    continue
 
-                    base = False
-                    if hasattr(obj, 'create_date') and action.trg_date_type=='create':
-                        base = mx.DateTime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                    elif hasattr(obj, 'create_date') and action.trg_date_type=='action_last':
-                        if hasattr(obj, 'date_action_last') and obj.date_action_last:
-                            base = mx.DateTime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
-                        else:
-                            base = mx.DateTime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                    elif hasattr(obj, 'date_deadline') and action.trg_date_type=='deadline' \
-                                    and obj.date_deadline:
-                        base = mx.DateTime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
-                    elif hasattr(obj, 'date') and action.trg_date_type=='date' and obj.date:
-                        base = mx.DateTime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
-                    if base:
-                        fnct = {
-                            'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval),
-                            'day': lambda interval: mx.DateTime.RelativeDateTime(days=interval),
-                            'hour': lambda interval: mx.DateTime.RelativeDateTime(hours=interval),
-                            'month': lambda interval: mx.DateTime.RelativeDateTime(months=interval),
-                        }
-                        d = base + fnct[action.trg_date_range_type](action.trg_date_range)
-                        dt = d.strftime('%Y-%m-%d %H:%M:%S')
-                        ok = False
-                        if hasattr(obj, 'date_action_last') and hasattr(obj, 'date_action_next'):
-                            ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and \
-                                    ((not obj.date_action_next) or \
-                                    (dt >= obj.date_action_next and \
-                                    obj.date_action_last < obj.date_action_next))
-                            if not ok:
-                                if not obj.date_action_next or dt < obj.date_action_next:
-                                    obj.date_action_next = dt
-                                    model_obj.write(cr, uid, [obj.id], {'date_action_next': dt}, context)
+                base = False
+                if hasattr(obj, 'create_date') and action.trg_date_type=='create':
+                    base = mx.DateTime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                elif hasattr(obj, 'create_date') and action.trg_date_type=='action_last':
+                    if hasattr(obj, 'date_action_last') and obj.date_action_last:
+                        base = mx.DateTime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
                     else:
-                        ok = action.trg_date_type=='none'
+                        base = mx.DateTime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                elif hasattr(obj, 'date_deadline') and action.trg_date_type=='deadline' \
+                                and obj.date_deadline:
+                    base = mx.DateTime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
+                elif hasattr(obj, 'date') and action.trg_date_type=='date' and obj.date:
+                    base = mx.DateTime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
+                if base:
+                    fnct = {
+                        'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval),
+                        'day': lambda interval: mx.DateTime.RelativeDateTime(days=interval),
+                        'hour': lambda interval: mx.DateTime.RelativeDateTime(hours=interval),
+                        'month': lambda interval: mx.DateTime.RelativeDateTime(months=interval),
+                    }
+                    d = base + fnct[action.trg_date_range_type](action.trg_date_range)
+                    dt = d.strftime('%Y-%m-%d %H:%M:%S')
+                    ok = False
+                    if hasattr(obj, 'date_action_last') and hasattr(obj, 'date_action_next'):
+                        ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and \
+                                ((not obj.date_action_next) or \
+                                (dt >= obj.date_action_next and \
+                                obj.date_action_last < obj.date_action_next))
+                        if not ok:
+                            if not obj.date_action_next or dt < obj.date_action_next:
+                                obj.date_action_next = dt
+                                model_obj.write(cr, uid, [obj.id], {'date_action_next': dt}, context)
+                else:
+                    ok = action.trg_date_type=='none'
 
-                    if ok:
-                        self.do_action(cr, uid, action, model_obj, obj, context)
-                        break
+                if ok:
+                    self.do_action(cr, uid, action, model_obj, obj, context)
+                    break
             level -= 1
         return True
-base_action_rule()
-
-class base_action_rule_line(osv.osv):
-    _name = 'base.action.rule.line'
-    _description = 'Action Rule Lines'
-
-    def _state_get(self, cr, uid, context={}):
-        """ Get State
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param context: A standard dictionary for contextual values """
-
-        return self.state_get(cr, uid, context=context)
-    def _priority_get(self, cr, uid, context={}):
-        """ Get Priority
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param context: A standard dictionary for contextual values """
-
-        return self.priority_get(cr, uid, context=context)
-
-    def state_get(self, cr, uid, context={}):
-        """ Get State
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param context: A standard dictionary for contextual values """
-
-        return [('','')]
-    def priority_get(self, cr, uid, context={}):
-        """ Get Priority
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param context: A standard dictionary for contextual values """
-
-        return [('','')]
-
-    _columns = {
-        'name': fields.char('Rule Name',size=64, required=True),
-        'rule_id': fields.many2one('base.action.rule','Rule'),
-        'active': fields.boolean('Active', help="If the active field is set to true,\
-                     it will allow you to hide the rule without removing it."),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when\
-                     displaying a list of rules."),
-
-        'trg_date_type':  fields.selection([
-            ('none','None'),
-            ('create','Creation Date'),
-            ('action_last','Last Action Date'),
-            ('date','Date'),
-            ('deadline', 'Deadline'),
-            ], 'Trigger Date', size=16),
-        'trg_date_range': fields.integer('Delay after trigger date',help="Delay After Trigger Date,\
-                             specifies you can put a negative number " \
-                             "if you need a delay before the trigger date, like sending a reminder 15 minutes before a meeting."),
-        'trg_date_range_type': fields.selection([('minutes', 'Minutes'),('hour','Hours'),\
-                                ('day','Days'),('month','Months')], 'Delay type'),
-
-
-        'trg_user_id':  fields.many2one('res.users', 'Responsible'),
-
-        'trg_partner_id': fields.many2one('res.partner', 'Partner'),
-        'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
-        'trg_state_from': fields.selection(_state_get, 'State', size=16),
-        'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16),
-        'trg_priority_from': fields.selection(_priority_get, 'Minimum Priority'),
-        'trg_priority_to': fields.selection(_priority_get, 'Maximum Priority'),
-
-        'act_method': fields.char('Call Object Method', size=64),
-        'act_user_id': fields.many2one('res.users', 'Set responsible to'),
-        'act_state': fields.selection(_state_get, 'Set state to', size=16),
-        'act_priority': fields.selection(_priority_get, 'Set priority to'),
-        'act_email_cc': fields.char('Add watchers (Cc)', size=250, help="These people\
-                         will receive a copy of the future communication between partner and users by email"),
-
-        'act_remind_partner': fields.boolean('Remind Partner', help="Check this if\
-                         you want the rule to send a reminder by email to the partner."),
-        'act_remind_user': fields.boolean('Remind responsible', help="Check this if \
-                        you want the rule to send a reminder by email to the user."),
-        'act_reply_to': fields.char('Reply-To', size=64),
-        'act_remind_attach': fields.boolean('Remind with attachment', help="Check this if\
-                         you want that all documents attached to the object be attached \
-                        to the reminder email sent."),
-
-        'act_mail_to_user': fields.boolean('Mail to responsible',help="Check this if \
-                            you want the rule to send an email to the responsible person."),
-        'act_mail_to_watchers': fields.boolean('Mail to watchers (CC)',help="Check this\
-                                 if you want the rule to mark CC(mail to any other person\
-                                  defined in actions)."),
-        'act_mail_to_email': fields.char('Mail to these emails', size=128,help="Email-id \
-                                of the persons whom mail is to be sent"),
-        'act_mail_body': fields.text('Mail body',help="Content of mail"),
-        'regex_name': fields.char('Regular Expression on Model Name', size=128),
-        'server_action_id': fields.many2one('ir.actions.server','Server Action',help="Describes the\
-                                 action name." \
-                                "eg:on which object which action to be taken on basis of which condition"),
-    }
-
-    _defaults = {
-        'active': lambda *a: 1,
-        'trg_date_type': lambda *a: 'none',
-        'trg_date_range_type': lambda *a: 'day',
-        'act_mail_to_user': lambda *a: 0,
-        'act_remind_partner': lambda *a: 0,
-        'act_remind_user': lambda *a: 0,
-        'act_mail_to_watchers': lambda *a: 0,
-    }
-
-    _order = 'sequence'
-
 
     def _check_mail(self, cr, uid, ids, context=None):
         """ Check Mail
@@ -393,6 +371,6 @@ class base_action_rule_line(osv.osv):
         (_check_mail, 'Error: The mail is not well formated', ['act_mail_body']),
     ]
 
-base_action_rule_line()
+base_action_rule()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

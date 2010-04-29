@@ -21,8 +21,6 @@
 
 from osv import fields, osv
 from crm import crm
-from caldav import caldav
-from base_calendar import base_calendar
 
 class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
@@ -56,6 +54,50 @@ class crm_meeting(osv.osv):
         vals = event_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
 
+    def check_import(self, cr, uid, vals, context={}):
+        """
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param vals: Get Values
+            @param context: A standard dictionary for contextual values
+        """
+        ids = []
+        model_obj = self.pool.get(context.get('model'))
+        recur_pool = {}
+        try:
+            for val in vals:
+                exists, r_id = caldav.uid2openobjectid(cr, val['id'], context.get('model'), \
+                                                                 val.get('recurrent_id'))
+                if val.has_key('create_date'): val.pop('create_date')
+                u_id = val.get('id', None)
+                val.pop('id')
+                if exists and r_id:
+                    val.update({'recurrent_uid': exists})
+                    model_obj.write(cr, uid, [r_id], val)
+                    ids.append(r_id)
+                elif exists:
+                    # Compute value of duration
+                    if 'date_deadline' in val and 'duration' not in val:
+                        start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
+                        end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
+                        diff = end - start
+                        val['duration'] = (diff.seconds/float(86400) + diff.days) * 24
+                    model_obj.write(cr, uid, [exists], val)
+                    ids.append(exists)
+                else:
+                    if u_id in recur_pool and val.get('recurrent_id'):
+                        val.update({'recurrent_uid': recur_pool[u_id]})
+                        revent_id = model_obj.create(cr, uid, val)
+                        ids.append(revent_id)
+                    else:
+                        event_id = model_obj.create(cr, uid, val)
+                        recur_pool[u_id] = event_id
+                        ids.append(event_id)
+        except Exception, e:
+            raise osv.except_osv(('Error !'), (str(e)))
+        return ids
+    
 crm_meeting()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
