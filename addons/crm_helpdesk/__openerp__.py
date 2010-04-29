@@ -40,6 +40,7 @@
     ],
     'demo_xml': [
         'crm_helpdesk_demo.xml',
+        'test/test_crm_helpdesk.yml'
     ],
     'installable': True,
     'active': False,

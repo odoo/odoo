@@ -24,22 +24,23 @@
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
-    'description': """Claims""",
+    'description': """claim""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['crm'],
     'init_xml': [
-         'crm_claims_data.xml',
+         'crm_claim_data.xml',
     ],
 
     'update_xml': [
-        'crm_claims_view.xml',
-        'crm_claims_menu.xml',
+        'crm_claim_view.xml',
+        'crm_claim_menu.xml',
         'security/ir.model.access.csv',
         'report/crm_claim_report_view.xml',
     ],
     'demo_xml': [
-        'crm_claims_demo.xml',
+        'crm_claim_demo.xml',
+        'test/test_crm_claim.yml'
     ],
     'installable': True,
     'active': False,

@@ -262,7 +262,22 @@ class base_action_rule(osv.osv):
         @param context: A standard dictionary for contextual values """
 
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
-        return res + [('escalate', 'Escalate')] + crm.AVAILABLE_STATES
+
+        return res + [('escalate','Escalate')] + crm.AVAILABLE_STATES
+
+    def priority_get(self, cr, uid, context={}):
+
+        """@param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values """
+
+        res = super(base_action_rule, self).priority_get(cr, uid, context=context)
+        return res + crm.AVAILABLE_PRIORITIES
+
 
 
 base_action_rule()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

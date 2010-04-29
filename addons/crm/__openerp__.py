@@ -72,6 +72,7 @@ between mails and Open ERP.""",
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
+        'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_send_email_view.xml',
         'wizard/crm_email_add_cc_view.xml',
         'crm_view.xml',
@@ -79,10 +80,13 @@ between mails and Open ERP.""",
         'crm_action_rule_view.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
+        
         'crm_meeting_view.xml',
         'crm_meeting_menu.xml',
+        
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
+        
         'crm_opportunity_view.xml',
         'crm_opportunity_menu.xml',
 
@@ -105,9 +109,14 @@ between mails and Open ERP.""",
         'crm_opportunity_demo.xml',
         'crm_phonecall_demo.xml'
     ],
+<<<<<<< TREE
     'test1': [
 #            'test/test_crm_meeting.yml', 
             'test/test_crm_lead.yml',
+=======
+    'test': ['test/test_crm_lead.yml',
+            'test/test_crm_meeting.yml', 
+>>>>>>> MERGE-SOURCE
             'test/test_crm_opportunity.yml',
             'test/test_crm_phonecall.yml', 
              ],
