@@ -34,15 +34,15 @@ AVAILABLE_STATES = [
     ('open', 'Open'), 
     ('cancel', 'Cancelled'), 
     ('done', 'Closed'), 
-    ('pending', 'Pending')
+    ('pending', 'Pending'),
 ]
 
 AVAILABLE_PRIORITIES = [
-    ('5', 'Lowest'), 
-    ('4', 'Low'), 
-    ('3', 'Normal'), 
+    ('1', 'Highest'),
     ('2', 'High'), 
-    ('1', 'Highest')
+    ('3', 'Normal'), 
+    ('4', 'Low'), 
+    ('5', 'Lowest'), 
 ]
 
 class crm_case_section(osv.osv):
