@@ -28,7 +28,7 @@
                 <field name="date_open" invisible="1"/>
                 <field name="opportunity_id" invisible="1"/>
                 <field name="country_id" invisible="1"/>
-                <field name="state_id" invisible="1"/>
+                <field name="state_id" invisible="1" string="State of Country"/>
                 <field name="date_deadline" invisible="1"/>
              </tree>
             </field>
@@ -86,7 +86,7 @@
             	    <field name="partner_id" />
             	    <separator orientation="vertical"/>
             	    <field name="country_id" />
-            	    <field name="state_id" />
+            	    <field name="state_id" string="State of Country"/>
             	    <separator orientation="vertical"/>
             	    <field name="date_deadline" />
 	                <newline/>
@@ -117,7 +117,7 @@
                  <newline/>
                  <filter string="Country" icon="terp-sale" domain="[]"
                      context="{'group_by':'country_id'}" />
-                 <filter string="State" icon="terp-sale" domain="[]"
+                 <filter string="State of Country" icon="terp-sale" domain="[]"
                      context="{'group_by':'state_id'}" />
              </xpath>
 			</data>
