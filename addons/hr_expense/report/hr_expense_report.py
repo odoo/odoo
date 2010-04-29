@@ -51,6 +51,7 @@ class hr_expense_report(osv.osv):
         'price_average':fields.float('Average Price', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'no_of_products':fields.integer('# of Products', readonly=True),
+        'no_of_account':fields.integer('# of Accounts', readonly=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Waiting confirmation'),
@@ -87,6 +88,7 @@ class hr_expense_report(osv.osv):
                      (sum(l.unit_quantity*l.unit_amount)/sum(l.unit_quantity * u.factor))::decimal(16,2) as price_average,
                      count(*) as nbr,
                      (select unit_quantity from hr_expense_line where id=l.id and product_id is not null) as no_of_products,
+                     (select count(analytic_account) from hr_expense_line where id=l.id and analytic_account is not null) as no_of_account,
                      s.state
                  from hr_expense_line l
                  left join hr_expense_expense s on (s.id=l.expense_id)
