@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="view_account_entries_report_tree" model="ir.ui.view">
+        <field name="name">account.entries.report.tree</field>
+        <field name="model">account.entries.report</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Invoices Statistics">
+                <field name="date" invisible="1"/>
+                <field name="ref" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="year"  invisible="1"/>
+                <field name="day"  invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="nbr" sum="# of Entries "/>
+                <field name="nbl" sum="# of Lines "/>
+                <field name="amount" sum="# of Amount "/>
+                <field name="partner_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="journal_id" invisible="1"/>
+                <field name="period_id" invisible="1"/>
+                <field name="type" invisible="1"/>
+           </tree>
+        </field>
+    </record>
+    <record id="view_account_entries_report_graph" model="ir.ui.view">
+         <field name="name">account.entries.report.graph</field>
+         <field name="model">account.entries.report</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Entries" type="bar">
+                 <field name="partner_id"/>
+                 <field name="amount"/>
+             </graph>
+         </field>
+    </record>
+    <record id="view_account_entries_report_search" model="ir.ui.view">
+        <field name="name">account.entries.report.search</field>
+        <field name="model">account.entries.report</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Entries">
+            	<group>
+	            	<filter icon="terp-account" string="This Year"
+	            			domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+		                    help="Entries of the year"/>
+	                <filter icon="terp-account" string="This Month"
+	                		name="This Month"
+	                		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                		help="Entries of this month"/>
+	                <filter icon="gtk-media-rewind"
+	                        string="    7 Days    "
+	                        separator="1"
+	                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                        help="Entries during last 7 days"/>
+	                <separator orientation="vertical"/>
+                    <filter string="Draft"
+                    		icon="terp-account"
+                    		domain="[('state','=','draft')]"
+                    		help = "Draft tasks"/>
+                    <separator orientation="vertical"/>
+                    		<field name="journal_id" widget="selection"/>
+                    		<field name="company_id" widget="selection"/>
+							<field name="partner_id" />
+					</group>
+                <newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                	<filter string="Posted"
+                   			icon="terp-account"
+                   			domain="[('state','=','posted')]"
+                   			help = "Posted tasks"/>
+                	<separator orientation="vertical"/>
+                		<field name="period_id" widget="selection"/>
+                		<field name="type"/>
+                	<separator orientation="vertical"/>
+                		<field name="date"/>
+                </group>
+                <newline/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Journal" name="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
+                    <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" />
+                    <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
+                    <filter string="Period" icon="terp-account" context="{'group_by':'period_id'}"/>
+                    <filter string="Type" icon="terp-account" context="{'group_by':'type'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-account" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
+                 </group>
+            </search>
+        </field>
+    </record>
+    <record id="action_account_entries_report_all" model="ir.actions.act_window">
+        <field name="name">Entries</field>
+        <field name="res_model">account.entries.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_This Month':1,'search_default_Journal':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="search_view_id" ref="view_account_entries_report_search"/>
+    </record>
+    <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all" parent="account.menu_finance_reporting" sequence="0"/>
+</data>
+</openerp>
