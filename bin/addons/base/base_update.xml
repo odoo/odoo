@@ -282,21 +282,21 @@
                 <form position="attributes">
                   <attribute name="string">Choose Your Interface</attribute>
                 </form>
-
-                <group string="res_config_contents" position="replace">
-                	<group colspan="4">
-		            	<group colspan="1">
-		            	    <image name="gtk-dialog-info"/>
-			              	<label colspan="4" align="0.0" string="Choose between the simplified interface and the extended one."/>
-		              		<label colspan="4" align="0.0" string="If you are testing OpenERP or using it for the first time, we suggest you use the simplified interface. It has less options and fields but is easier to understand."/>
-		              		<label colspan="4" align="0.0" string="You will be able to switch to the extended interface later."/>
-		              	</group>
-		              	<group colspan="3">
-		              		<separator string="Choose Your Interface" colspan="4"/>
-		              		<field colspan="4" name="view" nolabel="1"/>
-						</group>
+				<xpath expr="//label[@string='description']"
+	                 position="attributes">
+	            <attribute name="string">Choose between the simplified interface and the extended one.If you are testing OpenERP or using it for the first time, we suggest you use the simplified interface. It has less options and fields but is easier to understand.You will be able to switch to the extended interface later.</attribute>
+	          </xpath>
+	          <xpath expr='//separator[@string="title"]' position='attributes'>
+	          	  <attribute name='string'>Choose Your Interface</attribute>
+	          </xpath>
+	          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='string'></attribute>
+		      </xpath>
+               <group string="res_config_contents" position="replace">
+	              	<group colspan="5">
+	              		<field colspan="5" name="view" nolabel="1"/>
 					</group>
-                </group>
+            	</group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
                 <xpath expr='//button[@name="action_next"]' position='attributes'>
                   <attribute name='string'>Set</attribute>
