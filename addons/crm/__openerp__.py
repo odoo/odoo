@@ -99,6 +99,7 @@ between mails and Open ERP.""",
         'report/crm_phonecall_report_view.xml',
 
         'process/crm_configuration_process.xml',
+        'crm_installer_view.xml'
     ],
     'demo_xml': [
         'crm_demo.xml',

@@ -28,6 +28,7 @@ import crm_opportunity
 import crm_lead
 import crm_phonecall
 
+import crm_installer
 import report
 import wizard
 
