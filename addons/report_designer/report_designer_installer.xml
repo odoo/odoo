@@ -10,10 +10,13 @@
           <form position="attributes">
             <attribute name="string">Report Modules Installation</attribute>
           </form>
-
+		  <xpath expr='//separator[@string="vsep"]' position='attributes'>
+          	  	<attribute name='rowspan'>7</attribute>
+		  		<attribute name='string'></attribute>
+		  </xpath>
           <separator string="title" position="attributes">
             <attribute name="string"
-                       >Select Reporting Tools To Install</attribute>
+                       >Reporting Tools</attribute>
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
@@ -21,7 +24,6 @@
                        >OpenERP's built-in reporting abilities can be improved even further with some of the following applications</attribute>
           </xpath>
           <group colspan="8">
-            <separator string="Reporting" colspan="4"/>
             <field name="base_report_designer"/>
             <field name="base_report_creator"/>
             <field name="olap"/>
