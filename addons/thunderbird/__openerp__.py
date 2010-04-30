@@ -39,7 +39,8 @@
       Select a section for which you want to create case.''',
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ['security/ir.model.access.csv'],
+    "update_xml" : ['thunderbird_installer.xml',
+                    'security/ir.model.access.csv'],
     "active": False,
     "installable": True
 }
