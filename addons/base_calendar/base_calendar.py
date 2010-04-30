@@ -1340,7 +1340,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                     until_date = arg[2]
                 else:
                         args_without_date.append(arg)
-        args.append(('rrule_type', '=', 'none'))
+       # args.append(('rrule_type', '=', 'none'))
         res = super(calendar_event, self).search(cr, uid, args, offset, limit, order, context, count)
         if start_date and until_date:
              recur_args = [('rrule_type', '!=', 'none'), ('date', '<=', until_date), '|', ('end_date', '=', False), ('end_date', '>=', start_date)]

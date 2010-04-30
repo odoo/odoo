@@ -93,7 +93,7 @@ class crm_opportunity(osv.osv):
 
                     duration = float(ans.days)
                     if opportunity.section_id and opportunity.section_id.resource_calendar_id:
-                        duration =  float(ans.days) * 24                        
+                        duration =  float(ans.days) * 24
                         new_dates = cal_obj.interval_get(cr,
                             uid,
                             opportunity.section_id.resource_calendar_id and opportunity.section_id.resource_calendar_id.id or False,
