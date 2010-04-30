@@ -107,7 +107,7 @@
                     <field name="date_prefered"/>
                     <field name="date_planned" select="1"/>
                     <field name="user_id"/>
-                    <button colspan="2" name="%(wizard_populate_payment)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                    <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                     <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1">
                         <form string="Payment Line">
                             <notebook>
