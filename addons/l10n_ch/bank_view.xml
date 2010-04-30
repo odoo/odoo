@@ -1,54 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<record model="ir.ui.view" id="view_res_bank_form">
-			<field name="name">res.bank.form</field>
-			<field name="model">res.bank</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="base.view_res_bank_form"/>
-			<field name="arch" type="xml">
-				<field name="bic" position="after">
-					<field name="clearing" select="2"/>
-				</field>
-			</field>
-		</record>
-		
-		<record model="ir.ui.view" id="l10nch_view_res_bank_tree">
-			<field name="name">res.bank.tree</field>
-			<field name="model">res.bank</field>
-			<field name="type">tree</field>
-			<field name="inherit_id" ref="base.view_res_bank_tree"/>
-			<field name="arch" type="xml">
-				<field name="code" position="after">
-					<field name="clearing" select="1"/>
-				</field>
-			</field>
-		</record>
+    <data>
+        <record model="ir.ui.view" id="view_res_bank_form">
+            <field name="name">res.bank.form</field>
+            <field name="model">res.bank</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_res_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="bic" position="after">
+                    <field name="clearing" select="2"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="l10nch_view_res_bank_tree">
+            <field name="name">res.bank.tree</field>
+            <field name="model">res.bank</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="base.view_res_bank_tree"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="clearing" select="1"/>
+                    <field name="city" select="1"/>
+                    
+                </field>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="l10nch_view_res_partner_bank">
-			<field name="name">res.partner_bank.form</field>
-			<field name="model">res.partner.bank</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="base.view_partner_bank_form"/>
-			<field name="arch" type="xml">
-				<field name="country_id" position="after">
-					<field name="printBank" select="2"/>
-                    <field name="printAccount" select="2"/>
-				</field>
-			</field>
-		</record>
+            <field name="name">res.partner_bank.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="country_id" position="after">
+                    <field name="printbank" select="2"/>
+                    <field name="printaccount" select="2"/>
+                </field>
+            </field>
+        </record>
          <record model="ir.ui.view" id="l10nch_view_res_partner_bank">
-			<field name="name">res.partner_partner_bank.form</field>
-			<field name="model">res.partner</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="account.view_partner_property_form"/>
-			<field name="arch" type="xml">
-				<field name="bank" position="after">
+            <field name="name">res.partner_partner_bank.form</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <field name="bank" position="after">
                     <newline />
-					<field name="printBank" select="2"/>
-                    <field name="printAccount" select="2"/>
-				</field>
-			</field>
-		</record>
-	</data>
+                    <field name="printbank" select="2"/>
+                    <field name="printaccount" select="2"/>
+                </field>
+            </field>
+        </record>
+    </data>
 </openerp>

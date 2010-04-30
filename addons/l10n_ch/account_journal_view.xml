@@ -15,20 +15,20 @@
                     <field name="default_debit_account_id"
                         on_change="on_change_debit(name, default_debit_account_id)" select="1"/>
                     <group col="4" colspan="4">
-						<button icon="gtk-cancel" name="action_cancel" string="Cancel" type="object"/>
-						<button icon="gtk-ok" name="action_new" string="Next" type="object"/>
+                        <button icon="gtk-cancel" name="action_cancel" string="Cancel" type="object"/>
+                        <button icon="gtk-ok" name="action_new" string="Next" type="object"/>
 
                     </group>
                 </form>
             </field>
         </record>
-		<record id="action_config_journal" model="ir.actions.act_window">
+        <record id="action_config_journal" model="ir.actions.act_window">
             <field name="name">Configure Journal</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.journal.todo</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-			<field name="view_id" ref="view_account_journal_form_todo"/>
+            <field name="view_id" ref="view_account_journal_form_todo"/>
             <field name="target">new</field>
         </record>
 
@@ -36,7 +36,7 @@
         <record id="action_config_journal_todo" model="ir.actions.todo">
             <field name="name">Finalize your journal</field>
             <field name="note">Set accounts on financial journals defined by
-			Camptocamp l10n_ch module</field>
+            Camptocamp l10n_ch module</field>
             <field name="action_id" ref="action_config_journal"/>
             <field name="sequence">5</field>
         </record>
