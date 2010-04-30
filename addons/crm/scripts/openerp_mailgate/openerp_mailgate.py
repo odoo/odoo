@@ -189,7 +189,7 @@ class email_parser(object):
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'])
+            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'], False, False, {'model' : self.model})
             #self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
@@ -284,10 +284,10 @@ class email_parser(object):
                 act = 'case_' + actions['state']
 
             for k1, k2 in [('cost', 'planned_cost'), ('revenue', 'planned_revenue'), ('probability', 'probability')]:
-            try:
-                data[k2] = float(actions[k1])
-            except:
-                pass
+                try:
+                    data[k2] = float(actions[k1])
+                except:
+                    pass
 
         if 'priority' in actions:
             if actions['priority'] in ('1', '2', '3', '4', '5'):

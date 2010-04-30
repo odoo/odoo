@@ -22,8 +22,8 @@
 import time
 import operator
 
-from osv import fields
-from osv import osv
+from osv import fields, osv
+import decimal_precision as dp
 
 #
 # Object definition
@@ -281,4 +281,71 @@ class account_analytic_account(osv.osv):
         return self.name_get(cr, uid, account, context=context)
 
 account_analytic_account()
+
+
+class account_analytic_line(osv.osv):
+    _name = 'account.analytic.line'
+    _description = 'Analytic lines'
+    def _amount_currency(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context):
+            cmp_cur_id=rec.company_id.currency_id.id
+            aa_cur_id=rec.account_id.currency_id.id
+            # Always provide the amount in currency
+            if cmp_cur_id != aa_cur_id:
+                cur_obj = self.pool.get('res.currency')
+                ctx = {}
+                if rec.date and rec.amount:
+                    ctx['date'] = rec.date
+                    result[rec.id] = cur_obj.compute(cr, uid, rec.company_id.currency_id.id,
+                        rec.account_id.currency_id.id, rec.amount,
+                        context=ctx)
+            else:
+                result[rec.id]=rec.amount
+        return result
+        
+    def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context):
+            # Always provide second currency
+            result[rec.id] = (rec.account_id.currency_id.id,rec.account_id.currency_id.code)
+        return result
+    def _get_account_line(self, cr, uid, ids, context={}):
+        aac_ids = {}
+        for acc in self.pool.get('account.analytic.account').browse(cr, uid, ids):
+            aac_ids[acc.id] = True
+        aal_ids = []
+        if aac_ids:
+            aal_ids = self.pool.get('account.analytic.line').search(cr, uid, [('account_id','in',aac_ids.keys())], context=context)
+        return aal_ids
+
+    _columns = {
+        'name' : fields.char('Description', size=256, required=True),
+        'date' : fields.date('Date', required=True),
+        'amount' : fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price.'),
+        'unit_amount' : fields.float('Quantity', help='Specifies the amount of quantity to count.'),
+        'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),
+        'user_id' : fields.many2one('res.users', 'User',),
+        'company_id': fields.many2one('res.company','Company',required=True),
+        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency',
+                store={
+                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
+                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
+                },
+                help="The related account currency if not equal to the company one."),
+        'amount_currency': fields.function(_amount_currency, method=True, digits_compute= dp.get_precision('Account'), string='Amount currency',
+                store={
+                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
+                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
+                },
+                help="The amount expressed in the related account currency if not equal to the company one."),
+
+    }
+    _defaults = {
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', c),
+    }
+    _order = 'date'
+account_analytic_line()
+
 
