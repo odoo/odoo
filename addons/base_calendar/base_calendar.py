@@ -36,7 +36,7 @@ months = {
     10: "October", 11: "November", 12: "December"
 }
 
-def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=""):
+def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
     """
     Get recurrent dates based on Rule string considering exdate and start date
     @param rrulestring: Rulestring
@@ -56,6 +56,8 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=""):
     for date in exdate:
         datetime_obj = todate(date)
         rset1._exdate.append(datetime_obj)
+    if exrule:
+        rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
     re_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), rset1._iter())
     return re_dates
 
@@ -458,11 +460,12 @@ property or property parameter."),
             event.add('location').value = event_obj.location
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
+        
         if event_obj.alarm_id:
+            # computes alarm data
             valarm = event.add('valarm')
             alarm_object = self.pool.get('res.alarm')
             alarm_data = alarm_object.read(cr, uid, event_obj.alarm_id.id, context=context)
-            print 'aaaaaaaaaaaaaaaaa', alarm_data, event_obj.alarm_id.id
             # Compute trigger data
             interval = alarm_data['trigger_interval']
             occurs = alarm_data['trigger_occurs']
@@ -481,6 +484,13 @@ property or property parameter."),
     
             # Compute other details
             valarm.add('DESCRIPTION').value = alarm_data['name'] or 'OpenERP'
+        
+        for attendee in event_obj.attendee_ids:
+            attendee_add = event.add('attendee')
+            attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
+            attendee_add.params['ROLE'] = [str(attendee.role)]
+            attendee_add.params['RSVP'] = [str(attendee.rsvp)]
+            attendee_add.value = 'MAILTO:' + attendee.email
         res = cal.serialize()
         return res
     
