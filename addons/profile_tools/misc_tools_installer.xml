@@ -10,9 +10,13 @@
           <form position="attributes">
             <attribute name="string">Tools Modules Installation</attribute>
           </form>
+	      <xpath expr='//separator[@string="vsep"]' position='attributes'>
+          	  <attribute name='rowspan'>10</attribute>
+          	  <attribute name='string'></attribute>
+          </xpath>
 
           <separator string="title" position="attributes">
-            <attribute name="string">Select Tools To Install</attribute>
+            <attribute name="string">Tools</attribute>
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
@@ -20,7 +24,6 @@
                        >Here are a few useful applications which, while they don't directly contribute to your business, can improve on it or improve your OpenERP experience</attribute>
           </xpath>
           <group colspan="8">
-            <separator string="Tools" colspan="4"/>
             <field name="lunch"/>
             <field name="subscription"/>
             <field name="survey"/>
