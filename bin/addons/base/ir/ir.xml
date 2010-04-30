@@ -1236,14 +1236,14 @@
                             <field name="subject" colspan="4" attrs="{'required':[('state','=','email')]}"/>
                             <field name="message" select="2" colspan="4" attrs="{'required':[('state','=','email')]}"/>
                             <newline/>
-                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e.[[ object.partner_id.name ]]" align="0.0"/>
+                            <label colspan="4" string="Access all the fields related to the current object using expressions, i.e. object.partner_id.name " align="0.0"/>
                         </page>
                         <page string="SMS Configuration" attrs="{'invisible':[('state','!=','sms')]}">
                             <separator colspan="4" string="SMS Configuration"/>
                             <field name="mobile" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','sms')]}"/>
                             <field name="sms" colspan="4" attrs="{'required':[('state','=','sms')]}"/>
                             <newline/>
-                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
+                            <label colspan="4" string="Access all the fields related to the current object using expressions, i.e. object.partner_id.name " align="0.0"/>
                         </page>
                         <page string="Create / Write" attrs="{'invisible':[('state','!=','object_create'),('state','!=','object_write')]}">
                             <separator colspan="4" string="Fields Mapping"/>

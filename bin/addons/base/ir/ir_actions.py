@@ -551,7 +551,7 @@ class actions_server(osv.osv):
                 if not address:
                     raise osv.except_osv(_('Error'), _("Please specify the Partner Email address !"))
                 if not user:
-                    raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
+                    raise osv.except_osv(_('Error'), _("Please specify server option --email-from !"))
                 
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
