@@ -2117,6 +2117,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr,uid,[uid],c)[0].company_id.id,
         'chart_template_id': _get_chart,
         'code_digits': lambda *a:6,
+        'seq_journal': True
     }
 
     def execute(self, cr, uid, ids, context=None):

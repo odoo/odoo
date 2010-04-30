@@ -1698,11 +1698,19 @@
                 <form position="attributes">
                   <attribute name="string">Generate Chart of Accounts from a Chart Template</attribute>
                 </form>
+                <separator string="title" position="attributes">
+            	<attribute name="string"
+                       >Generate Chart of Accounts from a Chart Template</attribute>
+          		</separator>
+          		<xpath expr="//label[@string='description']" position="attributes">
+            		<attribute name="string">This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template</attribute>
+            		<attribute name="width">150</attribute>
+          		</xpath>
+          		<xpath expr='//separator[@string="vsep"]' position='attributes'>
+              			<attribute name='rowspan'>15</attribute>
+              			<attribute name='string'></attribute>
+	      		</xpath>
                 <group string="res_config_contents" position="replace">
-                  <separator col="4" colspan="4" string="
-                    Generate Chart of Accounts from a Chart Template"/>
-                  <label align="0.0" colspan="4"
-                         string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template"/>
                   <field name="company_id"  widget="selection"
                          groups="base.group_multi_company"/>
                   <field name ="code_digits" />
