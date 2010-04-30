@@ -256,28 +256,41 @@ class YamlInterpreter(object):
             b = default
         return b 
     
-    def process_record(self, node):
-        record, fields = node.items()[0]
-
-        self.validate_xml_id(record.id)
-        if self.isnoupdate(record) and self.mode != 'init':
-            id = self.pool.get('ir.model.data')._update_dummy(self.cr, self.uid, record.model, self.module, record.id)
-            # check if the resource already existed at the last update
-            if id:
-                self.id_map[record] = int(id)
-                return None
-            else:
-                if not self._coerce_bool(record.forcecreate):
-                    return None
-
+    def create_osv_memory_record(self, record, fields):
         model = self.get_model(record.model)
         record_dict = self._create_record(model, fields)
-        self.logger.debug("RECORD_DICT %s" % record_dict)
-        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
-                self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
-        self.id_map[record.id] = int(id)
-        if config.get('import_partial', False):
-            self.cr.commit()
+        id_new=model.create(self.cr, self.uid, record_dict, context=self.context)
+        self.id_map[record.id] = int(id_new)
+        return record_dict
+    
+    def process_record(self, node):
+        import osv
+        record, fields = node.items()[0]
+        model = self.get_model(record.model)
+        model_bases = model.__class__.__bases__ 
+        if osv.osv.osv_memory in model_bases:
+            record_dict=self.create_osv_memory_record(record, fields)
+        else:
+            self.validate_xml_id(record.id)
+            if self.isnoupdate(record) and self.mode != 'init':
+                id = self.pool.get('ir.model.data')._update_dummy(self.cr, self.uid, record.model, self.module, record.id)
+                # check if the resource already existed at the last update
+                if id:
+                    self.id_map[record] = int(id)
+                    return None
+                else:
+                    if not self._coerce_bool(record.forcecreate):
+                        return None
+    
+            model = self.get_model(record.model)
+            record_dict = self._create_record(model, fields)
+            self.logger.debug("RECORD_DICT %s" % record_dict)
+            if not osv.osv.osv_memory in model_bases:
+                id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
+                        self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
+                self.id_map[record.id] = int(id)
+                if config.get('import_partial', False):
+                    self.cr.commit()
     
     def _create_record(self, model, fields):
         record_dict = {}
@@ -390,6 +403,10 @@ class YamlInterpreter(object):
             uid = workflow.uid
         else:
             uid = self.uid
+        self.cr.execute('select distinct signal from wkf_transition')
+        signals=[x['signal'] for x in self.cr.dictfetchall()]
+        if workflow.action not in signals:
+            raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
     
@@ -528,15 +545,19 @@ class YamlInterpreter(object):
                     'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
 
     def process_act_window(self, node):
+        assert getattr(node, 'id'), "Attribute %s of act_window is empty !" % ('id',)
+        assert getattr(node, 'name'), "Attribute %s of act_window is empty !" % ('name',)
+        assert getattr(node, 'res_model'), "Attribute %s of act_window is empty !" % ('res_model',)
         self.validate_xml_id(node.id)
         view_id = False
         if node.view:
             view_id = self.get_id(node.view)
-        context = eval(node.context, self.eval_context)
-
+        if not node.context:
+            node.context={}
+        context = eval(str(node.context), self.eval_context)
         values = {
             'name': node.name,
-            'type': type or 'ir.actions.act_window',
+            'type': node.type or 'ir.actions.act_window',
             'view_id': view_id,
             'domain': node.domain,
             'context': context,
@@ -566,13 +587,17 @@ class YamlInterpreter(object):
         # TODO add remove ir.model.data
 
     def process_delete(self, node):
-        if len(node.search):
-            ids = self.pool.get(node.model).search(self.cr, self.uid, eval(node.search, self.eval_context))
+        assert getattr(node, 'model'), "Attribute %s of delete tag is empty !" % ('model',)
+        if self.pool.get(node.model):
+            if len(node.search):
+                ids = self.pool.get(node.model).search(self.cr, self.uid, eval(node.search, self.eval_context))
+            else:
+                ids = [self.get_id(node.id)]
+            if len(ids):
+                self.pool.get(node.model).unlink(self.cr, self.uid, ids)
+                self.pool.get('ir.model.data')._unlink(self.cr, self.uid, node.model, ids)
         else:
-            ids = [self.get_id(node.id)]
-        if len(ids):
-            self.pool.get(node.model).unlink(self.cr, self.uid, ids)
-            self.pool.get('ir.model.data')._unlink(self.cr, self.uid, node.model, ids)
+            self.logger.log(logging.TEST, "Record not deleted.")
     
     def process_url(self, node):
         self.validate_xml_id(node.id)
@@ -649,6 +674,8 @@ class YamlInterpreter(object):
         """
         Processes a Yaml string. Custom tags are interpreted by 'process_' instance methods.
         """
+        yaml_tag.add_constructors()
+
         is_preceded_by_comment = False
         for node in yaml.load(yaml_string):
             is_preceded_by_comment = self._log(node, is_preceded_by_comment)
