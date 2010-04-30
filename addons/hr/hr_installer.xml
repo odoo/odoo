@@ -12,14 +12,17 @@
           </form>
 
           <separator string="title" position="attributes">
-            <attribute name="string">Configure Human Resources"</attribute>
+            <attribute name="string">Select Human Resources Modules To Install</attribute>
           </separator>
+           <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='rowspan'>8</attribute>
+	          	  <attribute name='string'></attribute>
+	      		</xpath>
           <xpath expr="//label[@string='description']"
                  position="attributes">
             <attribute name="string">The base Human Resources addon will help you manage your employee roster, but your can enhance it even further by installing a few HR-related applications.</attribute>
           </xpath>
           <group colspan="8">
-            <separator string="Select Human Resources Modules To Install" colspan="4"/>
             <field name="hr_holidays"/>
             <field name="hr_expense"/>
             <field name="hr_recruitment"/>
