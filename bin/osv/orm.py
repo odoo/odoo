@@ -1138,17 +1138,24 @@ class orm_template(object):
             if isinstance(s, unicode):
                 return s.encode('utf8')
             return s
+
+        # return True if node can be displayed to current user
         def check_group(node):
             if node.get('groups'):
                 groups = node.get('groups').split(',')
-                readonly = False
+                can_see = False
                 access_pool = self.pool.get('ir.model.access')
                 for group in groups:
-                    readonly = readonly or access_pool.check_groups(cr, user, group)
-                if not readonly:
+                    can_see = can_see or access_pool.check_groups(cr, user, group)
+                    if can_see:
+                        break
+                if not can_see:
                     node.set('invisible', '1')
+                    if 'attrs' in node.attrib:
+                        del(node.attrib['attrs']) #avoid making field visible later
             del(node.attrib['groups'])
-    
+            return can_see
+
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
                 attrs = {}
@@ -1195,9 +1202,7 @@ class orm_template(object):
                             }
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
-                        if 'groups' in node.attrib:
-                            check_group(node)
-                        if node.get('invisible'):
+                        if not check_group(node)
                             attrs['selection'] = []
                         # We can not use the 'string' domain has it is defined according to the record !
                         else:
@@ -1206,7 +1211,7 @@ class orm_template(object):
                                 dom = column._domain
                             dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
                             context.update(eval(node.get('context','{}')))
-                            attrs['selection'] = self.pool.get(relation)._name_search(cr, user, '', dom, context=context,limit=None,name_get_uid=1)
+                            attrs['selection'] = self.pool.get(relation)._name_search(cr, user, '', dom, context=context, limit=None, name_get_uid=1)
                             if (node.get('required') and not int(node.get('required'))) or not column.required:
                                 attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
@@ -3656,6 +3661,8 @@ class orm(orm_template):
         return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
             [self._rec_name], context, load='_classic_write')]
 
+    # private implementation of name_search, allows passing a dedicated user for the name_get part to
+    # solve some access rights issues
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
         if not args:
             args = []
@@ -3665,7 +3672,7 @@ class orm(orm_template):
         if name:
             args += [(self._rec_name, operator, name)]
         ids = self.search(cr, user, args, limit=limit, context=context)
-        res = self.name_get(cr, name_get_uid, ids, context)
+        res = self.name_get(cr, name_get_uid or user, ids, context)
         return res
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
@@ -3683,9 +3690,8 @@ class orm(orm_template):
         This method is equivalent of search() on name + name_get()
 
         """
+        return self._name_search(cr, user, name, args, operator, context, limit)
 
-        return self._name_search(cr, user, name, args, operator, context, limit, user)
-        
     def copy_data(self, cr, uid, id, default=None, context=None):
         """
         Copy given record's data with all its fields values
