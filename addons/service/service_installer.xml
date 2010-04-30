@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
     <record id="view_confirm_install_module_form" model="ir.ui.view">
       <field name="name">Service Profile : Install extra modules</field>
       <field name="model">profile.service.config.install_modules_wizard</field>
@@ -12,7 +12,9 @@
           <form position="attributes">
             <attribute name="string">Install Extra Service Profile Modules</attribute>
           </form>
-
+		 <xpath expr='//separator[@string="vsep"]' position='attributes'>
+    	  	  <attribute name='string'></attribute>
+    	 </xpath>
           <separator string="title" position="attributes">
             <attribute name="string">Services Management</attribute>
           </separator>
@@ -42,7 +44,7 @@
         </data>
       </field>
     </record>
-    
+
         <record id="action_config_install_module" model="ir.actions.act_window">
             <field name="name">Service Profile : Install Extra Modules</field>
             <field name="type">ir.actions.act_window</field>
