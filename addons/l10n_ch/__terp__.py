@@ -5,7 +5,7 @@
 #
 #  Created by Nicolas Bessi based on Credric Krier contribution
 #
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+#  Copyright (c) 2010 CamptoCamp. All rights reserved.
 ##############################################################################
 #
 # WARNING: This program as such is intended to be used by professional
@@ -46,7 +46,7 @@ You can also add with this module one of the following account plan:
     
 ------------------------------------------------------------------------
     
-Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version 
+Module incluant la localisation Suisse de OpenERP revu et corrigé par Camptocamp. Cette nouvelle version 
 comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement) 
 et l'import du relevé de compte depuis la banque de manière automatisée. 
 De plus, nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).
@@ -57,14 +57,11 @@ Par ailleurs, conjointement à ce module, nous proposons 1 plan comptables issus
  - l10n_ch_c2c_pcg
  
 --------------------------------------------------------------------------
-TODO :
+Next features :
 - Implement bvr import partial reconciliation
 - Replace wizard by osv_memory when possible
-- Add mising HELP
 - Finish code comment
 - Improve demo data
-
-
 """,
     "version" : "5.0",
     "author" : "Camptocamp SA",
@@ -81,15 +78,15 @@ TODO :
     ],
     "init_xml" : [
         "dta_data.xml",
-        "vaudtax_data.xml",
+        "data.xml",
     ],
     "demo_xml" : [
-        "demo/vaudtax_data_demo.xml",
+      "demo/data_demo.xml",
     ],
     "update_xml" : [
         "dta_view.xml",
-        "dta_wizard.xml",
-        "bvr_report.xml",
+        "l10n_ch_wizard.xml",
+        "l10n_ch_report.xml",
         "bvr_wizard.xml",
         "bvr_view.xml",
         "company_view.xml",
@@ -101,4 +98,3 @@ TODO :
     "active": False,
     "installable": True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

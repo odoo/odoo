@@ -1,10 +1,10 @@
-#
+# -*- encoding: utf-8 -*-
 #  account_move_line.py
 #  l10n_ch
 #
 #  Created by Nicolas Bessi based on Credric Krier contribution
 #
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+#  Copyright (c) 2010 CamptoCamp. All rights reserved.
 ##############################################################################
 #
 # WARNING: This program as such is intended to be used by professional
@@ -40,12 +40,13 @@ class AccountMoveLine(osv.osv):
     _inherit = 'account.move.line'
 
     ## @param self The object pointer.
-    ## @param cr a psycopg cursor
+    ## @param cursor a psycopg cursor
     ## @param uid res.user.id that is currently loged
     ## @param payment_type manual 
     ## @parma context a standard dict 
-    ## @return a dict  who has the account move line id as key and the bank id as value
-    def line2bank(self, cr, uid, ids, payment_type='manual', context=None):
+    ## @return a dict  who has the account 
+    #  move line id as key and the bank id as value
+    def line2bank(self, cursor, uid, ids, payment_type='manual', context=None):
         """add a link to account.move.line in order to link 
         supplier invoice line and bank. The original link 
         was defined in account_payment"""
@@ -53,9 +54,9 @@ class AccountMoveLine(osv.osv):
         line2bank = {}
         if not ids:
             return {}
-        bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type,
+        bank_type = payment_mode_obj.suitable_bank_types(cursor, uid, payment_type,
                 context=context)
-        for line in self.browse(cr, uid, ids, context=context):
+        for line in self.browse(cursor, uid, ids, context=context):
             if line.invoice and line.invoice.partner_bank:
                 line2bank[line.id] = line.invoice.partner_bank.id
             elif line.partner_id:
@@ -68,4 +69,3 @@ class AccountMoveLine(osv.osv):
         return line2bank
 
 AccountMoveLine()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

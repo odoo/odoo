@@ -5,7 +5,7 @@
 #
 #  Created by Nicolas Bessi based on Credric Krier contribution
 #
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+#  Copyright (c) 2010 CamptoCamp. All rights reserved.
 ##############################################################################
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,55 +29,63 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""Wizzard use for printing ESR/BVR"""
 
 import wizard
 import pooler
 import re
-from tools.translate import _
 
-def _check(self, cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname)
+def _check(self, cursor, uid, data, context):
+    """Check if the invoice is ready to be printed"""
+    pool = pooler.get_pool(cursor.dbname)
     invoice_obj = pool.get('account.invoice')
-    for invoice in invoice_obj.browse(cr, uid, data['ids'], context):
+    for invoice in invoice_obj.browse(cursor, uid, data['ids'], context):
         if not invoice.partner_bank:
-            raise wizard.except_wizard(_('UserError'),
-                    _('No bank specified on invoice:\n%s') % \
-                            invoice_obj.name_get(cr, uid, [invoice.id], context=context)[0][1])
-
+            raise wizard.except_wizard('UserError',
+                    'No bank specified on invoice:\n' + \
+                            invoice_obj.name_get(cursor, uid, [invoice.id],
+                                context=context)[0][1])
         if not re.compile('[0-9][0-9]-[0-9]{3,6}-[0-9]').match(
                 invoice.partner_bank.bvr_number or ''):
-            raise wizard.except_wizard(_('UserError'),
-                    _('Your bank BVR number should be of the form 0X-XXX-X!\n' \
-                            'Please check your company ' \
-                            'information for the invoice:\n%s') % \
-                            invoice_obj.name_get(cr, uid, [invoice.id], context=context)[0][1])
-
+            raise wizard.except_wizard('UserError',
+                    "Your bank BVR number should be of the form 0X-XXX-X! " +
+                            'Please check your company ' +
+                            'information for the invoice:\n' + 
+                            invoice_obj.name_get(cursor, uid, [invoice.id],
+                                context=context)[0][1])
         if invoice.partner_bank.bvr_adherent_num \
                 and not re.compile('[0-9]*$').match(
                         invoice.partner_bank.bvr_adherent_num):
-            raise wizard.except_wizard(_('UserError'),
-                    _('Your bank BVR adherent number must contain exactly seven' \
-                            'digits!\nPlease check your company ' \
-                            'information for the invoice:\n%s') % \
-                            invoice_obj.name_get(cr, uid, [invoice.id], context=context)[0][1])
+            raise wizard.except_wizard('UserError',
+                    'Your bank BVR adherent number must contain exactly seven' +
+                            'digits!\nPlease check your company ' +
+                            'information for the invoice:\n' + +
+                            invoice_obj.name_get(cursor, uid, [invoice.id],
+                                context=context)[0][1])
     return {}
 
-class wizard_report(wizard.interface):
+class WizardReport(wizard.interface):
+    """Wizzard use for printing ESR/BVR without invoice layout"""
+    
     states = {
         'init': {
             'actions': [_check], 
             'result': {'type':'print', 'report':'l10n_ch.bvr', 'state':'end'}
         }
     }
-wizard_report('l10n_ch.bvr.check')
+WizardReport('l10n_ch.bvr.check')
 
 class ReportInvoiceBVRCheck(wizard.interface):
+    """Wizzard use for printing ESR/BVR without with layout"""
     states = {
         'init': {
             'actions': [_check],
-            'result': {'type':'print', 'report':'l10n_ch.invoice.bvr', 'state':'end'}
+            'result': {
+                        'type':'print', 
+                        'report':'l10n_ch.invoice.bvr', 
+                        'state':'end'
+                    }
         }
     }
 ReportInvoiceBVRCheck('l10n_ch.invoice.bvr.check')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

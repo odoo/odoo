@@ -1,39 +1,38 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
+        <!-- Inherit both bank view -->
+        <record model="ir.ui.view" id="view_partner_bank_form">
+            <field name="name">partner - bank inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="acc_number" position="after">
+                    <newline/>
+                    <field name="bvr_number"/>
+                    <field name="bvr_adherent_num"/>
+                    <field name="post_number"/>
+                    <field name="dta_code"/>
+                </field>
+            </field>
+        </record>
 
-		<!-- Inherit both bank view -->
-		<record model="ir.ui.view" id="view_partner_bank_form">
-			<field name="name">partner - bank inherit</field>
-			<field name="model">res.partner</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="base.view_partner_form"/>
-			<field name="arch" type="xml">
-				<field name="acc_number" position="after">
-					<newline/>
-					<field name="bvr_number"/>
-					<field name="bvr_adherent_num"/>
-					<field name="post_number"/>
-					<field name="dta_code"/>
-				</field>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_partner_bank_form2">
+            <field name="name">partner - bank inherit</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="acc_number" position="after">
+                    <newline/>
+                    <field name="bvr_number"/>
+                    <field name="bvr_adherent_num"/>
+                    <field name="post_number"/>
+                    <field name="dta_code"/>
+                </field>
+            </field>
+        </record>
 
-		<record model="ir.ui.view" id="view_partner_bank_form2">
-			<field name="name">partner - bank inherit</field>
-			<field name="model">res.partner.bank</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="base.view_partner_bank_form"/>
-			<field name="arch" type="xml">
-				<field name="acc_number" position="after">
-					<newline/>
-					<field name="bvr_number"/>
-					<field name="bvr_adherent_num"/>
-					<field name="post_number"/>
-					<field name="dta_code"/>
-				</field>
-			</field>
-		</record>
-
-	</data>
+    </data>
 </openerp>
