@@ -20,32 +20,5 @@
 #
 ##############################################################################
 
-
-{
-    'name': 'Issue Management in Project Management',
-    'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
-    'description': """
-        This module provide Issues/Bugs Management in Project
-    """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': [
-        'crm',
-        'project',
-    ],
-    'init_xml': [
-        'project_issue_data.xml'
-    ],
-    'update_xml': [
-        'project_issue_view.xml',
-        'project_issue_menu.xml',
-        'report/project_issue_report_view.xml',
-        'security/project_issue_security.xml',
-        'security/ir.model.access.csv',
-     ],
-    'demo_xml': ['project_issue_demo.xml'],
-    'installable': True,
-    'active': False,
-}
+import project_issue_sheet
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

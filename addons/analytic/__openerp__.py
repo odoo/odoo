@@ -26,7 +26,7 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["base"],
+    "depends" : ["base", "decimal_precision"],
     "description": """Module for defining analytic accounting object.
     """,
     "init_xml" : [],
