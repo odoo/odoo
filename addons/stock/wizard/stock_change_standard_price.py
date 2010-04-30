@@ -91,68 +91,16 @@ class change_standard_price(osv.osv_memory):
 
         """
         rec_id = context and context.get('active_id', False)
-        prod_obj = self.pool.get('product.template')
-        location_obj = self.pool.get('stock.location')
-        lot_obj = self.pool.get('stock.report.prodlots')
-        move_obj = self.pool.get('account.move')
-        move_line_obj = self.pool.get('account.move.line')
-        data_obj = self.pool.get('ir.model.data')
-
-        res = self.read(cr, uid, ids[0], ['new_price'])
-        new_price = res.get('new_price',[])
-        data = prod_obj.browse(cr, uid, rec_id)
-        diff = data.standard_price - new_price
-        prod_obj.write(cr, uid, rec_id, {'standard_price': new_price})
-
-        loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
-        lot_ids = lot_obj.search(cr, uid, [('location_id', 'in', loc_ids),('product_id','=',rec_id)])
-        qty = 0
-        debit = 0.0
-        credit = 0.0
-        stock_input_acc = data.property_stock_account_input.id or data.categ_id.property_stock_account_input_categ.id
-        stock_output_acc = data.property_stock_account_output.id or data.categ_id.property_stock_account_output_categ.id
-
-        for lots in lot_obj.browse(cr, uid, lot_ids):
-            qty += lots.name
-
-        if stock_input_acc and stock_output_acc and lot_ids:
-            move_id = move_obj.create(cr, uid, {'journal_id': data.categ_id.property_stock_journal.id})
-            if diff > 0:
-                credit = qty * diff
-                move_line_obj.create(cr, uid, {
-                                'name': data.name,
-                                'account_id': stock_input_acc,
-                                'credit': credit,
-                                'move_id': move_id
-                                })
-                for lots in lot_obj.browse(cr, uid, lot_ids):
-                    credit = lots.name * diff
-                    move_line_obj.create(cr, uid, {
-                                    'name': 'Expense',
-                                    'account_id': lots.location_id.account_id.id,
-                                    'debit': credit,
-                                    'move_id': move_id
-                                    })
-            elif diff < 0:
-                debit = qty * -diff
-                move_line_obj.create(cr, uid, {
-                                'name': data.name,
-                                'account_id': stock_output_acc,
-                                'debit': debit,
-                                'move_id': move_id
-                                })
-                for lots in lot_obj.browse(cr, uid, lot_ids):
-                    debit = lots.name * -diff
-                    move_line_obj.create(cr, uid, {
-                                    'name': 'Income',
-                                    'account_id': lots.location_id.account_id.id,
-                                    'credit': debit,
-                                    'move_id': move_id
-                                    })
-            else:
-                raise osv.except_osv(_('Warning!'),_('No Change in Price.'))
-        else:
-            pass
-        return {}
+        assert rec_id, _('Active ID is not set in Context')
+        prod_obj = self.pool.get('product.product')
+        res = self.browse(cr, uid, ids) 
+        datas = {
+            'new_price' : res[0].new_price,
+            'stock_output_account' : res[0].stock_account_output.id,
+            'stock_input_account' : res[0].stock_account_input.id,
+            'stock_journal' : res[0].stock_journal.id
+        }
+        prod_obj.do_change_standard_price(cr, uid, [rec_id], datas, context)
+        return {}      
 
 change_standard_price()
