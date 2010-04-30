@@ -21,6 +21,8 @@
 
 from osv import fields, osv
 from crm import crm
+from caldav import calendar
+from datetime import datetime
 
 class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
@@ -67,7 +69,7 @@ class crm_meeting(osv.osv):
         recur_pool = {}
         try:
             for val in vals:
-                exists, r_id = caldav.uid2openobjectid(cr, val['id'], context.get('model'), \
+                exists, r_id = calendar.uid2openobjectid(cr, val['id'], context.get('model'), \
                                                                  val.get('recurrent_id'))
                 if val.has_key('create_date'): val.pop('create_date')
                 u_id = val.get('id', None)
@@ -101,3 +103,4 @@ class crm_meeting(osv.osv):
 crm_meeting()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
