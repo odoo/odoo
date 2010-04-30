@@ -166,7 +166,7 @@ class project_issue(osv.osv):
                 'date': bug.date,
                 'project_id':bug.project_id.id,
                 'priority':bug.priority,
-                'user_id':bug.user_id.id,
+                'user_id':bug.assigned_to.id,
                 'planned_hours': 0.0,
             })
 
