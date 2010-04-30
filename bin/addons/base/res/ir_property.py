@@ -57,11 +57,6 @@ class ir_property(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'fields_id': fields.many2one('ir.model.fields', 'Fields', ondelete='cascade', required=True)
     }
-    def unlink(self, cr, uid, ids, context={}):
-        if ids:
-            cr.execute('delete from ir_model_fields where id in (select fields_id from ir_property where (fields_id is not null) and (id in ('+','.join(map(str,ids))+')))')
-        res = super(ir_property, self).unlink(cr, uid, ids, context)
-        return res
 
     def get(self, cr, uid, name, model, res_id=False, context={}):
         cr.execute('select id from ir_model_fields where name=%s and model=%s', (name, model))

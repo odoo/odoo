@@ -419,7 +419,7 @@ class actions_server(osv.osv):
         'type': lambda *a: 'ir.actions.server',
         'sequence': lambda *a: 5,
         'code': lambda *a: """# You can use the following variables
-#    - object
+#    - object or obj
 #    - time
 #    - cr
 #    - uid
@@ -519,18 +519,26 @@ class actions_server(osv.osv):
                 return result
 
             if action.state=='code':
-                localdict = {
-                    'self': self.pool.get(action.model_id.model),
-                    'context': context,
-                    'time': time,
-                    'ids': ids,
-                    'cr': cr,
-                    'uid': uid,
-                    'object':obj
-                }
-                exec action.code in localdict
-                if 'action' in localdict:
-                    return localdict['action']
+                if config['server_actions_allow_code']:
+                    localdict = {
+                        'self': self.pool.get(action.model_id.model),
+                        'context': context,
+                        'time': time,
+                        'ids': ids,
+                        'cr': cr,
+                        'uid': uid,
+                        'object':obj,
+                        'obj': obj,
+                        }
+                    exec action.code in localdict
+                    if 'action' in localdict:
+                        return localdict['action']
+                else:
+                    netsvc.Logger().notifyChannel(
+                        self._name, netsvc.LOG_ERROR,
+                        "%s is a `code` server action, but "
+                        "it isn't allowed in this configuration.\n\n"
+                        "See server options to enable it"%action)
 
             if action.state == 'email':
                 user = config['email_from']

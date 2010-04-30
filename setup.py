@@ -46,7 +46,7 @@ opj = os.path.join
 
 execfile(opj('bin', 'release.py'))
 
-if sys.argv[1] == 'bdist_rpm':
+if 'bdist_rpm' in sys.argv:
     version = version.split('-')[0]
 
 # get python short version
@@ -54,7 +54,6 @@ py_short_version = '%s.%s' % sys.version_info[:2]
 
 required_modules = [
     ('psycopg2', 'PostgreSQL module'),
-    ('xml', 'XML Tools for python'),
     ('reportlab', 'reportlab module'),
     ('pychart', 'pychart module'),
     ('pydot', 'pydot module'),
@@ -144,11 +143,14 @@ options = {
         "compressed": 1,
         "optimize": 2,
         "dist_dir": 'dist',
-        "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-                     "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
-                     "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing",
-                     "pydot","asyncore","asynchat", "reportlab", "vobject",
-                     "HTMLParser", "select"],
+        "packages": [
+            "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
+            "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
+            "encodings", "mx.DateTime","wizard","pychart","PIL", "pyparsing",
+            "pydot", "asyncore", "asynchat", "reportlab", "vobject",
+            "HTMLParser", "select", "mako", "poplib",
+            "imaplib", "smtplib", "email",
+        ],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }

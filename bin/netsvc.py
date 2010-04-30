@@ -36,6 +36,7 @@ import threading
 import time
 import xmlrpclib
 import release
+from pprint import pformat
 
 SERVICES = {}
 GROUPS = {}
@@ -231,8 +232,8 @@ class OpenERPDispatcherException(Exception):
 
 class OpenERPDispatcher:
     def log(self, title, msg):
-        from pprint import pformat
-        Logger().notifyChannel('%s' % title, LOG_DEBUG_RPC, pformat(msg))
+        if tools.config['log_level'] == logging.DEBUG_RPC:
+            Logger().notifyChannel('%s' % title, LOG_DEBUG_RPC, pformat(msg))
 
     def dispatch(self, service_name, method, params):
         if service_name not in GROUPS['web-services']:
@@ -390,7 +391,12 @@ class TinySocketClientThread(threading.Thread, OpenERPDispatcher):
                 ts.mysend(result)
             except OpenERPDispatcherException, e:
                 new_e = Exception(tools.exception_to_unicode(e.exception)) # avoid problems of pickeling
-                ts.mysend(new_e, exception=True, traceback=e.traceback)
+                try:
+                    ts.mysend(new_e, exception=True, traceback=e.traceback)
+                except:
+                    self.sock.close()
+                    self.threads.remove(self)
+                    return False
 
             self.sock.close()
             self.threads.remove(self)
