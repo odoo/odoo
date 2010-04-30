@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from dateutil import parser
 from dateutil import rrule
 from osv import fields, osv
@@ -36,7 +36,7 @@ months = {
     10: "October", 11: "November", 12: "December"
 }
 
-def get_recurrent_dates(rrulestring, exdate, startdate=None):
+def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
     """
     Get recurrent dates based on Rule string considering exdate and start date
     @param rrulestring: Rulestring
@@ -56,6 +56,8 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None):
     for date in exdate:
         datetime_obj = todate(date)
         rset1._exdate.append(datetime_obj)
+    if exrule:
+        rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
     re_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), rset1._iter())
     return re_dates
 
@@ -426,6 +428,72 @@ property or property parameter."),
                 self.write(cr, uid, ids, {'state': status})
         return True
 
+    def get_ics_file(self, cr, uid, event_obj, context=None):
+        """
+        Returns iCalendar file for the event invitation
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param event_obj: Event object (browse record)
+        @param context: A standard dictionary for contextual values
+        @return: .ics file content
+        """
+        res = None
+        def ics_datetime(idate, short=False):
+            if short:
+                return date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
+            else:
+                return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
+        try:
+            import vobject
+        except ImportError:
+            return res
+        cal = vobject.iCalendar()
+        event = cal.add('vevent')
+        event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
+        event.add('dtstart').value = ics_datetime(event_obj.date)
+        event.add('dtend').value = ics_datetime(event_obj.date_deadline)
+        event.add('summary').value = event_obj.name
+        if  event_obj.description:
+            event.add('description').value = event_obj.description
+        if event_obj.location:
+            event.add('location').value = event_obj.location
+        if event_obj.rrule:
+            event.add('rrule').value = event_obj.rrule
+        
+        if event_obj.alarm_id:
+            # computes alarm data
+            valarm = event.add('valarm')
+            alarm_object = self.pool.get('res.alarm')
+            alarm_data = alarm_object.read(cr, uid, event_obj.alarm_id.id, context=context)
+            # Compute trigger data
+            interval = alarm_data['trigger_interval']
+            occurs = alarm_data['trigger_occurs']
+            duration = (occurs == 'after' and alarm_data['trigger_duration']) \
+                                            or -(alarm_data['trigger_duration'])
+            related = alarm_data['trigger_related']
+            trigger = valarm.add('TRIGGER')
+            trigger.params['related'] = [related.upper()]
+            if interval == 'days':
+                delta = timedelta(days=duration)
+            if interval == 'hours':
+                delta = timedelta(hours=duration)
+            if interval == 'minutes':
+                delta = timedelta(minutes=duration)
+            trigger.value = delta
+    
+            # Compute other details
+            valarm.add('DESCRIPTION').value = alarm_data['name'] or 'OpenERP'
+        
+        for attendee in event_obj.attendee_ids:
+            attendee_add = event.add('attendee')
+            attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
+            attendee_add.params['ROLE'] = [str(attendee.role)]
+            attendee_add.params['RSVP'] = [str(attendee.rsvp)]
+            attendee_add.value = 'MAILTO:' + attendee.email
+        res = cal.serialize()
+        return res
+    
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context={}):
         """
         Send mail for calendar attendee.
@@ -443,7 +511,7 @@ property or property parameter."),
             res_obj = att.ref
             sub = '[%s Invitation][%d] %s' % (company, att.id, res_obj.name)
             att_infos = []
-            other_invitaion_ids = self.search(cr, uid, [('ref', '=', att.ref._name + ',' + str(att.ref.id))])
+            other_invitaion_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
             for att2 in self.browse(cr, uid, other_invitaion_ids):
                 att_infos.append(((att2.user_id and att2.user_id.name) or \
                              (att2.partner_id and att2.partner_id.name) or \
@@ -459,12 +527,14 @@ property or property parameter."),
                         'company': company
             }
             body = html_invitation % body_vals
+            attach = self.get_ics_file(cr, uid, res_obj, context=context)
             if mail_to and email_from:
                 tools.email_send(
                     email_from,
                     mail_to,
                     sub,
                     body,
+                    attach=attach and [('invitation.ics', attach)] or None,
                     subtype='html',
                     reply_to=email_from
                 )
