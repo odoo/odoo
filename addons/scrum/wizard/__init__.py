@@ -20,7 +20,7 @@
 ##############################################################################
 
 import scrum_backlog_create_task
-import assign_backlog_to_sprint
+import scrum_backlog_sprint
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

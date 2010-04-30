@@ -52,10 +52,10 @@
     'update_xml': [
         'security/ir.model.access.csv',
         'scrum_report.xml',
-        'scrum_wizard.xml',
         'scrum_view.xml',
         'process/scrum_process.xml',
-        'wizard/scrum_backlog_create_task_view.xml'
+        'wizard/scrum_backlog_create_task_view.xml',
+        'wizard/scrum_backlog_sprint_view.xml',
     ],
     'demo_xml': ['scrum_demo.xml'],
     'installable': True,
