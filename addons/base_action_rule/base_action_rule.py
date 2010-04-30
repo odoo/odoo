@@ -128,9 +128,8 @@ class base_action_rule(osv.osv):
                                 of the persons whom mail is to be sent"),
         'act_mail_body': fields.text('Mail body',help="Content of mail"),
         'regex_name': fields.char('Regular Expression on Model Name', size=128),
-        'server_action_id': fields.many2one('ir.actions.server','Server Action',help="Describes the\
-                                 action name." \
-                                "eg:on which object which action to be taken on basis of which condition"),
+        'server_action_id': fields.many2one('ir.actions.server','Server Action', help="Describes the action name.\neg:on which object which action to be taken on basis of which condition"),
+        'filter_id':fields.many2one('ir.filters', 'Filter', required=False),
     }
 
     _defaults = {
