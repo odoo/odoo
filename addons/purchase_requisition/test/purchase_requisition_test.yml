@@ -64,12 +64,17 @@
   !record {model: purchase.requisition.partner, id: purchase_requisition_partner_0}:
       partner_id: base.res_partner_4
       partner_address_id: base.res_partner_address_7
+-
+  On the purchase tender, I create a new purchase order for the supplier 'DistriPC' by clicking on
+  the button 'New RfQ'. This opens a window to ask me the supplier and I set DistriPC      
 - 
  !python {model: purchase.requisition}: |
     requisition_obj = self.pool.get('purchase.requisition.partner')
     req_obj = self.pool.get('purchase.requisition')
     ids =req_obj.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
     requisition_obj.create_order(cr,uid, [ref('purchase_requisition_partner_0')],{'active_ids': ids})
+-
+   check that I have two purchase orders on the purchase tender    
 -    
  !python {model: purchase.requisition}: |
     purchase_obj = self.pool.get('purchase.order')
@@ -95,6 +100,8 @@
     for ids in todo: 
       wf_service.trg_validate(uid, 'purchase.order',ids,'purchase_confirm', cr)    
       wf_service.trg_validate(uid, 'purchase.order',ids,'purchase_approve', cr)        
+-
+  Create a record in purchase requisition
 -
    !python {model: purchase.requisition}: | 
      ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
