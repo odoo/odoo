@@ -1,5 +1,8 @@
 <openerp>
    <data>
+   
+   <!-- Sales by journal's view  -->
+   
 	    <record model="ir.ui.view" id="view_sale_journal_report_tree">
 	        <field name="name">sale.journal.report.tree</field>
 	        <field name="model">sale.journal.report</field>
@@ -17,6 +20,8 @@
 	        </field>
 	    </record>
 	    
+	    <!-- sales journal graph view -->
+	    
 	    <record id="view_sale_journal_graph" model="ir.ui.view">
 	        <field name="name">sale.journal.report.graph</field>
             <field name="model">sale.journal.report</field>
@@ -28,6 +33,8 @@
               </graph>
            </field>
        </record>
+	    
+	  <!-- sales by journal search view -->  
 	    
 	    <record model="ir.ui.view" id="view_sale_journal_report_search">
 	        <field name="name">sale.journal.report.search</field>
@@ -60,7 +67,7 @@
 
 	    <menuitem name="Sales by Journal" id="menu_sale_journal_report_open_all" parent="base.next_id_64" action="action_sale_journal_report_open_menu_all"/>
 	 
-	 <!-- picking by journal and invoice method -->
+	 <!-- picking by journal and invoice's tree view-->
 
 	
 		<record model="ir.ui.view" id="view_sale_journal_picking_report_tree">
@@ -83,6 +90,8 @@
 			</field>
 		</record>
 		
+		<!-- picking journal's graph view -->
+		
 		<record id="view_sale_journal_picking_graph" model="ir.ui.view">
 	        <field name="name">sale.journal.picking.report.graph</field>
             <field name="model">sale.journal.picking.report</field>
@@ -96,6 +105,7 @@
            </field>
        </record>
        
+       <!-- Picking journal search view -->
 		
 		<record model="ir.ui.view" id="view_sale_journal_picking_report_search">
 			<field name="name">sale.journal.picking.report.search</field>
@@ -130,6 +140,8 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('invoice_state','=','2binvoiced'),('invoice_type_id','=',active_id)]</field>
 		</record>
+	
+	<!-- Action for picking journal view -->
 	
 		<record model="ir.actions.act_window" id="action_sale_journal_picking_report_open_menu_all">
 			<field name="name">Picking journal</field>

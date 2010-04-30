@@ -200,6 +200,7 @@
 	        </field>
 	    </record>
 	
+	<!--  Inherit stock picking delivery's form  view.-->
 	
 	    <record model="ir.ui.view" id="sale_journal_picking_order_del">
 	        <field name="name">stock.picking.journal.view.form</field>
@@ -286,6 +287,8 @@
 	            </field>
 	        </field>
 	    </record>
+	    
+	    <!-- Action of sale journal report in sale journal  --> 
 	
 	    <act_window name="Monthly sales"
 	        domain="[('journal_id', '=', active_id)]"
@@ -293,29 +296,47 @@
 	        src_model="sale_journal.sale.journal"
 	        id="act_sale_journal_sale_journal_2_sale_journal_sale_stats"/>
 	
+	   <!-- Action  of stock picking  in picking journal  --> 
+	
 	    <act_window name="Assigned picking"
 	        domain="[('journal_id', '=', active_id),('state', '=', 'assigned')]"
 	        res_model="stock.picking"
 	        src_model="sale_journal.picking.journal"
 	        id="act_sale_journal_picking_journal_2_stock_picking_assigned"/>
+	        
+	  <!-- Action  of stock picking  in picking journal  -->        
 	
 	    <act_window name="Confirmed picking"
 	        domain="[('journal_id', '=', active_id),('state', '=', 'confirmed')]"
 	        res_model="stock.picking"
 	        src_model="sale_journal.picking.journal"
 	        id="act_sale_journal_picking_journal_2_stock_picking_confirmed"/>
+	        
+	 <!-- Action  of stock picking  in sale journal  -->       
+	        
+	    <act_window name="Assigned picking"
+        	domain="[('sale_journal_id', '=', active_id),('state', '=', 'assigned')]"
+        	res_model="stock.picking"
+        	src_model="sale_journal.sale.journal"
+        	id="act_sale_journal_sale_journal_2_stock_picking_assigned"/>
+
+    <!-- Action  of stock picking in sale journal -->
 
 	    <act_window name="Confirmed picking"
 	        domain="[('sale_journal_id', '=', active_id),('state', '=', 'confirmed')]"
 	        res_model="stock.picking"
 	        src_model="sale_journal.sale.journal"
 	        id="act_sale_journal_sale_journal_2_stock_picking_confirmed"/>
+
+	<!-- Action of sale order in sale journal -->
 	
 	    <act_window name="Draft sales"
 	        domain="[('journal_id', '=', active_id),('state', '=', 'draft')]"
 	        res_model="sale.order"
 	        src_model="sale_journal.sale.journal"
 	        id="act_sale_journal_sale_journal_2_sale_order_draft"/>
+	        
+	  <!-- Action  of sale order in sale journal -->      
 	
 	    <act_window name="Approved sales"
 	        domain="[('journal_id', '=', active_id),('state', '=', 'approved')]"
@@ -388,6 +409,8 @@
 	            </tree>
 	        </field>
 	    </record>
+
+       <!-- Picking journal tree view  -->	
 	
 	    <record model="ir.ui.view" id="view_picking_journal_search">
 	        <field name="name">sale_journal.picking.journal.search</field>
@@ -422,7 +445,6 @@
 	
 	    <record model="ir.actions.act_window" id="action_invoice_type_tree">
 	        <field name="name">Picking by invoice_method</field>
-	        <field name="name">sale_journal.invoice.type.tree</field>
 	        <field name="res_model">sale_journal.invoice.type</field>
 	        <field name="type">ir.actions.act_window</field>
 	        <field name="view_type">tree</field>
