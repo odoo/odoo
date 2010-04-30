@@ -502,12 +502,19 @@
                 <form position="attributes">
                   <attribute name="string">Sales Configuration</attribute>
                 </form>
+                <separator string="title" position="attributes">
+            	<attribute name="string"
+                       >Configure Sale Order Logistic</attribute>
+          		</separator>
+          		<xpath expr="//label[@string='description']" position="attributes">
+            		<attribute name="string">Setup your sales workflow and default values.</attribute>
+            		<attribute name="width">100</attribute>
+          		</xpath>
+                <xpath expr='//separator[@string="vsep"]' position='attributes'>
+          			<attribute name='rowspan'>6</attribute>
+          			<attribute name='string'></attribute>
+	      		</xpath>
                 <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0"
-                         string="Setup your sales workflow and default values."/>
-                  <separator colspan="4"
-                       string="Configure Sale Order Logistic"/>
-                  <newline/>
                   <field name="picking_policy" groups="base.group_extended"/>
                   <newline/>
                   <field name="order_policy"/>
