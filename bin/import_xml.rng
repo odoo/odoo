@@ -48,12 +48,13 @@
     <rng:define name="assert">
         <rng:element name="assert">
             <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="search" /> </rng:optional>
+            <rng:optional><rng:attribute name="search" /></rng:optional>
+            <rng:optional><rng:attribute name="count" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="id" /></rng:optional>
             <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:optional><rng:attribute name="severity" /></rng:optional>
-            <rng:oneOrMore>
+            <rng:zeroOrMore>
                 <rng:element name="test">
                     <rng:attribute name="expr"/>
                     <rng:choice>
@@ -61,7 +62,7 @@
                         <rng:empty />
                     </rng:choice>
                 </rng:element>
-            </rng:oneOrMore>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 

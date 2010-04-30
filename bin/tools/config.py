@@ -99,8 +99,8 @@ class configmanager(object):
         parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
         parser.add_option("--net_interface", dest="netinterface", help="specify the TCP IP address for netrpc")
         parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc", type="int")
-        parser.add_option("--no-netrpc", dest="netrpc", action="store_false", default=True, help="disable netrpc")
-        parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", default=True, help="disable xmlrpc")
+        parser.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable netrpc")
+        parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable xmlrpc")
         parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
         parser.add_option("--without-demo", dest="without_demo",
                           help="load demo data for a module (use \"all\" for all modules)", default=False)
@@ -116,7 +116,6 @@ class configmanager(object):
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
-        parser.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
 
         if hasSSL:
             group = optparse.OptionGroup(parser, "SSL Configuration")
@@ -181,6 +180,13 @@ class configmanager(object):
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         parser.add_option_group(group)
 
+        security = optparse.OptionGroup(parser, 'Security-related options')
+        security.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
+        security.add_option('--enable-code-actions', action='store_true',
+                            dest='server_actions_allow_code', default=False,
+                            help='Enables server actions of state "code". Warning, this is a security risk.')
+        parser.add_option_group(security)
+
         (opt, args) = parser.parse_args()
 
         def die(cond, msg):
@@ -231,7 +237,8 @@ class configmanager(object):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog', 'list_db']
+                'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
+                'list_db', 'server_actions_allow_code']
 
         if hasSSL and not  self.options['secure']:
             keys.append('secure')

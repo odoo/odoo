@@ -460,7 +460,9 @@ class orm_template(object):
             return browse_null()
 
     def __export_row(self, cr, uid, row, fields, context=None):
-        
+        if context is None:
+            context = {}
+
         def check_type(field_type):
             if field_type == 'float':
                 return 0.0
@@ -512,9 +514,9 @@ class orm_template(object):
                                 cols = selection_field(self._inherits)
                             if cols and cols._type == 'selection':
                                 sel_list = cols.selection
-                                if type(sel_list) == type([]):
-                                    r = [x[1] for x in sel_list if r==x[0]][0]
-
+                                if r and type(sel_list) == type([]):
+                                    r = [x[1] for x in sel_list if r==x[0]]
+                                    r = r and r[0] or False
                     if not r:
                         if f[i] in self._columns: 
                             r = check_type(self._columns[f[i]]._type)
@@ -541,7 +543,7 @@ class orm_template(object):
                                     for rr in r :
                                         if isinstance(rr.name, browse_record):
                                             rr = rr.name
-                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id])
+                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
                                         rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
                                         dt += tools.ustr(rr_name or '') + ','
                                     data[fpos] = dt[:-1]
@@ -554,7 +556,7 @@ class orm_template(object):
                     i += 1
                 if i == len(f):
                     if isinstance(r, browse_record):
-                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id])
+                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id], context=context)
                         r = r and r[0] and r[0][1] or ''
                     data[fpos] = tools.ustr(r or '')
         return [data] + lines
@@ -875,7 +877,8 @@ class orm_template(object):
                     msg = _('Insertion Failed! ' + e[1])
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
                 #Raising Uncaught exception
-                raise
+                return (-1, res, 'Line ' + str(counter) +' : ' + str(e), '' )
+            
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
@@ -2793,7 +2796,8 @@ class orm(orm_template):
                     upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
                     upd2.append(self._columns[field]._symbol_set[1](vals[field]))
                 else:
-                    upd_todo.append(field)
+                    if not isinstance(self._columns[field],fields.related):
+                        upd_todo.append(field)
             if field in self._columns \
                     and hasattr(self._columns[field], 'selection') \
                     and vals[field]:
@@ -2990,6 +2994,7 @@ class orm(orm_template):
             context=None, count=False):
         if not context:
             context = {}
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
 
@@ -3063,7 +3068,10 @@ class orm(orm_template):
         if 'state' not in default:
             if 'state' in self._defaults:
                 default['state'] = self._defaults['state'](self, cr, uid, context)
-        data = self.read(cr, uid, [id], context=context)[0]
+        context_wo_lang = context
+        if 'lang' in context:
+            del context_wo_lang['lang']
+        data = self.read(cr, uid, [id], context=context_wo_lang)[0]
         fields = self.fields_get(cr, uid, context=context)
         trans_data=[]
         for f in fields:
@@ -3096,17 +3104,14 @@ class orm(orm_template):
                 data[f] = [(6, 0, data[f])]
 
         trans_obj = self.pool.get('ir.translation')
-        trans_name=''
         for f in fields:
-            trans_flag=True
+            trans_name = ''
             if f in self._columns and self._columns[f].translate:
-                trans_name=self._name+","+f
+                trans_name = self._name+","+f
             elif f in self._inherit_fields and self._inherit_fields[f][2].translate:
-                trans_name=self._inherit_fields[f][0]+","+f
-            else:
-                trans_flag=False
+                trans_name = self._inherit_fields[f][0] + "," + f
 
-            if trans_flag:
+            if trans_name:
                 trans_ids = trans_obj.search(cr, uid, [
                         ('name', '=', trans_name),
                         ('res_id','=',data['id'])

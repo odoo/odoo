@@ -398,6 +398,7 @@ form: module.record_id""" % (xml_id,)
         def ref(str_id):
             return self.id_get(cr, None, str_id)
         context=eval(context)
+        #domain=eval(domain) # XXX need to test this line -> uid, active_id, active_ids, ...
 
         res = {
             'name': name,

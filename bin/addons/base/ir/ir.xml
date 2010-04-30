@@ -332,18 +332,25 @@
                     <field name="src_model" select="2"/>
                     <field name="usage"/>
                     <field name="view_type"/>
-                    <field colspan="4" name="view_ids">
-                        <form string="Views">
-                            <field colspan="4" name="sequence"/>
-                            <field name="view_mode"/>
-                            <field domain="[('type', '=', view_mode)]" name="view_id"/>
-                        </form>
-                        <tree string="Views">
-                            <field name="sequence"/>
-                            <field name="view_mode"/>
-                            <field name="view_id"/>
-                        </tree>
-                    </field>
+                    <notebook colspan="4">
+                        <page string="Views">
+                            <field colspan="4" name="view_ids" nolabel="1">
+                                <form string="Views">
+                                    <field colspan="4" name="sequence"/>
+                                    <field name="view_mode"/>
+                                    <field domain="[('type', '=', view_mode)]" name="view_id"/>
+                                </form>
+                                <tree string="Views">
+                                    <field name="sequence"/>
+                                    <field name="view_mode"/>
+                                    <field name="view_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Security (Groups)">
+                            <field name="groups_id" nolabel="1"/>
+                        </page>
+                    </notebook>
                     <field colspan="4" name="domain"/>
                     <field colspan="4" name="context"/>
                     <field name="limit"/>
