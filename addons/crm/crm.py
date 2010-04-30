@@ -516,7 +516,7 @@ class crm_case(osv.osv):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Case ids
+        @param cases: a browse record list
         @param keyword: Case action keyword e.g.: If case is closed "Close" keyword is used
         @param history: Value True/False, If True it makes entry in case History otherwise in Case Log
         @param email: Email address if any
@@ -524,6 +524,10 @@ class crm_case(osv.osv):
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
+
+        # The mailgate sends the ids of the cases and not the object list
+        if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
+            cases = self.pool.get(context['model']).browse(cr, uid, cases, context=context)
 
         model_obj = self.pool.get('ir.model')
         obj = self.pool.get('crm.case.log')
