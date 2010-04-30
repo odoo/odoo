@@ -640,10 +640,20 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
 
     def load_test(cr, module_name, id_map, mode):
         cr.commit()
-        try:
-            _load_data(cr, module_name, id_map, mode, 'test')
-        finally:
-            cr.rollback()
+        if not tools.config.options['test-disable']:
+            try:
+                _load_data(cr, module_name, id_map, mode, 'test')
+            except Exception, e:
+                if tools.config.options['test-continue']:
+                    logger.notifyChannel('ERROR', netsvc.LOG_TEST, str(e))
+                    pass
+                else:
+                    raise Exception
+            finally:
+                if tools.config.options['test-rollback']:
+                    cr.rollback()
+                else:
+                    cr.commit()
 
     def _load_data(cr, module_name, id_map, mode, kind):
         noupdate = (kind == 'demo')
