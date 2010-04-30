@@ -48,8 +48,6 @@ class base_setup_company(osv.osv_memory):
             cr, uid, 'res.country.state', context=context)
     def _get_all_countries(self, cr, uid, context=None):
         return self._get_all(cr, uid, 'res.country', context=context)
-    def _get_all_currencies(self, cr, uid, context=None):
-        return self._get_all(cr, uid, 'res.currency', context=context)
 
     def default_get(self, cr, uid, fields_list=None, context=None):
         """ get default company if any, and the various other fields
@@ -90,7 +88,7 @@ class base_setup_company(osv.osv_memory):
         'country_id':fields.selection(_get_all_countries, 'Countries'),
         'email':fields.char('E-mail', size=64),
         'phone':fields.char('Phone', size=64),
-        'currency':fields.selection(_get_all_currencies, 'Currency', required=True),
+        'currency':fields.many2one('res.currency', 'Currency', required=True),
         'rml_header1':fields.char('Report Header', size=200,
             help='''This sentence will appear at the top right corner of your reports.
 We suggest you to put a slogan here:
@@ -112,7 +110,6 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
         if not getattr(payload, 'company_id', None):
             raise ValueError('Case where no default main company is setup '
                              'not handled yet')
-
         company = payload.company_id
         company.write({
             'name':payload.name,
@@ -120,6 +117,7 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
             'rml_footer1':payload.rml_footer1,
             'rml_footer2':payload.rml_footer2,
             'logo':payload.logo,
+            'currency_id':payload.currency.id,
         })
 
         company.partner_id.write({
