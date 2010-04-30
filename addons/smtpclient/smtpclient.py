@@ -302,7 +302,10 @@ class smtpclient(osv.osv):
                     
                 if self.server[serverid]['auth']:
                     password = self.server[serverid]['password']
-                    password = base64.b64decode(password)
+                    try:
+                        password = base64.b64decode(password)
+                    except:
+                        pass  
                     self.smtpServer[serverid].login(str(self.server[serverid]['user']), password)
 
             except Exception, e:
