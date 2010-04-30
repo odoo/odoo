@@ -230,7 +230,7 @@
 			<field name="group_id" ref="res_groups_posuser0"/>
 		</record>
 		<record id="ir_model_access_stockwarehouseorderpoint0" model="ir.model.access">
-			<field name="model_id" ref="mrp.model_stock_warehouse_orderpoint"/>
+			<field name="model_id" ref="mrp_procurement.model_stock_warehouse_orderpoint"/>
 			<field eval="1" name="perm_read"/>
 			<field eval="&quot;&quot;&quot;stock.warehouse.orderpoint&quot;&quot;&quot;" name="name"/>
 			<field eval="0" name="perm_unlink"/>
@@ -521,7 +521,7 @@
             name="Reporting"
             parent="stock.menu_stock_root" groups="base.group_user"/>
 		<menuitem action="stock.action_picking_tree" id="stock.menu_action_picking_tree" parent="stock.menu_stock_root" sequence="19" groups="res_groups_posuser0"/>
-        <menuitem id="mrp.menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4" groups="base.group_user"/>
+        <menuitem id="mrp_procurement.menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4" groups="base.group_user"/>
         <menuitem parent="stock.next_id_61" action="stock.action_stock_line_date" id="stock.menu_report_stock_line_date" groups="base.group_user"/>
 
 	</data>
