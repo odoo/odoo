@@ -94,5 +94,14 @@ class base_setup_installer(osv.osv_memory):
     _defaults = {
         'crm': True,
         }
+
+    def modules_to_install(self, cr, uid, ids, context=None):
+        modules = super(base_setup_installer, self).modules_to_install(cr, uid, ids, context=context)
+        interface_id = self.pool.get('res.config.view').search(cr, uid, [])
+        interface = self.pool.get('res.config.view').read(cr, uid, interface_id)[0]
+        modules_selected = self.read(cr, uid, ids)[0]
+        if interface.get('view', '') == 'simple' and modules_selected.get('mrp',False):
+            return modules | set(['mrp_jit'])
+        return modules
 base_setup_installer()
 
