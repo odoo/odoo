@@ -38,6 +38,7 @@
     'update_xml': [
         'security/account_payment_security.xml',
         'security/ir.model.access.csv',
+        'wizard/wizard_pay_view.xml',
         'payment_wizard.xml',
         'wizard/account_payment_create_order_view.xml',
         'payment_view.xml',
@@ -45,6 +46,7 @@
         'payment_sequence.xml',
         'account_invoice_view.xml',
         'payment_report.xml',
+
     ],
     'demo_xml': [],
     'installable': True,
