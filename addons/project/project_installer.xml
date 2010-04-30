@@ -13,14 +13,17 @@
 
           <separator string="title" position="attributes">
             <attribute name="string"
-                       >Configure Your Project Management</attribute>
+                       >Project Management</attribute>
           </separator>
+           <xpath expr='//separator[@string="vsep"]' position='attributes'>
+          	  <attribute name='rowspan'>10</attribute>
+          	  <attribute name='string'></attribute>
+     		</xpath>
           <xpath expr="//label[@string='description']"
                  position="attributes">
             <attribute name="string">Various OpenERP applications are available to bring your project management to the next levels of control and flexibility.</attribute>
           </xpath>
           <group colspan="8">
-            <separator string="Project Management" colspan="4"/>
             <field name="project_crm"/>
             <field name="project_long_term" groups="base.group_extended"/>
             <field name="project_wiki"/>
