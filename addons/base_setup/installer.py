@@ -100,8 +100,12 @@ class base_setup_installer(osv.osv_memory):
         interface_id = self.pool.get('res.config.view').search(cr, uid, [])
         interface = self.pool.get('res.config.view').read(cr, uid, interface_id)[0]
         modules_selected = self.read(cr, uid, ids)[0]
-        if interface.get('view', '') == 'simple' and modules_selected.get('mrp',False):
-            return modules | set(['mrp_jit'])
-        return modules
+        added_modules = []
+        if interface.get('view', '') == 'simple' :
+            if modules_selected.get('mrp', False):
+                added_modules.append('mrp_jit')
+            if modules_selected.get('knowledge', False):
+                added_modules.append('document_ftp')
+        return modules | set(added_modules)
 base_setup_installer()
 

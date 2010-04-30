@@ -24,10 +24,17 @@
             <form position="attributes">
               <attribute name="string">Auto Configure</attribute>
             </form>
+             <separator string="title" position="attributes">
+            	<attribute name="string">FTP Server Configuration</attribute>
+          	</separator>
+          	<xpath expr="//label[@string='description']" position="attributes">
+            <attribute name="string">Choose the address for the Document Management System's FTP server.</attribute>
+          </xpath>
+          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+  				<attribute name='rowspan'>6</attribute>
+      			<attribute name='string'></attribute>
+	      	</xpath>
             <group string="res_config_contents" position="replace">
-                <separator string="FTP Server Configuration." colspan="4"/>
-                <label align="0.0" colspan="4"
-                       string="Choose the address for the Document Management System's FTP server."/>
                 <field name="host"/>
             </group>
             <xpath expr="//button[@name='action_skip']" position="replace"/>
