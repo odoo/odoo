@@ -827,7 +827,7 @@ class account_invoice(osv.osv):
                 raise osv.except_osv(_('UserError'),
                         _('Cannot create invoice move on centralised journal'))
 
-            line = self.finalize_invoice_move_lines(self, cr, uid, inv, line)
+            line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
             move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date}
             period_id=inv.period_id and inv.period_id.id or False
