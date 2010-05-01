@@ -45,7 +45,7 @@ between mails and Open ERP.""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': [
-        'base', 
+        'base',
         'base_action_rule',
         'process',
         'mail_gateway',
@@ -80,16 +80,16 @@ between mails and Open ERP.""",
         'crm_action_rule_view.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
-        
+
         'crm_meeting_view.xml',
         'crm_meeting_menu.xml',
-        
+
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
-        
+
         'crm_opportunity_view.xml',
         'crm_opportunity_menu.xml',
-        
+
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
@@ -107,11 +107,11 @@ between mails and Open ERP.""",
         'crm_opportunity_demo.xml',
         'crm_phonecall_demo.xml'
     ],
-    'test': ['test/test_crm_lead.yml',
-            'test/test_crm_meeting.yml', 
-            'test/test_crm_opportunity.yml',
-            'test/test_crm_phonecall.yml', 
-             ],
+#    'test': ['test/test_crm_lead.yml',
+#            'test/test_crm_meeting.yml',
+#            'test/test_crm_opportunity.yml',
+#            'test/test_crm_phonecall.yml',
+#             ],
     'installable': True,
     'active': False,
     'certificate': '0079056041421',

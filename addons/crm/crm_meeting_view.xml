@@ -53,6 +53,10 @@
                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                                name="open_meeting" icon="gtk-edit"
                                type="object" />
+                           <button string="ExRule"
+       		name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
+       		context="{'model' : 'crm.meeting'}"
+       		attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
                     </group>
                 </group>
                 <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
@@ -120,6 +124,7 @@
                             <field name="class" string="Privacy"/>
                             <field name="show_as" string="Show time as" groups="base.group_extended"/>
                             <field name="rrule" groups="base.group_extended" />
+                            <field name="exrule" groups="base.group_extended" />
                             <field name="recurrent_id" invisible="1"/>
                             <field name="recurrent_uid" invisible="1"/>
                         </group>
