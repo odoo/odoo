@@ -8,6 +8,8 @@
         <field name="arch" type="xml">
             <tree string="Invoices Statistics">
                 <field name="date" invisible="1"/>
+                <field name="date_created" invisible="1"/>
+                <field name="date_maturity" invisible="1"/>
                 <field name="ref" invisible="1"/>
                 <field name="state" invisible="1"/>
                 <field name="year"  invisible="1"/>
@@ -17,9 +19,13 @@
                 <field name="nbl" sum="# of Lines "/>
                 <field name="amount" sum="# of Amount "/>
                 <field name="partner_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
+                <field name="journal_id2" invisible="1"/>
+                <field name="account_id" invisible="1"/>
                 <field name="period_id" invisible="1"/>
+                <field name="period_id2" invisible="1"/>
                 <field name="type" invisible="1"/>
            </tree>
         </field>
@@ -61,8 +67,10 @@
                     		help = "Draft tasks"/>
                     <separator orientation="vertical"/>
                     		<field name="journal_id" widget="selection"/>
+                    		<field name="journal_id2" widget="selection"/>
+                    		<field name="account_id"/>
                     		<field name="company_id" widget="selection"/>
-							<field name="partner_id" />
+                        <field name="partner_id" />
 					</group>
                 <newline/>
                 <group expand="0" string="Extended options..." colspan="10" col="12">
@@ -72,18 +80,27 @@
                    			help = "Posted tasks"/>
                 	<separator orientation="vertical"/>
                 		<field name="period_id" widget="selection"/>
+                		<field name="period_id2" widget="selection"/>
                 		<field name="type"/>
+                    <field name="product_id" />
+                    <newline/>
                 	<separator orientation="vertical"/>
                 		<field name="date"/>
+                    <field name="date_maturity"/>
+                    <field name="date_created"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Journal" name="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
+                    <filter string="Journal of Move Line" icon="terp-account" context="{'group_by':'journal_id2'}"/>
+                    <filter string="Account" name="Account" icon="terp-account" context="{'group_by':'account_id'}"/>
                     <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" />
                     <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
+                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
                     <filter string="Period" icon="terp-account" context="{'group_by':'period_id'}"/>
+                    <filter string="Period of Move Line" icon="terp-account" context="{'group_by':'period_id2'}"/>
                     <filter string="Type" icon="terp-account" context="{'group_by':'type'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-account" context="{'group_by':'day'}"/>

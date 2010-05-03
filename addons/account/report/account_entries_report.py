@@ -29,6 +29,8 @@ class account_entries_report(osv.osv):
     _rec_name = 'date'
     _columns = {
         'date': fields.date('Date', readonly=True),
+        'date_created': fields.date('Date Created', readonly=True),
+        'date_maturity': fields.date('Date Maturity', readonly=True),
         'nbr':fields.integer('# of Entries', readonly=True),
         'nbl':fields.integer('# of Lines', readonly=True),
         'amount': fields.float('Amount',readonly=True),
@@ -39,10 +41,14 @@ class account_entries_report(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'ref': fields.char('Reference', size=64,readonly=True),
         'period_id': fields.many2one('account.period', 'Period', readonly=True),
+        'account_id': fields.many2one('account.account', 'Account', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State',readonly=True,
                                   help='When new account move is created the state will be \'Draft\'. When all the payments are done it will be in \'Posted\' state.'),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
+        'period_id2': fields.many2one('account.period', 'Move Line Period', readonly=True),
+        'journal_id2': fields.many2one('account.journal', 'Move Line Journal', readonly=True),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
             ('bank_pay_voucher','Bank Payment'),
@@ -73,9 +79,15 @@ class account_entries_report(osv.osv):
                    to_char(am.date, 'MM') as month,
                    to_char(am.date, 'YYYY-MM-DD') as day,
                    am.company_id as company_id,
+                   l.account_id as account_id,
+                   l.date_created as date_created,
+                   l.date_maturity as date_maturity,
                    am.journal_id as journal_id,
+                   l.journal_id as journal_id2,
+                   l.period_id as period_id2,
                    am.period_id as period_id,
                    l.partner_id as partner_id,
+                   l.product_id as product_id,
                    am.type as type
              from
              account_move_line l
@@ -86,9 +98,15 @@ class account_entries_report(osv.osv):
                 am.date,
                 am.company_id,
                 am.journal_id,
+                l.journal_id,
                 am.period_id,
+                l.period_id,
                 am.type,
                 l.partner_id,
+                l.product_id,
+                l.date_created,
+                l.date_maturity,
+                l.account_id,
                 l.debit
             )
         """)
