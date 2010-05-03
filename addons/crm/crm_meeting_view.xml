@@ -132,6 +132,9 @@
                         <button name="case_close" string="Done"
                             states="open" type="object"
                             icon="gtk-jump-to" />
+						<button name="case_reset" string="Reset to Unconfirmed"
+                            states="open,done,cancel" type="object"
+                            icon="gtk-convert" />
                         <button name="case_open" string="Confirm"
                             states="draft" type="object"
                             icon="gtk-go-forward" />
@@ -214,7 +217,7 @@
                 <field name="date" string="Meeting Date" />
                 <field name="duration" />
                 <field name="user_id" />
-                <field name="state" invisible="1"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>

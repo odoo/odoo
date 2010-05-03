@@ -1101,7 +1101,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'end_date': fields.date('Repeat Until'), 
         'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel',\
                                  'event_id', 'attendee_id', 'Attendees'),
-        'allday': fields.boolean('All Day')
+        'allday': fields.boolean('All Day'), 
+        'active': fields.boolean('Active', help="If the active field is set to \
+                    true, it will allow you to hide the event alarm information without removing it.")
     }
 
     _defaults = {
@@ -1110,6 +1112,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
          'freq': lambda *x: 'None', 
          'select1': lambda *x: 'date', 
          'interval': lambda *x: 1, 
+         'active': lambda *x: 1, 
     }
     
     def open_event(self, cr, uid, ids, context=None):
@@ -1404,6 +1407,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             event_id = base_calendar_id2real_id(event_id)
             if not event_id in new_ids:
                 new_ids.append(event_id)
+        
         res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'):
             alarm_obj = self.pool.get('res.alarm')
