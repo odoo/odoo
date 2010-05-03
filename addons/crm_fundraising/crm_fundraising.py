@@ -28,7 +28,7 @@ class crm_fundraising(osv.osv):
     _name = "crm.fundraising"
     _description = "Fund Raising Cases"
     _order = "id desc"
-    _inherit ='crm.case'
+    _inherit ='mailgate.thread'
 
     _columns = {
             'date_closed': fields.datetime('Closed', readonly=True), 

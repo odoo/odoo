@@ -20,7 +20,7 @@
 ##############################################################################
 
 #import report_businessopp
-import crm_report
+#import crm_report
 import crm_lead_report
 import crm_phonecall_report
 #import crm_opportunity_report

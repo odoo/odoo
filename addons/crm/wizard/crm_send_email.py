@@ -55,7 +55,7 @@ class crm_send_new_email(osv.osv_memory):
         """ This sends an email to ALL the addresses of the selected partners.
         """
 
-        hist_obj = self.pool.get('crm.case.history')
+        hist_obj = self.pool.get('mailgate.message')
         smtp_pool = self.pool.get('email.smtpclient')
 
         if not context:
@@ -76,14 +76,14 @@ class crm_send_new_email(osv.osv_memory):
             
             case = case_pool.browse(cr, uid, res_id)
             if context.get('mail', 'new') == 'new':
-                if len(case.history_line):
-                    message_id = case.history_line[0].message_id
+                if len(case.message_ids):
+                    message_id = case.message_ids[0].message_id
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id
-                model = hist.log_id.model_id.model
+                model = hist.model_id.model
                 model_pool = self.pool.get(model)
-                case = model_pool.browse(cr, uid, hist.log_id.res_id)
+                case = model_pool.browse(cr, uid, hist.res_id)
             emails = [data['email_to']] + (data['email_cc'] or '').split(',')
             emails = filter(None, emails)
             body = data['text']
@@ -179,15 +179,15 @@ class crm_send_new_email(osv.osv_memory):
         """
         This function gets default values for reply mail
         """
-        hist_obj = self.pool.get('crm.case.history')
+        hist_obj = self.pool.get('mailgate.message')
         res_ids = context and context.get('active_ids', []) or []
 
         include_original = context and context.get('include_original', False) or False
         res = {}
-        for hist in hist_obj.browse(cr, uid, res_ids):
-            model = hist.log_id.model_id.model
+        for hist in hist_obj.browse(cr, uid, res_ids, context=context):
+            model = hist.model_id.model
             model_pool = self.pool.get(model)
-            case = model_pool.browse(cr, uid, hist.log_id.res_id)
+            case = model_pool.browse(cr, uid, hist.res_id)
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from or hist.email_from or False})
             if 'email_from' in fields:

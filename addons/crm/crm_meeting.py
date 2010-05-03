@@ -26,10 +26,6 @@ from datetime import datetime, timedelta
 from tools.translate import _
 from base_calendar import base_calendar
 
-class crm_opportunity(osv.osv):
-    _name = 'crm.opportunity'
-crm_opportunity()
-
 
 class crm_phonecall(osv.osv):
     """ CRM Phonecall """
@@ -43,14 +39,20 @@ class crm_meeting(osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting Cases"
     _order = "id desc"
-    _inherit = ["crm.case", "calendar.event"]
+    _inherit = ["mailgate.thread", "calendar.event"]
 
     _columns = {
+        # From crm.case
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+                        select=True, help='Sales team to which Case belongs to.\
+                             Define Responsible user and Email account for mail gateway.'), 
+        # Meeting fields
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
             ),
         'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
-        'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
+        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
         'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
                                  'event_id', 'attendee_id', 'Attendees'),
         'date_closed': fields.datetime('Closed', readonly=True),

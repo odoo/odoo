@@ -30,7 +30,7 @@ class crm_helpdesk(osv.osv):
     _name = "crm.helpdesk"
     _description = "Helpdesk Cases"
     _order = "id desc"
-    _inherit = 'crm.case'
+    _inherit = 'mailgate.thread'
 
     _columns = {
             'date_closed': fields.datetime('Closed', readonly=True), 

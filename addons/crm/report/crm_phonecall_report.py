@@ -28,7 +28,7 @@ class crm_phonecall_report(osv.osv):
     _name = "crm.phonecall.report"
     _description = "Phone calls by user and section"
     _auto = False
-    _inherit = "crm.case.report"
+#    _inherit = "crm.case.report"
 
     _columns = {
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),

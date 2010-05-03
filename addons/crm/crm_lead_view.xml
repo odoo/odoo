@@ -40,7 +40,7 @@
         <field name="arch" type="xml">
             <form string="Leads Form">
                 <group colspan="4" col="7">
-                    <field name="name" required="1" string="Name"/>
+                    <field name="name" required="1"/>
                     <field name="priority"/>
                     <field name="date_deadline"/>
                     <button
@@ -48,8 +48,7 @@
                          string="Convert"
                          help="Convert to Opportunity"
                          icon="gtk-index"   
-                         type="object"
-                         attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                         type="object"/>
                     <newline />
                     <field name="section_id" colspan="1"
                         widget="selection" />
@@ -153,7 +152,8 @@
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
                    </group>
-                    <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                    <!-- TODO-->
+                    <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
                             <group col="7" colspan="4">
                                 <field name="date"/>
@@ -179,7 +179,7 @@
                             <field name="email_to"/>
                             <field name="description"/>
                         </tree>
-                    </field>
+                    </field> 
                     <button colspan="2" string="Send New Email"
                         name="%(action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"

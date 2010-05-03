@@ -256,7 +256,7 @@
 
         <record id="crm_case_calendar-view" model="ir.ui.view">
             <field name="name">crm.case.calendar</field>
-            <field name="model">crm.case</field>
+            <field name="model">mailgate.thread</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="create_date"
@@ -273,7 +273,7 @@
 
         <record id="crm_case_tree-view" model="ir.ui.view">
             <field name="name">crm.case.tree</field>
-            <field name="model">crm.case</field>
+            <field name="model">mailgate.thread</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:date_deadline&lt;current_date and state=='open';black:state in ('draft', 'cancel','done','pending')" string="Cases">
@@ -311,7 +311,7 @@
 
         <record id="crm_case-view" model="ir.ui.view">
             <field name="name">crm.case.form</field>
-            <field name="model">crm.case</field>
+            <field name="model">mailgate.thread</field>
             <field name="type">form</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
@@ -392,7 +392,8 @@
                            <group colspan="4">
                                <field colspan="4" name="email_cc" string="CC"/>
                            </group>
-                           <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                            <!-- TODO-->
+                           <!-- <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
                                <form string="Communication history">
                                    <group col="7" colspan="4">
                                        <field name="date"/>
@@ -416,7 +417,7 @@
                                    <field name="email_to"/>
                                    <field name="date"/>
                                </tree>
-                           </field>
+                           </field> -->
                            <button colspan="4" string="Send New Email"
                                name="%(action_crm_send_mail)d"
                                context="{'mail':'new', 'model': 'crm.case'}"
@@ -431,7 +432,7 @@
 
         <record id="view_crm_case_filter" model="ir.ui.view">
             <field name="name">crm.case.select</field>
-            <field name="model">crm.case</field>
+            <field name="model">mailgate.thread</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Case">
@@ -463,7 +464,7 @@
 
         <record id="crm_case_categ0-act" model="ir.actions.act_window">
             <field name="name">Cases</field>
-            <field name="res_model">crm.case</field>
+            <field name="res_model">mailgate.thread</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_tree-view"/>
             <field name="search_view_id" ref="view_crm_case_filter"/>
@@ -471,7 +472,7 @@
 
         <record id="crm_case_categ0-act_open" model="ir.actions.act_window">
             <field name="name">Open Cases</field>
-            <field name="res_model">crm.case</field>
+            <field name="res_model">mailgate.thread</field>
             <field name="view_type">form</field>
             <field name="domain">
                 [('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]
@@ -481,7 +482,7 @@
 
         <record id="crm_case_section_open_act" model="ir.actions.act_window">
             <field name="name">Cases</field>
-            <field name="res_model">crm.case</field>
+            <field name="res_model">mailgate.thread</field>
             <field name="domain">[('section_id','child_of',[active_id])]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>

@@ -34,7 +34,7 @@ class crm_lead_report(osv.osv):
     """ CRM Lead Report """
     _name = "crm.lead.report"
     _auto = False
-    _inherit = "crm.case.report"
+#    _inherit = "crm.case.report"
     _description = "CRM Lead Report"
 
     _columns = {

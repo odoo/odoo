@@ -37,7 +37,7 @@ import crm
 class case(osv.osv):
     """ Case """
 
-    _inherit = 'crm.case'
+    _inherit = 'mailgate.thread'
     _description = 'case'
 
     _columns = {
@@ -89,7 +89,7 @@ class case(osv.osv):
                 attach_to_send = None
 
                 if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'crm.case'), ('res_id', '=', case.id)])
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'mailgate.thread'), ('res_id', '=', case.id)])
                     attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
@@ -195,16 +195,18 @@ class base_action_rule(osv.osv):
             ok = ok and (not action.trg_section_id or action.trg_section_id.id==obj.section_id.id)
         if hasattr(obj, 'categ_id'):
             ok = ok and (not action.trg_categ_id or action.trg_categ_id.id==obj.categ_id.id)
-        if hasattr(obj, 'history_line'):
-            ok = ok and (not action.trg_max_history or action.trg_max_history<=(len(obj.history_line)+1))
-            reg_history = action.regex_history
-            result_history = True
-            if reg_history:
-                ptrn = re.compile(str(reg_history))
-                if obj.history_line:
-                    _result = ptrn.search(str(obj.history_line[0].description))
-                    if not _result:
-                        result_history = False
+
+#    TODO: history_line is removed
+#        if hasattr(obj, 'history_line'):
+#            ok = ok and (not action.trg_max_history or action.trg_max_history<=(len(obj.history_line)+1))
+#            reg_history = action.regex_history
+#            result_history = True
+#            if reg_history:
+#                ptrn = re.compile(str(reg_history))
+#                if obj.history_line:
+#                    _result = ptrn.search(str(obj.history_line[0].description))
+#                    if not _result:
+#                        result_history = False
             regex_h = not reg_history or result_history
             ok = ok and regex_h
         return ok
