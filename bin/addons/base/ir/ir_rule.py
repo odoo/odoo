@@ -22,6 +22,7 @@
 from osv import fields,osv
 import time
 import tools
+from tools.safe_eval import safe_eval as eval
 
 class ir_rule(osv.osv):
     _name = 'ir.rule'

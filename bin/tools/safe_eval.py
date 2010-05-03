@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
 #    Copyright (C) 2004-2010 OpenERP s.a. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -14,15 +13,15 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 """
 safe_eval module - methods intended to provide more restricted alternatives to
                    evaluate simple and/or untrusted code.
-                   
-Methods in this module are typically used as alternatives to eval() to parse 
+
+Methods in this module are typically used as alternatives to eval() to parse
 OpenERP domain strings, conditions and expressions, mostly based on locals
 condition/math builtins.
 """
@@ -30,17 +29,19 @@ condition/math builtins.
 # Module partially ripped from/inspired by several different sources:
 #  - http://code.activestate.com/recipes/286134/
 #  - safe_eval in lp:~xrg/openobject-server/optimize-5.0
-#  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad  
+#  - safe_eval in tryton http://hg.tryton.org/hgwebdir.cgi/trytond/rev/bbb5f73319ad
 #  - python 2.6's ast.literal_eval
 
 from opcode import HAVE_ARGUMENT, opmap, opname
 
-_CONST_CODES = set(opmap[x] for x in [
+__all__ = ['test_expr', 'literal_eval', 'safe_eval', 'const_eval', 'ext_eval' ]
+
+_CONST_OPCODES = set(opmap[x] for x in [
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP',
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
     'LOAD_CONST', 'RETURN_VALUE', 'STORE_SUBSCR'] if x in opmap)
 
-_EXPR_CODES = _CONST_CODES.union(set(opmap[x] for x in [
+_EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT',
     'UNARY_INVERT', 'BINARY_POWER', 'BINARY_MULTIPLY',
     'BINARY_DIVIDE', 'BINARY_FLOOR_DIVIDE', 'BINARY_TRUE_DIVIDE',
@@ -48,10 +49,10 @@ _EXPR_CODES = _CONST_CODES.union(set(opmap[x] for x in [
     'BINARY_LSHIFT', 'BINARY_RSHIFT', 'BINARY_AND', 'BINARY_XOR',
     'BINARY_OR'] if x in opmap))
 
-_SAFE_CODES = _EXPR_CODES.union(set(opmap[x] for x in [
+_SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'STORE_MAP', 'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
     'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'JUMP_ABSOLUTE',
-    'DELETE_NAME', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 
+    'DELETE_NAME', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE',
     ] if x in opmap))
 
 
@@ -66,25 +67,25 @@ def _get_opcodes(codeobj):
     """
     i = 0
     opcodes = []
-    s = codeobj.co_code
-    while i < len(s):
-        code = ord(s[i])
+    byte_codes = codeobj.co_code
+    while i < len(byte_codes):
+        code = ord(byte_codes[i])
         opcodes.append(code)
         if code >= HAVE_ARGUMENT:
             i += 3
         else:
             i += 1
-    return opcodes        
+    return opcodes
 
-def test_expr(expr, allowed_codes):
-    """test_expr(expression) -> code_object
+def test_expr(expr, allowed_codes, mode="eval"):
+    """test_expr(expression, allowed_codes[, mode]) -> code_object
 
     Test that the expression contains only the allowed opcodes.
     If the expression is valid and contains only allowed codes,
     return the compiled code object. Otherwise raise a ValueError.
     """
     try:
-        code_obj = compile(expr, "", "eval")
+        code_obj = compile(expr, "", mode)
     except:
         raise ValueError("%s is not a valid expression" % expr)
     for code in _get_opcodes(code_obj):
@@ -111,7 +112,7 @@ def const_eval(expr):
     ...
     ValueError: opcode BINARY_ADD not allowed
     """
-    c = test_expr(expr, _CONST_CODES)
+    c = test_expr(expr, _CONST_OPCODES)
     return eval(c)
 
 def expr_eval(expr):
@@ -120,7 +121,7 @@ def expr_eval(expr):
     Restricted Python expression evaluation
 
     Evaluates a string that contains an expression that only
-    uses Python constants. This can be used to e.g. evaluate 
+    uses Python constants. This can be used to e.g. evaluate
     a numerical expression from an untrusted source.
 
     >>> expr_eval("1+2")
@@ -132,7 +133,7 @@ def expr_eval(expr):
     ...
     ValueError: opcode LOAD_NAME not allowed
     """
-    c = test_expr(expr, _EXPR_CODES)
+    c = test_expr(expr, _EXPR_OPCODES)
     return eval(c)
 
 
@@ -143,31 +144,31 @@ try:
     # first, try importing directly
     from ast import literal_eval
 except ImportError:
-    from _ast import *
-    
+    import _ast as ast
+
     def _convert(node):
-        if isinstance(node, Str):
+        if isinstance(node, ast.Str):
             return node.s
-        elif isinstance(node, Num):
+        elif isinstance(node, ast.Num):
             return node.n
-        elif isinstance(node, Tuple):
+        elif isinstance(node, ast.Tuple):
             return tuple(map(_convert, node.elts))
-        elif isinstance(node, List):
+        elif isinstance(node, ast.List):
             return list(map(_convert, node.elts))
-        elif isinstance(node, Dict):
+        elif isinstance(node, ast.Dict):
             return dict((_convert(k), _convert(v)) for k, v
                         in zip(node.keys, node.values))
-        elif isinstance(node, Name):
+        elif isinstance(node, ast.Name):
             if node.id in SAFE_CONSTANTS:
                 return SAFE_CONSTANTS[node.id]
         raise ValueError('malformed or disallowed expression')
-    
+
     def parse(expr, filename='<unknown>', mode='eval'):
         """parse(source[, filename], mode]] -> code object
         Parse an expression into an AST node.
         Equivalent to compile(expr, filename, mode, PyCF_ONLY_AST).
         """
-        return compile(expr, filename, mode, PyCF_ONLY_AST)
+        return compile(expr, filename, mode, ast.PyCF_ONLY_AST)
 
     def literal_eval(node_or_string):
         """literal_eval(expression) -> value
@@ -175,10 +176,10 @@ except ImportError:
         expression.  The string or node provided may only consist of the
         following Python literal structures: strings, numbers, tuples,
         lists, dicts, booleans, and None.
-        
+
         >>> literal_eval('[1,True,"spam"]')
         [1, True, 'spam']
-        
+
         >>> literal_eval('1+3')
         Traceback (most recent call last):
         ...
@@ -186,23 +187,23 @@ except ImportError:
         """
         if isinstance(node_or_string, basestring):
             node_or_string = parse(node_or_string)
-        if isinstance(node_or_string, Expression):
+        if isinstance(node_or_string, ast.Expression):
             node_or_string = node_or_string.body
         return _convert(node_or_string)
 
 
 
-def safe_eval(expr, context = None):
-    """safe_eval(expression, context) -> value
+def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval"):
+    """safe_eval(expression[, globals[, locals[, mode]]]) -> value
 
     System-restricted Python expression evaluation
 
     Evaluates a string that contains an expression that mostly
     uses Python constants, arithmetic expressions and the
-    use of the objects provided in context.
-     
-    This can be used to e.g. evaluate 
-    an OpenERP domain expression from an untrusted expr.
+    objects directly provided in context.
+
+    This can be used to e.g. evaluate
+    an OpenERP domain expression from an untrusted source.
 
     >>> safe_eval("__import__('sys').modules")
     Traceback (most recent call last):
@@ -212,30 +213,24 @@ def safe_eval(expr, context = None):
     """
     if '__subclasses__' in expr:
        raise ValueError('expression not allowed (__subclasses__)')
-    code_obj = compile(expr, '', 'eval')
-    byte_codes = code_obj.co_code
-    i = 0
-    while i < len(byte_codes):
-        op_code = ord(byte_codes[i])
-        if op_code not in _SAFE_CODES:
-            raise ValueError('opcode %byte_codes not allowed' % dis.opname[op_code])
-        if op_code >= HAVE_ARGUMENT:
-            i += 3
-        else:
-            i += 1
-    return eval(code_obj, {'__builtins__': {
-                                'True': True,
-                                'False': False,
-                                'None': None,
-                                'str': str,
-                                'globals': locals,
-                                'locals': locals,
-                                'bool': bool,
-                                'dict': dict,
-                                'list': list,
-                                'tuple': tuple,
-                           }
-                          }, context)
+
+    if globals_dict is None:
+        globals_dict = {}
+    globals_dict.update(
+            __builtins__ = {
+                'True': True,
+                'False': False,
+                'None': None,
+                'str': str,
+                'globals': locals,
+                'locals': locals,
+                'bool': bool,
+                'dict': dict,
+                'list': list,
+                'tuple': tuple,
+            }
+    )
+    return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
 
 
 

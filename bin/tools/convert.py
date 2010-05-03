@@ -35,6 +35,7 @@ import netsvc
 import osv
 import pooler
 from config import config
+from tools.safe_eval import safe_eval as eval
 from yaml_import import convert_yaml_import
 
 class ConvertError(Exception):

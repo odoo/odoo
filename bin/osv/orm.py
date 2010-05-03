@@ -56,7 +56,7 @@ from tools.translate import _
 
 import fields
 import tools
-
+from tools.safe_eval import safe_eval as eval
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
@@ -353,8 +353,8 @@ def get_pg_type(f):
             f_type = ('int4', 'INTEGER')
         else:
             f_type = ('varchar', 'VARCHAR(%d)' % f_size)
-    elif isinstance(f, fields.function) and eval('fields.'+(f._type)) in type_dict:
-        t = eval('fields.'+(f._type))
+    elif isinstance(f, fields.function) and eval('fields.'+(f._type),globals()) in type_dict:
+        t = eval('fields.'+(f._type), globals())
         f_type = (type_dict[t], type_dict[t])
     elif isinstance(f, fields.function) and f._type == 'float':
         if f.digits:
@@ -1951,9 +1951,9 @@ class orm_memory(orm_template):
                 f = True
                 for arg in result:
                      if arg[1] =='=':
-                         val =eval('data[arg[0]]'+'==' +' arg[2]')
+                         val =eval('data[arg[0]]'+'==' +' arg[2]', locals())
                      elif arg[1] in ['<','>','in','not in','<=','>=','<>']:
-                         val =eval('data[arg[0]]'+arg[1] +' arg[2]')
+                         val =eval('data[arg[0]]'+arg[1] +' arg[2]', locals())
                      elif arg[1] in ['ilike']:
                          if str(data[arg[0]]).find(str(arg[2]))!=-1:
                              val= True

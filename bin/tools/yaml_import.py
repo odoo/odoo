@@ -7,8 +7,8 @@ import pooler
 import netsvc
 import misc
 from config import config
+from tools.safe_eval import safe_eval as eval
 import yaml_tag
-
 import yaml
 
 logger_channel = 'tests'

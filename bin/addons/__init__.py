@@ -28,6 +28,7 @@ import zipimport
 import osv
 import tools
 import tools.osutil
+from tools.safe_eval import safe_eval as eval
 import pooler
 
 
@@ -422,6 +423,8 @@ def register_class(m):
         msg = "Couldn't load %smodule %s" % (mt, m)
         logger.notifyChannel('init', netsvc.LOG_CRITICAL, msg)
         logger.notifyChannel('init', netsvc.LOG_CRITICAL, e)
+        import traceback
+        traceback.print_exc()
 
     global loaded
     if m in loaded:

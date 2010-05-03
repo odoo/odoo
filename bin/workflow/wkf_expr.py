@@ -23,6 +23,7 @@ import sys
 import netsvc
 import osv as base
 import pooler
+from tools.safe_eval import safe_eval as eval
 
 class Env(dict):
     def __init__(self, cr, uid, model, ids):

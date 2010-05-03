@@ -24,6 +24,7 @@ from osv import fields
 import os
 import tools
 from tools.translate import _
+from tools.safe_eval import safe_eval as eval
 
 class multi_company_default(osv.osv):
     """
