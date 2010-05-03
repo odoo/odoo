@@ -284,11 +284,11 @@
                             <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="user_id" groups="base.group_extended"/>
+                            <field name="allow_date" />
                             <field name="company_id" groups="base.group_multi_company"/>
                             <newline/>
                             <field name="centralisation"/>
                             <field name="group_invoice_lines"/>
-
                             <field name="update_posted"/>
                             <field name="entry_posted"/>
                         </page>

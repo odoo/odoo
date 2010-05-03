@@ -515,6 +515,7 @@ class account_journal(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
             help="The sequence used for invoice numbers in this journal."),
+        'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
     _defaults = {
