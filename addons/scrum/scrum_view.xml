@@ -189,8 +189,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scrum Sprint">
-                    <field name="name" select="1"/>
-                    <field name="project_id" on_change="onchange_project_id(project_id)"/>
+                	<group colspan="4" col="6">
+                    	<field name="name" select="1"/>
+                    	<field name="project_id" on_change="onchange_project_id(project_id)"/>
+                    	<field name="active"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Sprint Info">
                             <group colspan="2" col="2">

@@ -93,6 +93,7 @@ class scrum_sprint(osv.osv):
         return True
     _columns = {
         'name' : fields.char('Sprint Name', required=True, size=64),
+        'active' : fields.boolean('Active',help="If the active field is set to true, it will allow you to select sprint from task list view. "),
         'date_start': fields.date('Starting Date', required=True),
         'date_stop': fields.date('Ending Date', required=True),
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)]),
@@ -111,6 +112,7 @@ class scrum_sprint(osv.osv):
     _defaults = {
         'state': lambda *a: 'draft',
         'date_start' : lambda *a:time.strftime('%Y-%m-%d'),
+        'active': lambda *a: 1,
     }
     def onchange_project_id(self, cr, uid, ids, project_id):
         v = {}
