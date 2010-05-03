@@ -29,10 +29,13 @@
 	      </xpath>
 	      <group colspan="8">
             <field name="charts" colspan="8"/>
-            <field name="account_analytic_plans"/>
-            <field name="account_payment"/>
-            <field name="account_followup"/>
-            <field name="account_asset"/>
+            <group colspan="4" groups="base.group_extended">
+            	<separator col="4" colspan="4" string="Install Extra Account Module"/>
+            	<field name="account_analytic_plans"/>
+            	<field name="account_payment"/>
+            	<field name="account_followup"/>
+            	<field name="account_asset"/>
+            </group>
              <group colspan="4" attrs="{'invisible':[('charts','=',False)]}">
             	<separator col="4" colspan="4" string="Bank and Cost Account"/>
                 <field name="account_name" colspan="2"/>
@@ -40,9 +43,7 @@
                 <field name="account_currency" colspan="2" widget="selection"/>
             </group>
             <group colspan="4">
-            	<separator col="4" colspan="4" string="Fiscal Year"/>
-                <field name="name"/>
-                <field name="code"/>
+            	<separator col="4" colspan="4" string="Configure Fiscal Year"/>
                 <field name="date_start" on_change="on_change_start_date(date_start)"/>
                 <field name="date_stop"/>
                 <field name="period" colspan="4"/>

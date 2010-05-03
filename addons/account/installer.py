@@ -60,21 +60,15 @@ class account_installer(osv.osv_memory):
         'account_asset':fields.boolean('Assets Management',
             help="Enables asset management in the accounting application, "
                  "including asset categories and usage periods."),
-        'name':fields.char('Name', required=True, size=64,
-            help="Name of the fiscal year as displayed on screens."),
-        'code':fields.char('Code', required=True, size=64,
-            help="Name of the fiscal year as displayed in reports."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
-        'period':fields.selection([('month','Month'), ('3months','3 Months')],
+        'period':fields.selection([('month','Monthly'), ('3months','3 Monthly')],
                                   'Periods', required=True),
         'account_name':fields.char('Name', size=128),
         'account_type':fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
         'account_currency':fields.many2one('res.currency', 'Currency')
         }
     _defaults = {
-        'code': lambda *a: time.strftime('%Y'),
-        'name': lambda *a: time.strftime('%Y'),
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
         'period':lambda *a:'month',
@@ -91,11 +85,14 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         super(account_installer, self).execute(cr, uid, ids, context=context)
         for res in self.read(cr,uid,ids):
-            if 'date1' in res and 'date2' in res:
+            if 'date_start' in res and 'date_stop' in res:
+                name = res['date_start'][:4]
+                if int(name) != int(res['date_stop'][:4]):
+                    name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
+                    code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
                 res_obj = self.pool.get('account.fiscalyear')
-                name = res['name']
-                vals = {'name':res['name'],
-                        'code':res['code'],
+                vals = {'name':name,
+                        'code':code,
                         'date_start':res['date_start'],
                         'date_stop':res['date_stop'],
                        }
