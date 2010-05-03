@@ -116,8 +116,8 @@
                     <field name="date_closed"/>
                     <separator orientation="vertical"/>
                   	<field name="type_id" widget="selection"/>
-                  	<field name="partner_id" widget="selection"/>
-                  	<field name="partner_address_id" widget="selection"/>
+                  	<field name="partner_id"/>
+                  	<field name="partner_address_id"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By ..." colspan="10" col="12">
@@ -126,7 +126,7 @@
                    <filter string="Partner" icon="terp-hr" domain="[]" context="{'group_by':'partner_id'}" />
                    <filter string="Stage" icon="terp-hr" domain="[]" context="{'group_by':'stage_id'}" />
                    <separator orientation="vertical"/>
-                   <filter string="Partner Contact" icon="terp-hr" domain="[]" context="{'group_by':'partner_address_id'}" />
+                   <filter string="Partner Contact Name" icon="terp-hr" domain="[]" context="{'group_by':'partner_address_id'}" />
                    <filter string="Jobs" name="job" icon="terp-sale" domain="[]" context="{'group_by':'job_id'}"/>
                    <filter string="Department" name="department" icon="terp-hr" domain="[]" context="{'group_by':'department_id'}"/>
                    <filter string="Degree" name="degree" icon="terp-hr" domain="[]" context="{'group_by':'type_id'}"/>

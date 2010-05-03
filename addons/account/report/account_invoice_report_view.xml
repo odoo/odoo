@@ -56,7 +56,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Invoices">
-            	<group>
+              <group col="10" colspan="12">
 	            	<filter icon="terp-account" string="This Year"
 		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 		                    help="Invoices of the year"/>
@@ -119,7 +119,7 @@
                 	<field name="address_invoice_id"/>
                 	<separator orientation="vertical"/>
                 	<field name="account_id"/>
-                	<field name="partner_bank"/>
+                	<field name="partner_bank" widget="selection"/>
                 	<separator orientation="vertical"/>
                 	<field name="period_id" widget="selection"/>
                 	<field name="fiscal_position" widget="selection"/>
@@ -145,8 +145,8 @@
                     <filter string="Account" icon="terp-account" context="{'group_by':'account_id'}"/>
                     <filter string="Bank Account" icon="terp-account" context="{'group_by':'partner_bank'}"/>
                     <newline/>
-                    <filter string="Contact Address" icon="terp-account" context="{'group_by':'address_contact_id'}"/>
-                    <filter string="Invoice Address" icon="terp-account" context="{'group_by':'address_invoice_id'}"/>
+                    <filter string="Contact Address Name" icon="terp-account" context="{'group_by':'address_contact_id'}"/>
+                    <filter string="Invoice Address Name" icon="terp-account" context="{'group_by':'address_invoice_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Force Period" icon="terp-account" context="{'group_by':'period_id'}"/>
                     <filter string="Fiscal Position" icon="terp-account" context="{'group_by':'fiscal_position'}"/>

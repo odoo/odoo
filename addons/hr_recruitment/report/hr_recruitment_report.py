@@ -45,7 +45,7 @@ class hr_recruitment_report(osv.osv):
         'salary_prop' : fields.float("Salary Proposed"),
         'salary_exp' : fields.float("Salary Expected"),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact',readonly=True),
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact Name',readonly=True),
         'available' : fields.float("Availability")
 
     }

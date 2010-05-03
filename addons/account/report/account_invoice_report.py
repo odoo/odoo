@@ -62,8 +62,8 @@ class account_invoice_report(osv.osv):
             ('cancel','Cancelled')
             ], 'Order State', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
-        'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True),
-        'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True),
+        'address_contact_id': fields.many2one('res.partner.address', 'Contact Address Name', readonly=True),
+        'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
         'residual':fields.float('Total Residual', readonly=True),
