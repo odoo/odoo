@@ -35,7 +35,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
        'sure': fields.boolean('Check this box', required=False)
               }
 
-    def data_save(self, cr, uid, ids, context={}):
+    def data_save(self, cr, uid, ids, context=None):
         """
         This function close account fiscalyear
         @param cr: the current row, from the database cursor,

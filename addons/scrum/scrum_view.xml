@@ -45,7 +45,7 @@
                     <field name="expected_hours" sum="Expected hours" widget="float_time"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
-                    <button type="action" string="Convert to Task" name="%(wizard_scrum_backlog_task)d" states="pending" icon="gtk-execute"/>
+                    <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
@@ -86,7 +86,7 @@
                     <group col="8" colspan="4">
                         <field name="state" select="1" readonly="1"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
-                        <button type="action" string="Convert to Task" name="%(wizard_scrum_backlog_task)d" states="pending" icon="gtk-execute"/>
+                        <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                         <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
                         <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>

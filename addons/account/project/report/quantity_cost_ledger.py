@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
 
 import pooler
-import time
 from report import report_sxw
 
 class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
@@ -35,7 +35,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
         })
 
     def _lines_g(self, account_id, date1, date2, journals):
-        if not journals or not journals[0][2]:
+        if not journals:
             self.cr.execute("SELECT sum(aal.unit_amount) AS quantity, \
                         aa.code AS code, aa.name AS name, aa.id AS id \
                     FROM account_account AS aa, account_analytic_line AS aal \
@@ -45,7 +45,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                     GROUP BY aa.code, aa.name, aa.id ORDER BY aa.code",
                     (account_id, date1, date2))
         else:
-            journal_ids = journals[0][2]
+            journal_ids = journals
             self.cr.execute("SELECT sum(aal.unit_amount) AS quantity, \
                         aa.code AS code, aa.name AS name, aa.id AS id \
                     FROM account_account AS aa, account_analytic_line AS aal \
@@ -59,7 +59,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
         return res
 
     def _lines_a(self, general_account_id, account_id, date1, date2, journals):
-        if not journals or not journals[0][2]:
+        if not journals:
             self.cr.execute("SELECT aal.name AS name, aal.code AS code, \
                         aal.unit_amount AS quantity, aal.date AS date, \
                         aaj.code AS cj \
@@ -71,7 +71,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                     ORDER BY aal.date, aaj.code, aal.code",
                     (general_account_id, account_id, date1, date2))
         else:
-            journal_ids = journals[0][2]
+            journal_ids = journals
             self.cr.execute("SELECT aal.name AS name, aal.code AS code, \
                         aal.unit_amount AS quantity, aal.date AS date, \
                         aaj.code AS cj \
@@ -86,13 +86,13 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
         return res
 
     def _account_sum_quantity(self, account_id, date1, date2, journals):
-        if not journals or not journals[0][2]:
+        if not journals:
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
                     WHERE account_id=%s AND date>=%s AND date<=%s",
                     (account_id, date1, date2))
         else:
-            journal_ids = journals[0][2]
+            journal_ids = journals
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
                     WHERE account_id = %s AND date >= %s AND date <= %s \
@@ -104,17 +104,17 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
         ids = map(lambda x: x.id, accounts)
         if not len(ids):
             return 0.0
-        if not journals or not journals[0][2]:
+        if not journals:
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
                     WHERE account_id =ANY(%s) AND date>=%s AND date<=%s",
-                    (date1, date2,ids,))
+                    (ids, date1, date2,))
         else:
-            journal_ids = journals[0][2]
+            journal_ids = journals
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
                     WHERE account_id =ANY(%s) AND date >= %s AND date <= %s \
-                        AND journal_id =ANY(%s)",(ids,date1, date2,journal_ids))
+                        AND journal_id =ANY(%s)",(ids, date1, date2, journal_ids))
         return self.cr.fetchone()[0] or 0.0
 
 report_sxw.report_sxw('report.account.analytic.account.quantity_cost_ledger',
@@ -122,6 +122,4 @@ report_sxw.report_sxw('report.account.analytic.account.quantity_cost_ledger',
         'addons/account/project/report/quantity_cost_ledger.rml',
         parser=account_analytic_quantity_cost_ledger, header=False)
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

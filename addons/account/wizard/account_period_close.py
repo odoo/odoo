@@ -32,7 +32,7 @@ class account_period_close(osv.osv_memory):
         'sure': fields.boolean('Check this box'),
               }
 
-    def data_save(self, cr, uid, ids, context={}):
+    def data_save(self, cr, uid, ids, context=None):
         """
         This function close period
         @param cr: the current row, from the database cursor,
@@ -41,7 +41,7 @@ class account_period_close(osv.osv_memory):
          """
 
         mode = 'done'
-        for form in self.read(cr, uid, ids,context=context):
+        for form in self.read(cr, uid, ids, context=context):
             if form['sure']:
                 for id in context['active_ids']:
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))

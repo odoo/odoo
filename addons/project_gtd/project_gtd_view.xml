@@ -75,8 +75,8 @@
         <field name="inherit_id" ref="project.view_task_tree2" />
         <field name="arch" type="xml">
             <field name="remaining_hours" position="after">
-                <field name="timebox_id" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
-                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
+                <field string="xxxxxx" name="timebox_id" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',True)"/>
+                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',True)"/>
                 <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
                 <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
