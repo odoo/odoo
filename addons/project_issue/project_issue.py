@@ -128,6 +128,10 @@ class project_issue(osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="integer", store=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to'),
+        'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
+        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
+                                                domain="[('partner_id', '=', partner_id)]",
+                                                required=True),
     }
 
     def _get_project(self, cr, uid, context):
@@ -219,4 +223,21 @@ class project_issue(osv.osv):
     }
 
 project_issue()
+
+class account_analytic_line(osv.osv):
+    _inherit = 'account.analytic.line'
+    _columns = {
+        'create_date' : fields.datetime('Create Date', readonly=True),
+    }
+
+account_analytic_line()
+
+class hr_analytic_issue(osv.osv):
+    _inherit = 'hr.analytic.timesheet'
+
+    _columns = {
+        'issue_id' : fields.many2one('project.issue', 'Issue'),
+    }
+
+hr_analytic_issue()
 
