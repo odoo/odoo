@@ -17,4 +17,15 @@
             <test expr="str(rate)">0.632</test>
         </assert>
     </data>
+    
+    <!-- Test count attribute for assertions -->
+    <data>
+    	<assert
+    		model="res.currency.rate"
+    		search="[('currency_id', '=', ref('INR'))]"
+    		count="3"
+    		string="Rate entries for Indian rupee">
+    		<test expr="True"/>
+    	</assert>
+    </data>
 </openerp>
