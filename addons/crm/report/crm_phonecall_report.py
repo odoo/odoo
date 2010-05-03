@@ -43,7 +43,8 @@ class crm_phonecall_report(osv.osv):
         'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
         'canal_id': fields.many2one('res.partner.canal','Channel',domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.phonecall')]"),
         'duration': fields.float('Duration',readonly=True),
-        'date': fields.datetime('Planned Date')
+        'date': fields.datetime('Planned Date'),
+        'partner_address_id': fields.many2one('res.partner.address', 'Contact', readonly=True)
     }
 
     def init(self, cr):
@@ -75,6 +76,7 @@ class crm_phonecall_report(osv.osv):
                     c.opportunity_id as opportunity_id,
                     c.canal_id as canal_id,
                     c.date as date,
+                    c.partner_address_id as partner_address_id,
                     sum(c.duration) as duration,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
@@ -84,6 +86,7 @@ class crm_phonecall_report(osv.osv):
                      c.state, c.user_id,c.section_id, c.categ_id,c.partner_id,c.company_id
                      ,to_char(c.create_date, 'YYYY-MM-DD'),c.create_date
                      ,c.priority,c.date_closed,opportunity_id,canal_id,c.date
+                     ,partner_address_id
             )""")
 
 crm_phonecall_report()

@@ -51,7 +51,7 @@
 	            <separator orientation="vertical"/>
             	<field name="name" string="Account"/>
             	<field name="code"/>
-                <field name="company_id" widget="selection"/>
+                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended options..." colspan="10" col="12">
@@ -62,7 +62,7 @@
                 <group expand="1" string="Group By..." colspan="10" col="12">
                 	<filter string="Account" name="Account" icon="terp-account" context="{'group_by':'name'}"/>
                 	<filter string="Code"  icon="terp-account" context="{'group_by':'code'}"/>
-                	<filter string="Company"  icon="terp-account" context="{'group_by':'company_id'}"/>
+                	<filter string="Company"  icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 	<separator orientation="vertical"/>
                 	<filter string="Currencies Rate" icon="terp-account" context="{'group_by':'currency_mode'}"/>
                     <filter string="Internal Type" icon="terp-account" context="{'group_by':'type'}"/>
