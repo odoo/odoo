@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -41,7 +41,7 @@ class report_rappel(report_sxw.rml_parse):
         pool = pooler.get_pool(self.cr.dbname)
         all_partners = []
         for partner in partners_ids:
-            partners = pool.get('account_followup.stat').browse(self.cr, self.uid, partner[2])
+            partners = pool.get('account_followup.stat').browse(self.cr, self.uid, [partner])
             for par in partners:
                 all_partners.append(par.name)
         return all_partners
@@ -88,6 +88,7 @@ class report_rappel(report_sxw.rml_parse):
                 'company_name': fp_obj.browse(self.cr, self.uid, followup_id).company_id.name,
                 'user_signature': pooler.get_pool(self.cr.dbname).get('res.users').browse(self.cr, self.uid, self.uid, context).signature,
             }
+
         return text
 
 

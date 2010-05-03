@@ -49,6 +49,7 @@ class analytical_timesheet_employees(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'hr.analytical.timesheet_users',
             'datas': datas,
+            'nodestroy':True
             }
 
 analytical_timesheet_employees()

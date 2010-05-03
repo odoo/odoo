@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+        <record id="account_budget_spread_view" model="ir.ui.view">
+             <field name="name">account.budget.spread.form</field>
+             <field name="model">account.budget.spread</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+	             <form string="Select Dates Period">
+				    <field name="fiscalyear"/>
+				    <field name="amount"/>
+				    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+               			<button name="check_spread" string="Ok" type="object" icon="gtk-ok" default_focus="1"/>
+ 					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_account_budget_spread" model="ir.actions.act_window">
+			<field name="name">Spread</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.budget.spread</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account_budget_spread_view"/>
+			<field name="target">new</field>
+		</record>
+
+	 </data>
+</openerp>
