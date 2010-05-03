@@ -33,9 +33,9 @@
  -->
 
         <!-- automatic reconcile -->
-        <wizard id="wizard_automatic_reconcile" menu="False" model="account.account" name="account.automatic.reconcile" string="Automatic reconciliation"/>
         <menuitem id="next_id_20" name="Reconciliation" parent="menu_finance_periodical_processing"/>
-        <menuitem action="wizard_automatic_reconcile" id="menu_automatic_reconcile" parent="next_id_20" type="wizard"/>
+    <!--    <wizard id="wizard_automatic_reconcile" menu="False" model="account.account" name="account.automatic.reconcile" string="Automatic reconciliation"/>
+        <menuitem action="wizard_automatic_reconcile" id="menu_automatic_reconcile" parent="next_id_20" type="wizard"/>-->
 
         <!-- Import entry in statement -->
 
@@ -47,7 +47,7 @@
 <!--            id="wizard_populate_statement_from_inv"/>-->
 
         <!-- manual reconcile -->
-        <wizard id="wizard_reconcile" model="account.move.line" name="account.move.line.reconcile" string="Reconcile Entries"/>
+<!--        <wizard id="wizard_reconcile" model="account.move.line" name="account.move.line.reconcile" string="Reconcile Entries"/>-->
 
 <!--        <wizard id="wizard_reconcile_unreconcile" model="account.move.reconcile" name="account.reconcile.unreconcile" string="Unreconcile Entries"/>-->
 

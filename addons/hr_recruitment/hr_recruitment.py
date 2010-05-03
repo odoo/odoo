@@ -135,7 +135,7 @@ class hr_applicant(osv.osv):
                 'default_name': opp.name
             }
             value = {
-                'name': _('Meetings'),
+                'name': ('Meetings'),
                 'domain': "[('user_id','=',%s)]" % (uid),
                 'context': context,
                 'view_type': 'form',
