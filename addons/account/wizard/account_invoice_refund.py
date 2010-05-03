@@ -34,7 +34,7 @@ class account_invoice_refund(osv.osv_memory):
        'description': fields.char('Description', size=150, required=True),
                 }
 
-    def compute_refund(self, cr, uid, ids, mode, context={}):
+    def compute_refund(self, cr, uid, ids, mode, context=None):
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -46,7 +46,11 @@ class account_invoice_refund(osv.osv_memory):
         account_m_line_obj = self.pool.get('account.move.line')
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        for form in  self.read(cr, uid, ids,context=context):
+
+        if context is None:
+            context = {}
+
+        for form in  self.read(cr, uid, ids, context=context):
             created_inv = []
             date = False
             period = False
@@ -171,7 +175,6 @@ class account_invoice_refund(osv.osv_memory):
             id = mod_obj.read(cr, uid, result, ['res_id'],context=context)['res_id']
             result = act_obj.read(cr, uid, id,context=context)
             result['res_id'] = created_inv
-
             return result
 
     def invoice_refund(self, cr, uid, ids, context={}):

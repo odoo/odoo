@@ -34,10 +34,10 @@ class account_print_journal(osv.osv_memory):
         }
 
     _defaults = {
-            'sort_selection': lambda *a: 'date',
-            }
+        'sort_selection': lambda *a: 'date',
+                }
 
-    def check_data(self, cr, uid, ids, context={}):
+    def check_data(self, cr, uid, ids, context=None):
         obj_jperiod = self.pool.get('account.journal.period')
         datas = {}
         datas['ids'] = []
@@ -59,6 +59,7 @@ class account_print_journal(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.journal.period.print',
             'datas': datas,
+            'nodestroy':True,
             }
 
 account_print_journal()

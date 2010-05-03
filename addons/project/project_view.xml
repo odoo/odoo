@@ -443,6 +443,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
+            <field name="context">{"search_default_project_id":context.get('project_id',False)}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
 
         </record>
@@ -629,7 +630,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_project_message_tree"/>
-            <field name="context">{"search_default_my_msg":1}</field>
+            <field name="context">{"search_default_project_id":context.get('project_id',False), "search_default_my_msg":1}</field>
             <field name="search_view_id" ref="view_project_message_search"/>
        </record>
 

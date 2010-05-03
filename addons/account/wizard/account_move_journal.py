@@ -26,12 +26,10 @@ import tools
 class account_move_journal(osv.osv_memory):
     _name = "account.move.journal"
     _description = "Move journal"
-
     _columns = {
        'journal_id': fields.many2one('account.journal', 'Journal', required=True),
        'period_id': fields.many2one('account.period', 'Period', required=True),
                 }
-
 
     def _get_period(self, cr, uid, context={}):
         """Return  default account period value"""
@@ -41,7 +39,11 @@ class account_move_journal(osv.osv_memory):
             period_id = ids[0]
         return period_id
 
-    def action_open_window(self, cr, uid, ids, context={}):
+    _defaults = {
+        'period_id': _get_period
+                }
+
+    def action_open_window(self, cr, uid, ids, context=None):
         """
         This function Open action move line window on given period and  Journal/Payment Mode
         @param cr: the current row, from the database cursor,
@@ -52,46 +54,43 @@ class account_move_journal(osv.osv_memory):
         """
         jp = self.pool.get('account.journal.period')
         mod_obj = self.pool.get('ir.model.data')
-        for data in  self.read(cr, uid, ids, ['journal_id', 'period_id'],context=context):
-            cr.execute('select id,name from ir_ui_view where model=%s and type=%s', ('account.move.line', 'form'))
-            view_res = cr.fetchone()
-            journal_id = data['journal_id']
-            period_id = data['period_id']
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids, ['journal_id', 'period_id'], context=context)[0]
+        cr.execute('select id,name from ir_ui_view where model=%s and type=%s', ('account.move.line', 'form'))
+        view_res = cr.fetchone()
+        journal_id = data['journal_id']
+        period_id = data['period_id']
 
-            ids = jp.search(cr, uid, [('journal_id', '=', journal_id), \
-                                        ('period_id', '=', period_id)],context=context)
+        ids = jp.search(cr, uid, [('journal_id', '=', journal_id), \
+                                    ('period_id', '=', period_id)],context=context)
 
-            if not len(ids):
-                name = self.pool.get('account.journal').read(cr, uid, [journal_id])[0]['name']
-                state = self.pool.get('account.period').read(cr, uid, [period_id])[0]['state']
-                if state == 'done':
-                    raise osv.except_osv(_('UserError'), _('This period is already closed !'))
-                company = self.pool.get('account.period').read(cr, uid, [period_id])[0]['company_id'][0]
-                jp.create(cr, uid, {'name': name, 'period_id': period_id, 'journal_id': journal_id, 'company_id': company},context=context)
+        if not len(ids):
+            name = self.pool.get('account.journal').read(cr, uid, [journal_id])[0]['name']
+            state = self.pool.get('account.period').read(cr, uid, [period_id])[0]['state']
+            if state == 'done':
+                raise osv.except_osv(_('UserError'), _('This period is already closed !'))
+            company = self.pool.get('account.period').read(cr, uid, [period_id])[0]['company_id'][0]
+            jp.create(cr, uid, {'name': name, 'period_id': period_id, 'journal_id': journal_id, 'company_id': company},context=context)
 
-            ids = jp.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)],context=context)
-            jp = jp.browse(cr, uid, ids, context=context)[0]
-            name = (jp.journal_id.code or '') + ':' + (jp.period_id.code or '')
+        ids = jp.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)],context=context)
+        jp = jp.browse(cr, uid, ids, context=context)[0]
+        name = (jp.journal_id.code or '') + ':' + (jp.period_id.code or '')
 
-            result = mod_obj._get_id(cr, uid, 'account', 'view_account_move_line_filter')
-            res = mod_obj.read(cr, uid, result, ['res_id'],context=context)
+        result = mod_obj._get_id(cr, uid, 'account', 'view_account_move_line_filter')
+        res = mod_obj.read(cr, uid, result, ['res_id'],context=context)
 
-            return {
-                'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (journal_id, period_id),
-                'name': name,
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'account.move.line',
-                'view_id': view_res,
-                'context': "{'journal_id': %d, 'period_id': %d}" % (journal_id, period_id),
-                'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id']
-                }
-
-
-    _defaults = {
-        'period_id': _get_period
-                }
+        return {
+            'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (journal_id, period_id),
+            'name': name,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.move.line',
+            'view_id': view_res,
+            'context': "{'journal_id': %d, 'period_id': %d}" % (journal_id, period_id),
+            'type': 'ir.actions.act_window',
+            'search_view_id': res['res_id']
+            }
 
 account_move_journal()
 

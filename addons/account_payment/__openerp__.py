@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -38,12 +38,14 @@
     'update_xml': [
         'security/account_payment_security.xml',
         'security/ir.model.access.csv',
-        'payment_wizard.xml',
+        'wizard/account_payment_pay_view.xml',
+        'wizard/account_payment_create_order_view.xml',
         'payment_view.xml',
         'payment_workflow.xml',
         'payment_sequence.xml',
         'account_invoice_view.xml',
-        'payment_report.xml'
+        'payment_report.xml',
+
     ],
     'demo_xml': [],
     'installable': True,
