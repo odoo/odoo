@@ -18,12 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import fields, osv
 from tools.translate import _
 
 class account_open_closed_fiscalyear(osv.osv_memory):
-
     _name = "account.open.closed.fiscalyear"
     _description = "Choose Fiscal Year"
     _columns = {

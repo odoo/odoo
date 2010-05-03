@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="0">
+
+        <!--<wizard string="Send followups"
+                name="account_followup.followup.print.all"
+                id="action_account_followup_all_wizard"
+                model="account_followup.followup" />
+
+        <menuitem action="action_account_followup_all_wizard"
+                  id="account_followup_wizard_menu"
+                  parent="account.menu_finance_periodical_processing"
+                  type="wizard" />-->
+
+
+		<record id="view_account_followup_print" model="ir.ui.view">
+            <field name="name">account.followup.print.form</field>
+            <field name="model">account.followup.print</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Send followups">
+			    <group col="4" colspan="6">
+			        <field name="followup_id"/>
+					<field name="date"/>
+				    <newline/>
+				</group>
+				<separator colspan="4"/>
+			    <group col="2" colspan="4">
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+					<button name="do_continue" string="Continue" colspan="1" type="object" icon="gtk-ok"/>
+				</group>
+			</form>
+            </field>
+        </record>
+
+        <record id="action_account_followup_print" model="ir.actions.act_window">
+            <field name="name">Send followups</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.followup.print</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+		<record model="ir.values" id="account_followup_print_values">
+            <field name="model_id" ref="model_account_followup_followup" />
+            <field name="object" eval="1" />
+            <field name="name">Send followups</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_followup_print'))" />
+            <field name="key">action</field>
+            <field name="model">account_followup.followup</field>
+        </record>
+
+        <menuitem action="action_account_followup_print"
+                  id="account_followup_print_menu"
+                  parent="account.menu_finance_periodical_processing"
+                  />
+
+
+       <!-- Screen2 -->
+
+       	<record id="view_account_followup_print_all" model="ir.ui.view">
+            <field name="name">account.followup.print.all.form</field>
+            <field name="model">account.followup.print.all</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Send followups">
+			    <group col="4" colspan="6">
+			            <notebook>
+					        <page string="Partner Selection">
+					            <separator string="Select partners to remind" colspan="4"/>
+					            <field name="partner_ids" colspan="4" nolabel="1"/>
+					        </page>
+					        <page string="Email Settings">
+					            <field name="email_conf" colspan="4"/>
+					            <field name="partner_lang" colspan="4"/>
+					            <field name="email_subject" colspan="4"/>
+					            <!--<separator string="Email body" colspan="4" attrs="{'readonly':[('partner_lang','=',True)]}"/>-->
+					            <separator string="Email body" colspan="4" />
+					            <field name="email_body" colspan="4" nolabel="1"/>
+					            <separator string="Legend" colspan="4"/>
+					            <label string="%%(partner_name)s: Partner name" colspan="2"/>
+					            <label string="%%(user_signature)s: User name" colspan="2"/>
+					            <label string="%%(followup_amount)s: Total Amount Due" colspan="2"/>
+					            <label string="%%(date)s: Current Date" colspan="2"/>
+					            <label string="%%(company_name)s: User's Company name" colspan="2"/>
+					            <label string="%%(company_currency)s: User's Company Currency" colspan="2"/>
+					            <label string="%%(heading)s: Move line header" colspan="2"/>
+					            <label string="%%(line)s: Ledger Posting lines" colspan="2"/>
+					        </page>
+					    </notebook>
+				</group>
+				<separator colspan="4"/>
+			    <group>
+            		<button special="cancel" string="Cancel" icon='gtk-cancel'/>
+					<button name="do_print" string="Print Follow Ups" colspan="1" type="object" icon="gtk-print"/>
+					<button name="do_mail" string="Send Mails" colspan="1" type="object" icon="gtk-execute"/>
+				</group>
+			</form>
+            </field>
+        </record>
+
+       	<record id="view_account_followup_print_all_msg" model="ir.ui.view">
+            <field name="name">account.followup.print.all.msg.form</field>
+            <field name="model">account.followup.print.all</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Summary">
+			    <group col="4" colspan="6">
+				    <field name="summary" height="300" width="800"/>
+				</group>
+				<separator colspan="4"/>
+			    <group>
+            		<button special="cancel" string="Ok" icon='gtk-cancel'/>
+				</group>
+			</form>
+            </field>
+        </record>
+
+        <record id="action_account_followup_print_all" model="ir.actions.act_window">
+            <field name="name">Send followups</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.followup.print.all</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+	</data>
+</openerp>
