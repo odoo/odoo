@@ -1234,8 +1234,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 if count > limit:
                     break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
-                if start_date and start_date <= event_date:
-                    start_date = event_date
+#                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
+#                if start_date and start_date <= event_date:
+#                        start_date = event_date
+                start_date = event_date
                 if not data['rrule']:
                     if start_date and (event_date < start_date):
                         continue

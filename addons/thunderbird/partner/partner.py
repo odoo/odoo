@@ -92,12 +92,7 @@ class tinythunderbird_partner(osv.osv):
         partner=add_obj.read(cr,user,partner_ids,['partner_id'])
         if partner:
             dictcreate.update({'partner_id':partner[0]['partner_id'][0]})
-<<<<<<< TREE
-#        search_id = self.pool.get('res.request.link').search(cr,user,[('object','=',dictcreate['ref'].split(',')[0])])
-#        if not search_id:
-#            create_link_id = self.pool.get('res.request.link').create(cr,user,{'name':dictcreate['ref'].split(',')[0],'object':dictcreate['ref'].split(',')[0]})
-=======
->>>>>>> MERGE-SOURCE
+
         create_id = self.pool.get(dictcreate.get('object','crm.case')).create(cr, user, dictcreate)
         cases=case_pool.browse(cr,user,[create_id])
         case_pool._history(cr, user, cases, _('Archive'), history=True, email=False)

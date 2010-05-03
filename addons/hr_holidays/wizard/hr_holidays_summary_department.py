@@ -51,6 +51,7 @@ class hr_holidays_summary_dept(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'holidays.summary',
             'datas': datas,
+            'nodestroy': True,
             }
 
 hr_holidays_summary_dept()

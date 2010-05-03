@@ -34,29 +34,29 @@ class account_move_bank_reconcile(osv.osv_memory):
               }
 
     def action_open_window(self, cr, uid, ids, context={}):
-            """
-           @param cr: the current row, from the database cursor,
-           @param uid: the current user’s ID for security checks,
-           @param ids: account move bank reconcile’s ID or list of IDs
-           @return: dictionary of  Open  account move line   on given journal_id.
-            """
-            for data in  self.read(cr, uid, ids,context=context):
-                 cr.execute('select default_credit_account_id \
-                                from account_journal where id=%s', (data['journal_id'],))
-                 account_id = cr.fetchone()[0]
-                 if not account_id:
-                     raise osv.except_osv(_('Error'), _('You have to define \
+        """
+       @param cr: the current row, from the database cursor,
+       @param uid: the current user’s ID for security checks,
+       @param ids: account move bank reconcile’s ID or list of IDs
+       @return: dictionary of  Open  account move line   on given journal_id.
+        """
+        data = self.read(cr, uid, ids,context=context)[0]
+        cr.execute('select default_credit_account_id \
+                        from account_journal where id=%s', (data['journal_id'],))
+        account_id = cr.fetchone()[0]
+        if not account_id:
+             raise osv.except_osv(_('Error'), _('You have to define \
 the bank account\nin the journal definition for reconciliation.'))
-                 return {
-                    'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (data['journal_id'], account_id),
-                    'name': _('Standard Encoding'),
-                    'view_type': 'form',
-                    'view_mode': 'tree,form',
-                    'res_model': 'account.move.line',
-                    'view_id': False,
-                    'context': "{'journal_id': %d}" % (data['journal_id'],),
-                    'type': 'ir.actions.act_window'
-                     }
+        return {
+            'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (data['journal_id'], account_id),
+            'name': _('Standard Encoding'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.move.line',
+            'view_id': False,
+            'context': "{'journal_id': %d}" % (data['journal_id'],),
+            'type': 'ir.actions.act_window'
+             }
 
 account_move_bank_reconcile()
 
