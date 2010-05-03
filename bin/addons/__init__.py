@@ -767,6 +767,15 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     return has_updates
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
+
+    def check_module_name(cr, mods, state):
+        for mod in mods:
+            id = modobj.search(cr, 1, ['&', ('state', '=', state), ('name', '=', mod)])
+            if id:
+                getattr(modobj, states[state])(cr, 1, id)
+            elif mod != 'all':
+                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: invalid module name!' % (mod))
+
     if not status:
         status = {}
     cr = db.cursor()
@@ -797,21 +806,16 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             return
         if update_module:
             modobj = pool.get('ir.module.module')
+            states = {'installed': 'button_upgrade', 'uninstalled': 'button_install'}
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 modobj.update_list(cr, 1)
 
             mods = [k for k in tools.config['init'] if tools.config['init'][k]]
-            if mods:
-                ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
-                if ids:
-                    modobj.button_install(cr, 1, ids)
+            check_module_name(cr, mods, 'uninstalled')
 
             mods = [k for k in tools.config['update'] if tools.config['update'][k]]
-            if mods:
-                ids = modobj.search(cr, 1, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
-                if ids:
-                    modobj.button_upgrade(cr, 1, ids)
+            check_module_name(cr, mods, 'installed')
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
 
