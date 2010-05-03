@@ -33,8 +33,8 @@ class mrp_production_order(osv.osv):
         'day': fields.char('Day',size=64,readonly=True),
         'origin': fields.char('Source Document', size=64),
         'nbr': fields.integer('# of Orders', readonly=True),
-#        'products_to_consumme': fields.integer('Products to Consumme', readonly=True),
-#        'consummed_products': fields.integer('Consummed Products', readonly=True),
+        'products_to_consume': fields.integer('Products to Consume', readonly=True),
+        'consumed_products': fields.integer('Consumed Products', readonly=True),
         'date': fields.date('Date', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty': fields.float('Product Qty', readonly=True),
@@ -79,6 +79,18 @@ class mrp_production_order(osv.osv):
                      sum(l.product_qty * u.factor) as product_qty,
                      s.company_id as company_id,
                      count(*) as nbr,
+                     (select sum(sm.product_qty) from stock_move as sm
+                        left join mrp_production_move_ids as mv on (sm.id=mv.move_id)
+                        left join mrp_production_product_line as ll on (ll.production_id=mv.production_id)
+                        where sm.product_id=ll.product_id and ll.id=l.id
+                        and sm.state not in ('done','cancel')
+                        group by sm.product_id) as products_to_consume,
+                    (select sum(sm.product_qty)/2 from stock_move as sm
+                        left join mrp_production_move_ids as mv on (sm.id=mv.move_id)
+                        left join mrp_production_product_line as ll on (ll.production_id=mv.production_id)
+                        where sm.product_id=ll.product_id and ll.id=l.id
+                        and sm.state in ('done','cancel')
+                        group by sm.product_id) as consumed_products,
                      s.location_src_id,
                      s.location_dest_id,
                      s.bom_id,
@@ -100,6 +112,7 @@ class mrp_production_order(osv.osv):
                      to_date(to_char(s.create_date, 'MM-dd-YYYY'),'MM-dd-YYYY'),
                      l.product_id,
                      l.product_uom,
+                     s.id,
                      l.id,
                      s.bom_id,
                      s.routing_id,
