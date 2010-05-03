@@ -1732,6 +1732,7 @@ class orm_memory(orm_template):
     def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
         if not context:
             context = {}
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         if not fields_to_read:
             fields_to_read = self._columns.keys()
         result = []
@@ -1761,6 +1762,7 @@ class orm_memory(orm_template):
     def write(self, cr, user, ids, vals, context=None):
         if not ids:
             return True
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
         vals2 = {}
         upd_todo = []
         for field in vals:
@@ -1779,6 +1781,7 @@ class orm_memory(orm_template):
         return id_new
 
     def create(self, cr, user, vals, context=None):
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
         self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
@@ -1930,6 +1933,7 @@ class orm_memory(orm_template):
         return res or []
 
     def unlink(self, cr, uid, ids, context=None):
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
         for id in ids:
             if id in self.datas:
                 del self.datas[id]
@@ -3232,7 +3236,7 @@ class orm(orm_template):
         """
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
 
         default = []
 
@@ -3288,7 +3292,7 @@ class orm(orm_template):
                 del vals[self._inherits[table]]
 
             record_id = tocreate[table].pop('id', None)
-            
+
             if record_id is None or not record_id:
                 record_id = self.pool.get(table).create(cr, user, tocreate[table], context=context)
             else:

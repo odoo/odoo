@@ -34,7 +34,7 @@ class groups(osv.osv):
     _columns = {
         'name': fields.char('Group Name', size=64, required=True),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
-        'rule_groups': fields.many2many('ir.rule.group', 'group_rule_group_rel',
+        'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment',size=250),
@@ -47,7 +47,7 @@ class groups(osv.osv):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': group_name +' (copy)'})
         return super(groups, self).copy(cr, uid, id, default, context)
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if 'name' in vals:
             if vals['name'].startswith('-'):
@@ -185,7 +185,6 @@ class users(osv.osv):
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
-        'rules_id': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules'),
         'company_id': fields.many2one('res.company', 'Company', required=True,
             help="The company this user is currently working for."),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
