@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+
+        <record id="account_open_vouchers_view" model="ir.ui.view">
+             <field name="name">Open Vouchers</field>
+             <field name="model">account.open.voucher</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+				<form string="Open Vouchers">
+				    <field name="type"/>
+				    <field name="state"/>
+				    <field name="period_ids" colspan="4"/>
+	 				<group colspan="4" col="6">
+	                   	<separator colspan="6"/>
+	 					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+	           			<button name="action_open_window" string="Open Voucher Entries" type="object" icon="gtk-ok"/>
+					</group>
+				</form>
+             </field>
+ 		</record>
+
+        <record id="action_account_open_vouchers" model="ir.actions.act_window">
+             <field name="name">Open Vouchers</field>
+             <field name="res_model">account.open.voucher</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="account_open_vouchers_view"/>
+             <field name="context">{'record_id':active_id}</field>
+             <field name="target">new</field>
+       </record>
+
+ 	   <menuitem
+ 	   		icon="STOCK_EXECUTE"
+ 	   		name="Open Vouchers"
+ 	   		action="action_account_open_vouchers"
+ 			id="menu_account_voucher_open"
+ 			parent="menu_action_voucher_list"/>
+
+	</data>
+</openerp>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record id="account_analytic_chart_view" model="ir.ui.view">
+			<field name="name">Account Analytic Chart</field>
+			<field name="model">account.analytic.chart</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Analytic Account Charts">
+				    <separator string="Select the Period for Analysis" colspan="4"/>
+				    <field name="from_date"/>
+				    <newline/>
+				    <field name="to_date"/>
+				    <newline/>
+				    <label string="(Keep empty to open the current situation)" align="0.0" colspan="3"/>
+					<separator colspan="4"/>
+					<group colspan="4" col="6">
+						<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+						<button name="analytic_account_chart_open_window" string="Open Charts" type="object" icon="gtk-ok"/>
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_account_analytic_chart" model="ir.actions.act_window">
+			<field name="name">Analytic Chart of Accounts</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.analytic.chart</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account_analytic_chart_view"/>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem
+	        name="Analytic Chart of Accounts"
+	        parent="account.menu_finance_charts"
+	        action="action_account_analytic_chart"
+	        id="menu_action_analytic_account_tree2"
+	        icon="STOCK_INDENT"/>
+
+    </data>
+</openerp>

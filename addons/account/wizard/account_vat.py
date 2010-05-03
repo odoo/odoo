@@ -33,7 +33,7 @@ class account_vat_declaration(osv.osv_memory):
 		'periods': fields.many2many('account.period', 'vat_period_rel', 'vat_id', 'period_id', 'Periods', help="All periods if empty"),
 		}
 
-	def _get_company(self, cr, uid, ids, context={}):
+	def _get_company(self, cr, uid, context={}):
 		user_obj = self.pool.get('res.users')
 		company_obj = self.pool.get('res.company')
 		user = user_obj.browse(cr, uid, uid, context=context)
@@ -43,7 +43,7 @@ class account_vat_declaration(osv.osv_memory):
 			return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
 
 	_defaults = {
-	        'based_on': lambda *a: 'invoices',
+	        'based_on': 'invoices',
 	        'company_id': _get_company
 	    }
 
@@ -57,6 +57,7 @@ class account_vat_declaration(osv.osv_memory):
 			'type': 'ir.actions.report.xml',
 			'report_name': 'account.vat.declaration',
 			'datas': datas,
+            'nodestroy':True,
 			}
 
 account_vat_declaration()
