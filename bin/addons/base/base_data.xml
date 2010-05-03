@@ -1230,6 +1230,16 @@
             <field name="currency_id" ref="INR"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
+        <record id="rateINR2001" model="res.currency.rate">
+            <field name="rate">0.631</field>
+            <field name="currency_id" ref="INR"/>
+            <field name="name">2001-01-01</field>
+        </record>
+        <record id="rateINR2002" model="res.currency.rate">
+            <field name="rate">0.632</field>
+            <field name="currency_id" ref="INR"/>
+            <field name="name">2002-01-01</field>
+        </record>
        
         <!-- Basic Company  -->
         <record id="main_company" model="res.company">
