@@ -51,7 +51,7 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         email = False
         if partner:
             addr = self.pool.get('res.partner').address_get(cr, uid, [partner], ['contact'])
-            if addr:
+            if addr and addr['contact']:
                 email = self.pool.get('res.partner.address').read(cr, uid, addr['contact'] , ['email'])['email']
         elif user:
             addr = self.pool.get('res.users').read(cr, uid, user, ['address_id'])['address_id']
@@ -100,6 +100,9 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         else:
             raise osv.except_osv(_('Email Fail!'), ("Lastest Email is not sent successfully"))
         return {}
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        return {'type' : 'ir.actions.act_window_close'}
 
 crm_email_add_cc_wizard()
 
