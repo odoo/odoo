@@ -234,6 +234,7 @@ scrum_task()
 class scrum_meeting(osv.osv):
     _name = 'scrum.meeting'
     _description = 'Scrum Meeting'
+    _order = 'date desc'
     _columns = {
         'name' : fields.char('Meeting Name', size=64, required=True),
         'date': fields.date('Meeting Date', required=True),

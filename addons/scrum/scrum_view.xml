@@ -333,7 +333,7 @@
             <field name="arch" type="xml">
                 <search string="Scrum Sprint">
                     <group col="10" colspan="4">
-                        <filter icon="terp-project" string="Daily" domain="[('date','=',time.strftime('%%Y%%m%%d'))]" help="Daily Meetings"/>
+                        <filter name="scrum_daily" icon="terp-project" string="Daily" domain="[('date','=',time.strftime('%%Y%%m%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="sprint_id">
@@ -356,6 +356,7 @@
             <field name="res_model">scrum.meeting</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_scrum_daily':1}</field>
             <field name="search_view_id" ref="view_scrum_meeting_search"/>
         </record>
         <menuitem sequence="30"
