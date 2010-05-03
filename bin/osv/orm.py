@@ -1153,8 +1153,10 @@ class orm_template(object):
                     node.set('invisible', '1')
                     if 'attrs' in node.attrib:
                         del(node.attrib['attrs']) #avoid making field visible later
-            del(node.attrib['groups'])
-            return can_see
+                del(node.attrib['groups'])
+                return can_see
+            else:
+                return True
 
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
@@ -1202,7 +1204,7 @@ class orm_template(object):
                             }
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
-                        if not check_group(node)
+                        if not check_group(node):
                             attrs['selection'] = []
                         # We can not use the 'string' domain has it is defined according to the record !
                         else:
