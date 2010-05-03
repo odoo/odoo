@@ -126,7 +126,7 @@ class crm_opportunity(osv.osv):
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesman'),
+        'user_id': fields.many2one('res.users', 'Salesman', help='By Default set the user is Administrator'),
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action'),
