@@ -120,11 +120,11 @@
 	    </record>
 		
 		
-		 <menuitem id="menu_crm_configuration" name="Cases"
+		 <menuitem id="base.menu_crm_configuration" name="Cases"
             parent="base.menu_base_config" sequence="0"/>
-            
+
         <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
-        	parent="menu_crm_configuration" />
+        	parent="base.menu_crm_configuration"  sequence="20"/>
         	
       	
     </data>
