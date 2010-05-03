@@ -1,0 +1,105 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+import time
+
+from osv import osv, fields
+
+class account_analytic_cost_ledger_journal_report(osv.osv_memory):
+    _name = 'account.analytic.cost.ledger.journal.report'
+    _description = 'Account Analytic Cost Ledger For Journal Report'
+
+    _columns = {
+        'date1': fields.date('Start of period', required=True),
+        'date2': fields.date('End of period', required=True),
+        'journal': fields.many2many('account.analytic.journal', 'ledger_journal_rel','ledger_id', 'Journal_id','Journals'),
+        }
+
+    _defaults = {
+        'date1':time.strftime('%Y-01-01'),
+        'date2':time.strftime('%Y-%m-%d')
+        }
+
+    def check_report(self, cr, uid, ids, context=None):
+        datas = {}
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids)[0]
+        datas = {
+             'ids': context.get('active_ids',[]),
+             'model': 'account.analytic.account',
+             'form': data
+                 }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'account.analytic.account.quantity_cost_ledger',
+            'datas': datas,
+            }
+
+account_analytic_cost_ledger_journal_report()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+#import time
+#import wizard
+#
+#_form = '''<?xml version="1.0"?>
+#<form string="Select period">
+#    <separator string="Cost Legder for period" colspan="4"/>
+#    <field name="date1"/>
+#    <field name="date2"/>
+#    <separator string="and Journals" colspan="4"/>
+#    <field name="journal" colspan="4"/>
+#</form>'''
+#
+#_fields = {
+#    'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
+#    'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+#    'journal': {'string':'Journals','type':'many2many', 'relation':'account.analytic.journal'},
+#}
+#
+#
+#class wizard_report(wizard.interface):
+#    states = {
+#        'init': {
+#            'actions': [],
+#            'result': {
+#                'type': 'form',
+#                'arch': _form,
+#                'fields': _fields,
+#                'state': [
+#                    ('end','Cancel'),
+#                    ('report','Print')
+#                ]
+#            }
+#        },
+#        'report': {
+#            'actions': [],
+#            'result': {
+#                'type': 'print',
+#                'report': 'account.analytic.account.quantity_cost_ledger',
+#                'state': 'end'
+#            }
+#        },
+#    }
+#
+#wizard_report('account.analytic.account.quantity_cost_ledger.report')
+#
+## vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

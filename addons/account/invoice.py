@@ -539,6 +539,16 @@ class account_invoice(osv.osv):
             wf_service.trg_create(uid, 'account.invoice', inv_id, cr)
         return True
 
+    def finalize_invoice_move_lines(self, cr, uid, invoice_browse, move_lines):
+        """finalize_invoice_move_lines(cr, uid, invoice, move_lines) -> move_lines
+        Hook method to be overridden in additional modules to verify and possibly alter the
+        move lines to be created by an invoice, for special cases.
+        :param invoice_browse: browsable record of the invoice that is generating the move lines
+        :param move_lines: list of dictionaries with the account.move.lines (as for create())
+        :return: the (possibly updated) final move_lines to create for this invoice
+        """
+        return move_lines
+
     # Workflow stuff
     #################
 
@@ -816,6 +826,9 @@ class account_invoice(osv.osv):
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
                         _('Cannot create invoice move on centralised journal'))
+
+            line = self.finalize_invoice_move_lines(cr, uid, inv, line)
+
             move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date}
             period_id=inv.period_id and inv.period_id.id or False
             if not period_id:
