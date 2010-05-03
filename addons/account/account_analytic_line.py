@@ -29,69 +29,15 @@ import tools
 from tools import config
 
 class account_analytic_line(osv.osv):
-    _name = 'account.analytic.line'
+    _inherit = 'account.analytic.line'
     _description = 'Analytic lines'
-    
-    def _amount_currency(self, cr, uid, ids, field_name, arg, context={}):
-        result = {}
-        for rec in self.browse(cr, uid, ids, context):
-            cmp_cur_id=rec.company_id.currency_id.id
-            aa_cur_id=rec.account_id.currency_id.id
-            # Always provide the amount in currency
-            if cmp_cur_id != aa_cur_id:
-                cur_obj = self.pool.get('res.currency')
-                ctx = {}
-                if rec.date and rec.amount:
-                    ctx['date'] = rec.date
-                    result[rec.id] = cur_obj.compute(cr, uid, rec.company_id.currency_id.id,
-                        rec.account_id.currency_id.id, rec.amount,
-                        context=ctx)
-            else:
-                result[rec.id]=rec.amount
-        return result
-        
-    def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
-        result = {}
-        for rec in self.browse(cr, uid, ids, context):
-            # Always provide second currency
-            result[rec.id] = (rec.account_id.currency_id.id,rec.account_id.currency_id.code)
-        return result
-    
-    def _get_account_line(self, cr, uid, ids, context={}):
-        aac_ids = {}
-        for acc in self.pool.get('account.analytic.account').browse(cr, uid, ids):
-            aac_ids[acc.id] = True
-        aal_ids = []
-        if aac_ids:
-            aal_ids = self.pool.get('account.analytic.line').search(cr, uid, [('account_id','in',aac_ids.keys())], context=context)
-        return aal_ids
-
     _columns = {
-        'name' : fields.char('Description', size=256, required=True),
-        'date' : fields.date('Date', required=True),
-        'amount' : fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price.'),
-        'unit_amount' : fields.float('Quantity', help='Specifies the amount of quantity to count.'),
         'product_uom_id' : fields.many2one('product.uom', 'UoM'),
         'product_id' : fields.many2one('product.product', 'Product'),
-        'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),
         'general_account_id' : fields.many2one('account.account', 'General Account', required=True, ondelete='cascade'),
         'move_id' : fields.many2one('account.move.line', 'Move Line', ondelete='cascade', select=True),
         'journal_id' : fields.many2one('account.analytic.journal', 'Analytic Journal', required=True, ondelete='cascade', select=True),
         'code' : fields.char('Code', size=8),
-        'user_id' : fields.many2one('res.users', 'User',),
-        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency',
-                store={
-                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
-                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
-                },
-                help="The related account currency if not equal to the company one."),
-        'company_id': fields.many2one('res.company','Company',required=True),
-        'amount_currency': fields.function(_amount_currency, method=True, digits_compute= dp.get_precision('Account'), string='Amount currency',
-                store={
-                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
-                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
-                },
-                help="The amount expressed in the related account currency if not equal to the company one."),
         'ref': fields.char('Ref.', size=64),
     }
     _defaults = {

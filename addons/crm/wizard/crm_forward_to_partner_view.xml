@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="crm_lead_forward_to_partner_form">
+            <field name="name">crm_lead_forward_to_partner</field>
+            <field name="model">crm.lead.forward.to.partner</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Forward to Partner">
+                    <separator string="User" colspan="4" />
+                    <field name="email_from" colspan="4" />
+
+                    <separator string="Destination" colspan="4" />
+                    <field name="partner_id" on_change="on_change_partner(partner_id)" colspan="4" />
+                    <field name="address_id" string="Contact" on_change="on_change_address(address_id)" colspan="4" />
+                    <field name="email_to" colspan="4" />
+
+                    <separator string="Email" colspan="4" />
+                    <field name="subject" colspan="4" />
+                    <field name="message" colspan="4" />
+                    <separator string="" colspan="4" />
+                    <group colspan="4" col="2">
+                        <button name="action_cancel" special="cancel" string="Cancel" icon="gtk-cancel" type="object" />
+                        <button name="action_forward" string="Forward" icon="gtk-go-forward" type="object" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="crm_lead_forward_to_partner_act">
+            <field name="name">Forward to Partner</field>
+            <field name="res_model">crm.lead.forward.to.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.ui.view" id="crm_opportunity_forward_to_partner_form">
+            <field name="name">crm_opportunity_forward_to_partner</field>
+            <field name="model">crm.opportunity.forward.to.partner</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Forward to Partner">
+                    <separator string="User" colspan="4" />
+                    <field name="email_from" colspan="4" />
+
+                    <separator string="Destination" colspan="4" />
+                    <field name="partner_id" on_change="on_change_partner(partner_id)" colspan="4" />
+                    <field name="address_id" string="Contact" on_change="on_change_address(address_id)" colspan="4" />
+                    <field name="email_to" colspan="4" />
+
+                    <separator string="Email" colspan="4" />
+                    <field name="subject" colspan="4" />
+                    <field name="message" colspan="4" />
+                    <separator string="" colspan="4" />
+                    <group colspan="4" col="2">
+                        <button name="action_cancel" special="cancel" string="Cancel" icon="gtk-cancel" type="object" />
+                        <button name="action_forward" string="Forward" icon="gtk-go-forward" type="object" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="crm_opportunity_forward_to_partner_act">
+            <field name="name">Forward to Partner</field>
+            <field name="res_model">crm.opportunity.forward.to.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>
