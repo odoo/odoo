@@ -645,10 +645,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 _load_data(cr, module_name, id_map, mode, 'test')
             except Exception, e:
                 if tools.config.options['test-continue']:
-                    logger.notifyChannel('ERROR', netsvc.LOG_TEST, str(e))
+                    logger.notifyChannel('ERROR', netsvc.LOG_TEST, e)
                     pass
                 else:
-                    raise Exception
+                    raise
             finally:
                 if tools.config.options['test-rollback']:
                     cr.rollback()
