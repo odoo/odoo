@@ -44,7 +44,7 @@ class crm_phonecall_report(osv.osv):
         'canal_id': fields.many2one('res.partner.canal','Channel',domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.phonecall')]"),
         'duration': fields.float('Duration',readonly=True),
         'date': fields.datetime('Planned Date'),
-        'partner_address_id': fields.many2one('res.partner.address', 'Contact', readonly=True)
+        'partner_address_id': fields.many2one('res.partner.address', 'Contact Name', readonly=True)
     }
 
     def init(self, cr):

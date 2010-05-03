@@ -51,7 +51,7 @@ class crm_claim_report(osv.osv):
         'som': fields.many2one('res.partner.som', 'State of Mind'),
         'claim_date': fields.datetime('Date Of Claim',readonly=True),
         'deadline_date': fields.datetime('Deadline ',readonly=True),
-        'partner_address_id': fields.many2one('res.partner.address','Contact ',readonly=True),
+        'partner_address_id': fields.many2one('res.partner.address','Contact Name',readonly=True),
     }
 
     def init(self, cr):

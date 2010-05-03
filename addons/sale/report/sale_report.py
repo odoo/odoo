@@ -57,9 +57,9 @@ class sale_report(osv.osv):
             ('done', 'Done'),
             ('cancel', 'Cancelled')
             ], 'Order State', readonly=True),
-        'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True),
-        'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact', readonly=True),
-        'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address', readonly=True),
+        'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
+        'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact Name', readonly=True),
+        'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address Name', readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'date_confirm': fields.date('Confirmation Date', readonly=True)
