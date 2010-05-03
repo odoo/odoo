@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -215,10 +215,10 @@ class accounting_report_indicator(report_sxw.rml_parse):
         obj_history=self.pool.get('account.report.history')
 
         if data['select_base']=='year':
-            tuple_search=('fiscalyear_id','in',data['base_selection'][0][2])
+            tuple_search=('fiscalyear_id','in',data['base_selection'])
             base='year'
         else:
-            tuple_search=('period_id','in',data['base_selection'][0][2])
+            tuple_search=('period_id','in',data['base_selection'])
             base='period'
 
         history_ids=obj_history.search(self.cr,self.uid,[('name','=',object['id']),tuple_search])
@@ -232,7 +232,7 @@ class accounting_report_indicator(report_sxw.rml_parse):
                 data_val.append(item.val)
                 data_period.append(item.period_id.name)
         else:
-            for i in data['base_selection'][0][2]:
+            for i in data['base_selection']:
                 val_temp=[]
                 data_period.append(self.pool.get('account.fiscalyear').browse(self.cr,self.uid,i).name)
                 for item in obj_his:
