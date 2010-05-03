@@ -16,6 +16,7 @@
                     <field name="user_id"  invisible="1"/>
                     <field name="company_id"  invisible="1"/>
 					<field name="partner_id"  invisible="1"/>
+					<field name="partner_address_id"  invisible="1"/>
                 	<field name="nbr" string="#Opportunities" sum="#Opportunities"/>
                     <field name="amount_revenue"  sum="Total Revenue"/>
                     <field name="probability" widget="progressbar" avg="Probability"/>
@@ -82,6 +83,7 @@
             	    <separator orientation="vertical"/>
             	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
             	    <field name="partner_id" />
+            	    <field name="partner_address_id" />
             	    <separator orientation="vertical"/>
             	    <field name="priority" />
 	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
@@ -101,6 +103,8 @@
 						context="{'group_by':'stage_id'}" />
 					<filter string="Partner" icon="terp-partner"
 						domain="[]" context="{'group_by':'partner_id'}" />
+					<filter string="Contact" icon="terp-partner"
+						domain="[]" context="{'group_by':'partner_address_id'}" />
 					<separator orientation="vertical"/>
 				    <filter string="Priority" icon="terp-sale"
 						domain="[]" context="{'group_by':'priority'}" />

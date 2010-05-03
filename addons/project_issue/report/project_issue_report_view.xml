@@ -87,9 +87,6 @@
                             <field name="date_closed" string="Date Closed"/>
                         </group>
 				</xpath>
-				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Company"]' position='replace'>
-					<filter string="Company" icon="terp-sale" domain="[]" context="{'group_by':'company_id'}"/>
-            	</xpath>
 				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Category"]' position='after'>
             		<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
             		<separator orientation="vertical"/>

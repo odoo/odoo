@@ -57,6 +57,7 @@ class crm_opportunity_report(osv.osv):
         'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
         'date_action': fields.date('Next Action', readonly=True),
         'planned_revenue': fields.float('Expected Revenue', readonly=True),
+        'partner_address_id': fields.many2one('res.partner.address', 'Contact', readonly=True),
     }
 
     def init(self, cr):
@@ -88,6 +89,7 @@ class crm_opportunity_report(osv.osv):
                     c.priority as priority,
                     c.date_action as date_action,
                     c.date_deadline as date_deadline,
+                    c.partner_address_id as partner_address_id,
                     sum(c.planned_revenue) as planned_revenue,
                     date_trunc('day',c.create_date) as create_date,
                     sum(planned_revenue) as amount_revenue,
@@ -112,7 +114,8 @@ class crm_opportunity_report(osv.osv):
                     c.date_open,
                     c.priority,
                     c.date_action,
-                    c.date_deadline
+                    c.date_deadline,
+                    c.partner_address_id
             )""")
 
 crm_opportunity_report()
