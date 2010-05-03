@@ -16,8 +16,8 @@
 					<field name="bom_id" invisible="1"/>
 					<field name="product_id" invisible="1"/>
 					<field name="product_qty" sum='Product Qty'/>
-					<!--field name="products_to_consumme" sum='Products to Consumme'/>
-					<field name="consummed_products" sum='Consummed Products'/-->
+					<field name="products_to_consume" sum='Products to Consume'/>
+					<field name="consumed_products" sum='Consumed Products'/>
 					<field name="nbr" string="#Production Orders" sum='#Production Orders'/>
 					<field name="state" invisible="1"/>
 					<field name="routing_id" invisible="1"/>
@@ -44,6 +44,8 @@
                 <graph orientation="horizontal" string="Production" type="bar">
                     <field name="product_id"/>
                     <field name="nbr" operator="+"/>
+                    <field name="products_to_consume" operator="+"/>
+					<field name="consumed_products" operator="+"/>
                     <field name="state" group="True"/>
                 </graph>
             </field>
