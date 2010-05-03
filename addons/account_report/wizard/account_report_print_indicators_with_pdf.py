@@ -74,7 +74,7 @@ class report_custom(report_int):
             self.list={}
 
             def find_child(obj):
-                self.list[obj.code]=str(obj.amount)
+                self.list[str(obj.code)]=str(obj.amount)
                 if obj.child_ids:
                     for child in obj.child_ids:
                         find_child(child)
