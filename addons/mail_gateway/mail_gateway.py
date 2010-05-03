@@ -68,7 +68,8 @@ class mailgate_thread(osv.osv):
         return result
 
     _columns = {
-        'name':fields.char('Name', size=64),
+        'name':fields.char('Name', size=64), 
+        'active': fields.boolean('Active'), 
 #        'message_ids':fields.one2many('mailgate.message', 'thread_id', 'Message'),
         'message_ids': fields.function(_get_log_ids, method=True, type='one2many', \
                          multi="message_ids", relation="mailgate.message", string="Messages"), 

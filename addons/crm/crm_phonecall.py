@@ -39,31 +39,128 @@ class crm_phonecall(osv.osv):
                              Define Responsible user and Email account for mail gateway.'), 
         'user_id': fields.many2one('res.users', 'Responsible'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                 domain="[('partner_id','=',partner_id)]"),
+        'description': fields.text('Description'),  
+        'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
+                                  help='The state is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the state is set to \'Open\'.\
+                                  \nWhen the case is over, the state is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+        'email_from': fields.char('Email', size=128, help="These people will receive email."),
         
         # phonecall fields
-        'duration': fields.float('Duration'),
+        'duration': fields.float('Duration'), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.phonecall')]"),
-        'partner_phone': fields.char('Phone', size=32),
-        'partner_contact': fields.related('partner_address_id', 'name',\
-                                 type="char", string="Contact", size=128),
-        'partner_mobile': fields.char('Mobile', size=32),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel',\
+                        ('object_id.model', '=', 'crm.phonecall')]"), 
+        'partner_phone': fields.char('Phone', size=32), 
+        'partner_contact': fields.related('partner_address_id', 'name', \
+                                 type="char", string="Contact", size=128), 
+        'partner_mobile': fields.char('Mobile', size=32), 
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
+        'canal_id': fields.many2one('res.partner.canal', 'Channel', \
                         help="The channels represent the different communication\
                          modes available with the customer." \
                         " With each commercial opportunity, you can indicate\
-                         the canall which is this opportunity source."),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'date': fields.datetime('Date'),
-        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'),
+                         the canall which is this opportunity source."), 
+        'date_closed': fields.datetime('Closed', readonly=True), 
+        'date': fields.datetime('Date'), 
+        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
     }
 
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
+        'state': lambda *a: 'draft', 
     }
+    
+    # From crm.case
+    
+    def case_close(self, cr, uid, ids, *args):
+        """Closes Case
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        cases = self.browse(cr, uid, ids)
+        cases[0].state # to fill the browse record cache
+        self._history(cr, uid, cases, _('Close'))
+        self.write(cr, uid, ids, {'state': 'done',
+                                  'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                  })
+        #
+        # We use the cache of cases to keep the old case state
+        #
+        self._action(cr, uid, cases, 'done')
+        return True
+
+    def case_open(self, cr, uid, ids, *args):
+        """Opens Case
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        cases = self.browse(cr, uid, ids)
+        self._history(cr, uid, cases, _('Open'))
+
+        for case in cases:
+            data = {'state': 'open', 'active': True}
+            if not case.user_id:
+                data['user_id'] = uid
+            self.write(cr, uid, case.id, data)
+        self._action(cr, uid, cases, 'open')
+        return True
+    
+    def case_pending(self, cr, uid, ids, *args):
+        """Marks case as pending
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        cases = self.browse(cr, uid, ids)
+        cases[0].state # to fill the browse record cache
+        self._history(cr, uid, cases, _('Pending'))
+        self.write(cr, uid, ids, {'state': 'pending', 'active': True})
+        self._action(cr, uid, cases, 'pending')
+        return True
+
+    def case_cancel(self, cr, uid, ids, *args):
+        """Cancels Case
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        cases = self.browse(cr, uid, ids)
+        cases[0].state # to fill the browse record cache
+        self._history(cr, uid, cases, _('Cancel'))
+        self.write(cr, uid, ids, {'state': 'cancel',
+                                  'active': True})
+        self._action(cr, uid, cases, 'cancel')
+        return True
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Resets case as draft
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        cases = self.browse(cr, uid, ids)
+        cases[0].state # to fill the browse record cache
+        self._history(cr, uid, cases, _('Draft'))
+        self.write(cr, uid, ids, {'state': 'draft', 'active': True})
+        self._action(cr, uid, cases, 'draft')
+        return True
 
     def action_make_meeting(self, cr, uid, ids, context=None):
         """
@@ -94,23 +191,23 @@ class crm_phonecall(osv.osv):
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
             context = {
-                        'default_phonecall_id': phonecall.id,
-                        'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
-                        'default_email': phonecall.email_from ,
+                        'default_phonecall_id': phonecall.id, 
+                        'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False, 
+                        'default_email': phonecall.email_from , 
                         'default_name': phonecall.name
                     }
 
             value = {
-                'name': _('Meetings'),
-                'domain' : "[('user_id','=',%s)]" % (uid),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id'],
+                'name': _('Meetings'), 
+                'domain' : "[('user_id','=',%s)]" % (uid), 
+                'context': context, 
+                'view_type': 'form', 
+                'view_mode': 'calendar,form,tree', 
+                'res_model': 'crm.meeting', 
+                'view_id': False, 
+                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')], 
+                'type': 'ir.actions.act_window', 
+                'search_view_id': res['res_id'], 
                 'nodestroy': True
                 }
 
