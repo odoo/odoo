@@ -49,7 +49,7 @@ class account_partner_ledger(osv.osv_memory):
         'date2': fields.date('End date', required=True),
             }
 
-    def _get_company(self, cr, uid, ids, context=None):
+    def _get_company(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         company_obj = self.pool.get('res.company')
         if context is None:
@@ -97,12 +97,14 @@ class account_partner_ledger(osv.osv_memory):
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger',
                 'datas': data,
+                'nodestroy':True,
             }
         else:
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger_other',
                 'datas': data,
+                'nodestroy':True,
             }
 
     def _check_date(self, cr, uid, data, context=None):
@@ -120,6 +122,7 @@ class account_partner_ledger(osv.osv_memory):
                     'type': 'ir.actions.report.xml',
                     'report_name': 'account.third_party_ledger',
                     'datas': data,
+                    'nodestroy':True,
                 }
         else:
             raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
