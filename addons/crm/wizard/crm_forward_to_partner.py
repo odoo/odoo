@@ -127,7 +127,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                 ]
         
                 for field_name in field_names:
-                    print field_name
                     field_definition = lead_proxy._columns[field_name]
                     value = None
         
@@ -138,7 +137,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                             key = field.definition.selection
                         value = dict(key).get(lead[field_name], lead[field_name])
                     elif field_definition._type == 'many2one':
-                        print '>>>>>>>>>>>', lead[field_name], field_name
                         if lead[field_name]:
                             value = lead[field_name].name_get()[0][1]
                     else:
