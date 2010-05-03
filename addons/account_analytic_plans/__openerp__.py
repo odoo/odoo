@@ -60,9 +60,10 @@ of distribution models.
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
-        'model_wizard.xml',
         'account_analytic_plans_view.xml',
-        'account_analytic_plans_report.xml'
+        'account_analytic_plans_report.xml',
+        'wizard/analytic_plan_create_model_view.xml',
+        'wizard/account_crossovered_analytic_view.xml'
     ],
     'demo_xml': [],
     'installable': True,

@@ -302,7 +302,10 @@ class smtpclient(osv.osv):
                     
                 if self.server[serverid]['auth']:
                     password = self.server[serverid]['password']
-                    password = base64.b64decode(password)
+                    try:
+                        password = base64.b64decode(password)
+                    except:
+                        pass  
                     self.smtpServer[serverid].login(str(self.server[serverid]['user']), password)
 
             except Exception, e:
@@ -539,7 +542,7 @@ class smtpclient(osv.osv):
             sids = queue.search(cr, uid, [('state','not in',['send','sending']), ('server_id','in',ids)], order="priority", limit=30)
         
         message = ""
-        if len(ids) > 0:
+        if len(ids) > 1:
             message = "sending %s emails from message queuq !" % (len(ids))
             logger.notifyChannel('smtp', netsvc.LOG_INFO, message)
         
