@@ -97,7 +97,7 @@
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Employee" name="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Type" icon="terp-hr" context="{'group_by':'holiday_status_id'}"/>
@@ -117,7 +117,7 @@
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_Employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 
