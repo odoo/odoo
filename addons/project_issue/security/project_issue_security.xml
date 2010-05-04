@@ -2,17 +2,12 @@
 <openerp>
 <data noupdate="1">
 
-
-
-    <record model="ir.rule.group" id="project_issue_rule_group">
-        <field name="name">project.issue.rule.group</field>
+ 	<record id="project_issue_rule" model="ir.rule">
+ 		<field name="name">project.issue.rule.group</field>
         <field name="model_id" search="[('model','=','project.issue')]" model="ir.model"/>
         <field name="global" eval="True"/>
-    </record>
- 	<record id="project_issue_rule" model="ir.rule">
         <field name="domain_force">['|',('project_id','=',False),('project_id','=',user.context_project_id)]</field>
-        <field name="rule_group" ref="project_issue_rule_group"/>
-    </record>    
+    </record>
 
   </data>
 </openerp>
