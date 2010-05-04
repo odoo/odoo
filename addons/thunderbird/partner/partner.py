@@ -201,4 +201,14 @@ class tinythunderbird_partner(osv.osv):
                 object.append(obj)
         return object
 
+    def thunderbird_list_search_object(self,cr,user,vals):
+        model_obj = self.pool.get('ir.model')
+        object=''
+        for obj in vals[0][1].split(','):
+            if model_obj.search(cr, user, [('model', '=', obj)]):
+                object += obj + ","
+            else:
+                object += "null,"
+        return object
+
 tinythunderbird_partner()
