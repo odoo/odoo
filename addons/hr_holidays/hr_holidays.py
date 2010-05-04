@@ -20,18 +20,18 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from mx import DateTime
 import time
+
 import pooler
 import netsvc
-import datetime
 from osv import fields, osv
 from tools.translate import _
 
 class hr_holidays_status(osv.osv):
     _name = "hr.holidays.status"
     _description = "Leave Types"
+
     def get_days(self, cr, uid, ids, employee_id, return_false, context={}):
         res = {}
         for record in self.browse(cr, uid, ids, context):
@@ -70,20 +70,20 @@ class hr_holidays_status(osv.osv):
         return res
 
     _columns = {
-        'name' : fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', size=64, required=True, translate=True),
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Category', domain="[('object_id.model', '=', 'crm.meeting')]", help='If you link this type of leave with a category in the CRM, it will synchronize each leave asked with a case in this category, to display it in the company shared calendar for example.'),
-        'color_name' : fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
-        'limit' : fields.boolean('Allow to Override Limit', help='If you thick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
-        'active' : fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
-        'max_leaves' : fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
-        'leaves_taken' : fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
-        'remaining_leaves' : fields.function(_user_left_days, method=True, string='Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
-
+        'color_name': fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
+        'limit': fields.boolean('Allow to Override Limit', help='If you thick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
+        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
+        'max_leaves': fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
+        'leaves_taken': fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
+        'remaining_leaves': fields.function(_user_left_days, method=True, string='Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
     }
     _defaults = {
-        'color_name': lambda *args: 'red',
-        'active' : lambda *a: True,
+        'color_name': 'red',
+        'active': True,
     }
+
 hr_holidays_status()
 
 class hr_holidays(osv.osv):
@@ -91,7 +91,7 @@ class hr_holidays(osv.osv):
     _description = "Holidays"
     _order = "type desc, date_from asc"
 
-    def _employee_get(obj,cr,uid,context={}):
+    def _employee_get(obj, cr, uid, context=None):
         ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
         if ids:
             return ids[0]
@@ -120,20 +120,21 @@ class hr_holidays(osv.osv):
 
     _defaults = {
         'employee_id' : _employee_get ,
-        'state' : lambda *a: 'draft',
-        'type': lambda *a: 'remove',
-        'allocation_type': lambda *a: 'employee',
+        'state' : 'draft',
+        'type': 'remove',
+        'allocation_type': 'employee',
         'user_id': lambda obj, cr, uid, context: uid,
     }
-    _order = 'date_from desc'
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         if context:
             if context.has_key('type'):
                 vals['type'] = context['type']
             if context.has_key('allocation_type'):
                 vals['allocation_type'] = context['allocation_type']
-        return super(osv.osv,self).create(cr, uid, vals, context)
+        return super(osv.osv, self).create(cr, uid, vals, context=context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
         result = {}
@@ -217,7 +218,7 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_validate(self, cr, uid, ids, *args):
-        self.check_holidays(cr,uid,ids)
+        self.check_holidays(cr, uid, ids)
         vals = {
             'state':'validate',
         }
