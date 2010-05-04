@@ -176,14 +176,14 @@
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="General Information">
+                    <notebook colspan="4" >
+                        <page string="General Information" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
                             <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list" />
                         </page>
-                        <page string="Revisions" groups="base.group_extended">
+                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Properties" groups="base.group_extended">
+                        <page string="Properties" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
                             <field name="position"/>
                             <field name="active"/>
                             <field name="sequence"/>
