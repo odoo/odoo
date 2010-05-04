@@ -1214,7 +1214,7 @@ class stock_move(osv.osv):
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
         'delivered_id': fields.many2one('stock.delivery', 'Product delivered'),
-        'scraped': fields.boolean('Scraped'),
+        'scraped': fields.related('location_dest_id','scraped',type='boolean',relation='stock.location',string='Scraped'),
     }
     _constraints = [
         (_check_tracking,
