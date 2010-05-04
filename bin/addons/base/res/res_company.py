@@ -88,14 +88,16 @@ class res_company(osv.osv):
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users')
     }
 
-    def search(self, cr, user, args, offset=0, limit=None, order=None,
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        if context and context.has_key('user_prefence') and context['user_prefence']:
-            cmp_ids = []
-            data_user = self.pool.get('res.users').browse(cr, user, [user], context=context)
-            map(lambda x: cmp_ids.append(x.id), data_user[0].company_ids)
-            return [data_user[0].company_id.id] + cmp_ids
-        return super(res_company, self).search(cr, user, args, offset=offset, limit=limit, order=order,
+
+        user_preference = context and context.get('user_preference', False) or False
+        if user_preference:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
+
+            return cmp_ids
+        return super(res_company, self).search(cr, uid, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
     def _company_default_get(self, cr, uid, object=False, field=False, context=None):
