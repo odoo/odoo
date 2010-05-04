@@ -336,7 +336,7 @@
             <field name="arch" type="xml">
                 <search string="Scrum Sprint">
                     <group col="10" colspan="4">
-                        <filter name="scrum_daily" icon="terp-project" string="Daily" domain="[('date','=',time.strftime('%%Y%%m%%d'))]" help="Daily Meetings"/>
+                        <filter name="scrum_daily" icon="terp-project" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="sprint_id" widget="selection">
