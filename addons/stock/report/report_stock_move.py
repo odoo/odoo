@@ -35,8 +35,10 @@ class report_stock_move(osv.osv):
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
-        'location_id':fields.many2one('stock.location', 'Location', readonly=True),
+        'location_id': fields.many2one('stock.location', 'Source Location', readonly=True, select=True, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', readonly=True, select=True, help="Location where the system will stock the finished products."),
         'product_qty':fields.integer('Qty',readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Product UOM', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
                                   help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
@@ -53,10 +55,12 @@ class report_stock_move(osv.osv):
                 to_char(date_trunc('day',m.date), 'MM') as month,
                 to_char(date_trunc('day',m.date), 'YYYY-MM-DD') as day,
                 m.location_id as location_id,
+                m.location_dest_id as location_dest_id,
                 m.product_id as product_id,
                 m.state as state,
-                sum(m.product_qty) as product_qty                  
-                from stock_move as m group by m.product_id, m.location_id, m.id, m.date, m.state
+                m.product_uom as product_uom,
+                sum(m.product_qty) as product_qty
+                from stock_move as m group by m.id, m.product_id, m.location_id, m.location_dest_id, m.date, m.state, m.product_uom
             )
         """)
 report_stock_move()

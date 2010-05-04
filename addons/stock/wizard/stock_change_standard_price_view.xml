@@ -7,17 +7,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="Change Standard Price">
-             		<field name="new_price" on_change="onchange_price(new_price, context)" context="{'active_id': active_id}"/>
-              		<newline/>
-                    <field name="stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('enable_stock_in_out_acc','=',False)]}"/>
-              		<newline/>
-                    <field name="stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('enable_stock_in_out_acc','=',True)]}"/>
-              		<newline/>
-              		<field name="stock_journal"/>
-              		<field name="enable_stock_in_out_acc" invisible="1"/>
-              		<group col="2" colspan="4">
-	              		<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-	              		<button name="change_price" string="Change" type="object" icon="gtk-ok"/>
+             		<field name="new_price"/>              		
+                    <separator string="" colspan="4" />
+                    <label string="" colspan="2"/>
+              		<group col="2" colspan="2">                        
+	              		<button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+	              		<button name="change_price" string="_Apply" type="object" icon="gtk-apply"/>
               		</group>
               </form>
             </field>

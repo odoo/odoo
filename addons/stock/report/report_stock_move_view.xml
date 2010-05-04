@@ -11,10 +11,13 @@
                 <field name="year" invisible="1" />
                 <field name="month" invisible="1"/>
                 <field name="day" invisible="1"/>
+                <field name="location_id" invisible="1"/>
+                <field name="location_dest_id" invisible="1"/>
                 <field name="product_id"/>
                 <field name="product_qty"/>
-                <field name="location_id"/>
+                <field name="product_uom"/>
                 <field name="state"/>
+                
            </tree>
         </field>
     </record>
@@ -47,7 +50,7 @@
                     domain="[('month','=',time.strftime('%%m'))]"
                     help="Stock Moves of this month"/>
 	            <filter icon="terp-stock"
-                    string="Current Stock"
+                    string="Today"
                     separator="1"
                     domain="[('date', '=', time.strftime('%%Y-%%m-%%d')]"
                     help="Stock Moves of today"/>
@@ -69,13 +72,16 @@
                     	help = "Completed Stock-Moves"/>
                 
                 <separator orientation="vertical"/>                                        
-                <field name="product_id" select="1" widget="selection"/>
-                <field name="location_id" select="1" widget="selection"/>
+                <field name="product_id"/>
+                <field name="location_id" widget = "selection"/>
+                <field name="location_dest_id"  widget = "selection"/>
+                
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." >
                     <filter string="Product" icon="terp-stock" context="{'group_by':'product_id'}"/>
-                    <filter string="Location" icon="terp-stock" context="{'group_by':'location_id'}"/>
+                    <filter string="Source Location" icon="terp-stock" context="{'group_by':'location_id'}"/>
+                    <filter string="Dest. Location" icon="terp-stock"  context="{'group_by':'location_dest_id'}"/>
                     <filter string="State" icon="terp-stock" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-stock" context="{'group_by':'day'}"/>
