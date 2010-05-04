@@ -82,7 +82,8 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
     start = cr.fetchone()[0]
     cr.execute("select 'subflow.'||name,id from wkf_activity where flow_stop=True and wkf_id=%s", (wkf_id,))
     stop = cr.fetchall()
-    stop = (stop[0][1], dict(stop))
+    if stop:
+        stop = (stop[0][1], dict(stop))
     return ((start,{}),stop)
 
 
