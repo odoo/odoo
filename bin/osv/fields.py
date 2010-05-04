@@ -656,6 +656,11 @@ class function(_column):
             self._symbol_f = float._symbol_f
             self._symbol_set = float._symbol_set
 
+        if type == 'boolean':
+            self._symbol_c = boolean._symbol_c
+            self._symbol_f = boolean._symbol_f
+            self._symbol_set = boolean._symbol_set
+
     def digits_change(self, cr):
         if self.digits_compute:
             t = self.digits_compute(cr)

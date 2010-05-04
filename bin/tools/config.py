@@ -82,6 +82,9 @@ class configmanager(object):
             'login_message': False,
             'list_db' : True,
             'timezone' : False, # to override the default TZ
+            'test-disable' : False,
+            'test-rollback' : True,
+            'test-continue' : False
         }
 
         self.misc = {}
@@ -134,7 +137,17 @@ class configmanager(object):
                               default="server.pkey",
                               help="specify the private key file for the SSL connection")
             parser.add_option_group(group)
-
+            
+        # Testing Group
+        group = optparse.OptionGroup(parser, "Testing Configuration")
+        group.add_option("--test-disable", action="store_true", dest="test_disable",
+                         default=False, help="Disable loading test files.")
+        group.add_option("--test-no-rollback", action="store_false", dest="test_rollback",
+                         default=True, help="Don't rollback after running test.")
+        group.add_option("--test-continue", action="store_true", dest="test_continue",
+                         default=False, help="Display exception but then test should continue.")
+        parser.add_option_group(group)
+        
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
@@ -274,6 +287,9 @@ class configmanager(object):
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
+        self.options["test-disable"] =  opt.test_disable
+        self.options["test-rollback"] =  opt.test_rollback
+        self.options["test-continue"] =  opt.test_continue
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
 
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
