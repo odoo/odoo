@@ -34,8 +34,8 @@
     "update_xml" : ["wizard/purchase_requisition_partner_view.xml",
                     "purchase_requisition_view.xml",
                     "security/ir.model.access.csv","purchase_requisition_sequence.xml"],
-     "test":['test/purchase_requisition_test.yml',
-                'test/purchase_requisition_exclusive_test.yml'],                    
+#     "test":['test/purchase_requisition_test.yml',
+#                'test/purchase_requisition_exclusive_test.yml'],                    
     "active": False,
     "installable": True
 }
