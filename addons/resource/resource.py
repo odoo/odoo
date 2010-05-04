@@ -151,7 +151,7 @@ class resource_resource(osv.osv):
         'name' : fields.char("Name", size=64, required=True ),
         'code': fields.char('Code', size=16),
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the resource record without removing it."),
-        'company_id' : fields.many2one('res.company', 'Company', required=True),
+        'company_id' : fields.many2one('res.company', 'Company', required=False),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
         'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
         'time_efficiency' : fields.float('Efficiency factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
