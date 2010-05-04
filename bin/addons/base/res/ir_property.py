@@ -20,36 +20,41 @@
 ##############################################################################
 
 from osv import osv,fields
-
+from operator import attrgetter
 # -------------------------------------------------------------------------
 # Properties
 # -------------------------------------------------------------------------
 
-def _models_get(self, cr, uid, context={}):
-    obj = self.pool.get('ir.model.fields')
-    ids = obj.search(cr, uid, [('view_load','=',1)])
-    res = []
-    done = {}
-    for o in obj.browse(cr, uid, ids, context=context):
-        if o.model_id.id not in done:
-            res.append( [o.model_id.model, o.model_id.name])
-            done[o.model_id.id] = True
-    return res
-
 class ir_property(osv.osv):
     _name = 'ir.property'
+
+    def _models_field_get(self, cr, uid, field_key, field_value, context=None):
+        get = attrgetter(field_key, field_value)
+
+        obj = self.pool.get('ir.model.fields')
+        ids = obj.search(cr, uid, [('view_load','=',1)], context=context)
+        res = set()
+        for o in obj.browse(cr, uid, ids, context=context):
+            res.add(get(o))
+        return res
+
+    def _models_get(self, cr, uid, context=None):
+        return self._models_field_get(cr, uid, 'model_id.model', 'model_id.name',
+                                     context)
+
+    def _models_get2(self, cr, uid, context=None):
+        return self._models_field_get(cr, uid, 'relation', 'relation', context)
+
+
     _columns = {
         'name': fields.char('Name', size=128),
-        'value': fields.char('Value', size=128),
-        'res_id': fields.reference('Resource', selection=_models_get, size=128),
+        'value': fields.reference('Value', selection=_models_get2, size=128),
+#        'value': fields.char('Value', size=128),
+        'res_id': fields.reference('Resource', selection=_models_get, size=128,
+                                   help="If not set, act as default property"),
         'company_id': fields.many2one('res.company', 'Company'),
         'fields_id': fields.many2one('ir.model.fields', 'Fields', ondelete='cascade', required=True)
     }
-    def unlink(self, cr, uid, ids, context={}):
-        if ids:
-            cr.execute('DELETE FROM ir_model_fields WHERE id IN (SELECT fields_id FROM ir_property WHERE (fields_id IS NOT NULL) AND (id = ANY  (%s)))', (ids,))
-        res = super(ir_property, self).unlink(cr, uid, ids, context)
-        return res
 
     def get(self, cr, uid, name, model, res_id=False, context={}):
         cr.execute('select id from ir_model_fields where name=%s and model=%s', (name, model))
