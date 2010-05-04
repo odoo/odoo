@@ -10,10 +10,13 @@
                 <field name="name" invisible="1" string="Account"/>
                 <field name="code" invisible="1"/>
                 <field name="type" invisible="1"/>
-                <field name="company_id" invisible="1"/>
+                <field name="company_id" invisible="1" group="base.multi_company"/>
                 <field name="currency_mode" invisible="1"/>
                 <field name="nbr" sum="#Accounts"/>
                 <field name="user_type" invisible="1"/>
+                <field name="parent_account_id" invisible="1"/>
+                <field name="quantity" sum="Quantity"/>
+                <field name="amount_total" sum="Total Amount"/>
                 <field name="credit" sum="Credit"/>
                 <field name="debit" sum="Debit"/>
                 <field name="balance" sum="Balance"/>
@@ -55,8 +58,9 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Extended options..." colspan="10" col="12">
-                    <field name="type"/>
-                    <field name="user_type" />
+                    <field name="type" />
+                    <field name="user_type" widget="selection"/>
+                    <field name="parent_account_id" />
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
@@ -67,6 +71,7 @@
                 	<filter string="Currencies Rate" icon="terp-account" context="{'group_by':'currency_mode'}"/>
                     <filter string="Internal Type" icon="terp-account" context="{'group_by':'type'}"/>
                     <filter string="Account Type" icon="terp-account" context="{'group_by':'user_type'}"/>
+                    <filter string="Parent Account" icon="terp-account" context="{'group_by':'parent_account_id'}"/>
                 </group>
             </search>
         </field>
