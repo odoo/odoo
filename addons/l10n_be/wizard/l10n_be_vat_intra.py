@@ -20,13 +20,14 @@
 ##############################################################################
 import time
 import base64
-from tools.translate import _
 
 from osv import osv, fields
+from tools.translate import _
 
 class partner_vat_intra(osv.osv_memory):
-
-    """ Partner Vat Intra"""
+    """
+    Partner Vat Intra
+    """
     _name = "partner.vat.intra"
     _description = 'Partner VAT Intra'
 
@@ -35,6 +36,7 @@ class partner_vat_intra(osv.osv_memory):
         return obj_country.search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
 
     _columns = {
+        'name': fields.char('File Name', size=32),
         'period_code': fields.char('Period Code',size = 6,required = True, help = '''This is where you have to set the period code for the intracom declaration using the format: ppyyyy
       PP can stand for a month: from '01' to '12'.
       PP can stand for a trimester: '31','32','33','34'
@@ -47,7 +49,8 @@ class partner_vat_intra(osv.osv_memory):
         'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id' : fields.char('MandataireId', size=14, required=True,  help="This identifies the representative of the sending company. This is a string of 14 characters"),
-        'msg': fields.text('File created', size=64, readonly=True),
+        'msg': fields.text('File created', size=14, readonly=True),
+        'no_vat': fields.text('Partner With No VAT', size=14, readonly=True, help="The Partner whose VAT number is not defined they doesn't include in XML File."),
         'file_save' : fields.binary('Save File', readonly=True),
         'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
         }
@@ -56,12 +59,18 @@ class partner_vat_intra(osv.osv_memory):
         'country_ids': _get_europe_country,
                 }
 
-    def create_xml(self, cursor, user, ids, context={}):
+    def create_xml(self, cursor, user, ids, context=None):
         obj_user = self.pool.get('res.users')
         obj_fyear = self.pool.get('account.fiscalyear')
         obj_sequence = self.pool.get('ir.sequence')
         obj_partner = self.pool.get('res.partner')
         obj_partner_add = self.pool.get('res.partner.address')
+        obj_country = self.pool.get('res.country')
+        street = zip_city = country = p_list = data_clientinfo = ''
+        error_message = list_partner = []
+        seq = amount_sum = 0
+        if context is None:
+            context = {}
 
         data_cmpny = obj_user.browse(cursor, user, user).company_id
         data  = self.read(cursor, user, ids)[0]
@@ -73,10 +82,9 @@ class partner_vat_intra(osv.osv_memory):
         seq_declarantnum = obj_sequence.get(cursor, user, 'declarantnum')
         cref = company_vat[2:] + seq_controlref[-4:]
         dnum = cref + seq_declarantnum[-5:]
-        if len(data['form']['period_code']) != 6:
-            raise wizard.except_wizard(_('Wrong Period Code'), _('The period code you entered is not valid.'))
+        if len(data['period_code']) != 6:
+            raise osv.except_osv(_('Wrong Period Code'), _('The period code you entered is not valid.'))
 
-        street = zip_city = country = ''
         addr = obj_partner.address_get(cursor, user, [data_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
             ads = obj_partner_add.browse(cursor, user, [addr['invoice']])[0]
@@ -99,26 +107,23 @@ class partner_vat_intra(osv.osv_memory):
         data_file +='\n\t\t\t<Country>' + str(country) +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
         data_comp ='\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat[2:])+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>\n\t\t\t<Country>'+ str(country) +'</Country>\n\t\t</CompanyInfo>'
         data_period = '\n\t\t<Period>'+ data['period_code'] +'</Period>' #trimester
-        error_message = []
-        seq = 0
-        amount_sum = 0
         p_id_list = obj_partner.search(cursor, user, [('vat','!=',False)])
         if not p_id_list:
             raise osv.except_osv(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
 
-        nb_period = len(data_fiscal.period_ids)
-        fiscal_periods = data_fiscal.period_ids
-        list_partner = []
-        data_clientinfo = ''
-        cr.execute('''SELECT l.partner_id AS partner_id, p.vat AS vat, t.code AS intra_code, SUM(l.tax_amount) AS amount 
-                      FROM account_move_line l 
-                      LEFT JOIN account_tax_code t ON (l.tax_code_id = t.id) 
-                      LEFT JOIN res_partner p ON (l.partner_id = p.id) 
-                      WHERE t.code IN ('44a','44b','88') 
-                       AND l.period_id IN %s 
-                      GROUP BY l.partner_id, p.vat, t.code''', (tuple(data['form']['period_ids'][0][2]), ))
-        for row in cr.dictfetchall():
-
+        if not data['period_ids']:
+            raise osv.except_osv(_('Data Insufficient!'),_('Please select at least one Period.'))
+        cursor.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat, t.code AS intra_code, SUM(l.tax_amount) AS amount
+                      FROM account_move_line l
+                      LEFT JOIN account_tax_code t ON (l.tax_code_id = t.id)
+                      LEFT JOIN res_partner p ON (l.partner_id = p.id)
+                      WHERE t.code IN ('44a','44b','88')
+                       AND l.period_id IN %s
+                      GROUP BY p.name, l.partner_id, p.vat, t.code''', (tuple(data['period_ids']), ))
+        for row in cursor.dictfetchall():
+            if not row['vat']:
+                p_list += str(row['partner_name']) + ', '
+                continue
             seq += 1
             amt = row['amount'] or 0
             amt = int(amt * 100)
@@ -128,9 +133,13 @@ class partner_vat_intra(osv.osv_memory):
         amount_sum = int(amount_sum)
         data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
         data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n\t</DeclarantList>\n</VatIntra>'
-        data['msg'] = 'XML Flie has been Created. Save the File with '".xml"' extension.'
-        data['file_save'] = base64.encodestring(data_file)
-        self.write(cursor, user, ids, {'file_save':data['file_save'], 'msg':data['msg']}, context=context)
+        data = {
+             'msg': 'XML Flie has been Created. Save the File with '".xml"' extension.',
+             'file_save': base64.encodestring(data_file),
+             'name': 'vat_Intra.xml',
+             'country_ids': [[6, 0, obj_country.search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])]],
+             }
+        self.write(cursor, user, ids, {'file_save':data['file_save'], 'msg':data['msg'], 'name':data['name'], 'no_vat':p_list, 'country_ids':data['country_ids']}, context=context)
         return True
 
 partner_vat_intra()
