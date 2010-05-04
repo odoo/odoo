@@ -125,7 +125,39 @@ class mailgate_thread(osv.osv):
     
     _history = __history
     history = __history
+    
+    def onchange_partner_id(self, cr, uid, ids, part, email=False):
+        """This function returns value of partner address based on partner
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case IDs
+        @param part: Partner's id
+        @email: Partner's email ID 
+        """
+        if not part:
+            return {'value': {'partner_address_id': False, 
+                            'email_from': False, 
+                            }}
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
+        data = {'partner_address_id': addr['contact']}
+        data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
+        return {'value': data}
 
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """This function returns value of partner email based on Partner Address
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case IDs
+        @param add: Id of Partner's address
+        @email: Partner's email ID 
+        """
+        if not add:
+            return {'value': {'email_from': False}}
+        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+        return {'value': {'email_from': address.email}}
+    
 mailgate_thread()
 
 class mailgate_message(osv.osv):

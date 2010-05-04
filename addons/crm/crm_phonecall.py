@@ -40,7 +40,8 @@ class crm_phonecall(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"),
+                                 domain="[('partner_id','=',partner_id)]"), 
+        'company_id': fields.many2one('res.company', 'Company'), 
         'description': fields.text('Description'),  
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
