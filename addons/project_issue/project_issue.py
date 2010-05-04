@@ -134,7 +134,7 @@ class project_issue(osv.osv):
     def _get_project(self, cr, uid, context):
        user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
        if user.context_project_id:
-           return user.context_project_id
+           return user.context_project_id.id
        return False
 
     def convert_issue_task(self, cr, uid, ids, context=None):
@@ -167,7 +167,7 @@ class project_issue(osv.osv):
                 'date': bug.date,
                 'project_id':bug.project_id.id,
                 'priority':bug.priority,
-                'user_id':bug.user_id.id,
+                'user_id':bug.assigned_to.id,
                 'planned_hours': 0.0,
             })
 

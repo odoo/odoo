@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
 
 from tools.translate import _
@@ -48,7 +47,7 @@ class account_partner_balance(osv.osv_memory):
         'date2': fields.date('End date', required=True),
             }
 
-    def _get_company(self, cr, uid, ids, context=None):
+    def _get_company(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         company_obj = self.pool.get('res.company')
         user = user_obj.browse(cr, uid, uid, context=context)
@@ -58,13 +57,13 @@ class account_partner_balance(osv.osv_memory):
             return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults={
-               'state' :  'none',
-               'date1' : lambda *a: time.strftime('%Y-01-01'),
-               'date2' : lambda *a: time.strftime('%Y-%m-%d'),
-               'result_selection' : lambda *a: 'all',
-               'soldeinit' : True,
-               'company_id' : _get_company,
-               'fiscalyear' : False,
+       'state' :  'none',
+       'date1' : time.strftime('%Y-01-01'),
+       'date2' : time.strftime('%Y-%m-%d'),
+       'result_selection' : 'all',
+       'soldeinit' : True,
+       'company_id' : _get_company,
+       'fiscalyear' : False,
                }
 
     def check_state(self, cr, uid, ids, context=None):
@@ -84,6 +83,7 @@ class account_partner_balance(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.partner.balance',
             'datas': data,
+            'nodestroy':True,
             }
 
     def _check_date(self, cr, uid, data, context):
@@ -99,6 +99,7 @@ class account_partner_balance(osv.osv_memory):
                     'type': 'ir.actions.report.xml',
                     'report_name': 'account.partner.balance',
                     'datas': data,
+                    'nodestroy':True,
                     }
         else:
             raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))

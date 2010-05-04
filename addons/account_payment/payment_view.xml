@@ -2,6 +2,7 @@
 <openerp>
     <data>
 
+		<wizard id="wizard_populate_statement" menu="False" model="account.bank.statement" name="populate_statement" string="Populate Statement with Payment lines"/>
         <!-- View used in the wizard -->
         <record id="view_move_line_form" model="ir.ui.view">
             <field name="name">account.move.line.form.inherit</field>
@@ -107,7 +108,7 @@
                     <field name="date_prefered"/>
                     <field name="date_planned" select="1"/>
                     <field name="user_id"/>
-                    <button colspan="2" name="%(wizard_populate_payment)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                    <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                     <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1">
                         <form string="Payment Line">
                             <notebook>
@@ -162,7 +163,7 @@
                     <group col="4" colspan="2">
                          <button name="cancel" states="draft,open" string="Cancel" icon="gtk-cancel"/>
                          <button name="open" states="draft" string="Confirm Payments"  icon="gtk-apply"/>
-                         <button name="%(wizard_pay_payment)d" states="open" string="Make Payments" type="action" icon="gtk-execute"/>
+                         <button name="%(action_account_payment_make_payment)d" states="open" string="Make Payments" type="action" icon="gtk-execute"/>
                          <button name="set_to_draft" states="cancel" string="Set to draft" type="object" icon="gtk-convert"/>
                     </group>
                 </form>

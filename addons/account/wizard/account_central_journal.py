@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import osv, fields
 from tools.translate import _
 
@@ -40,7 +39,7 @@ class account_central_journal(osv.osv_memory):
         period_id = datas['form']['period_id']
         journal_id = datas['form']['journal_id']
 
-        if type(period_id)==type([]):
+        if isinstance(period_id, list):
             ids_final = []
             for journal in journal_id:
                 for period in period_id:
@@ -53,10 +52,9 @@ class account_central_journal(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.central.journal',
             'datas': datas,
+            'nodestroy':True,
             }
 
 account_central_journal()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-
