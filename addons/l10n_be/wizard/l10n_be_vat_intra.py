@@ -31,9 +31,8 @@ class partner_vat_intra(osv.osv_memory):
     _name = "partner.vat.intra"
     _description = 'Partner VAT Intra'
 
-    def _get_europe_country(self, cursor, user, context={}):
-        obj_country = self.pool.get('res.country')
-        return obj_country.search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
+    def _get_europe_country(self, cursor, user, context=None):
+        return self.pool.get('res.country').search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
 
     _columns = {
         'name': fields.char('File Name', size=32),
@@ -69,9 +68,9 @@ class partner_vat_intra(osv.osv_memory):
         street = zip_city = country = p_list = data_clientinfo = ''
         error_message = list_partner = []
         seq = amount_sum = 0
+
         if context is None:
             context = {}
-
         data_cmpny = obj_user.browse(cursor, user, user).company_id
         data  = self.read(cursor, user, ids)[0]
         company_vat = data_cmpny.partner_id.vat
