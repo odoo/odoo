@@ -741,11 +741,11 @@ form: module.record_id""" % (xml_id,)
         return rec_model, id
 
     def id_get(self, cr, model, id_str):
+        if id_str in self.idref:
+            return self.idref[id_str]
         return self.model_id_get(cr, model, id_str)[1]
 
     def model_id_get(self, cr, model, id_str):
-        if id_str in self.idref:
-            return '', self.idref[id_str]
         model_data_obj = self.pool.get('ir.model.data')
         mod = self.module
         if '.' in id_str:
