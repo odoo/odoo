@@ -27,7 +27,6 @@
                     <field name="create_date" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="day" invisible="1"/>
-                    <field name="analytic_account_id" invisible="1"/>
                     <field name="partner_address_id" string="Contact" invisible="1"/>
                     <field name="nbr" string="#Project Issue" sum='#Number of Project Issue'/>
                     <field name="delay_open" avg='Avg Opening Delay'/>
@@ -69,7 +68,6 @@
                     		<field name="type_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                     		<field name="task_id"/>
                     		<separator orientation="vertical"/>
-                    		<field name="analytic_account_id"  />
                     		<newline/>
                     		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                     		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />

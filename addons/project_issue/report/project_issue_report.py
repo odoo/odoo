@@ -24,9 +24,6 @@ class project_issue_report(osv.osv):
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
         'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
-        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
-                                                domain="[('partner_id', '=', partner_id)]",
-                                                required=True),
         'partner_address_id': fields.many2one('res.partner.address','Contact ',readonly=True),
     }
     def init(self, cr):
@@ -53,7 +50,6 @@ class project_issue_report(osv.osv):
                     c.partner_id,
                     c.canal_id,
                     c.task_id,
-                    c.analytic_account_id as analytic_account_id,
                     c.partner_address_id as partner_address_id,
                     c.date_open as date_open,
                     date_trunc('day',c.create_date) as create_date,
@@ -83,7 +79,6 @@ class project_issue_report(osv.osv):
                     c.canal_id,
                     c.task_id,
                     c.date_open,
-                    c.analytic_account_id,
                     c.partner_address_id
             )""")
 
