@@ -28,7 +28,7 @@ class account_entries_report(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Effective Date', readonly=True),
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
         'nbr':fields.integer('# of Entries', readonly=True),
