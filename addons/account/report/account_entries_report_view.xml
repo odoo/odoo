@@ -12,21 +12,23 @@
                 <field name="date_maturity" invisible="1"/>
                 <field name="ref" invisible="1"/>
                 <field name="state" invisible="1"/>
+                <field name="state_2" invisible="1"/>
                 <field name="year"  invisible="1"/>
                 <field name="day"  invisible="1"/>
                 <field name="month" invisible="1"/>
-                <field name="nbr" sum="# of Entries "/>
-                <field name="nbl" sum="# of Lines "/>
-                <field name="amount" sum="# of Amount "/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
-                <field name="company_id" invisible="1"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="journal_id" invisible="1"/>
-                <field name="journal_id2" invisible="1"/>
                 <field name="account_id" invisible="1"/>
+                <field name="analytic_account_id" invisible="1"/>
                 <field name="period_id" invisible="1"/>
                 <field name="period_id2" invisible="1"/>
                 <field name="type" invisible="1"/>
+                <field name="nbr" sum="# of Entries "/>
+                <field name="nbl" sum="# of Lines "/>
+                <field name="amount" sum="# of Amount "/>
+                <field name="quantity" sum="# of Products Qty "/>
            </tree>
         </field>
     </record>
@@ -47,7 +49,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Entries">
-            	<group>
+            	<group colspan="10" col="12">
 	            	<filter icon="terp-account" string="This Year"
 	            			domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 		                    help="Entries of the year"/>
@@ -67,9 +69,8 @@
                     		help = "Draft tasks"/>
                     <separator orientation="vertical"/>
                     		<field name="journal_id" widget="selection"/>
-                    		<field name="journal_id2" widget="selection"/>
                     		<field name="account_id"/>
-                    		<field name="company_id" widget="selection"/>
+                    		<field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="partner_id" />
 					</group>
                 <newline/>
@@ -78,11 +79,13 @@
                    			icon="terp-account"
                    			domain="[('state','=','posted')]"
                    			help = "Posted tasks"/>
+                		<field name="state_2"/>
                 	<separator orientation="vertical"/>
                 		<field name="period_id" widget="selection"/>
                 		<field name="period_id2" widget="selection"/>
                 		<field name="type"/>
                     <field name="product_id" />
+                    <field name="analytic_account_id"/>
                     <newline/>
                 	<separator orientation="vertical"/>
                 		<field name="date"/>
@@ -92,13 +95,14 @@
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Journal" name="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
-                    <filter string="Journal of Move Line" icon="terp-account" context="{'group_by':'journal_id2'}"/>
                     <filter string="Account" name="Account" icon="terp-account" context="{'group_by':'account_id'}"/>
-                    <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" />
+                    <filter string="Analytic Account" name="Analytic Account" icon="terp-account" context="{'group_by':'analytic_account_id'}"/>
+                    <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
                     <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
+                    <filter string="State of Move Line" icon="terp-account" context="{'group_by':'state_2'}"/>
                     <filter string="Period" icon="terp-account" context="{'group_by':'period_id'}"/>
                     <filter string="Period of Move Line" icon="terp-account" context="{'group_by':'period_id2'}"/>
                     <filter string="Type" icon="terp-account" context="{'group_by':'type'}"/>

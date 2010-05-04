@@ -46,8 +46,11 @@ class account_entries_report(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State',readonly=True,
                                   help='When new account move is created the state will be \'Draft\'. When all the payments are done it will be in \'Posted\' state.'),
+        'state_2': fields.selection([('draft','Draft'), ('valid','Valid')], 'State of Move Line', readonly=True,
+                                  help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
         'partner_id': fields.many2one('res.partner','Partner', readonly=True),
         'period_id2': fields.many2one('account.period', 'Move Line Period', readonly=True),
+        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'journal_id2': fields.many2one('account.journal', 'Move Line Journal', readonly=True),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
@@ -59,6 +62,7 @@ class account_entries_report(osv.osv):
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
         ],'Type',readonly=True),
+        'quantity': fields.float('Products Quantity', digits=(16,2), readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
     _order = 'date desc'
@@ -70,7 +74,9 @@ class account_entries_report(osv.osv):
               select
                    min(l.id) as id,
                    am.ref as ref,
+                   sum(l.quantity) as quantity,
                    am.state as state,
+                   l.state as state_2,
                    am.date as date,
                    count(l.id) as nbr,
                    count(distinct am.id) as nbl,
@@ -80,6 +86,7 @@ class account_entries_report(osv.osv):
                    to_char(am.date, 'YYYY-MM-DD') as day,
                    am.company_id as company_id,
                    l.account_id as account_id,
+                   l.analytic_account_id as analytic_account_id,
                    l.date_created as date_created,
                    l.date_maturity as date_maturity,
                    am.journal_id as journal_id,
@@ -103,10 +110,12 @@ class account_entries_report(osv.osv):
                 l.period_id,
                 am.type,
                 l.partner_id,
+                l.analytic_account_id,
                 l.product_id,
                 l.date_created,
                 l.date_maturity,
                 l.account_id,
+                l.state,
                 l.debit
             )
         """)
