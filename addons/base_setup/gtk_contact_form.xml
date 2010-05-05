@@ -1,0 +1,81 @@
+<openerp>
+  <data>
+    <record id="view_base_setup_contact" model="ir.ui.view">
+      <field name="name">Contact information</field>
+      <field name="model">base.gtkcontactform</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.res_config_view_base"/>
+      <field name="arch" type="xml">
+        <data>
+          <form position="attributes">
+            <attribute name="string">Contact Information</attribute>
+          </form>
+		  <xpath expr="//label[@string='description']" position="attributes">
+	            <attribute name="string">Information about you and the company you are related too. The Basic information related to the company has already been collected and some more information required by you to fill.</attribute>
+	      </xpath>
+	      <xpath expr='//separator[@string="title"]' position='attributes'>
+	          	  <attribute name='string'>About You</attribute>
+	          	  <attribute name='colspan'>4</attribute>
+	      </xpath>
+	      <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='rowspan'>22</attribute>
+	          	  <attribute name='string'></attribute>
+	      </xpath>
+          <group string="res_config_contents" position="replace">
+          	<group colspan="4">
+          		<group colspan="2">
+	            	<field name="name" colspan="2" required="True"/>
+	            	<field name="job" colspan="2"/>
+		            <field name="email" colspan="2"/>
+		            <field name="phone" colspan="2"/>
+		            <field name="total_employees" colspan="2"/>
+		            <field name="industry" colspan="2"/>
+		        </group>
+		        <newline/>
+		        <group colspan="4">
+		            <separator string="Your projects with OpenERP" colspan="4"/>
+		            <field name="use_openerp" colspan="1"/>
+		            <field name="already_using_openerp" colspan="1"/>
+		            <field name="sell_openerp" colspan="1"/>
+		            <field name="already_selling__openerp" colspan="1"/>
+		       </group>
+		       <group colspan="4">
+		            <separator colspan="4" string="You would like to know more about"/>
+		            <field name="features" colspan="1"/>
+		            <field name="saas" colspan="1"/>
+		            <field name="partners_program" colspan="1"/>
+		            <field name="support" colspan="1"/>
+		            <field name="training" colspan="1"/>
+		            <field name="other" colspan="1"/>
+		       </group>
+			 <group colspan="2">
+		       		<separator colspan="4" string="Do You Need Them ?"/>
+		            <field name="ebook" nolabel="1" colspan="1"/>
+		            <label align="0.0" string="I want to receive the Open ERP ebook (PDF) by email." colspan="1"/>
+		            <newline/>
+		            <field name="updates" nolabel="1" colspan="1"/>
+		            <label align="0.0" string="Yes, I would like to receive information updates from OpenERP." colspan="1"/>
+	        	</group>
+	       </group>
+	       </group>
+        </data>
+      </field>
+    </record>
+
+    <record id="action_base_contact" model="ir.actions.act_window">
+      <field name="name">Setup contact information</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">base.gtkcontactform</field>
+      <field name="view_id" ref="view_base_setup_contact"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="base_setup_contact_todo" model="ir.actions.todo">
+        <field name="action_id" ref="action_base_contact"/>
+        <field name="sequence">1</field>
+        <field name="restart">onskip</field>
+    </record>
+  </data>
+</openerp>
