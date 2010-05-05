@@ -2587,19 +2587,14 @@ class orm(orm_template):
                     or False
             if isinstance(fld_def, fields.property):
                 property_obj = self.pool.get('ir.property')
-                definition_id = fld_def._field_get(cr, uid, self._name, f)
-                nid = property_obj.search(cr, uid, [('fields_id', '=',
-                    definition_id), ('res_id', '=', False)])
-                if nid:
-                    prop_value = property_obj.browse(cr, uid, nid[0],
-                            context=context).value
-                    if prop_value:
-                        if isinstance(prop_value, (browse_record, browse_null)):
-                            value[f] = prop_value.id
-                        else:
-                            value[f] = int(prop_value.rsplit(',', 1)[1])
+                prop_value = property_obj.get(cr, uid, f, self._name, context=context)
+                if prop_value:
+                    if isinstance(prop_value, (browse_record, browse_null)):
+                        value[f] = prop_value.id
                     else:
-                        value[f] = False
+                        value[f] = prop_value
+                else:
+                    value[f] = False
 
         # get the default values set by the user and override the default
         # values defined in the object
@@ -2991,7 +2986,7 @@ class orm(orm_template):
 
         properties = self.pool.get('ir.property')
         domain = [('res_id', '=', False),
-                  ('value', 'in', ['%s,%s' % (self._name, i) for i in ids]),
+                  ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
                  ]
         if properties.search(cr, uid, domain, context=context):
             raise except_orm(_('Error'), _('Unable to delete this document because it is used as a default property'))

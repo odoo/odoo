@@ -21,6 +21,7 @@
 
 from osv import osv,fields
 from operator import attrgetter
+import time
 # -------------------------------------------------------------------------
 # Properties
 # -------------------------------------------------------------------------
@@ -48,24 +49,130 @@ class ir_property(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128),
-        'value': fields.reference('Value', selection=_models_get2, size=128),
-#        'value': fields.char('Value', size=128),
+
         'res_id': fields.reference('Resource', selection=_models_get, size=128,
                                    help="If not set, act as default property"),
         'company_id': fields.many2one('res.company', 'Company'),
-        'fields_id': fields.many2one('ir.model.fields', 'Fields', ondelete='cascade', required=True)
+        'fields_id': fields.many2one('ir.model.fields', 'Fields', ondelete='cascade', required=True),
+
+        'value_float' : fields.float('Value'),
+        'value_integer' : fields.integer_big('Value'), # will contain (int, bigint)
+        'value_text' : fields.text('Value'), # will contain (char, text)
+        'value_binary' : fields.binary('Value'),
+        'value_reference': fields.reference('Value', selection=_models_get2, size=128),
+        'value_datetime' : fields.datetime('Value'),
+
+        'type' : fields.selection([('char', 'Char'),
+                                   ('float', 'Float'),
+                                   ('integer', 'Integer'),
+                                   ('integer_big', 'Integer Big'),
+                                   ('text', 'Text'),
+                                   ('binary', 'Binary'),
+                                   ('many2one', 'Many2One'),
+                                   ('date', 'Date'),
+                                   ('datetime', 'DateTime'),
+                                  ],
+                                  'Type',
+                                  required=True,
+                                  select=1),
     }
 
-    def get(self, cr, uid, name, model, res_id=False, context={}):
-        cr.execute('select id from ir_model_fields where name=%s and model=%s', (name, model))
-        res = cr.fetchone()
-        if res:
-            ucid = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-            nid = self.search(cr, uid, [('fields_id','=',res[0]),('res_id','=',res_id),('company_id','=',ucid)])
-            if nid:
-                d = self.browse(cr, uid, nid[0], context).value
-                return (d and int(d.split(',')[1])) or False
+    _defaults = {
+        'type': 'many2one',
+    }
+
+    def _update_values(self, cr, uid, ids, values):
+        value = values.pop('value', None)
+        if not value:
+            return values
+        type_ = values.get('type', 'many2one')
+        type2field = {
+            'char': 'value_text',
+            'float': 'value_float',
+            'integer': 'value_integer',
+            'integer_big': 'value_integer',
+            'text': 'value_text',
+            'binary': 'value_binary',
+            'many2one': 'value_reference',
+            'date' : 'value_datetime',
+            'datetime' : 'value_datetime',
+        }
+        field = type2field.get(type_)
+        if not field:
+            raise osv.except_osv('Error', 'Invalid type')
+
+        if field == 'value_reference':
+            if isinstance(value, osv.orm.browse_record):
+                value = '%s,%d' % (value._name, value.id)
+            elif isinstance(value, (int, long)):
+                field_id = values.get('fields_id')
+                if not field_id:
+                    if not ids:
+                        raise ValueError()
+                    field_id = self.browse(cr, uid, ids[0]).fields_id
+                else:
+                    field_id = self.pool.get('ir.model.fields').browse(cr, uid, field_id)
+
+                value = '%s,%d' % (field_id.relation, value)
+
+        values[field] = value
+        return values
+
+
+    def write(self, cr, uid, ids, values, context=None):
+        return super(ir_property, self).write(cr, uid, ids, self._update_values(cr, uid, ids, values), context=context)
+
+    def create(self, cr, uid, values, context=None):
+        return super(ir_property, self).create(cr, uid, self._update_values(cr, uid, None, values), context=context)
+
+    def get_by_id(self, cr, uid, record_ids, context=None):
+        if isinstance(record_ids, (int, long)):
+            record_ids = [record_ids]
+
+        if not record_ids:
+            return False
+
+        record = self.browse(cr, uid, record_ids[0], context=context)
+
+        if record.type in ('char', 'text'):
+            return record.value_text
+        elif record.type == 'float':
+            return record.value_float
+        elif record.type in ('integer', 'integer_big'):
+            return record.value_integer
+        elif record.type == 'binary':
+            return record.value_binary
+        elif record.type == 'many2one':
+            return record.value_reference
+        elif record.type == 'datetime':
+            return record.value_datetime
+        elif record.type == 'date':
+            return time.strftime('%Y-%m-%d', time.strptime(record.value_datetime, '%Y-%m-%d %H:%M:%S'))
+
         return False
+
+    def get(self, cr, uid, name, model, res_id=False, context=None):
+        domain = self._get_domain(cr, uid, name, model, context=context)
+        if domain is not None:
+            domain = [('res_id', '=', res_id)] + domain
+            nid = self.search(cr, uid, domain, context=context)
+            return self.get_by_id(cr, uid, nid, context=context)
+        return False
+
+    def _get_domain(self, cr, uid, prop_name, model, context=None):
+        cr.execute('select id from ir_model_fields where name=%s and model=%s', (prop_name, model))
+        res = cr.fetchone()
+        if not res:
+            return None
+
+        company = self.pool.get('res.company')
+        cid = company._company_default_get(cr, uid, model, res[0],
+                                           context=context)
+
+        domain = ['&', ('fields_id', '=', res[0]),
+                '|', ('company_id', '=', cid), ('company_id', '=', False)]
+        return domain
+
 ir_property()
 
 
