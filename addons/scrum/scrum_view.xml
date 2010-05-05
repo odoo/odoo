@@ -67,12 +67,13 @@
                         <field name="user_id" select="1"/>
                         <field name="sequence"/>
            			    <field name="date"/>
-                        <field name="active" select="1"/>
+           			    <field name="progress" widget="progressbar"/>
+           			    <newline/>
                         <group colspan="6" col="8">
                             <field name="effective_hours" widget="float_time"/>
                             <field name="planned_hours" widget="float_time"/>
                             <field name="expected_hours" widget="float_time"/>
-                            <field name="progress" widget="progressbar"/>
+
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -291,7 +292,6 @@
             <field name="arch" type="xml">
                 <tree string="Scrum Sprint">
                     <field name="date"/>
-                    <field name="name"/>
                     <field name="sprint_id"/>
                 </tree>
             </field>
@@ -303,17 +303,16 @@
             <field name="arch" type="xml">
                 <form string="Scrum Sprint">
                     <group colspan="4" col="6">
-                        <field name="name" select="1"/>
                         <field name="date"/>
                         <field name="sprint_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">
-                            <separator colspan="4" string="What have you accomplished since yesterday ?"/>
+                            <separator colspan="4" string="What did you do since the last meeeting?"/>
                             <field colspan="4" name="question_yesterday" nolabel="1"/>
-                            <separator colspan="4" string="What are you working on today ?"/>
+                            <separator colspan="4" string="What do you plan to do till the next meeting?"/>
                             <field colspan="4" name="question_today" nolabel="1"/>
-                            <separator colspan="4" string="Is there anything blocking you ?"/>
+                            <separator colspan="4" string="Are there anything blocking you?"/>
                             <field colspan="4" name="question_blocks" nolabel="1"/>
                         </page>
                         <page string="Optional Info">
@@ -338,7 +337,6 @@
                     <group col="10" colspan="4">
                         <filter name="scrum_daily" icon="terp-project" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
-                        <field name="name"/>
                         <field name="sprint_id" widget="selection">
                             <filter icon="terp-project" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints" default="1"/>
                         </field>

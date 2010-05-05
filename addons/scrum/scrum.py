@@ -18,11 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
 import netsvc
-from osv import fields, osv, orm
 
+from osv import fields, osv, orm
 from mx import DateTime
 import re
 
@@ -35,8 +34,8 @@ class scrum_project(osv.osv):
     }
     _defaults = {
         'product_owner_id': lambda self,cr,uid,context={}: uid,
-        'sprint_size': lambda *a: 15,
-        'scrum': lambda *a: 1
+        'sprint_size': 15,
+        'scrum': 1
     }
 scrum_project()
 
@@ -96,24 +95,47 @@ class scrum_sprint(osv.osv):
         'active' : fields.boolean('Active', help="If Active field is set to true, it will allow you to select sprint from task list view. "),
         'date_start': fields.date('Starting Date', required=True),
         'date_stop': fields.date('Ending Date', required=True),
-        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)]),
+        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True),
         'scrum_master_id': fields.many2one('res.users', 'Scrum Master', required=True),
         'meeting_ids': fields.one2many('scrum.meeting', 'sprint_id', 'Daily Scrum'),
         'review': fields.text('Sprint Review'),
         'retrospective': fields.text('Sprint Retrospective'),
         'backlog_ids': fields.one2many('scrum.product.backlog', 'sprint_id', 'Sprint Backlog'),
-        'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)'),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
-        'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours'),
-        'expected_hours': fields.function(_calc_expected, method=True, string='Expected Hours'),
+        'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
+        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done."),
+        'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+        'expected_hours': fields.function(_calc_expected, method=True, string='Expected Hours', help='Estimated time to do the task.'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('cancel','Cancelled'),('done','Done')], 'State', required=True),
     }
     _defaults = {
-        'state': lambda *a: 'draft',
-        'date_start' : lambda *a:time.strftime('%Y-%m-%d'),
-        'active': lambda *a: 1,
+        'state': 'draft',
+        'date_start' : time.strftime('%Y-%m-%d'),
+        'active': 1,
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        """Overrides orm copy method
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case’s IDs
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+        data = self.read(cr, uid, id, context=context)
+        data.pop('backlog_ids')
+        data.pop('meeting_ids')
+        data.update({'scrum_master_id': data['scrum_master_id'][0],
+                'product_owner_id': data['product_owner_id'][0],
+                'project_id': data['project_id'][0],
+                })
+        return self.create(cr, uid, data, context=context)
+
+
     def onchange_project_id(self, cr, uid, ids, project_id):
         v = {}
         if project_id:
@@ -180,6 +202,8 @@ class scrum_product_backlog(osv.osv):
         return True
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
+        for backlog in self.browse(cr, uid, ids, context=context):
+            self.pool.get('project.task').write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
         return True
     def button_pending(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
@@ -189,21 +213,21 @@ class scrum_product_backlog(osv.osv):
         'name' : fields.char('Feature', size=64, required=True),
         'note' : fields.text('Note'),
         'active' : fields.boolean('Active', help="If Active field is set to true, it will allow you to hide the product backlog without removing it."),
-        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)]),
+        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'sprint_id': fields.many2one('scrum.sprint', 'Sprint'),
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
-        'progress': fields.function(_calc_progress, method=True, string='Progress'),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
-        'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours'),
-        'expected_hours': fields.float('Expected Hours'),
+        'progress': fields.function(_calc_progress, method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
+        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done."),
+        'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+        'expected_hours': fields.float('Expected Hours', help='Estimated time to do the task.'),
         'date':fields.datetime("Created Date"),
     }
     _defaults = {
-        'state': lambda *a: 'draft',
-        'active': lambda *a: 1,
+        'state': 'draft',
+        'active':  1,
         'user_id': lambda self,cr,uid,context: uid,
     }
     _order = "sequence"
@@ -238,7 +262,7 @@ class scrum_meeting(osv.osv):
     _description = 'Scrum Meeting'
     _order = 'date desc'
     _columns = {
-        'name' : fields.char('Meeting Name', size=64, required=True),
+        'name' : fields.char('Meeting Name', size=64),
         'date': fields.date('Meeting Date', required=True),
         'sprint_id': fields.many2one('scrum.sprint', 'Sprint', required=True),
         'project_id': fields.many2one('project.project', 'Project'),
@@ -252,7 +276,7 @@ class scrum_meeting(osv.osv):
     # TODO: Find the right sprint thanks to users and date
     #
     _defaults = {
-        'date' : lambda *a:time.strftime('%Y-%m-%d'),
+        'date' : time.strftime('%Y-%m-%d'),
     }
 scrum_meeting()
 
