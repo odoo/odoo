@@ -33,6 +33,8 @@ import release
 import socket
 import re
 from itertools import islice
+import threading
+
 
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
@@ -472,7 +474,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     for key, value in x_headers.iteritems():
         msg['X-OpenERP-%s' % key] = str(value)
         msg['%s' % key] = str(value)
-    
+
     if openobject_id:
         msg['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
@@ -1284,6 +1286,23 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
 
+class upload_data_thread(threading.Thread):
+    def __init__(self, email, data, type):
+        self.args = [('email',email),('type',type),('data',data)]
+        super(upload_data_thread,self).__init__()
+    def run(self):
+        try:
+            import urllib
+            args = urllib.urlencode(self.args)
+            fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
+            fp.read()
+            fp.close()
+        except:
+            pass
 
+def upload_data(email, data, type='SURVEY'):
+    a = upload_data_thread(email, data, type)
+    a.start()
+    return True
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
