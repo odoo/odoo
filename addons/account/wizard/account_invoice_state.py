@@ -21,6 +21,7 @@
 from osv import fields, osv
 from tools.translate import _
 import netsvc
+import pooler
 
 class account_invoice_confirm(osv.osv_memory):
     """
@@ -34,7 +35,12 @@ class account_invoice_confirm(osv.osv_memory):
         wf_service = netsvc.LocalService('workflow')
         if context is None:
             context = {}
-        for id in context['active_ids']:
+        pool_obj = pooler.get_pool(cr.dbname)
+        data_inv = pool_obj.get('account.invoice').read(cr, uid, context['active_ids'], ['state'], context=context)
+        
+        for record in data_inv:
+            if record['state'] not in ('draft','proforma','proforma2'):
+                raise osv.except_osv(_('Warning'), _("Selected Invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-Forma' state!"))
             wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_open', cr)
         return {}
 
@@ -47,14 +53,19 @@ class account_invoice_cancel(osv.osv_memory):
     """
 
     _name = "account.invoice.cancel"
-    _description = "Cancel the selected invoices"
+    _description = "Cancel the Selected Invoices"
 
     def invoice_cancel(self, cr, uid, ids, context=None):
-        wf_service = netsvc.LocalService('workflow')
         if context is None:
             context = {}
-        for id in context['active_ids']:
-            wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
+        wf_service = netsvc.LocalService('workflow')
+        pool_obj = pooler.get_pool(cr.dbname)
+        data_inv = pool_obj.get('account.invoice').read(cr, uid, context['active_ids'], ['state'], context=context)
+        
+        for record in data_inv:
+            if record['state'] in ('cancel','paid'):
+                raise osv.except_osv(_('Warning'), _("Selected Invoice(s) cannot be cancelled as they are already in 'Cancelled' or 'Done' state!"))
+            wf_service.trg_validate(uid, 'account.invoice', record['id'], 'invoice_cancel', cr)
         return {}
 
 account_invoice_cancel()

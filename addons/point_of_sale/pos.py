@@ -287,7 +287,7 @@ class pos_order(osv.osv):
         'date_payment': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date',  store=True),
         'date_validity': fields.date('Validity Date', required=True),
         'user_id': fields.many2one('res.users', 'Connected Salesman', readonly=True),
-        'user_saleman': fields.many2one('res.users', 'Salesman', required=True),
+        'user_salesman_id': fields.many2one('res.users', 'Salesman', required=True),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_all, method=True, string='Taxes',digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
@@ -703,7 +703,7 @@ class pos_order(osv.osv):
         inv_ids = []
 
         for order in self.browse(cr, uid, ids, context):
-            curr_c = order.user_saleman.company_id
+            curr_c = order.user_salesman_id.company_id
             if order.invoice_id:
                 inv_ids.append(order.invoice_id.id)
                 continue
@@ -980,8 +980,8 @@ class pos_order(osv.osv):
                     create_contract_nb = True
                     break
             if create_contract_nb:
-                seq = sequence_obj.get(cr, uid, 'pos.user_%s' % pos.user_saleman.login)
-                vals['contract_number'] ='%s-%s' % (pos.user_saleman.login, seq)
+                seq = sequence_obj.get(cr, uid, 'pos.user_%s' % pos.user_salesman_id.login)
+                vals['contract_number'] ='%s-%s' % (pos.user_salesman_id.login, seq)
         self.write(cr, uid, ids, vals)
 
     def action_paid(self, cr, uid, ids, context=None):
