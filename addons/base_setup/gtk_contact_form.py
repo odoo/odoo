@@ -23,6 +23,7 @@ from operator import itemgetter
 from osv import osv, fields
 import netsvc
 import tools
+from tools import misc
 
 class base_gtkcontactform(osv.osv_memory):
     """
@@ -68,8 +69,30 @@ class base_gtkcontactform(osv.osv_memory):
              'other':fields.boolean('Other'),
              'ebook':fields.boolean('ebook'),
              'updates':fields.boolean('updates'),
+             'note':fields.text('Note'),
              }
     def execute(self, cr, uid, ids, context=None):
-         pass
+        company_id = self.pool.get('base.setup.company').search(cr, uid, [])
+        company_data = self.pool.get('base.setup.company').read(cr, uid, company_id)[0]
+        country1 = ''
+        if company_data.get('country_id', False):
+            country = self.pool.get('res.country').read(cr, uid, company_data['country_id'],['name'])['name']
+        for res in self.read(cr, uid, ids):
+            email = res.get('email','')
+            result = "\ncompany: "+ str(company_data.get('name',''))
+            result += "\nname: " + str(res.get('name',''))
+            result += "\nphone: " + str(res.get('phone',''))
+            result += "\ncity: " + str(company_data.get('city',''))
+            result += "\ncountry: " + str(country)
+            result += "\nindustry: " + str(res.get('industry', ''))
+            result += "\ntotal_employees: " + str(res.get('total_employees', ''))
+            result += "\nplan_use: " +  str(res.get('use_openerp', False))
+            result += "\nsell_openerp: " + str(res.get('sell_openerp', False))
+            result += "\nebook: " + str(res.get('ebook',False))
+            result += "\nnote: " + str(res.get('note',''))
+            result += "\ngtk: " + str(True)
+        misc.upload_data(email, result, type='SURVEY')
+
+
 
 base_gtkcontactform()
