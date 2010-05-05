@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-30 10:27:33+0000\n"
-"PO-Revision-Date: 2010-04-30 10:27:33+0000\n"
+"POT-Creation-Date: 2010-05-05 14:10:18+0000\n"
+"PO-Revision-Date: 2010-05-05 14:10:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -456,41 +456,6 @@ msgid "Here is the BVR to allow you to pay the invoice :"
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.module.module,description:l10n_ch.module_meta_information
-msgid "\n"
-"Swiss localisation :\n"
-" - DTA generation for a lot of paiment types\n"
-" - BVR management (number generation, report, etc..)\n"
-" - Import account move from the bank file (like v11 etc..)\n"
-" - Simplify the way you handle the bank statement for reconciliation\n"
-"\n"
-"You can also add with this module one of the following account plan:\n"
-" - l10n_ch_c2c_pcg\n"
-"\n"
-"\n"
-"    \n"
-"------------------------------------------------------------------------\n"
-"    \n"
-"Module incluant la localisation Suisse de OpenERP revu et corrigé par Camptocamp. Cette nouvelle version \n"
-"comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement) \n"
-"et l'import du relevé de compte depuis la banque de manière automatisée. \n"
-"De plus, nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).\n"
-"\n"
-"Par ailleurs, conjointement à ce module, nous proposons 1 plan comptables issus de l'USAM :\n"
-"\n"
-"\n"
-" - l10n_ch_c2c_pcg\n"
-" \n"
-"--------------------------------------------------------------------------\n"
-"Next features :\n"
-"- Implement bvr import partial reconciliation\n"
-"- Replace wizard by osv_memory when possible\n"
-"- Finish code comment\n"
-"- Improve demo data\n"
-""
-msgstr ""
-
-#. module: l10n_ch
 #: code:addons/l10n_ch/wizard/opae_wizard.py:0
 #, python-format
 msgid "Bic/swift number is requiered'+\n"
@@ -501,6 +466,11 @@ msgid "Bic/swift number is requiered'+\n"
 "                raise wizard.except_wizard(\n"
 "                                            _('Error"
 msgstr ""
+
+#. module: l10n_ch
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Errore! Non puoi creare dei membri associati ricorsivi."
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/opae_wizard.py:0

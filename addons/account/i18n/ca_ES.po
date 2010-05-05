@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:12:34+0000\n"
-"PO-Revision-Date: 2010-04-27 11:12:34+0000\n"
+"POT-Creation-Date: 2010-05-05 13:57:42+0000\n"
+"PO-Revision-Date: 2010-05-05 13:57:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -77,7 +77,7 @@ msgstr "El diari indicat no té assentaments comptables en estat d'esborrany per
 #. module: account
 #: wizard_view:account_use_models,init_form:0
 msgid "Select Message"
-msgstr "Selecciona missatge"
+msgstr "Seleccioneu missatge"
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
@@ -206,7 +206,7 @@ msgstr "Plans comptables"
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_move_line_select
 msgid "Move line select"
-msgstr "Selecciona línia moviment"
+msgstr "Seleccioneu línia moviment"
 
 #. module: account
 #: code:addons/account/wizard/wizard_refund.py:0
@@ -347,7 +347,7 @@ msgstr "No podeu eliminar el moviment fixat: \"%s\"!"
 #: wizard_view:account.analytic.account.quantity_cost_ledger.report,init:0
 #: wizard_view:account.vat.declaration,init:0
 msgid "Select period"
-msgstr "Selecciona període"
+msgstr "Seleccioneu període"
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -1076,7 +1076,7 @@ msgstr "Exercici fiscal per obrir"
 #. module: account
 #: view:account.config.wizard:0
 msgid "Select Chart of Accounts"
-msgstr "Selecciona pla comptable"
+msgstr "Seleccioneu un pla comptable"
 
 #. module: account
 #: field:account.analytic.account,quantity:0
@@ -1288,12 +1288,6 @@ msgid "Compute Code for Taxes included prices"
 msgstr "Codi pel càlcul dels impostos amb preus inclosos"
 
 #. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "You can not validate a non-balanced entry !"
-msgstr "No es pot validar un assentament no quadrat!"
-
-#. module: account
 #: view:account.invoice.tax:0
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
@@ -1405,7 +1399,7 @@ msgstr "Assentament estàndar"
 #. module: account
 #: help:account.account,currency_mode:0
 msgid "This will select how the current currency rate for outgoing transactions is computed. In most countries the legal method is \"average\" but only a few software systems are able to manage this. So if you import from another software system you may have to use the rate at date. Incoming transactions always use the rate at date."
-msgstr ""
+msgstr "Permet seleccionar com es calcula el tipus de canvi actual per a les transaccions de sortida. En molts països el mètode legal és \"mitjana\" però pocs sistemes informàtics poden fer-ho. Per tant si importeu des d'un altre sistema informàtic pot ser que heu de fer servir el tipus a una data. Les transaccions d'entrada sempre utilitzen el tipus a una data."
 
 #. module: account
 #: field:account.account,company_currency_id:0
@@ -1540,7 +1534,7 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaymentorder0
 msgid "Select invoices you want to pay and manages advances"
-msgstr "Selecciona factures que es volen pagar i gestiona avançaments"
+msgstr "Seleccioneu les factures que voleu pagar i gestionar avançaments"
 
 #. module: account
 #: selection:account.account,type:0
@@ -1680,11 +1674,9 @@ msgid "Write-Off"
 msgstr "Desajust"
 
 #. module: account
-#: help:account.invoice,partner_bank:0
-msgid "The partner bank account to pay\n"
-"Keep empty to use the default"
-msgstr "El compte bancari de l'empresa per pagar\n"
-"Deixa buit per utilitzar el valor per defecte"
+#: wizard_field:account.general.ledger.report,checktype,amount_currency:0
+msgid "With Currency"
+msgstr "Amb moneda"
 
 #. module: account
 #: field:res.partner,debit:0
@@ -2551,10 +2543,10 @@ msgid "x Checks Journal"
 msgstr "x Diari de xecs"
 
 #. module: account
-#: code:addons/account/wizard/wizard_pay_invoice.py:0
-#, python-format
-msgid "Your journal must have a default credit and debit account."
-msgstr "El diari ha de tenir un compte haver i deure per defecte."
+#: help:account.invoice,partner_bank:0
+msgid "The partner bank account to pay\n"
+"             Keep empty to use the default"
+msgstr ""
 
 #. module: account
 #: field:account.journal,centralisation:0
@@ -2569,7 +2561,7 @@ msgstr "Diari assentaments d'obertura"
 #. module: account
 #: view:account.config.wizard:0
 msgid "Create a Fiscal Year"
-msgstr "Crea un exercici fiscal"
+msgstr "Creeu un exercici fiscal"
 
 #. module: account
 #: field:product.template,taxes_id:0
@@ -2603,7 +2595,7 @@ msgstr "2"
 #. module: account
 #: wizard_view:account.chart,init:0
 msgid "(If you do not select Fiscal year it will take all open fiscal years)"
-msgstr "(Si no es selecciona cap any fiscal s'utilitzen tots els anys fiscals oberts)"
+msgstr "(Si no es selecciona cap exercici fiscal s'utilitzen tots els exercicis fiscals oberts)"
 
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
@@ -2779,6 +2771,13 @@ msgstr "Data final"
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
 msgid "Entry Lines"
 msgstr "Línies de l'extracte"
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#, python-format
+msgid "The account move (%s) for centralisation ' \\n"
+"                                'has been confirmed!"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -4033,11 +4032,6 @@ msgid "Entry Model"
 msgstr "Model d'assentament"
 
 #. module: account
-#: wizard_field:account.general.ledger.report,checktype,amount_currency:0
-msgid "With Currency"
-msgstr "Amb moneda"
-
-#. module: account
 #: view:account.account:0
 msgid "Chart of accounts"
 msgstr "Pla comptable"
@@ -4152,12 +4146,12 @@ msgstr "Factura d'abonament"
 #. module: account
 #: model:ir.actions.todo,note:account.config_fiscalyear
 msgid "Define Fiscal Years and Select Charts of Account"
-msgstr "Defineix exercicis fiscals i selecciona pla comptable"
+msgstr "Definiu els exercicis fiscals i seleccioneu el pla comptable"
 
 #. module: account
 #: selection:account.config.wizard,period:0
 msgid "3 Months"
-msgstr "3 mesos"
+msgstr "Trimestral"
 
 #. module: account
 #: wizard_view:account.move.journal,init:0
@@ -4223,7 +4217,7 @@ msgstr "Data inicial"
 #. module: account
 #: wizard_view:account.general.ledger.report,account_selection:0
 msgid "Select Chart"
-msgstr "Selecciona pla comptable"
+msgstr "Seleccioneu un pla comptable"
 
 #. module: account
 #: selection:account.chart,init,target_move:0
@@ -4380,6 +4374,12 @@ msgid "Financial Journals"
 msgstr "Diaris financers"
 
 #. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You can not validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type \"Balance\" !"
+msgstr ""
+
+#. module: account
 #: selection:account.account.balance.report,checktype,state:0
 #: selection:account.general.ledger.report,checktype,state:0
 #: selection:account.partner.balance.report,init,state:0
@@ -4451,7 +4451,7 @@ msgstr "Propietats de comptabilitat del client"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Select entries"
-msgstr "Selecciona les entrades"
+msgstr "Seleccioneu les entrades"
 
 #. module: account
 #: selection:account.chart,init,target_move:0
@@ -5397,13 +5397,6 @@ msgid "Warning"
 msgstr "Avís"
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#, python-format
-msgid "The account move (%s) for centralisation ' \\n"
-"                                        'has been confirmed!"
-msgstr ""
-
-#. module: account
 #: rml:account.overdue:0
 msgid "VAT:"
 msgstr "IVA:"
@@ -5448,7 +5441,7 @@ msgstr "Confirmat"
 #. module: account
 #: wizard_view:account.account.balance.report,account_selection:0
 msgid "Select parent account"
-msgstr "Selecciona compte pare"
+msgstr "Seleccioneu el compte pare"
 
 #. module: account
 #: field:account.account.template,parent_id:0
@@ -5638,7 +5631,7 @@ msgstr "_Cancel·la"
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
 msgid "Select Date-Period"
-msgstr "Selecciona data-període"
+msgstr "Seleccioneu data-període"
 
 #. module: account
 #: rml:account.analytic.account.inverted.balance:0
@@ -5740,6 +5733,12 @@ msgstr "Manualment"
 #: wizard_field:populate_statement_from_inv,go,lines:0
 msgid "Invoices"
 msgstr "Factures"
+
+#. module: account
+#: code:addons/account/wizard/wizard_pay_invoice.py:0
+#, python-format
+msgid "Your journal must have a default credit and debit account."
+msgstr "El diari ha de tenir un compte haver i deure per defecte."
 
 #. module: account
 #: selection:account.partner.balance.report,init,result_selection:0
@@ -5854,7 +5853,7 @@ msgstr "Filtrat per data"
 #. module: account
 #: wizard_view:populate_statement_from_inv,init:0
 msgid "Choose Journal and Payment Date"
-msgstr "Selecciona diari i data de pagament"
+msgstr "Seleccioneu diari i data de pagament"
 
 #. module: account
 #: code:addons/account/invoice.py:0

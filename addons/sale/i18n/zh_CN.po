@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:13:21+0000\n"
-"PO-Revision-Date: 2010-04-27 11:13:21+0000\n"
+"POT-Creation-Date: 2010-05-05 13:58:30+0000\n"
+"PO-Revision-Date: 2010-05-05 13:58:30+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -307,7 +307,7 @@ msgstr "确认"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "Invoice cannot be created for this Sale Order due to one of the following reasons:\n1.The state is not in %s!\n2.The Sale Order Lines are Invoiced!"
+msgid "You must first cancel all packing attached to this sale order."
 msgstr ""
 
 #. module: sale
@@ -1008,7 +1008,6 @@ msgid "Gives the state of the quotation or sale order. The exception state is au
 msgstr "给出这报价单或销售订单的状态这异常状态是在发票确认(发票异常)或在包装单处理(送货异常)自动设定时取消操作发生的.这\"等待调度表\"状态是在发票已确认但在等待在\"日期排序\"内运行调度."
 
 #. module: sale
-#: code:addons/sale/sale.py:0
 #: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
 #, python-format
 msgid "Warning"
@@ -1154,12 +1153,6 @@ msgstr "报价单/订单"
 #: rml:sale.order:0
 msgid "Tel. :"
 msgstr "电话:"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0

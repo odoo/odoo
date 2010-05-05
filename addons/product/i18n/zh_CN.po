@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:13:21+0000\n"
-"PO-Revision-Date: 2010-04-27 11:13:21+0000\n"
+"POT-Creation-Date: 2010-05-05 13:58:30+0000\n"
+"PO-Revision-Date: 2010-05-05 13:58:30+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Max. Margin"
-msgstr "最大利润"
+msgstr "最大上浮金额"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -28,7 +28,7 @@ msgstr "基础价格"
 #. module: product
 #: help:product.template,standard_price:0
 msgid "The cost of the product for accounting stock valuation. It can serves as a base price for supplier price."
-msgstr "产品成本的会计库存价值.它能作为供应商价格的一个基础价格."
+msgstr "这价格是产品的财务库存估价,它能提供产品供应的基础价格"
 
 #. module: product
 #: selection:product.template,type:0
@@ -38,7 +38,7 @@ msgstr "服务"
 #. module: product
 #: help:product.template,purchase_ok:0
 msgid "Determine if the product is visible in the list of products within a selection from a purchase order line."
-msgstr "如果产品列表中能看见这产品确定它"
+msgstr "在采购订单的产品列表中可见"
 
 #. module: product
 #: help:product.supplierinfo,name:0
@@ -73,7 +73,7 @@ msgstr "产品计量单位分类"
 #. module: product
 #: help:product.product,virtual_available:0
 msgid "Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming."
-msgstr "产品在选定库位或者没选定在内部的未来库存.计算公式:实际库存 + 接收 - 发出"
+msgstr "产品在选定库位未来库存计算公式: 实际库存 + 接收 - 发出 (或内部库位)"
 
 #. module: product
 #: field:product.price.type,field:0
@@ -83,7 +83,7 @@ msgstr "产品字段"
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
 msgid "Set a template if this rule only apply to a template of product. Keep empty for all products"
-msgstr "设置一模板如果这规则只适合一产品产品模板.留空为适用所有产品"
+msgstr "设置模板如果这规则只适合于一产品模板. 留空为适用所有产品"
 
 #. module: product
 #: field:product.template,procure_method:0
@@ -108,13 +108,13 @@ msgstr "产品的相关字段"
 #. module: product
 #: selection:product.template,cost_method:0
 msgid "Standard Price"
-msgstr "标准价"
+msgstr "标准价格"
 
 #. module: product
 #: code:addons/product/product.py:0
 #, python-format
 msgid "Products: "
-msgstr "产品： "
+msgstr "产品列表： "
 
 #. module: product
 #: help:product.packaging,height:0
@@ -155,7 +155,7 @@ msgstr "公司"
 #. module: product
 #: field:product.template,rental:0
 msgid "Rentable Product"
-msgstr "租借产品"
+msgstr "可租借产品"
 
 #. module: product
 #: field:product.product,lst_price:0
@@ -181,13 +181,13 @@ msgstr "服务"
 #. module: product
 #: help:product.template,list_price:0
 msgid "Base price for computing the customer price. Sometimes called the catalog price."
-msgstr "计算客户价格的基础价格.有时候它被称为目录价格"
+msgstr "计算给客户报价的基础价格.有时候它被称为目录价格"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
 #, python-format
 msgid "Partner section of the product form"
-msgstr "产品表业务伙伴专区"
+msgstr "供应产品的业务伙伴"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -233,12 +233,12 @@ msgstr "生产将根据产品类型创建生产单或任务.采购将在有需�
 #. module: product
 #: model:process.transition,note:product.process_transition_supplierofproduct0
 msgid "You can see the list of suppliers for that product."
-msgstr "你能在产品中看到供应商"
+msgstr "你能看到这产品的供应商"
 
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layer on a palet or box"
-msgstr "小包或箱子层数"
+msgstr "箱子数或垫板的层数"
 
 #. module: product
 #: model:product.pricelist.type,name:product.pricelist_type_sale
@@ -269,7 +269,7 @@ msgstr "虚拟库存"
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Fixed"
-msgstr "固定的"
+msgstr "已修复"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
@@ -280,7 +280,7 @@ msgstr "计量单位类型"
 #. module: product
 #: help:product.pricelist.item,product_id:0
 msgid "Set a product if this rule only apply to one product. Keep empty for all products"
-msgstr "设置产品类别如果这规则只适合产品.留空为为全部产品"
+msgstr "如果这规则只适合这产品,设置产品. 留空为适用所有产品"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -344,7 +344,7 @@ msgstr "供应商价格表"
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Pallet Dimension"
-msgstr "托板尺寸"
+msgstr "垫板尺寸"
 
 #. module: product
 #: field:product.pricelist.item,base:0
@@ -374,7 +374,7 @@ msgstr "鼠标"
 #. module: product
 #: help:product.template,cost_method:0
 msgid "Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."
-msgstr "标准价:这价格是固定的和重新定价(通常在今年年底).平均价:这价格是在每个产品上重新计算."
+msgstr "标准价: 这价格是固定的和定期重新计价(通常在年底). 平均价: 这价格是在每次接收产品时重新计算."
 
 #. module: product
 #: field:product.pricelist,name:0
@@ -865,7 +865,7 @@ msgstr "产品计量单位"
 #. module: product
 #: help:product.product,incoming_qty:0
 msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
-msgstr "产品在选定库位计划接收数量或如果没有选定库位全部内部库位"
+msgstr "产品在选定库位的计划接收数量(如果没选库位则是所有内部库位)"
 
 #. module: product
 #: field:product.template,sale_ok:0

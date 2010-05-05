@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:27:58+0000\n"
-"PO-Revision-Date: 2010-04-27 11:27:58+0000\n"
+"POT-Creation-Date: 2010-05-05 14:13:54+0000\n"
+"PO-Revision-Date: 2010-05-05 14:13:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1288,12 +1288,6 @@ msgid "Compute Code for Taxes included prices"
 msgstr "Wylicz kod dla cen z podatkiem"
 
 #. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "You can not validate a non-balanced entry !"
-msgstr "Nie możesz zatwierdzić niezbilansowanego zapisu !"
-
-#. module: account
 #: view:account.invoice.tax:0
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
@@ -1680,11 +1674,9 @@ msgid "Write-Off"
 msgstr "Odpis"
 
 #. module: account
-#: help:account.invoice,partner_bank:0
-msgid "The partner bank account to pay\n"
-"Keep empty to use the default"
-msgstr "Konto bankowe partnera do płatności\n"
-"Pozostaw puste, by stosować domyślne"
+#: wizard_field:account.general.ledger.report,checktype,amount_currency:0
+msgid "With Currency"
+msgstr "Z walutą"
 
 #. module: account
 #: field:res.partner,debit:0
@@ -2359,7 +2351,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,invoice_sequence_id:0
 msgid "Invoice Sequence"
-msgstr "Numeracja faktury"
+msgstr "Numeracja faktur"
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,init:0
@@ -2490,7 +2482,7 @@ msgstr "(pozostaw puste, aby stosować bieżący okres)"
 #: model:ir.actions.act_window,name:account.action_invoice_tree8
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree8
 msgid "Draft Supplier Invoices"
-msgstr "Projekt faktury dla klienta"
+msgstr "Projekty faktur od dostawcy"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -2551,10 +2543,10 @@ msgid "x Checks Journal"
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/wizard_pay_invoice.py:0
-#, python-format
-msgid "Your journal must have a default credit and debit account."
-msgstr "Twój dziennik musi mieć domyślne konto Winien i Ma."
+#: help:account.invoice,partner_bank:0
+msgid "The partner bank account to pay\n"
+"             Keep empty to use the default"
+msgstr ""
 
 #. module: account
 #: field:account.journal,centralisation:0
@@ -2779,6 +2771,13 @@ msgstr "Data końcowa"
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
 msgid "Entry Lines"
 msgstr "Pozycje zapisu"
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#, python-format
+msgid "The account move (%s) for centralisation ' \\n"
+"                                'has been confirmed!"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -3303,7 +3302,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree12
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree12
 msgid "Draft Supplier Refunds"
-msgstr "Projekt korekty od dostawcy"
+msgstr "Projekty korekt od dostawcy"
 
 #. module: account
 #: model:process.node,name:account.process_node_accountingstatemententries0
@@ -3410,7 +3409,7 @@ msgstr "Kurs dla op. wychodzacych"
 #: model:ir.actions.act_window,name:account.action_invoice_tree10
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree10
 msgid "Draft Customer Refunds"
-msgstr "Projekt korekty dla klienta"
+msgstr "Projekty korekt dla klienta"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -4033,11 +4032,6 @@ msgid "Entry Model"
 msgstr "Model zapisu"
 
 #. module: account
-#: wizard_field:account.general.ledger.report,checktype,amount_currency:0
-msgid "With Currency"
-msgstr "Z walutą"
-
-#. module: account
 #: view:account.account:0
 msgid "Chart of accounts"
 msgstr "Plan kont"
@@ -4378,6 +4372,12 @@ msgstr "Wprowadź ręcznie zestawienie"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Financial Journals"
 msgstr "Dzienniki finansowe"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You can not validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type \"Balance\" !"
+msgstr ""
 
 #. module: account
 #: selection:account.account.balance.report,checktype,state:0
@@ -5397,13 +5397,6 @@ msgid "Warning"
 msgstr "Ostrzeżenie"
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#, python-format
-msgid "The account move (%s) for centralisation ' \\n"
-"                                        'has been confirmed!"
-msgstr ""
-
-#. module: account
 #: rml:account.overdue:0
 msgid "VAT:"
 msgstr "VAT:"
@@ -5742,6 +5735,12 @@ msgid "Invoices"
 msgstr "Faktury"
 
 #. module: account
+#: code:addons/account/wizard/wizard_pay_invoice.py:0
+#, python-format
+msgid "Your journal must have a default credit and debit account."
+msgstr "Twój dziennik musi mieć domyślne konto Winien i Ma."
+
+#. module: account
 #: selection:account.partner.balance.report,init,result_selection:0
 #: selection:account.third_party_ledger.report,init,result_selection:0
 msgid "Payable Accounts"
@@ -6029,7 +6028,7 @@ msgstr "Anulowano zamknięcie roku podatkowego, proszę zaznacz opcję !"
 #: model:ir.actions.act_window,name:account.action_invoice_tree6
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree6
 msgid "PRO-FORMA Customer Invoices"
-msgstr "Faktura PRO-FORMA dla klienta"
+msgstr "Fakturay PRO-FORMA dla klienta"
 
 #. module: account
 #: field:account.subscription,period_total:0

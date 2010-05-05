@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:20:28+0000\n"
-"PO-Revision-Date: 2010-04-27 11:20:28+0000\n"
+"POT-Creation-Date: 2010-05-05 14:05:54+0000\n"
+"PO-Revision-Date: 2010-05-05 14:05:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1288,12 +1288,6 @@ msgid "Compute Code for Taxes included prices"
 msgstr "Code de calcul pour les taxes comprises"
 
 #. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "You can not validate a non-balanced entry !"
-msgstr "Vous ne pouvez pas valider une écriture non équilibrée !"
-
-#. module: account
 #: view:account.invoice.tax:0
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
@@ -1680,11 +1674,9 @@ msgid "Write-Off"
 msgstr "Ajustement"
 
 #. module: account
-#: help:account.invoice,partner_bank:0
-msgid "The partner bank account to pay\n"
-"Keep empty to use the default"
-msgstr "Le compte bancaire du partenaire pour le paiement\n"
-"Laissez vide pour utiliser celui par défaut"
+#: wizard_field:account.general.ledger.report,checktype,amount_currency:0
+msgid "With Currency"
+msgstr "Avec devise"
 
 #. module: account
 #: field:res.partner,debit:0
@@ -2551,10 +2543,10 @@ msgid "x Checks Journal"
 msgstr "x Journal de contrôle"
 
 #. module: account
-#: code:addons/account/wizard/wizard_pay_invoice.py:0
-#, python-format
-msgid "Your journal must have a default credit and debit account."
-msgstr "Votre journal doit avoir un compte de débit et de crédit par défaut."
+#: help:account.invoice,partner_bank:0
+msgid "The partner bank account to pay\n"
+"             Keep empty to use the default"
+msgstr ""
 
 #. module: account
 #: field:account.journal,centralisation:0
@@ -2779,6 +2771,13 @@ msgstr "Date de fin"
 #: model:ir.ui.menu,name:account.menu_action_move_line_search
 msgid "Entry Lines"
 msgstr "Lignes d'écriture"
+
+#. module: account
+#: code:addons/account/account_move_line.py:0
+#, python-format
+msgid "The account move (%s) for centralisation ' \\n"
+"                                'has been confirmed!"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -4033,11 +4032,6 @@ msgid "Entry Model"
 msgstr "Modèle d'écriture"
 
 #. module: account
-#: wizard_field:account.general.ledger.report,checktype,amount_currency:0
-msgid "With Currency"
-msgstr "Avec devise"
-
-#. module: account
 #: view:account.account:0
 msgid "Chart of accounts"
 msgstr "Plan comptable"
@@ -4378,6 +4372,12 @@ msgstr "Encoder le relevé de compte manuellement"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Financial Journals"
 msgstr "Journaux Financiers"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You can not validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type \"Balance\" !"
+msgstr ""
 
 #. module: account
 #: selection:account.account.balance.report,checktype,state:0
@@ -5397,13 +5397,6 @@ msgid "Warning"
 msgstr "Alerte !"
 
 #. module: account
-#: code:addons/account/account_move_line.py:0
-#, python-format
-msgid "The account move (%s) for centralisation ' \\n"
-"                                        'has been confirmed!"
-msgstr ""
-
-#. module: account
 #: rml:account.overdue:0
 msgid "VAT:"
 msgstr "TVA :"
@@ -5740,6 +5733,12 @@ msgstr "Manuellement"
 #: wizard_field:populate_statement_from_inv,go,lines:0
 msgid "Invoices"
 msgstr "Factures"
+
+#. module: account
+#: code:addons/account/wizard/wizard_pay_invoice.py:0
+#, python-format
+msgid "Your journal must have a default credit and debit account."
+msgstr "Votre journal doit avoir un compte de débit et de crédit par défaut."
 
 #. module: account
 #: selection:account.partner.balance.report,init,result_selection:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:34:00+0000\n"
-"PO-Revision-Date: 2010-04-27 11:34:00+0000\n"
+"POT-Creation-Date: 2010-05-05 14:20:24+0000\n"
+"PO-Revision-Date: 2010-05-05 14:20:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -307,8 +307,8 @@ msgstr "Confirmar"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "Invoice cannot be created for this Sale Order due to one of the following reasons:\n1.The state is not in %s!\n2.The Sale Order Lines are Invoiced!"
-msgstr ""
+msgid "You must first cancel all packing attached to this sale order."
+msgstr "Debe primero cancelar todos los packings asociados a este pedido de venta."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -1008,7 +1008,6 @@ msgid "Gives the state of the quotation or sale order. The exception state is au
 msgstr "Indica el estado del presupuesto o pedido de venta. El estado de excepción se establece automáticamente cuando una cancelación se produce en la validación de la factura (Excepción de factura) o en el procesado del remito (Excepción de envío). El estado 'Esperando programación' se establece cuando se confirma la factura pero se espera a que el planificador procese el pedido en la fecha 'Fecha del pedido'."
 
 #. module: sale
-#: code:addons/sale/sale.py:0
 #: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
 #, python-format
 msgid "Warning"
@@ -1154,12 +1153,6 @@ msgstr "Presupuesto / Orden"
 #: rml:sale.order:0
 msgid "Tel. :"
 msgstr "Tel. :"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr "Debe primero cancelar todos los packings asociados a este pedido de venta."
 
 #. module: sale
 #: code:addons/sale/sale.py:0

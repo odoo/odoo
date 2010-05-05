@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:12:34+0000\n"
-"PO-Revision-Date: 2010-04-27 11:12:34+0000\n"
+"POT-Creation-Date: 2010-05-05 13:57:43+0000\n"
+"PO-Revision-Date: 2010-05-05 13:57:43+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -307,8 +307,8 @@ msgstr "Confirma"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "Invoice cannot be created for this Sale Order due to one of the following reasons:\n1.The state is not in %s!\n2.The Sale Order Lines are Invoiced!"
-msgstr ""
+msgid "You must first cancel all packing attached to this sale order."
+msgstr "Primer heu de cancel·lar tots els albarans associats a aquesta comanda de venda."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -688,7 +688,7 @@ msgstr "No s'ha definit un client!"
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
 msgid "This Configuration step use to set default picking policy when make sale order"
-msgstr "Aquest pas en la configuració fixa la política d'empaquetament per defecte quan es crea una comanda de venda"
+msgstr "Aquest pas fixa la política d'empaquetament per defecte quan es crea una comanda de venda"
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
@@ -755,7 +755,7 @@ msgstr "Proveïment de venda"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sale Order Logistic"
-msgstr "Configura logística comanda de venda"
+msgstr "Configureu la logística de les comandes de venda"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1008,7 +1008,6 @@ msgid "Gives the state of the quotation or sale order. The exception state is au
 msgstr "Indica l'estat del pressupost o comanda de venda. L'estat d'excepció s'estableix automàticament quan una cancel·lació es produeix en la validació de la factura (Excepció de factura) o en el processament de l'albarà (Excepció d'enviament). L'estat 'Esperant planificació' s'estableix quan es confirma la factura però s'espera que el planificador processi la comanda en la data 'Data de la comanda'."
 
 #. module: sale
-#: code:addons/sale/sale.py:0
 #: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
 #, python-format
 msgid "Warning"
@@ -1158,12 +1157,6 @@ msgstr "Tel. :"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr "Primer heu de cancel·lar tots els albarans associats a aquesta comanda de venda."
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
 msgid "Could not cancel this sale order !"
 msgstr "No es pot cancel·lar aquesta comanda de venda!"
 
@@ -1260,7 +1253,7 @@ msgstr "UdM del producte"
 #. module: sale
 #: help:sale.config.picking_policy,step:0
 msgid "By default, Open ERP is able to manage complex routing and paths of products in your warehouse and partner locations. This will configure the most common and simple methods to deliver products to the customer in one or two operations by the worker."
-msgstr "Por defecte, OpenERP pot gestionar rutes complexes i rutes de productes en el vostre magatzem i en les ubicacions d'empreses. Això configurarà els mètodes més comuns i senzills per enviar productes al client en una o dues operacions realitzades pel treballador."
+msgstr "Per defecte, OpenERP pot gestionar rutes complexes i rutes de productes en el vostre magatzem i en les ubicacions d'empreses. Aquesta opció us configurarà els mètodes més comuns i senzills per enviar productes al client en una o dues operacions realitzades pel treballador."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy

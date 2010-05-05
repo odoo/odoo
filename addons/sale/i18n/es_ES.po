@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:34:52+0000\n"
-"PO-Revision-Date: 2010-04-27 11:34:52+0000\n"
+"POT-Creation-Date: 2010-05-05 14:21:22+0000\n"
+"PO-Revision-Date: 2010-05-05 14:21:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -187,7 +187,7 @@ msgstr "Total neto :"
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Shipping Policy"
-msgstr "Política de envío"
+msgstr "Política de facturación"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -307,8 +307,8 @@ msgstr "Confirmar"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "Invoice cannot be created for this Sale Order due to one of the following reasons:\n1.The state is not in %s!\n2.The Sale Order Lines are Invoiced!"
-msgstr ""
+msgid "You must first cancel all packing attached to this sale order."
+msgstr "Debe primero cancelar todos los albaranes asociados a este pedido de venta."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -688,7 +688,7 @@ msgstr "¡No se ha definido un cliente!"
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
 msgid "This Configuration step use to set default picking policy when make sale order"
-msgstr "Este paso en la configuración fija la política de empaquetado por defecto cuando se crea un pedido de venta"
+msgstr "Este paso fija la política de empaquetado por defecto cuando se crea un pedido de venta"
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
@@ -755,7 +755,7 @@ msgstr "Abastecimiento de venta"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sale Order Logistic"
-msgstr "Configurar logística pedido de venta"
+msgstr "Configurar la logística de los pedidos de venta"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1008,7 +1008,6 @@ msgid "Gives the state of the quotation or sale order. The exception state is au
 msgstr "Indica el estado del presupuesto o pedido de venta. El estado de excepción se establece automáticamente cuando se produce una cancelación en la validación de la factura (Excepción de factura) o en el procesado del albarán (Excepción de envío). El estado 'Esperando planificación' se establece cuando se confirma la factura pero se espera a que el planificador procese el pedido en la fecha 'Fecha del pedido'."
 
 #. module: sale
-#: code:addons/sale/sale.py:0
 #: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
 #, python-format
 msgid "Warning"
@@ -1158,12 +1157,6 @@ msgstr "Tel. :"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr "Debe primero cancelar todos los albaranes asociados a este pedido de venta."
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
 msgid "Could not cancel this sale order !"
 msgstr "¡No se puede cancelar este pedido de venta!"
 
@@ -1260,7 +1253,7 @@ msgstr "UdM del producto"
 #. module: sale
 #: help:sale.config.picking_policy,step:0
 msgid "By default, Open ERP is able to manage complex routing and paths of products in your warehouse and partner locations. This will configure the most common and simple methods to deliver products to the customer in one or two operations by the worker."
-msgstr "Por defecto, OpenERP puede gestionar rutas complejas y rutas de productos en su almacén y en las ubicaciones de empresas. Ésto configurará los métodos más comunes y sencillos para enviar productos al cliente en una o dos operaciones hechas por el trabajador."
+msgstr "Por defecto, OpenERP puede gestionar rutas complejas y rutas de productos en su almacén y en las ubicaciones de empresas. Esta opción le configurará los métodos más comunes y sencillos para enviar productos al cliente en una o dos operaciones hechas por el trabajador."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy

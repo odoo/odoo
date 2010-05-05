@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:27:58+0000\n"
-"PO-Revision-Date: 2010-04-27 11:27:58+0000\n"
+"POT-Creation-Date: 2010-05-05 14:13:55+0000\n"
+"PO-Revision-Date: 2010-05-05 14:13:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -307,8 +307,8 @@ msgstr "Potwierdź"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "Invoice cannot be created for this Sale Order due to one of the following reasons:\n1.The state is not in %s!\n2.The Sale Order Lines are Invoiced!"
-msgstr ""
+msgid "You must first cancel all packing attached to this sale order."
+msgstr "Musisz najpierw anulować wszystkie listy przesunięć związane z tym zamówieniem sprzedaży."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -1008,7 +1008,6 @@ msgid "Gives the state of the quotation or sale order. The exception state is au
 msgstr "Podaje stan oferty lub zamówienia sprzedaży. Stan wyjątku jest ustawiany automatycznie gdy wystąpi operacja anulowania w trakcie zatwierdzania faktury (Wyjątek faktury) lub w procesie listy przesunięć (Wyjątek wysyłki). Stan 'Oczekiwanie na planistę' jest ustawiany, gdy faktura jest zatwierdzona ale oczekuje na planistę, aby uruchomił akcję dla daty zamówienia."
 
 #. module: sale
-#: code:addons/sale/sale.py:0
 #: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
 #, python-format
 msgid "Warning"
@@ -1154,12 +1153,6 @@ msgstr ""
 #: rml:sale.order:0
 msgid "Tel. :"
 msgstr "Tel. :"
-
-#. module: sale
-#: code:addons/sale/sale.py:0
-#, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr "Musisz najpierw anulować wszystkie listy przesunięć związane z tym zamówieniem sprzedaży."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
