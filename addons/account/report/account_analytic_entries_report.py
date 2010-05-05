@@ -46,6 +46,7 @@ class analytic_entries_report(osv.osv):
         'amount': fields.float('Amount', readonly=True),
         'unit_amount': fields.float('Unit Amount', readonly=True),
         'amount_currency': fields.float('Amount Currency', readonly=True),
+        'nbr': fields.integer('#Entries', readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'analytic_entries_report')
@@ -53,6 +54,7 @@ class analytic_entries_report(osv.osv):
             create or replace view analytic_entries_report as (
                  select
                      min(a.id) as id,
+                     count(distinct a.id) as nbr,
                      a.create_date as date,
                      to_char(a.create_date, 'YYYY') as year,
                      to_char(a.create_date, 'MM') as month,

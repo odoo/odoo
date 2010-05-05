@@ -40,10 +40,13 @@ class account_account_report(osv.osv):
       'company_id': fields.many2one('res.company', 'Company', required=True),
       'currency_mode': fields.selection([('current', 'At Date'), ('average', 'Average Rate')], 'Outgoing Currencies Rate',readonly=True),
       'user_type': fields.many2one('account.account.type', 'Account Type',readonly=True),
+      'quantity': fields.float('Quantity', readonly=True),
+      'amount_total': fields.float('Total Amount', readonly=True),
       'credit': fields.float('Credit', readonly=True),
       'debit': fields.float('Debit', readonly=True),
       'balance': fields.float('Balance', readonly=True),
       'nbr': fields.integer('#Accounts', readonly=True),
+      'parent_account_id': fields.many2one('account.account', 'Parent Account', required=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_account_report')
@@ -58,14 +61,17 @@ class account_account_report(osv.osv):
                     a.company_id as company_id,
                     a.currency_mode as currency_mode,
                     a.user_type as user_type,
+                    a.parent_id as parent_account_id,
+                    sum(ail.quantity) as quantity,
+                    sum(ail.price_subtotal) as amount_total,
                     sum(m.credit) as credit,
                     sum(m.debit) as debit,
                     (sum(m.credit)-sum(m.debit)) as balance
                 from
                         account_account as a
-                    left join
-                        account_move_line as m
-                    on m.account_id=a.id
+                        left join account_move_line as m on m.account_id=a.id
+                        left join account_invoice_line  as ail on ail.account_id=a.id
+                        left join account_invoice as ai on ai.account_id=a.id
                 group by
                     a.name,
                     a.code,
@@ -73,7 +79,8 @@ class account_account_report(osv.osv):
                     a.company_id,
                     a.currency_mode,
                     a.user_type,
-                    m.account_id
+                    m.account_id,
+                    a.parent_id
             )
         """)
 account_account_report()
