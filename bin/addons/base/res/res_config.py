@@ -50,7 +50,16 @@ class res_config_configurable(osv.osv_memory):
         if total:
             return round(open*100./total)
         return 100.
-
+#    def default_get(self, cr, uid, fields_list, context=None):
+#        ''' Set Config Logo...
+#        '''
+#        defaults = super(res_config_configurable, self).default_get(
+#            cr, uid, fields_list, context=context)
+#        file_no = str(random.randint(1,3))
+#        path = os.path.join('base','res','config_pixmaps/%s.png'%file_no)
+#        file_data = tools.file_open(path,'rb').read()
+#        defaults.update({'config_logo':base64.encodestring(file_data)})
+#        return defaults
     def _get_image(self, cr, uid, context=None):
         file_no = str(random.randint(1,3))
         path = os.path.join('base','res','config_pixmaps/%s.png'%file_no)
