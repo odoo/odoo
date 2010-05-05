@@ -101,7 +101,7 @@
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Categorization"/>
                         <field name="section_id" colspan="1" widget="selection"/>
-                        <field name="categ_id" select="1"
+                        <field name="categ_id" select="1" groups="base.group_extended"
                             string="Category" widget="selection"
                             domain="[('object_id.model', '=', 'crm.opportunity')]" />
                     </group>
@@ -221,7 +221,7 @@
                 <field name="planned_revenue" sum="Total of Planned Revenue"/>
                 <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
                 <field name="date_action"/>
-                <field name="section_id"/>
+                <field name="section_id" groups="base.group_extended"/>
                 <field name="user_id"/>
                 <field name="priority"/>
                 <field name="state"/>
@@ -285,7 +285,6 @@
                 />
                 <separator orientation="vertical"/>
                 <field name="name" string="Opportunity"/>
-                <field name="partner_id"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
                         domain="[('user_id','=',uid)]"
@@ -315,7 +314,7 @@
                     <filter string="Partner" icon="terp-crm" domain="[]"
                         context="{'group_by':'partner_id'}" />
                     <filter string="Salesman" icon="terp-crm"
-                        domain="[]" context="{'group_by':'user_id'}" />
+                        domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}" />
                     <separator orientation="vertical" />
                     <filter string="Creation" icon="terp-project"
                         domain="[]" context="{'group_by':'create_date'}" />
