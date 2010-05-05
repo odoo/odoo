@@ -1891,8 +1891,8 @@ class stock_move(osv.osv):
         for move in too_many:
             self.write(cr, uid, move.id,
                     {
-                        'product_qty': product_qty,
-                        'product_uos_qty': product_qty
+                        'product_qty': move.product_qty,
+                        'product_uos_qty': move.product_qty
                     })
             complete.append(move)
 
