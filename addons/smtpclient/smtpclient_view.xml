@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_server_statistics_graph">
+            <field name="name">report.smtp.server.graph</field>
+            <field name="model">report.smtp.server</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Server Statistics" type="bar">
+                    <field name="no" operator="+" />
+                    <field name="history" operator="+" group="True" />
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_server_statistics_tree">
+            <field name="name">report.smtp.server.tree</field>
+            <field name="model">report.smtp.server</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Server Statistics">
+                    <field name="no" />
+                    <field name="history" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_server_statistics_form">
+            <field name="name">report.smtp.server.form</field>
+            <field name="model">report.smtp.server</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Server Statistics">
+                    <field name="no" />
+                    <field name="history" select="1" />
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window"
+            id="action_view_server_statistics_graph">
+            <field name="res_model">report.smtp.server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="view_server_statistics_graph" />
+        </record>
+
+        <record model="ir.ui.view" id="email_smtpclient_form_new">
+            <field name="name">email.smtpclient.form</field>
+            <field name="model">email.smtpclient</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="SMTP Server">
+                    <group col="6" colspan="4">
+                        <field name="name" select="1" />
+                        <field name="date_create" select="1"/>
+                        <field name="priority"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Configuration">
+                            <group col="2" colspan="2">
+                                <separator string="Server Configuration" colspan="2" />
+                                <field name="auth_type" on_change="change_servertype(auth_type)"/>
+                                <field name="server" select="2" />
+                                <field name="port" select="2" />
+                                <field name="ssl" select="2" />
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="User Configuration" colspan="2" />
+                                <field name="email" select="1" on_change="change_email(email)"/>
+                                <field name="from_email" select="1"/>
+                                <field name="auth" select="2"/>
+                                <field name="user" select="1" attrs="{'required': [('auth_type','in',['gmail','yahoo'])]}"/>
+                                <field name="password" password="True" attrs="{'required': [('auth_type','in',['gmail','yahoo'])]}"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Message Queue Configuration" colspan="2" />
+                                <field name="active" select="2" />
+                                <field name="delete_queue" select="2" />
+                                <field name="delete_queue_period" select="2" attrs="{'readonly':[('delete_queue','not in',['content','all'])]}"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Email Copy Configuration" colspan="2" />
+                                <field name="cc_to" select="2" />
+                                <field name="bcc_to" select="2" />
+                            </group>
+                            
+                            <newline/>
+                            <separator string="Server Information" colspan="4"/>
+                            <group col="3" colspan="4">
+                                <field name="state" select="1"/>
+                                <button name="set_to_draft" string="Set to Draft" type="object" states="waiting,confirm"/>
+                            </group>
+                            <group col="4" colspan="4">
+                                <field name="process_id"/>
+                                <button name="start_process" string="Start Server" attrs="{'invisible':[('pstate','=','running')]}" type="object"/>
+                                <button name="stop_process" string="Stop Server" attrs="{'invisible':[('pstate','=','stop')]}" type="object"/>
+                            </group>
+                        </page>
+                        <page string="Message Headers">
+                            <field name="header_ids" colspan="4" nolabel="1">
+                                <form string="Message Headers">
+                                    <field name="key"/>
+                                    <field name="value"/>
+                                </form>
+                                <tree string="Message Headers">
+                                    <field name="key"/>
+                                    <field name="value"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Messages">
+                            <separator string="Verification Message" colspan="4" />
+                            <field name="verify_email" colspan="4" nolabel="1" />
+                            <label string="__code__ for Verification Code" />
+                            <separator string="Test Message" colspan="4" />
+                            <field name="test_email" select="2" colspan="4" nolabel="1" />
+                        </page>
+                        <page string="Disclaimers">
+                            <separator string="Disclaimers Message" colspan="4" />
+                            <field name="disclaimers" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Permission">
+                            <separator string="Access Permission"
+                                colspan="4" />
+                            <field name="users_id" select="1"
+                                colspan="4" nolabel="1" />
+                        </page>
+
+                        <!--page string="Statistics">
+                            <field name="server_statistics"
+                                mode="graph,tree" colspan="4" nolabel="1" />
+                        </page-->
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_smtpclient_tree">
+            <field name="name">email.smtpclient.form</field>
+            <field name="model">email.smtpclient</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="SMTP Server">
+                    <field name="name" />
+                    <field name="pstate"/>
+                    <field name="from_email" />
+                    <field name="user" />
+                    <field name="server" />
+                    <field name="port" />
+                    <field name="type" />
+                    <field name="ssl" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window"
+            id="action_email_smtpclient_tree">
+            <field name="name">Email Server</field>
+            <field name="res_model">email.smtpclient</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_smtpclient_tree" />
+        </record>
+        
+        <menuitem name="Email Services" id="menu_smtpclient_administration_server" parent="base.menu_config"/>
+        
+        <menuitem name="SMTP Servers" id="menu_smtpclient_administration_smtp_server" parent="menu_smtpclient_administration_server" action="action_email_smtpclient_tree"/>
+                
+        <record model="ir.ui.view" id="email_smtpclient_history_tree">
+            <field name="name">email.smtpclient.history.tree</field>
+            <field name="model">email.smtpclient.history</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Server History">
+                    <field name="server_id" />
+                    <field name="user_id" />
+                    <field name="date_create" />
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_smtpclient_history_form">
+            <field name="name">email.smtpclient.history.form</field>
+            <field name="model">email.smtpclient.history</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Server History">
+                    <field name="server_id"
+                        domain="[('id','=',parent.id)]" select="1"/>
+                    <field name="date_create" select="1"/>
+                    <field name="name" colspan="4" select="1"/>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window"
+            id="action_email_smtpclient_history_tree">
+            <field name="name">Sent Email History</field>
+            <field name="res_model">email.smtpclient.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_smtpclient_history_tree" />
+        </record>
+        
+        <menuitem name="Sent Email History" id="menu_smtpclient_administration_server_history" parent="menu_smtpclient_administration_smtp_server" action="action_email_smtpclient_history_tree"/>
+    
+        <act_window context="{'server_id': active_id}" domain="[('server_id', '=', active_id)]" id="act_mail_server_2_mail_history" name="Email History" res_model="email.smtpclient.history" src_model="email.smtpclient"/>
+        
+        
+        <!-- MessageQueue Views -->
+        <record model="ir.ui.view" id="email_smtpclient_queue_tree">
+            <field name="name">email.smtpclient.queue.tree</field>
+            <field name="model">email.smtpclient.queue</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Message Queue">
+                    <field name="date_create" />
+                    <field name="priority"/>
+                    <field name="to" />
+                    <field name="name" />
+                    <field name="server_id" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_smtpclient_queue_form">
+            <field name="name">email.smtpclient.queue.form</field>
+            <field name="model">email.smtpclient.queue</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Message Queue">
+                    <notebook>
+                        <page string="General">
+                            <field name="server_id"    select="1"/>
+                            <field name="to" select="1"/>
+                            <field name="priority"/>
+                            <field name="name" colspan="4" select="1"/>
+                            <separator string="Message" colspan="4" />
+                            <field name="body" colspan="4" select="1" nolabel="1"/>
+                            <field name="state" select="1"/>
+                            <field name="date_create" select="1"/>
+                        </page>
+                        <page string="Error">
+                            <separator string="Last Error occured" colspan="4"/>
+                            <field name="error" nolabel="1"/>
+                        </page>
+                        <page string="Message">
+                            <separator string="Message with All Headers" colspan="4"/>
+                            <field name="serialized_message" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_email_smtpclient_queue_tree">
+            <field name="name">Message Queue</field>
+            <field name="res_model">email.smtpclient.queue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="email_smtpclient_queue_tree" />
+        </record>
+        <menuitem name="Message Queue" id="menu_smtpclient_administration_smtp_server_queue" parent="menu_smtpclient_administration_smtp_server" action="action_email_smtpclient_queue_tree"/>
+        
+        <act_window context="{'server_id': active_id}" domain="[('server_id', '=', active_id), ('state','!=', 'send')]" id="act_mail_server_2_mail_queue" name="Message Queus" res_model="email.smtpclient.queue" src_model="email.smtpclient"/>
+    </data>
+</openerp>

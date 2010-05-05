@@ -27,6 +27,26 @@ from tools.misc import currency
 from tools.translate import _
 
 class account_bank_statement(osv.osv):
+
+    def button_import_invoice(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
+        model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context.update({'statement_id': ids[0]})
+        return {
+            'name': _('Import Invoice'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.statement.from.invoice',
+            'views': [(resource_id,'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'nodestroy': True
+                }
+
     def _default_journal_id(self, cr, uid, context={}):
         if context.get('journal_id', False):
             return context['journal_id']
@@ -352,7 +372,16 @@ class account_bank_statement(osv.osv):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete bank statement which are already confirmed !'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
-    
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['move_line_ids'] = []
+        return super(account_bank_statement, self).copy(cr, uid, id, default, context)
+
 account_bank_statement()
 
 

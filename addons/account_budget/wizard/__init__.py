@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,15 +15,15 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard_crossovered_budget_report
-import wizard_analytic_account_budget
-import wizard_crossovered_budget_summary_report
+import account_budget_crossovered_report
+import account_budget_analytic
+import account_budget_crossovered_summary_report
 
-import wizard_budget_spread
-import wizard_budget_report
+import account_budget_spread
+import account_budget_report
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

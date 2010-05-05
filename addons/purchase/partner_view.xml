@@ -8,12 +8,12 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="priority">36</field>
             <field name="arch" type="xml">
-                <group name="sale_list" position="after">
-                    <group colspan="2" col="2">
+                <page string="Sales &amp; Purchases" position="inside">
+                    <group colspan="4" col="2" groups="base.group_extended">
                         <separator string="Purchases Properties" colspan="2"/>
-                        <field name="property_product_pricelist_purchase"/>
+                        <field name="property_product_pricelist_purchase" />
                     </group>
-                </group>
+                </page>
             </field>
         </record>
 

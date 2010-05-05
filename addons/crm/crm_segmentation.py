@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -31,19 +31,45 @@ class crm_segmentation(osv.osv):
     '''
     _name = "crm.segmentation"
     _description = "Partner Segmentation"
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, help='The name of the segmentation.'),
         'description': fields.text('Description'),
-        'categ_id': fields.many2one('res.partner.category', 'Partner Category', required=True, help='The partner category that will be added to partners that match the segmentation criterions after computation.'),
-        'exclusif': fields.boolean('Exclusive', help='Check if the category is limited to partners that match the segmentation criterions. If checked, remove the category from partners that doesn\'t match segmentation criterions'),
-        'state': fields.selection([('not running','Not Running'),('running','Running')], 'Execution Status', readonly=True),
+        'categ_id': fields.many2one('res.partner.category', 'Partner Category',\
+                         required=True, help='The partner category that will be \
+                         added to partners that match the segmentation criterions after computation.'),
+        'exclusif': fields.boolean('Exclusive', help='Check if the category is \
+                        limited to partners that match the segmentation criterions.\
+                        If checked, remove the category from partners that doesn\'t \
+                        match segmentation criterions'),
+        'state': fields.selection([('not running','Not Running'),\
+                    ('running','Running')], 'Execution Status', readonly=True),
         'partner_id': fields.integer('Max Partner ID processed'),
-        'segmentation_line': fields.one2many('crm.segmentation.line', 'segmentation_id', 'Criteria', required=True),
-        'som_interval': fields.integer('Days per Periode', help="A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionality for recurring businesses."),
-        'som_interval_max': fields.integer('Max Interval', help="The computation is made on all events that occured during this interval, the past X periods."),
-        'som_interval_decrease': fields.float('Decrease (0>1)', help="If the partner has not purchased (or bought) during a period, decrease the state of mind by this factor. It\'s a multiplication"),
-        'som_interval_default': fields.float('Default (0=None)', help="Default state of mind for period preceeding the 'Max Interval' computation. This is the starting state of mind by default if the partner has no event."),
-        'sales_purchase_active': fields.boolean('Use The Sales Purchase Rules', help='Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored')
+        'segmentation_line': fields.one2many('crm.segmentation.line', \
+                            'segmentation_id', 'Criteria', required=True),
+        'som_interval': fields.integer('Days per Periode', help="A period is the \
+                        average number of days between two cycle of sale or\
+                        purchase for this segmentation. It's mainly used to\
+                        detect if a partner has not purchased or buy for a too \
+                        long time, so we suppose that his state of mind has \
+                        decreased because he probably bought goods to another \
+                        supplier. Use this functionality for recurring businesses."),
+        'som_interval_max': fields.integer('Max Interval', help="The computation \
+                            is made on all events that occured during this \
+                            interval, the past X periods."),
+        'som_interval_decrease': fields.float('Decrease (0>1)', help="If the \
+                                     partner has not purchased (or bought) \
+                                     during a period, decrease the state of \
+                                     mind by this factor. It\'s a multiplication"),
+        'som_interval_default': fields.float('Default (0=None)', help="Default \
+                                     state of mind for period preceeding the \
+                                     'Max Interval' computation. This is the \
+                                     starting state of mind by default if the \
+                                     partner has no event."),
+        'sales_purchase_active': fields.boolean('Use The Sales Purchase Rules',\
+                                     help='Check if you want to use this tab as\
+                                    part of the segmentation rule. If not \
+                                    checked, the criteria beneath will be ignored')
     }
     _defaults = {
         'partner_id': lambda *a: 0,
@@ -54,11 +80,19 @@ class crm_segmentation(osv.osv):
     }
 
     def process_continue(self, cr, uid, ids, start=False):
-        categs = self.read(cr,uid,ids,['categ_id','exclusif','partner_id', 'sales_purchase_active', 'profiling_active'])
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of Process continue’s IDs"""
+
+        categs = self.read(cr, uid, ids, ['categ_id', 'exclusif', 'partner_id',\
+                                 'sales_purchase_active', 'profiling_active'])
         for categ in categs:
             if start:
                 if categ['exclusif']:
-                    cr.execute('delete from res_partner_category_rel where category_id=%s', (categ['categ_id'][0],))
+                    cr.execute('delete from res_partner_category_rel \
+                            where category_id=%s', (categ['categ_id'][0],))
 
             id = categ['id']
 
@@ -77,29 +111,46 @@ class crm_segmentation(osv.osv):
                     partners.remove(pid)
 
             for partner_id in partners:
-                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner_id))
+                cr.execute('insert into res_partner_category_rel (category_id,partner_id) \
+                        values (%s,%s)', (categ['categ_id'][0], partner_id))
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
         return True
 
     def process_stop(self, cr, uid, ids, *args):
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of Process stop’s IDs"""
+
         return self.write(cr, uid, ids, {'state':'not running', 'partner_id':0})
 
     def process_start(self, cr, uid, ids, *args):
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of Process start’s IDs """
+
         self.write(cr, uid, ids, {'state':'running', 'partner_id':0})
         return self.process_continue(cr, uid, ids, start=True)
 crm_segmentation()
 
 class crm_segmentation_line(osv.osv):
+    """ Segmentation line """
     _name = "crm.segmentation.line"
     _description = "Segmentation line"
+
     _columns = {
         'name': fields.char('Rule Name', size=64, required=True),
         'segmentation_id': fields.many2one('crm.segmentation', 'Segmentation'),
-        'expr_name': fields.selection([('sale','Sale Amount'),('som','State of Mind'),('purchase','Purchase Amount')], 'Control Variable', size=64, required=True),
+        'expr_name': fields.selection([('sale','Sale Amount'),('som','State of Mind'),\
+                        ('purchase','Purchase Amount')], 'Control Variable', size=64, required=True),
         'expr_operator': fields.selection([('<','<'),('=','='),('>','>')], 'Operator', required=True),
         'expr_value': fields.float('Value', required=True),
-        'operator': fields.selection([('and','Mandatory Expression'),('or','Optional Expression')],'Mandatory / Optional', required=True),
+        'operator': fields.selection([('and','Mandatory Expression'),\
+                        ('or','Optional Expression')],'Mandatory / Optional', required=True),
     }
     _defaults = {
         'expr_name': lambda *a: 'sale',
@@ -107,6 +158,12 @@ class crm_segmentation_line(osv.osv):
         'operator': lambda *a: 'and'
     }
     def test(self, cr, uid, ids, partner_id):
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of Test’s IDs """
+
         expression = {'<': lambda x,y: x<y, '=':lambda x,y:x==y, '>':lambda x,y:x>y}
         ok = False
         lst = self.read(cr, uid, ids)
@@ -115,7 +172,8 @@ class crm_segmentation_line(osv.osv):
             if cr.fetchone():
                 if l['expr_name']=='som':
                     datas = self.pool.get('crm.segmentation').read(cr, uid, [l['segmentation_id'][0]],
-                            ['som','som_interval','som_interval_max','som_interval_default', 'som_interval_decrease'])
+                            ['som','som_interval','som_interval_max',\
+                             'som_interval_default', 'som_interval_decrease'])
                     value = crm_operators.som(cr, uid, partner_id, datas[0])
                 elif l['expr_name']=='sale':
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
@@ -153,10 +211,8 @@ class crm_segmentation_line(osv.osv):
                 if res:
                     return True
         return True
+
 crm_segmentation_line()
-
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

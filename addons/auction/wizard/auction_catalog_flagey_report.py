@@ -40,9 +40,21 @@ class auction_catalog_flagey(osv.osv_memory):
         return res
     
     def view_init(self, cr, uid, fields, context):
-        current_auction = self.pool.get('auction.dates').browse(cr,uid,context.get('active_ids', []))
-        v_lots = self.pool.get('auction.lots').search(cr,uid,[('auction_id','=',current_auction.id)])
-        v_ids = self.pool.get('auction.lots').browse(cr,uid,v_lots)
+        """ 
+         Creates view dynamically, adding fields at runtime, raises exception
+         at the time of initialization of view.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary 
+         @return: New arch of view with new columns.
+        """
+        lots_obj = self.pool.get('auction.lots')
+        auc_dates_obj = self.pool.get('auction.dates')
+        current_auction = auc_dates_obj.browse(cr,uid,context.get('active_ids', []))
+        v_lots = lots_obj.search(cr,uid,[('auction_id','=',current_auction.id)])
+        v_ids = lots_obj.browse(cr,uid,v_lots)
         for ab in v_ids:
             if not ab.auction_id :
                 raise osv.except_osv('Error!','No Lots belong to this Auction Date')

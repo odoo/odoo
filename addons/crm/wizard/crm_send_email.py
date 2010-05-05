@@ -29,19 +29,22 @@ from crm import crm
 class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
     _name = "crm.send.mail"
-    _description = "Case Send new email"
+    _description = "Send new email"
 
     _columns = {
-                'email_to' : fields.char('To', size=64, required=True),
-                'email_from' : fields.char('From', size=64, required=True),
-                'email_cc' : fields.char('CC', size=128),
-                'subject': fields.char('Subject', size=128, required=True),
-                'text': fields.text('Message', required=True),
-                'state': fields.selection(crm.AVAILABLE_STATES, string='State'),
-                'doc1': fields.binary("Attachment1"),
-                'doc2': fields.binary("Attachment2"),
-                'doc3': fields.binary("Attachment3"),
-                }
+        'email_to' : fields.char('To', size=64, required=True),
+        'email_from' : fields.char('From', size=64, required=True),
+        'email_cc' : fields.char('CC', size=128),
+        'subject': fields.char('Subject', size=128, required=True),
+        'text': fields.text('Message', required=True),
+        'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),
+        'doc1': fields.binary("Attachment1"),
+        'doc1_fname': fields.char("File Name", size=64),
+        'doc2': fields.binary("Attachment2"),
+        'doc2_fname': fields.char("File Name", size=64),
+        'doc3': fields.binary("Attachment3"),
+        'doc3_fname': fields.char("File Name", size=64),
+    }
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Closes Phonecall to Opportunity form
@@ -51,6 +54,10 @@ class crm_send_new_email(osv.osv_memory):
     def action_send(self, cr, uid, ids, context=None):
         """ This sends an email to ALL the addresses of the selected partners.
         """
+
+        hist_obj = self.pool.get('crm.case.history')
+        smtp_pool = self.pool.get('email.smtpclient')
+
         if not context:
             context = {}
 
@@ -63,13 +70,17 @@ class crm_send_new_email(osv.osv_memory):
 
         for data in self.read(cr, uid, ids, context=context):
             attach = filter(lambda x: x, [data['doc1'], data['doc2'], data['doc3']])
-            attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
-
+            attach = map(lambda x: (data['doc' + str(attach.index(x) + 1) \
+                            + '_fname'], base64.decodestring(x)), attach)
+            message_id = None            
+            
+            case = case_pool.browse(cr, uid, res_id)
             if context.get('mail', 'new') == 'new':
-                case = case_pool.browse(cr, uid, res_id)
+                if len(case.history_line):
+                    message_id = case.history_line[0].message_id
             else:
-                hist_obj = self.pool.get('crm.case.history')
                 hist = hist_obj.browse(cr, uid, res_id)
+                message_id = hist.message_id
                 model = hist.log_id.model_id.model
                 model_pool = self.pool.get(model)
                 case = model_pool.browse(cr, uid, hist.log_id.res_id)
@@ -77,37 +88,51 @@ class crm_send_new_email(osv.osv_memory):
             emails = filter(None, emails)
             body = data['text']
 
-            if case.user_id.signature:
-                body += '\n\n%s' % (case.user_id.signature)
             body = case_pool.format_body(body)
             email_from = data.get('email_from', False)
-            case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from)
+            case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from, message_id=message_id)
+
+            x_headers = {
+                'Reply-To':"%s" % case.section_id.reply_to,
+            }
+            if message_id:
+                x_headers['References'] = "%s" % (message_id)
+
+            flag = False
+            if case.section_id and case.section_id.server_id:
+                flag = smtp_pool.send_email(
+                    cr=cr,
+                    uid=uid, 
+                    server_id=case.section_id.server_id.id,
+                    emailto=emails,
+                    subject=data['subject'],
+                    body="<pre>%s</pre>" % body,
+                    attachments=attach,
+                    headers=x_headers
+                )
+            else:
+                flag = tools.email_send(
+                    email_from,
+                    emails,
+                    data['subject'],
+                    body,
+                    attach=attach,
+                    reply_to=case.section_id.reply_to,
+                    openobject_id=str(case.id),
+                    x_headers=x_headers
+                )
             
-            flag = tools.email_send(
-                email_from,
-                emails,
-                data['subject'],
-                body,
-                attach=attach,
-                reply_to=case.section_id.reply_to,
-                openobject_id=str(case.id),
-            )
-            if flag:                
+            if flag:
                 if data['state'] == 'unchanged':
                     pass
                 elif data['state'] == 'done':
                     case_pool.case_close(cr, uid, [case.id])
                 elif data['state'] == 'draft':
-                    case_pool.case_reset(cr, uid, [case.id])                
+                    case_pool.case_reset(cr, uid, [case.id])
                 elif data['state'] in ['cancel', 'open', 'pending']:
                     act = 'case_' + data['state']
                     getattr(case_pool, act)(cr, uid, [case.id])
                 cr.commit()
-
-#            Commented because form does not close due to raise
-#                raise osv.except_osv(_('Email!'), ("Email Successfully Sent"))
-#            else:
-#                raise osv.except_osv(_('Warning!'), _("Email not sent !"))
 
         return {}
 
@@ -137,13 +162,15 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_from' in fields:
                 res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
                             (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from',False)})
+                             case.user_id.address_id.email and \
+                             "%s <%s>" % (case.user_id.name, case.user_id.address_id.email)) or \
+                            tools.config.get('email_from',False)})
             if 'subject' in fields:
-                res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')}) 
+                res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')})
             if 'email_cc' in fields:
                 res.update({'email_cc': case.email_cc or ''})
             if 'text' in fields:
-                res.update({'text': case.description or ''})
+                res.update({'text': '\n\n'+(case.user_id.signature or '')})
             if 'state' in fields:
                 res.update({'state': 'pending'})
         return res
@@ -154,6 +181,8 @@ class crm_send_new_email(osv.osv_memory):
         """
         hist_obj = self.pool.get('crm.case.history')
         res_ids = context and context.get('active_ids', []) or []
+
+        include_original = context and context.get('include_original', False) or False
         res = {}
         for hist in hist_obj.browse(cr, uid, res_ids):
             model = hist.log_id.model_id.model
@@ -165,9 +194,10 @@ class crm_send_new_email(osv.osv_memory):
                 res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
                             (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or hist.email_to or tools.config.get('email_from',False)})
-            if 'text' in fields:
-                header = '-------- Original Message --------'                
-                sender = 'From: %s' %(hist.email_from or '')                
+
+            if include_original == True and 'text' in fields:
+                header = '-------- Original Message --------'
+                sender = 'From: %s' %(hist.email_from or '')
                 to = 'To: %s' % (hist.email_to or '')
                 sentdate = 'Date: %s' % (hist.date)
                 desc = '\n%s'%(hist.description)
@@ -175,7 +205,7 @@ class crm_send_new_email(osv.osv_memory):
                 original = '\n'.join(original)
                 res['text']=original
             if 'subject' in fields:
-                res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')}) 
+                res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')})
             if 'state' in fields:
                 res['state']='pending'
         return res
@@ -212,4 +242,3 @@ class crm_send_new_email(osv.osv_memory):
 
 crm_send_new_email()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

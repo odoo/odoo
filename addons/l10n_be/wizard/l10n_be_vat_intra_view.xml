@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    	<menuitem
+        id="menu_finance_belgian_statement"
+        name="Belgium Statements"
+        parent="account.menu_finance_legal_statement"/>
+
+    	<record id="view_vat_intra" model="ir.ui.view">
+            <field name="name">Partner VAT intra</field>
+            <field name="model">partner.vat.intra</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<form string="Partner VAT intra">
+					    <notebook>
+						    <page string="General Information">
+							    <label string="This wizard will create an XML file for Vat Intra" colspan="4"/>
+							    <newline/>
+							    <field name="fyear" default_focus="1" />
+                  <field name="period_code"/>
+                  <newline/>
+                  <field name="period_ids"/>
+							    <newline/>
+							    <field name="mand_id"/>
+							    <newline/>
+								<button colspan="4" name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
+				           	 	<separator colspan="4"/>
+				              	<group colspan="4" >
+									<field name="msg" nolabel="1" colspan="4"/>
+							    	<field name="file_save" readonly="True"/>
+							    </group>
+				              	<button special="cancel" colspan="4" string="Cancel" icon="gtk-cancel"/>
+						    </page>
+						    <page string="European Countries">
+						    	<field name="country_ids" colspan="4" nolabel="1" />
+						    </page>
+						</notebook>
+						<newline/>
+				</form>
+            </field>
+		</record>
+
+		<record id="action_vat_intra" model="ir.actions.act_window">
+            <field name="name">Partner Vat Intra</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">partner.vat.intra</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_vat_intra"/>
+            <field name="target">new</field>
+    	</record>
+
+	    <menuitem
+	        name="Partner VAT Intra"
+	        parent="menu_finance_belgian_statement"
+	        action="action_vat_intra"
+	        id="l10_be_vat_intra"/>
+
+    </data>
+</openerp>

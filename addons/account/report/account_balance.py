@@ -95,12 +95,12 @@ class account_balance(report_sxw.rml_parse):
             ctx['state'] = form['context'].get('state','all')
             ctx['fiscalyear'] = form['fiscalyear']
             if form['state']=='byperiod' :
-                ctx['periods'] = form['periods'][0][2]
+                ctx['periods'] = form['periods']
             elif form['state']== 'bydate':
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to']
             elif form['state'] == 'all' :
-                ctx['periods'] = form['periods'][0][2]
+                ctx['periods'] = form['periods']
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to']
 #            accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)

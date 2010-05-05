@@ -152,9 +152,9 @@ class account_invoice(osv.osv):
     ## @parma date_invoice date of the invoice
     ## @parma payment_term inoice payment term
     ## @param partner_bank_id the partner linked invoice bank
-    ## @return the dict of values with the partner_bank value updated       
+    ## @return the dict of values with the partner_bank value updated
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False):
+            date_invoice=False, payment_term=False, partner_bank=False, company_id=False):
         """ Function that is call when the partner of the invoice is changed
         it will retriev and set the good bank partner bank"""
         res = super(account_invoice, self).onchange_partner_id(
@@ -175,7 +175,7 @@ class account_invoice(osv.osv):
         if type in ('in_invoice', 'in_refund'):
             res['value']['partner_bank'] = bank_id
 
-        if partner_bank_id != bank_id:
+        if partner_bank != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             res['value'].update(to_update['value'])
         return res

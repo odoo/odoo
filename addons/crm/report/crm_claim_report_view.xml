@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>	
+    <data>
+
+<!-- CRM Claim Report Tree View -->
 
         <record id="view_report_crm_claim_tree" model="ir.ui.view">
             <field name="name">crm.claim.report.tree</field>
@@ -8,20 +10,26 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Claims">
-					<field name="name" />
-					<field name="month"/>
-					<field name="section_id" />
-                    <field name="user_id" />
-                    <field name="company_id" />
-                    <field name="partner_id" />
-					<field name="nbr" string="#Claim"/>
-	                <field name="delay_close"/>
-	                <field name="state"  invisible="1"/>
+					<field name="name" invisible="1"/>
+					<field name="month" invisible="1"/>
+					<field name="section_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="day" invisible="1"/>
+					<field name="nbr" string="#Claim" sum="#Claim"/>
+	                <field name="delay_close" avg="Avg Closing Delay"/>
+	                <field name="state" invisible="1"/>
 	                <field name="stage_id" invisible="1"/>
 	                <field name="categ_id" invisible="1"/>
+	                <field name="priority" invisible="1"/>
+	                <field name="type_id" invisible="1"/>
                 </tree>
             </field>
         </record>
+
+<!-- CRM Claim Report Form View -->
+
         <record id="view_report_crm_claim_form" model="ir.ui.view">
             <field name="name">crm.claim.report.form</field>
             <field name="model">crm.claim.report</field>
@@ -29,7 +37,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="nbr" position="after">
-                	<field name="delay_close"/>
+                    <field name="delay_close"/>
                     <field name="amount_revenue"/>
                     <field name="amount_costs"/>
                     <field name="amount_revenue_prob"/>
@@ -37,7 +45,9 @@
                 </field>
             </field>
         </record>
-        
+
+<!-- CRM Claim Report Graph View -->
+
         <record id="view_report_crm_claim_graph" model="ir.ui.view">
             <field name="name">crm.claim.report.graph</field>
             <field name="model">crm.claim.report</field>
@@ -51,46 +61,75 @@
             </field>
         </record>
 
+<!-- CRM Claim Report Search View -->
+
         <record id="view_report_crm_claim_filter" model="ir.ui.view">
             <field name="name">crm.claim.report.select</field>
             <field name="model">crm.claim.report</field>
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-             <xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]' position='after'>
-                <filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
-            </xpath>
+            <data>
+            	<xpath expr='//search[@string="Search"]/group[@string="Extended options..."]/filter[@string="Cancel"]' position='after'>
+            	<group>
+            	    <separator orientation="vertical"/>
+            	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
+	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
+	                <separator orientation="vertical"/>
+	                <field name="priority" />
+	                <field name="type_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
+                </group>
+            	</xpath>
+             <xpath
+                 expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
+                 position='after'>
+                 <filter string="Stage" icon="terp-sale" domain="[]"
+                     context="{'group_by':'stage_id'}" />
+             </xpath>
+             <xpath
+                 expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Category"]'
+                 position='after'>
+                 <separator orientation="vertical"/>
+                 <filter string="Priority" icon="terp-sale" domain="[]"
+                     context="{'group_by':'priority'}" />
+                 <filter string="Type" icon="terp-sale" domain="[]"
+                     context="{'group_by':'type_id'}" />
+             </xpath>
+             </data>
             </field>
         </record>
-        
+
+<!-- CRM Claim Report Action -->
 
         <record id="action_report_crm_claim" model="ir.actions.act_window">
             <field name="name">Claims</field>
             <field name="res_model">crm.claim.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">tree,graph</field>
+  			<field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_claim_tree"/>
             <field name="search_view_id" ref="view_report_crm_claim_filter"/>
 
         </record>
-                       	
-       	<record model="ir.actions.act_window.view" id="action_report_crm_claim_tree">
-	        <field name="sequence" eval="1"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="view_report_crm_claim_tree"/>
-	        <field name="act_window_id" ref="action_report_crm_claim"/>
-	    </record>        
-                             	
-       	<record model="ir.actions.act_window.view" id="action_report_crm_claim_graph">
-	        <field name="sequence" eval="2"/>
-	        <field name="view_mode">graph</field>
-	        <field name="view_id" ref="view_report_crm_claim_graph"/>
-	        <field name="act_window_id" ref="action_report_crm_claim"/>
-	    </record>        
-      
-        
-        <menuitem name="Claims" id="menu_report_crm_claim_tree" action="action_report_crm_claim" parent="base.next_id_64"/>       
+
+           <record model="ir.actions.act_window.view" id="action_report_crm_claim_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_crm_claim_tree"/>
+            <field name="act_window_id" ref="action_report_crm_claim"/>
+        </record>
+
+           <record model="ir.actions.act_window.view" id="action_report_crm_claim_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_claim_graph"/>
+            <field name="act_window_id" ref="action_report_crm_claim"/>
+        </record>
+
+       <menuitem name="Claims" id="menu_report_crm_claim_tree"
+           groups="base.group_extended"
+           action="action_report_crm_claim" parent="base.next_id_64" />
 
 
-  </data>
+    </data>
 </openerp>

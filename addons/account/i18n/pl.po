@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-02-20 16:07+0000\n"
+"PO-Revision-Date: 2010-05-02 10:11+0000\n"
 "Last-Translator: Grzegorz Grzelak (Cirrus.pl) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-30 04:03+0000\n"
+"X-Launchpad-Export-Date: 2010-05-05 03:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -187,7 +187,7 @@ msgstr "Plan kont"
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_move_line_select
 msgid "Move line select"
-msgstr ""
+msgstr "Wybór pozycji zapisów"
 
 #. module: account
 #: rml:account.journal.period.print:0
@@ -217,7 +217,7 @@ msgstr "Oblicz kod (jeśli typ = kod)"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr "Pozycja zapisu na koncie"
+msgstr "Pozycje zapisów"
 
 #. module: account
 #: wizard_view:account.aged.trial.balance,init:0
@@ -533,7 +533,7 @@ msgstr "Uzgodnij zapłacone"
 #. module: account
 #: wizard_field:account.chart,init,target_move:0
 msgid "Target Moves"
-msgstr ""
+msgstr "Zapisy docelowe"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -776,7 +776,7 @@ msgstr "Płatność częściowa"
 #. module: account
 #: wizard_view:account_use_models,create:0
 msgid "Move Lines Created."
-msgstr "Utworzono pozycje zmian."
+msgstr "Utworzono pozycje zapisów."
 
 #. module: account
 #: field:account.fiscalyear,state:0
@@ -823,7 +823,7 @@ msgstr "(Pozostaw puste dla wszystkich otwartych lat podatkowych)"
 #. module: account
 #: field:account.invoice,move_lines:0
 msgid "Move Lines"
-msgstr "Pozycje zmian"
+msgstr "Pozycje zapisów"
 
 #. module: account
 #: model:ir.model,name:account.model_account_config_wizard
@@ -1121,7 +1121,7 @@ msgstr "Wylicz kod dla cen z podatkiem"
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
-msgstr "Prawa podatkowe"
+msgstr "Rejestr podatkowy"
 
 #. module: account
 #: field:account.fiscal.position.template,chart_template_id:0
@@ -1151,7 +1151,7 @@ msgstr "Szablony obszarów podatkowych"
 #: rml:account.invoice:0
 #: field:account.invoice.line,price_unit:0
 msgid "Unit Price"
-msgstr "Cena jednostkowa"
+msgstr "Cena jedn."
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -1562,7 +1562,7 @@ msgstr "Szablony planu kont"
 #. module: account
 #: field:account.invoice,move_id:0
 msgid "Invoice Movement"
-msgstr ""
+msgstr "Nr zapisu faktury"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -1808,7 +1808,7 @@ msgstr "Procentowo"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_charts
 msgid "Charts"
-msgstr "Wykresy"
+msgstr "Plany kont"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -2042,7 +2042,7 @@ msgstr "Dziennik - nazwa okresu"
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
-msgstr ""
+msgstr "Nazwa rejestru"
 
 #. module: account
 #: help:account.journal,entry_posted:0
@@ -2051,9 +2051,9 @@ msgid ""
 "'draft' state and instead goes directly to the 'posted state' without any "
 "manual validation."
 msgstr ""
-"Zaznacz to pole, jeśli nie chcesz aby nowe zmiany stanu konta przechodziły "
-"przez stan 'projekt' i zamiast tego od razu wchodziły w stan 'zaksięgowane' "
-"bez żadnego ręcznego zatwierdzania."
+"Zaznacz to pole, jeśli nie chcesz aby nowe zapisy konta przechodziły przez "
+"stan 'projekt' i zamiast tego od razu wchodziły w stan 'zaksięgowane' bez "
+"żadnego ręcznego zatwierdzania."
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
@@ -2087,7 +2087,7 @@ msgstr "Wydatki"
 #. module: account
 #: field:account.journal,invoice_sequence_id:0
 msgid "Invoice Sequence"
-msgstr "Numeracja faktury"
+msgstr "Numeracja faktur"
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,init:0
@@ -2114,7 +2114,7 @@ msgstr ""
 #: model:ir.actions.wizard,name:account.wizard_validate_account_moves_line
 #: model:ir.ui.menu,name:account.menu_validate_account_moves
 msgid "Validate Account Moves"
-msgstr "Zatwierdź zmiany konta"
+msgstr "Zatwierdź zapisy konta"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -2212,7 +2212,7 @@ msgstr "(pozostaw puste, aby stosować bieżący okres)"
 #: model:ir.actions.act_window,name:account.action_invoice_tree8
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree8
 msgid "Draft Supplier Invoices"
-msgstr "Projekt faktury dla klienta"
+msgstr "Projekty faktur od dostawcy"
 
 #. module: account
 #: wizard_field:account.invoice.refund,init,period:0
@@ -2415,7 +2415,7 @@ msgstr "Konto podatkowe"
 #. module: account
 #: field:account.analytic.line,move_id:0
 msgid "Move Line"
-msgstr "Przesuń pozycję"
+msgstr "Pozycja zapisu"
 
 #. module: account
 #: field:account.bank.accounts.wizard,acc_no:0
@@ -2868,7 +2868,7 @@ msgstr "ID partnera"
 #: wizard_view:account.invoice.pay,addendum:0
 #: wizard_view:account.move.line.reconcile,addendum:0
 msgid "Write-Off Move"
-msgstr "Zmiana odpisu"
+msgstr "Zapis odpisu"
 
 #. module: account
 #: view:account.move.line:0
@@ -2952,7 +2952,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree12
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree12
 msgid "Draft Supplier Refunds"
-msgstr "Projekt korekty od dostawcy"
+msgstr "Projekty korekt od dostawcy"
 
 #. module: account
 #: model:process.node,name:account.process_node_accountingstatemententries0
@@ -3039,7 +3039,7 @@ msgstr "Kurs dla op. wychodzacych"
 #: model:ir.actions.act_window,name:account.action_invoice_tree10
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree10
 msgid "Draft Customer Refunds"
-msgstr "Projekt korekty dla klienta"
+msgstr "Projekty korekt dla klienta"
 
 #. module: account
 #: field:account.journal.column,readonly:0
@@ -3072,12 +3072,12 @@ msgstr "Dokument"
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr "Zmiana tej pozycji zapisu"
+msgstr "Zapis dla tej pozycji."
 
 #. module: account
 #: field:account.invoice.line,uos_id:0
 msgid "Unit of Measure"
-msgstr "Jednostka miary"
+msgstr "Jedn. miary"
 
 #. module: account
 #: field:account.chart.template,property_account_receivable:0
@@ -3240,8 +3240,7 @@ msgstr "Uwagi"
 msgid ""
 "The account moves of the invoice have been reconciled with account moves of "
 "the payment(s)."
-msgstr ""
-"Zmiany konta dla faktury zostały uzgodnione ze zmianami konta płatności."
+msgstr "Zapisy konta dla faktury zostały uzgodnione ze zapisami płatności."
 
 #. module: account
 #: rml:account.invoice:0
@@ -3357,7 +3356,7 @@ msgstr "Nie drukowane na fakturze"
 #. module: account
 #: field:account.move.line,move_id:0
 msgid "Move"
-msgstr "Zmiana stanu"
+msgstr "Zapis"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_src_id:0
@@ -4080,7 +4079,7 @@ msgstr "Kody podrzędne"
 #. module: account
 #: field:account.invoice,move_name:0
 msgid "Account Move"
-msgstr "Zmiana stanu konta"
+msgstr "Zapis konta"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4096,7 +4095,7 @@ msgstr "Kwota opodatkowana"
 #. module: account
 #: field:account.invoice.line,price_subtotal:0
 msgid "Subtotal w/o tax"
-msgstr "Suma częściowa bez podatku"
+msgstr "Wartość"
 
 #. module: account
 #: field:account.invoice.line,invoice_id:0
@@ -4650,7 +4649,7 @@ msgstr "Wyciąg"
 #: model:ir.actions.act_window,name:account.action_move_line_form_encode_by_move
 #: model:ir.ui.menu,name:account.menu_encode_entries_by_move
 msgid "Entries Encoding by Move"
-msgstr "Wprowadzanie zapisów przez zmianę stanu"
+msgstr "Zapisy"
 
 #. module: account
 #: wizard_view:account.analytic.account.chart,init:0
@@ -5042,7 +5041,7 @@ msgstr "Opis podatku"
 #. module: account
 #: help:account.invoice,move_id:0
 msgid "Link to the automatically generated account moves."
-msgstr "Łącznik do automatycznie wygenerowanych zmian stanu konta."
+msgstr "Numer automatycznie wygenerowanego zapisu konta."
 
 #. module: account
 #: wizard_field:account.automatic.reconcile,reconcile,reconciled:0
@@ -5111,7 +5110,7 @@ msgstr "Konto dochodu w szablonie produktu"
 #: help:account.account,currency_id:0
 #: help:account.account.template,currency_id:0
 msgid "Force all moves for this account to have this secondary currency."
-msgstr "Wymuś, aby wszystkie zmiany tego konta miały tę dodatkową walutę."
+msgstr "Wymuś, aby wszystkie zapisy tego konta miały tę dodatkową walutę."
 
 #. module: account
 #: wizard_button:populate_statement_from_inv,go,end:0
@@ -5482,7 +5481,7 @@ msgstr "Zapisy subskrypcji"
 #: model:ir.actions.act_window,name:account.action_invoice_tree6
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree6
 msgid "PRO-FORMA Customer Invoices"
-msgstr "Faktura PRO-FORMA dla klienta"
+msgstr "Fakturay PRO-FORMA dla klienta"
 
 #. module: account
 #: field:account.subscription,period_total:0
@@ -5605,7 +5604,7 @@ msgstr "Zamknięte"
 #. module: account
 #: field:account.bank.statement.line,move_ids:0
 msgid "Moves"
-msgstr "Zmiany stanu"
+msgstr "Zapisy"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -5772,7 +5771,7 @@ msgstr ""
 #: field:account.tax.code,code:0
 #: field:account.tax.code.template,code:0
 msgid "Case Code"
-msgstr ""
+msgstr "Kod rejestru"
 
 #. module: account
 #: selection:account.automatic.reconcile,init,power:0

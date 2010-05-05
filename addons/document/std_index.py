@@ -21,9 +21,8 @@
 
 import StringIO
 import odt2txt
-
-from content_index import indexer, cntIndex
 from subprocess import Popen, PIPE
+from content_index import indexer, cntIndex
 
 def _to_unicode(s):
     try:
@@ -50,6 +49,24 @@ class TxtIndex(indexer):
         
 cntIndex.register(TxtIndex())
 
+class PptxIndex(indexer):
+    def _getMimeTypes(self):
+        return [ 'application/vnd.openxmlformats-officedocument.presentationml.presentation']
+    
+    def _getExtensions(self):
+        return ['.pptx']
+
+    def _doIndexFile(self,fname):
+        # Download pptx2txt package from  http://sourceforge.net/projects/pptx2txt/" link.
+        # To install this tool, just copy pptx2txt.pl to appropriate place (e.g. /usr/bin directory)
+        fp = Popen(['pptx2txt.pl', fname], shell=False, stdout=PIPE).stdout
+        fp.read()
+        file_obj = open(str(fname + ".txt"), "r")
+        data = file_obj.read()
+        return _to_unicode(data)
+
+cntIndex.register(PptxIndex())
+
 class DocIndex(indexer):
     def _getMimeTypes(self):
         return [ 'application/ms-word']
@@ -58,10 +75,31 @@ class DocIndex(indexer):
         return ['.doc']
 
     def _doIndexFile(self,fname):
-        fp = Popen(['antiword',fname], shell=False, stdout=PIPE).stdout
+        fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
         return _to_unicode( fp.read())
 
 cntIndex.register(DocIndex())
+
+class DocxIndex(indexer):
+    def _getMimeTypes(self):
+        return [ 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+    
+    def _getExtensions(self):
+        return ['.docx']
+
+    def _doIndexFile(self,fname):
+        # Download docx2txt package from  "http://sourceforge.net/projects/docx2txt/" link.   
+        # In case, you don't want to use Makefile for installation, you can follow these steps for manual installation.
+        # Copy docx2txt.pl, docx2txt.sh and docx2txt.config to appropriate place (e.g. /usr/bin directory) . used following command.
+        # --> cp docx2txt.pl docx2txt.sh docx2txt.config /usr/bin/
+
+        fp = Popen(['docx2txt.pl', fname], shell=False, stdout=PIPE).stdout
+        fp.read()
+        file_obj = open(str(fname + ".txt"), "r")
+        data = file_obj.read()
+        return _to_unicode(data)
+
+cntIndex.register(DocxIndex())
 
 class PdfIndex(indexer):
     def _getMimeTypes(self):

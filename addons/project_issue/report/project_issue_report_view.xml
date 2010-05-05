@@ -7,23 +7,28 @@
             <field name="model">project.issue.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-				<tree string="Project Issue">
-	              	<field name="name" />
-					<field name="month"/>
-					<field name="priority" />
-					<field name="stage_id" />
-					<field name="type_id" string="Type"/>
-					<field name="project_id" invisible="1"/>
-					<field name="company_id" invisible="1"/>
-                	<field name="nbr" string="#Project Issue"/>
-                    <field name="delay_close"/>
-                    <field name="state" invisible="1"/>
+                <tree string="Project Issue">
+                    <field name="name" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="project_id" invisible="1"/>
+                    <field name="stage_id" invisible="1"/>
+                    <field name="type_id" string="Type" invisible="1"/>
+                    <field name="priority" invisible="1"/>
+                    <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                    <field name="delay_close" avg='Avg Closing Delay'/>
                     <field name="section_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="stage_id"  invisible="1"/>
                     <field name="categ_id" invisible="1"/>
+                    <field name="canal_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="task_id" invisible="1"/>
+                    <field name="assigned_to" invisible="1"/>
                     <field name="date_closed" invisible="1"/>
-                </tree>
+                    <field name="create_date" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="day" invisible="1"/>
+                    <field name="nbr" string="#Project Issue" sum='#Number of Project Issue'/>
+                  </tree>
             </field>
         </record>
         <record id="view_project_issue_report_graph" model="ir.ui.view">
@@ -45,39 +50,34 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                <data>
-                <xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Year"]' position='replace'>
-                    	<filter string="This Year" icon="terp-sale" domain="[('name','=',time.strftime('%%Y'))]"/>
-           		</xpath>
-            	<xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Month"]' position='replace'>
-                    	<filter string="This Month" icon="terp-sale" domain="[('month','=',time.strftime('%%m'))]"  />
+
+            	<xpath expr='//search[@string="Search"]/group[1]/field[@name="user_id"]' position='replace'>
+            	        <field name="user_id"  select="1" widget="selection">
+	            			<filter icon="terp-crm" string="My Project Issue" help="My Project Issue Entries" domain="[('user_id','=',uid)]" />
+               			</field>
             	</xpath>
-                <xpath expr='//search[@string="Search"]/group[1]/filter[@string="Lost"]' position='after'>
-                        <separator orientation="vertical"/>
-                    	<filter string="Closed Today" icon="terp-sale" domain="[('date_closed','=',time.strftime('%%Y/%%m/%%d'))]" />
-            	</xpath>
-               	<xpath expr='//search[@string="Search"]/group[1]/field[3]' position='after'>
-						<field name="project_id" widget="selection"/>
-            	</xpath>
-               	<xpath expr='//search[@string="Search"]/group[@string="Group By..."]' position='before'>
-               	       <newline/>
-                		<group expand="1" string="Extended options..." colspan="10" col="12">
-                    		<filter icon="terp-sale"
-                    		string="Highest"
-                    		domain="[('priority','=','1')]"/>
-                    		<filter icon="terp-sale"
-                    		string="High"
-                    		domain="[('priority','=','2')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Normal"
-                    		domain="[('priority','=','3')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Low"
-                    		domain="[('priority','=','4')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Lowest"
-                    		domain="[('priority','=','5')]"/>
-                		</group>
-                		<newline/>
+               	<xpath expr='//search[@string="Search"]/group[@string="Extended options..."]/filter[@string="Cancel"]' position='after'>
+                    	<group>
+                    		<separator orientation="vertical"/>
+                  			<field name="project_id" widget="selection" />
+                    		<field name="priority" />
+                    		<separator orientation="vertical"/>
+                    		<field name="type_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                    		<field name="task_id"/>
+                    		<separator orientation="vertical"/>
+                    		<field name="assigned_to" widget="selection">
+                    			<filter icon="terp-crm"  help = "Project Issue Assigned To Me" domain="[('assigned_to','=',uid)]" />
+ 						    	<filter icon="terp-crm"  help="Non Assigned Project Issue"  domain="[('assigned_to','=',False)]"/>
+                    		</field>
+                    		<newline/>
+                    		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                    		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
+                    		<separator orientation="vertical"/>
+                    		<field name="partner_id"  />
+                    		<field name="canal_id" widget="selection"/>
+                            <separator orientation="vertical"/>
+                            <field name="date_closed" string="Date Closed"/>
+                        </group>
 				</xpath>
 				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Company"]' position='replace'>
 					<filter string="Company" icon="terp-sale" domain="[]" context="{'group_by':'company_id'}"/>
@@ -85,8 +85,15 @@
 				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Category"]' position='after'>
             		<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
             		<separator orientation="vertical"/>
-            		<filter string="Project" icon="terp-sale" domain="[]" context="{'group_by':'project_id'}"/>
-            		<filter string="Type" icon="terp-sale" domain="[]" context="{'group_by':'type_id'}"/>
+            		<filter string="Project"  icon="terp-sale" domain="[]" context="{'group_by':'project_id'}" />
+            		<filter string="Priority"  icon="terp-sale" domain="[]" context="{'group_by':'priority'}" />
+            		<separator orientation="vertical"/>
+            		<filter string="Type"  icon="terp-sale" domain="[]" context="{'group_by':'type_id'}"/>
+            		<filter string="Task"  icon="terp-sale" domain="[]" context="{'group_by':'task_id'}"/>
+            		<newline/>
+            		<filter string="Assigned To"  icon="terp-sale" domain="[]" context="{'group_by':'assigned_to'}"/>
+            		<filter string="Partner"  icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
+            		<filter string="Channel"  icon="terp-sale" domain="[]" context="{'group_by':'canal_id'}"/>
             	</xpath>
                 </data>
             </field>
@@ -97,6 +104,7 @@
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">graph,tree</field>
+  			<field name="context">{"search_default_This Month":1,"search_default_User":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_project_issue_report_tree"/>
             <field name="search_view_id" ref="view_project_issue_report_filter"/>
         </record>
@@ -117,5 +125,7 @@
         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
         <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
         <menuitem action="action_project_issue_report" id="menu_project_issue_report_tree" parent="base.menu_project_report"/>
+
+
   </data>
 </openerp>

@@ -22,8 +22,8 @@
 import time
 import operator
 
-from osv import fields
-from osv import osv
+from osv import fields, osv
+import decimal_precision as dp
 
 #
 # Object definition
@@ -63,13 +63,13 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not ids2:
             return res
-            
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
@@ -78,18 +78,18 @@ class account_analytic_account(osv.osv):
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency<0 and a.id =ANY(%s) GROUP BY a.id",(ids2,))
         r = dict(cr.fetchall())
         return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
-        
+
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not ids2:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
@@ -98,48 +98,48 @@ class account_analytic_account(osv.osv):
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency>0 and a.id =ANY(%s) GROUP BY a.id" ,(ids2,))
         r= dict(cr.fetchall())
         return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
-        
+
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not ids2:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id =ANY(%s) GROUP BY a.id",(ids2,))
-        
+
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
         return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
-                
+
     def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
         #XXX must convert into one uom
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not ids2:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
+
         cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
                 FROM account_analytic_account a \
                     LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
@@ -182,7 +182,7 @@ class account_analytic_account(osv.osv):
     def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
         result=self._get_company_currency(cr, uid, ids, field_name, arg, context={})
         return result
-            
+
     _columns = {
         'name' : fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
@@ -192,10 +192,10 @@ class account_analytic_account(osv.osv):
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
-        'balance' : fields.function(_balance_calc, method=True, type='float', string='Balance'),
-        'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit'),
-        'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit'),
-        'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity'),
+        'balance' : fields.function(_balance_calc, method=True, type='float', string='Balance',store=True),
+        'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit',store=True),
+        'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit',store=True),
+        'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity',store=True),
         'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
         'partner_id' : fields.many2one('res.partner', 'Associated Partner'),
         'contact_id' : fields.many2one('res.partner.address', 'Contact'),
@@ -204,7 +204,7 @@ class account_analytic_account(osv.osv):
         'date': fields.date('Date End'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
-        'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Close'),('template', 'Template')], 'State', required=True,readonly=True,
+        'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed'),('template', 'Template')], 'State', required=True,readonly=True,
                                   help='* When an account is created its in \'Draft\' state.\
                                   \n* If any associated partner is there, it can be in \'Open\' state.\
                                   \n* If any pending balance is there it can be in \'Pending\'. \
@@ -281,4 +281,71 @@ class account_analytic_account(osv.osv):
         return self.name_get(cr, uid, account, context=context)
 
 account_analytic_account()
+
+
+class account_analytic_line(osv.osv):
+    _name = 'account.analytic.line'
+    _description = 'Analytic lines'
+    def _amount_currency(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context):
+            cmp_cur_id=rec.company_id.currency_id.id
+            aa_cur_id=rec.account_id.currency_id.id
+            # Always provide the amount in currency
+            if cmp_cur_id != aa_cur_id:
+                cur_obj = self.pool.get('res.currency')
+                ctx = {}
+                if rec.date and rec.amount:
+                    ctx['date'] = rec.date
+                    result[rec.id] = cur_obj.compute(cr, uid, rec.company_id.currency_id.id,
+                        rec.account_id.currency_id.id, rec.amount,
+                        context=ctx)
+            else:
+                result[rec.id]=rec.amount
+        return result
+        
+    def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context):
+            # Always provide second currency
+            result[rec.id] = (rec.account_id.currency_id.id,rec.account_id.currency_id.code)
+        return result
+    def _get_account_line(self, cr, uid, ids, context={}):
+        aac_ids = {}
+        for acc in self.pool.get('account.analytic.account').browse(cr, uid, ids):
+            aac_ids[acc.id] = True
+        aal_ids = []
+        if aac_ids:
+            aal_ids = self.pool.get('account.analytic.line').search(cr, uid, [('account_id','in',aac_ids.keys())], context=context)
+        return aal_ids
+
+    _columns = {
+        'name' : fields.char('Description', size=256, required=True),
+        'date' : fields.date('Date', required=True),
+        'amount' : fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price.'),
+        'unit_amount' : fields.float('Quantity', help='Specifies the amount of quantity to count.'),
+        'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),
+        'user_id' : fields.many2one('res.users', 'User',),
+        'company_id': fields.many2one('res.company','Company',required=True),
+        'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency',
+                store={
+                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
+                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
+                },
+                help="The related account currency if not equal to the company one."),
+        'amount_currency': fields.function(_amount_currency, method=True, digits_compute= dp.get_precision('Account'), string='Amount currency',
+                store={
+                    'account.analytic.account': (_get_account_line, ['company_id'], 50),
+                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
+                },
+                help="The amount expressed in the related account currency if not equal to the company one."),
+
+    }
+    _defaults = {
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', c),
+    }
+    _order = 'date'
+account_analytic_line()
+
 

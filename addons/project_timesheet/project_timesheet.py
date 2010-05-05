@@ -18,13 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields, osv
 import time
 import datetime
+
+from osv import fields, osv
 import pooler
 import tools
 from tools.translate import _
-
 
 class project_work(osv.osv):
     _inherit = "project.task.work"
@@ -178,12 +178,14 @@ task()
 
 class project_project(osv.osv):
     _inherit = "project.project"
+
     def name_get(self, cr, user, ids, context=None):
         result = []
         for project in self.browse(cr, user, ids, context):
             name = "[%s] %s" % (project.category_id and project.category_id.code or '?', project.name)
             result.append((project.id, name))
         return result
+
 project_project()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

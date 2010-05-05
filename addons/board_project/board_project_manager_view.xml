@@ -7,19 +7,19 @@
         </record>
 
         <!--
-		 Board for project managers
-		 -->
+         Board for project managers
+         -->
         <act_window domain="[('manager', '=', uid)]" id="act_my_project" name="My projects" res_model="project.project" view_mode="tree,form" view_type="form"/>
 
         <act_window domain="[('user_id','=',uid),('state','&lt;&gt;','close')]" id="act_my_account" name="My accounts to invoice" res_model="account.analytic.account" view_id="view_account_analytic_simplified" view_mode="tree,form" view_type="form"/>
 
-        <record id="action_project_pipeline_user" model="ir.actions.act_window">
-            <field name="name">Pipeline of tasks</field>
-            <field name="res_model">report.task.user.pipeline.open</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('user_id','in',department_users_get())]</field>
-        </record>
+<!--        <record id="action_project_pipeline_user" model="ir.actions.act_window">-->
+<!--            <field name="name">Pipeline of tasks</field>-->
+<!--            <field name="res_model">report.task.user.pipeline.open</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">graph,tree</field>-->
+<!--            <field name="domain">[('user_id','in',department_users_get())]</field>-->
+<!--        </record>-->
 
         <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.tree.simplified.board</field>
@@ -66,7 +66,6 @@
 
                             <action colspan="4" name="%(project_planning.action_account_analytic_planning_stat_form)d" string="My Project's planning" domain="[('manager_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]"/>
 
-                            <action colspan="4" name="%(action_project_pipeline_user)d" string="My user's pipeline"/>
 
                         </child2>
                     </hpaned>

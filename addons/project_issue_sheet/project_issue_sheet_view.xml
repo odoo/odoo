@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="project_issue_form_view">
+            <field name="name">Project Issue Tracker Form</field>
+            <field name="model">project.issue</field>
+            <field name="inherit_id" ref="project_issue.project_issue_form_view" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook colspan="4">
+                    <page string="Worklogs">
+                        <separator string="Timesheets" colspan="4" />
+                        <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : user_id, 'default_account_id' : analytic_account_id}">
+                            <tree editable="top" string="Timesheet">
+                                <field name="create_date" string="Date" />
+                                <field name="user_id" readonly="1" />
+                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id)"/>
+                                <field name="name"/>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
+
+                                <field invisible="1" name="journal_id"/>
+                                <field invisible="1" name="product_id"/>
+                                <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                                <field invisible="1" name="amount"/>
+                                <field invisible="1" name="general_account_id"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</openerp>

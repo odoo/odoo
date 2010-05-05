@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,32 +15,28 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
-import wizard
-import netsvc
-import time
-import pooler
-from osv import osv
+from osv import osv, fields
 from tools.translate import _
 
-class wiz_timebox_open(wizard.interface):
-    def _open_timebox(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        ids = pool.get('project.gtd.timebox').search(cr, uid, [])
+class project_timebox_open(osv.osv_memory):
+
+    _name = 'project.timebox.open'
+    _description = 'Project Timebox Open'
+
+    def open_tb(self, cr, uid, data, context=None):
+        ids = self.pool.get('project.gtd.timebox').search(cr, uid, [])
         if not len(ids):
-            raise wizard.except_wizard(_('Error !'), _('No timebox of the type "%s" defined !') % (tbtype,))
-        view_type = 'form,tree'
+            raise osv.except_osv(_('Error !'), _('No timebox of the type defined !'))
         if len(ids) >= 1:
             domain = "[('id','in',["+','.join(map(str, ids))+"])]"
         value = {
             'domain': domain,
             'name': 'My Daily Timebox',
             'view_type': 'form',
-            'view_mode': view_type,
+            'view_mode': 'form,tree',
             'res_model': 'project.gtd.timebox',
             'view_id': False,
             'type': 'ir.actions.act_window'
@@ -50,13 +46,6 @@ class wiz_timebox_open(wizard.interface):
             value['context'] = {'record_id':ids[0]}
         return value
 
-    states = {
-        'init' : {
-            'actions' : [],
-            'result' : {'type':'action', 'action':_open_timebox, 'state':'end'}
-        }
-    }
-wiz_timebox_open('project.gtd.timebox.daily')
+project_timebox_open()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

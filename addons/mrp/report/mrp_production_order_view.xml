@@ -11,32 +11,21 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Production">
-					<field name="name" />
-					<field name="month"/>
-					<field name="product_id" />
-					<field name="scheduled_date"/>
-                   	<field name="reference" />
+					<field name="date_planned"/>
 					<field name="origin"/>
-					<field name="nbr" string="#Production Orders" />
-					<field name="location_src_id"/>
-                   	<field name="location_dest_id" />
-                    <field name="state" invisible="1"/>
+					<field name="bom_id" />
+					<field name="product_id"/>
+					<field name="product_qty" sum='Product Qty'/>
+					<field name="nbr" string="#Production Orders" sum='#Production Orders'/>
+					<field name="state"/>
+					<field name="routing_id" invisible="1"/>
+					<field name="picking_id" invisible="1"/>
+                    <field name="priority" invisible="1"/>
+                    <field name="name" invisible="1" />
+					<field name="month" invisible="1"/>
+					<field name="location_src_id" invisible="1"/>
+					<field name="location_dest_id" invisible="1"/>
 				</tree>
-            </field>
-        </record>
-        <record id="view_report_mrp_production_order_form" model="ir.ui.view">
-            <field name="name">mrp.production.order.form</field>
-            <field name="model">mrp.production.order</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-            	<form string="Production">
-            		<field name="name" />
-					<field name="month"/>
-                   	<field name="product_id"/>
-                   	<field name="scheduled_date"/>
-                   	<field name="reference" />
-					<field name="origin"/>
-                 </form>
             </field>
         </record>
 
@@ -59,28 +48,48 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="6">
-                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" default="1" />
-						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]" default="1"/>
+                   		<filter string="This Year" icon="terp-mrp" domain="[('name','=',time.localtime()[0])]" default="1" />
+						<filter string="This Month" icon="terp-mrp" domain="[('month','=',time.strftime('%%m'))]" default="1"/>
                         <separator orientation="vertical"/>
-						<filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
-						<filter string="Scheduled Date" icon="terp-hr" domain="[('scheduled_date',=,time.strftime('%%m/%%d/%%Y'))]"/>
+						<filter string="Current" icon="terp-mrp" domain="[('state','in',('open','draft'))]"/>
 						<separator orientation="vertical"/>
-						<field name="reference" />
 						<field name="origin"/>
+						<field name="date_planned"/>
                    </group>
-
+                   <newline/>
+	                <group expand="1" string="Extended options..." colspan="10" col="12">
+	                    <filter icon="terp-mrp" string="Draft" domain="[('state','=','draft')]"/>
+	                    <filter icon="terp-mrp" string="Picking Exception" domain="[('state','=','picking_except')]"/>
+	                    <separator orientation="vertical"/>
+	                    <filter icon="terp-mrp" string="Waiting Goods" domain="[('state','=','confirmed')]"/>
+	                    <filter icon="terp-mrp" string="Ready to Produce" domain="[('state','=','ready')]"/>
+	                    <separator orientation="vertical"/>
+	                    <filter icon="terp-mrp" string="In Production" domain="[('state','=','in_production')]"/>
+	                    <filter icon="terp-mrp" string="Done" domain="[('state','=','done')]"/>
+	                    <filter icon="terp-mrp" string="Cancelled" domain="[('state','=','cancel')]"/>
+	                    <newline/>
+	                    <filter icon="terp-mrp" string="Not urgent" domain="[('priority','=','0')]"/>
+	                    <filter icon="terp-mrp" string="Normal" domain="[('priority','=','1')]"/>
+	                    <separator orientation="vertical"/>
+	                    <filter icon="terp-mrp" string="Urgent" domain="[('priority','=','2')]"/>
+	                    <filter icon="terp-mrp" string="Very Urgent" domain="[('priority','=','3')]"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="date_start"/>
+						<field name="date_finnished"/>
+	                </group>
                    <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="6">
-                    	<filter string="Source Location" icon="terp-sale" domain="[]" context="{'group_by':'location_src_id'}"/>
-                    	<filter string="Destination Location" icon="terp-sale" domain="[]" context="{'group_by':'location_dest_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Product" icon="terp-sale" domain="[]" context="{'group_by':'product_id'}"/>
+                    	<filter string="Source Location" icon="terp-mrp" context="{'group_by':'location_src_id'}"/>
+                    	<filter string="Destination Location" icon="terp-mrp" context="{'group_by':'location_dest_id'}"/>
+                    	<filter string="Picking" icon="terp-mrp" context="{'group_by':'picking_id'}"/>
                     	<separator orientation="vertical"/>
-                    	<filter string="Month" icon="terp-sale" domain="[]" context="{'group_by':'month'}"/>
-                    	<filter string="Year" icon="terp-sale" domain="[]" context="{'group_by':'name'}"/>
-
-
+                        <filter string="Routing" icon="terp-mrp" context="{'group_by':'routing_id'}"/>
+                        <filter string="Product" name="Product" icon="terp-mrp" context="{'group_by':'product_id'}" />
+                        <filter string="State" icon="terp-mrp" context="{'group_by':'state'}"/>
+                    	<separator orientation="vertical"/>
+                    	<filter string="BOM" icon="terp-mrp" context="{'group_by':'bom_id'}"/>
+                    	<filter string="Month" icon="terp-mrp" context="{'group_by':'month'}"/>
+                    	<filter string="Year" icon="terp-mrp" context="{'group_by':'name'}"/>
                    </group>
                </search>
             </field>
@@ -92,6 +101,8 @@
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_mrp_production_order_tree"/>
             <field name="search_view_id" ref="view_report_mrp_production_order_filter"/>
+          <field name="context">{'search_default_Product': 1}</field>
+            
         </record>
 
        	<record model="ir.actions.act_window.view" id="action_report_mrp_production_order_tree">

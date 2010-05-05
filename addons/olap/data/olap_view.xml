@@ -2,22 +2,19 @@
 <openerp>
 <data>
 
-
-<!--    <menuitem-->
-<!--        name="Businesss Intelligence"-->
-<!--        id="menu_bi"-->
-<!--        icon="terp-account" parent="base.next_id_50"/>-->
-
     <menuitem icon="terp-graph" id="base.reporting_menu" name="Reporting" sequence="8"/>
+
     <menuitem
             id="base.next_id_50"
             name="Configuration"
             parent="base.reporting_menu"
             groups="base.group_system"
             sequence="3"/>
+
     <menuitem
         name="Custom Reports" id="base.menu_custom_reports"
         parent="base.reporting_menu" sequence="1"/>
+
     <menuitem
         name="Businesss Intelligence Configuration"
         id="menu_bi_configuration"
@@ -47,18 +44,26 @@
         id="menu_bi_conf_tools"
         parent="menu_bi_configuration"/>
 
+	<menuitem name="Clear Logs" action="action_view_olap_query_logs_clear" icon="STOCK_EXECUTE"
+         id="menu_bi_clear_logs" sequence="30" parent="menu_bi_conf_tools"/>
 
     <record model="ir.actions.url" id="menu_url_cube_browser">
             <field name="name">name_menu_url_cube_browser</field>
             <field name="url">http://localhost:8080/browser</field>
     </record>
-    <menuitem name="Cube Browser" id="menu_browser_url" type="url" action="menu_url_cube_browser" parent="base.menu_custom_reports" sequence="1"/>
+
+    <menuitem name="Cube Browser" id="menu_browser_url" type="url"
+    	action="menu_url_cube_browser" parent="base.menu_custom_reports"
+    	sequence="1" />
 
     <record model="ir.actions.url" id="menu_url_cube_designer">
             <field name="name">name_menu_url_cube_designer</field>
             <field name="url">http://localhost:8080/designer</field>
     </record>
-    <menuitem name="Cube Designer" sequence="60" action="menu_url_cube_designer" type="url" id="menu_designer_url" parent="base.next_id_50"/>
+
+    <menuitem name="Cube Designer" sequence="60"
+    	action="menu_url_cube_designer" type="url" id="menu_designer_url"
+    	parent="base.next_id_50" />
 
 </data>
 </openerp>

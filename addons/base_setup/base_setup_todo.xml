@@ -14,7 +14,7 @@
           <group string="res_config_contents" position="replace">
             <field name="company_id" invisible="1"/>
 
-            <separator string="Define Main Company" colspan="4"/>
+            <separator string="Configure Your Company" colspan="4"/>
             <field name="name" colspan="4" required="True"/>
             <newline/>
             <field name="street"/>
@@ -54,8 +54,9 @@
     </record>
 
     <record id="base_setup_company_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_base_setup_company"/>
-      <field name="sequence">1</field>
+        <field name="action_id" ref="action_base_setup_company"/>
+        <field name="sequence">1</field>
+        <field name="restart">onskip</field>
     </record>
   </data>
 </openerp>

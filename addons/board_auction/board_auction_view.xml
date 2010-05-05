@@ -1,70 +1,70 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-		<record model="board.note.type" id="note_auction_type">
-			<field name="name">Auction</field>
-		</record>
+        <record model="board.note.type" id="note_auction_type">
+            <field name="name">Auction</field>
+        </record>
 
-		<record model="ir.ui.view" id="board_auction_manager_form">
-			<field name="name">board.auction.manager.form</field>
-			<field name="model">board.board</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Auction manager ">
-					<hpaned position="100">
-						<child1>
-							<action
-								string="My Latest Objects"
-								name="%(auction.action_report_latest_objects_tree)d"
-								height="200"
-								width="510"/>
-							<action string="My Latest Deposits"
-								name="%(auction.action_report_latest_doposit_manager_tree)d"
-								domain="[('create_uid','=',uid)]"
-								/>
-							<action string="Objects statistics"
-								name="%(auction.action_report_object_encoded_member_tree)d"
-								/>
-							</child1>
+        <record model="ir.ui.view" id="board_auction_manager_form">
+            <field name="name">board.auction.manager.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Auction manager ">
+                    <hpaned position="100">
+                        <child1>
+                            <action
+                                string="My Latest Objects"
+                                name="%(auction.action_report_latest_objects_tree)d"
+                                height="200"
+                                width="510"/>
+                            <action string="My Latest Deposits"
+                                name="%(auction.action_report_latest_doposit_manager_tree)d"
+                                domain="[('create_uid','=',uid)]"
+                                />
+                            <action string="Objects statistics"
+                                name="%(auction.action_report_object_encoded_member_tree)d"
+                                />
+                            </child1>
 
-						<child2>
-							<button
-								string="Menu"
-								name="%(base.action_menu_admin)d"
-								icon="gtk-justify-fill"
-								type="action"
-								colspan="4"/>
+                        <child2>
+                            <button
+                                string="Menu"
+                                name="%(base.action_menu_admin)d"
+                                icon="gtk-justify-fill"
+                                type="action"
+                                colspan="4"/>
 
-							<action
-								string="My Objects By Day"
-								name="%(auction.action_report_auction_object_date_tree)d"
-								view_mode="graph,tree" colspan="4"
-								domain="[('user_id','=',uid),('month','=',time.strftime('%%Y-%%m-01'))]"/>
-						<action
-								string="Estimations/Adjudication"
-								name="%(auction.action_report_auction_estimation_adj_category_member_tree)d"
-								view_mode="graph,tree" colspan="4"/>
-						</child2>
-					</hpaned>
-				</form>
-			</field>
-		</record>
+                            <action
+                                string="My Objects By Day"
+                                name="%(auction.action_report_auction_object_date_tree)d"
+                                view_mode="graph,tree" colspan="4"
+                                domain="[('user_id','=',uid),('month','=',time.strftime('%%Y-%%m-01'))]"/>
+                        <action
+                                string="Estimations/Adjudication"
+                                name="%(auction.action_report_auction_estimation_adj_category_member_tree)d"
+                                view_mode="graph,tree" colspan="4"/>
+                        </child2>
+                    </hpaned>
+                </form>
+            </field>
+        </record>
 
-		<record model="ir.actions.act_window" id="open_board_auction">
-			<field name="name">Auction member board</field>
-			<field name="res_model">board.board</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="usage">menu</field>
-			<field name="view_id" ref="board_auction_manager_form"/>
-		</record>
-		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
-		<menuitem name="Auction Member" id="board_menu_auction_member" parent="base.dashboard" />
-		<menuitem
-			name="Auction Member"
-			action="open_board_auction"
-			sequence="1"
-			id="menu_board_auction" parent="board_menu_auction_member" />
+        <record model="ir.actions.act_window" id="open_board_auction">
+            <field name="name">Auction member board</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="board_auction_manager_form"/>
+        </record>
+        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+        <menuitem name="Auction Member" id="board_menu_auction_member" parent="base.dashboard" />
+        <menuitem
+            name="Auction Member"
+            action="open_board_auction"
+            sequence="1"
+            id="menu_board_auction" parent="board_menu_auction_member" />
 
 </data>
 </openerp>

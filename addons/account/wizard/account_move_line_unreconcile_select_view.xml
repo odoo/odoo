@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_account_move_line_unreconcile_select" model="ir.ui.view">
+            <field name="name">account.move.line.unreconcile.select.form</field>
+            <field name="model">account.move.line.unreconcile.select</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Unreconciliation">
+                	<group colspan="4" >
+                		 <field name="account_id"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel" />
+						<button icon="gtk-open"
+							string="Open For Unreconciliation" name="action_open_window"
+							type="object" />
+                   </group>
+               </form>
+            </field>
+    	</record>
+
+        <record id="action_account_unreconcile_select" model="ir.actions.act_window">
+            <field name="name">Unreconcile Entries</field>
+            <field name="res_model">account.move.line.unreconcile.select</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_account_move_line_unreconcile_select"/>
+           <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_account_unreconcile_select"
+        	id="menu_unreconcile_select" parent="account.next_id_20" />
+
+    </data>
+</openerp>

@@ -20,13 +20,10 @@
 ##############################################################################
 
 import stock_traceability
-import stock_move   
+import stock_move
 import stock_partial_picking
 import stock_partial_move
-import stock_picking_make
 import wizard_replacement
-import wizard_return
-import wizard_split_lot_line
 import wizard_ups
 import stock_inventory_merge
 import stock_inventory_set_stock_zero

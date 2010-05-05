@@ -41,7 +41,7 @@ class general_ledger(rml_parse.rml_parse):
         ##
         new_ids = []
         if (data['model'] == 'account.account'):
-            new_ids = ids
+            new_ids = 'active_ids' in data['form']['context'] and data['form']['context']['active_ids'] or []
         else:
             new_ids.append(data['form']['Account_list'])
 
@@ -117,7 +117,7 @@ class general_ledger(rml_parse.rml_parse):
         borne_max = res[0]['stop_date']
         if form['state'] == 'byperiod':
             ## This function will return the most aged date
-            periods = form['periods'][0][2]
+            periods = form['periods']
             if not periods:
                 self.cr.execute("""
                     Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = %s""",(form['fiscalyear'],))
@@ -131,13 +131,16 @@ class general_ledger(rml_parse.rml_parse):
             borne_min = form['date_from']
             borne_max = form['date_to']
         elif form['state'] == 'all':
-            periods = form['periods'][0][2]
+            periods = form['periods']
             if not periods:
-               self.cr.execute("""
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = %s""",(form['fiscalyear'],))
+                if form['fiscalyear'] == False:
+                   fiscalyears = self.pool.get('account.fiscalyear').search(self.cr, self.uid, [('state', '=', 'draft')])
+                else:
+                    fiscalyears = [form['fiscalyear']]
+                self.cr.execute("select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id =ANY(%s)" ,(fiscalyears,))
             else:
-               self.cr.execute("""
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id  =ANY(%s)""",(periods,))
+                self.cr.execute("""
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id =ANY(%s)""",(periods,))
             res = self.cr.dictfetchall()
             period_min = res[0]['start_date']
             period_max = res[0]['stop_date']
@@ -180,7 +183,7 @@ class general_ledger(rml_parse.rml_parse):
         ctx['state'] = form['context'].get('state','all')
         if form.has_key('fiscalyear'):
             ctx['fiscalyear'] = form['fiscalyear']
-            ctx['periods'] = form['periods'][0][2]
+            ctx['periods'] = form['periods']
         else:
             ctx['date_from'] = form['date_from']
             ctx['date_to'] = form['date_to']

@@ -7,16 +7,21 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Recruitments Statistics">
-                <field name="date"/>
-                <field name="user_id"/>
-                <field name="job_id"/>
-                <field name="stage_id"/>
-                <field name="department_id"/>
-                <field name="type_id"/>
-                <field name="company_id"/>
-                <field name="state"/>
-                <field name="name" invisible="1"/>
+                <field name="date" invisible="1"/>
+                <field name="user_id" invisible="1"/>
+                <field name="job_id" invisible="1"/>
+                <field name="stage_id" invisible="1"  widget="selection"/>
+                <field name="department_id" invisible="1"/>
+                <field name="type_id" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" invisible="1"/>
+                <field name="year" invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
+                <field name="nbr" sum="# Cases"/>
+                <field name="salary_prop" sum="Salary Proposed" />
+                <field name="salary_exp" sum="Salary Expected"/>
+                <field name="available" sum="Available"/>
             </tree>
         </field>
     </record>
@@ -39,58 +44,88 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Recruitments">
-                <filter icon="terp-hr"
-                    string="This Year"
-                    domain="[('year','=',time.strftime('%%Y'))]"
-                    help="Recruitments of the year"/>
-                <filter icon="terp-hr"
-                    string="This Month"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    help="Recruitments of this month"/>
+            	<group>
+            	    <filter icon="terp-hr" string="This Year"
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Tasks performed in this year"/>
+	                <filter icon="terp-hr" string="This Month"
+	                    name="month"
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Tasks performed in this month"/>
+		            <filter icon="gtk-media-rewind"
+	                    string="    7 Days    "
+	                    separator="1"
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Tasks during last 7 days"/>
+	                <separator orientation="vertical"/>
+	                <filter string="Draft"
+                    	icon="terp-hr"
+                    	domain="[('state','=','draft')]"
+                    	help = "Draft tasks"/>
+	                <filter string="Current"
+	                	icon="terp-hr"
+	                	domain="[('state', '=' ,'open')]"
+	                	help = "In progress tasks"/>
+                   	<filter string="Pending"
+                   		icon="terp-hr"
+                   		domain="[('state','=','pending')]"
+                   		help = "Pending tasks"/>
+  					<separator orientation="vertical"/>
+					<field name="department_id" widget="selection">
+                       <filter icon="terp-hr"
+                           string="My Recruitments "
+                           help="My Department Recruitments"
+                           domain="[('user_id','=',uid)]"/>
+                       <filter icon="terp-hr"
+                           string="Recruitments non assigned to departments"
+                           help="Recruitments non assigned to departments"
+                           domain="[('user_id','=',False)]"/>
+                    </field>
                 <separator orientation="vertical"/>
-                <filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
-				<filter string="Won" icon="terp-hr" domain="[('state','=','done')]"/>
-				<filter string="Lost" icon="terp-hr" domain="[('state','=','cancel')]"/>
-                <separator orientation="vertical"/>
-                <field name="company_id" widget="selection"/>
+                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 <field name="user_id" widget="selection">
-                    <filter icon="terp-sale"
+                    <filter icon="terp-hr"
                         string="My Recruitments"
-                        default="1"
+                        help="My Recruitments"
                         domain="[('user_id','=',uid)]"/>
+                    <filter icon="terp-hr"
+                        string="Recruitments non assigned"
+                        help="Recruitments non assigned"
+                        domain="[('user_id','=',False)]"/>
                 </field>
-                <newline/>
-                <group expand="1" string="Extended options..." colspan="10" col="12">
-                    <filter icon="terp-hr"
-                    		string="Not Good"
-                    		domain="[('priority','=','5')]"/>
-                    <filter icon="terp-hr"
-                    		string="On Average"
-                    		domain="[('priority','=','4')]"/>
-                    <filter icon="terp-hr"
-                    		string="Good"
-                    		domain="[('priority','=','3')]"/>
-                    <filter icon="terp-hr"
-                    		string="Very Good"
-                    		domain="[('priority','=','2')]"/>
-                    <filter icon="terp-hr"
-                    		string="Excellent"
-                    		domain="[('priority','=','1')]"/>
                 </group>
-
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                   <filter string="User" icon="terp-hr" domain="[]" context="{'group_by':'user_id'}" default="1" />
-                   <filter string="Company" icon="terp-hr" domain="[]" context="{'group_by':'company_id'}"/>
-                   <filter string="Stage" icon="terp-hr" domain="[]" context="{'group_by':'stage_id'}"/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-hr"
+                    		string="Hired"
+                        name="done"
+                    		domain="[('state','=','done')]"/>
+                    <filter icon="terp-hr"
+                    		string="Refused"
+                    		domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="priority"/>
+                    <field name="stage_id" widget="selection"/>
+                  	<field name="job_id" widget="selection"/>
+                  	<newline/>
+                  	<field name="type_id" widget="selection"/>
+                    <field name="date"/>
+                    <field name="date_closed"/>
+                </group>
+                <newline/>
+                <group expand="1" string="Group By ..." colspan="10" col="12">
+                   <filter string="User" name='User' icon="terp-hr" domain="[]" context="{'group_by':'user_id'}"/>
+                   <filter string="Company" icon="terp-hr" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                   <filter string="Stage" name="Stage" icon="terp-hr" domain="[]" context="{'group_by':'stage_id'}" />
                    <separator orientation="vertical"/>
                    <filter string="State" icon="terp-hr" domain="[]" context="{'group_by':'state'}"/>
                    <filter string="Jobs" icon="terp-sale" domain="[]" context="{'group_by':'job_id'}"/>
                    <filter string="Department" icon="terp-hr" domain="[]" context="{'group_by':'department_id'}"/>
                    <filter string="Degree" icon="terp-hr" domain="[]" context="{'group_by':'type_id'}"/>
             	   <separator orientation="vertical"/>
+            	   <filter string="Day" name = "day" icon="terp-hr" domain="[]" context="{'group_by':'day'}"/>
             	   <filter string="Month" icon="terp-hr" domain="[]" context="{'group_by':'month'}"/>
-            	   <filter string="Year" icon="terp-hr" domain="[]" context="{'group_by':'name'}"/>
+            	   <filter string="Year" icon="terp-hr" domain="[]" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>
@@ -101,6 +136,7 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
 	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root"/>

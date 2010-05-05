@@ -27,6 +27,9 @@
             </tree>
         </field>
     </record>
+
+<!-- Report Creator form -->
+
     <record model="ir.ui.view" id="base_report_creator_form">
         <field name="name">base_report_creator.report.form</field>
         <field name="model">base_report_creator.report</field>
@@ -34,14 +37,17 @@
         <field name="arch" type="xml">
             <form string="Report Creator">
                 <field name="name" select="1" colspan="4"/>
-                <field name="type" select="2"/>
-                <field name="active" select="2"/>
+                <field name="type"/>
+                <field name="active"/>
                 <notebook colspan="4">
                 <page string="General Configuration">
-                    <field name="model_ids" colspan="4" context="{'model_ids':model_ids}"/>
+                    <field name="model_ids" colspan="4"
+                        context="{'model_ids':model_ids}" />
                     <separator string="State"  colspan="4"/>
                     <field name="state"/>
-                    <button string="Create Menu" name="%(wizard_menu_create)d" type="action" colspan="2" icon="gtk-justify-fill"/>
+                    <button string="Create Menu"
+                        name="%(action_report_menu_create)d" type="action"
+                        colspan="2" icon="gtk-justify-fill" />
                 </page><page string="View parameters">
                     <separator string="Used View" colspan="4"/>
                     <field name="view_type1"/>
@@ -54,11 +60,12 @@
                     <field name="field_ids" nolabel="1" colspan="4">
                         <form string="Fields">
                             <field name="sequence"/>
-                            <field name="field_id" domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2]),('ttype','&lt;&gt;','many2many'),('ttype','&lt;&gt;','one2many')] or []">
+                            <field name="field_id"
+                                domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2]),('ttype','&lt;&gt;','many2many'),('ttype','&lt;&gt;','one2many')] or []">
                                 <tree string="Field List">
-                                    <field name="model_id"/>
-                                    <field name="name"/>
-                                    <field name="field_description"/>
+                                    <field name="model_id" />
+                                    <field name="name" />
+                                    <field name="field_description" />
                                 </tree>
                             </field>
                             <field name="group_method"/>
@@ -67,14 +74,18 @@
                         </form>
                         <tree editable="bottom" string="Fields to Display">
                             <field name="sequence"/>
-                            <field name="field_id" domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2]),('ttype','&lt;&gt;','many2many'),('ttype','&lt;&gt;','one2many')] or []" attrs="{'required':[('group_method','!=','count')]}"/>
+                            <field name="field_id"
+                                domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2]),('ttype','&lt;&gt;','many2many'),('ttype','&lt;&gt;','one2many')] or []"
+                                attrs="{'required':[('group_method','!=','count')]}" />
                             <field name="group_method"/>
                             <field name="graph_mode"/>
                             <field name="calendar_mode"/>
                         </tree>
                     </field>
                 </page><page string="Filters on Fields">
-                    <button string="Add filter" name="%(wizard_set_filter_fields)d" type="action" icon="gtk-add"/>
+                    <button string="Add filter"
+                        name="%(wizard_set_filter_fields)d" type="action"
+                        icon="gtk-add" />
                     <field name="filter_ids" nolabel="1" colspan="4">
                         <tree string="Filters">
                             <field name="name"/>
@@ -87,8 +98,10 @@
                         </form>
                     </field>
                     <separator string="Legend" colspan="4"/>
-					<label string="Use %%(uid)s to filter by the connected user" align="0.0"/>
-                </page><page string="Security">
+                    <label
+                        string="Use %%(uid)s to filter by the connected user"
+                        align="0.0" />
+</page><page string="Security">
                     <separator string="Authorized Groups (empty for all)" colspan="4"/>
                     <field name="group_ids" colspan="4" nolabel="1"/>
                 </page><page string="SQL Query">
@@ -98,17 +111,23 @@
             </form>
         </field>
     </record>
+
+ <!-- Action for Report creator form -->
+
     <record model="ir.actions.act_window" id="base_report_creator_action">
-    	<field name="name">Custom Report</field>
+        <field name="name">Custom Reports</field>
         <field name="res_model">base_report_creator.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+
     <menuitem
         name="Custom Reports" id="base.menu_custom_reports"
+        groups="base.group_extended"
         action="base_report_creator_action" parent="base.reporting_menu" sequence="1"/>
+
     <menuitem
-        name="Custom Reports" parent="base.next_id_50"
+        parent="base.next_id_50"
         id="menu_base_report_creator_action_config"
         action="base_report_creator_action"/>
 
@@ -122,35 +141,21 @@
             </tree>
         </field>
     </record>
+
     <record model="ir.actions.act_window" id="base_report_creator_action_tree">
         <field name="res_model">base_report_creator.report</field>
         <field name="view_type">tree</field>
     </record>
+
     <menuitem
         name="Custom Reports" parent="base.menu_custom_reports"
         id="menu_base_report_creator_action"
         action="base_report_creator_action_tree"/>
 
-    <wizard
-        id="wizard_report_open"
-        string="Open Report"
-        name="base_report_creator.report.open"/>
-
-    <record model="ir.values" id="ir_open_report">
-        <field name="key2" eval="'tree_but_open'"/>
-        <field name="model" eval="'base_report_creator.report'"/>
-        <field name="name">Browse Report</field>
-        <field name="value" eval="'ir.actions.wizard,%d'%wizard_report_open"/>
-        <field name="object" eval="True"/>
-    </record>
-    <record model="ir.values" id="ir_open_report_multi">
-        <field name="key2" eval="'client_action_multi'"/>
-        <field name="model" eval="'base_report_creator.report'"/>
-        <field name="name">Browse Report</field>
-        <field name="value" eval="'ir.actions.wizard,%d'%wizard_report_open"/>
-        <field name="object" eval="True"/>
-    </record>
-
+    <act_window id="action_report_open"
+            key2="client_action_multi" name="Open Report"
+            res_model="report.open" src_model="base_report_creator.report"
+            view_mode="form" target="new" view_type="form" />
 
 
     </data>

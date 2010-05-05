@@ -70,13 +70,13 @@
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
                     <field name="company_id"  groups="base.group_multi_company"/>
-                    <field name="sequence" select="2"/>
+                    <field name="sequence"/>
                     <notebook colspan="4">
                         <page string="Accounts">
                             <field name="account_ids" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Dotations">
-                            <button string="Spread" name="%(wizard_budget_spread)d" type="action" icon="gtk-fullscreen"/>
+                            <button string="Spread" name="%(action_account_budget_spread)d" type="action" icon="gtk-fullscreen"/>
                             <field name="dotation_ids" colspan="4" nolabel="1"/>
                         </page>
 
@@ -127,8 +127,8 @@
                             <field name="code" colspan="1" select="1" />
                             <field name="creating_user_id" />
                             <field name="validating_user_id" readonly="True"/>
-                            <field name="date_from" select="2"/>
-                            <field name="date_to" select="2"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
                             <field name="crossovered_budget_line" colspan="4" nolabel="1">
                                 <tree string="Budget Lines">
                                     <field name="analytic_account_id"/>
@@ -294,9 +294,9 @@
             auto="False"
             menu="False"/>-->
 
-		<!--Menu for project management-->
-		<menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
-		<menuitem id="base.menu_pm_invoicing" name="Invoicing" parent="base.menu_main_pm" sequence="7"/>
+        <!--Menu for project management-->
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+        <menuitem id="base.menu_pm_invoicing" name="Billing" parent="base.menu_main_pm" sequence="7"/>
         <menuitem id="menu_pm_budget" name="Budgets" parent="base.menu_pm_invoicing"/>
         <menuitem action="open_budget_post_form" id="menu_pm_budget_post_form" parent="menu_pm_budget"/>
         <menuitem parent="menu_pm_budget"

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Editable current timesheet used  in dashboard-->
         <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.tree</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Timesheets">
+                <tree string="Timesheets"
+                    colors="blue:state == 'draft';grey:state == 'done'">
                     <field name="user_id"/>
-                    <field name="department_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="name"/>
+                    <field name="department_id"/>
                     <field name="total_attendance" groups="hr_attendance.group_hr_attendance"/>
                     <field name="total_timesheet"/>
                     <field name="total_difference" groups="hr_attendance.group_hr_attendance"/>
@@ -20,7 +20,18 @@
                 </tree>
             </field>
         </record>
-
+       <record id="hr_timesheet_sheet_graph" model="ir.ui.view">
+         <field name="name">hr.timesheet.sheet.graph</field>
+         <field name="model">hr_timesheet_sheet.sheet</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Timesheets" type="bar">
+                 <field name="name"/>
+                 <field name="total_attendance" operator="+"/>
+                 <field name="total_timesheet" operator="+"/>
+             </graph>
+         </field>
+        </record>
         <record id="hr_timesheet_account_form" model="ir.ui.view">
             <field name="name">hr.timesheet.account.form</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
@@ -30,7 +41,7 @@
                     <field name="sheet_id" select="1"/>
                     <field name="name" select="1"/>
                     <field name="total" sum="Total"/>
-                    <field name="invoice_rate" select="2"/>
+                    <field name="invoice_rate"/>
                 </form>
             </field>
         </record>
@@ -156,9 +167,11 @@
                                     <field name="total_difference" widget="float_time" groups="hr_attendance.group_hr_attendance"/>
                                 </tree>
                             </field>
-                            <field name="total_attendance" widget="float_time"/>
-                            <field name="total_timesheet" widget="float_time"/>
-                            <field name="total_difference" widget="float_time"/>
+                            <group colspan="4" col="6">
+                                <field name="total_attendance" widget="float_time"/>
+                                <field name="total_timesheet" widget="float_time"/>
+                                <field name="total_difference" widget="float_time"/>
+                            </group>
                         </page>
                     </notebook>
                     <field name="state"/>
@@ -179,17 +192,13 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <group col="10" colspan="4">
-                        <filter icon="terp-crm" string="Unvalidated" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
-                        <filter icon="terp-crm" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Timesheets"/>
+                        <filter icon="terp-partner" string="My Timesheet" domain="[('user_id','=',uid)]" help="My Timesheets" />
                         <separator orientation="vertical"/>
-                        <field name="state">
-                            <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
-                            <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-                        </field>
-                        <field name="name" select="1"/>
-                        <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Timesheet"/>
-                        </field>
+                        <filter icon="terp-crm" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
+                        <filter icon="terp-crm" string="To Validate" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                        <separator orientation="vertical"/>
+                        <field name="user_id" select="1" widget="selection"/>
+                        <field name="date_from"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-crm"
                                 domain="[('department_id','=',context.get('department_id',False))]"
@@ -197,10 +206,10 @@
                         </field>
                     </group>
                     <newline/>
-                   	<group expand="1" string="Group By..." colspan="4" col="20">
+                    <group expand="1" string="Group By..." colspan="4" col="20">
                         <filter string="Users" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
-                   	</group>
+                    </group>
                 </search>
             </field>
         </record>
@@ -282,7 +291,7 @@
             <field name="inherit_id" ref="hr_attendance.view_attendance_form"/>
             <field name="arch" type="xml">
                 <field name="action_desc" position="after">
-                    <field name="sheet_id" select="2"/>
+                    <field name="sheet_id"/>
                 </field>
             </field>
         </record>
@@ -304,17 +313,6 @@
             <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
             <field name="arch" type="xml">
                 <field name="action" position="after">
-                    <field name="sheet_id"/>
-                </field>
-            </field>
-        </record>
-        <record id="view_attendance_tree_who" model="ir.ui.view">
-            <field name="name">hr.attendance.tree</field>
-            <field name="model">hr.attendance</field>
-            <field name="type">tree</field>
-            <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
-            <field name="arch" type="xml">
-                <field name="action_desc" position="after">
                     <field name="sheet_id"/>
                 </field>
             </field>
@@ -344,6 +342,9 @@
                 </tree>
             </field>
         </record>
+
+	<!-- Timesheet Button on Employee Form -->
+	<act_window domain="[('user_id', '=', user_id)]" id="act_hr_employee_2_hr_timesheet" name="Timesheets" res_model="hr_timesheet_sheet.sheet" src_model="hr.employee"/>
 
     </data>
 </openerp>

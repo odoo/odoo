@@ -7,24 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 12:04+0000\n"
-"Last-Translator: Freerk Kalsbeek (Mindswitch BV) <f.kalsbeek@mindswitch.nl>\n"
+"PO-Revision-Date: 2010-04-22 10:54+0000\n"
+"Last-Translator: Jan Verlaan (Veritos) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-30 04:11+0000\n"
+"X-Launchpad-Export-Date: 2010-04-23 03:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,mrp_operation:0
 msgid "Manufacturing Operations"
-msgstr ""
+msgstr "Productie operaties"
 
 #. module: profile_manufacturing
 #: model:ir.module.module,description:profile_manufacturing.module_meta_information
 msgid "Profile for manufacturing industries"
-msgstr ""
+msgstr "Profiel voor productie industrie"
 
 #. module: profile_manufacturing
 #: constraint:ir.model:0
@@ -36,22 +36,22 @@ msgstr ""
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,mrp_jit:0
 msgid "Just in Time Scheduling"
-msgstr ""
+msgstr "Just in time planning"
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,sale_journal:0
 msgid "Manage by Journals"
-msgstr ""
+msgstr "Beheer middels dagboeken"
 
 #. module: profile_manufacturing
 #: view:profile.manufacturing.config.install_modules_wizard:0
 msgid "Relationship Management"
-msgstr ""
+msgstr "Relatiebeheer"
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,portal:0
 msgid "This module allows you to manage a Portal system."
-msgstr ""
+msgstr "Deze module helpt u het portaal-systeem te beheren."
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,board_document:0
@@ -61,6 +61,11 @@ msgid ""
 "documents, printed reports, calendar system). It opens an FTP access for the "
 "users to easily browse association's document."
 msgstr ""
+"Met het documentbeheersysteem van OpenERP kunt u allerlei documenten "
+"(interne documenten, afgedrukte overzichten, agenda's) opslaan, "
+"doorbladeren, automatisch indexeren, zoeken en inzien.\r\n"
+"Het systeem maakt gebruik van FTP toegang zodat gebruikers eenvoudig bij de "
+"documenten kunnen komen."
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,sale_journal:0
@@ -69,17 +74,20 @@ msgid ""
 "journals. You can define journals for trucks, salesman, departments, "
 "invoicing date delivery period, etc."
 msgstr ""
+"Deze module help u uw verkopen, facturatie en materiaal picking the beheren "
+"middels dagboeken. U kunt dagboeken definiëren voor vrachtwagens, verkopers, "
+"afdelingen, factuurdatum aflever periode, enz."
 
 #. module: profile_manufacturing
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ongeldige modelnaam in de definitie van de actie."
 
 #. module: profile_manufacturing
 #: model:ir.actions.act_window,name:profile_manufacturing.action_config_install_module
 #: view:profile.manufacturing.config.install_modules_wizard:0
 msgid "Manufacturing Profile: Install Extra Modules"
-msgstr ""
+msgstr "Installeer extra modulen"
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,mrp_jit:0
@@ -88,6 +96,11 @@ msgid ""
 "and faster for real time stock computation but, in counter-part, it manages "
 "less efficiently priorities in procurements."
 msgstr ""
+"De JIT (Just in Time) module stelt u in staat een directe mrp-planningsrun "
+"van het actieve product bij wijzigingen te laten uitvoeren. Dit is "
+"makkelijker en sneller in gebruik voor real time voorraad berekening, maar "
+"heeft als nadeel dat het minder efficiënt prioriteiten kan stellen bij "
+"genereren van inkoopaanvragen."
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,mrp_operation:0
@@ -96,21 +109,25 @@ msgid ""
 "work order/operation. You will be able to planify, analyse the cost, check "
 "times, ... on all operations of each manufacturing order"
 msgstr ""
+"Deze module stelt u in staat om niet alleen de productie order te beheren, "
+"maar ook de operaties. U zult in staat zijn om te plannen, haar kosten te "
+"analyseren, tijden te controleren, ... over alle operaties van elke "
+"productieorder."
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,board_document:0
 msgid "Document Management"
-msgstr ""
+msgstr "Documentbeheer"
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,portal:0
 msgid "Portal"
-msgstr ""
+msgstr "Portaal"
 
 #. module: profile_manufacturing
 #: view:profile.manufacturing.config.install_modules_wizard:0
 msgid "Stock & Manufacturing"
-msgstr ""
+msgstr "Voorraad en productie"
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,mrp_repair:0
@@ -118,6 +135,8 @@ msgid ""
 "Allow to manage product repairs. Handle the guarantee limit date and the "
 "invoicing of products and services."
 msgstr ""
+"Deze module stelt u in staat om productreparaties te beheren. Beheer "
+"garantietermeinen en de facturatie van producten en services."
 
 #. module: profile_manufacturing
 #: constraint:ir.ui.view:0
@@ -131,21 +150,27 @@ msgid ""
 "manufacturing profile you selected. You will be able to install them based "
 "on our requirements."
 msgstr ""
+"Installeer meer modules. Enkele modules worden voorgesteld in "
+"overeenstemming met dit productieprofiel dat u heeft geselecteerd. U zult in "
+"staat om deze modules te installeren waarbij OpenERP rekening houd met de "
+"benodigde afhankelijkheden."
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,mrp_subproduct:0
 msgid "This module allows you to add sub poducts in mrp bom."
 msgstr ""
+"Deze module stelt u in staat om subproducten toe te voegen in de BOM (Bill "
+"of Materials)"
 
 #. module: profile_manufacturing
 #: model:ir.module.module,shortdesc:profile_manufacturing.module_meta_information
 msgid "Manufacturing industry profile"
-msgstr ""
+msgstr "Productie industrie profiel"
 
 #. module: profile_manufacturing
 #: model:ir.model,name:profile_manufacturing.model_profile_manufacturing_config_install_modules_wizard
 msgid "profile.manufacturing.config.install_modules_wizard"
-msgstr ""
+msgstr "profile.manufacturing.config.install_modules_wizard"
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,sale_crm:0
@@ -154,26 +179,29 @@ msgid ""
 "opportunities tracking, shared calendar, jobs tracking, bug tracker, and so "
 "on."
 msgstr ""
+"Deze module installeert de Customer Relation Management (CRM) uitbreidingen "
+"als: volgen van leads en kansen, gedeelde agenda's, HRM werving- & "
+"selectieproces, foutenrapportbeheer, enz."
 
 #. module: profile_manufacturing
 #: view:profile.manufacturing.config.install_modules_wizard:0
 msgid "Install"
-msgstr ""
+msgstr "Installeren"
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,sale_crm:0
 msgid "CRM and Calendars"
-msgstr ""
+msgstr "CRM en calenders"
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,mrp_repair:0
 msgid "Repair"
-msgstr ""
+msgstr "Reparatie"
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,sale_margin:0
 msgid "Display margins on the sale order form."
-msgstr ""
+msgstr "Toont marges op het verkooporderformulier."
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,point_of_sale:0
@@ -183,26 +211,30 @@ msgid ""
 "a perfect ergonomy with touchscreen materials and payment processing "
 "hardware."
 msgstr ""
+"Deze module stelt u in staat om een kassa systeem (POS) te beheren. Het bied "
+"een basis formulier voor kassa operaties. Selecteert u ook onze "
+"gebruikersinterface kassa systeem voor een uitstekende ergonomy met "
+"touchscreen schermen en betaalautomaten hardware."
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,mrp_subproduct:0
 msgid "Mrp Sub Product"
-msgstr ""
+msgstr "Mrp sub-product"
 
 #. module: profile_manufacturing
 #: view:profile.manufacturing.config.install_modules_wizard:0
 msgid "Sales Management"
-msgstr ""
+msgstr "Verkoopbeheer"
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,warning:0
 msgid "Warning"
-msgstr ""
+msgstr "Waarschuwing"
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,sale_margin:0
 msgid "Margins on Sales Order"
-msgstr ""
+msgstr "Marges op verkooporder"
 
 #. module: profile_manufacturing
 #: help:profile.manufacturing.config.install_modules_wizard,stock_location:0
@@ -213,18 +245,23 @@ msgid ""
 "managing a manufacturing chain, a quality control location, product that you "
 "rent, etc."
 msgstr ""
+"Stelt u in staat om geavanceerde logistiek te beheren met diverse locaties "
+"en magazijnen. U kunt per product definiëren: standaard locaties voor  "
+"verschillende operaties, etc. Deze module wordt vaak gebruikt voor "
+"lokalisatie van producten, beheren van en productieketen, kwaliteitscontrole "
+"lokaties, bij verhuur van producten, enz."
 
 #. module: profile_manufacturing
 #: view:profile.manufacturing.config.install_modules_wizard:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,point_of_sale:0
 msgid "Point of Sale"
-msgstr ""
+msgstr "Verkooppunt"
 
 #. module: profile_manufacturing
 #: field:profile.manufacturing.config.install_modules_wizard,stock_location:0
 msgid "Advanced Locations"
-msgstr ""
+msgstr "Uitgebreide locaties"

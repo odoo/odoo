@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+        <record id="account_aged_balance_view" model="ir.ui.view">
+             <field name="name">Aged Partner Balance</field>
+             <field name="model">account.aged.trial.balance</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+				<form string="Print Aged Trial Balance">
+				    <field name="company_id"/>
+				    <newline/>
+				    <field name="date1"/>
+				    <field name="period_length"/>
+				    <newline/>
+				    <field name="result_selection"/>
+				    <newline/>
+				    <field name="direction_selection"/>
+				    <newline/>
+     				<group colspan="4" col="6">
+                       	<separator colspan="6"/>
+     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+               			<button name="calc_dates" string="Print" type="object" icon="gtk-print" default_focus="1"/>
+ 					</group>
+				</form>
+             </field>
+ 		</record>
+
+        <record id="action_account_aged_balance_view" model="ir.actions.act_window">
+             <field name="name">Aged Partner Balance</field>
+             <field name="res_model">account.aged.trial.balance</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="account_aged_balance_view"/>
+             <field name="context">{'record_id':active_id}</field>
+             <field name="target">new</field>
+       </record>
+
+ 	   <menuitem
+ 	   		icon="STOCK_PRINT"
+ 	   		name="Aged Partner Balance"
+ 	   		action="action_account_aged_balance_view"
+ 			id="menu_aged_trial_balance"
+ 			parent="next_id_22"/>
+
+	</data>
+</openerp>

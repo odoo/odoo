@@ -18,8 +18,8 @@
     License along with this library; if not, write to the Free
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-"""
 
+"""
 
 from xml.dom import ext
 from xml.dom.Document import Document
@@ -45,9 +45,9 @@ class PROPFIND:
 
     It will set the following instance vars:
 
-    request_class   : ALLPROP | PROPNAME | PROP
-    proplist    : list of properties
-    nsmap       : map of namespaces
+    request_class: ALLPROP | PROPNAME | PROP
+    proplist: list of properties
+    nsmap: map of namespaces
 
     The list of properties will contain tuples of the form
     (element name, ns_prefix, ns_uri)
@@ -55,21 +55,20 @@ class PROPFIND:
 
     """
 
+    def __init__(self, uri, dataclass, depth):
+        self.request_type = None
+        self.nsmap = {}
+        self.proplist = {}
+        self.default_ns = None
+        self.__dataclass = dataclass
+        self.__depth = str(depth)
+        self.__uri = uri
+        self.use_full_urls = True
+        self.__has_body = None    # did we parse a body?
 
-    def __init__(self,uri,dataclass,depth):
-        self.request_type=None
-        self.nsmap={}
-        self.proplist={}
-        self.default_ns=None
-        self.__dataclass=dataclass
-        self.__depth=str(depth)
-        self.__uri=uri
-        self.use_full_urls=True
-        self.__has_body=None    # did we parse a body?
+    def read_propfind(self, xml_doc):
+        self.request_type,self.proplist,self.namespaces = utils.parse_propfind(xml_doc)
 
-    def read_propfind(self,xml_doc):
-        self.request_type,self.proplist,self.namespaces=utils.parse_propfind(xml_doc)
-	
 	# a violation of the expected logic: client (korganizer) will ask for DAV:resourcetype
 	# but we also have to return the http://groupdav.org/:resourcetype property!
 	if self.proplist.has_key('DAV:') and 'resourcetype' in self.proplist['DAV:']:
@@ -91,7 +90,7 @@ class PROPFIND:
 
         If we get an ALLPROP we first get the list of properties and then
         we do the same as with a PROP method.
-	
+
 	If the uri doesn't exist, return an xml response with a 404 status
 
         """
@@ -114,41 +113,41 @@ class PROPFIND:
     def create_propname(self):
         """ create a multistatus response for the prop names """
 
-        dc=self.__dataclass
+        dc = self.__dataclass
         # create the document generator
         doc = Document(None)
-        ms=doc.createElement("D:multistatus")
+        ms = doc.createElement("D:multistatus")
         ms.setAttribute("xmlns:D","DAV:")
         doc.appendChild(ms)
 
         if self.__depth=="0":
-            pnames=dc.get_propnames(self.__uri)
-            re=self.mk_propname_response(self.__uri,pnames,doc)
+            pnames = dc.get_propnames(self.__uri)
+            re = self.mk_propname_response(self.__uri,pnames,doc)
             ms.appendChild(re)
 
         elif self.__depth=="1":
-            pnames=dc.get_propnames(self.__uri)
-            re=self.mk_propname_response(self.__uri,pnames,doc)
+            pnames = dc.get_propnames(self.__uri)
+            re = self.mk_propname_response(self.__uri,pnames,doc)
             ms.appendChild(re)
 
         for newuri in dc.get_childs(self.__uri):
-            pnames=dc.get_propnames(newuri)
-            re=self.mk_propname_response(newuri,pnames,doc)
+            pnames = dc.get_propnames(newuri)
+            re = self.mk_propname_response(newuri,pnames,doc)
             ms.appendChild(re)
         # *** depth=="infinity"
 
-        sfile=StringIO()
-        ext.PrettyPrint(doc,stream=sfile)
-        s=sfile.getvalue()
+        sfile = StringIO()
+        ext.PrettyPrint(doc,stream = sfile)
+        s = sfile.getvalue()
         sfile.close()
         return s
 
     def create_allprop(self):
         """ return a list of all properties """
-        self.proplist={}
-        self.namespaces=[]
+        self.proplist = {}
+        self.namespaces = []
         for ns,plist in self.__dataclass.get_propnames(self.__uri).items():
-            self.proplist[ns]=plist
+            self.proplist[ns] = plist
             self.namespaces.append(ns)
 
         return self.create_prop()
@@ -178,32 +177,32 @@ class PROPFIND:
 
         # create the document generator
         doc = Document(None)
-        ms=doc.createElement("D:multistatus")
+        ms = doc.createElement("D:multistatus")
         ms.setAttribute("xmlns:D","DAV:")
         doc.appendChild(ms)
 
         if self.__depth=="0":
-            gp,bp=self.get_propvalues(self.__uri)
-            res=self.mk_prop_response(self.__uri,gp,bp,doc)
+            gp,bp = self.get_propvalues(self.__uri)
+            res = self.mk_prop_response(self.__uri,gp,bp,doc)
             ms.appendChild(res)
 
         elif self.__depth=="1":
-            gp,bp=self.get_propvalues(self.__uri)
-            res=self.mk_prop_response(self.__uri,gp,bp,doc)
+            gp,bp = self.get_propvalues(self.__uri)
+            res = self.mk_prop_response(self.__uri,gp,bp,doc)
             ms.appendChild(res)
 
 	    try:
 		for newuri in self.__dataclass.get_childs(self.__uri):
-			gp,bp=self.get_propvalues(newuri)
-			res=self.mk_prop_response(newuri,gp,bp,doc)
+			gp,bp = self.get_propvalues(newuri)
+			res = self.mk_prop_response(newuri,gp,bp,doc)
 			ms.appendChild(res)
 	    except DAV_NotFound:
 		# If no children, never mind.
 		pass
 
-        sfile=StringIO()
-        ext.PrettyPrint(doc,stream=sfile)
-        s=sfile.getvalue()
+        sfile = StringIO()
+        ext.PrettyPrint(doc,stream = sfile)
+        s = sfile.getvalue()
         sfile.close()
         return s
 
@@ -215,32 +214,32 @@ class PROPFIND:
         propnames should have the format {NS1 : [prop1, prop2, ...], NS2: ...}
 
         """
-        re=doc.createElement("D:response")
+        re = doc.createElement("D:response")
 
         # write href information
-        href=doc.createElement("D:href")
+        href = doc.createElement("D:href")
         if self.use_full_urls:
-            huri=doc.createTextNode(uri)
+            huri = doc.createTextNode(uri)
         else:
-            uparts=urlparse.urlparse(uri)
-            fileloc=uparts[2]
-            huri=doc.createTextNode(urllib.quote(fileloc.encode('utf8')))
+            uparts = urlparse.urlparse(uri)
+            fileloc = uparts[2]
+            huri = doc.createTextNode(urllib.quote(fileloc.encode('utf8')))
         href.appendChild(huri)
         re.appendChild(href)
 
-        ps=doc.createElement("D:propstat")
-        nsnum=0
+        ps = doc.createElement("D:propstat")
+        nsnum = 0
 
         for ns,plist in propnames.items():
             # write prop element
-            pr=doc.createElement("D:prop")
-            nsp="ns"+str(nsnum)
+            pr = doc.createElement("D:prop")
+            nsp = "ns"+str(nsnum)
             pr.setAttribute("xmlns:"+nsp,ns)
-            nsnum=nsnum+1
+            nsnum = nsnum+1
 
             # write propertynames
             for p in plist:
-                pe=doc.createElement(nsp+":"+p)
+                pe = doc.createElement(nsp+":"+p)
                 pr.appendChild(pe)
 
             ps.appendChild(pr)
@@ -257,33 +256,33 @@ class PROPFIND:
         one, that means).
 
         """
-        re=doc.createElement("D:response")
+        re = doc.createElement("D:response")
         # append namespaces to response
-        nsnum=0
+        nsnum = 0
         for nsname in self.namespaces:
             re.setAttribute("xmlns:ns"+str(nsnum),nsname)
-            nsnum=nsnum+1
+            nsnum = nsnum+1
 
         # write href information
-        href=doc.createElement("D:href")
+        href = doc.createElement("D:href")
         if self.use_full_urls:
-            huri=doc.createTextNode(uri)
+            huri = doc.createTextNode(uri)
         else:
-            uparts=urlparse.urlparse(uri)
-            fileloc=uparts[2]
-            huri=doc.createTextNode(urllib.quote(fileloc.encode('utf8')))
+            uparts = urlparse.urlparse(uri)
+            fileloc = uparts[2]
+            huri = doc.createTextNode(urllib.quote(fileloc.encode('utf8')))
         href.appendChild(huri)
         re.appendChild(href)
 
         # write good properties
         if good_props and len(good_props.items()):
-            ps=doc.createElement("D:propstat")
+            ps = doc.createElement("D:propstat")
 
-            gp=doc.createElement("D:prop")
+            gp = doc.createElement("D:prop")
             for ns in good_props.keys():
                 ns_prefix="ns"+str(self.namespaces.index(ns))+":"
                 for p,v in good_props[ns].items():
-                    pe=doc.createElement(ns_prefix+str(p))
+                    pe = doc.createElement(ns_prefix+str(p))
                     if v == None:
                         pass
                     elif ns=='DAV:' and p=="resourcetype":
@@ -294,15 +293,15 @@ class PROPFIND:
                         ve=doc.createElement(ns_prefix+v[0])
                         pe.appendChild(ve)
                     else:
-                        ve=doc.createTextNode(utf8str(v))
+                        ve = doc.createTextNode(utf8str(v))
                         pe.appendChild(ve)
 
                     gp.appendChild(pe)
             if gp.hasChildNodes():
 		re.appendChild(ps)
 		ps.appendChild(gp)
-		s=doc.createElement("D:status")
-		t=doc.createTextNode("HTTP/1.1 200 OK")
+		s = doc.createElement("D:status")
+		t = doc.createTextNode("HTTP/1.1 200 OK")
 		s.appendChild(t)
 		ps.appendChild(s)
 		re.appendChild(ps)
@@ -312,20 +311,20 @@ class PROPFIND:
 
             # write a propstat for each error code
             for ecode in bad_props.keys():
-                ps=doc.createElement("D:propstat")
+                ps = doc.createElement("D:propstat")
                 re.appendChild(ps)
-                bp=doc.createElement("D:prop")
+                bp = doc.createElement("D:prop")
                 ps.appendChild(bp)
 
                 for ns in bad_props[ecode].keys():
-                    ns_prefix="ns"+str(self.namespaces.index(ns))+":"
+                    ns_prefix = "ns"+str(self.namespaces.index(ns))+":"
 
                 for p in bad_props[ecode][ns]:
-                    pe=doc.createElement(ns_prefix+str(p))
+                    pe = doc.createElement(ns_prefix+str(p))
                     bp.appendChild(pe)
 
-                s=doc.createElement("D:status")
-                t=doc.createTextNode(utils.gen_estring(ecode))
+                s = doc.createElement("D:status")
+                t = doc.createTextNode(utils.gen_estring(ecode))
                 s.appendChild(t)
                 ps.appendChild(s)
                 re.appendChild(ps)
@@ -342,20 +341,20 @@ class PROPFIND:
         found or the user is not allowed to read them.
 
         """
-        good_props={}
-        bad_props={}
+        good_props = {}
+        bad_props = {}
 
         for (ns,plist) in self.proplist.items():
-            good_props[ns]={}
-            bad_props={}
+            good_props[ns] = {}
+            bad_props = {}
             ec = 0
             for prop in plist:
                 try:
                     ec = 0
-                    r=self.__dataclass.get_prop(uri,ns,prop)
-                    good_props[ns][prop]=r
+                    r = self.__dataclass.get_prop(uri,ns,prop)
+                    good_props[ns][prop] = r
                 except DAV_Error, error_code:
-                    ec=error_code[0]
+                    ec = error_code[0]
 
                 # ignore props with error_code if 0 (invisible)
                 if ec==0: continue
@@ -364,9 +363,11 @@ class PROPFIND:
                     if bad_props[ec].has_key(ns):
                         bad_props[ec][ns].append(prop)
                     else:
-                        bad_props[ec][ns]=[prop]
+                        bad_props[ec][ns] = [prop]
                 else:
-                    bad_props[ec]={ns:[prop]}
+                    bad_props[ec] = {ns:[prop]}
 
         return good_props, bad_props
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

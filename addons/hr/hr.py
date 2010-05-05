@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import fields, osv
 from tools.translate import _
 
@@ -82,6 +81,7 @@ class hr_job(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
         'state': lambda *args: 'open'
     }
+
 hr_job()
 
 class hr_employee(osv.osv):
@@ -101,10 +101,9 @@ class hr_employee(osv.osv):
         'department_id':fields.many2one('hr.department','Department'),
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
-        'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone'),
-        'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail'),
+        'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone', readonly=True),
+        'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail', readonly=True),
         'work_location': fields.char('Office Location', size=32),
-
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager', select=True),
         'category_id' : fields.many2one('hr.employee.category', 'Category'),
@@ -112,7 +111,6 @@ class hr_employee(osv.osv):
         'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
         'coach_id':fields.many2one('res.users','Coach'),
         'job_id':fields.many2one('hr.job', 'Job'),
-
     }
     _defaults = {
         'active' : lambda *a: True,
@@ -133,6 +131,5 @@ class hr_employee(osv.osv):
     ]
 
 hr_employee()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

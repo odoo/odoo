@@ -111,22 +111,22 @@
             </field>
         </record>
         <record id="view_res_partner_member_filter" model="ir.ui.view">
-		    <field name="name">res.partner.select</field>
-		    <field name="model">res.partner</field>
-		    <field name="type">search</field>
-		    <field name="arch" type="xml">
-		        <field name="category_id" position="after">
-		        	<field name="membership_state" select="1">
-			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'paid')]" help="Paid Members"/>
-			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'free')]" help="Free Members"/>
-			        	<filter icon="terp-partner" domain="[('associate_member', '!=', False), ('membership_state', '!=', 'none')]" help="Associated Members"/>
-			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'invoiced')]" help="Invoiced Members"/>
-			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'waiting')]" help="Future Members"/>
-			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'old')]" help="Old Members"/>
-					</field>
-		       </field>
-		    </field>
-	    </record>
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="category_id" position="after">
+                    <field name="membership_state" select="1">
+                        <filter icon="terp-partner" domain="[('membership_state', '=', 'paid')]" help="Paid Members"/>
+                        <filter icon="terp-partner" domain="[('membership_state', '=', 'free')]" help="Free Members"/>
+                        <filter icon="terp-partner" domain="[('associate_member', '!=', False), ('membership_state', '!=', 'none')]" help="Associated Members"/>
+                        <filter icon="terp-partner" domain="[('membership_state', '=', 'invoiced')]" help="Invoiced Members"/>
+                        <filter icon="terp-partner" domain="[('membership_state', '=', 'waiting')]" help="Future Members"/>
+                        <filter icon="terp-partner" domain="[('membership_state', '=', 'old')]" help="Old Members"/>
+                    </field>
+               </field>
+            </field>
+        </record>
 
         <record model="ir.actions.act_window" id="action_membership_members">
             <field name="name">Members</field>
@@ -180,13 +180,13 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Membership">
-                        <field name="membership_state" select="2"/>
-                        <field name="membership_amount" select="2"/>
+                        <field name="membership_state"/>
+                        <field name="membership_amount"/>
                         <field name="associate_member"/>
-                        <field name="free_member" select="2"/>
-                        <field name="membership_start" select="2"/>
-                        <field name="membership_stop" select="2"/>
-                        <field name="membership_cancel" select="2"/>
+                        <field name="free_member"/>
+                        <field name="membership_start"/>
+                        <field name="membership_stop"/>
+                        <field name="membership_cancel"/>
                         <field name="member_lines" nolabel="1" colspan="4">
                             <tree string="Membership">
                                 <field name="date_from"/>

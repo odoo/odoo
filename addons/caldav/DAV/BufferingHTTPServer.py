@@ -27,6 +27,7 @@ __author__  = AUTHOR
 
 from BaseHTTPServer import BaseHTTPRequestHandler
 import os
+
 class BufferedHTTPRequestHandler(BaseHTTPRequestHandler):
     """
     Buffering HTTP Request Handler
@@ -47,12 +48,12 @@ class BufferedHTTPRequestHandler(BaseHTTPRequestHandler):
         If you override the handle() method remember to call
         this (see below)
         """
-        self.__buffer=""
-        self.__outfp=os.tmpfile()
+        self.__buffer = ""
+        self.__outfp = os.tmpfile()
 
     def _append(self,s):
         """ append a string to the buffer """
-        self.__buffer=self.__buffer+s
+        self.__buffer = self.__buffer+s
 
     def _flush(self):
         """ flush the buffer to wfile """
@@ -60,7 +61,7 @@ class BufferedHTTPRequestHandler(BaseHTTPRequestHandler):
         self.__outfp.write(self.__buffer)
         self.__outfp.flush()
         self.wfile.flush()
-        self.__buffer=""
+        self.__buffer = ""
 
     def handle(self):
         """ Handle a HTTP request """
@@ -97,3 +98,4 @@ class BufferedHTTPRequestHandler(BaseHTTPRequestHandler):
 
     protocol_version="HTTP/1.1"
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

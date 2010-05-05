@@ -1,40 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    	<menuitem id="menu_base_action_rule" name="Action Rule" parent="base.menu_base_config" sequence="0"/>
+        <menuitem id="menu_base_action_rule" name="Action Rule"
+            groups="base.group_extended"
+            parent="base.menu_base_config" sequence="0" />
 
-		<!--
-			Action Rule
-		-->
-   		<record id="view_base_action_rule_form" model="ir.ui.view">
-   			<field name="name">base.action.rule.form</field>
+        <!--
+            Action Rule Form View
+        -->
+           <record id="view_base_action_rule_form" model="ir.ui.view">
+               <field name="name">base.action.rule.form</field>
             <field name="model">base.action.rule</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Rule">
-                	<field name="name" select="1"/>
+                    <field name="name" select="1"/>
                     <field name="active"/>
-                	<field name="max_level" />
+                    <field name="max_level" />
                     <separator colspan="4" string="Rule lines"/>
-                	<field name="rule_lines" colspan="4" nolabel="1"/>
+                    <field name="rule_lines" colspan="4" nolabel="1"/>
                 </form>
             </field>
-   		</record>
+           </record>
 
-   		<record id="view_base_action_rule_tree" model="ir.ui.view">
-   			<field name="name">base.action.rule.tree</field>
+<!-- Action Rule Tree View -->
+
+           <record id="view_base_action_rule_tree" model="ir.ui.view">
+               <field name="name">base.action.rule.tree</field>
             <field name="model">base.action.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Action Rule">
-                	<field name="name" colspan="4"/>
-                	<field name="max_level"/>
-                	<field name="rule_lines" colspan="4" nolabel="1"/>
+                    <field name="name" colspan="4"/>
+                    <field name="max_level"/>
+                    <field name="rule_lines" colspan="4" nolabel="1"/>
                 </tree>
             </field>
-   		</record>
+           </record>
 
-   		<record id="base_action_rule_act" model="ir.actions.act_window">
+<!-- Action Rule Action -->
+
+           <record id="base_action_rule_act" model="ir.actions.act_window">
             <field name="name">Action Rules</field>
             <field name="res_model">base.action.rule</field>
             <field name="view_type">form</field>
@@ -42,10 +48,11 @@
             <field name="view_id" ref="view_base_action_rule_tree"/>
         </record>
 
-        <menuitem id="menu_base_action_rule_form" parent="menu_base_action_rule" action="base_action_rule_act"/>
+           <menuitem id="menu_base_action_rule_form"
+               parent="menu_base_action_rule" action="base_action_rule_act" />
 
-        <!--
-        	Action Rule Lines
+           <!--
+            Action Rule Lines Form View
         -->
         <record id="view_base_action_rule_line_form" model="ir.ui.view">
             <field name="name">base.action.rule.line.form</field>
@@ -54,13 +61,13 @@
             <field name="arch" type="xml">
                 <form string="Action Rule Line">
                     <field name="name" select="1"/>
-                    <field name="active" select="2"/>
+                    <field name="active"/>
                     <notebook colspan="4">
                         <page string="Conditions">
                             <group col="2" colspan="2" name="model">
                                 <separator colspan="4" string="Conditions on Model Fields"/>
                                 <field name="regex_name" string="Regex on Model Name" colspan="2"/>
-                                <field name="trg_user_id" select="2"/>
+                                <field name="trg_user_id"/>
                             </group>
                             <group col="2" colspan="2" name="partner">
                                 <separator colspan="4" string="Conditions on Model Partner"/>
@@ -69,8 +76,8 @@
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Conditions on States"/>
-                                <field name="trg_state_from" select="2"/>
-                                <field name="trg_state_to" select="2"/>
+                                <field name="trg_state_from"/>
+                                <field name="trg_state_to"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Conditions on Priority Range"/>
@@ -99,7 +106,7 @@
                             <field name="act_remind_attach"/>
                             <field name="act_remind_user"/>
                             <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
-                            	<field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
+                                <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
                             </group>
                             <field colspan="4" name="act_email_cc"/>
                             <separator colspan="4" string="Server Action to be Triggered"/>
@@ -127,6 +134,9 @@
                 </form>
             </field>
         </record>
+
+<!-- Action Rule Lines Tree View -->
+
         <record id="view_base_action_rule_line_tree" model="ir.ui.view">
             <field name="name">base.action.rule.line.tree</field>
             <field name="model">base.action.rule.line</field>

@@ -24,25 +24,33 @@
 
         <report id="account_move_line_list" model="account.tax.code" name="account.tax.code.entries" rml="account/report/account_tax_code.rml" string="All Entries"/>
 
-        <report auto="False" id="account_vat_declaration" menu="False" model="account.tax.code" name="account.vat.declaration" rml="account/report/tax_report.rml" string="Taxes Report"/>
+        <report
+        	auto="False"
+        	id="account_vat_declaration"
+        	menu="False"
+        	model="account.tax.code"
+        	name="account.vat.declaration"
+        	rml="account/report/tax_report.rml"
+        	string="Taxes Report"/>
 
         <menuitem
             id="menu_tax_report"
             name="Taxes"
             parent="account.menu_finance_generic_reporting" sequence="3"/>
 
-        <wizard
+<!--        <wizard
             id="wizard_vat_declaration"
             menu="False"
             model="account.tax.code"
             name="account.vat.declaration"
-            string="Print Taxes Report"/>
-        <menuitem
+            string="Print Taxes Report"/> -->
+
+<!--        <menuitem
             icon="STOCK_PRINT"
             action="wizard_vat_declaration"
             id="menu_wizard_vat_declaration"
             parent="menu_tax_report"
-            type="wizard"/>
+            type="wizard"/> -->
 
 
         <record id="action_tax_code_tree" model="ir.actions.act_window">
@@ -66,6 +74,7 @@
 			rml="account/report/compare_account_balance.rml"
 			auto="False"
 			menu="False"/>
+
 		<report id="account_account_balance_landscape"
 			string="Account balance"
 			model="account.account"

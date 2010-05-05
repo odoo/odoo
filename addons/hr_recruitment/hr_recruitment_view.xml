@@ -43,10 +43,10 @@
                 <field name="partner_phone"/>
                 <field name="job_id"/>
                 <field name="stage_id"/>
-                <field name="survey" invisible="1"/>
-                <field name="response" invisible="1"/>
                 <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
                 <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
+                <field name="survey" invisible="1"/>
+                <field name="response" invisible="1"/>
                 <field name="priority"/>
                 <field name="type_id" invisible="1"/>
                 <field name="availability" invisible="1"/>
@@ -73,21 +73,23 @@
                     <label string="Stage: " align="1.0"/>
                     <group colspan="1" col="2">
                         <field name="stage_id" nolabel="1"/>
+                        <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
                     <field name="user_id"/>
                     <button string="Schedule a Phone Call"
-                        name="%(wizard_hr_job_reschedule_phone_call)d" icon="gtk-redo" type="action"/>
+                        name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
 						icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
                     <newline/>
                     <field name="partner_name"/>
                     <field name="job_id"/>
                     <field name="department_id" widget="selection"/>
-                    <button name="%(wizard_hr_job_meeting_set)d" string="Schedule Meeting" icon="terp-hr" type="action"/>
-					<button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
-						icon="gtk-print" context="{'survey_id': survey, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
-				</group>
+                    <button name="action_makeMeeting" type="object"
+                        string="Schedule Meeting" icon="terp-hr" />
+                    <button name="action_print_survey" string="Print Interview" type="object"
+                        icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
+                </group>
                 <notebook colspan="4">
                     <page string="Job Info">
                         <group col="2" colspan="2">

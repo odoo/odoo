@@ -27,6 +27,15 @@ class event_registration_list(osv.osv_memory):
     _description = "List Event Registrations"
 
     def open_registration(self, cr, uid, ids, context={}):
+        if not context.get('active_id', None):
+            return {
+            'name': 'Event Registrations',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'event.registration',
+            'type': 'ir.actions.act_window'
+            }
+
         cr.execute('SELECT section_id FROM event_event WHERE id = %s', (context['active_id'],))
         res = cr.fetchone()
         return {

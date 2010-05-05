@@ -31,7 +31,6 @@ If you don't think you need any of these right now, you can easily install them 
             <field name="report_designer"/>
             <separator string="Vertical Modules" colspan="4"/>
             <field name="profile_association"/>
-            <field name="profile_training"/>
             <field name="profile_auction"/>
             <field name="profile_bookstore"/>
           </group>
@@ -50,8 +49,8 @@ If you don't think you need any of these right now, you can easily install them 
     </record>
 
     <record id="base_setup_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_base_setup_installer"/>
-      <field name="sequence">2</field>
+        <field name="action_id" ref="action_base_setup_installer"/>
+        <field name="sequence">2</field>
     </record>
   </data>
 </openerp>

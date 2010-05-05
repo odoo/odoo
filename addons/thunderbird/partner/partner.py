@@ -87,15 +87,12 @@ class tinythunderbird_partner(osv.osv):
         header_name = email.Header.decode_header(dictcreate['name'])
         dictcreate['name'] = header_name and header_name[0] and header_name[0][0] 
         add_obj=self.pool.get('res.partner.address')
-        case_pool=self.pool.get('crm.case')
+        case_pool=self.pool.get(dictcreate.get('object','crm.case'))
         partner_ids=add_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
         partner=add_obj.read(cr,user,partner_ids,['partner_id'])
         if partner:
             dictcreate.update({'partner_id':partner[0]['partner_id'][0]})
-        search_id = self.pool.get('res.request.link').search(cr,user,[('object','=',dictcreate['ref'].split(',')[0])])
-        if not search_id:
-            create_link_id = self.pool.get('res.request.link').create(cr,user,{'name':dictcreate['ref'].split(',')[0],'object':dictcreate['ref'].split(',')[0]})
-        create_id = self.pool.get('crm.case').create(cr, user, dictcreate)
+        create_id = self.pool.get(dictcreate.get('object','crm.case')).create(cr, user, dictcreate)
         cases=case_pool.browse(cr,user,[create_id])
         case_pool._history(cr, user, cases, _('Archive'), history=True, email=False)
         return create_id
@@ -162,12 +159,15 @@ class tinythunderbird_partner(osv.osv):
         dictcreate = dict(vals)
         datas = [dictcreate['datas']]
         name = [dictcreate['name']]
+        f_name = [dictcreate['datas_fname']]
         if(dictcreate['datas'].__contains__(',')):
             name = dictcreate['name'].split(',')
             datas = dictcreate['datas'].split(',')
+            f_name = dictcreate['datas_fname'].split(',')
         for i in range(0,datas.__len__()):
             dictcreate['name'] = name[i]
             dictcreate['datas'] = datas[i]
+            dictcreate['datas_fname'] = f_name[i]
             create_id = self.pool.get('ir.attachment').create(cr,user,dictcreate)
         return 0
 

@@ -1,141 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
-<!--    Attendee invite wizard-->
-
-		<record id="view_calendar_invite_attendee_wizard" model="ir.ui.view">
-            <field name="name">Invite Attendees</field>
-            <field name="model">base_calendar.invite.attendee</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Invite People">
-                	<field name="type" />
-                	<field name="send_mail" />
-                	<newline/>
-                	<group col="1" colspan="4"
-                		attrs="{'invisible': [('type', '!=', 'external')]}">
-                		<field name="email" colspan="4"
-                			attrs="{'required': [('type', '=', 'external')]}" />
-                	</group>
-                	<group col="1" colspan="4"
-                		attrs="{'invisible': [('type', '!=', 'internal')]}">
-                		<separator string="Users" colspan="4" />
-                		<field name="user_ids" select="1" colspan="4"
-                			nolabel="1" />
-                		<newline />
-                	</group>
-                	<group col="2" colspan="4"
-                		attrs="{'invisible': [('type', '!=', 'partner')]}">
-                		<field name="partner_id" colspan="2"
-                			on_change="onchange_partner_id(partner_id)"
-                			attrs="{'required': [('type', '=', 'partner')]}" />
-                		<newline />
-                		<separator string="Partner Contacts"
-                			colspan="4" />
-                		<field name="contact_ids" select="1" colspan="4"
-                			nolabel="1" domain="[('partner_id', '=', partner_id)]"
-                			attrs="{'readonly': [('type', '!=', 'partner')]}" />
-                	</group>
-                	<newline/>
-                	<separator string="" colspan="6" />
-                	<label string="" colspan="2" />
-                	<button icon='gtk-cancel' special="cancel"
-                		string="Cancel" />
-                	<button name="do_invite" string="Invite"
-                		type="object" icon="gtk-ok" />
-                </form>
-            </field>
-        </record>
-
-        <record id="action_view_calendar_invite_attendee_wizard" model="ir.actions.act_window">
-            <field name="name">Invite Attendees</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">base_calendar.invite.attendee</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
 
         <record id="base_calendar_attendee_form_view" model="ir.ui.view">
             <field name="name">calendar.attendee.form</field>
             <field name="model">calendar.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string="Invitation details">
-            		<field name="email" string="Invitation To"/> 
-                    <field name="sent_by_uid" string="Invitation From"/>
-            		<notebook colspan="4">
-            			<page string="Invitation">
+                <form string="Invitation details">
+                    <field name="email" string="Invitation To"/>
+                    <field name="sent_by_uid" string="Invitation From" />
+                    <notebook colspan="4">
+                        <page string="Invitation">
                             <separator string="Invitation Detail" colspan="4" />
                             <group colspan="4" col="4">
                                 <field name="user_id" string="Invited User"/>
                                 <newline/>
-                                <field name="partner_address_id" string="Partner Contact"/>
-                                <field name="partner_id" string="Partner" readonly="1"/>
+                                <field name="partner_address_id"
+                                    string="Partner Contact" />
+                                <field name="partner_id"
+                                    string="Partner" readonly="1" />
                                 <field name="role" string="Role" />
                                 <field name="cutype" string="Invitation type" />
-                                <field name="rsvp" /> 
+                                <field name="rsvp" />
                             </group>
                             <separator string="Event Detail" colspan="4" />
                             <group colspan="4" col="4">
                                 <field name="event_date" />
                                 <field name="event_end_date" />
                                 <field name="language"/>
-                                <field name="ref" colspan="4"/>
+                                <field name="ref" colspan="4" readonly="1"/>
                             </group>
-            			</page>
-            			<page string="Delegation Info">
-            				<separator string="Delegated From" colspan="4" />
-            				<field name="parent_ids" nolabel="1"
-            					colspan="4" readonly="1" />
-            				<separator string="Delegated To" colspan="4" />
-            				<field name="child_ids" nolabel="1"
-            					colspan="4" readonly="1" />
-            			</page>
-            		</notebook>
-            		<group col="6" colspan="4">
-	                        <field name="state" select="2" />
-	                        <button name="do_tentative" states="needs-action,declined,accepted"
-	                        	string="Uncertain" type="object"
-	                        	icon="terp-crm" />
-	                        <button name="do_accept" string="Accept" states="needs-action,tentative,declined"
-	                        	type="object" icon="gtk-apply" />
-	                        <button name="do_decline" string="Decline"  states="needs-action,tentative,accepted"
-	                        	type="object" icon="gtk-cancel" />
-	                        <button
-	                        	name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-	                        	string="Delegate" type="action"
-	                        	icon="gtk-sort-descending" states="needs-action,tentative,declined,accepted"
-	                        	context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
-            		</group>
-            	</form>
+                        </page>
+                        <page string="Delegation Info">
+                            <separator string="Delegated From" colspan="4" />
+                            <field name="parent_ids" nolabel="1"
+                                colspan="4" readonly="1" />
+                            <separator string="Delegated To" colspan="4" />
+                            <field name="child_ids" nolabel="1"
+                                colspan="4" readonly="1" />
+                        </page>
+                    </notebook>
+                    <group col="6" colspan="4">
+                            <field name="state" />
+                            <button name="do_tentative"
+                                states="needs-action,declined,accepted"
+                                string="Uncertain" type="object"
+                                icon="terp-crm" />
+                            <button name="do_accept" string="Accept"
+                                states="needs-action,tentative,declined"
+                                type="object" icon="gtk-apply" />
+                            <button name="do_decline" string="Decline"
+                                states="needs-action,tentative,accepted"
+                                type="object" icon="gtk-cancel" />
+                            <button
+                                name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                string="Delegate" type="action"
+                                icon="gtk-sort-descending"
+                                states="needs-action,tentative,declined,accepted"
+                                context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                    </group>
+                </form>
             </field>
         </record>
 
-	    <record id="base_calendar_attendee_tree_view" model="ir.ui.view">
+        <record id="base_calendar_attendee_tree_view" model="ir.ui.view">
             <field name="name">calendar.attendee.tree</field>
             <field name="model">calendar.attendee</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Invitation details">
-            		<field name="email" string="Invitation To"/>
-                    <field name="partner_id" string="Partner" />
+                <tree string="Invitation details">
+                    <field name="email" string="Invitation To"/>
+                    <field name="user_id" string="Internal User" />
                     <field name="partner_address_id" string="Contact" />
-            		<field name="role" />            		
-            		<field name="state" />
-            	</tree>
+                    <field name="role" />
+                    <field name="state" />
+                </tree>
             </field>
-        </record>	 
+        </record>
 
-	 
-	 
-        <record id="res_alarm_form_view" model="ir.ui.view">
+        <record id="base_calendar_attendee_search_view" model="ir.ui.view">
+            <field name="name">calendar.attendee.search</field>
+            <field name="model">calendar.attendee</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Invitations">
+                   <filter icon="gtk-apply" string="Accepted"
+                       domain="[('state','=', 'accepted')]"
+                       separator="1" help="Accepted Invitations" />
+                   <filter icon="gtk-close" string="Declined"
+                       domain="[('state','=', 'declined')]"
+                       separator="1" help="Declined Invitations" />
+                   <separator orientation="vertical"/>
+                   <field name="email" select='1'/>
+                   <field name="sent_by_uid" select="1" widget="selection"/>
+                   <separator orientation="vertical"/>
+                   <field name="cutype" string="Invitation type" select="1"/>
+                   <field name="event_date" select="1"/>
+               </search>
+            </field>
+        </record>
+        
+        
+		<record id="action_view_attendee_form" model="ir.actions.act_window">
+	         <field name="name">Event Invitations</field>
+	         <field name="type">ir.actions.act_window</field>
+	         <field name="res_model">calendar.attendee</field>
+	         <field name="view_type">form</field>
+	         <field name="view_mode">tree,form</field>
+	         <field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view" />
+	         <field name="context">{'default_sent_by_uid': uid}</field>
+	     </record>
+		
+		<!-- Calenadar's menu -->
+        <menuitem id="base.menu_calendar_configuration" name="Calendar"
+            parent="base.menu_base_config" sequence="10" />
+		
+		<!-- Invitation menu -->
+		<menuitem id="menu_attendee_invitations"
+			name="Event Invitations" parent="base.menu_calendar_configuration"
+			sequence="10" action="action_view_attendee_form" />
+
+		<!--		ALARM FORM VIEW-->
+
+		<record id="res_alarm_form_view" model="ir.ui.view">
             <field name="name">res.alarm.form</field>
             <field name="model">res.alarm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string="Reminder details">
+                <form string="Reminder details">
                     <field name="name" />
                     <field name="active" />
                     <separator string="Reminder Details" colspan="4" />
@@ -146,42 +139,234 @@
                     <separator string="" colspan="4" />
                     <field name="duration" />
                     <field name="repeat" />
-            	</form>
+                </form>
             </field>
         </record>
 
-         <record id="res_alarm_tree_view" model="ir.ui.view">
-                <field name="name">res.alarm.tree</field>
-                <field name="model">res.alarm</field>
-                <field name="type">tree</field>
-                <field name="arch" type="xml">                    
-                	<tree string="Reminder details">
-			            <field name="name" select="1"/>                        			    
-			            <field name="trigger_interval" select="1"/>
-			            <field name="trigger_duration" select="1"/>
-			            <field name="trigger_occurs" select="1"/>			            
-			            <field name="trigger_related" select="1"/>
-		            </tree>
-                </field>
-            </record>
+		<!--		ALARM TREE VIEW-->
 
-         <record id="action_res_alarm_view" model="ir.actions.act_window">
-         	<field name="name">Available Alarms</field>
-         	<field name="type">ir.actions.act_window</field>
-         	<field name="res_model">res.alarm</field>
-         	<field name="view_type">form</field>
-         	<field name="view_mode">tree,form</field>
-         </record>
-
-        
-        <!--	Available alarms-->
-    <menuitem id="base.menu_calendar_configuration" name="Calendar"
-			parent="base.menu_base_config" sequence="10" />
-
-	<menuitem name="Available Alarms" id="menu_crm_meeting_avail_alarm"
-		action="base_calendar.action_res_alarm_view"
-		parent="base.menu_calendar_configuration" />
+        <record id="res_alarm_tree_view" model="ir.ui.view">
+            <field name="name">res.alarm.tree</field>
+            <field name="model">res.alarm</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Reminder details">
+                <field name="name" select="1"/>
+                <field name="trigger_interval" select="1"/>
+                <field name="trigger_duration" select="1"/>
+                <field name="trigger_occurs" select="1"/>
+                <field name="trigger_related" select="1"/>
+                </tree>
+            </field>
+        </record>
+            
 		
+        <record id="action_res_alarm_view" model="ir.actions.act_window">
+            <field name="name">Available Alarms</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.alarm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_crm_meeting_avail_alarm"
+            groups="base.group_extended"
+            action="base_calendar.action_res_alarm_view"
+            parent="base.menu_calendar_configuration" />
+
+        <!-- Event Form View-->	
+	
+		<record model="ir.ui.view" id="event_form_view">
+	        <field name="name">Event Form</field>
+	        <field name="model">calendar.event</field>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	            <form string="Meetings">
+	                <group col="6" colspan="4">
+	                    <field name="name" select="1" string="Summary"
+	                        colspan="4" />
+	                    <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+	                    <newline/>
+	                    <field name="date" string="Start Date" required="1" select="1"
+	                    	on_change="onchange_dates(date,duration,False,allday)" />
+	                    <field name="duration" widget="float_time"
+	                    	on_change="onchange_dates(date,duration,False,allday)" attrs="{'readonly': [('allday', '=', True)]}"/>
+	                    <field name="date_deadline" string="End Date" required="1"
+	                    	on_change="onchange_dates(date,False,date_deadline)" />
+	                    <field name="location" />
+	                    <field name="alarm_id" string="Reminder"
+	                    	widget="selection" />
+	                    <group colspan="2" col="4" >
+	                           <field name="rrule_type" string="Recurrency"
+	                                colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
+	                           <button string="Edit All"
+	                           	help="Edit all Ourrences of recurrent Meeting"
+	                           	attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
+	                           	name="open_event" icon="gtk-edit"
+	                           	type="object" />
+	                    </group>
+	                </group>
+	                <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
+	                    <separator string="Select data for Custom Rule" colspan="8"/>
+	                    <group col="8" colspan="4">
+	                        <field name="freq" />
+	                        <field name="interval" />
+	                        <field name="count" />
+	                        <field name="end_date" />
+	                    </group>
+	                    <group col="14" colspan="4" name="Select weekdays"
+	                        attrs="{'invisible' : [('freq','!=','weekly')]}">
+	                        <field name="mo" colspan="1" />
+	                        <field name="tu" colspan="1" />
+	                        <field name="we" colspan="1" />
+	                        <field name="th" colspan="1" />
+	                        <field name="fr" colspan="1" />
+	                        <field name="sa" colspan="1" />
+	                        <field name="su" colspan="1" />
+	                        <newline />
+	                    </group>
+	                    <group col="10" colspan="4"
+	                        attrs="{'invisible' : [('freq','!=','monthly'), ('freq','!=','yearly')]}">
+	                        <group col="2" colspan="1">
+	                            <field name="select1" />
+	                        </group>
+	                        <group col="2" colspan="1"
+	                            attrs="{'invisible' : [('select1','=','day')]}">
+	                            <field name="day"
+	                                attrs="{'required' : [('select1','=','date')]}" />
+	                        </group>
+	                        <group col="3" colspan="1"
+	                            attrs="{'invisible' : [('select1','=','date')]}">
+	                            <field name="byday" string="The"
+	                                attrs="{'required' : [('select1','=','day')]}" />
+	                            <field name="week_list" nolabel="1"
+	                                attrs="{'required' : [('select1','=','day')]}" />
+	                        </group>
+	                        <group col="1" colspan="1"
+	                            attrs="{'invisible' : [('freq','!=','yearly')]}">
+	                            <field name="month_list" string="of"
+	                                colspan="1"
+	                                attrs="{'required' : [('freq','=','yearly')]}" />
+	                        </group>
+	                    </group>
+	                </group>
+	                <notebook colspan="4">
+	                <page string="Event">
+	                    <group col="6" colspan="4">
+	                         <separator colspan="6" string="Visibility"/>
+	                         <field name="user_id" string="Responsible User" />
+	                         <field name="show_as" string="Show time as"/>
+	                         <field name="class" string="Privacy"/>
+	                         <field name="rrule" groups="base.group_extended" />
+	                         <field name="recurrent_id" invisible="1" />
+	                         <field name="recurrent_uid" invisible="1" />
+	                    </group>
+	                    <separator string="Description" colspan="4" />
+	                    <field name="description" nolabel="1" colspan="4" />
+	                    <separator colspan="4"/>
+	                    </page>
+	                    <page string="Invitation Detail">
+	                        <button string="Invite People"
+	                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+	                            icon="terp-partner" type="action"
+	                            context="{'model' : 'calendar.event', 'attendee_field':'attendee_ids'}" colspan="2"/>
+	                        <field name="attendee_ids" colspan="4"
+	                            nolabel="1" widget="one2many" mode="tree,form">
+	                            <tree string="Invitation details" editable="top">
+	                                <field name="email" />
+	                                <field name="role" select="1" />
+	                                <field name="state" />
+	                            </tree>
+	                            <form string="Invitation details">
+	                                <notebook colspan="4">
+	                                    <page string="Details">
+	                                        <field name="email" />
+	                                        <field name="rsvp" select="1" />
+	                                        <field name="cutype" select="1" />
+	                                        <field name="role" select="1" />
+	                                        <separator colspan="4" string="" />
+	                                        <group col="6" colspan="4">
+	                                            <field name="state" select="2" />
+	                                            <button name="do_tentative"
+	                                            	states="needs-action,declined,accepted"
+	                                            	string="Uncertain"
+	                                            	type="object"
+	                                            	icon="terp-crm" />
+	                                            <button name="do_accept"
+	                                            	string="Accept"
+	                                            	states="needs-action,tentative,declined"
+	                                            	type="object"
+	                                            	icon="gtk-apply" />
+	                                            <button name="do_decline"
+	                                            	string="Decline"
+	                                            	states="needs-action,tentative,accepted"
+	                                            	type="object"
+	                                            	icon="gtk-cancel" />
+	                                            <button
+	                                            	name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+	                                            	string="Delegate"
+	                                            	type="action"
+	                                            	icon="gtk-sort-descending"
+	                                            	states="needs-action,tentative,declined,accepted"
+	                                            	context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+	                                        </group>
+	                                    </page>
+	                                </notebook>
+	                            </form>
+	                        </field>
+	                    </page>
+	                </notebook>
+	            </form>
+	        </field>
+	    </record>
+
+		<!-- Event Tree View  -->
+
+		<record model="ir.ui.view" id="event_tree_view">
+	        <field name="name">Event Tree</field>
+	        <field name="model">calendar.event</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree string="Events">
+	            	<field name="name" string="Subject" />
+	            	<field name="date" string="Meeting Date" />
+	            	<field name="location" />
+	            	<field name="show_as" />
+	            	<field name="class" string="Privacy" />
+	            </tree>
+	        </field>
+	    </record>
+	    
+		<!-- Event Calendar View  -->
+
+		<record model="ir.ui.view" id="event_calendar_view">
+	        <field name="name">Events Calendar</field>
+	        <field name="model">calendar.event</field>
+	        <field name="type">calendar</field>
+	        <field name="priority" eval="2"/>
+	        <field name="arch" type="xml">
+	            <calendar string="Events" date_start="date" color="show_as" date_delay="duration">
+	                <field name="name"/>
+	                <field name="class"/>
+	                <field name="show_as"/>
+	            </calendar>
+	        </field>
+	    </record>
+	    
+	    <!-- Event action  -->
+	    
+		<record id="action_view_event" model="ir.actions.act_window">
+	            <field name="name">Events</field>
+	            <field name="type">ir.actions.act_window</field>
+	            <field name="res_model">calendar.event</field>
+	            <field name="view_type">form</field>
+	            <field name="view_mode">tree,form,calendar</field>
+	        </record>
 		
-    </data>
-</openerp>
+		<!-- Event menu  -->
+		<menuitem id="menu_events"
+				name="Events" parent="base.menu_calendar_configuration"
+				sequence="5" action="action_view_event" />
+		
+     </data>
+ </openerp>

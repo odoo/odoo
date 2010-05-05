@@ -7,20 +7,23 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Sales Orders Statistics">
-                <field name="date"/>
-                <field name="user_id"/>
+                <field name="date" invisible="1"/>
+                <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="shop_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
-                <field name="partner_id"/>
-                <field name="product_id"/>
-                <field name="product_qty"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="product_qty" invisible="1"/>
                 <field name="delay" avg="Days to Close"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="state" invisible="1"/>
+                <field name="fiscal_position" invisible="1"/>
+                <field name="payment_term" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -43,44 +46,74 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Sale Orders">
-                <filter icon="terp-sale" 
-                    string="This Year" 
-                    domain="[('year','=',time.strftime('%%Y'))]" 
-                    default="1"
-                    help="Sales orders of the year"/>
-                <filter icon="terp-sale"
-                    string="This Month" 
-                    default="1"
-                    domain="[('month','=',time.strftime('%%m'))]" 
-                    help="Sales orders of this month"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-sale"
-                    string="Quotations" 
-                    domain="[('state','=','draft')]"/>
-                <filter icon="terp-sale"
-                    string="Sales" 
-                    default="1"
-                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
-                <separator orientation="vertical"/>
-                <field name="user_id" widget="selection">
-                    <filter icon="terp-sale"
-                        help="My Sales"
-                        domain="[('user_id','=',uid)]"/>
-                </field>
-                <field name="partner_id"/>
-                <field name="product_id"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+            	<group>
+            	    <filter icon="terp-sale" string="This Year"
+	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                    	    help="Tasks performed in this year"/>
+	                <filter icon="terp-sale" string="This Month"
+	                		name="month"
+	                		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                		help="Tasks performed in this month"/>
+	                <filter icon="gtk-media-rewind"
+	                        string="    7 Days    "
+	                        separator="1"
+	                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                        help="Tasks during last 7 days"/>
+	                <separator orientation="vertical"/>
+	                <filter icon="terp-sale"
+	                    	string="Quotations"
+	                    	domain="[('state','=','draft')]"/>
+	                <filter icon="terp-sale"
+	                		string="Waiting Schedule"
+	                		domain="[('state','=','waiting_date')]"/>
+	                <filter icon="terp-sale"
+	                		string="In progress"
+	                		domain="[('state','=','progress')]"/>
 
+	                <separator orientation="vertical"/>
+	                <field name="user_id" widget="selection">
+	                    <filter icon="terp-sale"
+	                    		string="My Sales"
+	                    		help = "My Sales"
+	                    		domain="[('user_id','=',uid)]" />
+	                    <filter icon="terp-sale"
+	                    		string="sale Non User"
+	                    		help="sale Non User"
+	                    		domain="[('user_id','=',False)]"/>
+	                </field>
+	                <field name="partner_id"/>
+	                <field name="product_id"/>
+				</group>
+				<newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-sale" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
+                    <filter icon="terp-sale" string="       Invoice Exception      " domain="[('state','=','invoice_except')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="shop_id" widget="selection"/>
+                    <field name="payment_term" widget="selection"/>
+                    <field name="fiscal_position" widget="selection"/>
+                    <newline/>
+                    <filter icon="terp-sale" string="Manual In Progress" domain="[('state','=','manual')]"/>
+                    <filter icon="terp-sale" string="Done" domain="[('state','=','done')]"/>
+                    <filter icon="terp-sale" string="Cancelled" domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="date"/>
+                </group>
+                <newline/>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Company" icon="terp-sale" context="{'group_by':'company_id'}"/>
+                    <filter string="Company" icon="terp-sale" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <filter string="Shop" icon="terp-sale" context="{'group_by':'shop_id'}"/>
-                    <filter string="Salesman" icon="terp-sale" context="{'group_by':'user_id'}" default="1"/>
+                    <filter string="Salesman" icon="terp-sale" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Fiscal Position" icon="terp-sale" context="{'group_by':'fiscal_position'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-sale" context="{'group_by':'product_id'}"/>
                     <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
+                    <filter string="Payment Term" icon="terp-sale" context="{'group_by':'payment_term'}"/>
                     <filter string="State" icon="terp-sale" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
+					<filter string="Day" icon="terp-sale" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-sale" context="{'group_by':'date'}"/>
                     <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
                 </group>
@@ -94,10 +127,140 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_order_product_search"/>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
     </record>
 
     <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="8"/>
     <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="3"/>
 
+ <!-- This views used in board_sale module -->
+     <record id="view_sale_order_by_clients_tree" model="ir.ui.view">
+        <field name="name">sale.order.by.clients.tree</field>
+        <field name="model">sale.order.by.clients</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sales order by clients">
+                <field name="partner_id"/>
+                <field name="total_orders"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sale_order_by_clients_graph" model="ir.ui.view">
+         <field name="name">sale.order.by.clients.graph</field>
+         <field name="model">sale.order.by.clients</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Sales order by clients" type="bar">
+                 <field name="partner_id" />
+                 <field name="total_orders" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_sale_order_by_clients" model="ir.actions.act_window">
+        <field name="name">Sales Orders</field>
+        <field name="res_model">sale.order.by.clients</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="view_id" ref="view_sale_order_by_clients_tree"/>
+    </record>
+
+   <record id="view_uninvoiced_lines_per_month_tree" model="ir.ui.view">
+        <field name="name">uninvoiced.lines.per.month.tree</field>
+        <field name="model">uninvoiced.lines.per.month</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Uninvoiced lines per month">
+                <field name="year"/>
+                <field name="month"/>
+                <field name="number_of_lines"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_uninvoiced_lines_per_month_graph" model="ir.ui.view">
+         <field name="name">uninvoiced.lines.per.month.graph</field>
+         <field name="model">uninvoiced.lines.per.month</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Uninvoiced lines per month" type="bar">
+                 <field name="month" />
+                 <field name="number_of_lines" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_suninvoiced_lines_per_month" model="ir.actions.act_window">
+        <field name="name">Uninvoiced Lines</field>
+        <field name="res_model">uninvoiced.lines.per.month</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="view_id" ref="view_uninvoiced_lines_per_month_tree"/>
+    </record>
+
+       <record id="view_product_bought_by_sale_order_tree" model="ir.ui.view">
+        <field name="name">product.bought.by.sale.order.tree</field>
+        <field name="model">product.bought.by.sale.order</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Product bought by sale order">
+                <field name="name"/>
+                <field name="total_products"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_bought_by_sale_order_graph" model="ir.ui.view">
+         <field name="name">product.bought.by.sale.order.graph</field>
+         <field name="model">product.bought.by.sale.order</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Product bought by sale order" type="bar">
+                 <field name="name"/>
+                 <field name="total_products" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_product_bought_by_sale_order" model="ir.actions.act_window">
+        <field name="name">Product bought by sale order</field>
+        <field name="res_model">product.bought.by.sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="view_id" ref="view_product_bought_by_sale_order_tree"/>
+    </record>
+
+   <record id="view_sales_by_regions_tree" model="ir.ui.view">
+        <field name="name">sales.by.regions.tree</field>
+        <field name="model">sales.by.regions</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sales by regions">
+                <field name="name"/>
+                <field name="total_sales"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sales_by_regions_graph" model="ir.ui.view">
+         <field name="name">sales.by.regions.graph</field>
+         <field name="model">sales.by.regions</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Sales by regions" type="bar">
+                 <field name="name"/>
+                 <field name="total_sales" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_sales_by_regions" model="ir.actions.act_window">
+        <field name="name">Sales by regions</field>
+        <field name="res_model">sales.by.regions</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="view_id" ref="view_sales_by_regions_tree"/>
+    </record>
 </data>
 </openerp>

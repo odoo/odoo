@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-<!--        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"-->
-<!--            groups="group_sale_user"/>-->
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="4"/>
@@ -45,7 +43,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
         </record>
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="70"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form"
+            parent="base.menu_base_config" sequence="70"
+            groups="base.group_extended"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -76,8 +76,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales orders">
-                    <field name="date_order" string="Order date"/>
-                    <field name="name" string="Reference"/>
+                    <field name="date_order"/>
+                    <field name="name"/>
                     <field name="partner_id"/>
                     <field name="partner_shipping_id"/>
                     <field name="user_id" />
@@ -98,11 +98,11 @@
                 <form string="Sales order">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="client_order_ref" select="2"/>
-                        <field name="shipped" select="2"/>
-                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2" widget="selection"/>
-                        <field name="date_order" select="1" string="Order date" />
-                        <field name="invoiced" select="2"/>
+                        <field name="client_order_ref"/>
+                        <field name="shipped"/>
+                        <field name="date_order" select="1"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
+                        <field name="invoiced"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sale Order">
@@ -110,14 +110,15 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id"/>
-                            <field name="project_id" select="2" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
+                            <field name="project_id"
+                                context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
+                                groups="base.group_extended"/>
                             <newline/>
                             <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">
                                     <notebook>
                                         <page string="Order Line">
-                                            <separator colspan="4" string="Automatic Declaration"/>
                                             <field colspan="4"
                                                 context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
                                                 name="product_id"
@@ -138,18 +139,17 @@
                                                 groups="base.group_extended"/>
 
                                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                            <separator colspan="4" string="Manual Description"/>
-                                            <field colspan="4" name="name" select="2"/>
-                                            <field name="price_unit" select="2"/>
+                                            <field colspan="4" name="name"/>
+                                            <field name="price_unit"/>
                                             <field name="discount"/>
-                                            <field name="type"/>
-                                            <field name="delay" select="2"/>
+                                            <field name="type" groups="base.group_extended"/>
+                                            <field name="delay" groups="base.group_extended"/>
                                             <newline/>
                                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                            <separator colspan="4" string="States"/>
-                                            <field name="state" select="2"/>
-                                            <group col="3" colspan="2">
-                                                <field name="invoiced" select="2"/>
+                                            <group colspan="4" col="5" groups="base.group_extended">
+                                                <separator colspan="5" string="States"/>
+                                                <field name="state"/>
+                                                <field name="invoiced"/>
                                                 <button colspan="1"
                                                     name="%(action_view_sale_order_line_make_invoice)d"
                                                     states="confirmed"
@@ -162,7 +162,7 @@
                                             <field groups="product.group_uos" name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
                                             <field groups="product.group_uos" name="product_uos"/>
                                             <field name="th_weight"/>
-                                            <field name="address_allotment_id" select="2"/>
+                                            <field name="address_allotment_id"/>
                                             <separator colspan="4" string="Properties"/>
                                             <field colspan="4" name="property_ids" nolabel="1"/>
                                         </page>
@@ -195,12 +195,12 @@
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                             </group>
                             <group col="13" colspan="4">
-                                <field name="state" select="2"/>
+                                <field name="state"/>
                                 <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
                                 <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-print"/>
                                 <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="gtk-apply"/>
-                                <button name="ship_recreate" states="shipping_except" string="Recreate Requisition" icon="gtk-ok"/>
-                                <button name="ship_corrected" states="shipping_except" string="Requisition Corrected" icon="gtk-apply"/>
+                                <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
+                                <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
                                 <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-print"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
@@ -210,25 +210,25 @@
                             </group>
                         </page>
                         <page string="Other data">
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="base.group_extended" name="logistic">
                                 <separator string="Logistic" colspan="2"/>
-                                <field groups="base.group_extended" name="incoterm"/>
-                                <field groups="base.group_extended" name="picking_policy" required="True"/>
+                                <field name="incoterm"/>
+                                <field name="picking_policy" required="True"/>
                                 <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
-                                <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
+                                <field name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="References" colspan="2"/>
                                 <field name="user_id"/>
                                 <field groups="base.group_extended" name="origin"/>
                             </group>
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Conditions" colspan="2"/>
                                 <field name="payment_term" widget="selection"/>
-                                <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="fiscal_position" widget="selection"/>
+                                <field name="company_id" widget="selection"/>
                             </group>
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Dates" colspan="2"/>
                                 <field name="create_date" widget="datetime"/>
                                 <field name="date_confirm"/>
@@ -236,7 +236,7 @@
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
-                        <page string="History">
+                        <page string="History" groups="base.group_extended">
                             <separator colspan="4" string="Related invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1"/>
                             <field colspan="4" name="picking_ids" nolabel="1"/>
@@ -349,8 +349,7 @@
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="UoM"/>
-                    <field name="discount"/>
-                    <field name="price_unit"/>
+                    <field name="salesman_id"/>
                     <field name="price_net"/>
                     <field name="price_subtotal"/>
                     <field name="th_weight"/>
@@ -366,43 +365,43 @@
                 <form string="Sales Order Lines">
                     <notebook>
                         <page string="Order Lines">
-                            <separator colspan="4" string="Automatic Declaration"/>
+                            <separator colspan="4" string="General Information"/>
                             <field name="order_id" select="1"/>
                             <field name="order_partner_id" readonly="1" select="1" invisible="1"/>
-                            <field name="product_uom_qty" readonly="1" select="2"/>
+                            <field name="product_uom_qty" readonly="1"/>
                             <field name="product_uom"/>
                             <field name="product_id" readonly="1" select="1"/>
-                            <field name="invoiced" select="2"/>
+                            <field name="invoiced"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <separator colspan="4" string="Manual Designation"/>
-                            <field colspan="4" name="name" select="2"/>
-                            <field name="price_unit" select="2"/>
+                            <field colspan="4" name="name"/>
+                            <field name="price_unit"/>
                             <field name="discount"/>
-                            <field name="type"/>
-                            <field name="delay" select="2"/>
+                            <field name="type" groups="base.group_extended"/>
+                            <field name="delay" groups="base.group_extended"/>
                             <field name="price_subtotal"/>
                             <field name="th_weight"/>
                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                             <separator colspan="4" string="States"/>
-                            <field name="state" select="2"/>
+                            <field name="state"/>
                             <group col="2" colspan="2">
                                 <button name="button_done"
-                                	states="confirmed,exception"
-                                	string="Done" type="object"
-                                	icon="gtk-jump-to" />
+                                    states="confirmed,exception"
+                                    string="Done" type="object"
+                                    icon="gtk-jump-to" />
                                 <button name="button_cancel"
-                                	states="confirmed,exception"
-                                	string="Cancel" type="object"
-                                	icon="gtk-cancel" />
+                                    states="confirmed,exception"
+                                    string="Cancel" type="object"
+                                    icon="gtk-cancel" />
                             </group>
                         </page>
-                        <page string="Properties">
+                        <page string="Properties" groups="base.group_extended">
                             <field name="property_ids" nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
-                        <page string="Invoice Lines">
+                        <page string="Invoice Lines" groups="base.group_extended">
                             <field colspan="4" name="invoice_lines" nolabel="1"/>
                         </page>
                     </notebook>
@@ -429,6 +428,7 @@
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'salesman_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -443,31 +443,33 @@
                 <search string="Search Uninvoiced Lines">
                     <filter icon="terp-purchase" string="Shipped"
                         domain="[('state','=','done')]"
+                        name="unshipped"
                         separator="1" />
                     <filter icon="terp-purchase" string="Uninvoiced"
                         domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"  default="1"
                         separator="1" />
                     <separator orientation="vertical"/>
-                    <field name="product_id" select="1"/>
                     <field name="order_id" select="1"/>
                     <field name="order_partner_id" select="1"/>
+                    <field name="product_id" select="1"/>
                     <field name="state" select="1"/>
                     <newline />
                     <group expand="1" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-sale" domain="[]" context="{'group_by':'product_id'}"/>
-<!--                        <filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'order_partner_id'}"/>-->
                         <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
         <record id="action_order_line_tree2" model="ir.actions.act_window">
-            <field name="name">Uninvoiced Lines</field>
+            <field name="name">Lines to Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="context">{"search_default_uninvoiced":1,"search_default_unshipped":1}</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="filter" eval="True"/>
         </record>
@@ -486,7 +488,7 @@
 
         <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product"/>
 
-        <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="6"/>
+        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="6"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2"/>
         <!-- configartion view -->
 
@@ -502,11 +504,11 @@
                 </form>
                 <group string="res_config_contents" position="replace">
                   <label colspan="4" align="0.0"
-                         string="Set the policies selected by default when creating a new sale order."/>
+                         string="Setup your sales workflow and default values."/>
                   <separator colspan="4"
                        string="Configure Sale Order Logistic"/>
                   <newline/>
-                  <field name="picking_policy"/>
+                  <field name="picking_policy" groups="base.group_extended"/>
                   <newline/>
                   <field name="order_policy"/>
                   <newline/>

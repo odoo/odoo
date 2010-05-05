@@ -2,7 +2,8 @@
 <openerp>
 <data>
 
-    <!-- Views for Contacts -->
+    <!-- Views for Contacts Tree View -->
+
     <record model="ir.ui.view" id="view_partner_contact_tree">
         <field name="name">res.partner.contact.tree</field>
         <field name="model">res.partner.contact</field>
@@ -20,6 +21,8 @@
         </field>
     </record>
 
+<!-- Views for Contacts Form View -->
+
     <record model="ir.ui.view" id="view_partner_contact_form">
         <field name="name">res.partner.contact.form</field>
         <field name="model">res.partner.contact</field>
@@ -35,7 +38,7 @@
                        <group string="Partner" colspan="2" col="2">
                            <field name="partner_id" invisible="1" select="1"/>
                            <field name="title" select="1"/>
-                           <field name="function_id" invisible="1" select="2"/>
+                           <field name="function_id" invisible="1"/>
                         <field name="email"/>
                            <field name="lang_id"/>
                            <field name="active"/>
@@ -48,13 +51,13 @@
                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
                                <group string="Partner" colspan="2" col="4">
-	                               <field name="function_id"/>
-	                               <field name="address_id" context="{'address_partner_id': name}"/>
-	                               <field name="name"/>
-	                               <field name="date_start" />
-	                               <field name="date_stop" />
-	                               <field name="state" />
-	                               <field name="sequence_contact" />
+                                   <field name="function_id"/>
+                                   <field name="address_id" context="{'address_partner_id': name}"/>
+                                   <field name="name"/>
+                                   <field name="date_start" />
+                                   <field name="date_stop" />
+                                   <field name="state" />
+                                   <field name="sequence_contact" />
                                </group>
                                <group string="Communication" colspan="2" col="2">
                                    <field name="phone"/>
@@ -93,6 +96,8 @@
         </field>
     </record>
 
+<!-- Views for Contacts Search View -->
+
     <record model="ir.ui.view" id="view_partner_contact_search">
         <field name="name">res.partner.contact.search</field>
         <field name="model">res.partner.contact</field>
@@ -106,6 +111,8 @@
         </field>
     </record>
 
+<!-- Views for Contacts Action -->
+
     <record model="ir.actions.act_window" id="action_partner_contact_form">
         <field name="name">Contacts</field>
         <field name="res_model">res.partner.contact</field>
@@ -116,7 +123,7 @@
     </record>
     <menuitem name="Contacts" id="menu_partner_contact_form" action="action_partner_contact_form" parent = "base.menu_address_book" sequence="2"/>
 
-    <!-- Views for Partners -->
+    <!-- Views for Partners Form View -->
 
     <record model="ir.ui.view" id="view_partner_form_inherit">
         <field name="name">Partner form inherited</field>
@@ -128,13 +135,13 @@
                 <field name="address" mode="form,tree" colspan="4" nolabel="1" select="1">
                     <form string="Address">
                        <group string="Postal Address" colspan="2" col="2">
-                           <field name="type" select="2" />
-                           <field name="street" select="2"/>
+                           <field name="type" />
+                           <field name="street"/>
                            <field name="street2"/>
-                           <field name="zip" select="2"/>
-                           <field name="city" select="2"/>
-                           <field name="country_id" select="2" completion="1"/>
-                           <field name="state_id" select="2"/>
+                           <field name="zip"/>
+                           <field name="city"/>
+                           <field name="country_id" completion="1"/>
+                           <field name="state_id"/>
                         </group>
                         <group string="Communication" colspan="2" col="2">
                            <field name="phone"/>
@@ -186,6 +193,7 @@
 
 
 <!-- don't display the categories, since it is displayed in an other tab-->
+
         <record model="ir.ui.view" id="view_partner_form_inherit2">
             <field name="name">res.partner.form</field>
             <field name="type">form</field>
@@ -198,6 +206,7 @@
         </record>
 
 <!-- don't display the categories label-->
+
         <record model="ir.ui.view" id="view_partner_form_inherit2bis">
             <field name="name">res.partner.form</field>
             <field name="type">form</field>
@@ -217,7 +226,7 @@
                 <notebook position="inside">
                     <page string="Categories">
                         <separator colspan="4" string="Categories"/>
-                        <field colspan="4" name="category_id" nolabel="1" select="2"/>
+                        <field colspan="4" name="category_id" nolabel="1"/>
                     </page>
                 </notebook>
             </field>
@@ -225,6 +234,7 @@
 
 
     <!-- Views for Addresses -->
+
     <record model="ir.ui.view" id="view_partner_address_tree_inherited1">
         <field name="name">Partner addresses inherited</field>
         <field name="model">res.partner.address</field>
@@ -301,43 +311,10 @@
             <field name="partner_id" position="replace">
                 <field name='partner_id' select='1'/>
                 <field name='type' select='2'/>
-                <field name='job_id' invisible="1" select="2"/>
+                <field name='job_id' invisible="1"/>
             </field>
         </field>
     </record>
-
-
-    <!--
-    <record id='view_partner_address_form_inherited5' model='ir.ui.view'>
-        <field name='name'>res.partner.address.form.inherited5</field>
-        <field name='model'>res.partner.address</field>
-        <field name="inherit_id" ref="base.view_partner_address_form1"/>
-        <field name='type'>form</field>
-        <field name='arch' type='xml'>
-            <group string="Communication" colspan="2" col="2" position="after">
-            <newline/>
-                <field name="job_ids" mode="tree,form" colspan="4">
-                    <tree string="Contacts" editable="top">
-                        <field name="contact_id"/>
-                        <field name="function_id"/>
-                        <field name="phone"/>
-                        <field name="fax"/>
-                        <field name="extension"/>
-                        <field name="email"/>
-                    </tree>
-                    <form string="Contacts">
-                        <field name="contact_id"/>
-                        <field name="function_id"/>
-                        <field name="phone"/>
-                        <field name="fax"/>
-                        <field name="extension"/>
-                        <field name="email" widget="email"/>
-                    </form>
-                </field>
-            </group>
-        </field>
-    </record>
-    -->
 
     <record id="view_res_partner_address_filter" model="ir.ui.view">
         <field name="name">res.partner.address.select</field>
@@ -351,8 +328,8 @@
         </field>
     </record>
 
+    <!-- Views for partner job Tree view  -->
 
-    <!-- Views for res.partner.job -->
     <record model="ir.ui.view" id="view_partner_job_tree">
         <field name="name">res.partner.job.tree</field>
         <field name="model">res.partner.job</field>
@@ -372,6 +349,8 @@
         </field>
     </record>
 
+<!-- Views for partner job Form view  -->
+
     <record model="ir.ui.view" id="view_partner_job_form">
         <field name="name">res.partner.job.form</field>
         <field name="model">res.partner.job</field>
@@ -384,15 +363,15 @@
                         <field name="address_id" select="1" context="{'address_partner_id': name}"/>
                         <field name="contact_id" select="1"/>
                         <field name="function_id" select="1"/>
-                        <field name="email" select="2" widget="email"/>
-                        <field name="phone" select="2"/>
+                        <field name="email" widget="email"/>
+                        <field name="phone"/>
                         <field name="fax"/>
                         <field name="extension"/>
-                        <field name="sequence_contact" select="2" groups="base.group_user"/>
-                        <field name="sequence_partner" select="2" groups="base.group_user"/>
+                        <field name="sequence_contact" groups="base.group_user"/>
+                        <field name="sequence_partner" groups="base.group_user"/>
                         <field name="date_start" groups="base.group_user"/>
                         <field name="date_stop" groups="base.group_user"/>
-                        <field name="state" select="2" />
+                        <field name="state" />
                     </page>
                 </notebook>
             </form>
@@ -400,26 +379,22 @@
     </record>
 
     <!-- Menuitem for res.partner.job -->
+
     <record model="ir.actions.act_window" id="action_res_partner_job">
         <field name="name">Contact's Jobs</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner.job</field>
         <field name="view_type">form</field>
     </record>
-<!--    <menuitem-->
-<!--        name="Partners/Contact's Jobs"-->
-<!--        action="action_res_partner_job"-->
-<!--        id="menu_action_res_partner_job"-->
-<!--        groups="base.group_extended"/>-->
 
-    <!-- Act window defining a shorcut on partners to open all his contacts -->
     <act_window domain="[('name', '=', active_id)]"
         id="act_res_partner_jobs" name="Partner Contacts"
         res_model="res.partner.job"
         src_model="res.partner"
         />
 
-	<!-- Act window defining a shorcut on partner address to open all his jobs -->
+    <!-- Act window defining a shorcut on partner address to open all his jobs -->
+
     <act_window
         id="act_res_partner_jobs" name="Open Jobs"
         domain="[('address_id', '=', active_id)]"
@@ -427,9 +402,13 @@
         src_model="res.partner.address"
         />
 
-    <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Procurement Management" sequence="7"/>
-    <menuitem id="base.menu_procurement_management_supplier" name="Suppliers"
-            parent="base.menu_purchase_root" sequence="3"/>
-    <menuitem name="Contacts" id="menu_partner_contact_supplier_form" action="action_partner_contact_form" parent = "base.menu_procurement_management_supplier" sequence="2"/>
+    <menuitem icon="terp-purchase" id="base.menu_purchase_root"
+        name="Procurement Management" sequence="7" />
+    <menuitem id="base.menu_procurement_management_supplier"
+        name="Suppliers" parent="base.menu_purchase_root" sequence="3" />
+    <menuitem name="Contacts" id="menu_partner_contact_supplier_form"
+        action="action_partner_contact_form"
+        parent="base.menu_procurement_management_supplier" sequence="2" />
+
 </data>
 </openerp>

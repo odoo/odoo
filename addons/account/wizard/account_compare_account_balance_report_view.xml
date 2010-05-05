@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+        <record id="account_compare_account_balance_report_view" model="ir.ui.view">
+             <field name="name">account.compare.account.balance.report.form</field>
+             <field name="model">account.compare.account.balance.report</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+              	<form string="Customize Report">
+					    <notebook tabpos="up">
+					        <page string="Report Options">
+					            <separator string="Select Fiscal Year(s)(Maximum Three Years)" colspan="4"/>
+					            <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal years)"/>
+					            <field name="fiscalyear" colspan="5" nolabel="1"/>
+					            <field name="landscape" colspan="4"/>
+					            <field name="show_columns" colspan="4"/>
+					            <field name="format_perc" colspan="4"/>
+					            <field name="select_account" colspan="4"/>
+					            <field name="account_choice" colspan="4"/>
+					            <field name="compare_pattern" colspan="4"/>
+
+					        </page>
+
+					        <page string="Select Period">
+					            <field name="period_manner" colspan="4"/>
+					            <separator string="Select Period(s)" colspan="4"/>
+					            <field name="periods" colspan="4" nolabel="1"/>
+					        </page>
+					    </notebook>
+
+				    <newline/>
+     				<group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+               			<button name="check" string="Print" type="object" icon="gtk-print" default_focus="1"/>
+ 					</group>
+				</form>
+             </field>
+ 		</record>
+
+		<act_window name="Account balance-Compare Years"
+				res_model="account.compare.account.balance.report"
+				src_model="account.account"
+				view_mode="form"
+				target="new"
+				key2="client_print_multi"
+			id="action_view_account_compare_account_balance_report"/>
+
+	</data>
+</openerp>

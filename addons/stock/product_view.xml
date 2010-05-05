@@ -2,19 +2,19 @@
 <openerp>
     <data>
 
-	    <record id="product_search_form_view_stock" model="ir.ui.view">
+        <record id="product_search_form_view_stock" model="ir.ui.view">
             <field name="name">product.search.stock.form</field>
             <field name="model">product.product</field>
             <field name="type">search</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
-               	<field name="pricelist_id" select="1" widget="selection" position="before">
-               		<field name="location_id" select="1" widget="selection" context="{'location': self}" />
-               		<separator orientation="vertical"/>
-               	</field>
+                   <field name="pricelist_id" select="1" widget="selection" position="before">
+                       <field name="location_id" select="1" widget="selection" context="{'location': self}" />
+                       <separator orientation="vertical"/>
+                   </field>
             </field>
         </record>
-        
+
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit</field>
             <field name="model">product.category</field>
@@ -54,20 +54,21 @@
             </field>
         </record>
 
-		<record id="view_product_standard_price_form" model="ir.ui.view">
+        <record id="view_product_standard_price_form" model="ir.ui.view">
             <field name="name">product.product.standard.price.form.inherit</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-				<field name="standard_price" position="replace">
-					<group col="4" colspan="2">
-						<field name="standard_price" readonly="True"/>
-						<button name="%(action_view_change_standard_price)d" string="Change Price" type="action" icon="gtk-execute"/>
-	           		</group>
-	           	</field>
-	        </field>
-	    </record>
+                <field name="standard_price" position="replace">
+                    <label string="Cost Price" align="1.0"/>
+                    <group col="2" colspan="1">
+                        <field name="standard_price" readonly="True" nolabel="1"/>
+                        <button name="%(action_view_change_standard_price)d" string="Change Price" type="action" icon="gtk-execute"/>
+                    </group>
+                </field>
+            </field>
+        </record>
 
         <record id="view_normal_property_acc_form" model="ir.ui.view">
             <field name="name">product.normal.stock.acc.property.form.inherit</field>
@@ -77,8 +78,8 @@
             <field name="priority">26</field>
             <field name="arch" type="xml">
                 <field name="property_account_expense" position="after">
-                    <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                    <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                    <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
+                    <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="base.group_extended"/>
                 </field>
             </field>
         </record>
@@ -112,7 +113,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="store" position="after">
-                    <group col="2" colspan="2" name="store">
+                    <group col="2" colspan="2" name="store" groups="base.group_extended">
                         <separator string="Counter-Part Locations Properties" colspan="2"/>
                         <field name="property_stock_procurement" widget="selection" domain="[('usage','=','procurement')]"/>
                         <field name="property_stock_production" widget="selection"/>

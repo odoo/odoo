@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="ir_cron_mail_gateway_action" model="ir.cron">
+            <field name="name">Fetchmail Service</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'email.server'" name="model"/>
+            <field eval="'_fetch_mails'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+    </data>
+
+    <data>
+
+        <record id="fetchmail_user_server_rule" model="ir.rule">
+        	<field name="name">User wise Server</field>
+            <field ref="model_email_server" name="model_id" model="ir.model"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+        </record>
+
+    </data>
+</openerp>

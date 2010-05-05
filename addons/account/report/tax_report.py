@@ -20,16 +20,15 @@
 ##############################################################################
 
 import time
-import pooler
-import rml_parse
 import copy
+
+import rml_parse
 from report import report_sxw
-import pdb
-import re
 
 class tax_report(rml_parse.rml_parse):
 	_name = 'report.account.vat.declaration'
-	def __init__(self, cr, uid, name, context):
+	def __init__(self, cr, uid, name, context={}):
+		print "tax______init", name, context
 		super(tax_report, self).__init__(cr, uid, name, context=context)
 		self.localcontext.update({
 			'time': time,
@@ -42,19 +41,19 @@ class tax_report(rml_parse.rml_parse):
 		})
 
 
-	def _get_lines(self, based_on,period_list,company_id=False, parent=False, level=0):
-		res = self._get_codes(based_on,company_id,parent,level,period_list)
+	def _get_lines(self, based_on, period_list, company_id=False, parent=False, level=0, context={}):
+		res = self._get_codes(based_on, company_id, parent, level, period_list, context=context)
 
-		if period_list[0][2] :
-			res = self._add_codes(based_on,res,period_list)
+		if period_list:
+			res = self._add_codes(based_on, res, period_list, context=context)
 		else :
 			self.cr.execute ("select id from account_fiscalyear")
 			fy = self.cr.fetchall()
 			self.cr.execute ("select id from account_period where fiscalyear_id = %s",(fy[0][0],))
 			periods = self.cr.fetchall()
 			for p in periods :
-				period_list[0][2].append(p[0])
-			res = self._add_codes(based_on,res,period_list)
+				period_list.append(p[0])
+			res = self._add_codes(based_on, res, period_list, context=context)
 
 		i = 0
 		top_result = []
@@ -71,7 +70,7 @@ class tax_report(rml_parse.rml_parse):
 			}
 
 			top_result.append(res_dict)
-			res_general = self._get_general(res[i][1].id,period_list,company_id,based_on)
+			res_general = self._get_general(res[i][1].id, period_list, company_id, based_on, context=context)
 			ind_general = 0
 			while ind_general < len(res_general) :
 				res_general[ind_general]['type'] = 2
@@ -84,11 +83,12 @@ class tax_report(rml_parse.rml_parse):
 		return top_result
 		#return array_result
 
-	def _get_period(self, period_id):
-		return self.pool.get('account.period').browse(self.cr, self.uid, period_id).name
+	def _get_period(self, period_id, context={}):
+		return self.pool.get('account.period').browse(self.cr, self.uid, period_id, context=context).name
 
-	def _get_general(self, tax_code_id,period_list ,company_id, based_on):
+	def _get_general(self, tax_code_id,period_list ,company_id, based_on, context={}):
 		res=[]
+		obj_account = self.pool.get('account.account')
 		if based_on == 'payments':
 			self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
 						SUM(line.debit) AS debit, \
@@ -110,8 +110,8 @@ class tax_report(rml_parse.rml_parse):
 						AND line.period_id =ANY(%s) \
 						AND ((invoice.state = %s) \
 							OR (invoice.id IS NULL))  \
-					GROUP BY account.id,account.name,account.code', ('draft',tax_code_id,
-						company_id, period_list[0][2],'paid',))
+					GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
+						company_id, period_list, 'paid',))
 
 		else :
 			self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
@@ -129,52 +129,54 @@ class tax_report(rml_parse.rml_parse):
 						AND account.company_id = %s \
 						AND line.period_id =ANY(%s)\
 						AND account.active \
-					GROUP BY account.id,account.name,account.code', ('draft',tax_code_id,
-						company_id,period_list[0][2],))
+					GROUP BY account.id,account.name,account.code', ('draft', tax_code_id,
+						company_id, period_list,))
 		res = self.cr.dictfetchall()
 
 						#AND line.period_id IN ('+ period_sql_list +') \
 
 		i = 0
 		while i<len(res):
-			res[i]['account'] = self.pool.get('account.account').browse(self.cr, self.uid, res[i]['account_id'])
+			res[i]['account'] = obj_account.browse(self.cr, self.uid, res[i]['account_id'], context=context)
 			i+=1
 		return res
 
-	def _get_codes(self,based_on, company_id, parent=False, level=0,period_list=[]):
-		tc = self.pool.get('account.tax.code')
-		ids = tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)])
+	def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=[], context={}):
+		obj_tc = self.pool.get('account.tax.code')
+		ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], context=context)
 
 		res = []
-		for code in tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
-			res.append(('.'*2*level,code))
+		for code in obj_tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
+			res.append(('.'*2*level, code))
 
-			res += self._get_codes(based_on, company_id, code.id, level+1)
+			res += self._get_codes(based_on, company_id, code.id, level+1, context=context)
 		return res
 
-	def _add_codes(self,based_on, account_list=[],period_list=[]):
+	def _add_codes(self, based_on, account_list=[], period_list=[], context={}):
 		res = []
+		obj_tc = self.pool.get('account.tax.code')
 		for account in account_list:
-			tc = self.pool.get('account.tax.code')
-			ids = tc.search(self.cr, self.uid, [('id','=',account[1].id)])
+			ids = obj_tc.search(self.cr, self.uid, [('id','=', account[1].id)], context=context)
 			sum_tax_add = 0
-			for period_ind in period_list[0][2]:
-				for code in tc.browse(self.cr, self.uid, ids, {'period_id':period_ind,'based_on': based_on}):
+			for period_ind in period_list:
+				for code in obj_tc.browse(self.cr, self.uid, ids, {'period_id':period_ind,'based_on': based_on}):
 					sum_tax_add = sum_tax_add + code.sum_period
 
 			code.sum_period = sum_tax_add
 
-			res.append((account[0],code))
+			res.append((account[0], code))
 		return res
 
 
-	def _get_company(self, form):
-		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
+	def _get_company(self, form, context={}):
+		obj_company = self.pool.get('res.company')
+		return obj_company.browse(self.cr, self.uid, form['company_id'], context=context).name
 
-	def _get_currency(self, form):
-		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
+	def _get_currency(self, form, context={}):
+		obj_company = self.pool.get('res.company')
+		return obj_company.browse(self.cr, self.uid, form['company_id'], context=context).currency_id.name
 
-	def sort_result(self,accounts):
+	def sort_result(self, accounts, context={}):
 		# On boucle sur notre rapport
 		result_accounts = []
 		ind=0
@@ -191,7 +193,7 @@ class tax_report(rml_parse.rml_parse):
 				bcl_rup_ind = ind - 1
 
 				while (bcl_current_level >= int(accounts[bcl_rup_ind]['level']) and bcl_rup_ind >= 0 ):
-					tot_elem = copy.copy(accounts[bcl_rup_ind])
+					tot_elem = copy.copy(accounts[bcl_rup_ind], context=context)
 					res_tot = { 'code' : accounts[bcl_rup_ind]['code'],
 						'name' : '',
 						'debit' : 0,
@@ -218,6 +220,6 @@ class tax_report(rml_parse.rml_parse):
 
 
 report_sxw.report_sxw('report.account.vat.declaration', 'account.tax.code',
-	'addons/account/report/tax_report.rml', parser=tax_report, header=False)
+	'addons/account/report/tax_report.rml', parser=tax_report, header=True)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

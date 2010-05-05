@@ -13,7 +13,7 @@
             sequence="2" />
         <report auto="False" id="account_analytic_account_cost_ledger" menu="False" model="account.analytic.account" name="hr.timesheet.invoice.account.analytic.account.cost_ledger" rml="account/project/report/cost_ledger.rml" string="Cost Ledger"/>
 
-        <wizard id="account_analytic_account_cost_ledger_report" keyword="client_print_multi" model="account.analytic.account" name="hr.timesheet.invoice.account.analytic.account.cost_ledger.report" string="Cost Ledger"/>
+        <!--<wizard id="account_analytic_account_cost_ledger_report" keyword="client_print_multi" model="account.analytic.account" name="hr.timesheet.invoice.account.analytic.account.cost_ledger.report" string="Cost Ledger"/>-->
 
         <report
             auto="False"
@@ -24,7 +24,7 @@
             rml="hr_timesheet_invoice/report/account_analytic_profit.rml"
             string="Timesheet Profit"/>
 
-        <wizard
+        <!--<wizard
             id="account_analytic_profit"
             menu="False"
             model="account.analytic.line"
@@ -36,7 +36,7 @@
            id="print_account_analytic_profit"
            parent="menu_hr_reporting_timesheet_invoice"
            type="wizard"
-           groups="hr.group_hr_manager"/>
+           groups="hr.group_hr_manager"/>-->
 
     </data>
 </openerp>
