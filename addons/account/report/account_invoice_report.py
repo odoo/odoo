@@ -100,7 +100,7 @@ class account_invoice_report(osv.osv):
                      s.address_invoice_id as address_invoice_id,
                      s.account_id as account_id,
                      s.partner_bank as partner_bank,
-                     sum(s.residual) as residual,
+                     s.residual as residual,
                      case when s.state != 'paid' then null else
                             extract(epoch from avg(am.date_created-l.create_date))/(24*60*60)::decimal(16,2)
                      end as delay_to_pay
@@ -120,6 +120,7 @@ class account_invoice_report(osv.osv):
                      l.uos_id,
                      s.user_id,
                      s.state,
+                     s.residual,
                      s.company_id,
                      s.payment_term,
                      s.period_id,
