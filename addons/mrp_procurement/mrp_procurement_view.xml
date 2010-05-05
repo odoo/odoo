@@ -5,91 +5,6 @@
         Procurement
         -->
         
-        <menuitem id="menu_mrp_procurement" name="Procurements" 
-        	      parent="base.menu_base_partner" sequence="5"/>
-        	      
-        <menuitem name="Procurement Control" id="menu_mrp_control" 
-                  parent="mrp_procurement.menu_mrp_procurement"  sequence="3" />
-
-		<!--
-        Property / Property Group
-        -->
-
-        <record id="mrp_property_group_form_view" model="ir.ui.view">
-            <field name="name">mrp.property.group.form</field>
-            <field name="model">mrp.property.group</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Properties categories">
-                    <separator colspan="4" string="General Information"/>
-                    <field colspan="4" name="name" select="1"/>
-                    <field colspan="4" name="description"/>
-                </form>
-            </field>
-        </record>
-        <record id="mrp_property_group_action" model="ir.actions.act_window">
-            <field name="name">Property Categories</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.property.group</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem
-            id="menu_mrp_configuration"
-            name="Configuration"
-            parent="mrp_procurement.menu_mrp_procurement"
-            groups="base.group_extended"
-            sequence="50" />
-
-        <record id="mrp_property_tree_view" model="ir.ui.view">
-            <field name="name">mrp.property.tree</field>
-            <field name="model">mrp.property</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Properties">
-                    <field name="name"/>
-                    <field name="composition"/>
-                    <field name="group_id"/>
-                </tree>
-            </field>
-        </record>
-        <record id="mrp_property_form_view" model="ir.ui.view">
-            <field name="name">mrp.property.form</field>
-            <field name="model">mrp.property</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Properties">
-                    <separator colspan="4" string="General Information"/>
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="group_id" select="1"/>
-                    <field name="composition" select="1"/>
-                    <separator colspan="4" string="Description"/>
-                    <field colspan="4" name="description"/>
-                </form>
-            </field>
-        </record>
-        <record id="mrp_property_action" model="ir.actions.act_window">
-            <field name="name">Properties</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.property</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem name="Properties"
-            id="menu_mrp_property"
-            parent="menu_mrp_configuration"
-            groups="base.group_extended"
-            sequence="20" />
-        <menuitem
-            action="mrp_property_action"
-            id="menu_mrp_property_action"
-            parent="menu_mrp_property"
-            groups="base.group_extended" />
-        <menuitem
-            action="mrp_property_group_action"
-            id="menu_mrp_property_group_action"
-            parent="menu_mrp_property"/>
-
         <record id="mrp_procurement_tree_view" model="ir.ui.view">
             <field name="name">mrp.procurement.tree</field>
             <field name="model">mrp.procurement</field>
@@ -199,8 +114,6 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
-        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" 
-        		  parent="mrp_procurement.menu_mrp_procurement" sequence="2" />
 
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
             <field name="name">Procurements</field>
@@ -222,8 +135,6 @@
             <field name="domain">[('state','=','exception')]</field>
         </record>
 
-        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_exception_action" 
-        		  parent="mrp_procurement.menu_mrp_control" sequence="1" />
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
             <field name="name">Procurement Exceptions to Fix</field>
             <field name="type">ir.actions.act_window</field>
@@ -324,8 +235,6 @@
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
             <field name="search_view_id" ref="warehouse_orderpoint_search" />
         </record>
-        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
-        <menuitem action="action_orderpoint_form" id="menu_action_orderpoint_form" parent="menu_mrp_reordering"/>
 
         <act_window domain="[('warehouse_id', '=', active_id)]" id="act_stock_warehouse_2_stock_warehouse_orderpoint" name="Minimum Stock Rules" res_model="stock.warehouse.orderpoint" src_model="stock.warehouse"/>
 

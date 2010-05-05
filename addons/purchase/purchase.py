@@ -770,7 +770,7 @@ class mrp_procurement(osv.osv):
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             })
             res[procurement.id] = purchase_id
-            self.write(cr, uid, [procurement.id], {'state': 'running'}) #, 'purchase_id': purchase_id
+            self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': purchase_id})
         return res
 mrp_procurement()
 

@@ -57,7 +57,7 @@
         'report/sale_report_view.xml',
         'sale_report.xml',
         'stock_view.xml',
-        'process/sale_process.xml',
+#        'process/sale_process.xml',
     ],
     'demo_xml': ['sale_demo.xml'],
     'installable': True,

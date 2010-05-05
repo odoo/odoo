@@ -1,6 +1,17 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
+    
+    	<record id="process_node_procureproducts0" model="process.node">
+            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
+            <field name="model_id" ref="mrp_procurement.model_mrp_procurement"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;The way to procurement depends on the product type.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Procure Products&quot;&quot;&quot;" name="name"/>
+            <field name="process_id" ref="mrp_procurement.process_process_procurementprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
 
         <record id="process_node_productionorder0" model="process.node">
             <field name="menu_id" ref="mrp.menu_mrp_production_action"/>
@@ -14,7 +25,7 @@
         </record>
 
         <record id="process_node_procureproducts0" model="process.node">
-            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;The way to procurement depends on the product type.&quot;&quot;&quot;" name="note"/>
@@ -25,7 +36,7 @@
         </record>
         
         <record id="process_node_minimumstockrule0" model="process.node">
-            <field name="menu_id" ref="mrp_procurement.menu_action_orderpoint_form"/>
+            <field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
             <field name="model_id" ref="mrp_procurement.model_stock_warehouse_orderpoint"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Linked to the 'Minimum stock rule' supplying method.&quot;&quot;&quot;" name="note"/>
@@ -35,7 +46,7 @@
         </record>
 
         <record id="process_node_stockproduct0" model="process.node">
-            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Product type is Stockable or Consumable.&quot;&quot;&quot;" name="note"/>
@@ -47,7 +58,7 @@
         </record>
         
         <record id="process_node_stockproduct1" model="process.node">
-            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;For stockable products and consumables&quot;&quot;&quot;" name="note"/>
@@ -59,7 +70,7 @@
         </record>
 
         <record id="process_node_serviceproduct0" model="process.node">
-            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Product type is service&quot;&quot;&quot;" name="note"/>
@@ -71,7 +82,7 @@
         </record>
         
         <record id="process_node_serviceproduct1" model="process.node">
-            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;For Services.&quot;&quot;&quot;" name="note"/>
@@ -83,7 +94,7 @@
         </record>
 
         <record id="process_node_purchaseprocure0" model="process.node">
-            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
+            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
             <field name="model_id" ref="mrp.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement Orders&quot;&quot;&quot;" name="name"/>
@@ -94,7 +105,7 @@
         </record>
 
         <record id="process_node_productminimumstockrule0" model="process.node">
-            <field name="menu_id" ref="mrp_procurement.menu_action_orderpoint_form"/>
+            <field name="menu_id" ref="mrp.menu_action_orderpoint_form"/>
             <field name="model_id" ref="mrp_procurement.model_stock_warehouse_orderpoint"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Minimum Stock&quot;&quot;&quot;" name="name"/>
