@@ -61,12 +61,6 @@ class pos_open_statement(osv.osv_memory):
                 number = sequence_obj.get(cr, uid,
                                 'account.bank.statement')
 
-    #        statement_id=statement_obj.create(cr,uid,{'journal_id':journal.id,
-    #                                                  'company_id':company_id,
-    #                                                  'user_id':uid,
-    #                                                  'state':'open',
-    #                                                  'name':number
-    #                                                  })
             period = statement_obj._get_period(cr, uid, context) or None
             cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')"%(journal.id, company_id, uid, number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
             cr.commit()

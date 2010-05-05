@@ -500,7 +500,6 @@ class pos_order(osv.osv):
                     cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order.shop_id.warehouse_id.id))
                     res=cr.fetchone()
                     location_id=res and res[0] or None
-#                    location_id = order and order.shop_id and order.shop_id.warehouse_id and order.shop_id.warehouse_id.lot_stock_id.id or None
                     stock_dest_id = int(val.split(',')[1])
                     if line.qty < 0:
                         location_id, stock_dest_id = stock_dest_id, location_id
@@ -1015,18 +1014,9 @@ class pos_order(osv.osv):
 
 pos_order()
 
-class account_bank_statement(osv.osv):
-    _inherit = 'account.bank.statement'
-    _columns={
-        'user_id': fields.many2one('res.users',ondelete='cascade',string='User', readonly=True),
-    }
-    _defaults = {
-        'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id
-    }
-account_bank_statement()
-
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
+    
     def _get_statement_journal(self, cr, uid, ids, context, *a):
         res = {}
         for line in self.browse(cr, uid, ids):
@@ -1037,7 +1027,11 @@ class account_bank_statement_line(osv.osv):
         'am_out':fields.boolean("To count"),
         'is_acc':fields.boolean("Is accompte"),
         'pos_statement_id': fields.many2one('pos.order',ondelete='cascade'),
+        'company_id':fields.many2one('res.company', 'Company', required=True),        
     }
+    _defaults = {
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+    }    
 account_bank_statement_line()
 
 class pos_order_line(osv.osv):
