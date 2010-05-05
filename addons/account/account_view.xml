@@ -1719,11 +1719,13 @@
                   <field colspan="4" mode="tree" name="bank_accounts_id"
                          nolabel="1" widget="one2many_list">
                     <form string="Bank Information">
-                      <field name="acc_no"/>
+                      <field name="acc_name"/>
+                      <field name="account_type"/>
                       <field name="currency_id"/>
                     </form>
                     <tree editable="bottom" string="Bank Information">
-                      <field name="acc_no"/>
+                      <field name="acc_name"/>
+                      <field name="account_type"/>
                       <field name="currency_id"/>
                     </tree>
                   </field>

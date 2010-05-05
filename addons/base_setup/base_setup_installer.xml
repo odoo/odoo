@@ -13,7 +13,7 @@
           <xpath expr="//label[@string='description']"
                  position="attributes">
             <attribute name="string"
-                       >Now that OpenERP is installed, we have selected applications commonly useful to users which you can install directly, as well as sets of applications for more specific types or groups of businesses (the vertical modules).
+                       >Now that OpenERP is installed, We have selected applications commonly useful to users which you can install directly, as well as sets of applications for more specific types or groups of businesses (the vertical modules).
 
 If you don't think you need any of these right now, you can easily install them later on.</attribute>
           </xpath>
@@ -56,5 +56,16 @@ If you don't think you need any of these right now, you can easily install them 
         <field name="action_id" ref="action_base_setup_installer"/>
         <field name="sequence">2</field>
     </record>
+   <record id="base_setup_ir_actions_todo_tree" model="ir.ui.view">
+        <field name="model">ir.actions.todo</field>
+        <field name="name">base_setup_installer_action_replace</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+  		<field name="arch" type="xml">
+  		 <xpath expr="//button[@string='Launch']" position="replace">
+        	<button name="%(action_base_setup_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+      		</xpath>
+      	</field>
+		</record>
   </data>
 </openerp>
