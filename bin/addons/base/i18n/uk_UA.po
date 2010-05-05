@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.9\n"
+"Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-27 11:37:31+0000\n"
-"PO-Revision-Date: 2010-04-27 11:37:31+0000\n"
+"POT-Creation-Date: 2010-05-05 14:24:09+0000\n"
+"PO-Revision-Date: 2010-05-05 14:24:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -932,6 +932,11 @@ msgstr "Типове значення"
 #: field:res.users,login:0
 msgid "Login"
 msgstr "Користувач"
+
+#. module: base
+#: view:ir.actions.server:0
+msgid "Access all the fields related to the current object using expressions, i.e. object.partner_id.name "
+msgstr ""
 
 #. module: base
 #: view:maintenance.contract:0
@@ -2307,6 +2312,11 @@ msgstr "Обмеження"
 #: selection:res.partner.address,type:0
 msgid "Default"
 msgstr "Типовий"
+
+#. module: base
+#: help:res.partner.bank,acc_number:0
+msgid "Bank account number"
+msgstr ""
 
 #. module: base
 #: field:ir.model.fields,required:0
@@ -4055,11 +4065,6 @@ msgid "User ID"
 msgstr "ІД Користувача"
 
 #. module: base
-#: view:ir.actions.server:0
-msgid "Access all the fields related to the current object using expression in double brackets, i.e.[[ object.partner_id.name ]]"
-msgstr ""
-
-#. module: base
 #: view:res.lang:0
 msgid "11. %U or %W       ==> 48 (49th week)"
 msgstr "11. %U or %W ==> 48 (49й тиждень)"
@@ -4756,12 +4761,6 @@ msgid "Cancel"
 msgstr "Скасувати"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
-#, python-format
-msgid "Please specify server option --smtp-from !"
-msgstr ""
-
-#. module: base
 #: selection:wizard.module.lang.export,format:0
 msgid "PO File"
 msgstr "PO-файл"
@@ -4874,6 +4873,12 @@ msgstr "Єгипет"
 #. module: base
 #: help:ir.actions.server,model_id:0
 msgid "Select the object on which the action will work (read, write, create)."
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:0
+#, python-format
+msgid "Please specify server option --email-from !"
 msgstr ""
 
 #. module: base
@@ -6290,11 +6295,6 @@ msgstr "Тригер"
 #: field:ir.model.fields,translate:0
 msgid "Translate"
 msgstr "Перекласти"
-
-#. module: base
-#: view:ir.actions.server:0
-msgid "Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]"
-msgstr ""
 
 #. module: base
 #: field:res.request.history,body:0
