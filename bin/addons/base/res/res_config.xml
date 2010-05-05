@@ -6,29 +6,29 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
        <form>
-        	<group colspan="4" col="12">
-              	<group colspan="4">
-                	<image name="gtk-dialog-info"/>
+    		<group colspan="4" col="8">
+              	<group colspan="2">
+                	<field name="config_logo" widget="image" nolabel="1" colspan="1"/>
                 	<newline/>
-                	<label align="0.0" string="description" width="200" colspan="4"/>
+                	<label align="0.0" string="description" width="200" colspan="1"/>
               	</group>
-              	<group colspan="1">
-              		<separator string="vsep" position="vertical" colspan="1" rowspan="12"/>
-            	</group>
-            	<group>
+              	<group colspan="2">
+              		<separator string="vsep" position="vertical" colspan="2" rowspan="12"/>
+              	</group>
+            	<group colspan="4">
               		<separator string="title" colspan="4"/>
               		<group string="res_config_contents"/>
             	</group>
+              </group>
+            	<group colspan="4" col="8">
+            		<separator string="" colspan="8"/>
+            		<field name="progress" widget="progressbar" nolabel="1"/>
+            		<label string="" colspan="5"/>
+		 	 		<button name="action_skip" icon="gtk-goto-last" special="cancel"
+	                    	type="object" string="Skip" colspan="1"/>
+	                <button name="action_next" icon="gtk-go-forward"
+	                	 type="object" string="Next" colspan="1"/>
            </group>
-           <group colspan="4" col="8">
-           		<separator string="" colspan="8"/>
-       			<field name="progress" widget="progressbar" colspan= "1" nolabel="1"/>
-	 	 		<label string="" colspan="2"/>
-	 	 		<button name="action_skip" icon="gtk-goto-last" special="cancel"
-                    	type="object" string="Skip" colspan="1"/>
-                <button name="action_next" icon="gtk-go-forward"
-                	 type="object" string="Next" colspan="1"/>
-	        </group>
         </form>
       </field>
     </record>
@@ -60,13 +60,11 @@
       <field name="model">res.config.installer</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-
         <form>
           <group colspan="4">
-
             <group colspan="4" col="12">
               <group colspan="2">
-                <image name="gtk-dialog-info"/>
+                <field name="config_logo" widget="image" nolabel="1" colspan="1"/>
                 <newline/>
                 <label align="0.0" string="description" width="200"/>
               </group>
@@ -81,13 +79,13 @@
           </group>
           <group colspan="4" col="8">
           	<separator string="" colspan="8"/>
-            <field name="progress" widget="progressbar"/>
-            <label string="" colspan="3"/>
-            <group colspan="1" col="2">
+            <field name="progress" widget="progressbar" nolabel="1"/>
+            <label string="" colspan="5"/>
+            <group colspan="1">
               <button name="action_skip" icon="gtk-goto-last" special="cancel"
                       type="object" string="Skip"/>
             </group>
-            <group colspan="1" col="2">
+            <group colspan="1">
               <button name="action_next" icon="gtk-go-forward"
                       type="object" string="Install Modules"/>
             </group>

@@ -19,12 +19,18 @@
 #
 ##############################################################################
 
+import os
+import base64
+import random
 from operator import attrgetter
 
 from osv import osv, fields
+import tools
 from tools.translate import _
 import netsvc
 import pooler
+
+
 
 class res_config_configurable(osv.osv_memory):
     ''' Base classes for new-style configuration items
@@ -45,11 +51,19 @@ class res_config_configurable(osv.osv_memory):
             return round(open*100./total)
         return 100.
 
+    def _get_image(self, cr, uid, context=None):
+        file_no = str(random.randint(1,3))
+        path = os.path.join('base','res','config_pixmaps/%s.png'%file_no)
+        file_data = tools.file_open(path,'rb').read()
+        return base64.encodestring(file_data)
+
     _columns = dict(
-        progress=fields.float('Configuration Progress', readonly=True),
+        progress = fields.float('Configuration Progress', readonly=True),
+        config_logo = fields.binary('Image', readonly=True),
         )
     _defaults = dict(
-        progress=_progress
+        progress = _progress,
+        config_logo = _get_image
         )
 
     def _next_action(self, cr, uid):
