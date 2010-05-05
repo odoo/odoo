@@ -10,13 +10,10 @@
 
     </record>
 
-     <record model="ir.rule.group" id="product_comp_rule_group">
-        <field name="name" >Product multi-company</field>
+    <record id="product_comp_rule" model="ir.rule">
+    	<field name="name" >Product multi-company</field>
         <field name="model_id" ref="model_product_template"/>
         <field name="global" eval="True"/>
-    </record>
-    <record id="product_comp_rule" model="ir.rule">
-        <field name="rule_group" ref="product_comp_rule_group"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
