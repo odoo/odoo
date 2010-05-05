@@ -9,23 +9,26 @@
             <tree string="Analytic Accounts Statistics">
             	<field name="parent_id" invisible="1" string="Analytic Account"/>
             	<field name="product_id" invisible="1"/>
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="journal_id" string="Analytic Journal"/>
-                <field name="user_id"/>
-                <field name="date_start"/>
-                <field name="date_end"/>
-                <field name="quantity"/>
+                <field name="name" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="journal_id" string="Analytic Journal" invisible="1"/>
+                <field name="user_id" invisible="1"/>
+                <field name="date_start" invisible="1"/>
+                <field name="date_end" invisible="1"/>
+                <field name="total_quantity" sum=" # Total Quantity"/>
+                <field name="nbr" sum ="# of Lines"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                <field name="type" invisible="1"/>
                 <field name="debit"/>
                 <field name="credit"/>
                 <field name="balance"/>
-                <field name="state"/>
+                <field name="state" invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="year" invisible="1"/>
             </tree>
         </field>
     </record>
-
     <record id="view_analytic_report_search" model="ir.ui.view">
         <field name="name">analytic.report.search</field>
         <field name="model">analytic.report</field>
@@ -38,23 +41,15 @@
 	                    	domain="[('year','=',time.strftime('%%Y'))]"/>
 	                <filter icon="terp-account"
 	                    	string="This Month"
+	                    	name="This Month"
 	                    	domain="[('month','=',time.strftime('%%m'))]"/>
+	                <filter icon="gtk-media-rewind"
+	                        string="    7 Days    "
+	                        separator="1"
+	                        domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                        help="Entries during last 7 days"/>
 	                <separator orientation="vertical"/>
-		            <filter string="Start" icon="terp-account" domain="[('date_start','=',time.strftime('%%Y/%%m/%%d'))]"/>
-	         		<filter string="End" icon="terp-account" domain="[('date_end','=',time.strftime('%%Y/%%m/%%d'))]"/>
-	                <separator orientation="vertical"/>
-	                <field name="name"/>
-	                <field name="user_id" widget="selection">
-	                    <filter icon="terp-account"
-	                        	string="My Accounts"
-	                        	name="User"
-	                        	domain="[('user_id','=',uid)]"/>
-	                </field>
-	                <field name="partner_id"/>
-                </group>
-                <newline/>
-                <group expand="1" string="Extended options..." colspan="10" col="12">
-                    <filter icon="terp-account"
+	                <filter icon="terp-account"
                     		string="Draft"
                     		domain="[('state','=','draft')]"/>
                     <filter icon="terp-account"
@@ -63,6 +58,18 @@
                     <filter icon="terp-account"
                     		string="Pending"
                     		domain="[('state','=','pending')]"/>
+                     <separator orientation="vertical"/>
+	                <field name="name"/>
+	                <field name="user_id" widget="selection">
+	                    <filter icon="terp-account"
+	                        	string="My Accounts"
+	                        	help="My Account"
+	                        	domain="[('user_id','=',uid)]"/>
+	                </field>
+	                <field name="partner_id"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-account"
                     		string="Close"
                     		domain="[('state','=','close')]"/>
@@ -70,39 +77,44 @@
                     		string="Template"
                     		domain="[('state','=','template')]"/>
                     <separator orientation="vertical"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name="parent_id"/>
-                    <field name="journal_id"/>
-                    <field name="product_id"/>
+                    <field name="journal_id" widget="selection"/>
+                    <newline/>
+                    <field name="product_id" />
+                    <field name="type"/>
                     <separator orientation="vertical"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
-                    <filter string="User" name='User' icon="terp-account" context="{'group_by':'user_id'}"/>
+                	<filter string="User" name="User" icon="terp-account" context="{'group_by':'user_id'}"/>
+                    <filter string="Associated Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
+					<filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Analytic Account" icon="terp-account" context="{'group_by':'parent_id'}"/>
+                    <filter string="Analytic Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
-                    <filter string="Analytic Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
-                    <filter string="Analytic Account" icon="terp-account" context="{'group_by':'parent_id'}"/>
+                    <filter string="Account Type" icon="terp-account" context="{'group_by':'type'}"/>
                     <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-account" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>
     </record>
-
     <record id="action_analytic_report_all" model="ir.actions.act_window">
         <field name="name">Analytic Accounts</field>
         <field name="res_model">analytic.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree</field>
-        <field name="context">{'search_default_User':1,'search_default_user_id':uid}</field>
+        <field name="context">{'search_default_This Month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_analytic_report_search"/>
     </record>
-
     <menuitem action="action_analytic_report_all" id="menu_action_analytic_report_all" parent="account.menu_finance_statastic_report_statement" sequence="8"/>
 
 </data>
