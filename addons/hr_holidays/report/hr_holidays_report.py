@@ -63,7 +63,8 @@ class hr_holidays_report(osv.osv):
                      s.state
                      from
                  hr_holidays s
-                 where type='remove'
+                 where type='remove' and
+                 s.employee_id is not null
                  group by
                      s.create_date,s.state,s.date_from,s.date_to,
                      s.number_of_days_temp,s.employee_id,s.user_id
@@ -98,7 +99,7 @@ class hr_holidays_remaining_leaves_user(osv.osv):
                 where
                     hrs.employee_id = hre.id and
                     hre.resource_id =  rr.id and
-                    hhs.id = hrs.holiday_status_id  
+                    hhs.id = hrs.holiday_status_id
                 group by
                     rr.name,rr.user_id,hhs.name
             )
