@@ -1,3 +1,149 @@
+2010-05-05: 5.0.10
+==================
+
+Bugfixes (server)
+-----------------
+
+ * Not linked to a bug report:
+   * Server Actions: Cleaner legend help and error message
+   * use of tail text in preprocessor of report engine
+   * added support for missing Persian/Farsi (official language in Iran), with backport of the translations from trunk for base module
+ * https://launchpad.net/bugs/534769
+ * https://launchpad.net/bugs/452854
+   * res_currency: revert to correct rounding mechanism
+ * https://launchpad.net/bugs/540840
+   * Groups if removed, should remove relavent access rights too
+ * https://launchpad.net/bugs/558460
+   * Add the pixmaps and win32 directories in the MANIFEST to have
+ * https://launchpad.net/bugs/559346
+   * Copy() of ir_model_fields corected
+ * https://launchpad.net/bugs/541545
+ * https://launchpad.net/bugs/574394
+   * Workflow : print of workflow should not be broken if there is no flow_stop
+ * https://launchpad.net/bugs/552386
+   * _store_function dictionary should  get updated when field changes its type from function to any other storable
+ * https://launchpad.net/bugs/535559
+   * Illustration tag beahvior corrected
+ * https://launchpad.net/bugs/552457
+   * Raise a detailed exception if the record does not exist in the ir_model_data object
+ * https://launchpad.net/bugs/513278
+   * res_currency: revert to correct rounding mechanism
+ * https://launchpad.net/bugs/564926
+   * _constraints : Multiple constraints on the same field should be allowed
+
+
+Improvements (server)
+---------------------
+
+ * setup.cfg: Improve the setup of the server
+
+
+Bugfixes (addons)
+-----------------
+
+ * Not linked to a bug report:
+   * Remove the bad translation files
+   * Rename the oc_OC translation files to oc_FR
+   * l10n_be: intracom declaration compliancy with Intervat 5.1.0
+   * l10n_be: compliancy of belgian vat declaration with Intervat 5.1.0 (from 05 feb 2010)
+   * account: fixed the onchange partner of bank_statement
+   * audittrail: context={} -> context=None in method signature
+   * audittrail: indentation problems
+   * audittrail: wrong class passed to super
+ * https://launchpad.net/bugs/515590
+ * https://launchpad.net/bugs/552455
+   * Account_analytic_default : Invoice creation from SO corected
+ * https://launchpad.net/bugs/546004
+   * Account : Overdue report corrected
+ * https://launchpad.net/bugs/552519
+   * account_invoice_layout : Added translation entries
+ * https://launchpad.net/bugs/571978
+ * https://launchpad.net/bugs/553881
+   * Account : Added a link to view unreconciled receivables/payables from Invoices
+ * https://launchpad.net/bugs/566185
+   * Remove the unused translation files
+ * https://launchpad.net/bugs/559478
+   * only Grouped field should appear in groupby clause, graph orientation corrected
+ * https://launchpad.net/bugs/570652
+   * Locations when M2O,should not be among view type
+ * https://launchpad.net/bugs/519133
+   * Account : Added centralization check on write() of move line
+ * https://launchpad.net/bugs/532728
+   * sale: UoS qty visible for everyone
+ * https://launchpad.net/bugs/559347
+   * Purchase : Product_uom_change should respect fiscal position related to product_id_change
+ * https://launchpad.net/bugs/570132
+   * Account : code improved for move line creation
+ * https://launchpad.net/bugs/551522
+   * Account : Manual reconcilation should work with the option of Skip Draft Entries of Journal
+ * https://launchpad.net/bugs/539408
+   * Audittrail : Correction made to avoid crash on configuration wizard
+ * https://launchpad.net/bugs/564530
+   * Account : Copying bank statement should not copy move lines
+ * https://launchpad.net/bugs/568537
+   * Account : __compute() optimized a little
+ * https://launchpad.net/bugs/461801
+ * https://launchpad.net/bugs/568436
+   * Purchase : Merge PO should consider fiscal position
+ * https://launchpad.net/bugs/552447
+   * Account : Tax :If type=code,python_compute has to be mandatory;if applicable_type=python_code,python_appliacble has to be mandatory
+ * https://launchpad.net/bugs/561318
+   * Account/Document_ICS/MRP_Operations : datetime.datetime.strptime() replaced by mx.DateTime.strptime()
+ * https://launchpad.net/bugs/559055
+   * account_payment: Remove the duplicated 'bank_id' field in the payment.line tree view
+ * https://launchpad.net/bugs/564779
+   * Mrp_repair : Corrected make invoice process and Quotation report
+ * https://launchpad.net/bugs/557501
+   * Account_Voucher : Correction in creating account.move from voucher
+ * https://launchpad.net/bugs/519034
+   * Sale : progressbar for picking should be set when SO is picked 100%(including its procurement is done)
+ * https://launchpad.net/bugs/569036
+   * mrp_subproduct : Corrected action_confirm method
+ * https://launchpad.net/bugs/562803
+   * Membership : Copy() overridden for setting membership lines blank
+ * https://launchpad.net/bugs/552503
+   * Account : Raising an exception when journal_id is missing
+ * https://launchpad.net/bugs/564486
+   * Base_report_creator : Export method corrected
+ * https://launchpad.net/bugs/532073
+ * https://launchpad.net/bugs/489239
+   * mrp_operations : starting production order should start work order too.
+ * https://launchpad.net/bugs/557373
+ * https://launchpad.net/bugs/515507
+   * Support for ftp_server_host for setting the FTP interface for DMS server,
+ * https://launchpad.net/bugs/535109
+   * Account:
+ * https://launchpad.net/bugs/399817
+ * https://launchpad.net/bugs/452854
+   * account: finish fix of generation of account.move.lines from invoice by providing extension hook
+   * account: corrected move balance check - rounding correctly based on price_accuracy
+ * https://launchpad.net/bugs/570561
+   * Account_payment : Import of move line should include the date of search due date
+ * https://launchpad.net/bugs/567987
+   * Account_analytic_default : Invoice creation from SO corected
+ * https://launchpad.net/bugs/563713
+   * account_analytic_plans : Minor correction on a method to unlink entries
+ * https://launchpad.net/bugs/513278
+   * account: corrected move balance check - rounding correctly based on price_accuracy
+ * https://launchpad.net/bugs/551570
+   * Account_payment : Date will be asked to user while importing payment order into bank statement
+ * https://launchpad.net/bugs/550742
+   * Account : Refund invoice wizard should have current_date as default
+
+
+Improvements (addons)
+---------------------
+
+ * Add the new version of Swiss Localization:
+ * sale: unit tests for bug #461801
+ * sale: warning instead of error in some unit tests
+ * sale: demo tax account type
+ * account: test case for bug #452854
+ * account: renamed test
+ * sale: minor test  changes
+ * Account_followup : Domain improved for an act_window from Partner
+
+
 2010-04-06: 5.0.9
 =================
 
