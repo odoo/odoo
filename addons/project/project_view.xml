@@ -110,7 +110,7 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group col='15' colspan='4'>
-                       <filter icon="terp-project" string="Current" domain="[('state', 'in',('open','draft'))]" help="Open and Draft Projects" default="1"/>
+                       <filter icon="terp-project" string="Open" domain="[('state', 'in',('open','draft'))]" help="Open and Draft Projects" default="1"/>
                        <filter icon="terp-project" string="Pending" domain="[('state', '=', 'pending')]" help="Pending Projects"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-project" string="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
@@ -136,7 +136,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree string="Projects">
+                <tree colors="red:date&lt;current_date and state in ('open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
                     <field name="sequence" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
@@ -238,7 +238,7 @@
                         <field name="project_id" required="1" select="1" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                         <field name="total_hours" widget="float_time"/>
                         <field name="date_deadline"/>
-                        <field name="user_id" select="1"/>
+                        <field name="user_id" select="1" widget="selection"/>
                         <field name="progress" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
@@ -589,8 +589,8 @@
             <field name="arch" type="xml">
                 <tree string="Messages">
                     <field name="subject" select="1"/>
-                    <field name="user_id" select="1"/>
                     <field name="project_id" select="1"/>
+                    <field name="user_id" select="1"/>
                     <field name="date" select="1"/>
                 </tree>
             </field>
@@ -639,5 +639,6 @@
 
         <act_window domain="[('user_id', '=', active_id),('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
+		<act_window domain="[('project_id', '=', active_id)]" id="act_project_messages" name="Messages" res_model="project.message" src_model="project.project"/>
     </data>
 </openerp>
