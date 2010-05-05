@@ -86,7 +86,7 @@ class purchase_requisition_line(osv.osv):
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade')
     }
 
-    def onchange_product_id(self, cr, uid, ids, product_id, context={}):
+    def onchange_product_id(self, cr, uid, ids, product_id,product_uom_id, context={}):
 
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
@@ -94,13 +94,14 @@ class purchase_requisition_line(osv.osv):
         @return:  Dictionary of changed values
         """
         value = {}
-
+        
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
-
             value = {'product_uom_id': prod.uom_id.id}
-
+            if product_uom_id != prod.uom_id.id:
+                value = {'product_uom_id': prod.uom_id.id}            
         return {'value': value}
+
     _defaults = {
                  'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
                  }
