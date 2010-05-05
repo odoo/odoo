@@ -48,9 +48,7 @@ class Workflow(YamlTag):
         super(Workflow, self).__init__(**kwargs)
 
 class ActWindow(YamlTag):
-    def __init__(self, model, action, **kwargs):
-        self.model = model
-        self.action = action
+    def __init__(self, **kwargs):
         super(ActWindow, self).__init__(**kwargs)
 
 class Function(YamlTag):
@@ -67,10 +65,7 @@ class Report(YamlTag):
         super(Report, self).__init__(**kwargs)
 
 class Delete(YamlTag):
-    def __init__(self, model, id, search, **kwargs):
-        self.model = model
-        self.id = id
-        self.search = search
+    def __init__(self, **kwargs):
         super(Delete, self).__init__(**kwargs)
 
 class Context(YamlTag):
@@ -156,17 +151,19 @@ def ir_set_constructor(loader, node):
 # Registers constructors for custom tags.
 # Constructors are actually defined globally: do not redefined them in another
 # class/file/package.  This means that module recorder need import this file.
-yaml.add_constructor(u"!assert", assert_constructor)
-yaml.add_constructor(u"!record", record_constructor)
-yaml.add_constructor(u"!python", python_constructor)
-yaml.add_constructor(u"!menuitem", menuitem_constructor)
-yaml.add_constructor(u"!workflow", workflow_constructor)
-yaml.add_constructor(u"!act_window", act_window_constructor)
-yaml.add_constructor(u"!function", function_constructor)
-yaml.add_constructor(u"!report", report_constructor)
-yaml.add_constructor(u"!context", context_constructor)
-yaml.add_constructor(u"!delete", delete_constructor)
-yaml.add_constructor(u"!url", url_constructor)
-yaml.add_constructor(u"!eval", eval_constructor)
-yaml.add_multi_constructor(u"!ref", ref_constructor)
-yaml.add_constructor(u"!ir_set", ir_set_constructor)
+def add_constructors():
+    yaml.add_constructor(u"!assert", assert_constructor)
+    yaml.add_constructor(u"!record", record_constructor)
+    yaml.add_constructor(u"!python", python_constructor)
+    yaml.add_constructor(u"!menuitem", menuitem_constructor)
+    yaml.add_constructor(u"!workflow", workflow_constructor)
+    yaml.add_constructor(u"!act_window", act_window_constructor)
+    yaml.add_constructor(u"!function", function_constructor)
+    yaml.add_constructor(u"!report", report_constructor)
+    yaml.add_constructor(u"!context", context_constructor)
+    yaml.add_constructor(u"!delete", delete_constructor)
+    yaml.add_constructor(u"!url", url_constructor)
+    yaml.add_constructor(u"!eval", eval_constructor)
+    yaml.add_multi_constructor(u"!ref", ref_constructor)
+    yaml.add_constructor(u"!ir_set", ir_set_constructor)
+add_constructors()

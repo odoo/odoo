@@ -1139,6 +1139,25 @@ class orm_template(object):
                 return s.encode('utf8')
             return s
 
+        # return True if node can be displayed to current user
+        def check_group(node):
+            if node.get('groups'):
+                groups = node.get('groups').split(',')
+                can_see = False
+                access_pool = self.pool.get('ir.model.access')
+                for group in groups:
+                    can_see = can_see or access_pool.check_groups(cr, user, group)
+                    if can_see:
+                        break
+                if not can_see:
+                    node.set('invisible', '1')
+                    if 'attrs' in node.attrib:
+                        del(node.attrib['attrs']) #avoid making field visible later
+                del(node.attrib['groups'])
+                return can_see
+            else:
+                return True
+
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
                 attrs = {}
@@ -1185,15 +1204,18 @@ class orm_template(object):
                             }
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
+                        if not check_group(node):
+                            attrs['selection'] = []
                         # We can not use the 'string' domain has it is defined according to the record !
-                        dom = []
-                        if column._domain and not isinstance(column._domain, (str, unicode)):
-                            dom = column._domain
-                        dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
-                        context.update(eval(node.get('context','{}')))
-                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context,limit=None)
-                        if (node.get('required') and not int(node.get('required'))) or not column.required:
-                            attrs['selection'].append((False,''))
+                        else:
+                            dom = []
+                            if column._domain and not isinstance(column._domain, (str, unicode)):
+                                dom = column._domain
+                            dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
+                            context.update(eval(node.get('context','{}')))
+                            attrs['selection'] = self.pool.get(relation)._name_search(cr, user, '', dom, context=context, limit=None, name_get_uid=1)
+                            if (node.get('required') and not int(node.get('required'))) or not column.required:
+                                attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
 
         elif node.tag in ('form', 'tree'):
@@ -1207,15 +1229,7 @@ class orm_template(object):
                     fields[node.get(additional_field)] = {}
 
         if 'groups' in node.attrib:
-            if node.get('groups'):
-                groups = node.get('groups').split(',')
-                readonly = False
-                access_pool = self.pool.get('ir.model.access')
-                for group in groups:
-                    readonly = readonly or access_pool.check_groups(cr, user, group)
-                if not readonly:
-                    node.set('invisible', '1')
-            del(node.attrib['groups'])
+            check_group(node)
 
         # translate view
         if ('lang' in context) and not result:
@@ -1725,6 +1739,7 @@ class orm_memory(orm_template):
     def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
         if not context:
             context = {}
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         if not fields_to_read:
             fields_to_read = self._columns.keys()
         result = []
@@ -1754,6 +1769,7 @@ class orm_memory(orm_template):
     def write(self, cr, user, ids, vals, context=None):
         if not ids:
             return True
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
         vals2 = {}
         upd_todo = []
         for field in vals:
@@ -1772,6 +1788,7 @@ class orm_memory(orm_template):
         return id_new
 
     def create(self, cr, user, vals, context=None):
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
         self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
@@ -1923,6 +1940,7 @@ class orm_memory(orm_template):
         return res or []
 
     def unlink(self, cr, uid, ids, context=None):
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
         for id in ids:
             if id in self.datas:
                 del self.datas[id]
@@ -3225,7 +3243,7 @@ class orm(orm_template):
         """
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
 
         default = []
 
@@ -3282,7 +3300,7 @@ class orm(orm_template):
 
             record_id = tocreate[table].pop('id', None)
 
-            if record_id is None:
+            if record_id is None or not record_id:
                 record_id = self.pool.get(table).create(cr, user, tocreate[table], context=context)
             else:
                 self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=context)
@@ -3649,6 +3667,20 @@ class orm(orm_template):
         return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
             [self._rec_name], context, load='_classic_write')]
 
+    # private implementation of name_search, allows passing a dedicated user for the name_get part to
+    # solve some access rights issues
+    def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
+        if not args:
+            args = []
+        if not context:
+            context = {}
+        args = args[:]
+        if name:
+            args += [(self._rec_name, operator, name)]
+        ids = self.search(cr, user, args, limit=limit, context=context)
+        res = self.name_get(cr, name_get_uid or user, ids, context)
+        return res
+
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         """
 
@@ -3664,16 +3696,7 @@ class orm(orm_template):
         This method is equivalent of search() on name + name_get()
 
         """
-        if not args:
-            args = []
-        if not context:
-            context = {}
-        args = args[:]
-        if name:
-            args += [(self._rec_name, operator, name)]
-        ids = self.search(cr, user, args, limit=limit, context=context)
-        res = self.name_get(cr, user, ids, context)
-        return res
+        return self._name_search(cr, user, name, args, operator, context, limit)
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         """
