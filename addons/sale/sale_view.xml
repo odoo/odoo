@@ -259,7 +259,7 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="user_id" widget="selection">
-                        <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Sale Orders" default="1"/>
+                        <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Sale Orders" />
                     </field>
                     <field name="date_order" string="Order date" />
                     <newline/>
@@ -279,6 +279,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{'search_default_user_id':uid}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
@@ -426,7 +427,7 @@
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
-                        <filter string="Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Product" icon="terp-sale" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
                         <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'salesman_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
@@ -445,8 +446,8 @@
                         domain="[('state','=','done')]"
                         name="unshipped"
                         separator="1" />
-                    <filter icon="terp-purchase" string="Uninvoiced"
-                        domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"  default="1"
+                    <filter icon="terp-purchase" string="Uninvoiced" name="uninvoiced"
+                        domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]" 
                         separator="1" />
                     <separator orientation="vertical"/>
                     <field name="order_id"/>
