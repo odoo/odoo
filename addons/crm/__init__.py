@@ -30,7 +30,7 @@ import crm_opportunity
 import crm_phonecall
 
 import crm_installer
-#import report
+import report
 import wizard
 
 

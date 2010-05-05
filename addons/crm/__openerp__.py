@@ -93,10 +93,8 @@ between mails and Open ERP.""",
         'security/crm_security.xml',
 #        'security/ir.model.access.csv',
 
-##        'report/crm_report_view.xml',
-#        'report/crm_lead_report_view.xml',
-##        'report/crm_opportunity_report_view.xml' ,
-#        'report/crm_phonecall_report_view.xml',
+        'report/crm_lead_report_view.xml',
+        'report/crm_phonecall_report_view.xml',
 
         'process/crm_configuration_process.xml',
         'crm_installer_view.xml'
