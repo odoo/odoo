@@ -72,7 +72,7 @@
         <field name="arch" type="xml">
             <form string="Phone Call">
                 <group colspan="4" col="7">
-                    <field name="name" string="Call Summary"/>
+                    <field name="name" string="Summary"/>
                     <field name="date" string="Planned Date"/>
                     <field name="user_id"/>
                     <button string="Schedule a Meeting"
@@ -147,7 +147,7 @@
         <field name="arch" type="xml">
             <form string="Phone Call">
                 <group colspan="4" col="7">
-                    <field name="name" string="Call Summary"/>
+                    <field name="name" string="Summary"/>
                     <field name="date" string="Planned Date"/>
                     <field name="user_id"/>
                     <button string="Schedule a Meeting"
@@ -181,6 +181,8 @@
                     <newline/>
                     <field name="partner_address_id" string="Contact"
                         on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                    <newline/>
+                    <field name="partner_phone" />
                     <newline/>
                     <field name="partner_mobile" />
                 </group>

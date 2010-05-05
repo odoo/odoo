@@ -78,7 +78,16 @@ class crm_phonecall(osv.osv, crm_case):
     }
     
     # From crm.case
-    
+
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        res = super(crm_phonecall, self).onchange_partner_address_id(cr, uid, ids, add, email)
+        res.setdefault('value', {})
+        if add:
+            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            res['value']['partner_phone'] = address.phone
+            res['value']['partner_mobile'] = address.mobile
+        return res
+
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting close date
         @param self: The object pointer
@@ -154,14 +163,6 @@ class crm_phonecall(osv.osv, crm_case):
 
         return value
 
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        res = super(crm_phonecall, self).onchange_partner_address_id(cr, uid, ids, add, email)
-        res.setdefault('value', {})
-        if add:
-            address = self.pool.get('res.partner.address').browse(cr, uid, add)
-            res['value']['partner_phone'] = address.mobile
-            res['value']['partner_mobile'] = address.phone
-        return res
 crm_phonecall()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
