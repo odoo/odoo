@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="view_analytic_entries_report_tree" model="ir.ui.view">
+        <field name="name">analytic.entries.report.tree</field>
+        <field name="model">analytic.entries.report</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Entries Statistics">
+                <field name="date" invisible="1"/>
+                <field name="year" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="user_id" invisible="1"/>
+                <field name="name" invisible="1"/>
+                <field name="company_id" invisible="1" groups="base.multi_company"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="account_id" invisible="1"/>
+                <field name="general_account_id" invisible="1"/>
+                <field name="journal_id" invisible="1"/>
+                <field name="move_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="product_uom_id" invisible="1"/>
+                <field name="amount" sum="Amount"/>
+                <field name="unit_amount" sum="Unit Amount"/>
+                <field name="amount_currency" sum="Amount Currency"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_analytic_entries_report_search" model="ir.ui.view">
+        <field name="name">analytic.entries.report.search</field>
+        <field name="model">analytic.entries.report</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Analytic Entries">
+              <group col="10" colspan="12">
+	            	<filter icon="terp-account" string="This Year"
+		                    domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+		                    help="Analytic Entries of the year"/>
+	                <filter icon="terp-account" string="This Month"
+	                		name="month"
+	                		domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                		help="Analytic Entries of this month"/>
+	                <filter icon="gtk-media-rewind"
+	                        string="    7 Days    "
+	                        separator="1"
+	                        domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                        help="Analytic Entries during last 7 days"/>
+	                <separator orientation="vertical"/>
+	                <field name="name"/>
+	                <field name="user_id" widget="selection">
+	                <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Case"/>
+	                </field>
+	                <field name="currency_id"/>
+	                <field name="company_id" widget="selection" groups="base.multi_company"/>
+	            </group>
+                <newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+					<field name="account_id" />
+					<field name="general_account_id" widget="selection"/>
+					<field name="journal_id" widget="selection"/>
+					<separator orientation="vertical"/>
+					<field name="move_id"/>
+					<field name="product_id" />
+					<field name="product_uom_id" widget="selection"/>
+        		</group>
+        		<newline/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="User" icon="terp-account" context="{'group_by':'user_id'}"/>
+                    <filter string="Currency" icon="terp-account" context="{'group_by':'currency_id'}"/>
+                    <filter string="Company"  icon="terp-account" context="{'group_by':'company_id'}" groups="base.multi_company"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Account" name="Account" icon="terp-account" context="{'group_by':'account_id'}"/>
+                    <filter string="General Account" icon="terp-account" context="{'group_by':'general_account_id'}"/>
+                    <filter string="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Move" icon="terp-account" context="{'group_by':'move_id'}"/>
+                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
+                    <filter string="Product UOM" icon="terp-account" context="{'group_by':'product_uom_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-account" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_analytic_entries_report" model="ir.actions.act_window">
+        <field name="name">Analytic Entries</field>
+        <field name="res_model">analytic.entries.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_month':1,'search_default_Account':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="search_view_id" ref="view_analytic_entries_report_search"/>
+    </record>
+
+    <menuitem action="action_analytic_entries_report" id="menu_action_analytic_entries_report" parent="account.menu_finance_statastic_report_statement"  sequence="4"/>
+
+</data>
+</openerp>
