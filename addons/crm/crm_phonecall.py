@@ -19,12 +19,13 @@
 #
 ##############################################################################
 
+from crm import crm_case
 from osv import fields, osv
 from tools.translate import _
 import crm
 import time
 
-class crm_phonecall(osv.osv):
+class crm_phonecall(osv.osv, crm_case):
     """ Phonecall Cases """
 
     _name = "crm.phonecall"
@@ -79,89 +80,28 @@ class crm_phonecall(osv.osv):
     # From crm.case
     
     def case_close(self, cr, uid, ids, *args):
-        """Closes Case
+        """Overrides close for crm_case for setting close date
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Close'))
-        self.write(cr, uid, ids, {'state': 'done',
-                                  'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'),
-                                  })
-        #
-        # We use the cache of cases to keep the old case state
-        #
-        self._action(cr, uid, cases, 'done')
-        return True
+        res = super(crm_phonecall, self).case_close(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'date_close': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
 
     def case_open(self, cr, uid, ids, *args):
-        """Opens Case
+        """Overrides cancel for crm_case for setting Open Date
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
         """
-        cases = self.browse(cr, uid, ids)
-        self._history(cr, uid, cases, _('Open'))
-
-        for case in cases:
-            data = {'state': 'open', 'active': True}
-            if not case.user_id:
-                data['user_id'] = uid
-            self.write(cr, uid, case.id, data)
-        self._action(cr, uid, cases, 'open')
-        return True
-    
-    def case_pending(self, cr, uid, ids, *args):
-        """Marks case as pending
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Pending'))
-        self.write(cr, uid, ids, {'state': 'pending', 'active': True})
-        self._action(cr, uid, cases, 'pending')
-        return True
-
-    def case_cancel(self, cr, uid, ids, *args):
-        """Cancels Case
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Cancel'))
-        self.write(cr, uid, ids, {'state': 'cancel',
-                                  'active': True})
-        self._action(cr, uid, cases, 'cancel')
-        return True
-
-    def case_reset(self, cr, uid, ids, *args):
-        """Resets case as draft
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Draft'))
-        self.write(cr, uid, ids, {'state': 'draft', 'active': True})
-        self._action(cr, uid, cases, 'draft')
-        return True
+        res = super(crm_phonecall, self).case_open(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
 
     def action_make_meeting(self, cr, uid, ids, context=None):
         """

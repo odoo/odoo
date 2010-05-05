@@ -42,19 +42,6 @@ class crm_opportunity(osv.osv):
     _order = "priority,date_action,id desc"
     _inherit = 'crm.lead'
 
-    def case_open(self, cr, uid, ids, *args):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
-        """
-
-        res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
-        return res
-
     _columns = {
         # From crm.case
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
@@ -68,50 +55,43 @@ class crm_opportunity(osv.osv):
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-
          }
     
     def case_close(self, cr, uid, ids, *args):
-        """Closes Case
+        """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Close'))
-        self.write(cr, uid, ids, {'state': 'done',
-                                  'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'),
-                                  'probability' : 100.0})
-        #
-        # We use the cache of cases to keep the old case state
-        #
-        self._action(cr, uid, cases, 'done')
-        return True
-    
+        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'probability' : 100.0, 'date_close': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
+
     def case_cancel(self, cr, uid, ids, *args):
-        """Cancels Case
+        """Overrides cancel for crm_case for setting probability
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        cases = self.browse(cr, uid, ids)
-        cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Cancel'))
-        self.write(cr, uid, ids, {'state': 'cancel',
-                                  'active': True,
-                                  'probability' : 0.0})
-        self._action(cr, uid, cases, 'cancel')
-        return True
+        res = super(crm_opportunity, self).case_cancel(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'probability' : 0.0})
+        return res
+    
+    def case_open(self, cr, uid, ids, *args):
+        """Overrides cancel for crm_case for setting Open Date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+        res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
 
@@ -132,7 +112,6 @@ class crm_opportunity(osv.osv):
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
-        'state' : 'draft',
     }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
