@@ -97,7 +97,7 @@ class scrum_sprint(osv.osv):
         'date_stop': fields.date('Ending Date', required=True),
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)]),
         'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True),
-        'scrum_master_id': fields.many2one('res.users', 'Scrum Master', required=True),
+        'scrum_master_id': fields.many2one('res.users', 'Scrum Manager', required=True),
         'meeting_ids': fields.one2many('scrum.meeting', 'sprint_id', 'Daily Scrum'),
         'review': fields.text('Sprint Review'),
         'retrospective': fields.text('Sprint Retrospective'),
