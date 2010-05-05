@@ -67,7 +67,6 @@ class product_product(osv.osv):
         #TODO : TO Check 
         res = super(product_product, self).do_change_standard_price(cr, uid, ids, datas, context=context)
         bom_obj = self.pool.get('mrp.bom')
-
         def _compute_price(bom):
             price = 0.0
             if bom.bom_id :
@@ -87,7 +86,7 @@ class product_product(osv.osv):
                     super(product_product, self).do_change_standard_price(cr, uid, [bom.bom_id.product_id.id], datas, context)
                 _compute_price(bom.bom_id)
             return price
-        
+       
         bom_ids = bom_obj.search(cr, uid, [('product_id', 'in', ids)])
         
         for bom in bom_obj.browse(cr, uid, bom_ids):

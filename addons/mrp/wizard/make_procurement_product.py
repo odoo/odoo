@@ -29,17 +29,13 @@ class make_procurement(osv.osv_memory):
     _description = 'Make Procurements'
     
     def onchange_product_id(self, cr, uid, ids, prod_id):
-        """ 
-             On Change of Product ID getting the value of related UoM.
-        
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
-             @param prod_id: Changed ID of Product 
-             
-             @return: A dictionary which gives the UoM of the changed Product 
-        
+        """ On Change of Product ID getting the value of related UoM.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param ids: List of IDs selected 
+         @param prod_id: Changed ID of Product 
+         @return: A dictionary which gives the UoM of the changed Product 
         """
         product = self.pool.get('product.product').browse(cr, uid, prod_id)
         return {'value': {'uom_id': product.uom_id.id}}
@@ -58,17 +54,13 @@ class make_procurement(osv.osv_memory):
     }
     
     def make_procurement(self, cr, uid, ids, context=None):
-        """ 
-             Creates procurement order for selected product.
-        
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which loads Procurement form view. 
-        
+        """ Creates procurement order for selected product.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
+        @return: A dictionary which loads Procurement form view. 
         """
         user = self.pool.get('res.users').browse(cr, uid, uid, context).login
         wh_obj = self.pool.get('stock.warehouse')
@@ -109,17 +101,13 @@ class make_procurement(osv.osv_memory):
          }
     
     def default_get(self, cr, uid, fields, context=None):
-        """ 
-             To get default values for the object.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
+        """ To get default values for the object.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values 
+        @param context: A standard dictionary 
+        @return: A dictionary which of fields with values. 
         """
         record_id = context and context.get('active_id', False) or False
 

@@ -20,15 +20,8 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
-import netsvc
-import pooler
-import time
-import tools
-import wizard
 
 class auction_payer(osv.osv_memory):
-
     _name = "auction.payer"
     _description = "Auction payer"
     

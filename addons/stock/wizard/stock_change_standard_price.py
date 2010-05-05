@@ -101,7 +101,7 @@ class change_standard_price(osv.osv_memory):
             'stock_journal' : res[0].stock_journal.id
         }
         prod_obj.do_change_standard_price(cr, uid, [rec_id], datas, context)
-        return {}            
+        return {}      
 change_standard_price()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

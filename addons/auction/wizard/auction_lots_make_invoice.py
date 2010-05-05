@@ -27,20 +27,29 @@ import tools
 import wizard
 
 class auction_lots_make_invoice(osv.osv_memory):
+    _name = "auction.lots.make.invoice"
+    _description = "Make invoice"
     
+    _columns = {
+       'amount': fields.float('Invoiced Amount', required =True, readonly=True), 
+       'objects':fields.integer('# of objects', required =True, readonly=True), 
+       'number':fields.char('Invoice Number', size=64), 
+              
+    }
+    
+    _defaults = {
+       'number': lambda *a: False, 
+    }
     
     def default_get(self, cr, uid, fields, context):
         """ 
-              To get default values for the object.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
+        To get default values for the object.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values 
+        @param context: A standard dictionary 
+        @return: A dictionary which of fields with values. 
         """        
         res = super(auction_lots_make_invoice, self).default_get(cr, uid, fields, context=context) 
         for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
@@ -53,7 +62,7 @@ class auction_lots_make_invoice(osv.osv_memory):
     
     def makeInvoices(self, cr, uid, ids, context):
         """
-        seller invoice :Create an invoice.
+        Seller invoice :Create an invoice.
         @param cr: the current row, from the database cursor.
         @param uid: the current user’s ID for security checks.
         @param ids: List of Auction lots make invoice’s IDs
@@ -61,36 +70,20 @@ class auction_lots_make_invoice(osv.osv_memory):
         """
         order_obj = self.pool.get('auction.lots')
         mod_obj = self.pool.get('ir.model.data') 
-    
-        for data in self.read(cr, uid, ids):
-            result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-            id = mod_obj.read(cr, uid, result, ['res_id'])
-            newinv = []
-            ids = order_obj.seller_trans_create(cr, uid, context['active_ids'], context)
-            cr.commit()
-            return {
-                'domain': "[('id','in', ["+','.join(map(str, ids))+"])]", 
-                'name': 'Seller invoices', 
-                'view_type': 'form', 
-                'view_mode': 'tree,form', 
-                'res_model': 'account.invoice', 
-                'view_id': False, 
-                'context': "{'type':'out_refund'}", 
-                'type': 'ir.actions.act_window', 
-                'search_view_id': id['res_id']        
-                }
+        result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
+        id = mod_obj.read(cr, uid, result, ['res_id'])
+        lots_ids = order_obj.seller_trans_create(cr, uid, context['active_ids'], context)
+        cr.commit()
+        return {
+            'domain': "[('id','in', ["+','.join(map(str, lots_ids))+"])]", 
+            'name': 'Seller invoices', 
+            'view_type': 'form', 
+            'view_mode': 'tree,form', 
+            'res_model': 'account.invoice', 
+            'view_id': False, 
+            'context': "{'type':'out_refund'}", 
+            'type': 'ir.actions.act_window', 
+            'search_view_id': id['res_id']        
+        }
             
-    _name = "auction.lots.make.invoice"
-    _description = "Make invoice"
-    _columns= {
-               'amount': fields.float('Invoiced Amount', required =True, readonly=True), 
-               'objects':fields.integer('# of objects', required =True, readonly=True), 
-               'number':fields.char('Invoice Number', size=64), 
-              
-               }
-    _defaults={
-               'number':lambda *a: False, 
-               
-               }
-
 auction_lots_make_invoice()
