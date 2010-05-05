@@ -29,7 +29,25 @@
                     <field name="name" select="1"/>
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
                     <field colspan="4" name="fields_id" select="1"/>
-                    <field colspan="4" name="value"/>
+                    <field colspan="4" name="type"/>
+                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('integer', 'integer_big'))]}">
+                        <field colspan="4" name="value_integer" widget="integer"/>
+                    </group>
+                    <group colspan="4" attrs="{'invisible' : [('type', '!=', 'float')]}">
+                        <field colspan="4" name="value_float" />
+                    </group>
+                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('date', 'datetime'))]}">
+                        <field colspan="4" name="value_datetime" />
+                    </group>
+                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('char', 'text'))]}">
+                        <field colspan="4" name="value_text" />
+                    </group>
+                    <group colspan="4" attrs="{'invisible' : [('type', '!=', 'many2one')]}">
+                        <field colspan="4" name="value_reference" />
+                    </group>
+                    <group colspan="4" attrs="{'invisible' : [('type', '!=', 'binary')]}">
+                        <field colspan="4" name="value_binary" />
+                    </group>
                     <field colspan="4" name="res_id" groups="base.group_extended"/>
                 </form>
             </field>

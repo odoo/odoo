@@ -873,86 +873,83 @@ class serialized(_column):
 
 class property(function):
 
-    def _fnct_write(self, obj, cr, uid, id, prop, id_val, val, context=None):
-        if not context:
-            context = {}
-        (obj_dest,) = val
-        definition_id = self._field_get(cr, uid, obj._name, prop)
+    def _get_default(self, obj, cr, uid, prop_name, context=None):
+        prop = obj.pool.get('ir.property')
+        domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
+        ids = prop.search(cr, uid, domain, order='company_id', context=context)
+        if not ids:
+            return False
+        return prop.get_by_id(cr, uid, ids, context=context) 
 
-        property = obj.pool.get('ir.property')
-        nid = property.search(cr, uid, [('fields_id', '=', definition_id),
-            ('res_id', '=', obj._name+','+str(id))])
-        while len(nid):
-            cr.execute('DELETE FROM ir_property WHERE id=%s', (nid.pop(),))
+    def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
+        prop = obj.pool.get('ir.property')
+        vids = [obj._name + ',' + str(oid) for oid in  ids]
 
-        nid = property.search(cr, uid, [('fields_id', '=', definition_id),
-            ('res_id', '=', False)])
-        default_val = False
-        if nid:
-            default_val = property.browse(cr, uid, nid[0], context).value
-
-        company_id = obj.pool.get('res.company')._company_default_get(cr, uid, obj._name, prop, context=context)
-        res = False
-        if val[0]:
-            newval = (id_val and obj_dest+','+str(id_val)) or False
+        domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
+        if domain is not None:
+            domain = [('res_id', 'in', vids)] + domain
+            return prop.search(cr, uid, domain, context=context)
         else:
-            newval = id_val or False
-        if (newval != default_val) and newval:
-            propdef = obj.pool.get('ir.model.fields').browse(cr, uid,
-                    definition_id, context=context)
-            res = property.create(cr, uid, {
-                'name': propdef.name,
-                'value': newval,
-                'res_id': obj._name+','+str(id),
-                'company_id': company_id,
-                'fields_id': definition_id
-            }, context=context)
-        return res
+            return []
 
-    def _fnct_read(self, obj, cr, uid, ids, prop, val, context=None):
-        if not context:
+
+    def _fnct_write(self, obj, cr, uid, id, prop_name, id_val, obj_dest, context=None):
+        if context is None:
             context = {}
+
+        nids = self._get_by_id(obj, cr, uid, prop_name, [id], context)
+        if nids:
+            cr.execute('DELETE FROM ir_property WHERE id IN %s', (tuple(nids),))
+
+        default_val = self._get_default(obj, cr, uid, prop_name, context)
+
+        if id_val and id_val != default_val:
+            def_id = self._field_get(cr, uid, obj._name, prop_name)
+            company = obj.pool.get('res.company')
+            cid = company._company_default_get(cr, uid, obj._name, def_id,
+                                               context=context)
+            propdef = obj.pool.get('ir.model.fields').browse(cr, uid, def_id,
+                                                             context=context)
+            prop = obj.pool.get('ir.property')
+            return prop.create(cr, uid, {
+                'name': propdef.name,
+                'value': id_val,
+                'res_id': obj._name+','+str(id),
+                'company_id': cid,
+                'fields_id': def_id,
+                'type': self._type,
+                }, context=context)
+        return False
+
+
+    def _fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
+        from orm import browse_record
+        if context is None:
+            context = {}
+
         property = obj.pool.get('ir.property')
-        definition_id = self._field_get(cr, uid, obj._name, prop)
 
-        nid = property.search(cr, uid, [('fields_id', '=', definition_id),
-            ('res_id', '=', False)])
-        default_val = False
-        if nid:
-            d = property.browse(cr, uid, nid[0], context).value
-            default_val = (d and int(d.split(',')[1])) or False
+        default_val = self._get_default(obj, cr, uid, prop_name, context)
+        if isinstance(default_val, browse_record):
+            default_val = default_val.id
+        else:
+            default_val = False
 
-        vids = [obj._name + ',' + str(id) for id in  ids]
-        nids = property.search(cr, uid, [('fields_id', '=', definition_id),
-            ('res_id', 'in', vids)])
+        nids = self._get_by_id(obj, cr, uid, prop_name, ids, context)
 
         res = {}
         for id in ids:
             res[id] = default_val
         for prop in property.browse(cr, uid, nids):
-            if prop.value.find(',') >= 0:
-                res[int(prop.res_id.id)] = (prop.value and \
-                        int(prop.value.split(',')[1])) or False
-            else:
-                res[int(prop.res_id.id)] = prop.value or ''
-
-        if self._obj:
-            obj = obj.pool.get(self._obj)
-            to_check = res.values()
-            if default_val and default_val not in to_check:
-                to_check += [default_val]
-            existing_ids = obj.search(cr, uid, [('id', 'in', to_check)])
-            for id, res_id in res.items():
-                if res_id not in existing_ids:
-                    cr.execute('DELETE FROM ir_property WHERE value=%s', ((obj._name+','+str(res_id)),))
-                    res[id] = default_val
-            names = dict(obj.name_get(cr, uid, existing_ids, context))
-            for r in res.keys():
-                if res[r] and res[r] in names:
-                    res[r] = (res[r], names[res[r]])
-                else:
-                    res[r] = False
+            value = prop.get_by_id(context=context)
+            if isinstance(value, browse_record):
+                if not value.exists():
+                    cr.execute('DELETE FROM ir_property WHERE id=%s', (prop.id,))
+                    continue
+                value = value.id
+            res[prop.res_id.id] = value or False
         return res
+
 
     def _field_get(self, cr, uid, model_name, prop):
         if not self.field_id.get(cr.dbname):
@@ -964,9 +961,10 @@ class property(function):
         return self.field_id[cr.dbname]
 
     def __init__(self, obj_prop, **args):
+        # TODO remove obj_prop parameter (use many2one type)
         self.field_id = {}
         function.__init__(self, self._fnct_read, False, self._fnct_write,
-                (obj_prop, ), **args)
+                          obj_prop, **args)
 
     def restart(self):
         self.field_id = {}
