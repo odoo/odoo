@@ -209,13 +209,10 @@ class add_product(osv.osv_memory):
              @param context: A standard dictionary 
              @return : Retrun the add product form again for adding more product
         """               
-        
-        if not context.get('active_id', False):
-            super(add_product).select_product(cr,uid,ids)
-        else:    
-            active_id=context.get('active_id', False)
-            data =  self.read(cr, uid, ids)[0] 
-                   
+    
+        active_id=context.get('active_id', False)
+        data =  self.read(cr, uid, ids)[0] 
+        if active_id:               
             order_obj = self.pool.get('pos.order')
             lines_obj = self.pool.get('pos.order.line')
             picking_obj = self.pool.get('stock.picking')
@@ -277,10 +274,9 @@ class add_product(osv.osv_memory):
                 'views': False,
                 'type': 'ir.actions.act_window',
                 }
-
+    
     def close_action(self, cr, uid, ids, context):
-
-        active_id=context.get('active_id', False)            
+        active_id=context.get('active_id', False)     
         order_obj = self.pool.get('pos.order')
         lines_obj = self.pool.get('pos.order.line')
         picking_obj = self.pool.get('stock.picking')
