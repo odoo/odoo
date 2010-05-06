@@ -21,7 +21,6 @@
 
 from osv import fields,osv
 import tools
-from crm.report import crm_report
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -30,6 +29,15 @@ AVAILABLE_STATES = [
     ('done', 'Closed'),
     ('pending','Pending')
 ]
+
+AVAILABLE_PRIORITIES = [
+    ('5', 'Lowest'),
+    ('4', 'Low'),
+    ('3', 'Normal'),
+    ('2', 'High'),
+    ('1', 'Highest')
+]
+
 
 class crm_claim_report(osv.osv):
     """ CRM Claim Report"""
@@ -101,7 +109,7 @@ class crm_claim_report(osv.osv):
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
+        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'type_id': fields.many2one('crm.case.resource.type', 'Claim Type',\
                          domain="[('section_id','=',section_id),\
                          ('object_id.model', '=', 'crm.claim')]"),
