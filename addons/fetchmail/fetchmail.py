@@ -195,6 +195,7 @@ class email_server(osv.osv):
         msg['message-id'] = message_id
 
         def _decode_header(txt):
+            txt = txt.replace('\r', '')
             return ' '.join(map(lambda (x, y): unicode(x, y or 'ascii'), decode_header(txt)))
         
         if 'Subject' in fields:
