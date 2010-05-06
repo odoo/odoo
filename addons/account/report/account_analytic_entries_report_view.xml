@@ -68,11 +68,11 @@
         		</group>
         		<newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="User" icon="terp-account" context="{'group_by':'user_id'}"/>
+                    <filter string="User" name="User" icon="terp-account" context="{'group_by':'user_id'}"/>
                     <filter string="Currency" icon="terp-account" context="{'group_by':'currency_id'}"/>
                     <filter string="Company"  icon="terp-account" context="{'group_by':'company_id'}" groups="base.multi_company"/>
                     <separator orientation="vertical"/>
-                    <filter string="Account" name="Account" icon="terp-account" context="{'group_by':'account_id'}"/>
+                    <filter string="Account"  icon="terp-account" context="{'group_by':'account_id'}"/>
                     <filter string="General Account" icon="terp-account" context="{'group_by':'general_account_id'}"/>
                     <filter string="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
                     <separator orientation="vertical"/>
@@ -87,13 +87,25 @@
             </search>
         </field>
     </record>
-
+    <record id="view_account_analytic_entries_search" model="ir.ui.view">
+         <field name="name">account.analytic.entries.graph</field>
+         <field name="model">analytic.entries.report</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Analytic Entries" type="bar">
+             	<field name="user_id"/>
+                <field name="amount" operator="+"/>
+                <field name="unit_amount" operator="+"/>
+                <field name="amount_currency" operator="+"/>
+             </graph>
+         </field>
+    </record>
     <record id="action_analytic_entries_report" model="ir.actions.act_window">
         <field name="name">Analytic Entries</field>
         <field name="res_model">analytic.entries.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_Account':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_analytic_entries_report_search"/>
     </record>
 

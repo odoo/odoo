@@ -107,11 +107,25 @@
             </search>
         </field>
     </record>
+    <record id="view_account_analytic_report_search" model="ir.ui.view">
+         <field name="name">account.analytic.report.graph</field>
+         <field name="model">analytic.report</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Analytic Accounts" type="bar">
+             	<field name="user_id"/>
+                <field name="credit" operator="+"/>
+                <field name="debit" operator="+"/>
+                <field name="balance" operator="+"/>
+                <field name="nbr" operator="+"/>
+             </graph>
+         </field>
+    </record>
     <record id="action_analytic_report_all" model="ir.actions.act_window">
         <field name="name">Analytic Accounts</field>
         <field name="res_model">analytic.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_This Month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_analytic_report_search"/>
     </record>
