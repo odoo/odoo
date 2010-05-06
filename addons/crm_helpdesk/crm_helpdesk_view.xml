@@ -112,7 +112,7 @@
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="CC"/>
                        </group>
-                       <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                       <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                            <form string="Communication history">
                                <group col="7" colspan="4">
                                    <field name="date"/>
@@ -163,6 +163,7 @@
                 <field name="date_deadline"/>
                 <field name="user_id"/>
                 <field name="section_id"/>
+                <field name="priority"/>
                 <field name="state"/>
                 <button name="case_close" string="Done"
                     states="open,draft,pending" type="object"
