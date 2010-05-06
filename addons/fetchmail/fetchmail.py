@@ -184,7 +184,7 @@ class email_server(osv.osv):
         history_pool = self.pool.get('mail.server.history')
         msg_txt = email.message_from_string(message)
         message_id = msg_txt.get('Message-ID', False)
-        
+
         msg = {}
         if not message_id:
             return False
@@ -195,7 +195,7 @@ class email_server(osv.osv):
         msg['message-id'] = message_id
         
         if 'Subject' in fields:
-            msg['subject'] = msg_txt.get('Subject')
+            msg['subject'] = ' '.join(map(lambda (x, y): unicode(x, y or 'ascii'), decode_header(msg_txt.get('Subject'))))
         
         if 'Content-Type' in fields:
             msg['content-type'] = msg_txt.get('Content-Type')
@@ -258,6 +258,9 @@ class email_server(osv.osv):
 
             msg['body'] = body
             msg['attachments'] = attachents
+
+        encoding = msg_txt.get_content_charset('utf-8')
+        msg['body'] = msg['body'].decode(encoding).encode('utf-8')
 
         res_id = False
         if msg.get('references', False):
