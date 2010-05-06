@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
 
 import pooler
-import time
 from report import report_sxw
 
 class account_analytic_analytic_check(report_sxw.rml_parse):
@@ -131,6 +131,5 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
         return (self._gen_cred(date1,date2)-self._ana_cred(date1,date2))
 
 report_sxw.report_sxw('report.account.analytic.account.analytic.check', 'account.analytic.account', 'addons/account/project/report/analytic_check.rml',parser=account_analytic_analytic_check, header=False)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

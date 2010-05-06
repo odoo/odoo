@@ -72,6 +72,8 @@ class account_analytic_profit(osv.osv_memory):
             'type': 'ir.actions.report.xml',
             'report_name': 'account.analytic.profit',
             'datas': datas,
+            'nodestroy': True
+
             }
 
 account_analytic_profit()

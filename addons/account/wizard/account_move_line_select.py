@@ -72,4 +72,3 @@ class account_move_line_select(osv.osv_memory):
 account_move_line_select()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

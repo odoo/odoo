@@ -77,6 +77,12 @@
                                 <field name="delete_queue" select="2" />
                                 <field name="delete_queue_period" select="2" attrs="{'readonly':[('delete_queue','not in',['content','all'])]}"/>
                             </group>
+                            <group col="2" colspan="2">
+                                <separator string="Email Copy Configuration" colspan="2" />
+                                <field name="cc_to" select="2" />
+                                <field name="bcc_to" select="2" />
+                            </group>
+                            
                             <newline/>
                             <separator string="Server Information" colspan="4"/>
                             <group col="3" colspan="4">

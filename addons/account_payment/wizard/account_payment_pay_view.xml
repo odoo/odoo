@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+        <record id="account_payment_make_payment_view" model="ir.ui.view">
+             <field name="name">account.payment.make.payment.form</field>
+             <field name="model">account.payment.make.payment</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+	             <form string="Make Payment">
+                 	<label string ="Are you sure you want to make payment?" />
+				    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+               			<button name="launch_wizard" string="Print" type="object" icon="gtk-print" default_focus="1"/>
+ 					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_account_payment_make_payment" model="ir.actions.act_window">
+			<field name="name">Make Payment</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account.payment.make.payment</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="account_payment_make_payment_view"/>
+			<field name="target">new</field>
+		</record>
+
+
+	</data>
+</openerp>

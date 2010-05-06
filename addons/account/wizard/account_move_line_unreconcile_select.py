@@ -23,15 +23,12 @@ from osv import fields, osv
 from tools.translate import _
 import tools
 
-
 class account_move_line_unreconcile_select(osv.osv_memory):
-
     _name = "account.move.line.unreconcile.select"
     _description = "Unreconciliation"
     _columns ={
        'account_id': fields.many2one('account.account','Account',required=True),
                }
-
     def action_open_window(self, cr, uid, ids, context={}):
         data = self.read(cr, uid, ids, context=context)[0]
         return {
@@ -46,6 +43,4 @@ class account_move_line_unreconcile_select(osv.osv_memory):
 
 account_move_line_unreconcile_select()
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

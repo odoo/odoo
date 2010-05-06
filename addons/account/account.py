@@ -887,7 +887,7 @@ class account_move(osv.osv):
 
             cr.execute('update account_move set state=%s where id =ANY(%s) ',('posted',ids,))
         else:
-            raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !'))
+            raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
         return True
 
     def button_validate(self, cursor, user, ids, context=None):

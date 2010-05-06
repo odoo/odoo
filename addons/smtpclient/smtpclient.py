@@ -68,7 +68,9 @@ class smtpclient(osv.osv):
     _columns = {
         'name' : fields.char('Server Name', size=256, required=True),
         'from_email' : fields.char('Email From', size=256),
-        'email' : fields.char('Email Address', size=256, required=True, readonly=True, states={'new':[('readonly',False)]}),
+        'email':fields.char('Email Address', size=256, required=True, readonly=True, states={'new':[('readonly',False)]}),
+        'cc_to':fields.char('Send copy to', size=256, readonly=True, states={'new':[('readonly',False)]}, help="use comma to supply multiple address. email@domain.com, email2@domain.com"),
+        'bcc_to':fields.char('Send blind copy to', size=256, readonly=True, states={'new':[('readonly',False)]}, help="use comma to supply multiple address. email@domain.com, email2@domain.com"),
         'user' : fields.char('User Name', size=256, readonly=True, states={'new':[('readonly',False)]}),
         'password' : fields.char('Password', size=1024, invisible=True, readonly=True, states={'new':[('readonly',False)]}),
         'server' : fields.char('SMTP Server', size=256, required=True, readonly=True, states={'new':[('readonly',False)]}),
@@ -300,7 +302,10 @@ class smtpclient(osv.osv):
                     
                 if self.server[serverid]['auth']:
                     password = self.server[serverid]['password']
-                    password = base64.b64decode(password)
+                    try:
+                        password = base64.b64decode(password)
+                    except:
+                        pass  
                     self.smtpServer[serverid].login(str(self.server[serverid]['user']), password)
 
             except Exception, e:
@@ -386,7 +391,7 @@ class smtpclient(osv.osv):
             emailto = [emailto]
 
         ir_pool = self.pool.get('ir.attachment')
-        
+
         for to in emailto:
             msg = MIMEMultipart()
             msg['Subject'] = tools.ustr(subject) 
@@ -420,7 +425,13 @@ class smtpclient(osv.osv):
             msg['X-OpenERP-Server-Host'] = socket.gethostname()
             msg['X-OpenERP-Server-Version'] = release.version
             msg['Message-Id'] = "<%s-openerp-@%s>" % (time.time(), socket.gethostname())
-          
+            
+            if smtp_server.cc_to:
+                msg['Cc'] = smtp_server.cc_to
+                
+            if smtp_server.bcc_to:
+                msg['Bcc'] = smtp_server.bcc_to
+            
             #attach files from disc
             for file in attachments:
                 part = MIMEBase('application', "octet-stream")
@@ -442,8 +453,8 @@ class smtpclient(osv.osv):
             data = {
                 'to':to,
                 'server_id':server_id,
-                'cc':False,
-                'bcc':False,
+                'cc':smtp_server.cc_to or False,
+                'bcc':smtp_server.bcc_to or False,
                 'name':subject,
                 'body':body,
                 'serialized_message':message,
@@ -499,7 +510,7 @@ class smtpclient(osv.osv):
                 self.open_connection(cr, uid, ids, email.server_id.id)
                 
             try:
-                self.smtpServer[email.server_id.id].sendmail(email.server_id.email, email.to, tools.ustr(email.serialized_message))
+                self.smtpServer[email.server_id.id].sendmail(email.server_id.email, [email.to, email.cc, email.bcc], tools.ustr(email.serialized_message))
                 message = "message sent successfully to %s from %s server" % (email.to, email.server_id.name)
                 logger.notifyChannel('smtp', netsvc.LOG_INFO, message)
             except Exception, e:
@@ -531,7 +542,7 @@ class smtpclient(osv.osv):
             sids = queue.search(cr, uid, [('state','not in',['send','sending']), ('server_id','in',ids)], order="priority", limit=30)
         
         message = ""
-        if len(ids) > 0:
+        if len(ids) > 1:
             message = "sending %s emails from message queuq !" % (len(ids))
             logger.notifyChannel('smtp', netsvc.LOG_INFO, message)
         
@@ -539,6 +550,7 @@ class smtpclient(osv.osv):
         return result
         
     def set_to_draft(self, cr, uid, ids, context={}):
+        self.stop_process(cr, uid, ids, context)
         self.write(cr, uid, ids, {'state':'new', 'code':False})
         return True
     
@@ -555,17 +567,19 @@ class smtpclient(osv.osv):
                 'interval_type':'minutes',
                 'user_id':uid,
                 'numbercall':-1,
-                'doall':False
+                'doall':False,
+                'active':False
             }
             id = self.pool.get('ir.cron').create(cr, uid, res)
             self.write(cr, uid, ids, {'process_id':id})
+        
         return True
         
     def start_process(self, cr, uid, ids, context={}):
         process = self.browse(cr, uid, ids[0], context)
-        if not process.process_id:
+        if not process.process_id or process.state != 'confirm':
             raise osv.except_osv(_('SMTP Server Error !'), _('Server is not Verified, Please Verify the Server !'))
-            
+
         pid = process.process_id.id
         self.pool.get('ir.cron').write(cr, uid, [pid], {'active':True})
         self.write(cr, uid, ids, {'pstate':'running'})

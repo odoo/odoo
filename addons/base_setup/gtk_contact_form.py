@@ -69,7 +69,7 @@ class base_gtkcontactform(osv.osv_memory):
              'other':fields.boolean('Other'),
              'ebook':fields.boolean('ebook'),
              'updates':fields.boolean('updates'),
-             'note':fields.text('Note'),
+             #'note':fields.text('Note'),
              }
     def execute(self, cr, uid, ids, context=None):
         company_id = self.pool.get('base.setup.company').search(cr, uid, [])
