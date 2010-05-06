@@ -97,7 +97,7 @@ class crm_phonecall(osv.osv, crm_case):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_phonecall, self).case_close(cr, uid, ids, args)
-        self.write(cr, uid, ids, {'date_close': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
     def case_open(self, cr, uid, ids, *args):

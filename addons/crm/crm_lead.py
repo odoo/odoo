@@ -169,8 +169,8 @@ class crm_lead(osv.osv, crm_case):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        self.write(cr, uid, ids, {'date_close': time.strftime('%Y-%m-%d %H:%M:%S')})
+        res = super(crm_lead, self).case_close(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):

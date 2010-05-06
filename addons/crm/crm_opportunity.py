@@ -66,7 +66,7 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        self.write(cr, uid, ids, {'probability' : 100.0, 'date_close': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, ids, {'probability' : 100.0, 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
     def case_cancel(self, cr, uid, ids, *args):
