@@ -71,7 +71,7 @@ class add_product(osv.osv_memory):
         if obj.amount_total != obj.amount_paid:
             return {
             'name': _('Make Payment'),
-            'context ':context and context.get('record_id', False),
+            'context ':context and context.get('active_id', False),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.make.payment',

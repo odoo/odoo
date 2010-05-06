@@ -61,7 +61,7 @@
                             <separator colspan="4" string="Actions"/>
                             <group colspan="4" col="6">
                                 <field name="state" select="1"/>
-                                <button name="%(action_pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance" context="{'record_id':'active_id'}" />
+                                <button name="%(action_pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance" />
                                 <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
                                 <button name="%(action_view_pos_return)d" string="Return Picking" type="action" icon="gtk-ok" states="paid"
