@@ -258,16 +258,17 @@ class task(osv.osv):
             (task.description or '')+'\n\n'
 
     # Compute: effective_hours, total_hours, progress
-    def _hours_get(self, cr, uid, ids, field_names, args, context):
+    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
+        res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id =ANY(%s) GROUP BY task_id",(ids,))
         hours = dict(cr.fetchall())
-        res = {}
         for task in self.browse(cr, uid, ids, context=context):
-            res[task.id] = {}
-            res[task.id]['effective_hours'] = hours.get(task.id, 0.0)
-            res[task.id]['total_hours'] = task.remaining_hours + hours.get(task.id, 0.0)
+            res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
             if (task.remaining_hours + hours.get(task.id, 0.0)):
-                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 100),2)
+                if hours.get(task.id, 0.0) > res[task.id]['total_hours']:
+                    res[task.id]['progress'] = round(100 - (max(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 100)) % 100, 2)
+                else:
+                    res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 100),2)
             else:
                 res[task.id]['progress'] = 0.0
             if task.state in ('done','cancel'):

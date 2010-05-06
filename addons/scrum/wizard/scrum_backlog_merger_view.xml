@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="scrum_backlog_merge_view" model="ir.ui.view">
+            <field name="name">Merger Product Backlogs</field>
+            <field name="model">scrum.backlog.merge</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+               <form string="Merge Backlogs">
+        			<separator string="Are you sure you want to merge these Backlogs?" colspan="4"/>
+					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+            	    <button name="check" string="Merge Backlogs" type="object" icon="gtk-convert"/>
+    			</form>
+            </field>
+		</record>
+
+         <act_window name="Merge Product Backlogs"
+		    res_model="scrum.backlog.merge"
+		    src_model="scrum.product.backlog"
+		    view_mode="form"
+		    target="new"
+            key2="client_action_multi"
+		    id="action_scrum_backlog_merge"/>
+
+    	<record id="scrum_merge_project_id_view" model="ir.ui.view">
+            <field name="name">Merger Product Backlogs</field>
+            <field name="model">scrum.backlog.merge</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+               <form string="Select Project">
+               		<field name="project_id"/>
+        			<separator string="Slelect the Project" colspan="4"/>
+					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+            	    <button name="do_merge" string="ok" type="object" icon="gtk-convert"/>
+    			</form>
+            </field>
+		</record>
+
+
+    </data>
+</openerp>

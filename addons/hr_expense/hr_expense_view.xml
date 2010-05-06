@@ -66,7 +66,6 @@
             <field name="arch" type="xml">
                 <form string="Expenses Sheet">
                     <group colspan="4" col="6">
-                        <field name="employee_id" select="1"/>
                         <field name="name" select="1"/>
                         <field name="employee_id" select="1"/>
                         <field name="ref"/>
@@ -99,7 +98,7 @@
                                 <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
                                 <button name="cancel" states="cancel" string="Cancel" type="workflow" icon="gtk-cancel"/>
                                 <button name="validate" states="confirm" string="Accept" type="workflow" icon="gtk-ok"/>
-                                <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-print"/>
+                                <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-execute"/>
                                 <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert"/>
                                 <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no"/>
                             </group>

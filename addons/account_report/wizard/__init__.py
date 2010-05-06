@@ -20,6 +20,6 @@
 ##############################################################################
 
 import account_report_print_indicators
-import wizard_print_indicators_with_pdf
+import account_report_print_indicators_with_pdf
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
