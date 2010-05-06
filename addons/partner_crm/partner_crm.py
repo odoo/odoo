@@ -26,7 +26,7 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     
     _columns = {
-                'opportunity_ids': fields.one2many('crm.lead', 'partner_id', 'Opportunities'), 
+                'opportunity_ids': fields.one2many('crm.lead', 'partner_id', 'Opportunities', domain=[('type', '=', 'opportunity')]), 
                 'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
                                                      'Meetings'), 
                 'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
