@@ -610,7 +610,7 @@ class pos_order(osv.osv):
         if 'payment_name' in data.keys():
             args['name'] = data['payment_name'] + ' ' +order.name
         account_def = self.pool.get('ir.property').get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
-        args['account_id'] = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def or curr_c.account_receivable.id
+        args['account_id'] = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def.id or curr_c.account_receivable.id
         if data.get('is_acc',False):
             args['is_acc']=data['is_acc']
             args['account_id']= prod_obj.browse(cr,uid, data['product_id']).property_account_income and prod_obj.browse(cr,uid, data['product_id']).property_account_income.id
