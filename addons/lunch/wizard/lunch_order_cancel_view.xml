@@ -14,7 +14,8 @@
                 		 <label string="Are you sure you want to cancel this order ?"/>
                     </group>
                        	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
+                    <group colspan="6">
+                        <label string=" " colspan="2"/> 
                     	<button  icon="gtk-cancel" special="cancel" string="No"/>
                     	<button  icon="gtk-ok" name="cancel" string="Yes" type="object"/>
                    </group>
@@ -22,14 +23,7 @@
             </field>
   		</record>
 
-        <record id="action_lunch_order_cancel" model="ir.actions.act_window">
-            <field name="name">Cancel Order</field>
-            <field name="res_model">lunch.order.cancel</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_lunch_order_cancel"/>
-           <field name="target">new</field>
-        </record>
+<!-- Action for Cancel Order -->
 
         <act_window id="action_lunch_order_cancel_values"
     		key2="client_action_multi" name="Cancel Order"
