@@ -105,20 +105,23 @@ class pos_make_payment(osv.osv_memory):
         active_model = context.get('active_model')
         if not active_model and active_model != 'pos.order':
             return result           
-        active_id = context.get('active_id', False)        
+        active_id = context.get('active_id', False)  
         if active_id:
-            order = self.pool.get('pos.order').browse(cr, uid, active_id)
-            if order.amount_total == order.amount_paid:
-                res['arch'] = """ <form string="Make Payment" colspan="4">
-                                <group col="2" colspan="2">
-                                    <label string="Do you want to print the Receipt?" colspan="4"/>
-                                    <separator colspan="4"/>
-                                    <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                                    <button name="print_report" string="Print Receipt" type="object" icon="gtk-print"/>
-                                </group>
-                            </form>
-                        """
-        return res
+            try:            
+                order = self.pool.get('pos.order').browse(cr, uid, active_id)
+                if order.amount_total == order.amount_paid:
+                    res['arch'] = """ <form string="Make Payment" colspan="4">
+                                    <group col="2" colspan="2">
+                                        <label string="Do you want to print the Receipt?" colspan="4"/>
+                                        <separator colspan="4"/>
+                                        <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
+                                        <button name="print_report" string="Print Receipt" type="object" icon="gtk-print"/>
+                                    </group>
+                                </form>
+                            """
+            except:
+                return result                            
+        return result
 
     def check(self, cr, uid, ids, context=None):
         
