@@ -67,7 +67,7 @@ class crm_case_section(osv.osv):
         'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
         'server_id':fields.many2one('email.smtpclient', 'Server ID'),
         'note': fields.text('Description'),
-        
+        'working_hours': fields.float('Working Hours', digits=(16,2 )),
     }
 
     _defaults = {

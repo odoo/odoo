@@ -109,14 +109,10 @@ between mails and Open ERP.""",
         'crm_opportunity_demo.xml',
         'crm_phonecall_demo.xml'
     ],
-<<<<<<< TREE
-    'test1': [
-#            'test/test_crm_meeting.yml', 
-            'test/test_crm_lead.yml',
-=======
+
     'test': ['test/test_crm_lead.yml',
             'test/test_crm_meeting.yml', 
->>>>>>> MERGE-SOURCE
+
             'test/test_crm_opportunity.yml',
             'test/test_crm_phonecall.yml', 
              ],
