@@ -85,6 +85,7 @@ class account_installer(osv.osv_memory):
         'period':lambda *a:'month',
         'sale_tax':lambda *a:0.0,
         'purchase_tax':lambda *a:0.0,
+        'charts':'configurable',
         }
 
     def on_change_start_date(self, cr, uid, id, start_date):

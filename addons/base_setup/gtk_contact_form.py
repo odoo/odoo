@@ -69,7 +69,6 @@ class base_gtkcontactform(osv.osv_memory):
              'other':fields.boolean('Other'),
              'ebook':fields.boolean('ebook'),
              'updates':fields.boolean('updates'),
-             #'note':fields.text('Note'),
              }
     def execute(self, cr, uid, ids, context=None):
         company_id = self.pool.get('base.setup.company').search(cr, uid, [])
@@ -89,7 +88,6 @@ class base_gtkcontactform(osv.osv_memory):
             result += "\nplan_use: " +  str(res.get('use_openerp', False))
             result += "\nsell_openerp: " + str(res.get('sell_openerp', False))
             result += "\nebook: " + str(res.get('ebook',False))
-            result += "\nnote: " + str(res.get('note',''))
             result += "\ngtk: " + str(True)
         misc.upload_data(email, result, type='SURVEY')
 
