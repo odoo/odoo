@@ -147,11 +147,11 @@ class pos_return(osv.osv_memory):
 
             for order_id in order_obj.browse(cr, uid, [record_id], context=context):
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-                val = property_obj.browse(cr, uid,prop_ids[0]).value
+                val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
                 cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
-                stock_dest_id = int(val.split(',')[1])
+                stock_dest_id = val.id
                                     
                 new_picking=picking_obj.copy(cr, uid, order_id.last_out_picking.id, {'name':'%s (return)' % order_id.name,
                                                                                     'move_lines':[], 'state':'draft', 'type':'in',
@@ -232,11 +232,11 @@ class add_product(osv.osv_memory):
                 prod=data['product_id']
                 qty=data['quantity']
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-                val = property_obj.browse(cr, uid,prop_ids[0]).value
+                val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
                 cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
-                stock_dest_id = int(val.split(',')[1])
+                stock_dest_id = val.id
         
                 prod_id=prod_obj.browse(cr,uid,prod)
                 new_picking=picking_obj.create(cr,uid,{
@@ -295,11 +295,11 @@ class add_product(osv.osv_memory):
         wf_service = netsvc.LocalService("workflow")
         for order_id in order_obj.browse(cr, uid, [record_id], context=context):
             prop_ids =property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-            val = property_obj.browse(cr, uid,prop_ids[0]).value
+            val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
             cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
             res=cr.fetchone()
             location_id=res and res[0] or None
-            stock_dest_id = int(val.split(',')[1])
+            stock_dest_id = val.id
     
             order_obj.write(cr,uid,[order_id.id],{'type_rec':'Exchange'})
             if order_id.invoice_id:
