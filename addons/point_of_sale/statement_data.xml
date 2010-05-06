@@ -21,13 +21,13 @@
 			<field eval="1" name="perm_create"/>
 			<field name="group_id" ref="point_of_sale.res_groups_posuser0"/>
 		</record>
-		<record id="ir_rule_group_bankstatementcompany0" model="ir.rule.group">
+		<record id="ir_rule_group_bankstatementcompany0" model="ir.rule">
 			<field name="model_id" ref="account.model_account_bank_statement"/>
 			<field eval="&quot;&quot;&quot;Bank Statement company&quot;&quot;&quot;" name="name"/>
 			<field eval="1" name="global"/>
 		</record>
 
-		<record id="ir_rule_group_bankstatementlinecompany0" model="ir.rule.group">
+		<record id="ir_rule_group_bankstatementlinecompany0" model="ir.rule">
 			<field name="model_id" ref="account.model_account_bank_statement_line"/>
 			<field eval="&quot;&quot;&quot;Bank Statement line Company&quot;&quot;&quot;" name="name"/>
 			<field eval="1" name="global"/>

@@ -52,11 +52,11 @@ class pos_return(osv.osv_memory):
         """ 
 
         res = super(pos_return, self).default_get(cr, uid, fields, context=context)
-        order_obj=self.pool.get('pos.order')      
-        record_id=context.get('record_id')
+        order_obj = self.pool.get('pos.order')
+        active_ids = context.get('active_ids')
         if not context:
             context={}
-        for order in order_obj.browse(cr, uid,[record_id]):
+        for order in order_obj.browse(cr, uid, active_ids):
             for line in order.lines:
                 if 'return%s'%(line.id) in fields:
                     res['return%s'%(line.id)] = line.qty        
@@ -66,9 +66,10 @@ class pos_return(osv.osv_memory):
         res = super(pos_return, self).view_init(cr, uid, fields_list, context=context)
         order_obj=self.pool.get('pos.order')           
         if not context:
-            context={}
-        record_id=context.get('record_id')            
-        for order in order_obj.browse(cr, uid,[record_id]):            
+            context={}       
+        
+        active_ids=context.get('active_ids')            
+        for order in order_obj.browse(cr, uid, active_ids):            
             for line in order.lines:    
                 if 'return%s'%(line.id) not in self._columns:
                     self._columns['return%s'%(line.id)] = fields.float("Quantity")
@@ -79,14 +80,17 @@ class pos_return(osv.osv_memory):
         result = super(pos_return, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
         if not context:
             context={}
-        order_obj=self.pool.get('pos.order')
-        record_id = context.get('record_id', False)
-        if record_id:
+        active_model = context.get('active_model')
+        if not active_model and active_model != 'pos.order':
+            return result
+        order_obj = self.pool.get('pos.order')
+        active_id = context.get('active_id', False)
+        if active_id:
             _moves_arch_lst="""<?xml version="1.0"?>
                             <form string="Return lines">
                             <label string="Quantities you enter, match to products that will return to the stock." colspan="4"/>"""
             _line_fields = result['fields']                
-            order=order_obj.browse(cr, uid, record_id)
+            order=order_obj.browse(cr, uid, active_id)
             for line in order.lines:    
                 quantity=line.qty    
                 _line_fields.update({
@@ -130,7 +134,7 @@ class pos_return(osv.osv_memory):
                 'type': 'ir.actions.act_window',
         }
     def create_returns2(self, cr, uid, ids, context):
-        record_id = context.get('record_id', False)        
+        active_id = context.get('active_id', False)        
         order_obj =self.pool.get('pos.order')
         line_obj = self.pool.get('pos.order.line')
         picking_obj = self.pool.get('stock.picking')
@@ -139,19 +143,19 @@ class pos_return(osv.osv_memory):
         uom_obj =self. pool.get('product.uom')
         wf_service = netsvc.LocalService("workflow")
         #Todo :Need to clean the code
-        if record_id:
-            picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in',[record_id]), ('state', '=', 'done')])
+        if active_id:
+            picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in',[active_id]), ('state', '=', 'done')])
             data=self.read(cr,uid,ids)[0]
             clone_list = []
             date_cur=time.strftime('%Y-%m-%d')
 
-            for order_id in order_obj.browse(cr, uid, [record_id], context=context):
+            for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-                val = property_obj.browse(cr, uid,prop_ids[0]).value
+                val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
                 cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
-                stock_dest_id = int(val.split(',')[1])
+                stock_dest_id = val.id
                                     
                 new_picking=picking_obj.copy(cr, uid, order_id.last_out_picking.id, {'name':'%s (return)' % order_id.name,
                                                                                     'move_lines':[], 'state':'draft', 'type':'in',
@@ -205,13 +209,10 @@ class add_product(osv.osv_memory):
              @param context: A standard dictionary 
              @return : Retrun the add product form again for adding more product
         """               
-        
-        if not context.get('record_id', False):
-            super(add_product).select_product(cr,uid,ids)
-        else:    
-            record_id=context.get('record_id', False)
-            data =  self.read(cr, uid, ids)[0] 
-                   
+    
+        active_id=context.get('active_id', False)
+        data =  self.read(cr, uid, ids)[0] 
+        if active_id:               
             order_obj = self.pool.get('pos.order')
             lines_obj = self.pool.get('pos.order.line')
             picking_obj = self.pool.get('stock.picking')
@@ -219,24 +220,24 @@ class add_product(osv.osv_memory):
             move_obj = self.pool.get('stock.move')
             property_obj= self.pool.get("ir.property")
             invoice_obj= self.pool.get('account.invoice')
-            picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in',[record_id]), ('state', '=', 'done')])
+            picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in',[active_id]), ('state', '=', 'done')])
             clone_list = []
             date_cur=time.strftime('%Y-%m-%d')
             uom_obj = self.pool.get('product.uom')
             prod_obj=self.pool.get('product.product')
             wf_service = netsvc.LocalService("workflow")
             return_boj=self.pool.get('pos.return')
-            order_obj.add_product(cr, uid, record_id,data['product_id'],data['quantity'], context=context)
+            order_obj.add_product(cr, uid, active_id,data['product_id'],data['quantity'], context=context)
               
-            for order_id in order_obj.browse(cr, uid, [record_id], context=context):
+            for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prod=data['product_id']
                 qty=data['quantity']
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-                val = property_obj.browse(cr, uid,prop_ids[0]).value
+                val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
                 cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
-                stock_dest_id = int(val.split(',')[1])
+                stock_dest_id = val.id
         
                 prod_id=prod_obj.browse(cr,uid,prod)
                 new_picking=picking_obj.create(cr,uid,{
@@ -259,7 +260,7 @@ class add_product(osv.osv_memory):
         
                 wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
-                order_obj.write(cr,uid,record_id,{'last_out_picking':new_picking})
+                order_obj.write(cr,uid,active_id,{'last_out_picking':new_picking})
                 
              
         return {            
@@ -273,10 +274,9 @@ class add_product(osv.osv_memory):
                 'views': False,
                 'type': 'ir.actions.act_window',
                 }
-
+    
     def close_action(self, cr, uid, ids, context):
-
-        record_id=context.get('record_id', False)            
+        active_id=context.get('active_id', False)     
         order_obj = self.pool.get('pos.order')
         lines_obj = self.pool.get('pos.order.line')
         picking_obj = self.pool.get('stock.picking')
@@ -284,7 +284,7 @@ class add_product(osv.osv_memory):
         move_obj = self.pool.get('stock.move')
         property_obj= self.pool.get("ir.property")   
         invoice_obj=self.pool.get('account.invoice')
-        picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in', [record_id]), ('state', '=', 'done')])
+        picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in', [active_id]), ('state', '=', 'done')])
         clone_list = []
         date_cur=time.strftime('%Y-%m-%d')
         uom_obj = self.pool.get('product.uom')
@@ -293,13 +293,13 @@ class add_product(osv.osv_memory):
         data=return_boj.read(cr,uid,return_id,[])[0]
                         
         wf_service = netsvc.LocalService("workflow")
-        for order_id in order_obj.browse(cr, uid, [record_id], context=context):
+        for order_id in order_obj.browse(cr, uid, [active_id], context=context):
             prop_ids =property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-            val = property_obj.browse(cr, uid,prop_ids[0]).value
+            val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
             cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
             res=cr.fetchone()
             location_id=res and res[0] or None
-            stock_dest_id = int(val.split(',')[1])
+            stock_dest_id = val.id
     
             order_obj.write(cr,uid,[order_id.id],{'type_rec':'Exchange'})
             if order_id.invoice_id:
@@ -328,11 +328,11 @@ class add_product(osv.osv_memory):
                     })
             wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [new_picking], context)
-        obj=order_obj.browse(cr,uid, record_id)                
+        obj=order_obj.browse(cr,uid, active_id)                
         if obj.amount_total != obj.amount_paid:
             return {
             'name': _('Make Payment'),
-            'context ':context and context.get('record_id', False),
+            'context ':context and context.get('active_id', False),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.make.payment',
