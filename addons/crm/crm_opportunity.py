@@ -152,7 +152,6 @@ class crm_opportunity(osv.osv):
             }
             value = {
                 'name': _('Meetings'),
-                'domain': "[('user_id','=',%s),('opportunity_id','=',%s)]" % (uid,opp.id),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'calendar,form,tree',

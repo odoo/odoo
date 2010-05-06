@@ -44,7 +44,13 @@ class crm_phonecall(osv.osv, crm_case):
                                  domain="[('partner_id','=',partner_id)]"), 
         'company_id': fields.many2one('res.company', 'Company'), 
         'description': fields.text('Description'), 
-        'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
+        'state': fields.selection([
+                                    ('draft', 'Draft'), 
+                                    ('open', 'Todo'), 
+                                    ('cancel', 'Cancelled'), 
+                                    ('done', 'Closed'), 
+                                    ('pending', 'Pending'),
+                                ], 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\

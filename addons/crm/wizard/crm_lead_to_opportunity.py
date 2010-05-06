@@ -146,7 +146,7 @@ Leads Could not convert into Opportunity"))
         res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
         for lead in lead_obj.browse(cr, uid, data, context=context):
             if 'name' in fields:
-                res.update({'name': lead.partner_name})
+                res.update({'name': lead.name})
             if 'partner_id' in fields:
                 res.update({'partner_id': lead.partner_id.id or False})
         return res
