@@ -93,7 +93,7 @@ class scrum_backlog_merge(osv.osv_memory):
             task_obj.copy(cr, uid, tasks.id, {'product_backlog_id': id_b})
         # This is to change the status of the old product backlogs to done state
         for backlogs in backlog_obj.browse(cr, uid, context['active_ids'], context=context):
-            backlog_obj.write(cr, uid, context['active_ids'], {'state':'done'}, context=context)
+            backlog_obj.write(cr, uid, context['active_ids'], {'state':'cancel'}, context=context)
         return {}
 
 scrum_backlog_merge()
