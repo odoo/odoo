@@ -6,26 +6,27 @@
       <field name="model">base.setup.config</field>
       <field name="type">form</field>
       <field name="arch" type="xml">
-        <form string="Setup">
-          <group colspan="4">
-            <image name="gtk-dialog-info"/>
-            <group colspan="2" col="4">
-              <separator colspan="4" string="Installation Done"/>
-              <label align="0.0" colspan="4"
-                     string="Your new database is now fully installed."/>
-              <field name="installed_users" nolabel= "1" colspan="4"/>
-              <label align="0.0" colspan="4"
-                     string="You can start configuring the system or connect directly to the database as an administrator."/>
-            </group>
-          </group>
-          <separator string="" colspan="4"/>
-          <button name="menu" icon="gtk-ok" type="object"
-                  string="Use Directly"/>
-          <button name="config" icon="gtk-go-forward" type="object"
-                  string="Start Configuration"/>
-        </form>
-      </field>
-    </record>
+      <form string="Setup">
+      <group colspan="4" col="8">
+      	<group width="150">
+      		<image name="gtk-dialog-info"/>
+      	</group>
+      	<group>
+      		<separator string="Installation Done" colspan="8"/>
+      		<label align="0.0" string="Your new database is now fully installed." colspan="8"/>
+       		<field name="installed_users" nolabel= "1" colspan="8"/>
+       		<label align="0.0" colspan="8"	string="You can start configuring the system or connect directly to the database as an administrator."/>
+        </group>
+      </group>
+      <group colspan="8" col="8">
+    		<separator string="" colspan="8"/>
+    		<label string="" colspan="6"/>
+			<button name="menu" icon="gtk-ok" type="object" string="Use Directly" colspan="1"/>
+			<button name="config" icon="gtk-go-forward" type="object" string="Start Configuration" colspan="1"/>
+      </group>
+    </form>
+   </field>
+  </record>
 
     <record id="action_base_setup" model="ir.actions.act_window">
       <field name="name">Setup</field>
