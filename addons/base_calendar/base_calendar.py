@@ -178,28 +178,12 @@ html_invitation = """
                 </div>
                 </td>
             </tr>
-            <tr valign="top">
-                <td><b>Are you coming?</b></td>
-                <td><b>:</b></td>
-                <td colspan="3">
-                <UL>
-                    <LI>YES</LI>
-                    <LI>NO</LI>
-                    <LI>MAYBE</LI>
-                </UL>
-                </td>
-            </tr>
         </table>
         </td>
     </tr>
 </table>
 <table border="0" cellspacing="10" cellpadding="0" width="100%%"
     style="font-family: Arial, Sans-serif; font-size: 14">
-    <tr>
-        <td width="100%%"><b>Note:</b> If you are interested please reply this
-        mail and keep only your response from options <i>YES, NO</i>
-        and <i>MAYBE</i>.</td>
-    </tr>
     <tr>
         <td width="100%%">From:</td>
     </tr>
@@ -384,49 +368,6 @@ property or property parameter."),
     _defaults = {
         'state': lambda *x: 'needs-action', 
     }
-
-    response_re = re.compile("Are you coming\?.*\n*.*(YES|NO|MAYBE).*", re.UNICODE)
-
-    def msg_new(self, cr, uid, msg):
-        """ 
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks, 
-        """
-        return False
-
-    def msg_act_get(self, msg):
-        """
-        Get Message.
-        @param self: The object pointer
-        @return: dictionary of actions which contain state field value.
-        """
-
-        mailgate_obj = self.pool.get('mail.gateway')
-        body = mailgate_obj.msg_body_get(msg)
-        actions = {}
-        res = self.response_re.findall(body['body'])
-        if res:
-            actions['state'] = res[0]
-        return actions
-
-    def msg_update(self, cr, uid, ids, msg, data={}, default_act='None'):
-        """
-        Update msg state which may be accepted.declined.tentative.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of calendar attendee’s IDs.
-        @param context: A standard dictionary for contextual values
-        @return: True
-        """
-        msg_actions = self.msg_act_get(msg)
-        if msg_actions.get('state'):
-            if msg_actions['state'] in ['YES', 'NO', 'MAYBE']:
-                mapping = {'YES': 'accepted', 'NO': 'declined', 'MAYBE': 'tentative'}
-                status = mapping[msg_actions['state']]
-                print 'Got response for invitation id: %s as %s' % (ids, status)
-                self.write(cr, uid, ids, {'state': status})
-        return True
 
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
