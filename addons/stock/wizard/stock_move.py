@@ -141,7 +141,7 @@ class stock_move_scrap(osv.osv_memory):
         res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)        
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         location_obj = self.pool.get('stock.location')
-        scrpaed_location_ids = location_obj.search(cr, uid, [('scraped','=',True)])
+        scrpaed_location_ids = location_obj.search(cr, uid, [('scrap_location','=',True)])
         
         if 'product_id' in fields:
             res.update({'product_id': move.product_id.id})     
