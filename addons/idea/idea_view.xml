@@ -14,7 +14,8 @@
                     <field name="name" select="1"/>
                     <field name="parent_id" select="1"/>
                     <newline/>
-                    <field name="summary" colspan="4"/>
+                    <separator string="Summary" colspan="4"/>
+                    <field name="summary" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -128,6 +129,27 @@
         </form>
         </field>
     </record>
+    
+<!-- Search view for Idea vote -->
+
+    <record model="ir.ui.view" id="view_idea_vote_search">
+        <field name="name">idea.vote.search</field>
+        <field name="model">idea.vote</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+	        <search string="Ideas vote">
+	        	<group col="10" colspan="4">
+		            <field name="idea_id" widget="selection"/>
+		            <field name="user_id" widget="selection"/>
+				</group>
+				<newline/>
+	            <group expand="1" string="Group By..." colspan="14">
+	                <filter string="Idea" icon="terp-crm" domain="[]" context="{'group_by':'idea_id'}"/>
+	                <filter string="User" name="user" icon="terp-partner" domain="[]" context="{'group_by':'user_id'}"/>
+	            </group>
+	        </search>
+        </field>
+    </record>
 
 <!-- New Idea Form View -->
 
@@ -141,9 +163,12 @@
                 <page string="Idea">
                     <field name="title" select="1" />
                     <field name="category_id" select="1"/>
+                    <field name="date" />
                     <field name="user_id" select="1"/>
-                    <field name="vote_avg" />
-                    <field name="description" colspan="4" widget="text_wiki"/>
+                    <field name="vote_avg" widget="progressbar"/>
+                    <field name="vote_user"/>
+                    <separator string="Description" colspan="4"/>
+                    <field name="description" colspan="4" widget="text_wiki" nolabel="1"/>
                     <field name="state"/>
                     <group colspan="2" col="3">
                         <button name="idea_open" string="Open" states="draft" icon="gtk-go-forward"/>
@@ -154,8 +179,9 @@
                 <page string="Comments">
                     <field name="comment_ids" nolabel="1" colspan="4">
                         <form string="Comment">
-                            <separator string="Your comment" colspan="4"/>
-                            <field name="content" nolabel="1" />
+                        	<field name="user_id" colspan="2"/>
+                            <separator string="User comment" colspan="4"/>
+                            <field name="content" nolabel="1" colspan="4"/>
                         </form>
                     </field>
                 </page>
@@ -209,17 +235,25 @@
         <field name="arch" type="xml">
 	        <search string="Ideas">
 	        	<group col="10" colspan="4">
-		        	<filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Ideas"/>
+		        	<filter icon="terp-project" string="My" domain="[('user_id','=',uid)]" help="My Ideas"/>
 		        	<separator orientation="vertical"/>
-		        	<filter icon="gtk-execute" string="Draft"
+		        	<filter icon="terp-project" string="Draft"
 		        		domain="[('state','=','draft')]" help="Draft Ideas" />
-		        	<filter icon="gtk-execute" string="Open"
+		        	<filter icon="terp-project" string="Open"
 		        		domain="[('state','=','open')]" help="Open Ideas" />
 		        	<separator orientation="vertical"/>
 		            <field name="title" select="1"/>
-		            <field name="category_id" select="1"/>
-		            <field name="user_id" select="1"/>
+		            <field name="category_id" widget="selection"/>
+		            <field name="user_id" widget="selection"/>
 				</group>
+				<newline/>
+	            <group expand="1" string="Group By..." colspan="14">
+	                <filter string="Category" icon="terp-crm" domain="[]" context="{'group_by':'category_id'}"/>
+	                <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
+	                <separator orientation="vertical"/>
+	                <filter string="Idea date" icon="terp-crm" domain="[]" context="{'group_by':'date'}"/>
+	                <filter string="User" name="user" icon="terp-partner" domain="[]" context="{'group_by':'user_id'}"/>
+	            </group>
 	        </search>
         </field>
     </record>
@@ -327,6 +361,7 @@
         <field name="res_model">idea.vote</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_idea_vote_search"/>
     </record>
 
     <menuitem name="All Votes" parent="menu_ideas" id="menu_idea_vote" action="action_idea_vote"/>

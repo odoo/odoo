@@ -148,7 +148,6 @@ class idea_idea(osv.osv):
             if int(field_value) >= 0:
                 vote_obj.create(cr, uid, {'idea_id': id, 'user_id': uid, 'score': textual_value })
 
-
     _columns = {
         'user_id': fields.many2one('res.users', 'Creator', required=True, readonly=True),
         'title': fields.char('Idea Summary', size=64, required=True),
@@ -170,12 +169,16 @@ class idea_idea(osv.osv):
                                    opened by the user, the state is \'Opened\'.\
                                     \nIf the idea is accepted, the state is \'Accepted\'.'),
         'stat_vote_ids': fields.one2many('idea.vote.stat', 'idea_id', 'Statistics', readonly=True),
+        'date': fields.date('Creation date'),
+        'vote_user': fields.integer('Maximum Vote per User',
+                     help="Set to one if  you require only one Vote per user"),
     }
 
     _defaults = {
         'user_id': lambda self,cr,uid,context: uid,
         'my_vote': lambda *a: '-1',
-        'state': lambda *a: 'draft'
+        'state': lambda *a: 'draft',
+        'vote_user': lambda * a: 1,        
     }
     _order = 'id desc'
 
@@ -196,7 +199,6 @@ class idea_idea(osv.osv):
         return True
 idea_idea()
 
-
 class idea_comment(osv.osv):
     """ Apply Idea for Comment """
 
@@ -210,7 +212,7 @@ class idea_comment(osv.osv):
         'content': fields.text('Comment', required=True),
         'create_date': fields.datetime('Creation date', readonly=True),
     }
-
+    
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid
     }
@@ -230,14 +232,13 @@ class idea_vote(osv.osv):
     _columns = {
         'user_id': fields.many2one('res.users', 'User'),
         'idea_id': fields.many2one('idea.idea', 'Idea', required=True, ondelete='cascade'),
-        'score': fields.selection(VoteValues, 'Score', required=True)
+        'score': fields.selection(VoteValues, 'Score', required=True),
     }
     _defaults = {
         'score': lambda *a: DefaultVoteValue,
     }
 
 idea_vote()
-
 
 class idea_vote_stat(osv.osv):
     """ Idea votes Statistics """
