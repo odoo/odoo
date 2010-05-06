@@ -21,28 +21,29 @@
 
 
 {
-    'name': 'CRM Fundraising',
-    'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
-    'description': """Fundraising""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['crm'],
+    'name': 'CRM Fundraising', 
+    'version': '1.0', 
+    'category': 'Generic Modules/CRM & SRM', 
+    'description': """Fundraising""", 
+    'author': 'Tiny', 
+    'website': 'http://www.openerp.com', 
+    'depends': ['crm'], 
     'init_xml': [
-         'crm_fundraising_data.xml',
-    ],
+         'crm_fundraising_data.xml', 
+    ], 
 
     'update_xml': [
-        'crm_fundraising_view.xml',
-        'crm_fundraising_menu.xml',
-        'security/ir.model.access.csv',
-        'report/crm_fundraising_report_view.xml',
-    ],
+        'crm_fundraising_view.xml', 
+        'crm_fundraising_menu.xml', 
+        'security/ir.model.access.csv', 
+        'report/crm_fundraising_report_view.xml', 
+    ], 
     'demo_xml': [
-        'crm_fundraising_demo.xml',
-    ],
-    'installable': True,
-    'active': False,
+        'crm_fundraising_demo.xml', 
+    ], 
+    'test': ['test/test_crm_fund.yml'], 
+    'installable': True, 
+    'active': False, 
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

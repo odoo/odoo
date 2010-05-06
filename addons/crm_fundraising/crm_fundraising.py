@@ -22,7 +22,7 @@
 from osv import fields, osv, orm
 from crm import crm
 
-class crm_fundraising(osv.osv):
+class crm_fundraising(osv.osv, crm.crm_case):
     """ Fund Raising Cases """
 
     _name = "crm.fundraising"
@@ -31,6 +31,23 @@ class crm_fundraising(osv.osv):
     _inherit ='mailgate.thread'
 
     _columns = {
+            'name': fields.char('Name', size=128, required=True), 
+            'description': fields.text('Description'), 
+            'create_date': fields.datetime('Creation Date' , readonly=True), 
+            'write_date': fields.datetime('Update Date' , readonly=True), 
+            'date_deadline': fields.date('Deadline'), 
+            'user_id': fields.many2one('res.users', 'Responsible'), 
+            'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+                            select=True, help='Sales team to which Case belongs to.\
+                                 Define Responsible user and Email account for mail gateway.'), 
+            'company_id': fields.many2one('res.company', 'Company'), 
+            'partner_id': fields.many2one('res.partner', 'Partner'), 
+            'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                 domain="[('partner_id','=',partner_id)]"), 
+            'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
+                                 will receive a copy of the future" \
+                                " communication between partner and users by email"), 
+            'email_from': fields.char('Email', size=128, help="These people will receive email."), 
             'date_closed': fields.datetime('Closed', readonly=True), 
             'date': fields.datetime('Date'), 
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
@@ -63,13 +80,26 @@ class crm_fundraising(osv.osv):
                               "the partner mentality in relation to our services.The scale has" \
                             "to be created with a factor for each level from 0 \
                              (Very dissatisfied) to 10 (Extremely satisfied)."), 
+            'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
+                                  help='The state is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the state is set to \'Open\'.\
+                                  \nWhen the case is over, the state is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         }
 
     _defaults = {
-                 'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
-                 'probability':lambda *a:0.0, 
-                 'planned_cost':lambda *a:0.0, 
-                 'planned_revenue':lambda *a:0.0, 
-    }
+            'active': lambda *a: 1, 
+            'user_id': crm.crm_case._get_default_user, 
+            'partner_id': crm.crm_case._get_default_partner, 
+            'partner_address_id': crm.crm_case._get_default_partner_address, 
+            'email_from': crm.crm_case. _get_default_email, 
+            'state': lambda *a: 'draft', 
+            'section_id': crm.crm_case. _get_section, 
+            'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c), 
+            'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
+            'probability': lambda *a:0.0, 
+            'planned_cost': lambda *a:0.0, 
+            'planned_revenue': lambda *a:0.0, 
+            }
 
 crm_fundraising()
