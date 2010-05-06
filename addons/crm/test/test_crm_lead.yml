@@ -88,8 +88,7 @@
 -  
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref("crm_lead_newcustomer0"))
-    print "lead",  lead.partner_name
-    obj_opportunity = self.pool.get('crm.opportunity')
+    obj_opportunity = self.pool.get('crm.lead')
     ids = obj_opportunity.search(cr, uid, [('name', '=', lead.partner_name)])
     opportunity = obj_opportunity.browse(cr, uid, ids)[0]
     assert lead.partner_name == opportunity.partner_id.name

@@ -43,14 +43,17 @@ class crm_phonecall(osv.osv, crm_case):
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"), 
         'company_id': fields.many2one('res.company', 'Company'), 
-        'description': fields.text('Description'),  
+        'description': fields.text('Description'), 
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
-        'email_from': fields.char('Email', size=128, help="These people will receive email."),
-        
+        'email_from': fields.char('Email', size=128, help="These people will receive email."), 
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', \
+                            domain="[('section_id','=',section_id),\
+                            ('object_id.model', '=', 'crm.phonecall')]"), 
+        'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
         'duration': fields.float('Duration'), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
