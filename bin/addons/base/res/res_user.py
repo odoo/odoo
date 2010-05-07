@@ -210,6 +210,14 @@ class users(osv.osv):
                 result = map(override_password, result)
         return result
 
+
+    def _check_company(self, cr, uid, ids, context=None):
+        return all(this.company_id in this.company_ids for this in self.browse(cr, uid, ids, context))
+
+    _constraints = [
+        (_check_company, 'The chosen company is not in the allowed companies', ['company_id', 'company_ids']),
+    ]
+
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  _('You can not have two users with the same login !'))
     ]
@@ -225,12 +233,18 @@ class users(osv.osv):
         ids = self.pool.get('ir.ui.menu').search(cr, uid, [('usage','=','menu')])
         return ids and ids[0] or False
 
-    def _get_company(self,cr, uid, context={}, uid2=False):
+    def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
             uid2 = uid
         user = self.pool.get('res.users').read(cr, uid, uid2, ['company_id'], context)
         company_id = user.get('company_id', False)
         return company_id and company_id[0] or False
+
+    def _get_companies(self, cr, uid, context=None):
+        c = self._get_company(cr, uid, context)
+        if c:
+            return [c]
+        return False
 
     def _get_menu(self,cr, uid, context={}):
         ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')])
@@ -247,6 +261,7 @@ class users(osv.osv):
         'menu_id': _get_menu,
         'action_id': _get_menu,
         'company_id': _get_company,
+        'company_ids': _get_companies,
         'groups_id': _get_group,
         'address_id': False,
     }
