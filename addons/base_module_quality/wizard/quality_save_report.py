@@ -45,9 +45,7 @@ def get_detail(self, cr, uid, datas, context={}):
     data = pooler.get_pool(cr.dbname).get('module.quality.detail').browse(cr, uid, datas['id'])
     if not data.detail:
         raise wizard.except_wizard(_('Warning'), _('No report to save!'))
-    buf = cStringIO.StringIO(data.detail)
-    out = base64.encodestring(buf.getvalue())
-    buf.close()
+    out = base64.encodestring(data.detail)
     return {'module_file': out, 'name': data.name + '.html'}
 
 class save_report(wizard.interface):
