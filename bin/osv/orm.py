@@ -1153,12 +1153,8 @@ class orm_template(object):
         def check_group(node):
             if node.get('groups'):
                 groups = node.get('groups').split(',')
-                can_see = False
                 access_pool = self.pool.get('ir.model.access')
-                for group in groups:
-                    can_see = can_see or access_pool.check_groups(cr, user, group)
-                    if can_see:
-                        break
+                can_see = any(access_pool.check_groups(cr, user, group) for group in groups)
                 if not can_see:
                     node.set('invisible', '1')
                     if 'attrs' in node.attrib:
@@ -1199,7 +1195,8 @@ class orm_template(object):
                     column = False
 
                 if column:
-                    relation = column._obj
+                    relation = self.pool.get(column._obj)
+
                     childs = False
                     views = {}
                     for f in node:
@@ -1207,7 +1204,7 @@ class orm_template(object):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
-                            xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, view_id, ctx)
+                            xarch, xfields = relation.__view_look_dom_arch(cr, user, f, view_id, ctx)
                             views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields
@@ -1215,7 +1212,13 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
                         if not check_group(node):
-                            attrs['selection'] = []
+                            # the field is just invisible. default value must be in the selection
+                            name = node.get('name')
+                            default = self.default_get(cr, user, [name], context=context).get(name)
+                            if default:
+                                attrs['selection'] = relation.name_get(cr, 1, default, context=context)
+                            else:
+                                attrs['selection'] = []
                         # We can not use the 'string' domain has it is defined according to the record !
                         else:
                             dom = []
@@ -1223,7 +1226,7 @@ class orm_template(object):
                                 dom = column._domain
                             dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
                             context.update(eval(node.get('context','{}')))
-                            attrs['selection'] = self.pool.get(relation)._name_search(cr, user, '', dom, context=context, limit=None, name_get_uid=1)
+                            attrs['selection'] = relation._name_search(cr, user, '', dom, context=context, limit=None, name_get_uid=1)
                             if (node.get('required') and not int(node.get('required'))) or not column.required:
                                 attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
