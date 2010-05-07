@@ -53,7 +53,6 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
 """)
         self.min_score = 30
-        return None
 
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)

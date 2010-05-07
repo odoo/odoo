@@ -166,28 +166,24 @@ class abstract_quality_check(object):
         style = '''
             <style>
                 .divstyle {
-                border:1px solid #aaaaaa;
-                background-color:#f9f9f9;
-                padding:5px;
+                    border:1px solid #aaaaaa;
+                    background-color:#f9f9f9;
+                    padding:5px;
                 }
-                .tablestyle
-                {
-                border:1px dashed gray;
+                .tablestyle {
+                    border:1px dashed gray;
                 }
-                .tdatastyle
-                {
-                border:0.5px solid gray;
+                .tdatastyle {
+                    border:0.5px solid gray;
                 }
-                .head
-                {
-                color: black;
-                background: none;
-                font-weight: normal;
-                margin: 0;
-                padding-top: .5em;
-                padding-bottom: .17em;
-                border-bottom: 1px solid #aaa;
-                }
+                .head {
+                    color: black;
+                    background: none;
+                    font-weight: normal;
+                    margin: 0;
+                    padding-top: .5em;
+                    padding-bottom: .17em;
+                    border-bottom: 1px solid #aaa;
                 }
           </style> '''
         return style
