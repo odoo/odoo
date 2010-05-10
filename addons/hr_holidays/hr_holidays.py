@@ -196,7 +196,7 @@ class hr_holidays(osv.osv):
         if ids:
             cr.execute('select number_of_days_temp from hr_holidays where id in ('+','.join(map(str, ids))+')')
             res =  cr.fetchall()
-            if res and res[0][0] < 0:
+            if res and res[0][0] and res[0][0] < 0:
                 return False
         return True
 
