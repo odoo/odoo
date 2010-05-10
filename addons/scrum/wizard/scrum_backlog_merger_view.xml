@@ -9,7 +9,7 @@
                <form string="Merge Backlogs">
         			<separator string="Are you sure you want to merge these Backlogs?" colspan="4"/>
 					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            	    <button name="check" string="Merge Backlogs" type="object" icon="gtk-convert"/>
+            	    <button name="check_backlogs" string="Merge Backlogs" type="object" icon="gtk-execute"/>
     			</form>
             </field>
 		</record>
@@ -27,11 +27,12 @@
             <field name="model">scrum.backlog.merge</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-               <form string="Select Project">
+               <form string="Merge Backlogs">
+               		<separator string="Select the Project" colspan="4"/>
                		<field name="project_id"/>
-        			<separator string="Slelect the Project" colspan="4"/>
+        			<separator colspan="4"/>
 					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            	    <button name="do_merge" string="ok" type="object" icon="gtk-convert"/>
+            	    <button name="do_merge" string="Merge Backlogs" type="object" icon="gtk-execute"/>
     			</form>
             </field>
 		</record>

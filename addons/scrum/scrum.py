@@ -95,7 +95,7 @@ class scrum_sprint(osv.osv):
         'active' : fields.boolean('Active', help="If Active field is set to true, it will allow you to select sprint from task list view. "),
         'date_start': fields.date('Starting Date', required=True),
         'date_stop': fields.date('Ending Date', required=True),
-        'project_id': fields.many2one('project.project', 'Project', domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
+        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True),
         'scrum_master_id': fields.many2one('res.users', 'Scrum Master', required=True),
         'meeting_ids': fields.one2many('scrum.meeting', 'sprint_id', 'Daily Scrum'),
