@@ -170,7 +170,12 @@
                     <field name="ref2" colspan="4"/>
 
                     <field name="log_ids" nolabel="1" colspan="4">
-                        <form string="Actions">
+                        <tree string="Logs">
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </tree>
+                        <form string="Logs">
                             <separator string="Action Information" colspan="4"/>
                             <field name="name" colspan="4"/>
                             <field name="date"/>
