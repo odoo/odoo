@@ -222,7 +222,13 @@
 -
   I receive both the products. My incoming pickings are done.
 -
-  !function {model: stock.move.split, name: split_lot}:
-    - model: stock.picking
-      search: "[('origin','in',['PO00001:SCHEDULER','PO00002:SCHEDULER','PO00003:OP/00002','PO00004:OP/00003']),('type','=','in')]"
-   
+  !record {model: stock.partial.picking, id: stock_partial_picking0}:
+    date: '2010-04-30 16:53:36'
+    partner_id: base.res_partner_asus
+    address_id: base.res_partner_address_tang
+-
+  !python {model: stock.partial.picking}: |
+     pick_obj = self.pool.get('stock.picking')
+     picking_ids = pick_obj.search(cr, uid, [('origin','in',['PO00001:SCHEDULER','PO00002:SCHEDULER','PO00003:OP/00002','PO00004:OP/00003']),('type','=','in')])
+     self.do_partial(cr, uid, [1],context={'active_ids': picking_ids})
+     
