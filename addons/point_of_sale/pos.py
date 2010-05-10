@@ -287,7 +287,7 @@ class pos_order(osv.osv):
         'date_payment': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date',  store=True),
         'date_validity': fields.date('Validity Date', required=True),
         'user_id': fields.many2one('res.users', 'Connected Salesman', readonly=True),
-        'user_saleman': fields.many2one('res.users', 'Salesman', required=True),
+        'user_salesman_id': fields.many2one('res.users', 'Salesman', required=True),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_all, method=True, string='Taxes',digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
@@ -496,12 +496,12 @@ class pos_order(osv.osv):
                     if line.product_id and line.product_id.type=='service':
                         continue
                     prop_ids = self.pool.get("ir.property").search(cr, uid, [('name', '=', 'property_stock_customer')])
-                    val = self.pool.get("ir.property").browse(cr, uid, prop_ids[0]).value
+                    val = self.pool.get("ir.property").browse(cr, uid, prop_ids[0]).value_reference
                     cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order.shop_id.warehouse_id.id))
                     res=cr.fetchone()
                     location_id=res and res[0] or None
 #                    location_id = order and order.shop_id and order.shop_id.warehouse_id and order.shop_id.warehouse_id.lot_stock_id.id or None
-                    stock_dest_id = int(val.split(',')[1])
+                    stock_dest_id = val.id
                     if line.qty < 0:
                         location_id, stock_dest_id = stock_dest_id, location_id
 
@@ -610,7 +610,7 @@ class pos_order(osv.osv):
         if 'payment_name' in data.keys():
             args['name'] = data['payment_name'] + ' ' +order.name
         account_def = self.pool.get('ir.property').get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
-        args['account_id'] = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def or curr_c.account_receivable.id
+        args['account_id'] = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def.id or curr_c.account_receivable.id
         if data.get('is_acc',False):
             args['is_acc']=data['is_acc']
             args['account_id']= prod_obj.browse(cr,uid, data['product_id']).property_account_income and prod_obj.browse(cr,uid, data['product_id']).property_account_income.id
@@ -703,7 +703,7 @@ class pos_order(osv.osv):
         inv_ids = []
 
         for order in self.browse(cr, uid, ids, context):
-            curr_c = order.user_saleman.company_id
+            curr_c = order.user_salesman_id.company_id
             if order.invoice_id:
                 inv_ids.append(order.invoice_id.id)
                 continue
@@ -980,8 +980,8 @@ class pos_order(osv.osv):
                     create_contract_nb = True
                     break
             if create_contract_nb:
-                seq = sequence_obj.get(cr, uid, 'pos.user_%s' % pos.user_saleman.login)
-                vals['contract_number'] ='%s-%s' % (pos.user_saleman.login, seq)
+                seq = sequence_obj.get(cr, uid, 'pos.user_%s' % pos.user_salesman_id.login)
+                vals['contract_number'] ='%s-%s' % (pos.user_salesman_id.login, seq)
         self.write(cr, uid, ids, vals)
 
     def action_paid(self, cr, uid, ids, context=None):

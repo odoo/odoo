@@ -43,7 +43,8 @@ class pos_make_payment(osv.osv_memory):
          @return: A dictionary which of fields with values. 
         """
         res = super(pos_make_payment, self).default_get(cr, uid, fields, context=context)
-        record_id = context and context.get('record_id',False)  
+        
+        active_id = context and context.get('active_id',False)  
         j_obj = self.pool.get('account.journal')
         company_id = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
         journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
@@ -55,14 +56,14 @@ class pos_make_payment(osv.osv_memory):
         wf_service = netsvc.LocalService("workflow")
 
         order_obj=self.pool.get('pos.order')
-        order = order_obj.browse(cr, uid, record_id, context)
+        order = order_obj.browse(cr, uid, active_id, context)
         #get amount to pay
         amount = order.amount_total - order.amount_paid
         if amount <= 0.0:
             context.update({'flag': True})
-            order_obj.action_paid(cr, uid, [record_id], context)
+            order_obj.action_paid(cr, uid, [active_id], context)
         elif order.amount_paid > 0.0:
-            order_obj.write(cr, uid, [record_id], {'state': 'advance'})
+            order_obj.write(cr, uid, [active_id], {'state': 'advance'})
         invoice_wanted_checked = False
     
         current_date = time.strftime('%Y-%m-%d')
@@ -81,11 +82,11 @@ class pos_make_payment(osv.osv_memory):
         
     def view_init(self, cr, uid, fields_list, context=None):
         res = super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
-        record_id = context and context.get('record_id', False) or False        
-        order = self.pool.get('pos.order').browse(cr, uid, record_id)
+        active_id = context and context.get('active_id', False) or False        
+        order = self.pool.get('pos.order').browse(cr, uid, active_id)
         if not order.lines:
-                raise osv.except_osv('Error!','No order lines defined for this sale ')
-        True
+            raise osv.except_osv('Error!','No order lines defined for this sale ')
+        return True
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ 
@@ -99,21 +100,26 @@ class pos_make_payment(osv.osv_memory):
              @return: New arch of view.
         
         """
-        record_id = context and context.get('record_id', False) or False        
-        res = super(pos_make_payment, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        if record_id:
-            order = self.pool.get('pos.order').browse(cr, uid, record_id)
-            if order.amount_total == order.amount_paid:
-                res['arch'] = """ <form string="Make Payment" colspan="4">
-                                <group col="2" colspan="2">
-                                    <label string="Do you want to print the Receipt?" colspan="4"/>
-                                    <separator colspan="4"/>
-                                    <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                                    <button name="print_report" string="Print Receipt" type="object" icon="gtk-print"/>
-                                </group>
-                            </form>
-                        """
-        return res
+     
+                
+        result = super(pos_make_payment, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        active_model = context.get('active_model')
+        active_id = context.get('active_id', False)
+        if not active_id or (active_model and active_model != 'pos.order'):
+            return result                  
+                 
+        order = self.pool.get('pos.order').browse(cr, uid, active_id)
+        if order.amount_total == order.amount_paid:
+            res['arch'] = """ <form string="Make Payment" colspan="4">
+                            <group col="2" colspan="2">
+                                <label string="Do you want to print the Receipt?" colspan="4"/>
+                                <separator colspan="4"/>
+                                <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
+                                <button name="print_report" string="Print Receipt" type="object" icon="gtk-print"/>
+                            </group>
+                        </form>
+                    """                                   
+        return result
 
     def check(self, cr, uid, ids, context=None):
         
@@ -121,10 +127,10 @@ class pos_make_payment(osv.osv_memory):
         if the order is not paid: continue payment,
         if the order is paid print invoice (if wanted) or ticket.
         """
-        record_id = context and context.get('record_id',False)      
+        active_id = context and context.get('active_id',False)      
         order_obj = self.pool.get('pos.order')
         jrnl_obj = self.pool.get('account.journal')        
-        order = order_obj.browse(cr, uid, record_id, context)
+        order = order_obj.browse(cr, uid, active_id, context)
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids)[0]
         
@@ -134,35 +140,35 @@ class pos_make_payment(osv.osv_memory):
             jrnl_used=False
             if data.get('journal',False):
                 jrnl_used=jrnl_obj.browse(cr,uid,data['journal'])
-            order_obj.write(cr, uid, [record_id], {'invoice_wanted': invoice_wanted})
-            order_obj.add_payment(cr, uid, record_id, data, context=context)            
+            order_obj.write(cr, uid, [active_id], {'invoice_wanted': invoice_wanted})
+            order_obj.add_payment(cr, uid, active_id, data, context=context)            
         # Todo need to check
 #        if amount<=0.0:
 #            context.update({'flag':True})
-#            order_obj.action_paid(cr,uid,[record_id],context)
-        if order_obj.test_paid(cr, uid, [record_id]):
+#            order_obj.action_paid(cr,uid,[active_id],context)
+        if order_obj.test_paid(cr, uid, [active_id]):
             if order.partner_id and order.invoice_wanted:
                 return self.create_invoice(cr,uid,ids,context)
             else:
                 context.update({'flag': True})                
-                order_obj.action_paid(cr,uid,[record_id],context)                
-                order_obj.write(cr, uid, [record_id],{'state':'paid'})                            
+                order_obj.action_paid(cr,uid,[active_id],context)                
+                order_obj.write(cr, uid, [active_id],{'state':'paid'})                            
                 return self.print_report(cr, uid, ids, context)  
         if order.amount_paid > 0.0:
             context.update({'flag': True})
             # Todo need to check
-            order_obj.action_paid(cr, uid, [record_id], context)            
-            self.pool.get('pos.order').write(cr, uid, [record_id],{'state':'advance'})
+            order_obj.action_paid(cr, uid, [active_id], context)            
+            self.pool.get('pos.order').write(cr, uid, [active_id],{'state':'advance'})
             return self.print_report(cr, uid, ids, context)            
         return {}
 
     
     def create_invoice(self, cr, uid, ids, context):
         wf_service = netsvc.LocalService("workflow")
-        record_ids = [context and context.get('record_id',False)]      
-        for i in record_ids:
+        active_ids = [context and context.get('active_id',False)]      
+        for i in active_ids:
             wf_service.trg_validate(uid, 'pos.order', i, 'invoice', cr)
-        datas = {'ids' : context.get('record_id', [])}        
+        datas = {'ids' : context.get('active_id', [])}        
         return { 
                 'type' : 'ir.actions.report.xml',
                 'report_name':'pos.invoice',
@@ -180,8 +186,8 @@ class pos_make_payment(osv.osv_memory):
          @param context: A standard dictionary 
          @return : retrun report
         """        
-        record_id=context.get('record_id',[])        
-        datas = {'ids' : [record_id]}
+        active_id=context.get('active_id',[])        
+        datas = {'ids' : [active_id]}
         res =  {}        
         datas['form'] = res
 

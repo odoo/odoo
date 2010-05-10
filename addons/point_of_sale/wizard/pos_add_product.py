@@ -63,7 +63,7 @@ class add_product(osv.osv_memory):
         }
     def close_action(self, cr, uid, ids, context):
 
-        record_id = context and context.get('record_id', False)
+        record_id = context and context.get('active_id', False)
         order_obj= self.pool.get('pos.order')
         order_line_obj= self.pool.get('pos.order.line')
         obj=order_obj.browse(cr,uid, record_id)
@@ -71,7 +71,7 @@ class add_product(osv.osv_memory):
         if obj.amount_total != obj.amount_paid:
             return {
             'name': _('Make Payment'),
-            'context ':context and context.get('record_id', False),
+            'context ':context and context.get('active_id', False),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.make.payment',
