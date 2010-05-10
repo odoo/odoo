@@ -459,7 +459,7 @@ property or property parameter."),
             event.add('location').value = event_obj.location
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
-        
+
         if event_obj.alarm_id:
             # computes alarm data
             valarm = event.add('valarm')
@@ -480,10 +480,10 @@ property or property parameter."),
             if interval == 'minutes':
                 delta = timedelta(minutes=duration)
             trigger.value = delta
-    
+
             # Compute other details
             valarm.add('DESCRIPTION').value = alarm_data['name'] or 'OpenERP'
-        
+
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
             attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
@@ -492,7 +492,7 @@ property or property parameter."),
             attendee_add.value = 'MAILTO:' + attendee.email
         res = cal.serialize()
         return res
-    
+
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context={}):
         """
         Send mail for calendar attendee.
@@ -1367,23 +1367,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                     if until_date:
                         continue
                     until_date = arg[2]
-                else:
-                        args_without_date.append(arg)
-       # args.append(('rrule_type', '=', 'none'))
-        res = super(calendar_event, self).search(cr, uid, args, offset, limit, order, context, count)
-        if start_date and until_date:
-             recur_args = [('rrule_type', '!=', 'none'), ('date', '<=', until_date), '|', ('end_date', '=', False), ('end_date', '>=', start_date)]
-             recur_args.extend(args_without_date)
-             recur_res = super(calendar_event, self).search(cr, uid, recur_args, offset, limit, order, context, count)
-
-        if not isinstance(res, list):
-            res = [res]
-        if not isinstance(recur_res, list):
-            recur_res = [recur_res]
-
-        res.extend(recur_res)
-        res = list(set(res))
+        res = super(calendar_event, self).search(cr, uid, args_without_date, \
+                                 offset, limit, order, context, count)
         return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
+
 
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
