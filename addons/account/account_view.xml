@@ -1712,7 +1712,7 @@
 	      		</xpath>
                 <group string="res_config_contents" position="replace">
                   <field name="company_id"  widget="selection"
-                         groups="base.group_multi_company"/>
+                         />
                   <field name ="code_digits" />
                   <field name="chart_template_id"/>
                   <field name ="seq_journal" />
@@ -1721,12 +1721,12 @@
                     <form string="Bank Information">
                       <field name="acc_name"/>
                       <field name="account_type"/>
-                      <field name="currency_id"/>
+                      <field name="currency_id" widget="selection"/>
                     </form>
                     <tree editable="bottom" string="Bank Information">
                       <field name="acc_name"/>
                       <field name="account_type"/>
-                      <field name="currency_id"/>
+                      <field name="currency_id" widget="selection"/>
                     </tree>
                   </field>
                 </group>

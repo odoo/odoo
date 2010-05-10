@@ -34,11 +34,11 @@
 	      <group colspan="8">
 	      <group colspan="4" height="450" width="600">
             <field name="charts"/>
-            <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
+            <group colspan="4" attrs="{'invisible':[('charts','!=','l10n_chart_configurable')]}">
             	<field name="sale_tax" colspan="2"/>
             	<field name="purchase_tax" colspan="2"/>
             </group>
-             <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
+             <group colspan="4" attrs="{'invisible':[('charts','!=','l10n_chart_configurable')]}">
             	<separator col="4" colspan="4" string="Bank and Cost Account"/>
             	 <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
             	 	<form string="Bank Information">

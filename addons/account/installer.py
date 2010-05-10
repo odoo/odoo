@@ -37,7 +37,6 @@ class account_installer(osv.osv_memory):
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids)),
                    key=itemgetter(1)))
-        charts.insert(0,('configurable','Configurable Chart of Account'))
         return charts
 
 #    def default_get(self, cr, uid, fields_list=None, context=None):
@@ -85,7 +84,7 @@ class account_installer(osv.osv_memory):
         'period':lambda *a:'month',
         'sale_tax':lambda *a:0.0,
         'purchase_tax':lambda *a:0.0,
-        'charts':'configurable',
+        'charts':'l10n_chart_configurable',
         }
 
     def on_change_start_date(self, cr, uid, id, start_date):
@@ -99,7 +98,7 @@ class account_installer(osv.osv_memory):
         super(account_installer, self).execute(cr, uid, ids, context=context)
         record = self.browse(cr, uid, ids, context=context)[0]
         for res in self.read(cr,uid,ids):
-            if record.charts == 'configurable':
+            if record.charts == 'l10n_chart_configurable':
                 obj_acc = self.pool.get('account.account')
                 obj_tax = self.pool.get('account.tax')
                 user_type = self.pool.get('account.account.type')
