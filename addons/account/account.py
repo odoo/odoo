@@ -438,11 +438,30 @@ class account_account(osv.osv):
                 raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
         return True
 
+    def _check_allow_type_change(self, cr, uid, ids, new_type, context):
+        group1 = ['payable', 'receivable', 'other']
+        group2 = ['consolidation','view']
+        line_obj = self.pool.get('account.move.line')
+        for account in self.browse(cr, uid, ids, context=context):
+            old_type = account.type
+            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])])
+            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+                #Check for 'Closed' type
+                if old_type == 'closed' and new_type !='closed':
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type which contains account entries!"))
+                #Check for change From group1 to group2 and vice versa
+                if (old_type in group1 and new_type in group2) or (old_type in group2 and new_type in group1):
+                    print " fdsfdsgdsfgdfgdfg "
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from '%s' to '%s' type as it contains account entries!") % (old_type,new_type,))
+        return True
+
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
+        if context is None:
             context = {}
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context)
+        if 'type' in vals.keys(): 
+            self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context={}):
