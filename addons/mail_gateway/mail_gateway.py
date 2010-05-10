@@ -59,7 +59,7 @@ class mailgate_thread(osv.osv):
         model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
         domain +=  [('model_id', '=', model_ids[0])]
         for case in self.browse(cr, uid, ids, context):
-            domain1 =  domain + [('res_id', '=', case.id)]
+            domain1 = domain + [('res_id', '=', case.id)]
             history_ids = history_obj.search(cr, uid, domain1, context=context)
             if history_ids:
                 result[case.id] = {name: history_ids}
@@ -84,7 +84,8 @@ class mailgate_message(osv.osv):
     '''
     _name = 'mailgate.message'
     _description = 'Mailgateway Message'
-    
+    _order = 'date desc'
+
     _columns = {
         'name':fields.char('Message', size=64),
         'thread_id':fields.many2one('mailgate.thread', 'Thread'),
