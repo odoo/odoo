@@ -95,8 +95,7 @@ class document_directory(osv.osv):
         'user_id': lambda self,cr,uid,ctx: uid,
         'domain': lambda self,cr,uid,ctx: '[]',
         'type': lambda *args: 'directory',
-        'ressource_id': lambda *a: 0,
-        'parent_id': _get_root_directory,
+        'ressource_id': lambda *a: 0,        
         'storage_id': _get_def_storage,
     }
     _sql_constraints = [
@@ -202,52 +201,11 @@ class document_directory(osv.osv):
                 raise
 
 
-    def _locate_child(self, cr,uid, root_id, uri,nparent, ncontext):
+    def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
         """ try to locate the node in uri,
             Return a tuple (node_dir, remaining_path)
         """
-        did = root_id
-        duri = uri
-        path = []
-        context = ncontext.context        
-        while len(duri):            
-            nid = self.search(cr,uid,[('parent_id','=',did),('name','=',duri[0]),('type','=','directory')], context=context)            
-            if not nid:
-                break
-            if len(nid)>1:
-                print "Duplicate dir? p= %d, n=\"%s\"" %(did,duri[0])
-            path.append(duri[0])
-            duri = duri[1:]
-            did = nid[0]
-        root_node = did and self.browse(cr,uid,did, context) or False
-        return (nodes.node_dir(path, nparent,ncontext, root_node), duri)
-
-        
-        nid = self.search(cr,uid,[('parent_id','=',did),('name','=',duri[0]),('type','=','ressource')], context=context)
-        if nid:
-            if len(nid)>1:
-                print "Duplicate dir? p= %d, n=\"%s\"" %(did,duri[0])
-            path.append(duri[0])
-            duri = duri[1:]
-            did = nid[0]
-            return nodes.node_res_dir(path, nparent,ncontext,self.browse(cr,uid,did, context))
-
-        # Here, we must find the appropriate non-dir child..
-        # Chech for files:
-        fil_obj = self.pool.get('ir.attachment')
-        nid = fil_obj.search(cr,uid,[('parent_id','=',did),('name','=',duri[0])],context=context)
-        if nid:
-                if len(duri)>1:
-                        # cannot treat child as a dir
-                        return None
-                if len(nid)>1:
-                        print "Duplicate file?",did,duri[0]
-                path.append(duri[0])
-                return nodes.node_file(path,nparent,ncontext,fil_obj.browse(cr,uid,nid[0],context))
-        
-        print "nothing found:",did, duri
-        #still, nothing found
-        return None
+        return (nodes.node_database(context=ncontext), uri)         
         
     def old_code():
         if not uri:

@@ -18,8 +18,8 @@
             res_model="crm.phonecall"
             src_model="crm.opportunity"
             view_mode="calendar,tree,form"
-            context="{'default_duration': 1.0}"
-            domain="[('user_id','=',uid)]"
+            context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
+            domain="[('user_id','=',uid),('opportunity_id', '=', active_id)]"
             view_type="form"/>
 
      <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">

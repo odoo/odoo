@@ -84,10 +84,11 @@ class project_issue(osv.osv):
                     resource_id = False
                     if issue.user_id:
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
-                        resource_id = len(resource_ids) and resource_ids[0] or False
+                        if resource_ids and len(resource_ids):
+                            resource_id = resource_ids[0]
 
                     duration = float(ans.days)
-                    if issue.section_id.resource_calendar_id:
+                    if issue.section_id and issue.section_id.resource_calendar_id:
                         duration =  float(ans.days) * 24
                         new_dates = cal_obj.interval_get(cr,
                             uid,
