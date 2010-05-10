@@ -35,7 +35,7 @@
             <field eval="&quot;&quot;&quot;Sale Order Requisition&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Drives procurement orders for every sale order line.&quot;&quot;&quot;" name="note"/>
             <field name="subflow_id" ref="process_process_salesprocess0"/>
-            <field name="process_id" ref="mrp.process_process_procurementprocess0"/>
+            <field name="process_id" ref="mrp_procurement.process_process_procurementprocess0"/>
             <field eval="&quot;&quot;&quot;object.state in ('draft', 'waiting_date', 'manual', 'progress', 'shipping_except', 'invoice_except', 'done', 'cancel')&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
@@ -63,12 +63,12 @@
         </record>
 
         <record id="process_node_saleprocurement0" model="process.node">
-            <field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
-            <field name="model_id" ref="mrp.model_mrp_procurement"/>
+            <field name="menu_id" ref="mrp_procurement.menu_mrp_procurement_action"/>
+            <field name="model_id" ref="mrp_procurement.model_mrp_procurement"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;One Procurement order for each sale order line and for each of the components.&quot;&quot;&quot;" name="note"/>
-            <field name="subflow_id" ref="mrp.process_process_procurementprocess0"/>
+            <field name="subflow_id" ref="mrp_procurement.process_process_procurementprocess0"/>
             <field name="process_id" ref="process_process_salesprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
@@ -202,7 +202,7 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement of sold material&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;For every sale order line, a procurement order is created to supply the sold product.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="mrp.process_node_procureproducts0"/>
+            <field model="process.node" name="target_node_id" ref="mrp_procurement.process_node_procureproducts0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleorderprocurement0"/>
         </record>
 
