@@ -212,7 +212,7 @@ class users(osv.osv):
 
 
     def _check_company(self, cr, uid, ids, context=None):
-        return all(this.company_id in this.company_ids for this in self.browse(cr, uid, ids, context))
+        return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
 
     _constraints = [
         (_check_company, 'The chosen company is not in the allowed companies', ['company_id', 'company_ids']),
