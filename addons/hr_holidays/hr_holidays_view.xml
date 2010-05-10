@@ -45,12 +45,12 @@
                 <form string="Leave Request">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="holiday_type"/>
+                        <field name="holiday_type" attrs="{'readonly':[('state','!=','draft')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General">
 	                        <group colspan="4" attrs="{'invisible':[('holiday_type','=','employee')]}">
-	   	                    	<field name="category_id" select="1" attrs="{'required':[('holiday_type','=','category')]}"/>
+	   	                    	<field name="category_id" select="1" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')]}"/>
 	   	                    </group>
 	   	                    <group colspan="4" attrs="{'invisible':[('holiday_type','=','category')]}">
 	                        	<field name="employee_id" select="1" attrs="{'required':[('holiday_type','=','employee')]}"/>
@@ -87,11 +87,11 @@
                 <form string="Allocation Request">
                     <field name="name" select="1"/>
                     <field name="holiday_status_id" select="1" />
-                    <field name="holiday_type"/>
+                    <field name="holiday_type" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Type"/>
                     <notebook colspan="4">
                         <page string="General">
 		                    <group colspan="4" attrs="{'invisible':[('holiday_type','=','employee')]}">
-		   	                    	<field name="category_id" select="1" attrs="{'required':[('holiday_type','=','category')]}"/>
+		   	                    	<field name="category_id" select="1" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')]}"/>
 		   	                    </group>
 		   	                <group colspan="4" attrs="{'invisible':[('holiday_type','=','category')]}">
 		                    	<field name="employee_id" select="1" attrs="{'required':[('holiday_type','=','employee')]}"/>

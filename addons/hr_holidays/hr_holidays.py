@@ -134,7 +134,7 @@ class hr_holidays(osv.osv):
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
         'category_id': fields.many2one('hr.employee.category', "Employee Category", help='Category Of employee'),
-        'holiday_type': fields.selection([('employee','Employee Request'),('category','Employee Category Request')], 'Holiday Type'),
+        'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Holiday Type', help='By Employee: Allocate/Request for individual Employee, By Employee Category: Allocate/Request for group of employees in category'),
             }
 
     _defaults = {
