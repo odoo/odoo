@@ -649,6 +649,16 @@ class account_invoice(osv.osv):
             if res and res['value']:
                 self.write(cr, uid, [inv.id], res['value'])
         return True
+    
+    def finalize_invoice_move_lines(self, cr, uid, invoice_browse, move_lines):
+        """finalize_invoice_move_lines(cr, uid, invoice, move_lines) -> move_lines
+        Hook method to be overridden in additional modules to verify and possibly alter the 
+        move lines to be created by an invoice, for special cases.
+        :param invoice_browse: browsable record of the invoice that is generating the move lines
+        :param move_lines: list of dictionaries with the account.move.lines (as for create())
+        :return: the (possibly updated) final move_lines to create for this invoice 
+        """
+        return move_lines
 
     def check_tax_lines(self, cr, uid, inv, compute_taxes, ait_obj):
         if not inv.tax_line:
