@@ -2051,9 +2051,9 @@ class stock_warehouse(osv.osv):
 #       'partner_id': fields.many2one('res.partner', 'Owner'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
         'partner_address_id': fields.many2one('res.partner.address', 'Owner Address'),
-        'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True),
-        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True),
-        'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True),
+        'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True, domain=[('usage','<>','view')]),
+        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','<>','view')]),
+        'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True, domain=[('usage','<>','view')]),
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
