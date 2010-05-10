@@ -91,6 +91,11 @@ class base_setup_installer(osv.osv_memory):
         'crm': True,
         }
 
+
+    def onchange_moduleselection(self, cr, uid, ids, *args):
+        progress = self._progress(cr, uid) - (2.5 * len(filter(lambda x: x==1, args)))
+        return {'value':{'progress':progress}}
+
     def modules_to_install(self, cr, uid, ids, context=None):
         modules = super(base_setup_installer, self).modules_to_install(cr, uid, ids, context=context)
         interface_id = self.pool.get('res.config.view').search(cr, uid, [])
