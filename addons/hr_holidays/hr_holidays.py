@@ -108,11 +108,11 @@ class hr_holidays(osv.osv):
     _description = "Holidays"
     _order = "type desc, date_from asc"
 
-#    def _employee_get(obj, cr, uid, context=None):
-#        ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
-#        if ids:
-#            return ids[0]
-#        return False
+    def _employee_get(obj, cr, uid, context=None):
+        ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+        if ids:
+            return ids[0]
+        return False
 
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
@@ -138,7 +138,7 @@ class hr_holidays(osv.osv):
             }
 
     _defaults = {
-#        'employee_id' : _employee_get ,
+        'employee_id' : _employee_get ,
         'state' : 'draft',
         'type': 'remove',
         'allocation_type': 'employee',
@@ -149,11 +149,15 @@ class hr_holidays(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if context:
-            if context.has_key('type'):
-                vals['type'] = context['type']
-            if context.has_key('allocation_type'):
-                vals['allocation_type'] = context['allocation_type']
+        if 'holiday_type' in vals:
+            if vals['holiday_type'] == 'employee':
+                vals.update({'category_id': False})
+            else:
+                vals.update({'employee_id': False})
+        if context.has_key('type'):
+            vals['type'] = context['type']
+        if context.has_key('allocation_type'):
+            vals['allocation_type'] = context['allocation_type']
         return super(hr_holidays, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -165,6 +169,16 @@ class hr_holidays(osv.osv):
             else:
                 vals.update({'employee_id': False})
         return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+
+    def onchange_type(self, cr, uid, ids, holiday_type):
+        result = {}
+        if holiday_type=='employee':
+            ids_employee = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+            if ids_employee:
+                result['value'] = {
+                    'employee_id': ids_employee[0]
+                                    }
+        return result
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
         result = {}
