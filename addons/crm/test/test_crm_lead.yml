@@ -40,6 +40,11 @@
 -   
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_lead_newcustomer0")])
+- |
+  I check that lead is now in 'open' state.
+-
+  !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in open state}:
+     - state == "open"  
        
 -  |
    As the lead seems to be a real business opportunity, I will convert it to a
@@ -48,8 +53,8 @@
 -  
    !python {model: crm.lead}: |
      lead = self.browse(cr, uid, ref('crm_lead_newcustomer0'))
-     if not lead.partner_id:
-       self.convert_opportunity(cr, uid, [ref("crm_lead_newcustomer0")], {'active_ids': [ref("crm_lead_newcustomer0")]})
+     action = self.convert_opportunity(cr, uid, [ref("crm_lead_newcustomer0")], {'active_ids': [ref("crm_lead_newcustomer0")]})
+     assert action['res_model'] == 'crm.lead2opportunity.partner'
 -
    |
    Now, select "create a new partner" option in this wizard.
@@ -78,8 +83,8 @@
    I can check that a lead and a business opportunity is now assigned to this
    lead.
 -
-  # !python {model: crm.lead, id: crm_lead_newcustomer0}: 
-    #   - opportunity_id.id != False
+   # !python {model: crm.lead, id: crm_lead_newcustomer0}: 
+   #   - opportunity_id == False
          
 -  |
    I check that the partner associated to this lead as the same country, phone number
@@ -87,7 +92,6 @@
 -  
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref("crm_lead_newcustomer0"))
-    print "lead",  lead.partner_name
     obj_opportunity = self.pool.get('crm.opportunity')
     ids = obj_opportunity.search(cr, uid, [('name', '=', lead.partner_name)])
     opportunity = obj_opportunity.browse(cr, uid, ids)[0]

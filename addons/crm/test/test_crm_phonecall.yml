@@ -4,44 +4,56 @@
   !record {model: crm.phonecall, id: crm_phonecall_interviewcall0}:
     date: '2010-04-21 18:59:00'
     name: Interview call
-    partner_address_id: base.res_partner_address_1
-    partner_id: base.res_partner_9
-    partner_mobile: (+32)2 211 34 83
     section_id: crm.section_sales_department
+- |
+  Now , I select partner by click on "Create a Partner" button.
+  	 
+- 
+  !record {model: crm.phonecall2partner, id: crm_phonecall2partner_1}:
+    action: exist
+    partner_id: base.res_partner_9
+
+- 
+  Now, click on "Continue" button of this wizard.
+- 
+  !python {model: crm.phonecall2partner}: |
+    self.make_partner(cr, uid, [ref("crm_phonecall2partner_1")], {"active_ids": [ref("crm_phonecall_interviewcall0")]})    
     
 - |
   As the success of phonecall seems to be a real business opportunity, I will convert
   it to opportunity by clicking on the "Convert to Opportunity" button.
+- 
+  !record {model: crm.phonecall2opportunity, id: crm_phonecall2opportunity_interviewcall0}:
+    name: Interview call
+    partner_id: base.res_partner_9
+    planned_revenue: 0.0
+    probability: 0.0  
+-
+   Now, I click on "Convert" button of this wizard.    
 -    
-#  !python {model: crm.phonecall2opportunity}: |
-#    self.action_apply(cr, uid, [1], {'active_id': ref('crm_phonecall_interviewcall0')})  
-
+  !python {model: crm.phonecall2opportunity}: |
+     self.action_apply(cr, uid, [ref("crm_phonecall2opportunity_interviewcall0")], {"active_id": ref("crm_phonecall_interviewcall0")})
 -
   # This is not working, find a way to do that in YAML
-      
+  
 - |
   I can see that a business opportunity is now assigned to this phonecall
-- |
-  I check that the partner associated to this as the same country, phone number
-  and name than the phonecall.
-- |
-  In order to avoid the duplication of similar partner, OpenERP should be able to
-  detect if the partner exists or if it should be created from the phonecall during the
-  conversion.
-- |
-  In order to test this, I log as the user "user_crm2"
-- |
-  Then, I create the same phonecall than the preceeding one but I change the name
-  of the phonecall.  But this customer keeps the same email.
-- |
-  This time OpenERP should detect that this customer already exists in the
-  partner base and I check that in the wizard, proposes me to link to this existing
-  partner instead of creating another one.
-- |
-  I confirm the conversion wizard.
+-
+  !assert {model: crm.phonecall, id: crm_phonecall_interviewcall0}:
+      - opportunity_id == True
+      
 - |
   And I check that the phonecall and the newly created business opportunity is linked
-  to the partner
+  to same  partner
+-
+  !python {model:  crm.phonecall}: | 
+    xid= ref('crm_phonecall_interviewcall0')
+    obj_phonecall = self.browse(cr, uid, xid)
+    ids = self.pool.get('crm.opportunity').search(cr, uid, [('name', '=', obj_phonecall.opportunity_id.name)])
+    obj_opp = self.pool.get('crm.opportunity').browse(cr, uid, ids)[0]
+    print "obj_opp", obj_opp, obj_phonecall
+    assert obj_phonecall.partner_id == obj_opp.partner_id
+  
 - |
   I schedule Meeting on this current phonecall by clicking on "schedule
   Meeting"
