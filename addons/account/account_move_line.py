@@ -774,6 +774,17 @@ class account_move_line(osv.osv):
             result['fields'] = self.fields_get(cr, uid, fields, context)
         return result
 
+    def _check_moves(self, cr, uid, context):
+        # use the first move ever created for this journal and period
+        cr.execute('select id, state, name from account_move where journal_id=%s and period_id=%s order by id limit 1', (context['journal_id'],context['period_id']))
+        res = cr.fetchone()
+        if res:
+            if res[1] != 'draft':
+                raise osv.except_osv(_('UserError'),
+                       _('The account move (%s) for centralisation ' \
+                                'has been confirmed!') % res[2])
+        return res
+
     def unlink(self, cr, uid, ids, context={}, check=True):
         self._update_check(cr, uid, ids, context)
         result = False
@@ -786,7 +797,7 @@ class account_move_line(osv.osv):
         return result
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
-        if not context:
+        if context is None:
             context={}
         if vals.get('account_tax_id', False):
             raise osv.except_osv(_('Unable to change tax !'), _('You can not change the tax, you should remove and recreate lines !'))
@@ -802,6 +813,24 @@ class account_move_line(osv.osv):
         if vals.get('date', False):
             todo_date = vals['date']
             del vals['date']
+            
+        for line in self.browse(cr, uid, ids,context=context):
+            ctx = context.copy()
+            if ('journal_id' not in ctx):
+                if line.move_id:
+                   ctx['journal_id'] = line.move_id.journal_id.id
+                else:
+                    ctx['journal_id'] = line.journal_id.id
+            if ('period_id' not in ctx):
+                if line.move_id:
+                    ctx['period_id'] = line.move_id.period_id.id
+                else:
+                    ctx['period_id'] = line.period_id.id  
+            #Check for centralisation  
+            journal = self.pool.get('account.journal').browse(cr, uid, ctx['journal_id'], context=ctx)
+            if journal.centralisation:
+                self._check_moves(cr, uid, context=ctx)
+
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
 
         if check:
@@ -867,14 +896,9 @@ class account_move_line(osv.osv):
         is_new_move = False
         if not move_id:
             if journal.centralisation:
-                # use the first move ever created for this journal and period
-                cr.execute('select id, state, name from account_move where journal_id=%s and period_id=%s order by id limit 1', (context['journal_id'],context['period_id']))
-                res = cr.fetchone()
+                #Check for centralisation
+                res = self._check_moves(cr, uid, context)
                 if res:
-                    if res[1] != 'draft':
-                        raise osv.except_osv(_('UserError'),
-                                _('The Ledger Posting (%s) for centralisation ' \
-                                        'has been confirmed!') % res[2])
                     vals['move_id'] = res[0]
 
             if not vals.get('move_id', False):
