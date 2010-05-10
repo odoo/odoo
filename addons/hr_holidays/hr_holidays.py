@@ -96,6 +96,7 @@ class hr_holidays_status(osv.osv):
         'max_leaves': fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
         'leaves_taken': fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
         'remaining_leaves': fields.function(_user_left_days, method=True, string='Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
+        'double_validation': fields.boolean('Apply Double Validation', help="If its True then its Allocation/Request have to be validated by second validator")
     }
     _defaults = {
         'color_name': 'red',
@@ -117,7 +118,7 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate', 'Validated'), ('cancel', 'Cancelled')], 'State', readonly=True, help='When the holiday request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Validation\'.\
+        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate1', 'Waiting Second Validation'), ('validate', 'Validated'), ('cancel', 'Cancelled')], 'State', readonly=True, help='When the holiday request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Validation\'.\
             If the admin accepts it, the state is \'Validated\'. If it is refused, the state is \'Refused\'.'),
         'date_from' : fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}),
         'user_id':fields.many2one('res.users', 'User', states={'draft':[('readonly',False)]}, select=True, readonly=True),
@@ -136,6 +137,7 @@ class hr_holidays(osv.osv):
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
         'category_id': fields.many2one('hr.employee.category', "Employee Category", help='Category Of employee'),
         'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Holiday Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category'),
+        'manager_id2': fields.many2one('hr.employee', 'Second Validator', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
             }
 
     _defaults = {
@@ -259,18 +261,16 @@ class hr_holidays(osv.osv):
             wf_service.trg_create(uid, 'hr.holidays', holiday_id, cr)
         return True
 
-    def holidays_validate(self, cr, uid, ids, *args):
-        self.check_holidays(cr, uid, ids)
-        vals = {
-            'state':'validate',
-        }
+    def holidays_validate2(self, cr, uid, ids, *args):
+        vals = {'state':'validate'}
+        data_holiday = self.browse(cr, uid, ids)
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
         if ids2:
-            vals['manager_id'] = ids2[0]
+            vals['manager_id2'] = ids2[0]
         else:
             raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
         self.write(cr, uid, ids, vals)
-        for record in self.browse(cr, uid, ids):
+        for record in data_holiday:
             if record.holiday_type=='employee' and record.type=='remove':
                 vals= {
                    'name':record.name,
@@ -281,6 +281,33 @@ class hr_holidays(osv.osv):
                    'resource_id':record.employee_id.resource_id.id
                      }
                 self.pool.get('resource.calendar.leaves').create(cr, uid, vals)
+        return True
+
+    def holidays_validate(self, cr, uid, ids, *args):
+        data_holiday = self.browse(cr, uid, ids)
+        self.check_holidays(cr, uid, ids)
+        if data_holiday[0].holiday_status_id.double_validation:
+            vals = {'state':'validate1'}
+        else:
+            vals = {'state':'validate'}
+        ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+        if ids2:
+            vals['manager_id'] = ids2[0]
+        else:
+            raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
+        self.write(cr, uid, ids, vals)
+        if data_holiday[0].holiday_status_id.double_validation:
+            for record in data_holiday:
+                if record.holiday_type=='employee' and record.type=='remove':
+                    vals= {
+                       'name':record.name,
+                       'date_from':record.date_from,
+                       'date_to':record.date_to,
+                       'calendar_id':record.employee_id.calendar_id.id,
+                       'company_id':record.employee_id.company_id.id,
+                       'resource_id':record.employee_id.resource_id.id
+                         }
+                    self.pool.get('resource.calendar.leaves').create(cr, uid, vals)
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
@@ -310,6 +337,7 @@ class hr_holidays(osv.osv):
                 'number_of_days': nb,
                 'user_id': user_id
             })
+            cr.commit()
         return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
