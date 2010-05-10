@@ -60,7 +60,6 @@
         <field name="arch" type="xml">
             <tree string="Funds Tree"
                 colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
-                <field name="id" />
                 <field name="name" string="Fund Description" />
                 <field name="categ_id" />
                 <field name="type_id" string="Payment Mode" />
@@ -68,6 +67,7 @@
                 <field name="probability" />
                 <field name="user_id" />
                 <field name="state" />
+                <field name="partner_id" invisible="1"/>
                 <button name="case_close" string="Done"
                     states="open,draft,pending" type="object"
                     icon="gtk-close" />
@@ -261,22 +261,22 @@
             <field name="arch" type="xml">
                 <search string="Search Funds">
                    <group col='6' colspan='4'>
+                       <filter icon="gtk-new" string="Current"
+                           domain="[('state','in',('draft', 'open'))]" name="current"
+                           help="Current Funds" />
+                       <filter icon="gtk-yes" string="Open"
+                           domain="[('state','=','open')]"
+                           help="Open Funds" />
+                       <filter icon="gtk-media-pause"
+                           string="Pending"
+                           domain="[('state','=','pending')]"
+                           help="Pending Funds" />
+                       <separator orientation="vertical" />
                        <filter icon="terp-partner" string="My Funds"
                            default="1" domain="[('user_id','=',uid)]"
                            separator="1"
                            help="Funds Related to Current User"
                            />
-                       <separator orientation="vertical" />
-                       <filter icon="gtk-new" string="Current Funds"
-                           domain="[('state','in',('draft', 'open'))]"
-                           help="Current Funds" />
-                       <filter icon="gtk-yes" string="Open Funds"
-                           domain="[('state','=','open')]"
-                           help="Open Funds" />
-                       <filter icon="gtk-media-pause"
-                           string="Pending Funds"
-                           domain="[('state','=','pending')]"
-                           help="Pending Funds" />
                        <separator orientation="vertical" />
                        <field name="state" select="1" />
                        <field name="name" select='1'
@@ -292,6 +292,19 @@
                                domain="[('section_id','=',context.get('section_id',False))]"
                                help="My section" />
                        </field>
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Group By..." colspan="10" col="20">
+                       <filter string="Partner" icon="terp-partner"
+                           domain="[]"
+                           context="{'group_by':'partner_id'}" />
+                       <filter string="Responsible" icon="terp-crm"
+                           domain="[]"
+                           context="{'group_by':'user_id'}" />
+                       <separator orientation="vertical" />
+                       <filter string="Type" icon="terp-project"
+                           domain="[]"
+                           context="{'group_by':'type_id'}" />
                    </group>
                </search>
             </field>

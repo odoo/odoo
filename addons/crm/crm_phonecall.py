@@ -84,6 +84,7 @@ class crm_phonecall(osv.osv, crm_case):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
         'state': lambda *a: 'draft', 
+        'active': lambda *a: 1, 
     }
     
     # From crm.case

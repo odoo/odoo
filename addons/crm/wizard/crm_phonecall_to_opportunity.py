@@ -97,7 +97,6 @@ Call Could not convert into Opportunity"))
                                 'type': 'opportunity', 
                                 'phone': case.partner_phone or False,
                             })
-                new_opportunity = opp_obj.browse(cr, uid, new_opportunity_id)
                 vals = {
                             'partner_id': this.partner_id.id,
                             'opportunity_id' : new_opportunity_id,

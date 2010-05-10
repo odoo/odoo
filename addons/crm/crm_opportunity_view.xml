@@ -274,7 +274,7 @@
             <search string="Search Opportunities">
                 <filter icon="terp-project"
                     string="Current"
-                    default="1"
+                    name="current"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-project"
                     string="Open"
@@ -311,7 +311,7 @@
                         help="My section" />
                 </field>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="16">
+                <group expand="0" string="Group By..." colspan="16">
                     <filter string="Stage" icon="terp-crm" domain="[]"
                         context="{'group_by':'stage_id'}" />
                     <filter string="Priority" icon="terp-crm" domain="[]"

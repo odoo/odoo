@@ -270,7 +270,7 @@
             <search string="Search Leads">
                 <filter icon="terp-project"
                     string="Current"
-                    default="1"
+                    default="1" name="current"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-project"
                     string="Open"
@@ -313,7 +313,7 @@
                         help="Show Sales Team"/>
                 </field>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="14">
+                <group expand="0" string="Group By..." colspan="14">
                     <filter string="Stage" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Source" icon="terp-crm" domain="[]" context="{'group_by':'categ_id'}"/>

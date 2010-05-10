@@ -31,6 +31,7 @@ class crm_fundraising(osv.osv, crm.crm_case):
     _inherit ='mailgate.thread'
 
     _columns = {
+            'id': fields.integer('ID'), 
             'name': fields.char('Name', size=128, required=True), 
             'description': fields.text('Description'), 
             'create_date': fields.datetime('Creation Date' , readonly=True), 

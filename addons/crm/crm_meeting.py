@@ -55,7 +55,8 @@ class crm_meeting(osv.osv, crm_case):
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
-        
+        'id': fields.integer('ID'),
+
         # Meeting fields
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
@@ -74,7 +75,8 @@ class crm_meeting(osv.osv, crm_case):
     }
 
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': lambda *a: 'draft', 
+        'active': lambda *a: 1, 
     }
 
     def open_meeting(self, cr, uid, ids, context=None):
