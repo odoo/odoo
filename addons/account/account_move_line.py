@@ -1031,7 +1031,7 @@ class account_move_line(osv.osv):
         #    if context and ('__last_update' in context):
         #        del context['__last_update']
         #    self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
-        if check and not context.get('no_store_function'):
+        if check and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)
