@@ -132,18 +132,14 @@
                 </notebook>
             </field>
         </record>
-
-        <record id="hr_contract_type_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.type.view.form</field>
-            <field name="model">hr.contract.type</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Contract Type">
-                    <field colspan="4" name="name" select="1"/>
-                </form>
-            </field>
+        <record id="action_hr_marital_status" model="ir.actions.act_window">
+            <field name="name">Marital Status</field>
+            <field name="res_model">hr.employee.marital.status</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-
+        <menuitem action="action_hr_marital_status" id="hr_menu_marital_status" parent="hr.menu_hr_configuration"/>
+        
         <record id="hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
             <field name="model">hr.contract</field>
@@ -177,17 +173,6 @@
                     </page>
                     </notebook>
                 </form>
-            </field>
-        </record>
-
-        <record id="hr_contract_type_view_tree" model="ir.ui.view">
-            <field name="name">hr.contract.type.view.tree</field>
-            <field name="model">hr.contract.type</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Contract Type">
-                    <field colspan="4" name="name"/>
-                </tree>
             </field>
         </record>
 
