@@ -538,13 +538,13 @@ class account_journal(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
-        if not context:
+        if context is None:
             context={}
         ids = []
         if name:
-            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 account_journal()
 
