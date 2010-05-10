@@ -114,7 +114,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 mrp_procurement mp on (mp.move_id=m.id)
             WHERE
-                p.sale_id = ANY(%s) GROUP BY mp.state, p.sale_id''')
+                p.sale_id = ANY(%s) GROUP BY mp.state, p.sale_id''',(ids,))
         for oid, nbr, mp_state in cr.fetchall():
             if mp_state == 'cancel':
                 continue
