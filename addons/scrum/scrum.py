@@ -228,7 +228,7 @@ class scrum_product_backlog(osv.osv):
     _defaults = {
         'state': 'draft',
         'active':  1,
-        'user_id': lambda self,cr,uid,context: uid,
+        'user_id': lambda self, cr, uid, context: uid,
     }
     _order = "sequence"
 scrum_product_backlog()
