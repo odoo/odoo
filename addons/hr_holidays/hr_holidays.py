@@ -86,6 +86,7 @@ class hr_holidays_status(osv.osv):
             res = self.get_days(cr, uid, ids, employee_id, return_false, context=context)
         return res
 
+    # To do: we can add remaining_leaves_category field to display remaining leaves for particular type
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Category', domain="[('object_id.model', '=', 'crm.meeting')]", help='If you link this type of leave with a category in the CRM, it will synchronize each leave asked with a case in this category, to display it in the company shared calendar for example.'),
@@ -134,7 +135,7 @@ class hr_holidays(osv.osv):
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
         'category_id': fields.many2one('hr.employee.category', "Employee Category", help='Category Of employee'),
-        'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Holiday Type', help='By Employee: Allocate/Request for individual Employee, By Employee Category: Allocate/Request for group of employees in category'),
+        'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Holiday Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category'),
             }
 
     _defaults = {
