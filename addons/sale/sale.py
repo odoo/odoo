@@ -436,7 +436,7 @@ class sale_order(osv.osv):
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term': pay_term,
-            'fiscal_position': order.partner_id.property_account_position.id,
+            'fiscal_position': order.partner_id.property_account_position.id or order.fiscal_position.id,
             'date_invoice' : context.get('date_invoice',False),
             'company_id' : order.company_id.id,
         }

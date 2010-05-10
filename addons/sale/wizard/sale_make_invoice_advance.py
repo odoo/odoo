@@ -95,7 +95,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                     'currency_id' :sale.pricelist_id.currency_id.id,
                     'comment': '',
                     'payment_term':sale.payment_term.id,
-                    'fiscal_position': sale.partner_id.property_account_position.id
+                    'fiscal_position': sale.partner_id.property_account_position.id or sale.fiscal_position.id
                     }
                 
                 inv_id = inv_obj.create(cr, uid, inv)
