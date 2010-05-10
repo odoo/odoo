@@ -106,17 +106,19 @@ class sale_order(osv.osv):
         for id in ids:
             res[id] = [0.0, 0.0]
         cr.execute('''SELECT
-                p.sale_id,sum(m.product_qty), m.state
+                p.sale_id,sum(m.product_qty), mp.state as mp_state
             FROM
                 stock_move m
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
+            LEFT JOIN
+                mrp_procurement mp on (mp.move_id=m.id)
             WHERE
-                p.sale_id = ANY(%s) GROUP BY m.state, p.sale_id''',(ids,))
-        for oid, nbr, state in cr.fetchall():
-            if state == 'cancel':
+                p.sale_id = ANY(%s) GROUP BY mp.state, p.sale_id''')
+        for oid, nbr, mp_state in cr.fetchall():
+            if mp_state == 'cancel':
                 continue
-            if state == 'done':
+            if mp_state == 'done':
                 res[oid][0] += nbr or 0.0
                 res[oid][1] += nbr or 0.0
             else:
