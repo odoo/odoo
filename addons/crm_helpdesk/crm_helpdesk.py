@@ -47,17 +47,15 @@ class crm_helpdesk(osv.osv, crm.crm_case):
             'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"), 
             'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
-                                 will receive a copy of the future" \
-                                " communication between partner and users by email"), 
+ will receive a copy of the future" \
+" communication between partner and users by email"), 
             'email_from': fields.char('Email', size=128, help="These people will receive email."), 
             'date': fields.datetime('Date'), 
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128), 
             'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128), 
             'canal_id': fields.many2one('res.partner.canal', 'Channel', \
                             help="The channels represent the different communication \
-                             modes available with the customer." \
-                            " With each commercial opportunity, you can indicate\
-                             the canall which is this opportunity source."), 
+ modes available with the customer."), 
             'planned_revenue': fields.float('Planned Revenue'), 
             'planned_cost': fields.float('Planned Costs'), 
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
