@@ -532,7 +532,7 @@ class actions_server(osv.osv):
 
     def run(self, cr, uid, ids, context={}):
         logger = netsvc.Logger()
-
+        print "::ODS",ids
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
             obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
@@ -580,7 +580,7 @@ class actions_server(osv.osv):
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Partner Email address not Specified!')
                     continue
                 if not user:
-                    raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
+                    raise osv.except_osv(_('Error'), _("Please specify server option --email-from !"))
 
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
