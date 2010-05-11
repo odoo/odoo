@@ -1279,7 +1279,7 @@ class account_tax_code(osv.osv):
     _description = 'Tax Code'
     _rec_name = 'code'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True),
+        'name': fields.char('Tax Case Name', size=64, required=True, translate=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'sum': fields.function(_sum_year, method=True, string="Year Sum"),
