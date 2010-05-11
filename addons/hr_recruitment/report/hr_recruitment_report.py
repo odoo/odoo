@@ -38,7 +38,8 @@ class hr_recruitment_report(osv.osv):
         'date': fields.date('Date', readonly=True),
         'date_closed': fields.date('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]",readonly=True),
+        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
+#        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]",readonly=True),
         'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
@@ -90,3 +91,4 @@ class hr_recruitment_report(osv.osv):
         """)
 hr_recruitment_report()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

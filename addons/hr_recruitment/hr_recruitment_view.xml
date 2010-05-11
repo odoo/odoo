@@ -7,12 +7,12 @@
     # ------------------------------------------------------
 
     <record id="hr_job_categ_action" model="ir.actions.act_window">
-        <field name="name">Applicant Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-           <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
-        <field name="context">{'object_id':'hr.applicant'}</field>
+		<field name="name">Applicant Categories</field>
+		<field name="res_model">crm.case.categ</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+		<field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
+		<field name="context">{'object_id':'hr.applicant'}</field>
     </record>
     # ------------------------------------------------------
     # Stage
@@ -70,19 +70,19 @@
             <form string="Jobs - Recruitment Form">
                 <group colspan="4" col="8">
                     <field name="name" string="Subject"/>
-                    <label string="Stage: " align="1.0"/>
-                    <group colspan="1" col="2">
-                        <field name="stage_id" nolabel="1"/>
-                        <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
-                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                    </group>
+                    <field name="partner_name"/>
                     <field name="user_id"/>
                     <button string="Schedule a Phone Call"
                         name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
 						icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
                     <newline/>
-                    <field name="partner_name"/>
+                    <label string="Stage: " align="1.0"/>
+                    <group colspan="1" col="4">
+                        <field name="stage_id" nolabel="1"/>
+                        <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
+                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                    </group>
                     <field name="job_id"/>
                     <field name="department_id" widget="selection"/>
                     <button name="action_makeMeeting" type="object"
@@ -108,7 +108,7 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Qualification"/>
-                            <field name="type_id"/>
+                            <field name="type_id" domain="[('object_id.model', '=', 'hr.applicant')]"/>
                             <field name="priority" string="Appreciation"/>
                         </group>
                         <group col="2" colspan="2">
@@ -265,6 +265,37 @@
             </field>
         </field>
     </record>
+
+<!-- Stage Tree View -->
+
+	<record model="ir.ui.view" id="hr_recruitment_stage_tree">
+	    <field name="name">hr.recruitment.stage.tree</field>
+	    <field name="model">hr.recruitment.stage</field>
+	    <field name="type">tree</field>
+	    <field name="arch" type="xml">
+	        <tree string="Stages">
+	            <field name="sequence"/>
+	            <field name="name"/>
+	        </tree>
+	    </field>
+	</record>
+
+<!-- Stage Form View -->
+
+	<record model="ir.ui.view" id="hr_recruitment_stage_form">
+	    <field name="name">hr.recruitment.stage.form</field>
+	    <field name="model">hr.recruitment.stage</field>
+	    <field name="type">form</field>
+	    <field name="arch" type="xml">
+	        <form string="Stage">
+	            <separator string="Stage Definition" colspan="4"/>
+	            <field name="name" select="1"/>
+	            <field name="sequence"/>
+	            <separator string="Requirements" colspan="4"/>
+	            <field name="requirements" nolabel="1" colspan="4"/>
+	        </form>
+	    </field>
+	</record>
 
     </data>
 </openerp>
