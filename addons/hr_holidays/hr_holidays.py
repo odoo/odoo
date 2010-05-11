@@ -163,14 +163,16 @@ class hr_holidays(osv.osv):
                     self.unlink(cr,uid,list_ids)
 
     def _check_date(self, cr, uid, ids):
-        if ids:
-            cr.execute('select number_of_days_temp from hr_holidays where id in ('+','.join(map(str, ids))+')')
-            res =  cr.fetchall()
-            if res and res[0][0] < 0:
+        for rec in self.read(cr, uid, ids, ['number_of_days','date_from','date_to']):
+            if rec['number_of_days'] < 0:
+                return False
+            date_from = time.strptime(rec['date_from'], '%Y-%m-%d %H:%M:%S')
+            date_to = time.strptime(rec['date_to'], '%Y-%m-%d %H:%M:%S')
+            if date_from > date_to:
                 return False
         return True
-
-    _constraints = [(_check_date, 'Start date should not be larger than end date! ', ['number_of_days'])]
+    
+    _constraints = [(_check_date, 'Start date should not be larger than end date!\nNumber of Days should be greater than 1!', ['number_of_days'])]
 
 
     def unlink(self, cr, uid, ids, context={}):
