@@ -220,7 +220,10 @@ class hr_holidays(osv.osv):
     _constraints = [(_check_date, 'Start date should not be larger than end date! ', ['number_of_days'])]
 
     def unlink(self, cr, uid, ids, context={}):
+        leave_obj = self.pool.get('resource.calendar.leaves')
         self._update_user_holidays(cr, uid, ids)
+        leave_ids = leave_obj.search(cr, uid, [('holiday_id', 'in', ids)])
+        leave_obj.unlink(cr, uid, leave_ids)
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_to(self, cr, uid, ids, date_from, date_to):
@@ -272,13 +275,14 @@ class hr_holidays(osv.osv):
         self.write(cr, uid, ids, vals)
         for record in data_holiday:
             if record.holiday_type=='employee' and record.type=='remove':
-                vals= {
+                vals = {
                    'name':record.name,
                    'date_from':record.date_from,
                    'date_to':record.date_to,
                    'calendar_id':record.employee_id.calendar_id.id,
                    'company_id':record.employee_id.company_id.id,
-                   'resource_id':record.employee_id.resource_id.id
+                   'resource_id':record.employee_id.resource_id.id,
+                   'holiday_id':record.id
                      }
                 self.pool.get('resource.calendar.leaves').create(cr, uid, vals)
         return True
@@ -299,13 +303,14 @@ class hr_holidays(osv.osv):
         if not data_holiday[0].holiday_status_id.double_validation:
             for record in data_holiday:
                 if record.holiday_type=='employee' and record.type=='remove':
-                    vals= {
+                    vals = {
                        'name':record.name,
                        'date_from':record.date_from,
                        'date_to':record.date_to,
                        'calendar_id':record.employee_id.calendar_id.id,
                        'company_id':record.employee_id.company_id.id,
-                       'resource_id':record.employee_id.resource_id.id
+                       'resource_id':record.employee_id.resource_id.id,
+                       'holiday_id':record.id
                          }
                     self.pool.get('resource.calendar.leaves').create(cr, uid, vals)
         return True
@@ -351,16 +356,20 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, *args):
+        leave_obj = self.pool.get('resource.calendar.leaves')
         self._update_user_holidays(cr, uid, ids)
         self.write(cr, uid, ids, {
             'state':'cancel'
             })
+        leave_ids = leave_obj.search(cr, uid, [('holiday_id', 'in', ids)])
+        leave_obj.unlink(cr, uid, leave_ids)
         return True
 
     def holidays_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'draft'
         })
+        self.pool.get('resource.calendar.leaves')
         return True
 
     def check_holidays(self, cr, uid, ids):
@@ -425,4 +434,12 @@ class hr_holidays(osv.osv):
         return True
 hr_holidays()
 
+class resource_calendar_leaves(osv.osv):
+    _inherit = "resource.calendar.leaves"
+    _description = "Leave Detail"
+    _columns = {
+        'holiday_id': fields.many2one("hr.holidays", "Holiday"),
+                }
+
+resource_calendar_leaves()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

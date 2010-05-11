@@ -341,6 +341,19 @@
             id="menu_open_view_holiday_status"
             parent="hr.menu_open_view_attendance_reason_config"/>
 
+	<!-- holiday on resource leave -->
+        <record id="resource_calendar_leave_form_inherit" model="ir.ui.view">
+            <field name="name">resource.calendar.leaves.form.inherit</field>
+            <field name="model">resource.calendar.leaves</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="resource.resource_calendar_leave_form"/>
+            <field name="arch" type="xml">
+            	<field name="resource_id"  on_change="onchange_resource(resource_id)" position="after">
+            		<field name="holiday_id"/>
+            	</field>
+            </field>
+    	</record>
+
     <!--  Shortcuts -->
         <act_window name="Holidays"
             domain="[('employee_id', '=', active_id), ('type','=','remove')]"
