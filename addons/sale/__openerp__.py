@@ -60,6 +60,7 @@
 #        'process/sale_process.xml',
     ],
     'demo_xml': ['sale_demo.xml'],
+#    'test': ['test/sale_procurement.yml'],
     'installable': True,
     'active': False,
     'certificate': '0058103601429',
