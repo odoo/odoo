@@ -95,10 +95,11 @@
     ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0002')])
     self.write(cr,uid,ids[0],{'exclusive': 'exclusive' })
 -
- I confirm and validate the RfQ of Asustek      
+ I confirm and validate the RfQ of ASUStek      
 -
  !python {model: purchase.order}: |
-    purchase_id= self.search(cr, uid, [('name','=','PO00003')])[0]
+    partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','ASUStek')])[0]
+    purchase_id= self.search(cr, uid, [('partner_id','=','partner_id)])[0]
     import netsvc
     wf_service = netsvc.LocalService("workflow")  
     if purchase_id:
@@ -108,6 +109,6 @@
   I check that RfQ of DistriPC is cancelled.
 -        
   !python {model: purchase.order}: |
-   purchase_id= self.search(cr, uid, [('name','=','PO00004')])[0]  
+   partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]
    state=self.browse(cr,uid,purchase_id).state
    assert (state=='cancel')

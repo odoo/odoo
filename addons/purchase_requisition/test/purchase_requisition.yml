@@ -108,12 +108,15 @@
 - 
   !python {model: purchase.order}: |
     line_obj=self.pool.get('purchase.order.line')  
-    purchase_id1= self.search(cr, uid, [('name','=','PO00001')])
-    purchase_id2= self.search(cr, uid, [('name','=','PO00002')])
+    partner_obj=self.pool.get('res.partner')    
+    partner_id1=partner_obj.search(cr,uid,[('name','=','ASUStek')])[0] 
+    partner_id2=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]   
+    purchase_id1= self.search(cr, uid, [('partner_id','=',partner_id1)])
+    purchase_id2= self.search(cr, uid, [('partner_id','=',partner_id2)])
     order_line1=self.browse(cr, uid, purchase_id1, context)[0].order_line[0].id
-    order_line2=self.browse(cr, uid, purchase_id2, context)[0].order_line[0].id    
-    line_obj.write(cr, uid, [order_line1], {'product_qty':2})
-    line_obj.write(cr, uid, [order_line2], {'product_qty':3})  
+    order_line2=self.browse(cr, uid, purchase_id2, context)[0].order_line[0].id
+    line_obj.write(cr, uid, order_line1, {'product_qty':2})
+    line_obj.write(cr, uid, order_line2, {'product_qty':3})  
 -
   I confirm and validate both purchase orders
   
@@ -143,7 +146,9 @@
 -
   !python {model: stock.picking }: |
    import time
-   picking_id = self.search(cr, uid, [('origin','=','PO00001:TEST/TENDER/0001'),('type','=','in')])
+   partner_obj=self.pool.get('res.partner')    
+   partner_id=partner_obj.search(cr,uid,[('name','=','ASUStek')])[0]    
+   picking_id = self.search(cr, uid, [('address_id.partner_id','=',partner_id),('type','=','in')])
    if picking_id:
      pick=self.browse(cr,uid,picking_id[0])
      move =pick.move_lines[0]
@@ -164,7 +169,8 @@
 -   
   !python {model: stock.picking }: |
    import time
-   picking_id = self.search(cr, uid, [('origin','=','PO00002:TEST/TENDER/0001'),('type','=','in')])
+   partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]     
+   picking_id = self.search(cr, uid, [('address_id.partner_id','=',partner_id),('type','=','in')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       move =pick.move_lines[0]
