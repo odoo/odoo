@@ -57,23 +57,24 @@ class repair_cancel(osv.osv_memory):
         @param context: A standard dictionary 
         @return: New arch of view.
         """
-        record_id = context and context.get('active_id', False) or False        
         res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        if record_id:
-            try:
-                repair_order = self.pool.get('mrp.repair').browse(cr, uid, record_id)
-                if not repair_order.invoiced:
-                    res['arch'] = """ <form string="Cancel Repair" colspan="4">
-                                    <group col="2" colspan="2">
-                                        <label string="Do you want to continue?" colspan="4"/>
-                                        <separator colspan="4"/>
-                                        <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                                        <button name="cancel_repair" string="Yes" type="object" icon="gtk-ok"/>
-                                    </group>
-                                </form>                             
-                            """
-            except:
-                return res
+        record_id = context and context.get('active_id', False) or False        
+        active_model = context.get('active_model')
+        
+        if not record_id or (active_model and active_model != 'mrp.repair'):
+            return res
+        
+        repair_order = self.pool.get('mrp.repair').browse(cr, uid, record_id)
+        if not repair_order.invoiced:
+            res['arch'] = """ <form string="Cancel Repair" colspan="4">
+                            <group col="2" colspan="2">
+                                <label string="Do you want to continue?" colspan="4"/>
+                                <separator colspan="4"/>
+                                <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
+                                <button name="cancel_repair" string="Yes" type="object" icon="gtk-ok"/>
+                            </group>
+                        </form>                             
+                    """
         return res
 
 repair_cancel()
