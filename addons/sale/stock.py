@@ -63,11 +63,8 @@ class stock_picking(osv.osv):
                 user, picking)
 
     def _get_comment_invoice(self, cursor, user, picking):
-        if picking.sale_id and picking.sale_id.note:
-            if picking.note:
-                return picking.note + '\n' + picking.sale_id.note
-            else:
-                return picking.sale_id.note
+        if picking.note or (picking.sale_id and picking.sale_id.note):
+            return picking.note or picking.sale_id.note
         return super(stock_picking, self)._get_comment_invoice(cursor, user,
                 picking)
 
