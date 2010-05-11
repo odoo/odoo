@@ -252,8 +252,9 @@ class account_account(osv.osv):
                     if current.child_id:
                         sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
         res = {}
+        null_result = dict((fn, 0.0) for fn in field_names)
         for id in ids:
-            res[id] = sums[id]
+            res[id] = sums.get(id, null_result)
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
