@@ -631,6 +631,19 @@ class account_fiscalyear(osv.osv):
             else:
                 return False
         return ids[0]
+    
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if args is None:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
+    
 account_fiscalyear()
 
 class account_period(osv.osv):
@@ -706,6 +719,18 @@ class account_period(osv.osv):
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
+    
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if args is None:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
 
 account_period()
 
