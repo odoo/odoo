@@ -35,7 +35,7 @@ class idea_post_vote(osv.osv_memory):
                                           ('50', 'Normal'),
                                           ('75', 'Good'),
                                           ('100', 'Very Good') ], 'Post Vote', required=True),
-#                'content': fields.text('Comment'),
+                'content': fields.text('Comment'),
                 }
     
     def view_init(self, cr, uid, fields, context=None):
@@ -48,8 +48,16 @@ class idea_post_vote(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         """
         idea_obj = self.pool.get('idea.idea')
-        
+       
         for idea in idea_obj.browse(cr, uid, context.get('active_ids', [])):
+            
+            cr.execute('select count(id) from idea_vote where user_id=%s\
+                                                      and idea_id=%s' % (uid, context.get('active_id')))
+            res = cr.fetchone()[0]
+            user_limit = idea.vote_user
+            if  res >= user_limit:
+                   raise osv.except_osv(_('Warning !'),_("You can not give Vote for this idea more than %s times") % (user_limit))
+        
             if idea.state in ['draft', 'close', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Draft/Accepted/Cancelled \
 ideas Could not be voted"))
@@ -71,19 +79,13 @@ ideas Could not be voted"))
         data = context and context.get('active_id', False) or False
         vote_obj = self.pool.get('idea.vote')
         comment_obj = self.pool.get('idea.comment')
-        idea_obj = self.pool.get('idea.idea')
+
         for do_vote_obj in self.read(cr, uid, ids):
             score = str(do_vote_obj['vote'])
-#            comment = do_vote_obj['content']
-            idea = idea_obj.browse(cr, uid, data)
-            user_limit = idea.vote_user
+            comment = do_vote_obj['content']
             dic = {'idea_id': data, 'user_id': uid, 'score': score}
-#             dic = {'idea_id': data, 'user_id': uid, 'score': score, 'content': comment}
-            cr.execute('select count(id) from idea_vote where user_id=%s\
-                                                      and idea_id=%s' % (uid, context.get('active_id')))
-            res = cr.fetchone()[0]
-            if  res >= user_limit:
-                   raise osv.except_osv(_('Warning !'),_("You can not give Vote for this idea more than %s times") % (user_limit))
+            if comment:
+                comment_id = comment_obj.create(cr, uid, {'idea_id': data, 'user_id': uid, 'content': comment})
             vote = vote_obj.create(cr, uid, dic)
             return {}
 
