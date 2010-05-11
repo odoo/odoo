@@ -354,7 +354,7 @@ class Partner(osv.osv):
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
         'free_member': fields.boolean('Free member'),
         'membership_amount': fields.float(
-                    'Membership amount', digites=(16, 2),
+                    'Membership amount', digits=(16, 2),
                     help='The price negociated by the partner'),
         'membership_state': fields.function(
                     _membership_state, method = True,
