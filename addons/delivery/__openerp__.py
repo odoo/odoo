@@ -39,7 +39,7 @@
         'partner_view.xml'
     ],
     'demo_xml': ['delivery_demo.xml'],
-    'test':['delivery_test.yml',],
+    'test':['test/delivery_test.yml',],
     'installable': True,
     'active': False,
     'certificate': '0033981912253',

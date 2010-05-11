@@ -6,34 +6,7 @@
   I start by creating a new product 'Laptop ACER', which is purchased at Asustek, in MTO,
   with the generation of purchase requisitions.    
   
-- 
-  Modifying a res.users record
-- 
-  !record {model: res.users, id: base.user_root}:
-    groups_id:
-      - base.group_system
-      - base.group_erp_manager
-      - base.group_user
-      - base.group_multi_company
-      - base.group_extended
-      - base.group_no_one
-      - base.group_partner_manager
-      - base.group_maintenance_manager
-      - product.group_uos
-      - product.group_product_manager
-      - product.group_product_variant
-      - account.group_account_invoice
-      - account.group_account_user
-      - account.group_account_manager
-      - stock.group_stock_manager
-      - stock.group_stock_user
-      - purchase.group_purchase_manager
-      - purchase.group_purchase_user
-      - mrp.group_mrp_manager
-      - mrp.group_mrp_user
-      - sale.group_sale_manager
-      - sale.group_sale_user
-- 
+-
   !record {model: product.product, id: product_product_laptopacer1}:
     categ_id: product.product_category_3
     cost_method: standard

@@ -2,35 +2,6 @@
 -
   In order to test the purchase requicisition module, I will do a sale order -> purchase_requisition ->
   purchase flow and I will buy the required products at two different suppliers.
-
-- 
-  Modifying a res.users record
-- 
-  !record {model: res.users, id: base.user_root}:
-    groups_id:
-      - base.group_system
-      - base.group_erp_manager
-      - base.group_user
-      - base.group_multi_company
-      - base.group_extended
-      - base.group_no_one
-      - base.group_partner_manager
-      - base.group_maintenance_manager
-      - product.group_uos
-      - product.group_product_manager
-      - product.group_product_variant
-      - account.group_account_invoice
-      - account.group_account_user
-      - account.group_account_manager
-      - stock.group_stock_manager
-      - stock.group_stock_user
-      - purchase.group_purchase_manager
-      - purchase.group_purchase_user
-      - mrp.group_mrp_manager
-      - mrp.group_mrp_user
-      - sale.group_sale_manager
-      - sale.group_sale_user
-    
 - 
   I start by creating a new product 'Laptop ACER', which is purchased at Asustek, in MTO,
   with the generation of purchase requisitions.
@@ -55,8 +26,6 @@
     weight: 0.0
     weight_net: 0.0
     list_price: 100.0    
-    
-    
 - 
   Then I sell 5 Laptop ACER to the customer Agrolait, sale order TEST/TENDER/0001
 - 
@@ -123,7 +92,8 @@
 -
  !python {model: purchase.order}: |
     order_ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
-    assert (order_ids==2), "Purchase order  hasn't Created"
+    ids=len(order_ids)
+    assert (ids==2), "Purchase order  hasn't Created"
 - 
  I set the purchase requisition as 'Not Exclusive'
  

@@ -172,5 +172,5 @@
     import base
     so=self.pool.get('sale.order').browse(cr,uid,ref('sale_order_test_complete0'))
     ids=len(so.invoice_ids[0].invoice_line)
-    assert len(ids), "Invoice   hasn't Created"
+    assert (ids<2), "Invoice   hasn't Created"
     
