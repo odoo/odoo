@@ -350,7 +350,21 @@ stock_location()
 class stock_tracking(osv.osv):
     _name = "stock.tracking"
     _description = "Stock Tracking Lots"
-
+    
+    def get_create_tracking_lot(self, cr, uid, ids, context):
+        tracking_id = context.get('tracking_id', False)
+        tracking_id_list = self.search(cr, uid, [('name', '=', tracking_id)],
+                                            limit=1)
+        if tracking_id_list:
+            tracking_id = tracking_id_list[0]
+        tracking_obj = self.browse(cr, uid, tracking_id)
+        if not tracking_obj:
+            tracking_lot_vals = {
+                'name': tracking_id
+                }
+            tracking_id = self.create(cr, uid, tracking_lot_vals,
+                    context=context)
+        return tracking_id
     def checksum(sscc):
         salt = '31' * 8 + '3'
         sum = 0
@@ -1602,7 +1616,12 @@ class stock_move(osv.osv):
                         'line_id': lines,
                         'ref': ref,
                     })
-        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
+        tracking_id = context.get('tracking_id', False)
+        if tracking_id:
+            tracking = self.pool.get('stock.tracking')
+            tracking_id = tracking.get_create_tracking_lot(cr, uid,[rec_id], context=context )        
+             
+        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S'), 'tracking_id': tracking_id})
         for pick in self.pool.get('stock.picking').browse(cr, uid, picking_ids):
             if all(move.state == 'done' for move in pick.move_lines):
                 self.pool.get('stock.picking').action_done(cr, uid, [pick.id])
@@ -1819,7 +1838,8 @@ class stock_move(osv.osv):
         partner_id = partial_datas.get('partner_id', False)
         address_id = partial_datas.get('address_id', False)
         delivery_date = partial_datas.get('delivery_date', False)
-
+        tracking_id = context.get('tracking_id', False)
+        
         new_moves = []
 
         complete, too_many, too_few = [], [], []
@@ -1835,6 +1855,10 @@ class stock_move(osv.osv):
             product_price = partial_data.get('product_price',0.0)
             product_currency = partial_data.get('product_currency',False)
             if move.product_qty == product_qty:
+                self.write(cr, uid, move.id,
+                {
+                    'tracking_id': tracking_id
+                })
                 complete.append(move)
             elif move.product_qty > product_qty:
                 too_few.append(move)
@@ -1879,6 +1903,7 @@ class stock_move(osv.osv):
                         'state': 'assigned',
                         'move_dest_id': False,
                         'price_unit': move.price_unit,
+                        'tracking_id': tracking_id,
                     })
                 complete.append(self.browse(cr, uid, new_move))
             self.write(cr, uid, move.id,
@@ -1892,12 +1917,13 @@ class stock_move(osv.osv):
             self.write(cr, uid, move.id,
                     {
                         'product_qty': move.product_qty,
-                        'product_uos_qty': move.product_qty
+                        'product_uos_qty': move.product_qty,
+                        'tracking_id': tracking_id
                     })
             complete.append(move)
 
         for move in complete:
-            self.action_done(cr, uid, [move.id])
+            self.action_done(cr, uid, [move.id], context)
 
             # TOCHECK : Done picking if all moves are done
             cr.execute("""
