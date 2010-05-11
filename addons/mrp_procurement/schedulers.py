@@ -238,4 +238,5 @@ class mrp_procurement(osv.osv):
             cr.close()
         return {}
 mrp_procurement()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

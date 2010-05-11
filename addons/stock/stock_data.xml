@@ -37,6 +37,11 @@
             <field name="usage">view</field>
             <field name="icon">terp-mrp</field>
         </record>
+        <record id="stock_location_scraped" model="stock.location">
+            <field name="name">Scraped</field>
+            <field name="location_id" ref="stock_location_locations_virtual"/>
+            <field name="scrap_location">True</field>
+        </record>
         
         <record id="location_inventory" model="stock.location">
             <field name="name">Inventory loss</field>
