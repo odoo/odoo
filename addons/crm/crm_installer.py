@@ -37,7 +37,7 @@ class crm_installer(osv.osv_memory):
         'crm_fundraising': fields.boolean('Fundraising', help="This may help associations in their fund raising process and tracking."), 
         'crm_claim': fields.boolean('Claims', help="Manages the supplier and customers claims, including your corrective or preventive actions."), 
         'crm_caldav': fields.boolean('Calendar Synchronizing', help="Help you to synchronize the meetings with other calender clients(e.g.: Sunbird)."), 
-        'sale_crm': fields.boolean('Opportunity to Quotation', help="This module relates sale to opportunity cases in the CRM."),
+        'sale_crm': fields.boolean('Create Quotation from Opportunity', help="This module relates sale to opportunity cases in the CRM."),
         'fetchmail': fields.boolean('Fetch Emails', help="Fetchmail Server."),
         'thunderbird': fields.boolean('Thunderbird', help="Thunderbird Interface."),  
     }
