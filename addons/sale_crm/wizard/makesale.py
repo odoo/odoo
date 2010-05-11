@@ -44,7 +44,7 @@ sale_fields = {
         'relation': 'res.partner',
         'help': 'Use this partner if there is no partner on the case'},
     'picking_policy': {'string': 'Picking Policy', 'type': 'selection',
-        'selection': [('direct','Direct Delivery'),('one','All at once')]},
+        'selection': [('direct', 'Partial Delivery'), ('one', 'Complete Delivery')]},
     'products': {'string': 'Products', 'type': 'many2many',
         'relation': 'product.product'},
     'analytic_account': {'string': 'Analytic Account', 'type': 'many2one',
