@@ -676,7 +676,20 @@ class pricelist_partnerinfo(osv.osv):
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
 
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
 
+    def create(self, cr, uid, data, context={}):
+        user_id = super(res_users, self).create(cr, uid, data, context)
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'product', 'ir_ui_view_sc_product0')
+        view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+        copy_id = self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                    'user_id': user_id}, context=context)
+        return user_id
+
+res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
