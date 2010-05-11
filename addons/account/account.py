@@ -432,11 +432,17 @@ class account_account(osv.osv):
     def _check_moves(self, cr, uid, ids, method, context):
         line_obj = self.pool.get('account.move.line')
         account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
+        
         if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
             if method == 'write':
                 raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
             elif method == 'unlink':
                 raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
+        #Checking whether the account is set as a property to any Partner or not
+        value = 'account.account,' + str(ids[0])
+        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
+        if partner_prop_acc:
+            raise osv.except_osv(_('Warning !'), _('You cannot remove/deactivate an account which is set as a property to any Partner.'))
         return True
 
     def _check_allow_type_change(self, cr, uid, ids, new_type, context):
