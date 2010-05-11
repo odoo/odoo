@@ -62,6 +62,9 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
     }
+    _sql_constraints = [
+        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
+    ]   
     
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         """ Finds location id for changed warehouse.
