@@ -175,6 +175,7 @@ class email_parser(object):
         message = self.msg_body_get(msg)
         msg_subject = self._decode_header(msg['Subject'])
         msg_from = self._decode_header(msg['From'])
+        msg_to = self._decode_header(msg['To'])
         msg_cc = self._decode_header(msg['Cc'] or '')
         
         data = {
@@ -189,7 +190,7 @@ class email_parser(object):
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'], False, False, {'model' : self.model})
+            self.rpc(self.model, 'history', [id], 'Receive', True, msg_to, message['body'], msg_from, False, {'model' : self.model})
             #self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
@@ -314,7 +315,7 @@ class email_parser(object):
                 'res_id': id
             }
             self.rpc('ir.attachment', 'create', data_attach)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], body['body'])
+        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['From']), body['body'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -357,7 +358,7 @@ class email_parser(object):
                 'res_id': id
             }
             self.rpc('ir.attachment', 'create', data_attach)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['From']), message['body'])
         return id
 
     def msg_test(self, msg, case_str):
