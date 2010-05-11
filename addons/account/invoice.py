@@ -24,7 +24,6 @@ import decimal_precision as dp
 
 import netsvc
 from osv import fields, osv
-import ir
 from osv.orm import except_orm
 import pooler
 from tools import config
@@ -1211,8 +1210,8 @@ class account_invoice_line(osv.osv):
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
 
-        lang=part.lang
-        context.update({'lang': lang})
+        if part.lang:
+            context.update({'lang': part.lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
