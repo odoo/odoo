@@ -25,6 +25,7 @@ import decimal_precision as dp
 import netsvc
 from osv import fields, osv
 import ir
+from osv.orm import except_orm
 import pooler
 from tools import config
 from tools.translate import _
