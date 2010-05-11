@@ -99,7 +99,7 @@
 -
  !python {model: purchase.order}: |
     partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','ASUStek')])[0]
-    purchase_id= self.search(cr, uid, [('partner_id','=','partner_id)])[0]
+    purchase_id= self.search(cr, uid, [('partner_id','=',partner_id)])[0]
     import netsvc
     wf_service = netsvc.LocalService("workflow")  
     if purchase_id:
@@ -110,5 +110,6 @@
 -        
   !python {model: purchase.order}: |
    partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]
+   purchase_id= self.search(cr, uid, [('partner_id','=',partner_id)])[0]  
    state=self.browse(cr,uid,purchase_id).state
    assert (state=='cancel')
