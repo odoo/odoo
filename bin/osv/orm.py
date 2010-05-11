@@ -276,7 +276,7 @@ class browse_record(object):
                     else:
                         new_data[n] = data[n]
                 self._data[data['id']].update(new_data)
-        
+
         if not name in self._data[self._id]:
             #how did this happen?
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
@@ -438,7 +438,7 @@ class orm_template(object):
                 'name': k,
                 'field_description': f.string.replace("'", " "),
                 'ttype': f._type,
-                'relation': f._obj or 'NULL',
+                'relation': f._obj or '',
                 'view_load': (f.view_load and 1) or 0,
                 'select_level': tools.ustr(f.select or 0),
                 'readonly':(f.readonly and 1) or 0,
