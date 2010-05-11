@@ -296,7 +296,7 @@ class hr_holidays(osv.osv):
         else:
             raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
         self.write(cr, uid, ids, vals)
-        if data_holiday[0].holiday_status_id.double_validation:
+        if not data_holiday[0].holiday_status_id.double_validation:
             for record in data_holiday:
                 if record.holiday_type=='employee' and record.type=='remove':
                     vals= {
