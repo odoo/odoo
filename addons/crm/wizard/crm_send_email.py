@@ -217,7 +217,11 @@ class crm_send_new_email(osv.osv_memory):
                 to = 'To: %s' % (hist.email_to or '')
                 sentdate = 'Date: %s' % (hist.date)
                 desc = '\n%s'%(hist.description)
-                original = [header, sender, to, sentdate, desc]
+
+                if case.user_id.signature:
+                    signature = '--\n' + case.user_id.signature
+
+                original = [header, sender, to, sentdate, desc, signature]
                 original = '\n'.join(original)
                 res['text']=original
             if 'subject' in fields:
