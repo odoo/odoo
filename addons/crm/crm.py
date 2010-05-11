@@ -774,7 +774,7 @@ class crm_case_history(osv.osv):
         """
         res = {}
         for hist in self.browse(cursor, user, ids, context or {}):
-            res[hist.id] = (hist.email or '/') + ' (' + str(hist.date) + ')\n'
+            res[hist.id] = (hist.email_from or '/') + ' (' + str(hist.date) + ')\n'
             res[hist.id] += (hist.description or '')
         return res
 

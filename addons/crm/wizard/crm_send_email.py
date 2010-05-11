@@ -92,9 +92,10 @@ class crm_send_new_email(osv.osv_memory):
             email_from = data.get('email_from', False)
             case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from, message_id=message_id)
 
-            x_headers = {
-                'Reply-To':"%s" % case.section_id.reply_to,
-            }
+            x_headers = dict()
+            #x_headers = {
+            #    'Reply-To':"%s" % case.section_id.reply_to,
+            #}
             if message_id:
                 x_headers['References'] = "%s" % (message_id)
 

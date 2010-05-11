@@ -42,7 +42,9 @@
         'security/idea_security.xml',
         'security/ir.model.access.csv',
     ],
-    'demo_xml': [],
+    'demo_xml': [
+        "idea_data.xml"
+    ],
     'installable': True,
     'certificate': '0071515601309',
 }

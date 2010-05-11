@@ -86,7 +86,7 @@ class hr_contract(osv.osv):
         'job_id': fields.many2one('hr.job', 'Job Title'),
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date'),
-        'working_hours': fields.many2one('resource.calendar','Working hours'),
+        'working_hours': fields.many2one('resource.calendar','Working Schedule'),
         'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
         'wage': fields.float('Wage', digits=(16,2), required=True),
         'advantages': fields.text('Advantages'),

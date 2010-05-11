@@ -434,7 +434,11 @@
             string="Close Register"
             action="action_pos_close_statement"
             id="menu_close_statement" sequence="2" />
-
+       
+       <menuitem icon="STOCK_PRINT"
+       			 action="action_report_all_closed_cashbox_of_the_day"
+				 id="menu_all_closed_cashbox_of_the_day"
+				 parent="menu_point_report_register"/>
             
 	</data>
 </openerp>

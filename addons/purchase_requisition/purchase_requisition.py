@@ -122,7 +122,7 @@ class purchase_order(osv.osv):
                     if order.id<>po.id:
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
-                    self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'close','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
+                    self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
 
         return res
 
