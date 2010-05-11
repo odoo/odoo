@@ -1046,9 +1046,16 @@
             <test expr="currency_id.code == 'eur'.upper()"/>
             <test expr="name">OpenERP S.A.</test>
         </assert>
-        <record id="user_admin" model="res.users">
+
+        <record model="res.users" id="base.user_root">
+            <field name="signature">Administrator</field>
+            <field name="address_id" ref="main_address"/>
             <field name="company_id" ref="main_company"/>
+            <field name="company_ids" eval="[(4, ref('main_company'))]"/>
+            <field name="action_id" ref="action_menu_admin"/>
+            <field name="menu_id" ref="action_menu_admin"/>
         </record>
+
         <record id="main_partner" model="res.partner">
             <field name="company_id" ref="main_company"/>
         </record>
