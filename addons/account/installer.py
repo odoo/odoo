@@ -198,6 +198,10 @@ class account_installer(osv.osv_memory):
             new_account = obj_acc.create(cr,uid,vals)
             acc_template_ref[account_template.id] = new_account
             if account_template.name == 'Bank Current Account':
+                view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Cash Journal View')])[0]
+                view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Multi-Currency Cash Journal View')])[0]
+                ref_acc_bank = obj_multi.bank_account_view_id
+
                 cash_result = mod_obj._get_id(cr, uid, 'account', 'conf_account_type_cash')
                 cash_type_id = mod_obj.read(cr, uid, [cash_result], ['res_id'])[0]['res_id']
 
@@ -209,19 +213,61 @@ class account_installer(osv.osv_memory):
 
                 record = self.browse(cr, uid, ids, context=context)[0]
                 code_cnt = 1
+                vals_seq = {
+                        'name': _('Bank Journal '),
+                        'code': 'account.journal',
+                        }
+                seq_id = obj_sequence.create(cr,uid,vals_seq)
+
+                #create the bank journal
+                vals_journal = {}
+                vals_journal['name']= _('Bank Journal ')
+                vals_journal['code']= _('BNK')
+                vals_journal['sequence_id'] = seq_id
+                vals_journal['type'] = 'cash'
+                if vals.get('currency_id', False):
+                    vals_journal['view_id'] = view_id_cur
+                    vals_journal['currency'] = vals.get('currency_id', False)
+                else:
+                    vals_journal['view_id'] = view_id_cash
+                vals_journal['default_credit_account_id'] = new_account
+                vals_journal['default_debit_account_id'] = new_account
+                obj_journal.create(cr,uid,vals_journal)
+
                 for val in record.bank_accounts_id:
                     if val.account_type == 'cash':type = cash_type_id
                     elif val.account_type == 'bank':type = bank_type_id
                     else:type = check_type_id
-                    vals = {'name': val.acc_name or '',
+                    vals_bnk = {'name': val.acc_name or '',
                         'currency_id': val.currency_id.id or False,
                         'code': str(110400 + code_cnt),
                         'type': 'other',
                         'user_type': type,
                         'parent_id':new_account,
                         'company_id': company_id.id }
-                    obj_acc.create(cr, uid, vals)
+                    child_bnk_acc = obj_acc.create(cr, uid, vals_bnk)
+                    vals_seq_child = {
+                        'name': _(vals_bnk['name']),
+                        'code': 'account.journal',
+                        }
+                    seq_id = obj_sequence.create(cr, uid, vals_seq_child)
+
+                    #create the bank journal
+                    vals_journal = {}
+                    vals_journal['name']= vals_bnk['name'] + ' Journal'
+                    vals_journal['code']= _(vals_bnk['name'][:3])
+                    vals_journal['sequence_id'] = seq_id
+                    vals_journal['type'] = 'cash'
+                    if vals.get('currency_id', False):
+                        vals_journal['view_id'] = view_id_cur
+                        vals_journal['currency'] = vals_bnk.get('currency_id', False)
+                    else:
+                        vals_journal['view_id'] = view_id_cash
+                    vals_journal['default_credit_account_id'] = child_bnk_acc
+                    vals_journal['default_debit_account_id'] = child_bnk_acc
+                    obj_journal.create(cr,uid,vals_journal)
                     code_cnt += 1
+
 
         #reactivate the parent_store functionnality on account_account
         self.pool._init = False
@@ -341,6 +387,7 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         super(account_installer, self).execute(cr, uid, ids, context=context)
         record = self.browse(cr, uid, ids, context=context)[0]
+        company_id = self.pool.get('res.users').browse(cr,uid,[uid],context)[0].company_id
         for res in self.read(cr,uid,ids):
             if record.charts == 'configurable':
                 fp = tools.file_open(opj('account','configurable_account_chart.xml'))
@@ -355,16 +402,36 @@ class account_installer(osv.osv_memory):
                 tax_val = {}
                 default_tax = []
                 if s_tax*100 > 0.0:
+                    vals_tax_code = {
+                        'name': 'VAT%s%%'%(s_tax*100),
+                        'code': 'VAT%s%%'%(s_tax*100),
+                        'company_id': company_id.id,
+                        'sign': 1,
+                        }
+                    new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals_tax_code)
                     sales_tax = obj_tax.create(cr, uid,
-                                           {'name':'%s%%'%(s_tax*100),
-                                            'amount':s_tax
+                                           {'name':'VAT%s%%'%(s_tax*100),
+                                            'description':'VAT%s%%'%(s_tax*100),
+                                            'amount':s_tax,
+                                            'base_code_id':new_tax_code,
+                                            'tax_code_id':new_tax_code
                                             })
                     tax_val.update({'taxes_id':[(6,0,[sales_tax])]})
                     default_tax.append(('taxes_id',sales_tax))
                 if p_tax*100 > 0.0:
+                    vals_tax_code = {
+                        'name': 'VAT%s%%'%(p_tax*100),
+                        'code': 'VAT%s%%'%(p_tax*100),
+                        'company_id': company_id.id,
+                        'sign': 1,
+                        }
+                    new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals_tax_code)
                     purchase_tax = obj_tax.create(cr, uid,
-                                            {'name':'%s%%'%(p_tax*100),
-                                             'amount':p_tax
+                                            {'name':'VAT%s%%'%(p_tax*100),
+                                             'description':'VAT%s%%'%(p_tax*100),
+                                             'amount':p_tax,
+                                             'base_code_id':new_tax_code,
+                                            'tax_code_id':new_tax_code
                                              })
                     tax_val.update({'supplier_taxes_id':[(6,0,[purchase_tax])]})
                     default_tax.append(('supplier_taxes_id',purchase_tax))
