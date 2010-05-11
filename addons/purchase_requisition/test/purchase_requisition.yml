@@ -97,7 +97,6 @@
     proc_obj._procure_confirm(cr,uid)
 -
   On the purchase tender, I create a new purchase order for the supplier 'DistriPC' by clicking on
-  the button 'New RfQ'. This opens a window to ask me the supplier and I set DistriPC
   
 - 
   Creating a purchase.requisition.partner record
@@ -123,7 +122,7 @@
   
 -
  !python {model: purchase.order}: |
-    order_ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0002')])
+    order_ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
     assert (order_ids==2), "Purchase order  hasn't Created"
 - 
  I set the purchase requisition as 'Not Exclusive'
@@ -200,8 +199,8 @@
       pick=self.browse(cr,uid,picking_id[0])
       move =pick.move_lines[0]
       partial_datas = {
-           'partner_id': 4,
-            'address_id': 7,
+           'partner_id':pick.address_id.partner_id.id,
+            'address_id': pick.address_id.id,
             'delivery_date' : time.strftime('%Y-%m-%d'),
            }
       partial_datas['move%s'%(move.id)]= {

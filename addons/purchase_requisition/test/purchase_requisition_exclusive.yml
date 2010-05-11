@@ -93,6 +93,7 @@
 -    
  !python {model: purchase.requisition}: |
     requisition_ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0002')])
+    ids=len(requisition_ids)
     assert len(requisition_ids), "Purchase requisition  hasn't Created"
 -
   On the purchase tender, I create a new purchase order for the supplier 'DistriPC' by clicking on
