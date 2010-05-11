@@ -1006,7 +1006,7 @@ class stock_picking(osv.osv):
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
             delivery_id = delivery_obj.create(cr, uid, {
-                'name':  delivered_pack.name,
+                'name':  delivered_pack.name or move.name,
                 'partner_id': partner_id,
                 'address_id': address_id,
                 'date': delivery_date,
