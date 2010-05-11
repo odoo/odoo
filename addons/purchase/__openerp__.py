@@ -31,7 +31,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'account', 'stock', 'process'],
+    'depends': ['base', 'account', 'stock', 'process', 'mrp_procurement'],
     'init_xml': [],
     'update_xml': [
                    
@@ -39,6 +39,7 @@
         'security/ir.model.access.csv',
         'purchase_workflow.xml',
         'purchase_sequence.xml',
+        'company_view.xml',
         'purchase_data.xml',
         'wizard/purchase_order_group_view.xml',
         'wizard/purchase_installer.xml',

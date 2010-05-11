@@ -131,6 +131,7 @@ class pos_return(osv.osv_memory):
                 'view_id': False,
                 'target':'new',
                 'views': False,
+                'context': context,
                 'type': 'ir.actions.act_window',
         }
     def create_returns2(self, cr, uid, ids, context):
@@ -193,6 +194,7 @@ class pos_return(osv.osv_memory):
                 'auto_refresh':0,
                 'res_id':new_order,
                 'view_id': False,
+                'context':context,
                 'type': 'ir.actions.act_window'
             }
         return act
@@ -276,7 +278,7 @@ class add_product(osv.osv_memory):
                 }
     
     def close_action(self, cr, uid, ids, context):
-        active_id=context.get('active_id', False)     
+        active_ids=context.get('active_ids', False)         
         order_obj = self.pool.get('pos.order')
         lines_obj = self.pool.get('pos.order.line')
         picking_obj = self.pool.get('stock.picking')
@@ -284,7 +286,7 @@ class add_product(osv.osv_memory):
         move_obj = self.pool.get('stock.move')
         property_obj= self.pool.get("ir.property")   
         invoice_obj=self.pool.get('account.invoice')
-        picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in', [active_id]), ('state', '=', 'done')])
+        picking_ids = picking_obj.search(cr, uid, [('pos_order', 'in', active_ids), ('state', '=', 'done')])
         clone_list = []
         date_cur=time.strftime('%Y-%m-%d')
         uom_obj = self.pool.get('product.uom')
@@ -293,7 +295,7 @@ class add_product(osv.osv_memory):
         data=return_boj.read(cr,uid,return_id,[])[0]
                         
         wf_service = netsvc.LocalService("workflow")
-        for order_id in order_obj.browse(cr, uid, [active_id], context=context):
+        for order_id in order_obj.browse(cr, uid, active_ids, context=context):
             prop_ids =property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
             val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
             cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
@@ -328,11 +330,12 @@ class add_product(osv.osv_memory):
                     })
             wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [new_picking], context)
-        obj=order_obj.browse(cr,uid, active_id)                
+        obj=order_obj.browse(cr,uid, active_ids[0])    
+
         if obj.amount_total != obj.amount_paid:
             return {
             'name': _('Make Payment'),
-            'context ':context and context.get('active_id', False),
+            'context ':context,
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.make.payment',
@@ -341,7 +344,8 @@ class add_product(osv.osv_memory):
             'views': False,
             'type': 'ir.actions.act_window',
             
-            }                    
+            }
+        return True                    
                  
 add_product()        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

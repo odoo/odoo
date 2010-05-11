@@ -43,6 +43,7 @@ class pos_make_payment(osv.osv_memory):
          @return: A dictionary which of fields with values. 
         """
         res = super(pos_make_payment, self).default_get(cr, uid, fields, context=context)
+        
         active_id = context and context.get('active_id',False)  
         j_obj = self.pool.get('account.journal')
         company_id = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
@@ -84,8 +85,8 @@ class pos_make_payment(osv.osv_memory):
         active_id = context and context.get('active_id', False) or False        
         order = self.pool.get('pos.order').browse(cr, uid, active_id)
         if not order.lines:
-                raise osv.except_osv('Error!','No order lines defined for this sale ')
-        True
+            raise osv.except_osv('Error!','No order lines defined for this sale ')
+        return True
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ 
@@ -103,22 +104,22 @@ class pos_make_payment(osv.osv_memory):
                 
         result = super(pos_make_payment, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         active_model = context.get('active_model')
-        if not active_model and active_model != 'pos.order':
-            return result           
-        active_id = context.get('active_id', False)        
-        if active_id:
-            order = self.pool.get('pos.order').browse(cr, uid, active_id)
-            if order.amount_total == order.amount_paid:
-                res['arch'] = """ <form string="Make Payment" colspan="4">
-                                <group col="2" colspan="2">
-                                    <label string="Do you want to print the Receipt?" colspan="4"/>
-                                    <separator colspan="4"/>
-                                    <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                                    <button name="print_report" string="Print Receipt" type="object" icon="gtk-print"/>
-                                </group>
-                            </form>
-                        """
-        return res
+        active_id = context.get('active_id', False)
+        if not active_id or (active_model and active_model != 'pos.order'):
+            return result                  
+                 
+        order = self.pool.get('pos.order').browse(cr, uid, active_id)
+        if order.amount_total == order.amount_paid:
+            res['arch'] = """ <form string="Make Payment" colspan="4">
+                            <group col="2" colspan="2">
+                                <label string="Do you want to print the Receipt?" colspan="4"/>
+                                <separator colspan="4"/>
+                                <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
+                                <button name="print_report" string="Print Receipt" type="object" icon="gtk-print"/>
+                            </group>
+                        </form>
+                    """                                   
+        return result
 
     def check(self, cr, uid, ids, context=None):
         
