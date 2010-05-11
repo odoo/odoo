@@ -75,7 +75,7 @@ class res_partner(osv.osv):
         vat_country, vat_number = self._split_vat(self.browse(cr, uid, ids)[0].vat)
         if default_vat_check(vat_country, vat_number):
             return _('The Vat does not seems to be correct. You should have entered something like this %s'), (_ref_vat[vat_country])
-        return _('The VAT is invalid, it shoul begin with the country code'), ()
+        return _('The VAT is invalid, it should begin with the country code'), ()
 
     _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
 
