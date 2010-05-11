@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    Copyright (C) 2008-2009 B2CK, Cedric Krier, Bertrand Chenal (the methods "check_vat_[a-z]{2}" 
+#    Copyright (C) 2008-2009 B2CK, Cedric Krier, Bertrand Chenal (the methods "check_vat_[a-z]{2}"
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -42,6 +42,9 @@ class res_partner(osv.osv):
                 continue    #FIXME return False? empty vat numbre is invalid?
 
             vat_country, vat_number = partner.vat[:2].lower(), partner.vat[2:].replace(' ', '')
+            res = self.pool.get('res.country').search(cr, uid, [('code', '=', vat_country.upper())])
+            if not res:
+                return False
             check = getattr(self, 'check_vat_' + vat_country)
             if not check(vat_number):
                 return False
@@ -51,7 +54,7 @@ class res_partner(osv.osv):
     def __getattr__(self, attr):
         if not attr.startswith('check_vat_'):
             super(res_partner, self).__getattr__(attr)
-        
+
         def default_vat_check(self, cn, vn):
             # by default, a VAT number is valid if:
             #  it starts with 2 letters
@@ -70,7 +73,7 @@ class res_partner(osv.osv):
     _constraints = [(check_vat, "The VAT doesn't seem to be correct.", ["vat"])]
 
     # code from the following methods come from Tryton (B2CK)
-    # http://www.tryton.org/hgwebdir.cgi/modules/relationship/file/544d1de586d9/party.py 
+    # http://www.tryton.org/hgwebdir.cgi/modules/relationship/file/544d1de586d9/party.py
     def check_vat_at(self, vat):
         '''
         Check Austria VAT number.
@@ -969,10 +972,10 @@ class res_partner(osv.osv):
 
         if int(vat[9:11]) < 0:
             return False
-        
+
 #        if int(vat[-2:]) != 1:
 #            return False
-        
+
         sum = mult_add(2, int(vat[0])) + int(vat[1]) + \
                 mult_add(2, int(vat[2])) + int(vat[3]) + \
                 mult_add(2, int(vat[4])) + int(vat[5]) + \
