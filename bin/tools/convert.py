@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,7 +26,6 @@ import os.path
 import pickle
 import re
 import sys
-import time
 
 from datetime import datetime
 from lxml import etree
@@ -369,10 +368,10 @@ form: module.record_id""" % (xml_id,)
         domain = rec.get('domain','').encode('utf-8') or '{}'
         context = rec.get('context','').encode('utf-8') or '{}'
         res_model = rec.get('res_model','').encode('utf-8')
-        src_model = rec.get('src_model','').encode('utf-8')        
+        src_model = rec.get('src_model','').encode('utf-8')
         view_type = rec.get('view_type','').encode('utf-8') or 'form'
         view_mode = rec.get('view_mode','').encode('utf-8') or 'tree,form'
-        
+
         usage = rec.get('usage','').encode('utf-8')
         limit = rec.get('limit','').encode('utf-8')
         auto_refresh = rec.get('auto_refresh','').encode('utf-8')
