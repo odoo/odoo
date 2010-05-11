@@ -184,7 +184,7 @@ class email_server(osv.osv):
         history_pool = self.pool.get('mail.server.history')
         msg_txt = email.message_from_string(message)
         message_id = msg_txt.get('Message-ID', False)
-        
+
         msg = {}
         if not message_id:
             return False
@@ -193,24 +193,28 @@ class email_server(osv.osv):
         
         msg['id'] = message_id
         msg['message-id'] = message_id
+
+        def _decode_header(txt):
+            txt = txt.replace('\r', '')
+            return ' '.join(map(lambda (x, y): unicode(x, y or 'ascii'), decode_header(txt)))
         
         if 'Subject' in fields:
-            msg['subject'] = msg_txt.get('Subject')
+            msg['subject'] = _decode_header(msg_txt.get('Subject'))
         
         if 'Content-Type' in fields:
             msg['content-type'] = msg_txt.get('Content-Type')
         
         if 'From' in fields:
-            msg['from'] = msg_txt.get('From')
+            msg['from'] = _decode_header(msg_txt.get('From'))
         
         if 'Delivered-To' in fields:
-            msg['to'] = msg_txt.get('Delivered-To')
+            msg['to'] = _decode_header(msg_txt.get('Delivered-To'))
         
         if 'Cc' in fields:
-            msg['cc'] = msg_txt.get('Cc')
+            msg['cc'] = _decode_header(msg_txt.get('Cc'))
         
         if 'Reply-To' in fields:
-            msg['reply'] = msg_txt.get('Reply-To')
+            msg['reply'] = _decode_header(msg_txt.get('Reply-To'))
         
         if 'Date' in fields:
             msg['date'] = msg_txt.get('Date')
@@ -228,7 +232,10 @@ class email_server(osv.osv):
             msg['priority'] = msg_txt.get('X-priority', '3 (Normal)').split(' ')[0]
         
         if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', None):
+            encoding = msg_txt.get_content_charset()
             msg['body'] = msg_txt.get_payload(decode=True)
+            if encoding:
+                msg['body'] = msg['body'].decode(encoding).encode('utf-8')
         
         attachents = {}
         if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', None):
@@ -238,26 +245,34 @@ class email_server(osv.osv):
                 if part.get_content_maintype() == 'multipart':
                     continue
                 
+                encoding = part.get_content_charset()
+
                 if part.get_content_maintype()=='text':
                     content = part.get_payload(decode=True)
-                    if part.get_content_subtype() == 'html':
-                        body = html2plaintext(content)
-                    elif part.get_content_subtype() == 'plain':
-                        body = content
-                    
                     filename = part.get_filename()
                     if filename :
-                        attachents[filename] = part.get_payload(decode=True)
-                    
+                        attachents[filename] = content
+                    else:
+                        if encoding:
+                            content = unicode(content, encoding)
+                        if part.get_content_subtype() == 'html':
+                            body = html2plaintext(content)
+                        elif part.get_content_subtype() == 'plain':
+                            body = content
                 elif part.get_content_maintype()=='application' or part.get_content_maintype()=='image' or part.get_content_maintype()=='text':
                     filename = part.get_filename();
                     if filename :
                         attachents[filename] = part.get_payload(decode=True)
                     else:
-                        body += part.get_payload(decode=True)
+                        res = part.get_payload(decode=True)
+                        if encoding:
+                            res = res.decode(encoding).encode('utf-8')
+
+                        body += res
 
             msg['body'] = body
             msg['attachments'] = attachents
+
 
         res_id = False
         if msg.get('references', False):

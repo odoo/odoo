@@ -16,20 +16,6 @@
   	</record>
 
 <!-- Multi -->
-    <record model="ir.rule" id="mrp_procurement_rule">
-    	<field name="name">mrp_procurement multi-company</field>
-        <field name="model_id" search="[('model','=','mrp.procurement')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
-    </record>
-
-    <record model="ir.rule" id="stock_warehouse_orderpoint_rule">
-    	<field name="name">stock_warehouse.orderpoint multi-company</field>
-        <field name="model_id" search="[('model','=','stock.warehouse.orderpoint')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
-    </record>
-
     <record model="ir.rule" id="mrp_production_rule">
     	<field name="name">mrp_production multi-company</field>
         <field name="model_id" search="[('model','=','mrp.production')]" model="ir.model"/>
