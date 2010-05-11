@@ -208,6 +208,8 @@ class res_partner_job(osv.osv):
                 if arg[2] and not count:
                     search_arg = ['|', ('first_name', 'ilike', arg[2]), ('name', 'ilike', arg[2])]
                     contact_ids = contact_obj.search(cr, user, search_arg, offset=offset, limit=limit, order=order, context=context, count=count)
+                    if not contact_ids:
+                         continue
                     contacts = contact_obj.browse(cr, user, contact_ids, context=context)
                     for contact in contacts:
                         job_ids.extend([item.id for item in contact.job_ids])
