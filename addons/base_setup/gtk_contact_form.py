@@ -38,8 +38,10 @@ class base_gtkcontactform(osv.osv_memory):
          defaults = super(base_gtkcontactform, self)\
          .default_get(cr, uid, fields_list=fields_list, context=context)
          company_id = self.pool.get('base.setup.company').search(cr, uid, [])
-         company = self.pool.get('base.setup.company').read(cr, uid, company_id)[0]
-         defaults.update({'email':company.get('email',''),
+         company = self.pool.get('base.setup.company').read(cr, uid, company_id)
+         company = company and company[0] or False
+         if company:
+             defaults.update({'email':company.get('email',''),
                           'phone': company.get('phone','')})
          return defaults
 
@@ -73,9 +75,9 @@ class base_gtkcontactform(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         company_id = self.pool.get('base.setup.company').search(cr, uid, [])
         company_data = self.pool.get('base.setup.company').read(cr, uid, company_id)
-        company_data = company_data and company_data[0]
+        company_data = company_data and company_data[0] or False
         country1 = ''
-        if company_data.get('country_id', False):
+        if company_data and company_data.get('country_id', False):
             country = self.pool.get('res.country').read(cr, uid, company_data['country_id'],['name'])['name']
         for res in self.read(cr, uid, ids):
             email = res.get('email','')

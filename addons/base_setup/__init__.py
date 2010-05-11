@@ -23,7 +23,10 @@ import installer
 import todo
 import gtk_contact_form
 import wizard
-
+import os
+import base64
+import random
+import tools
 from osv import fields, osv
 import netsvc
 from tools.translate import _
@@ -34,6 +37,12 @@ class base_setup_config_choice(osv.osv_memory):
     _name = 'base.setup.config'
     logger = netsvc.Logger()
 
+    def _get_image(self, cr, uid, context=None):
+        file_no = str(random.randint(1,3))
+        path = os.path.join('base','res','config_pixmaps/%s.png'%file_no)
+        file_data = tools.file_open(path,'rb').read()
+        return base64.encodestring(file_data)
+
     def get_users(self, cr, uid, context={}):
         user_obj = self.pool.get('res.users')
         user_ids = user_obj.search(cr, uid, [])
@@ -42,11 +51,13 @@ class base_setup_config_choice(osv.osv_memory):
         return _('The following users have been installed on your database: \n')+ user_str
 
     _columns = {
-        'installed_users':fields.text('Installed Users', readonly=True)
+        'installed_users':fields.text('Installed Users', readonly=True),
+        'config_logo' : fields.binary('Image', readonly=True),
         }
 
     _defaults = {
-        'installed_users':get_users
+        'installed_users':get_users,
+         'config_logo' : _get_image
         }
 
     def set_default_menu(self, cr, uid, menu, context=None):

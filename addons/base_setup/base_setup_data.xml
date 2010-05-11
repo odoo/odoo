@@ -7,11 +7,11 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
       <form string="Setup">
-      <group colspan="4" col="8">
-      	<group width="150">
-      		<image name="gtk-dialog-info"/>
-      	</group>
-      	<group>
+      <group colspan="4" col="8" width="600">
+      <group>
+  		<field name="config_logo" widget="image" width="150" height="100" nolabel="1" colspan="1"/>
+  	</group>
+      	<group colspan="6">
       		<separator string="Installation Done" colspan="8"/>
       		<label align="0.0" string="Your new database is now fully installed." colspan="8"/>
        		<field name="installed_users" nolabel= "1" colspan="8"/>

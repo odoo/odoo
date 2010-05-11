@@ -16,20 +16,21 @@
                        >Knowledge Management</attribute>
           </separator>
           <xpath expr='//separator[@string="vsep"]' position='attributes'>
-      				<attribute name='rowspan'>9</attribute>
           			<attribute name='string'></attribute>
 	      		</xpath>
           <xpath expr="//label[@string='description']"
                  position="attributes">
             <attribute name="string">From this screen, you can select various OpenERP applications which will help employees store information, distribute it and share it with one another.</attribute>
           </xpath>
-          <group colspan="8">
+          <group colspan="8" position="replace">
+          <group colspan="4">
             <field name="document_ftp"/>
             <field name="document_webdav"/>
             <field name="wiki"/>
             <separator string="Templates of Content" colspan="4"/>
             <field name="wiki_faq"/>
             <field name="wiki_quality_manual"/>
+          </group>
           </group>
          <xpath expr="//button[@string='Install Modules']" position="attributes">
           	<attribute name="string">Configure</attribute>
