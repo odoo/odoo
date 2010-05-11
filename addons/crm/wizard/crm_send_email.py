@@ -202,6 +202,11 @@ class crm_send_new_email(osv.osv_memory):
         res = {}
         for hist in hist_obj.browse(cr, uid, res_ids):
             model = hist.log_id.model_id.model
+
+            # In the case where the crm.case does not exist in the database
+            if not model:
+                return {}
+
             model_pool = self.pool.get(model)
             case = model_pool.browse(cr, uid, hist.log_id.res_id)
             if 'email_to' in fields:
