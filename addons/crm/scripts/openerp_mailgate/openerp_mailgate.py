@@ -168,7 +168,7 @@ class email_parser(object):
 
     def _decode_header(self, s):
         from email.Header import decode_header
-        s = decode_header(s) 
+        s = decode_header(s.replace('\r', '')) 
         return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s or []))
 
     def msg_new(self, msg):
