@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -608,7 +608,7 @@ def trans_generate(lang, modules, dbname=None):
                     mod_paths.append(os.path.join(def_path,adp))
                 elif adp.startswith(def_path):
                     mod_paths.append(adp[len(def_path)+1:])
-        
+
         for mp in mod_paths:
             if path.startswith(mp) and (os.path.dirname(path) != mp):
                 path = path[len(mp)+1:]
@@ -767,7 +767,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 # the same source
                 obj = pool.get(model)
                 if obj:
-                    if not field in obj._columns:
+                    if field not in obj.fields_get_keys(cr, uid):
                         continue
                     ids = obj.search(cr, uid, [(field, '=', dic['src'])])
 
