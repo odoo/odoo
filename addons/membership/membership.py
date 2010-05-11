@@ -412,7 +412,16 @@ class Partner(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive associated members.', ['associate_member'])
     ]
-
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}    
+        default = default.copy()
+        default['member_lines'] = []
+        return super(Partner, self).copy(cr, uid, id, default, context)
+    
 Partner()
 
 class product_template(osv.osv):
