@@ -223,6 +223,7 @@ class crm_send_new_email(osv.osv_memory):
                 sentdate = 'Date: %s' % (hist.date)
                 desc = '\n%s'%(hist.description)
 
+                signature = ''
                 if case.user_id.signature:
                     signature = '--\n' + case.user_id.signature
 
