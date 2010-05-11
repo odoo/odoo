@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -167,7 +167,7 @@ class _rml_doc(object):
         from reportlab.lib.fonts import addMapping
         from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
-    
+
         pdfmetrics.registerFont(TTFont(fontname, filename ))
         if (mode == 'all'):
             addMapping(face, 0, 0, fontname)    #normal
@@ -417,11 +417,11 @@ class _rml_canvas(object):
         self.canvas.drawPath(self.path, **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
     def setFont(self, node):
-        from reportlab.pdfbase import pdfmetrics 
+        from reportlab.pdfbase import pdfmetrics
         fname = node.get('name')
-        #TODO : other fonts should be supported      
+        #TODO : other fonts should be supported
         if fname not in pdfmetrics.standardFonts:
-           fname = self.canvas._fontname          
+           fname = self.canvas._fontname
         return self.canvas.setFont(fname, utils.unit_get(node.get('size')))
 
     def render(self, node):
@@ -565,7 +565,7 @@ class _rml_flowable(object):
     def _illustration(self, node):
         class Illustration(platypus.flowables.Flowable):
             def __init__(self, node, localcontext, styles, self2):
-                self.localcontext = localcontext
+                self.localcontext = localcontext.copy
                 self.node = node
                 self.styles = styles
                 self.width = utils.unit_get(node.get('width'))
