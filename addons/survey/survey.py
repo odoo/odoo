@@ -609,7 +609,7 @@ class survey_response(osv.osv):
         reads = self.read(cr, uid, ids, ['user_id','date_create'], context)
         res = []
         for record in reads:
-            name = record['user_id'][1] + ' (' + record['date_create'].split('.')[0] + ')'
+            name = (record['user_id'] and record['user_id'][1] or '' )+ ' (' + record['date_create'].split('.')[0] + ')'
             res.append((record['id'], name))
         return res
 
