@@ -44,15 +44,6 @@ class base_action_rule(osv.osv):
         return self.state_get(cr, uid, context=context)
 
    
-    def _priority_get(self, cr, uid, context={}):
-        """ Get Priority
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param context: A standard dictionary for contextual values """
-
-        return self.priority_get(cr, uid, context=context)
-
     def state_get(self, cr, uid, context={}):
         """ Get State
             @param self: The object pointer
@@ -72,7 +63,7 @@ class base_action_rule(osv.osv):
         return [('', '')]
 
     _columns = {
-        'name': fields.many2one('ir.model', 'Model', required=True), 
+        'name': fields.many2one('ir.model', 'Object', required=True), 
         'max_level': fields.integer('Max Level', help='Specifies maximum level.'), 
         'create_date': fields.datetime('Create Date', readonly=1), 
         'active': fields.boolean('Active', help="If the active field is set to true,\
@@ -100,13 +91,10 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'), 
         'trg_state_from': fields.selection(_state_get, 'State', size=16), 
         'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16), 
-        'trg_priority_from': fields.selection(_priority_get, 'Minimum Priority'), 
-        'trg_priority_to': fields.selection(_priority_get, 'Maximum Priority'), 
 
         'act_method': fields.char('Call Object Method', size=64), 
         'act_user_id': fields.many2one('res.users', 'Set responsible to'), 
         'act_state': fields.selection(_state_get, 'Set state to', size=16), 
-        'act_priority': fields.selection(_priority_get, 'Set priority to'), 
         'act_email_cc': fields.char('Add watchers (Cc)', size=250, help="\
 These people will receive a copy of the future communication between partner \
 and users by email"), 
@@ -127,6 +115,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         'regex_name': fields.char('Regular Expression on Model Name', size=128), 
         'server_action_id': fields.many2one('ir.actions.server', 'Server Action', help="Describes the action name.\neg:on which object which action to be taken on basis of which condition"), 
         'filter_id':fields.many2one('ir.filters', 'Filter', required=False), 
+        'domain':fields.char('Domain', size=124, required=False, readonly=False),
     }
 
     _defaults = {
@@ -138,8 +127,11 @@ the rule to mark CC(mail to any other person defined in actions)."),
         'act_remind_partner': lambda *a: 0, 
         'act_remind_user': lambda *a: 0, 
         'act_mail_to_watchers': lambda *a: 0, 
+        'domain': lambda *a: '[]'
     }
-
+    
+    _order = 'sequence'
+    
     def format_body(self, body):
         """ Foramat Action rule's body
             @param self: The object pointer """
@@ -198,6 +190,10 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param context: A standard dictionary for contextual values """
 
         ok = True
+        if eval(action.domain):
+            obj_ids = obj._table.search(cr, uid, eval(action.domain), context=context)
+            if not obj.id in obj_ids:
+                ok = False
         if hasattr(obj, 'user_id'):
             ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==obj.user_id.id)
         if hasattr(obj, 'partner_id'):
@@ -214,10 +210,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
             ok = ok and (not action.trg_state_from or action.trg_state_from==obj.state)
         if state_to:
             ok = ok and (not action.trg_state_to or action.trg_state_to==state_to)
-
-        if hasattr(obj, 'priority'):
-            ok = ok and (not action.trg_priority_from or action.trg_priority_from>=obj.priority)
-            ok = ok and (not action.trg_priority_to or action.trg_priority_to<=obj.priority)
 
         reg_name = action.regex_name
         result_name = True
@@ -256,10 +248,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
             obj.categ_id = action.act_categ_id
             write['categ_id'] = action.act_categ_id.id
 
-        if hasattr(obj, 'priority') and action.act_priority:
-            obj.priority = action.act_priority
-            write['priority'] = action.act_priority
-
         model_obj.write(cr, uid, [obj.id], write, context)
 
         if hasattr(model_obj, 'remind_user') and action.act_remind_user:
@@ -294,7 +282,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         if not scrit:
             scrit = []
-        for action in self.browse(cr, uid, ids):
+        cr.execute("select id from base_action_rule order by sequence")
+        rule_ids = map(lambda x: x[0], cr.fetchall())
+        for action in self.browse(cr, uid, rule_ids):
             level = action.max_level
             if not level:
                 break
