@@ -352,19 +352,28 @@ class account_installer(osv.osv_memory):
                 ir_values = self.pool.get('ir.values')
                 s_tax = (res.get('sale_tax',0.0))/100
                 p_tax = (res.get('purchase_tax',0.0))/100
-                sales_tax = obj_tax.create(cr, uid,
-                                           {'name':'(%s)'%(s_tax*100),
+                tax_val = {}
+                default_tax = []
+                if s_tax*100 > 0.0:
+                    sales_tax = obj_tax.create(cr, uid,
+                                           {'name':'%s%%'%(s_tax*100),
                                             'amount':s_tax
                                             })
-                purchase_tax = obj_tax.create(cr, uid,
-                                            {'name':'(%s)'%(p_tax*100),
+                    tax_val.update({'taxes_id':[(6,0,[sales_tax])]})
+                    default_tax.append(('taxes_id',sales_tax))
+                if p_tax*100 > 0.0:
+                    purchase_tax = obj_tax.create(cr, uid,
+                                            {'name':'%s%%'%(p_tax*100),
                                              'amount':p_tax
                                              })
-                product_ids = obj_product.search(cr,uid, [])
-                for product in obj_product.browse(cr, uid, product_ids):
-                    obj_product.write(cr, uid, product.id, {'taxes_id':[(6,0,[sales_tax])],'supplier_taxes_id':[(6,0,[purchase_tax])]})
-                for name, value in [('taxes_id',sales_tax),('supplier_taxes_id',purchase_tax)]:
-                    ir_values.set(cr, uid, key='default', key2=False, name=name, models =[('product.product',False)], value=[value])
+                    tax_val.update({'supplier_taxes_id':[(6,0,[purchase_tax])]})
+                    default_tax.append(('supplier_taxes_id',purchase_tax))
+                if len(tax_val):
+                    product_ids = obj_product.search(cr,uid, [])
+                    for product in obj_product.browse(cr, uid, product_ids):
+                        obj_product.write(cr, uid, product.id, tax_val)
+                    for name, value in default_tax:
+                        ir_values.set(cr, uid, key='default', key2=False, name=name, models =[('product.product',False)], value=[value])
 
             if 'date_start' in res and 'date_stop' in res:
                 name = code = res['date_start'][:4]
