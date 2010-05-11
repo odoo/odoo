@@ -86,27 +86,27 @@
 -
   !python {model: mrp.procurement}: |
     from tools.translate import _
-    proc_ids = self.search(cr, uid, [('origin','=',':MO/00004')])
+    proc_ids = self.search(cr, uid, [('state','!=','confirmed')])
     assert proc_ids, _('No Procurements!')
 -
   The scheduler runs.
 -
   !function {model: mrp.procurement, name: run_scheduler}:
     - model: mrp.procurement
-      search: "[('origin','=',':MO/00004')]"
+      search: "[('state','=','cofirmed')]"
 -
   I am checking Internal picking.
 -
   !python {model: stock.picking}: |
     from tools.translate import _
-    pick_ids = self.search(cr, uid, [('origin','=',':MO/00004'),('type','=','internal')])
+    pick_ids = self.search(cr, uid, [('state','!=','done'),('type','=','internal')])
     assert pick_ids, _('No Internal Pickings!')
 -
   I see that there is a manufacturing order for the subproduct of PC1 with ready state.
 -
   !python {model: mrp.production}: |
     from tools.translate import _
-    order_ids = self.search(cr, uid, [('origin','=',':MO/00004'),('state','=','ready')])
+    order_ids = self.search(cr, uid, [('state','=','confirmed')])
     assert order_ids, _('No manufacturing order!')
 -
   I start producing that product first. So I marked it as started.
@@ -117,7 +117,7 @@
 -
   !python {model: mrp.product.produce}: |
     prod_obj = self.pool.get('mrp.production')
-    prod_ids = prod_obj.search(cr, uid, [('origin','=',':MO/00004')])
+    prod_ids = prod_obj.search(cr, uid, [('state','=','confirmed')])
     self.do_produce(cr, uid, [1], context={'active_ids': prod_ids})
 -
   Now the manufacturing order for subproduct CPU_GEN is done. And manufacturing
@@ -125,7 +125,7 @@
 -
   !python {model: mrp.production}: |
     from tools.translate import _
-    prod_ids = self.search(cr, uid, [('origin','=',':MO/00004'),('state','=','done')])
+    prod_ids = self.search(cr, uid, [('state','!=','done')])
     assert prod_ids, _('Manufacturing order is yet not done!')
 -
   I start producing the product PC1.
