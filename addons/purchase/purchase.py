@@ -515,6 +515,7 @@ class purchase_order(osv.osv):
                 'state': 'draft',
                 'order_line': {},
                 'notes': '%s' % (porder.notes or '',),
+                'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
                 })
             else:
                 #order_infos['name'] += ', %s' % porder.name
