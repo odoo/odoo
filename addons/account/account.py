@@ -295,7 +295,7 @@ class account_account(osv.osv):
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
             help="These types are defined according to your country. The type contains more information "\
             "about the account and its specificities."),
-        'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade'),
+        'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
         'child_id': fields.function(_get_child_ids, method=True, type='many2many', relation="account.account", string="Child Accounts"),
