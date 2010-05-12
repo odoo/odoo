@@ -19,7 +19,36 @@
 #
 ##############################################################################
 
-import partner_crm
+
+{
+    'name': 'Detailed information on partner form', 
+    'version': '1.0', 
+    'category': 'Generic Modules/Base', 
+    'description': """
+This module allows a salesman to have a direct overlook at all events related to this partner directly from the partner form.
+
+It adds the following fields on the partner form:
+
+    * Opportunities
+    * Meetings
+    * Phone Calls
+    * Invoices
+       - group by product_id
+    * Contracts
+    * Timesheets
+
+    """, 
+    'author': 'Tiny', 
+    'website': 'http://www.openerp.com', 
+    'depends': ['crm', 'account_analytic_analysis'], 
+    'init_xml': [], 
+    'update_xml': [
+                   'security/ir.model.access.csv', 
+                   'partner_infotab_view.xml'
+                   ], 
+    'demo_xml': [], 
+    'installable': True, 
+    'active': False, 
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
