@@ -26,5 +26,6 @@ import installer
 import wizard
 import report
 import company
-import schedulers
+import mrp_procurement
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

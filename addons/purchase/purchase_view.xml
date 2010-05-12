@@ -322,7 +322,22 @@
             <field name="act_window_id" ref="purchase_line_form_action2"/>
         </record>
          <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_procurement_management_invoice"/>
-
+		
+		<!-- 
+        	Procurements
+        -->
+         
+        <record id="view_procurement_form_inherit" model="ir.ui.view">
+        	<field name="name">mrp.procurement.form.inherit</field>
+        	<field name="model">mrp.procurement</field>
+        	<field name="inherit_id" ref="mrp_procurement.mrp_procurement_form_view"/>
+        	<field name="type">form</field>
+        	<field name="arch" type="xml">
+        		<xpath expr="/form/notebook/page/field[@name='close_move']" position="before">
+        			<field name="purchase_id"/>
+        		</xpath>
+        	</field>
+        </record>
 
     </data>
 </openerp>
