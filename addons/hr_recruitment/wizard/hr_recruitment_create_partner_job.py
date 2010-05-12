@@ -54,12 +54,11 @@ class hr_recruitment_partner_create(osv.osv_memory):
             partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])
             if partner_id:
                 raise osv.except_osv(_('Warning !'),_('A partner is already existing with the same name.'))
-            else:
-                partner_id = partner_obj.create(cr, uid, {
-                    'name': case.partner_name or case.name,
-                    'user_id': case.user_id.id,
-                    'comment': case.description,
-                })
+            partner_id = partner_obj.create(cr, uid, {
+                'name': case.partner_name or case.name,
+                'user_id': case.user_id.id,
+                'comment': case.description,
+            })
             contact_id = contact_obj.create(cr, uid, {
                 'partner_id': partner_id,
                 'name': case.partner_name,
@@ -68,10 +67,10 @@ class hr_recruitment_partner_create(osv.osv_memory):
                 'email': case.email_from
             })
 
-        case_obj.write(cr, uid, context['active_ids'], {
-            'partner_id': partner_id,
-            'partner_address_id': contact_id
-        })
+            case_obj.write(cr, uid, case.id, {
+                'partner_id': partner_id,
+                'partner_address_id': contact_id
+            })
         if data['close']:
             case_obj.case_close(cr, uid, context['active_ids'])
 
