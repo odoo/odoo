@@ -29,7 +29,7 @@ import sys
 
 from datetime import datetime
 from lxml import etree
-
+import time
 import ir
 import misc
 import netsvc
@@ -252,13 +252,13 @@ form: module.record_id""" % (xml_id,)
         if ids:
             self.pool.get(d_model).unlink(cr, self.uid, ids)
             self.pool.get('ir.model.data')._unlink(cr, self.uid, d_model, ids)
-    
+
     def _remove_ir_values(self, cr, name, value, model):
         ir_value_ids = self.pool.get('ir.values').search(cr, self.uid, [('name','=',name),('value','=',value),('model','=',model)])
         if ir_value_ids:
             self.pool.get('ir.values').unlink(cr, self.uid, ir_value_ids)
             self.pool.get('ir.model.data')._unlink(cr, self.uid, 'ir.values', ir_value_ids)
-        
+
         return True
 
     def _tag_report(self, cr, rec, data_node=None):
@@ -278,7 +278,7 @@ form: module.record_id""" % (xml_id,)
             res['header'] = eval(rec.get('header','False'))
         if rec.get('report_type'):
             res['report_type'] = rec.get('report_type')
-            
+
         res['multi'] = rec.get('multi') and eval(rec.get('multi','False'))
 
         xml_id = rec.get('id','').encode('utf8')
@@ -355,7 +355,7 @@ form: module.record_id""" % (xml_id,)
             # Special check for wizard having attribute menu=False on update
             value = 'ir.actions.wizard,'+str(id)
             self._remove_ir_values(cr, string, value, model)
-        
+
     def _tag_url(self, cr, rec, data_node=None):
         url = rec.get("string",'').encode('utf8')
         target = rec.get("target",'').encode('utf8')
