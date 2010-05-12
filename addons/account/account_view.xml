@@ -1447,7 +1447,7 @@
 
         <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]" id="act_account_partner_account_move_unreconciled" name="Unreconciled Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 
-        <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="All Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
+        <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 		
 		<act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All Account Entries" res_model="account.move.line" src_model="res.partner"/>
 
@@ -1746,25 +1746,35 @@
                 <form position="attributes">
                   <attribute name="string">Generate Chart of Accounts from a Chart Template</attribute>
                 </form>
+                <separator string="title" position="attributes">
+            	<attribute name="string"
+                       >Generate Chart of Accounts from a Chart Template</attribute>
+          		</separator>
+          		<xpath expr="//label[@string='description']" position="attributes">
+            		<attribute name="string">This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template</attribute>
+            		<attribute name="width">150</attribute>
+          		</xpath>
+          		<xpath expr='//separator[@string="vsep"]' position='attributes'>
+              			<attribute name='rowspan'>15</attribute>
+              			<attribute name='string'></attribute>
+	      		</xpath>
                 <group string="res_config_contents" position="replace">
-                  <separator col="4" colspan="4" string="
-                    Generate Chart of Accounts from a Chart Template"/>
-                  <label align="0.0" colspan="4"
-                         string="This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template"/>
                   <field name="company_id"  widget="selection"
-                         groups="base.group_multi_company"/>
+                         />
                   <field name ="code_digits" />
                   <field name="chart_template_id"/>
                   <field name ="seq_journal" />
                   <field colspan="4" mode="tree" name="bank_accounts_id"
                          nolabel="1" widget="one2many_list">
                     <form string="Bank Information">
-                      <field name="acc_no"/>
-                      <field name="currency_id"/>
+                      <field name="acc_name"/>
+                      <field name="account_type"/>
+                      <field name="currency_id" widget="selection"/>
                     </form>
                     <tree editable="bottom" string="Bank Information">
-                      <field name="acc_no"/>
-                      <field name="currency_id"/>
+                      <field name="acc_name"/>
+                      <field name="account_type"/>
+                      <field name="currency_id" widget="selection"/>
                     </tree>
                   </field>
                 </group>

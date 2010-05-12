@@ -84,7 +84,7 @@ class report_project_task_user(osv.osv):
                     t.project_id,
                     t.state,
                     t.priority,
-                    t.name,
+                    t.name as name,
                     t.company_id,
                     t.partner_id,
                     t.type,
