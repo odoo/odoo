@@ -32,6 +32,11 @@ class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
 
+    def _get_default_accounts(self, cr, uid, context=None):
+        accounts = [{'acc_name':'Current','account_type':'cash'},
+                    {'acc_name':'Deposit','account_type':'cash'}]
+        return accounts
+
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
         ids = modules.search(cr, uid, [('category_id','=','Account Charts')])
@@ -77,6 +82,7 @@ class account_installer(osv.osv_memory):
         'sale_tax':lambda *a:0.0,
         'purchase_tax':lambda *a:0.0,
         'charts':'configurable',
+        'bank_accounts_id':_get_default_accounts
         }
 
     def on_change_start_date(self, cr, uid, id, start_date):

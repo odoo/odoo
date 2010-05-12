@@ -7,23 +7,25 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
       <form string="Setup">
-      <group colspan="4" col="8" width="600">
-      <group>
-  		<field name="config_logo" widget="image" width="150" height="100" nolabel="1" colspan="1"/>
-  	</group>
-      	<group colspan="6">
-      		<separator string="Installation Done" colspan="8"/>
-      		<label align="0.0" string="Your new database is now fully installed." colspan="8"/>
-       		<field name="installed_users" nolabel= "1" colspan="8"/>
-       		<label align="0.0" colspan="8"	string="You can start configuring the system or connect directly to the database as an administrator."/>
-        </group>
-      </group>
-      <group colspan="8" col="8">
-    		<separator string="" colspan="8"/>
-    		<label string="" colspan="6"/>
-			<button name="menu" icon="gtk-ok" type="object" string="Use Directly" colspan="1"/>
-			<button name="config" icon="gtk-go-forward" type="object" string="Start Configuration" colspan="1"/>
-      </group>
+	      <group colspan="4" col="8">
+              	<group colspan="3" width="200">
+                	<field name="config_logo" widget="image" width="150" height="100" nolabel="1" colspan="1"/>
+                	<newline/>
+                	<label align="0.0" string="You can start configuring the system or connect directly to the database as an administrator." width="200" colspan="2"/>
+              	</group>
+              	<separator string="" position="vertical" colspan="1" rowspan="8"/>
+            	<group colspan="4" width="400">
+              		<separator string="Installation Done" colspan="4"/>
+              		<label align="0.0" string="Your new database is now fully installed." colspan="4"/>
+       				<field name="installed_users" nolabel= "1" colspan="4"/>
+            	</group>
+			</group>
+            	<group colspan="8" col="8">
+            		<separator string="" colspan="8"/>
+    				<label string="" colspan="6"/>
+					<button name="menu" icon="gtk-ok" type="object" string="Use Directly" colspan="1"/>
+					<button name="config" icon="gtk-go-forward" type="object" string="Start Configuration" colspan="1"/>
+           </group>
     </form>
    </field>
   </record>
