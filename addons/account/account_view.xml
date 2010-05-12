@@ -1451,48 +1451,6 @@
 		
 		<act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All Account Entries" res_model="account.move.line" src_model="res.partner"/>
 
-
-        <!-- configuration wizard view -->
-
-        <record id="view_account_config_wizard_form" model="ir.ui.view">
-            <field name="name">Account Configure wizard</field>
-            <field name="model">account.config.wizard</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
-            <field name="arch" type="xml">
-              <data>
-                <form position="attributes">
-                  <attribute name="string">Account Configure</attribute>
-                </form>
-                <group string="res_config_contents" position="replace">
-                    <separator col="4" colspan="4" string="Create a Fiscal Year"/>
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="date1"/>
-                    <field name="date2"/>
-                    <field name="period" colspan="4"/>
-                </group>
-                <xpath expr='//button[@name="action_skip"]' position="replace"/>
-              </data>
-            </field>
-        </record>
-
-        <record id="action_account_config_wizard_form" model="ir.actions.act_window">
-            <field name="name">Account Configure Wizard </field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.config.wizard</field>
-            <field name="view_id" ref="view_account_config_wizard_form"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!-- register configuration wizard -->
-        <record id="config_fiscalyear" model="ir.actions.todo">
-            <field name="action_id" ref="action_account_config_wizard_form"/>
-            <field name="restart">onskip</field>
-        </record>
-
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Account Add wizard</field>
             <field name="model">account.addtmpl.wizard</field>
