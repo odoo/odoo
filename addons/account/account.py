@@ -1330,7 +1330,15 @@ class account_tax_code(osv.osv):
                 return False
             level -= 1
         return True
+    
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.update({'line_ids': []})
+        return super(account_tax_code, self).copy(cr, uid, id, default, context)
+    
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
