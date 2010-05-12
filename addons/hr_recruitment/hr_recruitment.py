@@ -37,6 +37,20 @@ AVAILABLE_PRIORITIES = [
     ('1','Excellent')
 ]
 
+class hr_recruitment_stage(osv.osv):
+    """ Stage of HR Recruitment """
+
+    _name = "hr.recruitment.stage"
+    _description = "Stage of Recruitment"
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
+        'requirements': fields.text('Requirements')
+    }
+    _defaults = {
+        'sequence': 1,
+    }
+hr_recruitment_stage()
 
 class hr_applicant(osv.osv):
     _name = "hr.applicant"
@@ -54,8 +68,8 @@ class hr_applicant(osv.osv):
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
+        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
+        'type_id': fields.many2one('crm.case.resource.type', 'Degree'),
         'department_id':fields.many2one('hr.department','Department'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
@@ -75,7 +89,7 @@ class hr_applicant(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             section = (case.section_id.id or False)
             st = case.stage_id.id  or False
-            stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [])
+            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [])
             if st and stage_ids.index(st):
                 self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)-1]})
         return True
@@ -93,7 +107,7 @@ class hr_applicant(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             section = (case.section_id.id or False)
             st = case.stage_id.id  or False
-            stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [])
+            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [])
             if st and len(stage_ids) != stage_ids.index(st)+1:
                 self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)+1]})
         return True
@@ -177,3 +191,5 @@ class hr_job(osv.osv):
     }
 
 hr_job()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

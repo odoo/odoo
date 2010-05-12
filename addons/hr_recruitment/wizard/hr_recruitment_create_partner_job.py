@@ -19,7 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import osv, fields
 from tools.translate import _
 
@@ -74,7 +73,7 @@ class hr_recruitment_partner_create(osv.osv_memory):
         if data['close']:
             case_obj.case_close(cr, uid, context['active_ids'])
 
-        value = {
+        return {
             'domain': "[]",
             'view_type': 'form',
             'view_mode': 'form,tree',
@@ -83,8 +82,7 @@ class hr_recruitment_partner_create(osv.osv_memory):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
-        }
-        return value
+                }
 
 hr_recruitment_partner_create()
 
