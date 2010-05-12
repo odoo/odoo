@@ -490,7 +490,7 @@ class stock_picking(osv.osv):
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for Picking. Default it takes current date"),
         'date': fields.datetime('Order Date', help="Date of Order"),
-        'date_done': fields.datetime('Date Done', help="Date of completion"),
+        'date_done': fields.datetime('Date Done', help="Date of Completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Entry lines', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
