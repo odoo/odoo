@@ -3621,8 +3621,9 @@ class orm(orm_template):
             * '&' (default), '|', '!'
 
         """
-        if not context:
+        if context is None:
             context = {}
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
         dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
