@@ -37,8 +37,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         'email_from' : fields.char('From', required=True, size=128), 
         'email_to' : fields.char('To', required=True, size=128), 
         'subject' : fields.char('Subject', required=True, size=128), 
-        'message' : fields.text('Message', required=True),
-        'history': fields.selection([('whole', 'Whole'), ('latest', 'Latest')], 'Send history', required=True), 
+        'message' : fields.text('Message', required=True), 
+        'history': fields.selection([('latest', 'Latest email'), ('whole', 'Whole Story'), ('info', 'Case Information')], 'Send history', required=True), 
     }
     
     def get_whole_history(self, cr, uid, ids, context=None):
@@ -47,19 +47,19 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             whole.append(self.get_latest_history(cr, uid, hist_id, context=context))
         whole = '\n\n'.join(whole)
         return whole or ''
-    
-    def get_latest_history(self, cr, uid, id, context=None):
+
+    def get_latest_history(self, cr, uid, hist_id, context=None):
         log_pool = self.pool.get('mailgate.message')
-        hist = log_pool.browse(cr, uid, id, context=context)
+        hist = log_pool.browse(cr, uid, hist_id, context=context)
         header = '-------- Original Message --------'
         sender = 'From: %s' %(hist.email_from or '')
         to = 'To: %s' % (hist.email_to or '')
-        sentdate = 'Date: %s' % (hist.date)
+        sentdate = 'Date: %s' % (hist.date or '')
         desc = '\n%s'%(hist.description)
         original = [header, sender, to, sentdate, desc]
         original = '\n'.join(original)
         return original
-    
+
     def on_change_email(self, cr, uid, ids, user, partner):
         """
         @param self: The object pointer
@@ -83,14 +83,29 @@ class crm_lead_forward_to_partner(osv.osv_memory):
     def on_change_history(self, cr, uid, ids, history, context=None):
         #TODO: ids and context are not comming
         res = False
-        if history == 'whole' and ids: #Remove second condition:
-            #TODO: get whole history ids for current Case object
-            msg_val = self.get_whole_history(cr, uid, ids, context=context)
-            res = {'value': {'message' : msg_val}}
-        if history == 'latest' and ids: #Remove second condition
-            #TODO: get Latest history id for current Case object
-            msg_val = self.get_latest_history(cr, uid, ids, context=context)
-            res = {'value': {'message' : msg_val}}
+        msg_val = ''
+        res_id = 2 # temp
+        model = 'crm.lead' # temp
+        model_pool = self.pool.get(model)
+
+        if history == 'info':
+            msg_val = self.get_lead_details(cr, uid, res_id, context=context)
+
+        if history == 'whole':
+            log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
+            log_ids = map(lambda x: x.id, log_ids)
+            if not log_ids:
+                raise osv.except_osv('Warning!', 'There is no history to send')
+            msg_val = self.get_whole_history(cr, uid, log_ids, context=context)
+
+        if history == 'latest':
+            log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
+            if not log_ids:
+                raise osv.except_osv('Warning!', 'There is no history to send')
+            msg_val = self.get_latest_history(cr, uid, log_ids[0].id, context=context)
+
+        if msg_val:
+            res = {'value': {'message' : '\n\n' + msg_val}}
         return res
 
     def on_change_partner(self, cr, uid, ids, partner_id):
@@ -159,9 +174,10 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         case_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc + ', ' + this.email_to or this.email_to})
         return {}
 
-    def get_lead_details(self, cr, uid, lead, context=None):
+    def get_lead_details(self, cr, uid, lead_id, context=None):
         message = []
         lead_proxy = self.pool.get('crm.lead')
+        lead = lead_proxy.browse(cr, uid, lead_id, context=context)
         if lead.type == 'lead':
                 field_names = [
                     'partner_name', 'title', 'function_name', 'street', 'street2', 
@@ -226,14 +242,15 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         if user.address_id and user.address_id.email:
             email_from = "%s <%s>" % (user.name, user.address_id.email)
         
-        message = self.get_lead_details(cr, uid, lead, context=context)
+        message = self.get_lead_details(cr, uid, lead.id, context=context)
 
         res = {
             'email_from' : email_from, 
             'subject' : '[%s-Forward:%06d] %s' % (lead.type.title(), lead.id, lead.name), 
             'message' : message, 
         }
-
+        if 'history' in fields:
+            res.update({'history': 'info'})
         return res
 
 crm_lead_forward_to_partner()
