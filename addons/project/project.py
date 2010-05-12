@@ -139,6 +139,7 @@ class project(osv.osv):
         'active': lambda *a: True,
         'priority': lambda *a: 1,
         'sequence': lambda *a: 10,
+        'warn_manager': lambda *a: True,
     }
     def _check_dates(self, cr, uid, ids):
          leave = self.read(cr, uid, ids[0],['date_start','date'])

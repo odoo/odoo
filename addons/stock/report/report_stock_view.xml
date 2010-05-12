@@ -105,21 +105,24 @@
             id="act_stock_product_location_open"
             name="Stock by Location"
             res_model="stock.location"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="base.group_extended"/>
 
         <act_window
             domain="[('location_id', 'child_of', [active_id])]"
             id="act_stock_location_2_stock_report_prodlots"
             name="Stock by Lots"
             res_model="stock.report.prodlots"
-            src_model="stock.location"/>
+            src_model="stock.location"
+            />
 
         <act_window
             domain="[('product_id','=',active_id)]"
             id="act_product_product_2_stock_report_prodlots"
             name="Stock by Lots"
             res_model="stock.report.prodlots"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="base.group_extended"/>
 
         <act_window
             domain="[('prodlot_id', '=', active_id)]"
