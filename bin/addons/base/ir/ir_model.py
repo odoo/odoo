@@ -82,6 +82,8 @@ class ir_model(osv.osv):
         return super(ir_model,self).write(cr, user, ids, vals, context)
 
     def create(self, cr, user, vals, context=None):
+        if  context is None:
+            context = {}
         if context and context.get('manual',False):
             vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
