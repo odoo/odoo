@@ -1070,7 +1070,7 @@ class sale_order_line(osv.osv):
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
 
-        elif uos: # only happens if uom is False
+        elif uos and not uom: # only happens if uom is False
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
             result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
             result['th_weight'] = result['product_uom_qty'] * product_obj.weight
