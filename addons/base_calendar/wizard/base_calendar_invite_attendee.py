@@ -44,7 +44,7 @@ class base_calendar_invite_attendee(osv.osv_memory):
         'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel',
                                   'invite_id', 'contact_id', 'Contacts'),
         'send_mail': fields.boolean('Send mail?', help='Check this if you want to \
-                        send an Email to Invited Person')
+send an Email to Invited Person')
     }
 
     _defaults = {

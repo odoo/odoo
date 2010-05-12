@@ -42,17 +42,18 @@ class crm_claim(osv.osv, crm.crm_case):
         'ref' : fields.reference('Reference', selection=crm._links_get, size=128), 
         'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128), 
         'canal_id': fields.many2one('res.partner.canal', 'Channel', \
-                     help="The channels represent the different communication\
-                      modes available with the customer." \
-                     " With each commercial opportunity, you can indicate the\
-                      canall which is this opportunity source."), 
+                     help="The channels represent the different communication"\
+                      "modes available with the customer." \
+                     " With each commercial opportunity, you can indicate the"\
+                      "canall which is this opportunity source."), 
         'planned_revenue': fields.float('Planned Revenue'), 
         'planned_cost': fields.float('Planned Costs'), 
         'som': fields.many2one('res.partner.som', 'State of Mind', \
-                        help="The minds states allow to define a value scale which represents" \
-                              "the partner mentality in relation to our services.The scale has" \
-                              "to be created with a factor for each level from 0 (Very dissatisfied) \
-                              to 10 (Extremely satisfied)."), 
+                        help="The minds states allow to define a value scale "\
+                            "which represents the partner mentality in "\
+                            "relation to our services.The scale has to be "\
+                            "created with a factor for each level from 0 "\
+                            "(Very dissatisfied) to 10 (Extremely satisfied)"), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.claim')]"), 
@@ -62,15 +63,14 @@ class crm_claim(osv.osv, crm.crm_case):
                          ('object_id.model', '=', 'crm.claim')]"), 
         'user_id': fields.many2one('res.users', 'Responsible'), 
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'), 
+                        select=True, help="Sales team to which Case belongs to."\
+                                "Define Responsible user and Email account for"\
+                                " mail gateway."), 
         'company_id': fields.many2one('res.company', 'Company'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"), 
-        'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
- will receive a copy of the future" \
-" communication between partner and users by email"), 
+        'email_cc': fields.text('Watchers Emails', size=252, help="These people will receive a copy of the future communication between partner and users by email"), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."), 
         'partner_name': fields.char("Employee's Name", size=64), 
         'partner_mobile': fields.char('Mobile', size=32), 

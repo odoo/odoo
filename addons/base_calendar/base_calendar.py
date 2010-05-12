@@ -580,7 +580,7 @@ class res_alarm(osv.osv):
 are both optional, but if one occurs, so MUST the other"""), 
         'repeat': fields.integer('Repeat'), 
         'active': fields.boolean('Active', help="If the active field is set to \
-                    true, it will allow you to hide the event alarm information without removing it.")
+true, it will allow you to hide the event alarm information without removing it.")
     }
     _defaults = {
         'trigger_interval': lambda *x: 'minutes', 
@@ -992,9 +992,9 @@ class calendar_event(osv.osv):
                                                 'Show as'), 
         'base_calendar_url': fields.char('Caldav URL', size=264), 
         'exdate': fields.text('Exception Date/Times', help="This property \
-                    defines the list of date/time exceptions for arecurring calendar component."), 
+defines the list of date/time exceptions for arecurring calendar component."), 
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
-                    rule or repeating pattern for anexception to a recurrence set"), 
+rule or repeating pattern for an exception to a recurrence set"), 
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, \
                                     string='Recurrent Rule', store=True, \
                                     fnct_inv=_set_rrulestring, help='Defines a\
@@ -1044,7 +1044,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                  'event_id', 'attendee_id', 'Attendees'),
         'allday': fields.boolean('All Day'), 
         'active': fields.boolean('Active', help="If the active field is set to \
-                    true, it will allow you to hide the event alarm information without removing it.")
+true, it will allow you to hide the event alarm information without removing it.")
     }
 
     _defaults = {

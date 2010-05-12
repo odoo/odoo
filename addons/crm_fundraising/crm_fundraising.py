@@ -39,15 +39,12 @@ class crm_fundraising(osv.osv, crm.crm_case):
             'date_deadline': fields.date('Deadline'), 
             'user_id': fields.many2one('res.users', 'Responsible'), 
             'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                            select=True, help='Sales team to which Case belongs to.\
-                                 Define Responsible user and Email account for mail gateway.'), 
+                            select=True, help='Sales team to which Case belongs to. Define Responsible user and Email account for mail gateway.'), 
             'company_id': fields.many2one('res.company', 'Company'), 
             'partner_id': fields.many2one('res.partner', 'Partner'), 
             'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"), 
-            'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
- will receive a copy of the future" \
-" communication between partner and users by email"), 
+            'email_cc': fields.text('Watchers Emails', size=252 , help="These people will receive a copy of the future communication between partner and users by email"), 
             'email_from': fields.char('Email', size=128, help="These people will receive email."), 
             'date_closed': fields.datetime('Closed', readonly=True), 
             'date': fields.datetime('Date'), 
@@ -72,8 +69,8 @@ class crm_fundraising(osv.osv, crm.crm_case):
             'ref': fields.reference('Reference', selection=crm._links_get, size=128), 
             'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128), 
             'canal_id': fields.many2one('res.partner.canal', 'Channel', \
-                        help="The channels represent the different communication \
-                        modes available with the customer." \
+                        help="The channels represent the different communication "\
+                        "modes available with the customer." \
                        " With each commercial opportunity, you can indicate\
                      the canall which is this opportunity source."), 
             'som': fields.many2one('res.partner.som', 'State of Mind', \

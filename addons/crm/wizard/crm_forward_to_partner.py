@@ -26,6 +26,7 @@ from tools.translate import _
 import tools
 
 class crm_lead_forward_to_partner(osv.osv_memory):
+    """Forwards lead history"""
     _name = 'crm.lead.forward.to.partner'
 
     _columns = {
@@ -43,6 +44,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
     }
     
     def get_whole_history(self, cr, uid, ids, context=None):
+        """This function gets whole communication history and returns as top posting style 
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of history IDs
+        @param context: A standard dictionary for contextual values
+        """
         whole = []
         for hist_id in ids:
             whole.append(self.get_latest_history(cr, uid, hist_id, context=context))
@@ -50,6 +58,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         return whole or ''
 
     def get_latest_history(self, cr, uid, hist_id, context=None):
+        """This function gets latest communication and returns as top posting style
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param hist_id: Id of latest history
+        @param context: A standard dictionary for contextual values
+        """
         log_pool = self.pool.get('mailgate.message')
         hist = log_pool.browse(cr, uid, hist_id, context=context)
         header = '-------- Original Message --------'
@@ -61,27 +76,34 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         original = '\n'.join(original)
         return original
 
-    def on_change_email(self, cr, uid, ids, user, partner):
-        """
+    def on_change_email(self, cr, uid, ids, user):
+        """This function fills email information based on user selected
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of Mail’s IDs
+        @param user: Changed User id
+        @param partner: Changed Partner id  
         """
-        if (not partner and not user):
+        if not user:
             return {'value': {'email_to': False}}
         email = False
-        if partner:
-            addr = self.pool.get('res.partner').address_get(cr, uid, [partner], ['contact'])
-            if addr and addr['contact']:
-                email = self.pool.get('res.partner.address').read(cr, uid, addr['contact'] , ['email'])['email']
-        elif user:
-            addr = self.pool.get('res.users').read(cr, uid, user, ['address_id'])['address_id']
-            if addr:
-                email = self.pool.get('res.partner.address').read(cr, uid, addr[0] , ['email'])['email']
+        addr = self.pool.get('res.users').read(cr, uid, user, ['address_id'])['address_id']
+        if addr:
+            email = self.pool.get('res.partner.address').read(cr, uid, addr[0] , ['email'])['email']
         return {'value': {'email_to': email}}
 
     def on_change_history(self, cr, uid, ids, history, context=None):
+        """Gives message body according to type of history selected
+            * info: Forward the case information
+            * whole: Send the whole history
+            * latest: Send the latest histoy
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of history IDs
+        @param context: A standard dictionary for contextual values
+        """
         #TODO: ids and context are not comming
         res = False
         msg_val = ''
@@ -111,6 +133,14 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         return res
 
     def on_change_partner(self, cr, uid, ids, partner_id):
+        """This function fills address information based on partner/user selected
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Mail’s IDs
+        @param user: Changed User id
+        @param partner: Changed Partner id  
+        """
         if not partner_id:
             return {'value' : {'email_to' : False, 'address_id': False}}
 

@@ -63,8 +63,8 @@ class crm_helpdesk(osv.osv, crm.crm_case):
             'som': fields.many2one('res.partner.som', 'State of Mind', \
                             help="The minds states allow to define a value scale which represents" \
                                 "the partner mentality in relation to our services.The scale has" \
-                                "to be created with a factor for each level from 0 \
-                                (Very dissatisfied) to 10 (Extremely satisfied)."), 
+                                "to be created with a factor for each level from 0" \
+                                "(Very dissatisfied) to 10 (Extremely satisfied)."), 
             'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"), 
