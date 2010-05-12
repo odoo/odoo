@@ -26,7 +26,7 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
-    "depends" : ["stock", "resource", "purchase", "product","process"],
+    "depends" : ["mrp_procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
     This is the base module to manage the manufacturing process in Open ERP.
 
@@ -61,15 +61,11 @@
         'mrp_workflow.xml',
         'mrp_data.xml',
         'wizard/mrp_product_produce_view.xml',
-        'wizard/make_procurement_view.xml',
-        'wizard/mrp_procurement_view.xml',
         'wizard/change_production_qty_view.xml',
-        'wizard/orderpoint_procurement_view.xml',
         'wizard/mrp_price_view.xml',
         'wizard/mrp_workcenter_load_view.xml',
 #        'wizard/mrp_track_prod_view.xml',
         'mrp_view.xml',
-        'wizard/schedulers_all_view.xml',
         'mrp_wizard.xml',
         'mrp_report.xml',
         'company_view.xml',
@@ -81,6 +77,7 @@
         'report/mrp_production_order_view.xml',
     ],
     'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
+#    'test': ['test/mrp_phantom_bom.yml','test/mrp_production_order.yml'],
     'installable': True,
     'active': False,
     'certificate': '0032052481373',

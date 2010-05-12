@@ -20,14 +20,10 @@
 ##############################################################################
 
 import mrp_product_produce
-import orderpoint_procurement
-import mrp_procurement
-import schedulers_all
 import mrp_price
 import mrp_workcenter_load
 #import mrp_track_prod
 import change_production_qty
-import make_procurement_product
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

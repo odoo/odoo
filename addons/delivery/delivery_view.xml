@@ -291,5 +291,16 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="edit_project_multicompany">
+            <field name="name">sale.order.multicompany</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                    <xpath expr="/form/notebook/page[@string='Sale Order']/group[1]/button[@name='button_dummy']" position="after">
+ 			        	<button name="%(action_delivery_cost)d" states="draft" string="Delivery Costs" type="action" icon="gtk-execute" context="{'order_id':id}"/>                    
+ 			        </xpath>
+            </field>
+        </record>
+
     </data>
 </openerp>

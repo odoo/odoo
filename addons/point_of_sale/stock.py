@@ -30,7 +30,6 @@ class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     _columns = {
         'pos_order': fields.many2one('pos.order', 'Pos order'),
-     #   'company_id':fields.many2one('res.company', 'Company', required=True),
     }
 stock_picking()
 
