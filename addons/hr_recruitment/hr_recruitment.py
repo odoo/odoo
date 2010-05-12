@@ -43,9 +43,8 @@ class hr_recruitment_stage(osv.osv):
     _name = "hr.recruitment.stage"
     _description = "Stage of Recruitment"
     _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order \
-                        when displaying a list of case stages."),
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'requirements': fields.text('Requirements')
     }
     _defaults = {
