@@ -2,173 +2,195 @@
 <openerp>
     <data>
 
-    <record id="view_repair_order_form" model="ir.ui.view">
-            <field name="name">mrp.repair.form</field>
-            <field name="model">mrp.repair</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Repairs order">
-                    <group col="6" colspan="4">
-                        <field name="name"/>
-                        <field name="product_id" select="1"  on_change="onchange_product_id(product_id)"/>
-                        <field name="deliver_bool"/>
-                        <newline/>
-                        <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)"/>
-                        <field name="move_id" on_change="onchange_move_id(product_id, move_id)"/>
-                        <field name="repaired"/>
-                        <newline/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)"/>
-                        <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}"/>
-                        <field name="invoiced"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Operations">
-                            <field name="guarantee_limit" />
-                            <newline/>
-                            <field colspan="4" mode="tree,form" name="operations" nolabel="1" widget="one2many_list">
-                                <form string="Operations">
-                                    <notebook>
-                                        <page string="Repair Line">
-                                            <field name="name" colspan="4"/>
-                                            <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)" colspan="4"/>
-                                            <field name="product_uom_qty" string="Qty" />
-                                            <field name="product_uom" string="UoM"/>
-                                            <field name="price_unit"/>
-                                            <field name="price_subtotal"/>
-                                            <field name="location_id"/>
-                                            <field name="location_dest_id"/>
-                                            <newline/>
-                                            <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
-                                            <group colspan="2">
-                                                <field name="to_invoice"/>
-                                                <field name="invoiced"/>
-                                            </group>
-                                            <newline/>
-                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                            <separator colspan="4" string="States"/>
-                                            <field name="state"/>
-                                        </page>
-                                        <page string="History" groups="base.group_extended">
-                                            <field colspan="4" name="move_id" />
-                                            <field colspan="4" name="invoice_line_id"/>
-                                        </page>
-
-                                     </notebook>
-                                </form>
-                                <tree string="Operations" editable="bottom">
-                                    <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
-                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
-                                    <field name='name'/>
-                                    <field name="location_id"/>
-                                    <field name="location_dest_id"/>
-                                    <field name="product_uom_qty" string="Qty"/>
-                                    <field name="product_uom" string="UoM"/>
-                                    <field name="price_unit"/>
-                                    <field name="tax_id"/>
-                                    <field name="to_invoice"/>
-                                    <field name="price_subtotal"/>
-                                </tree>
-                            </field>
-                            <newline/>
-                            <group col="7" colspan="4">
-                                <field name="amount_untaxed" sum="Untaxed amount"/>
-                                <field name="amount_tax"/>
-                                <field name="amount_total" sum="Total amount"/>
-                                <button name="button_dummy" states="draft" string="Compute" type="object"/>
-                            </group>
-                            <newline/>
-                            <group col="13" colspan="4">
-                                <field name="state"/>
-                                <button name="repair_confirm" states="draft" string="Confirm Repair"/>
-                                <button name="repair_ready" states="confirmed" string="Start Repair"/>
-                                <button name="action_repair_start" states="ready" string="Start Repair"/>
-                                <button name="action_repair_end" states="under_repair" string="End Repair"/>
-                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
-                                <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>
-                                <button name="action_invoice_create" states="2binvoiced" string="Make Invoice"/>
-                                <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action"/>
-                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                                <button name="cancel" states="draft" string="Cancel Repair"/>
-                                <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action"/>
-                            </group>
-                        </page>
-                        <page string="Invoicing">
-                            <field name="invoice_method" colspan="4"/>
-                            <field
-                                name="pricelist_id" context="product_id=product_id"
-                                attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
-                            <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
-                            <!-- <field name="invoice_id"/> -->
-                            <field colspan="4" mode="tree,form" name="fees_lines" nolabel="1" widget="one2many_list">
-                                <form string="Fees">
-                                    <notebook>
-                                        <page string="Fees Line">
-                                            <field name='name'/>
-                                            <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)" colspan="4"/>
-                                            <field name="product_uom_qty" string="Qty"/>
-                                            <field name="product_uom" string="UoM" />
-                                            <field name="price_unit"/>
-                                            <field name="price_subtotal"/>
-                                            <newline/>
-                                            <group colspan="2">
-                                                <field name="to_invoice"/>
-                                                <field name="invoiced"/>
-                                            </group>
-                                            <newline/>
-                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                         </page>
-                                         <page string="History" groups="base.group_extended">
-                                            <field colspan="4" name="invoice_line_id" />
-                                        </page>
-                                      </notebook>
-                                </form>
-                                <tree string="Fees" editable="bottom">
-                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
-                                    <field name='name'/>
-                                    <field name="product_uom_qty" string="Qty"/>
-                                    <field name="product_uom" string="UoM"/>
-                                    <field name="price_unit"/>
-                                    <field name="to_invoice"/>
-                                    <field name="price_subtotal"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Quality">
-                            <separator colspan="4" string="Internal Notes"/>
-                            <field colspan="4" name="internal_notes" nolabel="1"/>
-                            <separator colspan="4" string="Quotation Notes"/>
-                            <field colspan="4" name="quotation_notes" nolabel="1"/>
-                        </page>
-                        <page string="Extra Info" groups="base.group_extended">
-                            <field name="invoice_id"/>
-                            <field name="picking_id"/>
-                            <field name="location_id"/>
-                            <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_repair_order_tree" model="ir.ui.view">
+	<record id="view_repair_order_tree" model="ir.ui.view">
             <field name="name">mrp.repair.tree</field>
             <field name="model">mrp.repair</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Repairs order">
                     <field name="name" select="1" />
-                        <field name="product_id" select="1" />
-                        <field name="prodlot_id"/>
-                        <field name="partner_id"/>
-                        <field name="address_id"/>
-                            <field name="location_id"/>
-                            <field name="state"/>
-                            <field name="move_id"/>
-                            <field name="location_dest_id"/>
-                            <field name="guarantee_limit"/>
+                     <field name="product_id" select="1" />
+                     <field name="prodlot_id"/>
+                     <field name="partner_id"/>
+                     <field name="address_id"/>
+                     <field name="location_id"/>
+                     <field name="move_id"/>
+                     <field name="location_dest_id"/>
+                     <field name="guarantee_limit"/>
+                     <field name="state"/>
                 </tree>
             </field>
         </record>
+
+    <record id="view_repair_order_form" model="ir.ui.view">
+        <field name="name">mrp.repair.form</field>
+        <field name="model">mrp.repair</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Repairs order">
+                <group col="6" colspan="4">
+                    <field name="name"/>
+                    <field name="product_id" select="1"  on_change="onchange_product_id(product_id)"/>
+                    <field name="deliver_bool"/>
+                    <newline/>
+                    <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)"/>
+                    <field name="move_id" on_change="onchange_move_id(product_id, move_id)"/>
+                    <field name="repaired"/>
+                    <newline/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)"/>
+                    <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}"/>
+                    <field name="invoiced"/>
+                </group>
+                <notebook colspan="4">
+                    <page string="Operations">
+                        <field name="guarantee_limit" />
+                        <newline/>
+                        <field colspan="4" mode="tree,form" name="operations" nolabel="1" widget="one2many_list">
+                            <form string="Operations">
+                                <notebook>
+                                    <page string="Repair Line">
+                                        <field name="name" colspan="4"/>
+                                        <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)" colspan="4"/>
+                                        <field name="product_uom_qty" string="Qty" />
+                                        <field name="product_uom" string="UoM"/>
+                                        <field name="price_unit"/>
+                                        <field name="price_subtotal"/>
+                                        <field name="location_id"/>
+                                        <field name="location_dest_id"/>
+                                        <newline/>
+                                        <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
+                                        <group colspan="2">
+                                            <field name="to_invoice"/>
+                                            <field name="invoiced"/>
+                                        </group>
+                                        <newline/>
+                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                        <separator colspan="4" string="States"/>
+                                        <field name="state"/>
+                                    </page>
+                                    <page string="History" groups="base.group_extended">
+                                        <field colspan="4" name="move_id" />
+                                        <field colspan="4" name="invoice_line_id"/>
+                                    </page>
+
+                                 </notebook>
+                            </form>
+                            <tree string="Operations" editable="bottom">
+                                <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
+                                <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
+                                <field name='name'/>
+                                <field name="location_id"/>
+                                <field name="location_dest_id"/>
+                                <field name="product_uom_qty" string="Qty"/>
+                                <field name="product_uom" string="UoM"/>
+                                <field name="price_unit"/>
+                                <field name="tax_id"/>
+                                <field name="to_invoice"/>
+                                <field name="price_subtotal"/>
+                            </tree>
+                        </field>
+                        <newline/>
+                        <group col="7" colspan="4">
+                            <field name="amount_untaxed" sum="Untaxed amount"/>
+                            <field name="amount_tax"/>
+                            <field name="amount_total" sum="Total amount"/>
+                            <button name="button_dummy" states="draft" string="Compute" type="object"/>
+                        </group>
+                        <newline/>
+                        <group col="13" colspan="4">
+                            <field name="state"/>
+                            <button name="repair_confirm" states="draft" string="Confirm Repair" icon="gtk-apply"/>
+                            <button name="repair_ready" states="confirmed" string="Start Repair" icon="gtk-execute"/>
+                            <button name="action_repair_start" states="ready" string="Start Repair" icon="gtk-execute"/>
+                            <button name="action_repair_end" states="under_repair" string="End Repair" icon="gtk-ok"/>
+                            <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-convert"/>
+                            <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="gtk-apply"/>
+                            <button name="action_invoice_create" states="2binvoiced" string="Make Invoice" icon="gtk-ok"/>
+                            <button name="%(action_cancel_repair)d" states="invoice_except" string="Cancel Repair" type="action" icon="gtk-cancel"/>
+                            <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                            <button name="cancel" states="draft" string="Cancel Repair" icon="gtk-cancel"/>
+                            <button name="%(action_cancel_repair)d" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="action" icon="gtk-cancel"/>
+                        </group>
+                    </page>
+                    <page string="Invoicing">
+                        <field name="invoice_method" colspan="4"/>
+                        <field
+                            name="pricelist_id" context="product_id=product_id"
+                            attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
+                        <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
+                        <!-- <field name="invoice_id"/> -->
+                        <field colspan="4" mode="tree,form" name="fees_lines" nolabel="1" widget="one2many_list">
+                            <form string="Fees">
+                                <notebook>
+                                    <page string="Fees Line">
+                                        <field name='name'/>
+                                        <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)" colspan="4"/>
+                                        <field name="product_uom_qty" string="Qty"/>
+                                        <field name="product_uom" string="UoM" />
+                                        <field name="price_unit"/>
+                                        <field name="price_subtotal"/>
+                                        <newline/>
+                                        <group colspan="2">
+                                            <field name="to_invoice"/>
+                                            <field name="invoiced"/>
+                                        </group>
+                                        <newline/>
+                                        <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                     </page>
+                                     <page string="History" groups="base.group_extended">
+                                        <field colspan="4" name="invoice_line_id" />
+                                    </page>
+                                  </notebook>
+                            </form>
+                            <tree string="Fees" editable="bottom">
+                                <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id,parent.guarantee_limit)"/>
+                                <field name='name'/>
+                                <field name="product_uom_qty" string="Qty"/>
+                                <field name="product_uom" string="UoM"/>
+                                <field name="price_unit"/>
+                                <field name="to_invoice"/>
+                                <field name="price_subtotal"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Quality">
+                        <separator colspan="4" string="Internal Notes"/>
+                        <field colspan="4" name="internal_notes" nolabel="1"/>
+                        <separator colspan="4" string="Quotation Notes"/>
+                        <field colspan="4" name="quotation_notes" nolabel="1"/>
+                    </page>
+                    <page string="Extra Info" groups="base.group_extended">
+                        <field name="invoice_id"/>
+                        <field name="picking_id"/>
+                        <field name="location_id"/>
+                        <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+
+
+    <record id="view_repair_order_form_filter" model="ir.ui.view">
+          <field name="name">mrp.repair.select</field>
+          <field name="model">mrp.repair</field>
+          <field name="type">search</field>
+          <field name="arch" type="xml">
+              <search string="Search Reair Orders">
+              	<group col='4' colspan='4'>
+              		<field name="name" />
+                    <field name="product_id" />
+              	</group>
+              	<newline/>
+                  <group expand="1" string="Group By" colspan="10" col="8">
+                      <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
+                      <filter string="State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
+                      <filter string="Partner" icon="terp-mrp" domain="[]" context="{'group_by':'partner_id'}"/>
+                  </group>
+             </search>
+          </field>
+	</record>
 
         <record id="action_repair_order_form" model="ir.actions.act_window">
             <field name="name">New Repair</field>
@@ -184,6 +206,7 @@
             <field name="res_model">mrp.repair</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_repair_order_form_filter"/>
         </record>
 
          <record id="action_repair_quotation_tree" model="ir.actions.act_window">

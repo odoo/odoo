@@ -57,7 +57,7 @@
 						<field name="date_planned"/>
                    </group>
                    <newline/>
-	                <group expand="1" string="Extended options..." colspan="10" col="12">
+	                <group expand="1" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
 	                    <filter icon="terp-mrp" string="Draft" domain="[('state','=','draft')]"/>
 	                    <filter icon="terp-mrp" string="Picking Exception" domain="[('state','=','picking_except')]"/>
 	                    <separator orientation="vertical"/>
@@ -102,7 +102,7 @@
             <field name="view_id" ref="view_report_mrp_production_order_tree"/>
             <field name="search_view_id" ref="view_report_mrp_production_order_filter"/>
           <field name="context">{'search_default_Product': 1}</field>
-            
+
         </record>
 
        	<record model="ir.actions.act_window.view" id="action_report_mrp_production_order_tree">
