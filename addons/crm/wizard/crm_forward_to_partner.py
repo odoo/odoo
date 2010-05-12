@@ -38,7 +38,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         'email_to' : fields.char('To', required=True, size=128), 
         'subject' : fields.char('Subject', required=True, size=128), 
         'message' : fields.text('Message', required=True), 
-        'history': fields.selection([('latest', 'Latest email'), ('whole', 'Whole Story'), ('info', 'Case Information')], 'Send history', required=True), 
+        'history': fields.selection([('latest', 'Latest email'), ('whole', 'Whole Story'), ('info', 'Case Information')], 'Send history', required=True),
+        'add_cc': fields.boolean('Add as CC', required=False, help="Selcect if you want this user to add as cc for this case.This user will receive all future conversations"),  
     }
     
     def get_whole_history(self, cr, uid, ids, context=None):
@@ -171,7 +172,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                 this.subject, 
                 body, 
             )
-        case_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc + ', ' + this.email_to or this.email_to})
+        if this.add_cc:
+            case_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc + ', ' + this.email_to or this.email_to})
         return {}
 
     def get_lead_details(self, cr, uid, lead_id, context=None):

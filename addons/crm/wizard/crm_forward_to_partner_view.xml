@@ -22,6 +22,8 @@
 	                    <field name="address_id" string="Contact" on_change="on_change_address(address_id)" colspan="2" />
 					</group>
 					<field colspan="4" name="email_to" attrs="{ 'required' : [('name','=','email')]}" />
+					<newline/>
+					<field name="add_cc" colspan="2" />
                     <separator string="Email" colspan="4" />
                     <field name="subject" colspan="4" />
                     <separator string="Mesage body" colspan="4" />
