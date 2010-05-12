@@ -29,6 +29,24 @@ from crm import crm
 class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
     _name = "crm.send.mail"
+
+crm_send_new_email()
+
+class crm_send_new_email_attachment(osv.osv_memory):
+    _name = 'crm.send.mail.attachment'
+
+    _columns = {
+        'binary' : fields.binary('Attachment', required=True),
+        'name' : fields.char('Name', size=128, required=True),
+
+        'wizard_id' : fields.many2one('crm.send.mail', 'Wizard', required=True),
+    }
+
+crm_send_new_email_attachment()
+
+class crm_send_new_email(osv.osv_memory):
+    """ Sends new email for the case"""
+    _name = "crm.send.mail"
     _description = "Send new email"
 
     _columns = {
@@ -38,12 +56,8 @@ class crm_send_new_email(osv.osv_memory):
         'subject': fields.char('Subject', size=128, required=True),
         'text': fields.text('Message', required=True),
         'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),
-        'doc1': fields.binary("Attachment1"),
-        'doc1_fname': fields.char("File Name", size=64),
-        'doc2': fields.binary("Attachment2"),
-        'doc2_fname': fields.char("File Name", size=64),
-        'doc3': fields.binary("Attachment3"),
-        'doc3_fname': fields.char("File Name", size=64),
+
+        'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
     }
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -68,12 +82,13 @@ class crm_send_new_email(osv.osv_memory):
         case_pool = self.pool.get(model)
         res_id = context and context.get('active_id', False) or False
 
-        for data in self.read(cr, uid, ids, context=context):
-            attach = filter(lambda x: x, [data['doc1'], data['doc2'], data['doc3']])
-            attach = map(lambda x: (data['doc' + str(attach.index(x) + 1) \
-                            + '_fname'], base64.decodestring(x)), attach)
-            message_id = None            
-            
+        for obj in self.browse(cr, uid, ids, context=context):
+            attach = [
+                (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
+            ]
+
+            message_id = None
+
             case = case_pool.browse(cr, uid, res_id)
             if context.get('mail', 'new') == 'new':
                 if len(case.history_line):
@@ -84,17 +99,18 @@ class crm_send_new_email(osv.osv_memory):
                 model = hist.log_id.model_id.model
                 model_pool = self.pool.get(model)
                 case = model_pool.browse(cr, uid, hist.log_id.res_id)
-            emails = [data['email_to']] + (data['email_cc'] or '').split(',')
+            emails = [obj.email_to] + (obj.email_cc or '').split(',')
             emails = filter(None, emails)
-            body = data['text']
+            body = obj.text
 
             body = case_pool.format_body(body)
-            email_from = data.get('email_from', False)
-            case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from, message_id=message_id)
+            email_from = getattr(obj, 'email_from', False)
+            case_pool._history(cr, uid, [case], _('Send'), history=True, email=obj.email_to, details=body, email_from=email_from, message_id=message_id)
 
-            x_headers = {
-                'Reply-To':"%s" % case.section_id.reply_to,
-            }
+            x_headers = dict()
+            #x_headers = {
+            #    'Reply-To':"%s" % case.section_id.reply_to,
+            #}
             if message_id:
                 x_headers['References'] = "%s" % (message_id)
 
@@ -105,7 +121,7 @@ class crm_send_new_email(osv.osv_memory):
                     uid=uid, 
                     server_id=case.section_id.server_id.id,
                     emailto=emails,
-                    subject=data['subject'],
+                    subject=obj.subject,
                     body="<pre>%s</pre>" % body,
                     attachments=attach,
                     headers=x_headers
@@ -114,7 +130,7 @@ class crm_send_new_email(osv.osv_memory):
                 flag = tools.email_send(
                     email_from,
                     emails,
-                    data['subject'],
+                    obj.subject,
                     body,
                     attach=attach,
                     reply_to=case.section_id.reply_to,
@@ -123,14 +139,14 @@ class crm_send_new_email(osv.osv_memory):
                 )
             
             if flag:
-                if data['state'] == 'unchanged':
+                if obj.state == 'unchanged':
                     pass
-                elif data['state'] == 'done':
+                elif obj.state == 'done':
                     case_pool.case_close(cr, uid, [case.id])
-                elif data['state'] == 'draft':
+                elif obj.state == 'draft':
                     case_pool.case_reset(cr, uid, [case.id])
-                elif data['state'] in ['cancel', 'open', 'pending']:
-                    act = 'case_' + data['state']
+                elif obj.state in ['cancel', 'open', 'pending']:
+                    act = 'case_' + obj.state
                     getattr(case_pool, act)(cr, uid, [case.id])
                 cr.commit()
 
@@ -186,6 +202,11 @@ class crm_send_new_email(osv.osv_memory):
         res = {}
         for hist in hist_obj.browse(cr, uid, res_ids):
             model = hist.log_id.model_id.model
+
+            # In the case where the crm.case does not exist in the database
+            if not model:
+                return {}
+
             model_pool = self.pool.get(model)
             case = model_pool.browse(cr, uid, hist.log_id.res_id)
             if 'email_to' in fields:
@@ -201,7 +222,12 @@ class crm_send_new_email(osv.osv_memory):
                 to = 'To: %s' % (hist.email_to or '')
                 sentdate = 'Date: %s' % (hist.date)
                 desc = '\n%s'%(hist.description)
-                original = [header, sender, to, sentdate, desc]
+
+                signature = ''
+                if case.user_id.signature:
+                    signature = '--\n' + case.user_id.signature
+
+                original = [header, sender, to, sentdate, desc, signature]
                 original = '\n'.join(original)
                 res['text']=original
             if 'subject' in fields:
