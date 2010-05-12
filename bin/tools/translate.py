@@ -627,7 +627,7 @@ def trans_generate(lang, modules, dbname=None):
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
 
     root_path = os.path.join(tools.config['root_path'], 'addons')
-    
+
     if root_path in tools.config['addons_path'] :
         path_list = [root_path]
     else :
@@ -706,6 +706,11 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             if not lang_name:
                 lang_name = tools.get_languages().get(lang, lang)
 
+            def fix_xa0(s):
+                if s == '\xa0':
+                    return '\xc2\xa0'
+                return s
+
             lang_info = {
                 'code': lang,
                 'iso_code': iso_lang,
@@ -713,9 +718,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 'translatable': 1,
                 'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
                 'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                'decimal_point' : str(locale.localeconv()['decimal_point']).replace('\xa0', '\xc2\xa0'),
-                'thousands_sep' : str(locale.localeconv()['thousands_sep']).replace('\xa0', '\xc2\xa0'),
+                'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
+                'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
             }
+
             try:
                 lang_obj.create(cr, uid, lang_info)
             finally:
