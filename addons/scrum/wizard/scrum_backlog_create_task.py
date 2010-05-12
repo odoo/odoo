@@ -54,7 +54,7 @@ class backlog_create_task(osv.osv_memory):
 
         return {
             'domain': "[('product_backlog_id','in',["+','.join(map(str, context['active_ids']))+"])]",
-            'name': 'Open Backlog Tasks',
+            'name': 'Tasks',
             'res_id': ids_task,
             'view_type': 'form',
             'view_mode': 'tree,form',

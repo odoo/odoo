@@ -204,10 +204,11 @@
             <field name="model">config.compute.remaining</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Remaining Hours">
+                <form string="Reevaluate Hours">
                     <separator colspan="4" string="Change Remaining Hours"/>
                     <newline/>
                     <field name="remaining_hours" widget="float_time"/>
+                    <separator string="" colspan="4"/>
                     <group col="4" colspan="4">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <button icon="gtk-refresh" name="compute_hours" string="Update" type="object" default_focus="1"/>
