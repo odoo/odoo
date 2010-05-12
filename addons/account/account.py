@@ -982,7 +982,6 @@ class account_move(osv.osv):
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
 
-        accnt_journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'])
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True

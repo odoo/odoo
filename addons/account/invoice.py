@@ -350,7 +350,8 @@ class account_invoice(osv.osv):
 #       res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
 #       return [{}]
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
+            date_invoice=False, payment_term=False, partner_bank=False, company_id=False):
+        print "onchange_partner_id::::::::::: 354::::"
         invoice_addr_id = False
         contact_addr_id = False
         partner_payment_term = False
@@ -415,7 +416,7 @@ class account_invoice(osv.osv):
             else:
                 result['value']['date_due'] = False
 
-        if partner_bank_id != bank_id:
+        if partner_bank != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             result['value'].update(to_update['value'])
         return result
@@ -450,7 +451,7 @@ class account_invoice(osv.osv):
     def onchange_invoice_line(self, cr, uid, ids, lines):
         return {}
 
-    def onchange_partner_bank(self, cursor, user, ids, partner_bank_id):
+    def onchange_partner_bank(self, cursor, user, ids, partner_bank):
         return {'value': {}}
 
     def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):
