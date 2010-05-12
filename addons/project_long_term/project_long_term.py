@@ -350,20 +350,20 @@ class task(osv.osv):
 
         # Change the date_start and date_end
         # for previous and next tasks respectively based on valid condition
-        if vals.get('date_start', False) and vals['date_start'] < task_rec.date_start:
-            dt_start = mx.DateTime.strptime(vals['date_start'], '%Y-%m-%d %H:%M:%S')
-            work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, hrs or 0.0, resource.id or False)
-            if work_times:
-                vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-            for prv_task in task_rec.parent_ids:
-               self._check_date_start(cr, uid, prv_task, dt_start)
-        if vals.get('date_end', False) and vals['date_end'] > task_rec.date_end:
-            dt_end = mx.DateTime.strptime(vals['date_end'], '%Y-%m-%d %H:%M:%S')
-            work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, hrs or 0.0, resource.id or False)
-            if work_times:
-                vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
-            for next_task in task_rec.child_ids:
-               self._check_date_end(cr, uid, next_task, dt_end)
+            if vals.get('date_start', False) and vals['date_start'] < task_rec.date_start:
+                dt_start = mx.DateTime.strptime(vals['date_start'], '%Y-%m-%d %H:%M:%S')
+                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, hrs or 0.0, resource.id or False)
+                if work_times:
+                    vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+                for prv_task in task_rec.parent_ids:
+                   self._check_date_start(cr, uid, prv_task, dt_start)
+            if vals.get('date_end', False) and vals['date_end'] > task_rec.date_end:
+                dt_end = mx.DateTime.strptime(vals['date_end'], '%Y-%m-%d %H:%M:%S')
+                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, hrs or 0.0, resource.id or False)
+                if work_times:
+                    vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
+                for next_task in task_rec.child_ids:
+                   self._check_date_end(cr, uid, next_task, dt_end)
 
         return super(task, self).write(cr, uid, ids, vals, context=context)
 
