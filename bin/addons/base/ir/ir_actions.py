@@ -737,6 +737,7 @@ class ir_actions_todo(osv.osv):
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name':fields.char('Name', size=64),
         'restart': fields.selection([('onskip','On Skip'),('always','Always'),('never','Never')],'Restart',required=True),
+        'groups_id':fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note':fields.text('Text', translate=True),
     }
     _defaults={
