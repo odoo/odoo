@@ -171,55 +171,6 @@ class crm_case(object):
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
         return True
 
-    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param cases: a browse record list
-        @param keyword: Case action keyword e.g.: If case is closed "Close" keyword is used
-        @param history: Value True/False, If True it makes entry in case History otherwise in Case Log
-        @param email: Email address if any
-        @param details: Details of case history if any 
-        @param context: A standard dictionary for contextual values"""
-        if not context:
-            context = {}
-
-        # The mailgate sends the ids of the cases and not the object list
-        if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
-            cases = self.pool.get(context['model']).browse(cr, uid, cases, context=context)
-
-        model_obj = self.pool.get('ir.model')
-        
-        obj = self.pool.get('mailgate.message')
-        for case in cases:
-            model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
-            data = {
-                'name': keyword,
-                'user_id': uid,
-                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'model_id' : model_ids and model_ids[0] or False,
-                'res_id': case.id,
-                'section_id': case.section_id.id,
-                'message_id':message_id
-            }
-
-            if history:
-                data['description'] = details or case.description
-                data['email_to'] = email or \
-                        (case.section_id and case.section_id.reply_to) or \
-                        (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from', False)
-                data['email_from'] = email_from or \
-                        (case.section_id and case.section_id.reply_to) or \
-                        (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from', False)
-            res = obj.create(cr, uid, data, context)
-        return True
-    
-    _history = __history
-    history = __history
-    
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
         @param self: The object pointer
@@ -313,7 +264,7 @@ class crm_case(object):
         self._history(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')
         return True
-    
+
     def case_cancel(self, cr, uid, ids, *args):
         """Cancels Case
         @param self: The object pointer
