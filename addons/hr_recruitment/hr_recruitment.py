@@ -62,6 +62,14 @@ class hr_applicant(osv.osv):
         'response' : fields.integer("Response"),
     }
 
+    def onchange_job(self,cr, uid, ids, job, context={}):
+        result = {}
+        if job:
+            job_obj = self.pool.get('hr.job')
+            result['department_id'] = job_obj.browse(cr, uid, job).department_id.id
+            return {'value': result}
+        return {'value': {'department_id': []}}
+
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current stage
              using available stage for that case type
