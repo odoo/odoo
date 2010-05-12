@@ -922,7 +922,12 @@ class account_invoice(osv.osv):
                 # will be automatically deleted too
                 account_move_obj.unlink(cr, uid, [i['move_id'][0]])
             if i['payment_ids']:
-                self.pool.get('account.move.line').write(cr, uid, i['payment_ids'], {'reconcile_partial_id': False})
+                account_move_line_obj = self.pool.get('account.move.line')
+                pay_ids = account_move_line_obj.browse(cr, uid , i['payment_ids'])
+                for move_line in pay_ids:
+                    if move_line.reconcile_partial_id and move_line.reconcile_partial_id.line_partial_ids:
+                        raise osv.except_osv(_('Error !'), _('You cannot cancel the Invoice which is Partially Paid! You need to unreconcile concerned payment entries!'))
+
         self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})
         self._log_event(cr, uid, ids,-1.0, 'Cancel Invoice')
         return True
