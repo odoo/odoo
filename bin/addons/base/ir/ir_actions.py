@@ -532,7 +532,6 @@ class actions_server(osv.osv):
 
     def run(self, cr, uid, ids, context={}):
         logger = netsvc.Logger()
-        print "::ODS",ids
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
             obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
@@ -554,20 +553,26 @@ class actions_server(osv.osv):
                 return self.pool.get(action.action_id.type)\
                     .read(cr, uid, action.action_id.id, context=context)
 
-            if action.state == 'code':
-                localdict = {
-                    'self': self.pool.get(action.model_id.model),
-                    'context': context,
-                    'time': time,
-                    'ids': ids,
-                    'cr': cr,
-                    'uid': uid,
-                    'object':obj,
-                    'obj': obj,
-                }
-                exec action.code in localdict
-                if 'action' in localdict:
-                    return localdict['action']
+                if config['server_actions_allow_code']:
+                    localdict = {
+                        'self': self.pool.get(action.model_id.model),
+                        'context': context,
+                        'time': time,
+                        'ids': ids,
+                        'cr': cr,
+                        'uid': uid,
+                        'object':obj,
+                        'obj': obj,
+                        }
+                    exec action.code in localdict
+                    if 'action' in localdict:
+                        return localdict['action']
+                else:
+                    netsvc.Logger().notifyChannel(
+                        self._name, netsvc.LOG_ERROR,
+                        "%s is a `code` server action, but "
+                        "it isn't allowed in this configuration.\n\n"
+                        "See server options to enable it"%action)
 
             if action.state == 'email':
                 user = config['email_from']
