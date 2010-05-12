@@ -20,14 +20,15 @@
                             <field name="text" nolabel="1" colspan="4"/>
                         </page>
                         <page string="Attachments">
-                            <field name="doc1" filename="doc1_fname"/>
-                            <field name="doc1_fname" invisible="1" />
-                            <newline/>
-                            <field name="doc2" filename="doc2_fname" />
-                            <field name="doc2_fname" invisible="1" />
-                            <newline/>
-                            <field name="doc3" filename="doc3_fname" />
-                            <field name="doc3_fname" invisible="1" />
+                            <field name="attachment_ids" colspan="4" nolabel="1">
+                                <form string="Attachment">
+                                    <field name="binary" filename="name" />
+                                    <field name="name" />
+                                </form>
+                                <tree string="Attachments">
+                                    <field name="name" />
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                     <separator string="" colspan="2"/>
@@ -64,9 +65,15 @@
                     <field name="email_to" />
                     <field name="email_cc" />
                     <field name="subject" />
-                    <field name="doc1" />
-                    <field name="doc2" />
-                    <field name="doc3" />
+                    <field name="attachment_ids" colspan="4" nolabel="1">
+                        <form string="Attachment">
+                            <field name="binary" filename="name" />
+                            <field name="name" />
+                        </form>
+                        <tree string="Attachments">
+                            <field name="name" />
+                        </tree>
+                    </field>
                     <separator string="" colspan="4"/>
                     <field name="text" nolabel="1" colspan="4"/>
                     <separator string=" " colspan="4"/>

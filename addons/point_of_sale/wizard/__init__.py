@@ -19,7 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import wizard_return
+
 import pos_add_product
 import pos_confirm
 import pos_discount
@@ -39,6 +39,7 @@ import pos_payment_report_date
 import pos_payment_report
 import pos_payment
 import pos_scan_product
+import pos_return
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
