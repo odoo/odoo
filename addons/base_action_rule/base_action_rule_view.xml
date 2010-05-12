@@ -16,9 +16,7 @@
                 <form string="Action Rule">
                     <field name="name" select="1"/>
                     <field name="active"/>
-                    <field name="sequence"/>
                     <field name="max_level" />
-                    <field name="domain" colspan="4"/>
                     <notebook colspan="4">
                         <page string="Conditions">
                             <group col="2" colspan="2" name="model">
@@ -37,6 +35,11 @@
                                 <field name="trg_state_to"/>
                             </group>
                             <group col="2" colspan="2">
+                                <separator colspan="4" string="Conditions on Priority Range"/>
+                                <field name="trg_priority_from"/>
+                                <field name="trg_priority_to"/>
+                            </group>
+                            <group col="2" colspan="2">
                                 <separator colspan="4" string="Conditions on Timing"/>
                                 <field name="trg_date_type"/>
                                 <label align="1.0" string="Delay After Trigger Date:"/>
@@ -52,6 +55,7 @@
                             <separator colspan="4" string="Fields to Change"/>
                             <field name="act_user_id"/>
                             <field name="act_state"/>
+                            <field name="act_priority"/>
                             <separator colspan="4" string="E-Mail Reminders (includes the content of the object)"/>
                             <field name="act_remind_partner"/>
                             <field name="act_remind_attach"/>
@@ -68,9 +72,7 @@
                             <field name="act_mail_to_user"/>
                             <field name="act_mail_to_watchers"/>
                             <field colspan="4" name="act_mail_to_email"/>
-                            <separator colspan="4" string="Mail Body"/>
-                            <field colspan="4" name="act_mail_body"
-                            	nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
+                            <field colspan="4" name="act_mail_body" attrs="{'required':[('act_remind_user','=',True)]}"/>
                             <separator colspan="4" string="Special Keywords to Be Used in The Body"/>
                             <label align="0.0" string="%%(object_id)s = Object ID" colspan="2"/>
                             <label align="0.0" string="%%(object_subject)s = Object subject" colspan="2"/>
@@ -97,9 +99,7 @@
             <field name="arch" type="xml">
                 <tree string="Action Rule">
                     <field name="name" colspan="4"/>
-                    <field name="sequence"/>
                     <field name="max_level"/>
-                    <field name="domain"/>
                 </tree>
             </field>
            </record>

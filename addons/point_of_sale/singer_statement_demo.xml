@@ -316,17 +316,6 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
 
-        <record id="base.main_company" model="res.company">
-            <field name="account_receivable" ref="account.a_recv"/>
-        </record>
-          <record id="point_of_sale.pos_order_posadvance" model="pos.order">
-      <field name="sale_journal" ref="sales_journal_comp2"/>
-    </record>
-
-
-        <record id="base.main_company" model="res.company">
-            <field name="account_receivable" ref="account.a_recv"/>
-        </record>
           <record id="point_of_sale.pos_order_posadvance" model="pos.order">
       <field name="sale_journal" ref="sales_journal_comp2"/>
     </record>

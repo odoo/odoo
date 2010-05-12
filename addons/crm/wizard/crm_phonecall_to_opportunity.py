@@ -69,9 +69,7 @@ Call Could not convert into Opportunity"))
 
         @return : Dictionary value for created Opportunity form
         """
-        
         record_id = context and context.get('active_id', False) or False
-        print "ids", ids 
         if record_id:
             opp_obj = self.pool.get('crm.opportunity')
             phonecall_obj = self.pool.get('crm.phonecall')
@@ -85,6 +83,7 @@ Call Could not convert into Opportunity"))
                 id2 = data_obj.browse(cr, uid, id2, context=context).res_id
             if id3:
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+
             for this in self.browse(cr, uid, ids, context=context):
                 new_opportunity_id = opp_obj.create(cr, uid, {
                                 'name': this.name,
@@ -106,18 +105,18 @@ Call Could not convert into Opportunity"))
                 phonecall_obj.case_close(cr, uid, [case.id])
                 opp_obj.case_open(cr, uid, [new_opportunity_id])
 
-            value = {
-                'name': _('Opportunity'),
-                'view_type': 'form',
-                'view_mode': 'form,tree',
-                'res_model': 'crm.opportunity',
-                'res_id': int(new_opportunity_id),
-                'view_id': False,
-                'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id']
-            }
-            return value
+        value = {
+            'name': _('Opportunity'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'crm.opportunity',
+            'res_id': int(new_opportunity_id),
+            'view_id': False,
+            'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
+            'type': 'ir.actions.act_window',
+            'search_view_id': res['res_id']
+        }
+        return value
 
     _columns = {
         'name' : fields.char('Opportunity Summary', size=64, required=True, select=1),

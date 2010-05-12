@@ -19,30 +19,19 @@
 #
 ##############################################################################
 
+from osv import osv,fields
 
-{
-    'name': 'CRM Helpdesk',
-    'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
-    'description': """Helpdesk Management""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['crm'],
-    'init_xml': [
-         'crm_helpdesk_data.xml',
-    ],
+class company(osv.osv):
+    _inherit = 'res.company'
+    _columns = {
+        'security_lead': fields.float('Security Days', required=True,
+            help="This is the days added to what you promise to customers "\
+            "for security purpose"),
+    }
+    _defaults = {
+        'security_lead': lambda *a: 5.0,
+    }
+company()
 
-    'update_xml': [
-        'crm_helpdesk_view.xml',
-        'crm_helpdesk_menu.xml',
-        'security/ir.model.access.csv',
-        'report/crm_helpdesk_report_view.xml',
-    ],
-    'demo_xml': [
-        'crm_helpdesk_demo.xml',
-    ],
-    'installable': True,
-    'active': False,
-}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

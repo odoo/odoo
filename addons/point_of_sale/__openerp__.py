@@ -37,7 +37,6 @@ Main features :
     """,
     'author': 'Tiny',
     'depends': ['sale', 'delivery'],
-#    'depends': ['sale', 'purchase', 'account', 'account_tax_include','board','mrp','board_manufacturing','delivery','profile_manufacturing','account','multi_company'],
     'init_xml': [],
 
     'update_xml': [
@@ -63,8 +62,9 @@ Main features :
         'wizard/pos_payment_report.xml',
         'wizard/pos_payment.xml',
         'wizard/pos_scan_product_view.xml',
+        'wizard/pos_return_view.xml',
         'pos_report.xml',
-        'pos_wizard.xml',
+       # 'pos_wizard.xml',
         'pos_view.xml',
         'pos_sequence.xml',
         'posrule_data.xml',
@@ -73,7 +73,6 @@ Main features :
         'statement_view.xml',
         'statement_report.xml',
         'statement_data.xml',
-        'statement_wizard.xml',    
     ],
     'demo_xml': ['pos_demo.xml','singer_statement_demo.xml','multi_company_stock_data.xml'],
     'installable': True,

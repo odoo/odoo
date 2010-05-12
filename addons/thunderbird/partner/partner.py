@@ -92,7 +92,6 @@ class tinythunderbird_partner(osv.osv):
         partner=add_obj.read(cr,user,partner_ids,['partner_id'])
         if partner:
             dictcreate.update({'partner_id':partner[0]['partner_id'][0]})
-
         create_id = self.pool.get(dictcreate.get('object','crm.case')).create(cr, user, dictcreate)
         cases=case_pool.browse(cr,user,[create_id])
         case_pool._history(cr, user, cases, _('Archive'), history=True, email=False)

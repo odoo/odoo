@@ -171,6 +171,16 @@
         	id="act_res_users_2_report_crm_case_user" name="Monthly cases"
         	res_model="crm.case.report" src_model="res.users" />
 
+        <act_window domain="[('section_id', '=', active_id)]"
+        	id="act_crm_case_section_2_report_crm_case_user"
+        	name="Monthly cases by user" res_model="crm.case.report"
+        	src_model="crm.case.section" />
+
+        <act_window domain="[('section_id', '=', active_id)]"
+        	id="act_crm_case_section_2_report_crm_case_categ"
+        	name="Monthly cases by Sales Team" res_model="crm.case.report"
+        	src_model="crm.case.section" />
+
 <!-- Closed & Open CRM Case view for Random Activities dashboard Tree View -->
 
         <record id="board_view_crm_case_open_dashboard_tree" model="ir.ui.view">

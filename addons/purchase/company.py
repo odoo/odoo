@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,22 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import crm_helpdesk_report
+from osv import osv,fields
+
+class company(osv.osv):
+    _inherit = 'res.company'
+    _columns = {
+        'po_lead': fields.float('Purchase Lead Time', required=True,
+            help="This is the leads/security time for each purchase order."),
+    }
+    _defaults = {
+        'po_lead': lambda *a: 1.0,
+    }
+company()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
