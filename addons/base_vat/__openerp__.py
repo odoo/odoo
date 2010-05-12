@@ -30,6 +30,7 @@
     """,
     'author': 'Tiny',
     'depends': ['account'],
+    'website': 'http://www.openerp.com',
     'update_xml': ['base_vat_view.xml'],
     'installable': True,
     'active': False,
