@@ -29,7 +29,7 @@ This module install the base for IBAN (International Bank Account Number) bank a
 
     """,
     'author': 'Tiny',
-    'depends': ['base', 'account'],
+    'depends': ['account'],
     'init_xml': ['base_iban_data.xml'],
     'update_xml': ['base_iban_view.xml'],
     'installable': True,
