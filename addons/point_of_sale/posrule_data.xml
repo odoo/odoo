@@ -67,6 +67,7 @@
             <field eval="&quot;&quot;&quot;en_US&quot;&quot;&quot;" name="context_lang"/>
             <field eval="&quot;&quot;&quot;Shop 1 User&quot;&quot;&quot;" name="name"/>
             <field name="company_id" ref="stock.res_company_shop0"/>
+            <field name="company_ids" eval="[(4, ref('stock.res_company_shop0'))]"/>
             <field eval="&quot;&quot;&quot;shop1&quot;&quot;&quot;" name="login"/>
             <field model="ir.actions.actions" name="action_id" search="[('name','=','Menu')]"/>
         </record>
@@ -77,6 +78,7 @@
             <field eval="&quot;&quot;&quot;shop2&quot;&quot;&quot;" name="password"/>
             <field eval="&quot;&quot;&quot;Shop 2 User&quot;&quot;&quot;" name="name"/>
             <field name="company_id" ref="stock.res_company_tinyshop0"/>
+            <field name="company_ids" eval="[(4, ref('stock.res_company_tinyshop0'))]"/>
             <field eval="&quot;&quot;&quot;shop2&quot;&quot;&quot;" name="login"/>
             <field model="ir.actions.actions" name="action_id" search="[('name','=','Menu')]"/>
         </record>
