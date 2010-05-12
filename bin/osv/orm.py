@@ -3736,9 +3736,9 @@ class orm(orm_template):
         :return: dictionary containing all the field values
         """
 
-        if not context:
+        if context is None:
             context = {}
-        if not default:
+        if default is None:
             default = {}
         if 'state' not in default:
             if 'state' in self._defaults:
@@ -3747,7 +3747,11 @@ class orm(orm_template):
                 else:
                     default['state'] = self._defaults['state']
 
-        data = self.read(cr, uid, [id], context=context)[0]
+        context_wo_lang = context
+        if 'lang' in context:
+            del context_wo_lang['lang']
+        data = self.read(cr, uid, [id], context=context_wo_lang)[0]
+
         fields = self.fields_get(cr, uid, context=context)
         trans_data=[]
         for f in fields:
@@ -3782,17 +3786,14 @@ class orm(orm_template):
 
         trans_obj = self.pool.get('ir.translation')
         #TODO: optimize translations
-        trans_name=''
         for f in fields:
-            trans_flag=True
+            trans_name = ''
             if f in self._columns and self._columns[f].translate:
-                trans_name=self._name+","+f
+                trans_name = self._name+","+f
             elif f in self._inherit_fields and self._inherit_fields[f][2].translate:
-                trans_name=self._inherit_fields[f][0]+","+f
-            else:
-                trans_flag=False
+                trans_name = self._inherit_fields[f][0] + "," + f
 
-            if trans_flag:
+            if trans_name:
                 trans_ids = trans_obj.search(cr, uid, [
                         ('name', '=', trans_name),
                         ('res_id','=',data['id'])
