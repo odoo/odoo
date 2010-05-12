@@ -29,7 +29,7 @@
     checking the validity of VAT Number assinged to partners in European countries.
     """,
     'author': 'Tiny',
-    'depends': ['base', 'account'],
+    'depends': ['account'],
     'update_xml': ['base_vat_view.xml'],
     'installable': True,
     'active': False,
