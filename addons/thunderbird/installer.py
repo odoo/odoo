@@ -41,7 +41,7 @@ class thunderbird_installer(osv.osv_memory):
         'name':fields.char('File name', size=34),
         'pdf_name':fields.char('File name', size=64),
         'thunderbird':fields.boolean('Thunderbird Module ', help="Allows you to select an object that you’d like to add to your email and its attachments."),
-        'plugin_file':fields.binary('Thunderbird Plug-in', readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbir."),
+        'plugin_file':fields.binary('Thunderbird Plug-in', readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."),
         'pdf_file':fields.binary('Installation Manual', help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
         'description':fields.text('Description', readonly=True)        
         }
