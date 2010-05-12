@@ -56,33 +56,35 @@ class mrp_track_move(osv.osv_memory):
         """
         res = super(mrp_track_move, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         record_id = context and context.get('active_id', False) or False
-        if record_id:
-            prod_obj = self.pool.get('mrp.production')
-            prod = prod_obj.browse(cr, uid, record_id)
-            try:
-                if prod.state != 'done':
-                    res['arch'] = '''<form string="Track lines">
-                                        <label colspan="4" string="You can not split an unfinished production Output." />
-                                        <group col="2" colspan="4">
-                                            <button icon='gtk-cancel' special="cancel"
-                                                string="Exit" />
-                                        </group>
-                                    </form>
-                                    '''
-                else:
-                    arch_lst = ['<form string="Track lines">', '<label colspan="4" string="The field on each line says whether this lot should be tracked or not." />']
-                    for m in [line for line in prod.move_created_ids]:
-                        quantity = m.product_qty
-                        res['fields']['track%s' %m.id] = {'string' : m.product_id.name, 'type' : 'boolean', 'default' : lambda x,y,z: False}
-                        arch_lst.append('<field name="track%s" />\n<newline />' %m.id)
-                    arch_lst.append('<group col="2" colspan="4">')
-                    arch_lst.append('<button icon=\'gtk-cancel\' special="cancel" string="Cancel" />')
-                    arch_lst.append('<button name="track_lines" string="Track" colspan="1" type="object" icon="gtk-ok" />')
-                    arch_lst.append('</group>')
-                    arch_lst.append('</form>')
-                    res['arch'] = '\n'.join(arch_lst)
-            except Exception,e:
-                return res
+        active_model = context.get('active_model')
+
+        if not record_id or (active_model and active_model != 'mrp.production'):
+            return res
+        
+        prod_obj = self.pool.get('mrp.production')
+        prod = prod_obj.browse(cr, uid, record_id)
+        if prod.state != 'done':
+            res['arch'] = '''<form string="Track lines">
+                                <label colspan="4" string="You can not split an unfinished production Output." />
+                                <group col="2" colspan="4">
+                                    <button icon='gtk-cancel' special="cancel"
+                                        string="Exit" />
+                                </group>
+                            </form>
+                            '''
+        else:
+            arch_lst = ['<form string="Track lines">', '<label colspan="4" string="The field on each line says whether this lot should be tracked or not." />']
+            for m in [line for line in prod.move_created_ids]:
+                quantity = m.product_qty
+                res['fields']['track%s' %m.id] = {'string' : m.product_id.name, 'type' : 'boolean', 'default' : lambda x,y,z: False}
+                arch_lst.append('<field name="track%s" />\n<newline />' %m.id)
+            arch_lst.append('<group col="2" colspan="4">')
+            arch_lst.append('<button icon=\'gtk-cancel\' special="cancel" string="Cancel" />')
+            arch_lst.append('<button name="track_lines" string="Track" colspan="1" type="object" icon="gtk-ok" />')
+            arch_lst.append('</group>')
+            arch_lst.append('</form>')
+            res['arch'] = '\n'.join(arch_lst)
+        
         return res
     
     def track_lines(self, cr, uid, ids, context):

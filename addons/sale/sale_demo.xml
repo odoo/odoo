@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+    
+		<!--    
+	Resource: res.company
+	-->
+		<record id="res_company_shop_sale0" model="res.company">
+            <field eval="5.0" name="security_lead"/>
+            <field name="partner_id" ref="stock.res_partner_tinyshop0"/>
+            <field name="parent_id" ref="stock.res_company_shop0"/>
+            <field eval="&quot;&quot;&quot;Shop 1&quot;&quot;&quot;" name="name"/>
+        </record>
 
         <!--
 	Resource: sale.order
