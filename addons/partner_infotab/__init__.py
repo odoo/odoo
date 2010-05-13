@@ -19,22 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-
-class res_partner(osv.osv):
-    """ Inherits partner and adds more information in the partner form """
-    _inherit = 'res.partner'
-    
-    _columns = {
-                'opportunity_ids': fields.one2many('crm.lead', 'partner_id', 'Opportunities', domain=[('type', '=', 'opportunity')]), 
-                'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
-                                                     'Meetings'), 
-                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
-                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'), 
-                'contract_ids': fields.one2many('account.analytic.account', \
-                                                    'partner_id', 'Contracts'), 
-                }
-
-res_partner()
+import partner_infotab
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

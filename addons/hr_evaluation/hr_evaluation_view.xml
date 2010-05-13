@@ -1,6 +1,25 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
+
+    	<record id="view_hr_evaluation_plan_search" model="ir.ui.view">
+            <field name="name">hr_evaluation.plan.search</field>
+            <field name="model">hr_evaluation.plan</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Evaluation Plan">
+                   <group col='15' colspan='4'>
+                       <field name="name"/>
+                       <field name="company_id" widget="selection"/>
+                   </group>
+                   <newline/>
+                   <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}"/>
+                    </group>
+               </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_hr_evaluation_plan_form">
             <field name="name">hr_evaluation.plan.form</field>
             <field name="model">hr_evaluation.plan</field>
@@ -42,7 +61,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="3"/>
+        <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="6"/>
 
        <menuitem
             name="Periodic Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="3"/>
@@ -169,19 +188,23 @@
                     <button name="button_plan_in_progress"
                             string="Start Evaluation"
                             states="draft"
-                            type="object"/>
+                            type="object"
+                            icon="gtk-execute"/>
                     <button name="button_final_validation"
                             string="Final Validation"
                             states="wait"
-                            type="object"/>
+                            type="object"
+                            icon="gtk-execute"/>
                     <button name="button_done"
                             string="Done"
                             states="progress"
-                            type="object"/>
+                            type="object"
+                            icon="gtk-jump-to"/>
                     <button name="button_cancel"
                             string="Cancel"
                             states="draft,wait,progress"
-                            type="object"/>
+                            type="object"
+                            icon="gtk-cancel"/>
                     </group>
               </form>
             </field>
@@ -279,7 +302,7 @@
                         <field name="date_deadline"/>
                         <field name="response" readonly="1"/>
                         <field name="user_to_review_id"/>
-                        <field name="user_id"/>
+                        <field name="user_id" string="Interviewer"/>
                     </group>
                     <newline/>
                     <separator string="State" colspan="4"/>
@@ -328,7 +351,7 @@
                         <filter icon="terp-stock" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                         <separator orientation="vertical"/>
                         <field name="user_to_review_id" widget="selection"/>
-                        <field name="user_id" widget="selection"/>
+                        <field name="user_id" string="Interviewer" widget="selection"/>
                    </group>
                </search>
             </field>

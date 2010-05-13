@@ -21,7 +21,7 @@
             <field name="arch" type="xml">
                 <form string="Wage Type">
                     <field colspan="4" name="name"/>
-                    <field name="period_id"/>
+                    <field name="period_id" widget="selection"/>
                     <field name="type"/>
                     <separator colspan="4" string="Hourly cost computation"/>
                     <field name="factor_type"/>
@@ -70,7 +70,7 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Contracts">
-                        <field colspan="4" name="contract_ids" nolabel="1">
+                        <field colspan="4" mode="form,tree" name="contract_ids" nolabel="1">
                             <tree string="Contracts">
                                 <field name="name"/>
                                 <field name="job_id"/>
@@ -133,14 +133,24 @@
             </field>
         </record>
 
-        <record id="hr_contract_type_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.type.view.form</field>
-            <field name="model">hr.contract.type</field>
-            <field name="type">form</field>
+		<record id="hr_contract_view_search" model="ir.ui.view">
+            <field name="name">hr.contract.view.search</field>
+            <field name="model">hr.contract</field>
+            <field name="type">search</field>
             <field name="arch" type="xml">
-                <form string="Contract Type">
-                    <field colspan="4" name="name" select="1"/>
-                </form>
+                <search string="Search Contract">
+                   <group col='15' colspan='4'>
+                   		<field name="name"/>
+                      	<field name="employee_id"/>
+                      	<field name="department_id"/>
+                       	<field name="date_start"/>
+                       	<field name="date_end"/>
+                   </group>
+                   <newline/>
+                   <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
+                    </group>
+               </search>
             </field>
         </record>
 
@@ -180,17 +190,6 @@
             </field>
         </record>
 
-        <record id="hr_contract_type_view_tree" model="ir.ui.view">
-            <field name="name">hr.contract.type.view.tree</field>
-            <field name="model">hr.contract.type</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Contract Type">
-                    <field colspan="4" name="name"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="hr_contract_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.view.tree</field>
             <field name="model">hr.contract</field>
@@ -216,9 +215,30 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
+            <field name="search_view_id" ref="hr_contract_view_search"/>
         </record>
 
+		<record id="hr_contract_type_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.type.view.form</field>
+            <field name="model">hr.contract.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Contract Type">
+                    <field colspan="4" name="name" select="1"/>
+                </form>
+            </field>
+        </record>
 
+		 <record id="hr_contract_type_view_tree" model="ir.ui.view">
+            <field name="name">hr.contract.type.view.tree</field>
+            <field name="model">hr.contract.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Contract Type">
+                    <field colspan="4" name="name"/>
+                </tree>
+            </field>
+        </record>
         <record id="action_hr_contract_type" model="ir.actions.act_window">
             <field name="name">Contract Types</field>
             <field name="res_model">hr.contract.type</field>
@@ -227,8 +247,8 @@
         </record>
         <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56"/>
 
-        <menuitem  id="hr_menu_contract_main" parent="hr.menu_hr_root" name="Contracts" sequence="3"/>
-        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr_menu_contract_main" name="Contracts"/>
+        <!--<menuitem  id="hr_menu_contract_main" parent="hr.menu_hr_root" name="Contracts" sequence="3"/> -->
+        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_root" name="Contracts" sequence="4"/>
 
         <!-- Contracts Button on Employee Form -->
 		<act_window domain="[('employee_id', '=', active_id)]" id="act_hr_employee_2_hr_contract" name="Contracts" res_model="hr.contract" src_model="hr.employee"/>

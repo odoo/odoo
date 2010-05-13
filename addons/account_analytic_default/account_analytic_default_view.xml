@@ -54,7 +54,8 @@
             id="analytic_rule_action_partner"
             res_model="account.analytic.default"
             src_model="res.partner"
-            domain="[('partner_id','=',active_id)]"/>
+            domain="[('partner_id','=',active_id)]"
+            groups="base.group_extended"/>
         <act_window
             name="Analytic Rules"
             id="analytic_rule_action_user"
@@ -66,7 +67,8 @@
             res_model="account.analytic.default"
             id="analytic_rule_action_product"
             src_model="product.product"
-            domain="[('product_id','=',active_id)]"/>
+            domain="[('product_id','=',active_id)]"
+            groups="base.group_extended"/>
 
     </data>
 </openerp>
