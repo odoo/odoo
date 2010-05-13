@@ -1115,7 +1115,7 @@ class sale_order_line(osv.osv):
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False):
         res = self.product_id_change(cursor, user, ids, pricelist, product,
-                qty=0, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
+                qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
                 date_order=date_order)
         if 'product_uom' in res['value']:
