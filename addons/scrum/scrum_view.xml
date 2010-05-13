@@ -67,13 +67,13 @@
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>
            			    <field name="date"/>
-                        <field name="active" select="1"/>
-                        <group colspan="6" col="8">
+                        <field name="progress" widget="progressbar"/>
+                      <!--  <group colspan="6" col="8">
                             <field name="effective_hours" widget="float_time"/>
                             <field name="planned_hours" widget="float_time"/>
                             <field name="expected_hours" widget="float_time"/>
                             <field name="progress" widget="progressbar"/>
-                        </group>
+                        </group>-->
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
