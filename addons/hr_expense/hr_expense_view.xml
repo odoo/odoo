@@ -132,11 +132,6 @@
                         domain="[('state','=','draft')]"
                         string="Draft"
                         help="Draft Expense"/>
-                	  <filter
-                        icon="terp-hr"
-                        string="My Expenses"
-                        default="1"
-                        domain="[('user_id','=',uid)]"/>
                       <separator orientation="vertical"/>
                       <filter
                         icon="terp-hr"
@@ -152,7 +147,7 @@
                       <field name="name" select='1'/>
                       <field name="date" select='1'/>
                       <field name="user_id" select="1" widget="selection" string="User">
-                        <filter icon="terp-hr"
+                      		<filter icon="terp-hr"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
@@ -173,6 +168,7 @@
             <field name="name">Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
 

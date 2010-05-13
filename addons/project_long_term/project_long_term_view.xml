@@ -204,9 +204,7 @@
                         <field name="project_id" widget="selection">
                             <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
                         </field>
-                        <field name="responsible_id" widget="selection">
-                            <filter domain="[('responsible_id','=',uid)]" help="My Phase" icon="gtk-execute" default="1"/>
-                        </field>
+                        <field name="responsible_id" widget="selection"/>
                         <field name="date_start"/>
                     </group>
                     <newline/>
@@ -225,6 +223,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,gantt</field>
+            <field name="context">{"search_default_responsible_id":uid}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 

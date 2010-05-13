@@ -106,9 +106,7 @@
                         help="My company"/>
                         </field>
 
-                      	<field name="user_id" select="1" widget="selection">
-	            			<filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
-               			</field>
+                      	<field name="user_id" select="1" widget="selection"/>
                    </group>
                    <newline/>
                    <group  expand="0" string="Extended options..." colspan="10" col="12">
@@ -164,6 +162,7 @@
             <field name="res_model">crm.case.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
 

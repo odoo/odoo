@@ -256,12 +256,6 @@
             <field name="arch" type="xml">
                 <search string="Search Funds">
                    <group col='6' colspan='4'>
-                       <filter icon="terp-partner" string="My Funds"
-                           default="1" domain="[('user_id','=',uid)]"
-                           separator="1"
-                           help="Funds Related to Current User"
-                           />
-                       <separator orientation="vertical" />
                        <filter icon="gtk-new" string="Current Funds"
                            domain="[('state','in',('draft', 'open'))]"
                            help="Current Funds" />
@@ -283,7 +277,7 @@
                                help="Unassigned" />
                        </field>
                        <field name="section_id" select="1" widget="selection" string="Sales Team">
-                           <filter icon="terp-crm"
+                       <filter icon="terp-crm"
                                domain="[('section_id','=',context.get('section_id',False))]"
                                help="My section" />
                        </field>

@@ -223,7 +223,6 @@
                <field name="email_from"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id" widget="selection">
-                    <filter domain="[('user_id','=',uid)]" help="My Recruitements" icon="gtk-execute" default="1"/>
                     <filter domain="[('user_id','=',False)]" help="Unassigned Recruitements" icon="gtk-execute" separator="1"/>
                </field>
                <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">

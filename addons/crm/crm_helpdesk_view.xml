@@ -223,15 +223,11 @@
                 <separator orientation="vertical"/>
                 <field name="name" select='1' string="Query"/>
                 <field name="partner_id" />
-                <field name="user_id" select="1" widget="selection">
-                    <filter icon="terp-partner"
-                        domain="[('user_id','=',uid)]"
-                        help="My Helpdesk Requests" default="1" />
-                </field>
+                <field name="user_id" select="1" widget="selection"/>
                 <field name="section_id" select="1" widget="selection" string="Sales Team">
-                    <filter icon="terp-crm"
-                        domain="[('section_id','=',context.get('section_id',False))]"
-                        help="My section" />
+                <filter icon="terp-crm"
+                               domain="[('section_id','=',context.get('section_id',False))]"
+                               help="My section" />
                 </field>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="12" col="20">

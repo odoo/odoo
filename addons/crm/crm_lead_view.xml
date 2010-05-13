@@ -47,7 +47,7 @@
                          name="convert_opportunity"
                          string="Convert"
                          help="Convert to Opportunity"
-                         icon="gtk-index"   
+                         icon="gtk-index"
                          type="object"
                          attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                     <newline />
@@ -294,10 +294,6 @@
                 <field name="partner_name"/>
                 <field name="email_from"/>
                 <field name="user_id" widget="selection">
-                    <filter icon="terp-partner"
-                        domain="[('user_id','=',uid)]"
-                        help="My Leads" default="1"
-                    />
                     <filter icon="terp-partner"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />

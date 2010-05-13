@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-        <menuitem id="menu_stock_period_main" 
-                  name="Stock and Sales Periods" 
+        <menuitem id="menu_stock_period_main"
+                  name="Stock and Sales Periods"
                   parent="base.menu_base_config"/>
 
 <!-- Creating periods section -->
@@ -15,16 +15,16 @@
                 <form string="Stock and Sales Periods">
                     <separator colspan="4" string="Create periods for Stock and Sales Planning"/>
                     <field name="date_start"/>
-                    <field name="date_stop"/>                             
-                    <separator colspan="4" string=""/>        
+                    <field name="date_stop"/>
+                    <separator colspan="4" string=""/>
                     <group col="3" colspan="4">
                         <button name="create_period" string="Create Daily Periods" type="object"/>
                         <button name="create_period_weekly" string="Create Weekly Periods" type="object"/>
                         <button name="create_period_monthly" string="Create Monthly Periods" type="object"/>
-                    </group> 
+                    </group>
                 </form>
             </field>
-        </record>      
+        </record>
 
         <record id="action_stock_period_createlines_form" model="ir.actions.act_window">
             <field name="name">Stock and Sales Planning Periods</field>
@@ -35,9 +35,9 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_stock_period_creatlines" 
-                  name="Create Stock and Sales Periods" 
-                  parent="menu_stock_period_main" 
+        <menuitem id="menu_stock_period_creatlines"
+                  name="Create Stock and Sales Periods"
+                  parent="menu_stock_period_main"
                   action="action_stock_period_createlines_form"
                   sequence = "5"/>
 
@@ -56,7 +56,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_stock_period_tree" model="ir.ui.view">
             <field name="name">stock.period.tree</field>
             <field name="model">stock.period</field>
@@ -78,7 +78,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        
+
         <menuitem
             id="menu_stock_period"
             parent="menu_stock_period_main"
@@ -107,10 +107,10 @@
                     <group colspan="4">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <button icon="gtk-execute" name="create_forecast" string="Create Forecasts" type="object" />
-                    </group>         
+                    </group>
                 </form>
             </field>
-        </record>      
+        </record>
 
         <record id="action_stock_sale_forecast_createlines_form" model="ir.actions.act_window">
             <field name="name">Create Stock and Sales Forecasts</field>
@@ -120,9 +120,9 @@
             <field name="view_id" ref="view_stock_sale_forecast_createlines_form"/>
             <field name="target">new</field>
         </record>
-        
+
         <menuitem id="menu_stock_sale_forecast" name="Stock and Sales Forecasts" parent="base.menu_base_partner"/>
-        
+
         <menuitem id="menu_stock_sale_forecast_createlines" name="Create Stock and Sales Forecasts" parent="menu_stock_sale_forecast" action="action_stock_sale_forecast_createlines_form" sequence = "5"/>
 
         <record id="view_stock_sale_forecast_form" model="ir.ui.view">
@@ -133,19 +133,19 @@
                 <form string="Stock and Sales Forecast">
                     <group colspan = "4" col = "4">
 		        <group colspan = "2" col="2" >
-                            <field name="company_id" select="1" 
-                                        groups="base.group_multi_company" 
-                                        widget="selection" 
+                            <field name="company_id" select="1"
+                                        groups="base.group_multi_company"
+                                        widget="selection"
                                         on_change="onchange_company(company_id)"/>
                             <field name="warehouse_id" select="1" domain = "[('company_id','=',company_id)] "/>
                             <field name="period_id" select="1" />
                             <field name="product_id" select="1" on_change="product_id_change(product_id)" />
 			    <field name="product_uom_categ"  invisible = "True"/>
 			    <field name="product_uos_categ"  invisible = "True"/>
-                            <field name="product_uom"  
+                            <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom, product_qty, active_uom)"/>
-                            <field name="active_uom" invisible = "True" />  
+                            <field name="active_uom" invisible = "True" />
 		         </group>
 		         <group colspan = "2" col="2" >
                             <field name="user_id"/>
@@ -156,7 +156,7 @@
 		        </group>
                     </group>
                     <separator colspan ="4" string="Sales history"/>
-                    <group colspan = "4" col = "5"> 
+                    <group colspan = "4" col = "5">
                         <label string = " "/>
                         <label string = "Per User :"/>
                         <label string = "Per Department :"/>
@@ -166,7 +166,7 @@
                         <field name="analyzed_user_id" nolabel = "1" domain = "[('company_id','=',company_id)] "/>
                         <field name="analyzed_dept_id" nolabel = "1" domain = "[('company_id','=',company_id)] " />
                         <field name="analyzed_warehouse_id" nolabel = "1" domain = "[('company_id','=',company_id)] " />
-                        <group colspan = "1" col = "2"> 
+                        <group colspan = "1" col = "2">
                             <field name = "analyze_company"/>
                         </group>
                         <field name = "analyzed_period1_id" nolabel = "1"  />
@@ -194,14 +194,14 @@
                         <field name = "analyzed_period5_per_dept" nolabel = "1" />
                         <field name = "analyzed_period5_per_warehouse" nolabel = "1" />
                         <field name = "analyzed_period5_per_company" nolabel = "1" />
-                        <button name="calculate_sales_history" icon="gtk-execute" 
+                        <button name="calculate_sales_history" icon="gtk-execute"
                                 string="Calculate Sales History" type="object" colspan = "1" states="draft" />
                     </group>
 
                 </form>
             </field>
         </record>
-        
+
         <record id="view_stock_sale_forecast_tree" model="ir.ui.view">
              <field name="name">stock.sale.forecast.tree</field>
             <field name="model">stock.sale.forecast</field>
@@ -217,7 +217,7 @@
                 </tree>
             </field>
         </record>
-        
+
        <record id="view_stock_sale_forecast_graph" model="ir.ui.view">
              <field name="name">stock.sale.forecast.graph</field>
             <field name="model">stock.sale.forecast</field>
@@ -244,28 +244,27 @@
                     <field name="warehouse_id" select="1" widget="selection"/>
                     <field name="period_id" select="1" widget="selection"/>
                     <field name="product_id" select="1" widget="selection"/>
-                    <field name="create_uid" select="1" widget="selection">
-                        <filter icon="terp-purchase" domain="[('create_uid','=',uid)]" help="My Forecasts"/>
-                    </field>
+                    <field name="create_uid" select="1" widget="selection"/>
                 </group>
               </search>
             </field>
         </record>
 
-        
+
         <record id="action_view_stock_sale_forecast_form" model="ir.actions.act_window">
             <field name="name">Stock and Sales Forecast</field>
             <field name="res_model">stock.sale.forecast</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="context">{"search_default_create_uid":uid}</field>
             <field name="search_view_id" ref="view_stock_sale_forecast_filter"/>
         </record>
-        
-        <menuitem id="menu_stock_sale_forecast_all" 
-                  name="Stock and Sales Forecasts" 
-                  parent="menu_stock_sale_forecast" 
+
+        <menuitem id="menu_stock_sale_forecast_all"
+                  name="Stock and Sales Forecasts"
+                  parent="menu_stock_sale_forecast"
                   action="action_view_stock_sale_forecast_form"/>
-        
+
 <!-- Create Planning section -->
 
         <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root"/>
@@ -275,7 +274,7 @@
             <field name="model">stock.planning.createlines</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock Planning">                            
+                <form string="Stock Planning">
 		    <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="period_id2" widget="selection"/>
@@ -290,10 +289,10 @@
                     <group colspan="4">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <button icon="gtk-ok" name="create_planning" string="Create Stock Planning" type="object"/>
-                    </group>         
+                    </group>
                 </form>
             </field>
-        </record>      
+        </record>
 
         <record id="action_stock_planning_createlines_form" model="ir.actions.act_window">
             <field name="name">Create Stock Planning Lines</field>
@@ -305,7 +304,7 @@
         </record>
 
         <menuitem
-            id="menu_stock_planning_createlines" 
+            id="menu_stock_planning_createlines"
             parent="menu_stock_planning_main"
             action="action_stock_planning_createlines_form" sequence = "5"/>
 
@@ -322,14 +321,14 @@
                         <group colspan ="3" col="2">
                             <separator colspan ="2" string = "General Info"/>
 
-                            <field name="company_id" select = "1" widget= "selection" 
+                            <field name="company_id" select = "1" widget= "selection"
                                          on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                             <field name="warehouse_id" select="1" domain = "[('company_id','=',company_id)] " />
                             <field name="period_id" select="1"  />
                             <field name="product_id" on_change="product_id_change(product_id)"  />
 			    <field name="product_uom_categ"  invisible = "True"/>
 			    <field name="product_uos_categ"  invisible = "True"/>
-                            <field name="product_uom"  
+                            <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom)"/>
 <!--                            <field name="state"/>    -->
@@ -353,7 +352,7 @@
                             <field name="incoming"/>
                             <field name="incoming_left"/>
                             <button name="calculate_planning" string="Calculate Planning" type="object" colspan="2"/>
-                            <field name="stock_only"/> 
+                            <field name="stock_only"/>
                         </group>
                         <group colspan ="2" col="2">
                             <separator colspan ="2" string = "Minimum Stock Rule Indicators"/>
@@ -362,13 +361,13 @@
                             <separator colspan ="2" string = "Calculated Period Simulation"/>
                             <field name="outgoing_before"/>
                             <field name="incoming_before"/>
-                            <field name="stock_simulation"/> 
+                            <field name="stock_simulation"/>
                             <button name="procure_incomming_left" string="Procure Incoming Left" type="object" colspan="2"/>
-                            <field name="procure_to_stock"/> 
+                            <field name="procure_to_stock"/>
                             <separator colspan ="2" string = "Internal Supply"/>
 			    <button name="internal_supply" string="Supply from Another Warehouse" type="object" colspan="2"/>
-                            <field name="supply_warehouse_id" domain = "[('company_id','=',company_id)] "/> 
-                            <field name="stock_supply_location"/> 
+                            <field name="supply_warehouse_id" domain = "[('company_id','=',company_id)] "/>
+                            <field name="stock_supply_location"/>
                         </group>
                     </group>
                     <separator colspan ="4" string = "Requisition history"/>
@@ -424,9 +423,9 @@
         </record>
 
         <menuitem
-            id="menu_stock_planning" 
+            id="menu_stock_planning"
             parent="menu_stock_planning_main"
             action="action_view_stock_planning_form"/>
-        
+
 </data>
 </openerp>

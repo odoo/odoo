@@ -12,9 +12,7 @@
                 <search string="Search Resource">
                    <group col='15' colspan='4'>
                        <field name="name"/>
-                       <field name="user_id" string="User" widget="selection">
-                           <filter domain="[('user_id','=',uid)]" help="My Resouces" icon="gtk-execute" default="1"/>
-                       </field>
+                       <field name="user_id" string="User" widget="selection"/>
                        <field name="resource_type"/>
                        <field name="company_id" widget="selection"/>
                    </group>
@@ -58,7 +56,7 @@
                    </group>
                    <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Resouce" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
+                        <filter string="Resource" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
                     </group>
                </search>
             </field>
@@ -191,6 +189,7 @@
             <field name="name">Resources</field>
             <field name="res_model">resource.resource</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_resource_resource_search"/>
         </record>
 

@@ -13,6 +13,7 @@
         <field name="res_model">crm.fundraising</field>
         <field name="view_mode">tree,form,graph</field>
         <field name="view_id" ref="crm.crm_case_tree_view_fund"/>
+        <field name="context">{"search_default_user_id":uid}</field>
         <field name="search_view_id" ref="crm.view_crm_case_fund_filter"/>
     </record>
 

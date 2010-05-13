@@ -209,8 +209,6 @@
         <field name="arch" type="xml">
 	        <search string="Ideas">
 	        	<group col="10" colspan="4">
-		        	<filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Ideas"/>
-		        	<separator orientation="vertical"/>
 		        	<filter icon="gtk-execute" string="Draft"
 		        		domain="[('state','=','draft')]" help="Draft Ideas" />
 		        	<filter icon="gtk-execute" string="Open"
@@ -218,7 +216,7 @@
 		        	<separator orientation="vertical"/>
 		            <field name="title" select="1"/>
 		            <field name="category_id" select="1"/>
-		            <field name="user_id" select="1"/>
+		            <field name="user_id" widget="selection" select="1"/>
 				</group>
 	        </search>
         </field>
@@ -246,6 +244,7 @@
         <field name="res_model">idea.idea</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{"search_default_user_id":uid}</field>
         <field name="search_view_id" ref="view_idea_idea_search"/>
     </record>
 
