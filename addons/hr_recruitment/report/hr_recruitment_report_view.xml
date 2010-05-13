@@ -148,8 +148,8 @@
         <field name="context">{'search_default_month':1,'search_default_degree':1,'search_default_job':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
-	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root"/>
-    <menuitem action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="hr.menu_hr_reporting" sequence="0"/>
+	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10"/>
+    <menuitem action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="hr.menu_hr_reporting" sequence="2"/>
 
 </data>
 </openerp>
