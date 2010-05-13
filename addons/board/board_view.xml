@@ -66,11 +66,14 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Dashboard">
-                    <field name="name" select="1"/>
-                    <button colspan="2"
-                        name="%(action_board_menu_create)d"
-                        string="Create Menu" type="action"
-                        icon="gtk-justify-fill" />
+                	<group col="6" colspan="4">
+                    	<field name="name" select="1" />
+                    		<field name="menu_id" colspan="2"/>
+                    		<button 
+                        		name="%(action_board_menu_create)d"
+                        		string="Create Menu" type="action"
+                        		icon="gtk-justify-fill"  attrs="{'invisible':[('menu_id','!=',False)]}"/>
+                    	</group>    
                     <field colspan="4" name="line_ids" nolabel="1">
                         <tree string="Dashboard View">
                             <field name="name"/>

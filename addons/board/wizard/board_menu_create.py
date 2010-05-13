@@ -69,14 +69,17 @@ class board_menu_create(osv.osv_memory):
                 'view_id': board.view_id.id,
                 })
         obj_menu = self.pool.get('ir.ui.menu')
+        obj_board = self.pool.get('board.board')
         #start Loop
         for data in self.read(cr, uid, ids):
-            obj_menu.create(cr, uid, {
-                'name': data.get('menu_name'),
-                'parent_id': data.get('menu_parent_id'),
-                'icon': 'STOCK_SELECT_COLOR',
-                'action': 'ir.actions.act_window,' + str(action_id)
-                }, context=context)
+            id = obj_menu.create(cr, uid, {
+                    'name': data.get('menu_name'),
+                    'parent_id': data.get('menu_parent_id'),
+                    'icon': 'STOCK_SELECT_COLOR',
+                    'action': 'ir.actions.act_window,' + str(action_id)
+                    }, context=context)
+            obj_board.write(cr, uid, [context_id], { "menu_id": id})
+            
         #End Loop
         return {}
 
