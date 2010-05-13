@@ -72,16 +72,18 @@
                           <label align="0.0" string="This module is required for the thuderbird plug-in to work properly.This allows you to select an object that you had like to add to your email and its attachments. You can select a partner, a task, a project, an analytical account, or any other object and attach selected mail as .eml file in attachment of selected record." width="200"/>
                        </group>
                        <group colspan="8">
-                           <separator string="Thunderbird" colspan="4"/>
-                           <field name="thunderbird"/>
-                           <field name="name" invisible="1"/>
-                           <newline/>
-                           <field name="plugin_file"/>
-                           <button name="process_plugin"  icon="gtk-execute" string="Get Plugin File" type="object"/>
-                           <newline/>
-                           <separator string="Thunderbird plugin installation note." colspan="4"/>
-                           <label colspan="8" string="Save The thunderbird plug­in Follow the following step to install thunderbird plug­in ? 1. From Menu Bar, Open Tools ­> Add ons. 2. Now click on install button and a browser window will appear. 3. Just select the (.xpi) file from thunderbird/plugin directory and click ok, a new software installation window will appear and within a short time Install Now  button will be enabled. 4. Click on Install Now and restart Thunderbird. 5. Now Thunderbird plug­in is installed."/>
-                       </group>
+		                  <field name="thunderbird"/>
+		                  <field name="name" invisible="1"/>
+		                  <field name="pdf_name" invisible="1"/>
+		                  <newline/>
+		
+		                  <field name="plugin_file" filename="name"/>
+		                  <newline/>
+		                  <field name="pdf_file" filename="pdf_name"/>
+		                  <newline/>
+		                  <separator string="Thunderbird plugin installation note." colspan="4"/>
+		                  <field name="description" nolabel="1" colspan="8"/>                       
+		               </group>
                    </group>
              </group>
              <separator string="" colspan="4"/>
