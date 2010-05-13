@@ -191,7 +191,7 @@ class wiz_refund(wizard.interface):
             xml_id = 'action_invoice_tree5'
         elif inv.type == 'in_invoice':
             xml_id = 'action_invoice_tree8'
-        elif type == 'out_refund':
+        elif inv.type == 'out_refund':
             xml_id = 'action_invoice_tree10'
         else:
             xml_id = 'action_invoice_tree12'
