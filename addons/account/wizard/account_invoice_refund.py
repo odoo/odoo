@@ -167,7 +167,7 @@ class account_invoice_refund(osv.osv_memory):
                 xml_id = 'action_invoice_tree1'
             elif inv.type == 'in_invoice':
                 xml_id = 'action_invoice_tree2'
-            elif type == 'out_refund':
+            elif inv.type == 'out_refund':
                 xml_id = 'action_invoice_tree3'
             else:
                 xml_id = 'action_invoice_tree4'
