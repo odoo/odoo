@@ -69,7 +69,7 @@ class base_setup_installer(osv.osv_memory):
             help="Helps you manage your marketing campaigns step by step."),
         'misc_tools':fields.boolean('Miscellaneous Tools',
             help="Lets you install various interesting but non-essential "
-                 "tools."),
+                 "tools like Survey, Lunch,..."),
         'report_designer':fields.boolean('Advanced Reporting',
             help="Lets you install various tools to simplify and enhance "
                  "OpenERP's report creation."),
@@ -90,5 +90,25 @@ class base_setup_installer(osv.osv_memory):
     _defaults = {
         'crm': True,
         }
+
+
+    def onchange_moduleselection(self, cr, uid, ids, *args):
+        progress = self._progress(cr, uid) - round((len(filter(lambda x: x==1, args)))*80/len(args))
+        if progress <= 10.0:
+            progress = 10.0
+        return {'value':{'progress':progress}}
+
+    def modules_to_install(self, cr, uid, ids, context=None):
+        modules = super(base_setup_installer, self).modules_to_install(cr, uid, ids, context=context)
+        interface_id = self.pool.get('res.config.view').search(cr, uid, [])
+        interface = self.pool.get('res.config.view').read(cr, uid, interface_id)[0]
+        modules_selected = self.read(cr, uid, ids)[0]
+        added_modules = []
+        if interface.get('view', '') == 'simple' :
+            if modules_selected.get('mrp', False):
+                added_modules.append('mrp_jit')
+            if modules_selected.get('knowledge', False):
+                added_modules.append('document_ftp')
+        return modules | set(added_modules)
 base_setup_installer()
 

@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <menuitem icon="terp-hr" id="menu_hr_root" name="Human Resources" sequence="6"/>
-        <menuitem id="menu_hr_human_resources" sequence="1" name="Human Resources" parent="menu_hr_root"/>
+        <menuitem id="menu_hr_human_resources" sequence="2" name="Human Resources" parent="menu_hr_root"/>
         <menuitem
             id="menu_hr_configuration"
             name="Configuration"
@@ -58,7 +58,7 @@
                             <group col="2" colspan="2">
                                 <separator string="Status" colspan="2"/>
                                 <field name="gender"/>
-                                <field name="marital"/>
+                                <field name="marital" widget="selection"/>
                                 <field name="country_id"/>
                                 <field name="birthday"/>
                             </group>
@@ -103,7 +103,7 @@
                     <newline />
                     <group expand="1" string="Group By..." colspan="11" col="11">
                         <filter string="Manager" icon="terp-sale" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <filter string="Coach" icon="terp-sale" domain="[]" context="{'group_by':'coach_id'}"/>
+                        <filter string="Coach" icon="terp-sale" domain="[]" context="{'group_by':'coach_id'}" groups="base.group_extended"/>
                         <separator orientation="vertical" />
                         <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Job" icon="terp-sale" domain="[]" context="{'group_by':'job_id'}"/>
@@ -141,13 +141,15 @@
         <menuitem
             action="open_view_employee_list_my"
             id="menu_open_view_employee_list_my"
-            parent="menu_hr_human_resources"/>
+            sequence="3"
+            parent="menu_hr_root"/>
+
 
         <!--
         =======================
         Employee marital status
-        =======================
-        -->
+        =======================     -->
+
         <record id="hr_hr_employee_marital_status_form" model="ir.ui.view">
             <field name="name">hr.hr.employee.marital.status</field>
             <field name="model">hr.employee.marital.status</field>
@@ -171,6 +173,7 @@
             action="action_hr_marital_status"
             id="hr_menu_marital_status"
             parent="hr.menu_view_employee_category_configuration_form" sequence="3"/>
+
 
         <!--
         =======================
@@ -257,9 +260,10 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="open_view_categ_form" 
-            id="menu_view_employee_category_form" 
-            parent="menu_view_employee_category_configuration_form" sequence="1"/>
+        <menuitem action="open_view_categ_form"
+            id="menu_view_employee_category_form"
+            parent="menu_view_employee_category_configuration_form" sequence="1"
+            groups="base.group_extended"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories structure</field>
@@ -287,8 +291,8 @@
             <field eval="True" name="object"/>
         </record>
 
-        <menuitem 
-            action="open_view_categ_tree" 
+        <menuitem
+            action="open_view_categ_tree"
             groups="base.group_extended"
             id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
 
@@ -375,9 +379,9 @@
             name="Recruitment"
             id="base.menu_crm_case_job_req_main"
             parent="menu_hr_root"/>
-        <menuitem 
-            parent="base.menu_crm_case_job_req_main" 
-            id="menu_hr_job" 
+        <menuitem
+            parent="base.menu_crm_case_job_req_main"
+            id="menu_hr_job"
             action="action_hr_job" sequence="2"/>
 
     </data>
