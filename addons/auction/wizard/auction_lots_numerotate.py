@@ -48,7 +48,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
-        res = super(wiz_auc_lots_numerotate_per_lot, self).default_get(cr, uid, fields, context=context)
+        res = super(auction_lots_numerotate_per_lot, self).default_get(cr, uid, fields, context=context)
         active_id = context.get('active_id',False)
         active_model = context.get('active_model')
         if active_id and (active_model and active_model!='auction.lots'):
