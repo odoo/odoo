@@ -157,4 +157,16 @@ class calendar_attendee(osv.osv):
 
 calendar_attendee()
 
+class res_partner(osv.osv):
+    """ Inherits partner and adds meetings information in the partner form """
+    _inherit = 'res.partner'
+    
+    _columns = {
+                'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+                                                     'Meetings'), 
+                }
+
+res_partner()
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

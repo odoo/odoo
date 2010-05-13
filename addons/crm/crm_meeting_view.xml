@@ -324,5 +324,22 @@
                     </field>
                 </field>
         </record>
+        
+        <!--  Partners inherited form -->
+
+		<record id="view_meeting_partner_info_form" model="ir.ui.view">
+            <field name="name">res.partner.meeting.info.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+               		<page string="CRM Info">
+						<field name="meeting_ids" colspan="4" nolabel="1" />
+					</page>
+                </notebook>
+            </field>
+        </record>
+
     </data>
 </openerp>
