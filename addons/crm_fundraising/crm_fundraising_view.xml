@@ -1,32 +1,31 @@
 <?xml version="1.0"?>
 <openerp>
-<data>
+    <data>
 
-<!-- Fund Raising Categories Form View -->
+        <!-- Fund Raising Categories Form View -->
 
-    <record id="crm_fund_categ_action" model="ir.actions.act_window">
-        <field name="name">Fundraising Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
-         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-        <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
-        <field name="context">{'object_id':'crm.fundraising'}</field>
-    </record>
+        <record id="crm_fund_categ_action" model="ir.actions.act_window">
+            <field name="name">Fundraising Categories</field>
+            <field name="res_model">crm.case.categ</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+            <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
+            <field name="context">{'object_id':'crm.fundraising'}</field>
+        </record>
 
-    <menuitem action="crm_fund_categ_action"
-        id="menu_crm_case_fundraising-act"
-        groups="base.group_extended"
-        parent="crm.menu_crm_case_categ" />
+        <menuitem action="crm_fund_categ_action"
+            id="menu_crm_case_fundraising-act" groups="base.group_extended"
+            parent="crm.menu_crm_case_categ" />
 
-<!-- Fund Stage Form View -->
+        <!-- Fund Stage Form View -->
 
         <record id="crm_fundraising_stage_act" model="ir.actions.act_window">
             <field name="name">Fundraising Stages</field>
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-               <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
-               <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
+            <field name="context">{'object_id':'crm.fundraising'}</field>
         </record>
 
         <menuitem action="crm_fundraising_stage_act"
@@ -34,15 +33,15 @@
             id="menu_crm_fundraising_stage_act"
             parent="crm.menu_crm_case_stage" />
 
-<!-- Fund  Resource Type Form View -->
+        <!-- Fund Resource Type Form View -->
 
         <record id="crm_fundraising_resource_act" model="ir.actions.act_window">
             <field name="name">Fundraising Resource Type</field>
             <field name="res_model">crm.case.resource.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
-               <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
-               <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
+            <field name="context">{'object_id':'crm.fundraising'}</field>
         </record>
 
         <menuitem action="crm_fundraising_resource_act"
@@ -51,260 +50,262 @@
             parent="crm.menu_crm_case_resource_type" />
 
 
-<!-- Fund Raising Tree View -->
+        <!-- Fund Raising Tree View -->
 
-    <record model="ir.ui.view" id="crm_case_tree_view_fund">
-        <field name="name">CRM - Funds Tree</field>
-        <field name="model">crm.fundraising</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Funds Tree"
-                colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
-                <field name="name" string="Fund Description" />
-                <field name="categ_id" />
-                <field name="type_id" string="Payment Mode" />
-                <field name="planned_cost" string="Amount" />
-                <field name="probability" />
-                <field name="user_id" />
-                <field name="state" />
-                <field name="partner_id" invisible="1"/>
-                <button name="case_close" string="Done"
-                    states="open,draft,pending" type="object"
-                    icon="gtk-close" />
-                <button name="case_open" string="Open"
-                    states="draft,pending" type="object"
-                    icon="gtk-go-forward" />
-                <button name="case_cancel" string="Cancel"
-                    states="draft,open,pending" type="object"
-                    icon="gtk-cancel" />
-                <button name="case_pending" string="Pending"
-                    states="draft,open" type="object" icon="gtk-media-pause" />
-                <button name="case_escalate" string="Escalate"
-                    states="open,draft,pending" type="object"
-                    groups="base.group_extended"
-                    icon="gtk-go-up" />
-                <button name="case_reset" string="Reset to Draft"
-                    states="done,cancel" type="object" icon="gtk-convert" />
-            </tree>
-        </field>
-    </record>
-
-<!-- Fund Raising Form View -->
-
-    <record model="ir.ui.view" id="crm_case_form_view_fund">
-        <field name="name">CRM - Funds Form</field>
-        <field name="model">crm.fundraising</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Funds Form">
-                <group colspan="4" col="4">
-                    <field name="name" select="1" string="Name"/>
-                    <field name="type_id" string="Payment Mode" select="1" widget="selection"
-                            domain="[('object_id.model', '=', 'crm.fundraising')]" />
-                </group>
-                <notebook colspan="4">
-                <page string="Funds">
-                    <separator colspan="4" string="Communication"/>
-                    <group colspan="4" col="4">
-                        <field name="partner_id" select="1"
-                            on_change="onchange_partner_id(partner_id, email_from)"
-                            colspan="2" />
-                        <field name="partner_address_id"
-                            string="Contact"
-                            on_change="onchange_partner_address_id(partner_address_id, email_from)"
-                            colspan="1" />
-                        <field name="email_from" colspan="2"/>
-                    </group>
-                    <separator colspan="4" string="Estimates"/>
-                    <field name="planned_cost"/>
-                    <field name="planned_revenue"/>
-                    <field name="probability"/>
-                    <separator colspan="4" string="Categorization"/>
-                    <group colspan="4" col="6">
-                        <field name="user_id" string="Responsible"/>
-                        <field name="section_id" colspan="1" widget="selection"/>
-                        <field name="categ_id" select="1"
-                            widget="selection"
-                            domain="[('object_id.model', '=', 'crm.fundraising')]" />
-                        <field name="date"/>
-                        <field name="duration"/>
-                    </group>
-                    <separator colspan="4" string="Notes"/>
-                        <field name="description" nolabel="1" colspan="4"/>
-                    <separator colspan="4"/>
-                    <group col="8" colspan="4">
-                        <field name="state"/>
-                        <button name="case_close" string="Done"
-                            states="open,draft,pending" type="object"
-                            icon="gtk-close" />
-                        <button name="case_open" string="Open"
-                            states="draft,pending" type="object"
-                            icon="gtk-go-forward" />
-                        <button name="case_cancel" string="Cancel"
-                            states="draft,open,pending" type="object"
-                            icon="gtk-cancel" />
-                        <button name="case_pending" string="Pending"
-                            states="draft,open" type="object"
-                            icon="gtk-media-pause" />
-                        <button name="case_escalate" string="Escalate"
-                            states="open,draft,pending" type="object"
-                            groups="base.group_extended"
-                            icon="gtk-go-up" />
-                        <button name="case_reset"
-                            string="Reset to Draft" states="done,cancel"
-                            type="object" icon="gtk-convert" />
-                    </group>
-                </page>
-                <page string="History" groups="base.group_extended">
-                    <field name="id" select="1"/>
-                    <field name="active"/>
-                    <field name="priority" string="Priority"/>
-                    <newline/>
-                    <field name="canal_id"/>
-                    <field name="som"/>
-                    <separator colspan="4" string="Dates"/>
-                    <field name="create_date"/>
-                    <field name="date_closed"/>
-                    <separator colspan="4" string="References"/>
-                    <field name="ref" colspan="4"/>
-                    <field name="ref2" colspan="4"/>
-
-                    <field name="log_ids" nolabel="1" colspan="4">
-                        <tree string="Logs">
-                            <field name="name" colspan="4"/>
-                            <field name="date"/>
-                            <field name="user_id"/>
-                        </tree>
-                        <form string="Logs">
-                            <separator string="Action Information" colspan="4"/>
-                            <field name="name" colspan="4"/>
-                            <field name="date"/>
-                            <field name="user_id"/>
-                        </form>
-                    </field>
-                </page>
-                 <page string="Emails" groups="base.group_extended">
-                   <group colspan="4">
-                       <field colspan="4" name="email_cc" string="CC"/>
-                   </group>
-                    <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
-                       <form string="Communication history">
-                            <group col="6" colspan="4">
-                                <field name="date"/>
-                                <field name="email_to"/>
-                                <field name="email_from"/>
-							</group>
-                                   <newline/>
-                                   <field name="description" colspan="4" nolabel="1"/>
-                                   <button colspan="4"
-                                       string="Reply to Last Email"
-                                       name="%(crm.action_crm_send_mail)d"
-                                       context="{'mail':'reply', 'model': 'crm.fundraising'}"
-                                       icon="gtk-undo" type="action" />
-                               </form>
-                               <tree string="Communication history">
-                                   <field name="description"/>
-                                   <field name="email_to"/>
-                                   <field name="date"/>
-                               </tree>
-                           </field>
-                           <button colspan="4" string="Send New Email"
-                               name="%(crm.action_crm_send_mail)d"
-                               context="{'mail':'new', 'model': 'crm.fundraising'}"
-                               icon="gtk-go-forward" type="action" />
-                 </page>
-                </notebook>
-            </form>
-        </field>
-    </record>
-
-<!-- Fund Raising Calendar View -->
-
-    <record model="ir.ui.view" id="crm_case_calendar_view_fund">
-        <field name="name">CRM - Funds Calendar</field>
-        <field name="model">crm.fundraising</field>
-        <field name="type">calendar</field>
-        <field name="priority" eval="2"/>
-        <field name="arch" type="xml">
-            <calendar string="Funds" date_start="date" color="user_id" date_delay="duration">
-                <field name="name"/>
-                <field name="partner_id"/>
-            </calendar>
-        </field>
-    </record>
-
-<!-- Fund Raising Graph View -->
-
-    <record model="ir.ui.view" id="crm_case_graph_view_fund">
-        <field name="name">CRM - Funds Graph</field>
-        <field name="model">crm.fundraising</field>
-        <field name="type">graph</field>
-        <field name="arch" type="xml">
-            <graph string="Funds by Categories" type="bar" orientation="horizontal">
-                <field name="categ_id"/>
-                <field name="planned_cost" operator="+"/>
-                <field name="state" group="True"/>
-            </graph>
-        </field>
-    </record>
-
-<!-- Fund Raising Search View -->
-
-    <record id="view_crm_case_fund_filter" model="ir.ui.view">
-            <field name="name">CRM - Funds Search</field>
+        <record model="ir.ui.view" id="crm_case_tree_view_fund">
+            <field name="name">CRM - Funds Tree</field>
             <field name="model">crm.fundraising</field>
-            <field name="type">search</field>
+            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <search string="Search Funds">
-                   <group col='6' colspan='4'>
-                       <filter icon="gtk-new" string="Current"
-                           domain="[('state','in',('draft', 'open'))]" name="current"
-                           help="Current Funds" />
-                       <filter icon="gtk-yes" string="Open"
-                           domain="[('state','=','open')]"
-                           help="Open Funds" />
-                       <filter icon="gtk-media-pause"
-                           string="Pending"
-                           domain="[('state','=','pending')]"
-                           help="Pending Funds" />
-                       <separator orientation="vertical" />
-                       <filter icon="terp-partner" string="My Funds"
-                           default="1" domain="[('user_id','=',uid)]"
-                           separator="1"
-                           help="Funds Related to Current User"
-                           />
-                       <separator orientation="vertical" />
-                       <field name="state" select="1" />
-                       <field name="name" select='1'
-                           string="Fund Description" />
-                       <field name="user_id" select="1"
-                           widget="selection">
-                           <filter icon="terp-partner"
-                               domain="[('user_id','=', False)]"
-                               help="Unassigned" />
-                       </field>
-                       <field name="section_id" select="1" widget="selection" string="Sales Team">
-                           <filter icon="terp-crm"
-                               domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section" />
-                       </field>
-                   </group>
-                   <newline/>
-                   <group expand="0" string="Group By..." colspan="10" col="20">
-                       <filter string="Partner" icon="terp-partner"
-                           domain="[]"
-                           context="{'group_by':'partner_id'}" />
-                       <filter string="Responsible" icon="terp-crm"
-                           domain="[]"
-                           context="{'group_by':'user_id'}" />
-                       <separator orientation="vertical" />
-                       <filter string="Type" icon="terp-project"
-                           domain="[]"
-                           context="{'group_by':'type_id'}" />
-                   </group>
-               </search>
+                <tree string="Funds Tree"
+                    colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                    <field name="name" string="Fund Description" />
+                    <field name="categ_id" />
+                    <field name="type_id" string="Payment Mode" />
+                    <field name="planned_cost" string="Amount" />
+                    <field name="probability" />
+                    <field name="user_id" />
+                    <field name="state" />
+                    <field name="partner_id" invisible="1"/>
+                    <button name="case_close" string="Done"
+                        states="open,draft,pending" type="object"
+                        icon="gtk-close" />
+                    <button name="case_open" string="Open"
+                        states="draft,pending" type="object"
+                        icon="gtk-go-forward" />
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
+                    <button name="case_pending" string="Pending"
+                        states="draft,open" type="object" icon="gtk-media-pause" />
+                    <button name="case_escalate" string="Escalate"
+                        states="open,draft,pending" type="object"
+                        groups="base.group_extended"
+                        icon="gtk-go-up" />
+                    <button name="case_reset" string="Reset to Draft"
+                        states="done,cancel" type="object" icon="gtk-convert" />
+                </tree>
             </field>
         </record>
 
-</data>
+        <!-- Fund Raising Form View -->
+
+        <record model="ir.ui.view" id="crm_case_form_view_fund">
+            <field name="name">CRM - Funds Form</field>
+            <field name="model">crm.fundraising</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Funds Form">
+                    <group colspan="4" col="6">
+                        <field name="name" select="1" string="Name"/>
+                        <field name="section_id" colspan="1" widget="selection"/>
+                        <field name="user_id" string="Responsible"/>
+                        <field name="date"/>
+                        <field name="categ_id" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
+                        <field name="type_id" string="Payment Mode" select="1" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Funds">
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Communication"/>
+                                <field name="partner_id" select="1"
+                                    on_change="onchange_partner_id(partner_id, email_from)"
+                                    colspan="2" />
+                                <field name="partner_address_id"
+                                    string="Contact"
+                                    on_change="onchange_partner_address_id(partner_address_id, email_from)"
+                                    colspan="1" />
+                                <field name="email_from" colspan="2"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Estimates"/>
+                                <field name="planned_cost"/>
+                                <field name="planned_revenue"/>
+                                <field name="probability"/>
+                            </group>
+                            <separator colspan="4" string="Notes"/>
+                                <field name="description" nolabel="1" colspan="4"/>
+                            <separator colspan="4"/>
+                            <group col="8" colspan="4">
+                                <field name="state"/>
+                                <button name="case_close" string="Done"
+                                    states="open,draft,pending" type="object"
+                                    icon="gtk-close" />
+                                <button name="case_open" string="Open"
+                                    states="draft,pending" type="object"
+                                    icon="gtk-go-forward" />
+                                <button name="case_cancel" string="Cancel"
+                                    states="draft,open,pending" type="object"
+                                    icon="gtk-cancel" />
+                                <button name="case_pending" string="Pending"
+                                    states="draft,open" type="object"
+                                    icon="gtk-media-pause" />
+                                <button name="case_escalate" string="Escalate"
+                                    states="open,draft,pending" type="object"
+                                    groups="base.group_extended"
+                                    icon="gtk-go-up" />
+                                <button name="case_reset"
+                                    string="Reset to Draft" states="done,cancel"
+                                    type="object" icon="gtk-convert" />
+                            </group>
+                        </page>
+                        <page string="History" groups="base.group_extended">
+                            <group col="2" colspan="2">
+                                <separator colspan="4" string="Misc"/>
+                                <field name="active"/>
+                                <field name="id" select="1"/>
+                                <field name="priority" string="Priority"/>
+                                <field name="canal_id"/>
+                                <field name="som"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator colspan="4" string="Dates"/>
+                                <field name="create_date"/>
+                                <field name="date_closed"/>
+                                <field name="duration"/>
+                            </group>
+                            <newline/>
+                            <group colspan="4" col="2">
+                                <separator colspan="4" string="References"/>
+                                <field colspan="4" name="ref"/>
+                                <field colspan="4" name="ref2"/>
+                            </group>
+                            <field name="log_ids" nolabel="1" colspan="4">
+                                <tree string="Logs">
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </tree>
+                                <form string="Logs">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Emails" groups="base.group_extended">
+                            <group colspan="4">
+                                <field colspan="4" name="email_cc" string="CC"/>
+                            </group>
+                            <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
+                                <form string="Communication history">
+                                    <group col="6" colspan="4">
+                                        <field name="date"/>
+                                        <field name="email_to"/>
+                                        <field name="email_from"/>
+                                    </group>
+                                    <newline/>
+                                    <field name="description" colspan="4" nolabel="1"/>
+                                    <button colspan="4"
+                                        string="Reply to Last Email"
+                                        name="%(crm.action_crm_send_mail)d"
+                                        context="{'mail':'reply', 'model': 'crm.fundraising'}"
+                                        icon="gtk-undo" type="action" />
+                                </form>
+                                <tree string="Communication history">
+                                    <field name="description"/>
+                                    <field name="email_to"/>
+                                    <field name="date"/>
+                                </tree>
+                            </field>
+                            <button colspan="4" string="Send New Email"
+                                name="%(crm.action_crm_send_mail)d"
+                                context="{'mail':'new', 'model': 'crm.fundraising'}"
+                                icon="gtk-go-forward" type="action" />
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <!-- Fund Raising Calendar View -->
+
+        <record model="ir.ui.view" id="crm_case_calendar_view_fund">
+            <field name="name">CRM - Funds Calendar</field>
+            <field name="model">crm.fundraising</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Funds" date_start="date" color="user_id" date_delay="duration">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Fund Raising Graph View -->
+
+        <record model="ir.ui.view" id="crm_case_graph_view_fund">
+            <field name="name">CRM - Funds Graph</field>
+            <field name="model">crm.fundraising</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Funds by Categories" type="bar" orientation="horizontal">
+                    <field name="categ_id"/>
+                    <field name="planned_cost" operator="+"/>
+                    <field name="state" group="True"/>
+                </graph>
+            </field>
+        </record>
+
+<!-- Fund Raising Search View -->
+
+        <record id="view_crm_case_fund_filter" model="ir.ui.view">
+                <field name="name">CRM - Funds Search</field>
+                <field name="model">crm.fundraising</field>
+                <field name="type">search</field>
+                <field name="arch" type="xml">
+                    <search string="Search Funds">
+                        <group col='6' colspan='4'>
+                            <filter icon="gtk-new" string="Current"
+                                domain="[('state','in',('draft', 'open'))]" name="current"
+                                help="Current Funds" />
+                            <filter icon="gtk-yes" string="Open"
+                                domain="[('state','=','open')]"
+                                help="Open Funds" />
+                            <filter icon="gtk-media-pause"
+                                string="Pending"
+                                domain="[('state','=','pending')]"
+                                help="Pending Funds" />
+                            <separator orientation="vertical" />
+                            <filter icon="terp-partner" string="My Funds"
+                                default="1" domain="[('user_id','=',uid)]"
+                                separator="1"
+                                help="Funds Related to Current User"
+                                />
+                            <separator orientation="vertical" />
+                            <field name="state" select="1" />
+                            <field name="name" select='1'
+                                string="Fund Description" />
+                            <field name="user_id" select="1"
+                                widget="selection">
+                                <filter icon="terp-partner"
+                                    domain="[('user_id','=', False)]"
+                                    help="Unassigned" />
+                            </field>
+                            <field name="section_id" select="1" widget="selection" string="Sales Team">
+                                <filter icon="terp-crm"
+                                    domain="[('section_id','=',context.get('section_id',False))]"
+                                    help="My section" />
+                            </field>
+                        </group>
+                        <newline/>
+                        <group expand="0" string="Group By..." colspan="10" col="20">
+                            <filter string="Partner" icon="terp-partner"
+                                domain="[]"
+                                context="{'group_by':'partner_id'}" />
+                            <filter string="Responsible" icon="terp-crm"
+                                domain="[]"
+                                context="{'group_by':'user_id'}" />
+                            <separator orientation="vertical" />
+                            <filter string="Type" icon="terp-project"
+                                domain="[]"
+                                context="{'group_by':'type_id'}" />
+                        </group>
+                    </search>
+                </field>
+            </record>
+
+    </data>
 </openerp>
