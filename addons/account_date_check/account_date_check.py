@@ -63,7 +63,9 @@ class account_move_line(osv.osv):
             journal=self.pool.get('account.journal').browse(cr,uid,[journal_id])[0]
             if not journal.allow_date:
                 period=self.pool.get('account.period').browse(cr,uid,[period_id])[0]
-                if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') and time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
+                date = time.strptime(vals['date'], '%Y-%m-%d')
+                if not (date >= time.strptime(period.date_start,'%Y-%m-%d')
+                        and date <= time.strptime(period.date_stop,'%Y-%m-%d') ):
                     raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
         else:
             return True
