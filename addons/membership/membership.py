@@ -332,14 +332,15 @@ class Partner(osv.osv):
         '''Return the cancel date of membership'''
         res = {}
         member_line_obj = self.pool.get('membership.membership_line')
-        for partner_id in ids:
-            line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
-                    limit=1, order='date_cancel')
-            if line_id:
-                res[partner_id] = member_line_obj.read(cr, uid, line_id[0],
-                        ['date_cancel'])['date_cancel']
+        for partner in self.browse(cr, uid, ids, context=context):
+            if partner.membership_state != 'canceled':
+                res[partner.id] = False
             else:
-                res[partner_id] = False
+                line_id = member_line_obj.search(cr, uid, [('partner', '=', partner.id)],limit=1, order='date_cancel')
+                if line_id:
+                    res[partner.id] = member_line_obj.read(cr, uid, line_id[0],['date_cancel'])['date_cancel']
+                else:
+                    res[partner.id] = False    
         return res
 
     def _get_partners(self, cr, uid, ids, context={}):
