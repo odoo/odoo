@@ -13,21 +13,23 @@
 
           <separator string="title" position="attributes">
             <attribute name="string"
-                       >Configure Your Project Management</attribute>
+                       >Project Management</attribute>
           </separator>
+           <xpath expr='//separator[@string="vsep"]' position='attributes'>
+          	  <attribute name='string'></attribute>
+     		</xpath>
           <xpath expr="//label[@string='description']"
                  position="attributes">
             <attribute name="string">Various OpenERP applications are available to bring your project management to the next levels of control and flexibility.</attribute>
           </xpath>
           <group colspan="8">
-            <separator string="Project Management" colspan="4"/>
-            <field name="project_long_term"/>
+            <field name="project_crm"/>
+            <field name="project_long_term" groups="base.group_extended"/>
             <field name="project_wiki"/>
             <field name="hr_timesheet_sheet"/>
             <field name="hr_timesheet_invoice"/>
-            <field name="account_budget"/>
-            <field name="project_messages"/>
-            <field name="project_crm"/>
+            <field name="account_budget" groups="base.group_extended"/>
+            <field name="project_messages" groups="base.group_extended"/>
             <separator string="Methodologies" colspan="4"/>
             <field name="scrum"/>
             <field name="project_gtd"/>
@@ -50,5 +52,16 @@
       <field name="action_id" ref="action_project_installer"/>
       <field name="sequence">3</field>
     </record>
+     <record id="project_ir_actions_todo_tree" model="ir.ui.view">
+		    <field name="model">ir.actions.todo</field>
+		    <field name="name">project_installer_action_replace</field>
+		    <field name="type">tree</field>
+		    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+		    <field name="arch" type="xml">
+				<xpath expr="//button[@string='Launch']" position="replace">
+        			<button name="%(action_project_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+  				</xpath>
+  			</field>
+	</record>
   </data>
 </openerp>
