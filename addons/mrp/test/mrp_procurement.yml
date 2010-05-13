@@ -41,7 +41,7 @@
     seller_delay: '1'
     seller_ids:
       - delay: 1
-        name: base.res_partner_sednacom
+        name: base.res_partner_maxtor
         qty: 300.0
     standard_price: 1.0
     supply_method: buy
@@ -167,14 +167,14 @@
   I check that there is one purchase order for Cloth.
 -
   !python {model: purchase.order}: |
-    purch_ids = self.search(cr, uid, [('partner_id.name','=','Syleam')])
+    purch_ids = self.search(cr, uid, [('partner_id.name','=','Maxtor')])
     assert purch_ids, 'No Purchase Orders.'
 -
   I confirm purchase order for Cloth.
 -
   !python {model: purchase.order}: |
     import netsvc
-    purch_ids = self.search(cr, uid, [('partner_id.name','=','Syleam')])
+    purch_ids = self.search(cr, uid, [('partner_id.name','=','Maxtor')])
     wf_service = netsvc.LocalService("workflow")
     for p_id in purch_ids:
     	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
@@ -214,17 +214,17 @@
 -
   !python {model: stock.picking}: |
     from tools.translate import _
-    pick_ids = self.search(cr, uid, [('address_id.name','=','Sebastien LANGE'),('state','=','assigned')])
+    pick_ids = self.search(cr, uid, [('address_id.name','=','Wong'),('state','=','assigned')])
     assert pick_ids, _('No Incoming Shipments found!')
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
-    partner_id: base.res_partner_sednacom
-    address_id: base.res_partner_address_11
+    partner_id: base.res_partner_maxtor
+    address_id: base.res_partner_address_wong
 -
   !python {model: stock.partial.picking}: |
      pick_obj = self.pool.get('stock.picking')
-     picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Sebastien LANGE'),('state','=','assigned')])
+     picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Wong'),('state','=','assigned')])
      partial = self.browse(cr, uid, 1, context)
      partial_datas = {
             'partner_id' : partial.partner_id and partial.partner_id.id or False,
@@ -254,8 +254,8 @@
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
-    partner_id: base.res_partner_sednacom
-    address_id: base.res_partner_address_11
+    partner_id: base.res_partner_maxtor
+    address_id: base.res_partner_address_wong
 -
   !python {model: stock.partial.picking}: |
      pick_obj = self.pool.get('stock.picking')
