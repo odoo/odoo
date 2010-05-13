@@ -396,6 +396,7 @@ class account_installer(osv.osv_memory):
         company_id = self.pool.get('res.users').browse(cr,uid,[uid],context)[0].company_id
         for res in self.read(cr,uid,ids):
             if record.charts == 'configurable':
+                mod_obj = self.pool.get('ir.model.data')
                 fp = tools.file_open(opj('account','configurable_account_chart.xml'))
                 tools.convert_xml_import(cr, 'account', fp, {}, 'init',True, None)
                 fp.close()
@@ -407,12 +408,20 @@ class account_installer(osv.osv_memory):
                 p_tax = (res.get('purchase_tax',0.0))/100
                 tax_val = {}
                 default_tax = []
+
+                pur_tax_parent = mod_obj._get_id(cr, uid, 'account', 'vat_code_base_purchases')
+                pur_tax_parent_id = mod_obj.read(cr, uid, [pur_tax_parent], ['res_id'])[0]['res_id']
+
+                sal_tax_parent = mod_obj._get_id(cr, uid, 'account', 'vat_code_base_sales')
+                sal_tax_parent_id = mod_obj.read(cr, uid, [sal_tax_parent], ['res_id'])[0]['res_id']
+
                 if s_tax*100 > 0.0:
                     vals_tax_code = {
                         'name': 'VAT%s%%'%(s_tax*100),
                         'code': 'VAT%s%%'%(s_tax*100),
                         'company_id': company_id.id,
                         'sign': 1,
+                        'parent_id':sal_tax_parent_id
                         }
                     new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals_tax_code)
                     sales_tax = obj_tax.create(cr, uid,
@@ -420,7 +429,8 @@ class account_installer(osv.osv_memory):
                                             'description':'VAT%s%%'%(s_tax*100),
                                             'amount':s_tax,
                                             'base_code_id':new_tax_code,
-                                            'tax_code_id':new_tax_code
+                                            'tax_code_id':new_tax_code,
+                                            'type_tax_use':'sale'
                                             })
                     tax_val.update({'taxes_id':[(6,0,[sales_tax])]})
                     default_tax.append(('taxes_id',sales_tax))
@@ -430,6 +440,7 @@ class account_installer(osv.osv_memory):
                         'code': 'VAT%s%%'%(p_tax*100),
                         'company_id': company_id.id,
                         'sign': 1,
+                        'parent_id':pur_tax_parent_id
                         }
                     new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals_tax_code)
                     purchase_tax = obj_tax.create(cr, uid,
@@ -437,7 +448,8 @@ class account_installer(osv.osv_memory):
                                              'description':'VAT%s%%'%(p_tax*100),
                                              'amount':p_tax,
                                              'base_code_id':new_tax_code,
-                                            'tax_code_id':new_tax_code
+                                            'tax_code_id':new_tax_code,
+                                            'type_tax_use':'purchase'
                                              })
                     tax_val.update({'supplier_taxes_id':[(6,0,[purchase_tax])]})
                     default_tax.append(('supplier_taxes_id',purchase_tax))
