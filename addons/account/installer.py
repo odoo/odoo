@@ -44,7 +44,7 @@ class account_installer(osv.osv_memory):
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids)),
                    key=itemgetter(1)))
-        charts.insert(0,('configurable','Configurable Chart of Account'))
+        charts.insert(0,('configurable','Generic Chart Of Account'))
         return charts
 
     _columns = {
@@ -81,9 +81,12 @@ class account_installer(osv.osv_memory):
         'period':lambda *a:'month',
         'sale_tax':lambda *a:0.0,
         'purchase_tax':lambda *a:0.0,
-        'charts':'configurable',
+        #'charts':'configurable',
         'bank_accounts_id':_get_default_accounts
         }
+
+    def on_change_tax(self, cr, uid, id, tax):
+        return{'value':{'purchase_tax':tax}}
 
     def on_change_start_date(self, cr, uid, id, start_date):
         if start_date:
