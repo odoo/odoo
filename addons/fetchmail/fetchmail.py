@@ -126,7 +126,7 @@ class email_server(osv.osv):
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'active':fields.boolean('Active', required=False),
         'state':fields.selection([
-            ('draft','Not Confirme'),
+            ('draft','Not Confirmed'),
             ('wating','Waiting for Verification'),
             ('done','Confirmed'),
         ],'State', select=True, readonly=True),

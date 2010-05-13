@@ -40,7 +40,7 @@
         <field name="arch" type="xml">
             <form string="Leads Form">
                 <group colspan="4" col="7">
-                    <field name="name" required="1"/>
+                    <field name="name" required="1" string="Name"/>
                     <field name="priority"/>
                     <field name="date_deadline"/>
                     <button
@@ -48,8 +48,7 @@
                          string="Convert"
                          help="Convert to Opportunity"
                          icon="gtk-index"   
-                         type="object"
-                         attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                         type="object"/>
                     <newline />
                     <field name="section_id" colspan="1"
                         widget="selection" />
@@ -69,7 +68,7 @@
                 <page string="Lead">
                     <group colspan="2" col="4">
                         <separator string="Contact" colspan="4" col="4"/>
-                        <field name="partner_name" colspan="4"/>
+                        <field name="partner_name" string="Partner Name" colspan="4"/>
                         <newline/>
                         <field domain="[('domain', '=', 'contact')]" name="title"/>
                         <field name="function_name" />
@@ -97,7 +96,6 @@
                             icon="gtk-index" type="action"
                             string="Create"
                             attrs="{'invisible':[('partner_id','!=',False)]}"/>
-                        <field name="opportunity_id"/>
                     </group>
                     <separator colspan="4" string="Notes"/>
                     <field name="description" nolabel="1" colspan="4"/>
@@ -133,7 +131,7 @@
                             widget="selection" colspan="2" />
                         <field name="categ_id"
                             widget="selection"
-                            domain="[('object_id.model', '=', 'crm.opportunity')]" />
+                            domain="[('object_id.model', '=', 'crm.lead')]" />
                         <field name="type_id" string="Campaign" select="1"/>
                         <field name="referred"/>
                     </group>
@@ -154,16 +152,13 @@
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
                    </group>
-                    <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                    <!-- TODO-->
+                    <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
-                            <group col="7" colspan="4">
+                            <group col="6" colspan="4">
                                 <field name="date"/>
                                 <field name="email_to"/>
                                 <field name="email_from"/>
-                                <button
-                                     string="Add a CC"
-                                     name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                     icon="gtk-add" type="action"/>
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
@@ -180,7 +175,7 @@
                             <field name="email_to"/>
                             <field name="description"/>
                         </tree>
-                    </field>
+                    </field> 
                     <button colspan="2" string="Send New Email"
                         name="%(action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
@@ -271,7 +266,7 @@
             <search string="Search Leads">
                 <filter icon="terp-project"
                     string="Current"
-                    default="1"
+                    default="1" name="current"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-project"
                     string="Open"
@@ -314,7 +309,7 @@
                         help="Show Sales Team"/>
                 </field>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="14">
+                <group expand="0" string="Group By..." colspan="14">
                     <filter string="Stage" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Source" icon="terp-crm" domain="[]" context="{'group_by':'categ_id'}"/>

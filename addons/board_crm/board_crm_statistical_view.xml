@@ -18,7 +18,7 @@
 
         <record model="ir.ui.view" id="view_crm_opportunity_categ_graph">
             <field name="name">report.crm.opportunity.categ.graph</field>
-            <field name="model">crm.opportunity.report</field>
+            <field name="model">crm.lead.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Opportunity by Sales Team and Categories" type="bar" orientation="horizontal">
@@ -30,7 +30,7 @@
 
         <act_window name="Opportunities By Categories"
             domain="[('state','!=','done'),('state','!=','cancel')]"
-            res_model="crm.opportunity.report"
+            res_model="crm.lead.report"
             view_type="form"
             view_mode="graph,tree,form"
             view_id="view_crm_opportunity_categ_graph"
