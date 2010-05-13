@@ -97,7 +97,7 @@ class scrum_sprint(osv.osv):
         'date_stop': fields.date('Ending Date', required=True),
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True),
-        'scrum_master_id': fields.many2one('res.users', 'Scrum Master', required=True),
+        'scrum_master_id': fields.many2one('res.users', 'Scrum Manager', required=True),
         'meeting_ids': fields.one2many('scrum.meeting', 'sprint_id', 'Daily Scrum'),
         'review': fields.text('Sprint Review'),
         'retrospective': fields.text('Sprint Retrospective'),
@@ -220,9 +220,9 @@ class scrum_product_backlog(osv.osv):
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
         'progress': fields.function(_calc_progress, method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done."),
+        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done (Time spent on tasks)"),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
-        'expected_hours': fields.float('Expected Hours', help='Estimated time to do the task.'),
+        'expected_hours': fields.float('Expected Hours', help='Estimated total time to do the Backlog'),
         'date':fields.datetime("Created Date"),
     }
     _defaults = {

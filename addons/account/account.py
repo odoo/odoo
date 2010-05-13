@@ -122,6 +122,16 @@ class account_account_type(osv.osv):
         'partner_account': fields.boolean('Partner account'),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True),
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
+        'report_type':fields.selection([
+            ('none','/'),
+            ('income','Profilt & Loss (Income Accounts)'),
+            ('expanse','Profilt & Loss (Expanse Accounts)'),
+            ('asset','Balance Sheet (Assets Accounts)'),
+            ('liabilities','Balance Sheet (Liabilities Accounts)')
+        ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
+        'parent_id':fields.many2one('account.account.type', 'Parent Type', required=False),
+        'child_ids':fields.one2many('account.account.type', 'parent_id', 'Child Types', required=False),
+        'note': fields.text('Description'),
     }
     _defaults = {
         'close_method': lambda *a: 'none',
@@ -129,6 +139,15 @@ class account_account_type(osv.osv):
         'sign': lambda *a: 1,
     }
     _order = "sequence"
+
+    def _check_recursion(self, cr, uid, ids):
+        #TODO: Need to check for recusrion
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive types.', ['parent_id'])
+    ]
+
 account_account_type()
 
 def _code_get(self, cr, uid, context={}):
@@ -1764,52 +1783,6 @@ class account_subscription_line(osv.osv):
     _rec_name = 'date'
 account_subscription_line()
 
-
-class account_config_wizard(osv.osv_memory):
-    _name = 'account.config.wizard'
-    _inherit = 'res.config'
-
-    _columns = {
-        'name':fields.char(
-            'Name', required=True, size=64,
-            help="Name of the fiscal year as displayed on screens."),
-        'code':fields.char(
-            'Code', required=True, size=64,
-            help="Name of the fiscal year as displayed in reports."),
-        'date1': fields.date('Start Date', required=True),
-        'date2': fields.date('End Date', required=True),
-        'period':fields.selection([('month','Month'), ('3months','3 Months')],
-                                  'Periods', required=True),
-    }
-    _defaults = {
-        'code': lambda *a: time.strftime('%Y'),
-        'name': lambda *a: time.strftime('%Y'),
-        'date1': lambda *a: time.strftime('%Y-01-01'),
-        'date2': lambda *a: time.strftime('%Y-12-31'),
-        'period':lambda *a:'month',
-    }
-
-    def execute(self, cr, uid, ids, context=None):
-        for res in self.read(cr,uid,ids):
-            if 'date1' in res and 'date2' in res:
-                res_obj = self.pool.get('account.fiscalyear')
-                start_date=res['date1']
-                end_date=res['date2']
-                name=res['name']#DateTime.strptime(start_date, '%Y-%m-%d').strftime('%m.%Y') + '-' + DateTime.strptime(end_date, '%Y-%m-%d').strftime('%m.%Y')
-                vals={
-                    'name':name,
-                    'code':name,
-                    'date_start':start_date,
-                    'date_stop':end_date,
-                }
-                new_id=res_obj.create(cr, uid, vals, context=context)
-                if res['period']=='month':
-                    res_obj.create_period(cr,uid,[new_id])
-                elif res['period']=='3months':
-                    res_obj.create_period3(cr,uid,[new_id])
-account_config_wizard()
-
-
 #  ---------------------------------------------------------------
 #   Account Templates : Account, Tax, Tax Code and chart. + Wizard
 #  ---------------------------------------------------------------
@@ -2164,6 +2137,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr,uid,[uid],c)[0].company_id.id,
         'chart_template_id': _get_chart,
         'code_digits': lambda *a:6,
+        'seq_journal': True
     }
 
     def execute(self, cr, uid, ids, context=None):
@@ -2436,10 +2410,14 @@ class account_bank_accounts_wizard(osv.osv_memory):
     _name='account.bank.accounts.wizard'
 
     _columns = {
-        'acc_no':fields.many2one('res.partner.bank','Account No.',required=True),
+        'acc_name':fields.char('Account Name.', size=64, required=True),
         'bank_account_id':fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
         'currency_id':fields.many2one('res.currency', 'Currency'),
+        'account_type':fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
     }
+    _defaults = {
+        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
+        }
 
 account_bank_accounts_wizard()
 

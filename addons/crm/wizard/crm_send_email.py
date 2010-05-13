@@ -216,6 +216,9 @@ class crm_send_new_email(osv.osv_memory):
                             (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or hist.email_to or tools.config.get('email_from',False)})
 
+            signature = '\n' + (case.user_id.signature or '')
+            original = [signature]
+
             if include_original == True and 'text' in fields:
                 header = '-------- Original Message --------'
                 sender = 'From: %s' %(hist.email_from or '')
@@ -223,13 +226,10 @@ class crm_send_new_email(osv.osv_memory):
                 sentdate = 'Date: %s' % (hist.date)
                 desc = '\n%s'%(hist.description)
 
-                signature = ''
-                if case.user_id.signature:
-                    signature = '--\n' + case.user_id.signature
-
                 original = [header, sender, to, sentdate, desc, signature]
-                original = '\n'.join(original)
-                res['text']=original
+
+            res['text']= '\n'.join(original)
+
             if 'subject' in fields:
                 res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')})
             if 'state' in fields:

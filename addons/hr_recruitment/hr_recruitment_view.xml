@@ -7,12 +7,12 @@
     # ------------------------------------------------------
 
     <record id="hr_job_categ_action" model="ir.actions.act_window">
-        <field name="name">Applicant Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-           <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
-        <field name="context">{'object_id':'hr.applicant'}</field>
+		<field name="name">Applicant Categories</field>
+		<field name="res_model">crm.case.categ</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+		<field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
+		<field name="context">{'object_id':'hr.applicant'}</field>
     </record>
     # ------------------------------------------------------
     # Stage
@@ -69,27 +69,27 @@
         <field name="arch" type="xml">
             <form string="Jobs - Recruitment Form">
                 <group colspan="4" col="8">
-                    <field name="name" string="Subject"/>
-                    <label string="Stage: " align="1.0"/>
-                    <group colspan="1" col="2">
-                        <field name="stage_id" nolabel="1"/>
+                     <group colspan="3" col="6">
+                        <field name="name" string="Subject"/>
+                        <field name="stage_id"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
-                    <field name="user_id"/>
-                    <button string="Schedule a Phone Call"
-                        name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
-						icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
                     <newline/>
-                    <field name="partner_name"/>
-                    <field name="job_id"/>
-                    <field name="department_id" widget="selection"/>
-                    <button name="action_makeMeeting" type="object"
-                        string="Schedule Meeting" icon="terp-hr" />
-                    <button name="action_print_survey" string="Print Interview" type="object"
-                        icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                </group>
+                    <group colspan="3" col="6">
+	                  	<field name="partner_name"/>
+	                   	<field name="job_id" on_change="onchange_job(job_id)"/>
+	                   	<button string="Schedule a Phone Call" name="223" icon="gtk-redo" type="action"/>
+                     </group>
+                    <newline/>
+                    <group colspan="3" col="6">
+                        <field name="user_id"/>
+                        <field name="department_id" widget="selection"/>
+                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
+                    </group>
+                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+            	</group>
                 <notebook colspan="4">
                     <page string="Job Info">
                         <group col="2" colspan="2">
@@ -108,7 +108,7 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Qualification"/>
-                            <field name="type_id"/>
+                            <field name="type_id" domain="[('object_id.model', '=', 'hr.applicant')]"/>
                             <field name="priority" string="Appreciation"/>
                         </group>
                         <group col="2" colspan="2">
@@ -265,6 +265,59 @@
             </field>
         </field>
     </record>
+
+<!-- Stage Tree View -->
+
+	<record model="ir.ui.view" id="hr_recruitment_stage_tree">
+	    <field name="name">hr.recruitment.stage.tree</field>
+	    <field name="model">hr.recruitment.stage</field>
+	    <field name="type">tree</field>
+	    <field name="arch" type="xml">
+	        <tree string="Stages">
+	            <field name="sequence"/>
+	            <field name="name"/>
+	        </tree>
+	    </field>
+	</record>
+
+<!-- Stage Form View -->
+
+	<record model="ir.ui.view" id="hr_recruitment_stage_form">
+	    <field name="name">hr.recruitment.stage.form</field>
+	    <field name="model">hr.recruitment.stage</field>
+	    <field name="type">form</field>
+	    <field name="arch" type="xml">
+	        <form string="Stage">
+	            <separator string="Stage Definition" colspan="4"/>
+	            <field name="name" select="1"/>
+	            <field name="sequence"/>
+	            <separator string="Requirements" colspan="4"/>
+	            <field name="requirements" nolabel="1" colspan="4"/>
+	        </form>
+	    </field>
+	</record>
+
+<!-- Stage Action -->
+
+	<record id="hr_recruitment_stage_act" model="ir.actions.act_window">
+	    <field name="name">Stages</field>
+	    <field name="res_model">hr.recruitment.stage</field>
+	    <field name="view_type">form</field>
+	    <field name="view_id" ref="hr_recruitment_stage_tree"/>
+	</record>
+
+	<menuitem
+	    id="menu_hr_recruitment_recruitment"
+	    name="Recruitment"
+	    parent="hr.menu_hr_configuration"
+	    />
+
+	<menuitem
+		id="menu_hr_recruitment_stage"
+		name="Stages"
+		parent="menu_hr_recruitment_recruitment"
+		action="hr_recruitment_stage_act"
+		sequence="1"/>
 
     </data>
 </openerp>

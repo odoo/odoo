@@ -30,8 +30,8 @@
                     <field name="date"/>
                     <field name="employee_id"/>
                     <field name="department_id" groups="base.group_extended"/>
-                    <field name="name"/>
                     <field name="ref"/>
+                    <field name="name"/>
                     <field name="amount"/>
                     <field name="state"/>
                     <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
@@ -49,8 +49,8 @@
                     <field name="date"/>
                     <field name="employee_id"/>
                     <field name="department_id" groups="base.group_extended"/>
-                    <field name="name"/>
                     <field name="ref"/>
+                    <field name="name"/>
                     <field name="amount"/>
                     <field name="state"/>
                     <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
@@ -67,8 +67,7 @@
                 <form string="Expenses Sheet">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
-                        <field name="employee_id" select="1"/>
-                        <field name="ref"/>
+                        <field name="ref" groups="base.group_extended"/>
                         <field name="date" select="1"/>
                         <field name="amount"/>
                         <field name="currency_id"/>
@@ -81,7 +80,7 @@
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <form string="Expense Lines">
                                     <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
-                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
+                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" widget="selection"/>
                                     <field name="name" select="1"/>
                                     <field name="date_value" select="1"/>
                                     <field name="unit_quantity"/>
@@ -132,6 +131,12 @@
                         domain="[('state','=','draft')]"
                         string="Draft"
                         help="Draft Expense"/>
+                	  <filter
+                        icon="terp-hr"
+                        string="My Expenses"
+                        default="1"
+                        domain="[('user_id','=',uid)]"/>
+                      <separator orientation="vertical"/>
                       <filter
                         icon="terp-hr"
                         domain="[('state','=','confirm')]"
@@ -145,12 +150,7 @@
                       <separator orientation="vertical"/>
                       <field name="name" select='1'/>
                       <field name="date" select='1'/>
-                      <field name="user_id" select="1" widget="selection">
-                          <filter
-                            icon="gtk-execute"
-                            help="My Expenses"
-                            default="1"
-                            domain="[('user_id','=',uid)]"/>
+                      <field name="user_id" select="1" widget="selection" string="User">
                         <filter icon="terp-hr"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
@@ -160,9 +160,9 @@
                 <newline />
                 <group expand="1" string="Group By..." colspan="11" col="11">
                     <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
-                    <filter string="Employee" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="User" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Date" icon="terp-sale" domain="[]" context="{'group_by':'date'}"/>
+                    <filter string="Month" icon="terp-sale" domain="[]" context="{'group_by':'date'}"/>
                 </group>
                 </search>
             </field>
@@ -175,7 +175,7 @@
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
 
-        <menuitem id="next_id_49" name="Expenses" sequence="6"
+        <menuitem id="next_id_49" name="Expenses" sequence="8"
            parent="hr.menu_hr_root"/>
 
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses"

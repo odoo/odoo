@@ -315,7 +315,8 @@ class email_parser(object):
                 'res_id': id
             }
             self.rpc('ir.attachment', 'create', data_attach)
-        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['From']), body['body'])
+
+        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['To']), body['body'], self._decode_header(msg['From']), False, {'model' : self.model})
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -358,7 +359,8 @@ class email_parser(object):
                 'res_id': id
             }
             self.rpc('ir.attachment', 'create', data_attach)
-        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['From']), message['body'])
+
+        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['To']), message['body'], self._decode_header(msg['From']), False, {'model' : self.model})
         return id
 
     def msg_test(self, msg, case_str):

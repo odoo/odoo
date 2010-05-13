@@ -139,6 +139,7 @@ class project(osv.osv):
         'active': lambda *a: True,
         'priority': lambda *a: 1,
         'sequence': lambda *a: 10,
+        'warn_manager': lambda *a: True,
     }
     def _check_dates(self, cr, uid, ids):
          leave = self.read(cr, uid, ids[0],['date_start','date'])
@@ -549,7 +550,7 @@ class config_compute_remaining(osv.osv_memory):
         return False
 
     _columns = {
-        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
+        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Re-estimated Time to change the remaining hours of the task"),
             }
 
     _defaults = {
