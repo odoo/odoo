@@ -743,7 +743,7 @@ class crm_case_log(osv.osv):
     _columns = {
         'name': fields.char('Status', size=64), 
         'date': fields.datetime('Date'), 
-        'section_id': fields.many2one('crm.case.section', 'Section'), 
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
         'model_id': fields.many2one('ir.model', "Model"), 
         'res_id': fields.integer('Resource ID'), 
