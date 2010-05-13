@@ -44,7 +44,7 @@ sys.path.append(join(os.path.abspath(os.path.dirname(__file__)), "bin"))
 
 execfile(join('bin', 'release.py'))
 
-if sys.argv[1] == 'bdist_rpm':
+if 'bdist_rpm' in sys.argv:
     version = version.split('-')[0]
 
 # get python short version
