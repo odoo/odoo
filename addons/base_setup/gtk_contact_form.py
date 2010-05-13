@@ -70,7 +70,8 @@ class base_gtkcontactform(osv.osv_memory):
              'training':fields.boolean('OpenERP Training Program'),
              'other':fields.boolean('Other'),
              'ebook':fields.boolean('ebook'),
-             'updates':fields.boolean('updates'),
+             'updates':fields.boolean('Updates'),
+             'contact_me':fields.boolean('Contact Me'),
              }
     def execute(self, cr, uid, ids, context=None):
         company_id = self.pool.get('base.setup.company').search(cr, uid, [])
