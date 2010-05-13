@@ -99,7 +99,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone1'))+'), (\'state\',\'=\',\'\open\')]'"/>
+        <field name="domain" eval="'[(\'section_id\',\'=\','+str(ref('section_support_phone'))+'), (\'categ_id\',\'=\','+str(ref('categ_phone1'))+'), (\'state\',\'=\',\'open\')]'"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming2">
         <field name="sequence" eval="1"/>
