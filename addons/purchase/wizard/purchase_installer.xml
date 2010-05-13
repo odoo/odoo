@@ -11,7 +11,9 @@
 	          <form position="attributes">
 	            <attribute name="string">Purchase Modules Installation</attribute>
 	          </form>
-	
+			  <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='string'></attribute>
+	      		</xpath>
 	          <separator string="title" position="attributes">
 	            <attribute name="string"
 	                       >Configure Your Purchase System</attribute>
@@ -22,7 +24,6 @@
 	          </xpath>
 
                 <group colspan="8">
-                  <separator string="Purchase Application" colspan="4"/>
                   <field name="purchase_requisition"/>
                 </group>
               </data>
@@ -42,7 +43,18 @@
 	<record id="purchase_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_purchase_install_module"/>
       <field name="sequence">3</field>
-    
+      <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
     </record>
+	<record id="purchase_ir_actions_todo_tree" model="ir.ui.view">
+		    <field name="model">ir.actions.todo</field>
+		    <field name="name">purchase_installer_action_replace</field>
+		    <field name="type">tree</field>
+		    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+			<field name="arch" type="xml">
+	 			<xpath expr="//button[@string='Launch']" position="replace">
+        			<button name="%(action_purchase_install_module)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+      			</xpath>
+    		</field>
+	</record>
     </data>
 </openerp>

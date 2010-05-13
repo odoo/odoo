@@ -29,20 +29,20 @@
                 <form string="Procurement">
                     <group col="2" colspan="2">
                         <separator colspan="2" string="References"/>
-                        <field name="name" select="1" string="Procurement Reason"/>
+                        <field name="name" string="Procurement Reason"/>
                         <field name="origin"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Planification"/>
-                        <field name="date_planned" select="1"/>
+                        <field name="date_planned"/>
                         <field name="procure_method"/>
                         <field name="priority" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Procurement Details">
                         <separator colspan="4" string="Product &amp; Location"/>
-                        <field name="product_id" select="1" on_change="onchange_product_id(product_id)"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
                         <field name="location_id" domain="[('usage','=','internal')]"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
@@ -179,11 +179,11 @@
             <field name="arch" type="xml">
                 <search string="Minimum Stock Rules Search">
                     <group col="10" colspan="4">
-                        <field name="name" select="1" />
-                        <field name="warehouse_id" select="1" widget="selection"/>
-                        <field name="location_id" select="1" />
-                        <field name="company_id" select="1" widget="selection"/>
-                        <field name="product_id" select="1"/>
+                        <field name="name"/>
+                        <field name="warehouse_id" widget="selection"/>
+                        <field name="location_id"/>
+                        <field name="company_id" widget="selection"/>
+                        <field name="product_id"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="10">

@@ -441,6 +441,30 @@
 
         <!-- Random Timesheet Lines of random activities -->
 
+		<record id="view_random_timesheet_lines_search" model="ir.ui.view">
+            <field name="name">random.timesheet.lines.search</field>
+            <field name="model">random.timesheet.lines</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Timesheet Lines">
+                   <group col='15' colspan='4'>
+                    	<field name="date"/>
+                    	<field name="user_id" widget="selection"/>
+                    	<field name="product_id" widget="selection"/>
+                    	<field name="analytic_account_id" widget="selection"/>
+                    	<field name="general_account_id" widget="selection"/>
+                   </group>
+                   <newline/>
+                   <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Product" icon="terp-project" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Analytic Account" icon="terp-project" domain="[]" context="{'group_by':'analytic_account_id'}"/>
+                   		<filter string="General Account" icon="terp-project" domain="[]" context="{'group_by':'general_account_id'}"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_random_timesheet_lines_tree">
             <field name="name">random.timesheet.lines.tree</field>
             <field name="model">random.timesheet.lines</field>
@@ -448,7 +472,7 @@
             <field name="arch" type="xml">
                 <tree string="Random Timesheets Lines">
                     <field name="date" select="1"/>
-                    <field name="user_id" />
+                    <field name="user_id"/>
                     <field name="name" select="1"/>
                     <field name="quantity" />
                     <field name="product_id" select="1"/>

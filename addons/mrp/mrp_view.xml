@@ -12,7 +12,7 @@
                   id="menu_mrp_bom"
                   parent="base.menu_mrp_root"
                   sequence="5" />
-        
+
         <!--
         Property / Property Group
         -->
@@ -379,24 +379,24 @@
                 </form>
             </field>
         </record>
-		
+
 		<!--
         Procurement
         -->
-	
+
 		<menuitem action="mrp_procurement.mrp_procurement_action" id="menu_mrp_procurement_action"
         		  parent="mrp.menu_mrp_manufacturing" sequence="2" />
-        <menuitem action="mrp_procurement.mrp_procurement_action5" id="menu_mrp_procurement_exception_action" 
+        <menuitem action="mrp_procurement.mrp_procurement_action5" id="menu_mrp_procurement_exception_action"
         		  parent="mrp.menu_mrp_control" sequence="1" />
-     	
+
      	<menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="4"/>
         <menuitem action="mrp_procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
-	
-		<!-- 
-		Order Point 
-		-->	
+
+		<!--
+		Order Point
+		-->
 		<menuitem action="mrp_procurement.action_orderpoint_form" id="menu_action_orderpoint_form" parent="mrp.menu_mrp_reordering"/>
-        
+
         <!--
 	    Production Management
 	    -->
@@ -783,8 +783,8 @@
                 </tree>
             </field>
         </record>
-        
-        <!-- 
+
+        <!--
         	Procurements
         -->
 
@@ -799,7 +799,6 @@
         		</xpath>
         	</field>
         </record>
-
 
         <act_window
             id="action_product_bom_structure"
