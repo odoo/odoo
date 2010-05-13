@@ -243,22 +243,22 @@ class calendar_attendee(osv.osv):
                                         attdata.sent_by_uid.address_id.email)
             if name == 'cn':
                 if attdata.user_id:
-                    result[id][name] = self._get_address(attdata.user_id.name, attdata.email)
+                    result[id][name] = attdata.user_id.name
                 elif attdata.partner_address_id:
-                    result[id][name] = self._get_address(attdata.partner_id.name, attdata.email)
+                    result[id][name] = attdata.partner_address_id.name or attdata.partner_id.name
                 else:
-                    result[id][name] = self._get_address(None, attdata.email)
+                    result[id][name] = attdata.email or ''
             if name == 'delegated_to':
                 todata = []
-                for parent in attdata.parent_ids:
-                    if parent.email:
-                        todata.append('MAILTO:' + parent.email)
+                for child in attdata.child_ids:
+                    if child.email:
+                        todata.append('MAILTO:' + child.email)
                 result[id][name] = ', '.join(todata)
             if name == 'delegated_from':
                 fromdata = []
-                for child in attdata.child_ids:
-                    if child.email:
-                        fromdata.append('MAILTO:' + child.email)
+                for parent in attdata.parent_ids:
+                    if parent.email:
+                        fromdata.append('MAILTO:' + parent.email)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
                 if attdata.ref:

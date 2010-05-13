@@ -66,20 +66,19 @@ send an Email to Invited Person')
 
         model = False
         model_field = False
-
         context_id = context and context.get('active_id', False) or False
         if not context or not context.get('model'):
             return {}
         else:
             model = context.get('model')
+
         model_field = context.get('attendee_field', False)
+        obj = self.pool.get(model)
+        res_obj = obj.browse(cr, uid, context_id)
+        att_obj = self.pool.get('calendar.attendee')
 
         for datas in self.read(cr, uid, ids, context=context):
-
-            obj = self.pool.get(model)
-            res_obj = obj.browse(cr, uid, context_id)
             type = datas.get('type')
-            att_obj = self.pool.get('calendar.attendee')
             vals = []
             mail_to = []
             attendees = []
@@ -123,15 +122,13 @@ send an Email to Invited Person')
                     if contact.email:
                         mail_to.append(contact.email)
 
-            att = att_obj.browse(cr, uid, context_id)
-
             for att_val in vals:
                 if model == 'calendar.attendee':
-                    if ref:
-                        att_val.update({
-                            'parent_ids': [(4, att.id)],
-                            'ref': att.ref._name + ',' +str(att.ref.id)
-                            })
+                    att = att_obj.browse(cr, uid, context_id)
+                    att_val.update({
+                        'parent_ids': [(4, att.id)],
+                        'ref': att.ref._name + ',' +str(att.ref.id)
+                        })
                 attendees.append(att_obj.create(cr, uid, att_val))
             if model_field:
                 for attendee in attendees:
