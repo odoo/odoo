@@ -248,7 +248,7 @@ class hr_holidays(osv.osv):
             if brows_obj.categ_id and brows_obj.categ_id.section_id and not brows_obj.categ_id.section_id.allow_unlink:
                 warning = {
                     'title': "Warning for ",
-                    'message': "You won\'t be able to cancel this leave request because the CRM Section of the leave type disallows."
+                    'message': "You won\'t be able to cancel this leave request because the CRM Sales Team of the leave type disallows."
                         }
         return {'warning': warning}
 
