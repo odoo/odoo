@@ -10,10 +10,12 @@
           <form position="attributes">
             <attribute name="string">Report Modules Installation</attribute>
           </form>
-
+		  <xpath expr='//separator[@string="vsep"]' position='attributes'>
+		  		<attribute name='string'></attribute>
+		  </xpath>
           <separator string="title" position="attributes">
             <attribute name="string"
-                       >Select Reporting Tools To Install</attribute>
+                       >Reporting Tools</attribute>
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
@@ -21,7 +23,6 @@
                        >OpenERP's built-in reporting abilities can be improved even further with some of the following applications</attribute>
           </xpath>
           <group colspan="8">
-            <separator string="Reporting" colspan="4"/>
             <field name="base_report_designer"/>
             <field name="base_report_creator"/>
             <field name="olap"/>
@@ -44,5 +45,16 @@
       <field name="action_id" ref="action_report_designer_installer"/>
       <field name="sequence">3</field>
     </record>
+   <record id="report_designer_ir_actions_todo_tree" model="ir.ui.view">
+		    <field name="model">ir.actions.todo</field>
+		    <field name="name">report_designer_installer_action_replace</field>
+		    <field name="type">tree</field>
+		    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+			<field name="arch" type="xml">
+	 			<xpath expr="//button[@string='Launch']" position="replace">
+        			<button name="%(action_report_designer_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+      			</xpath>
+    		</field>
+	</record>
   </data>
 </openerp>

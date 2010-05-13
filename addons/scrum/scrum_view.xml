@@ -65,7 +65,7 @@
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id)]" name="sprint_id" select="1"/>
                         <field name="user_id" select="1"/>
-                        <field name="sequence"/>
+                        <field name="sequence" groups="base.group_extended"/>
            			    <field name="date"/>
                         <field name="active" select="1"/>
                         <group colspan="6" col="8">
