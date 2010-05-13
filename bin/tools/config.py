@@ -136,7 +136,7 @@ class configmanager(object):
                               default="server.pkey",
                               help="specify the private key file for the SSL connection")
             parser.add_option_group(group)
-            
+
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-disable", action="store_true", dest="test_disable",
@@ -146,7 +146,7 @@ class configmanager(object):
         group.add_option("--test-continue", action="store_true", dest="test_continue",
                          default=False, help="Display exception but then test should continue.")
         parser.add_option_group(group)
-        
+
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
@@ -163,8 +163,7 @@ class configmanager(object):
         group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port', type="int")
-        if self.has_ssl:
-            group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
+        group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
         parser.add_option_group(group)
@@ -207,7 +206,7 @@ class configmanager(object):
                             dest='server_actions_allow_code', default=False,
                             help='Enables server actions of state "code". Warning, this is a security risk.')
         parser.add_option_group(security)
-        
+
     def parse_config(self):
         (opt, args) = self.parser.parse_args()
 
@@ -253,13 +252,13 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
+                'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout','smtp_ssl',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
 
         if self.has_ssl:
-            keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
+            keys.extend(['secure_cert_file', 'secure_pkey_file'])
             keys.append('secure')
 
         for arg in keys:
