@@ -16,10 +16,10 @@
                            <filter domain="[('user_id','=',uid)]" help="My Resouces" icon="gtk-execute" default="1"/>
                        </field>
                        <field name="resource_type"/>
-                       <field name="company_id" widget="selection"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="20">
+                   <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
                         <filter string="Type" icon="terp-project" domain="[]" context="{'group_by':'resource_type'}"/>
                         <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
@@ -38,7 +38,7 @@
                    <group col='15' colspan='4'>
                        <field name="name" string="Name"/>
                        <field name="manager" widget="selection"/>
-                       <field name="company_id" widget="selection"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                </search>
             </field>
@@ -52,7 +52,7 @@
                 <search string="Search Working Period Leaves">
                    <group col='15' colspan='4'>
                        <field name="name" string="Name"/>
-                       <field name="company_id" string="Company" widget="selection"/>
+                       <field name="company_id" string="Company" widget="selection" />
                        <field name="calendar_id" string="Working Time" widget="selection"/>
                        <field name="resource_id" string="Resource" widget="selection"/>
                    </group>
@@ -73,7 +73,7 @@
                 <form string="Working Period">
                     <field name="name" select="1"/>
                     <field name="manager" select="1"/>
-                    <field name="company_id" select="1"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company"/>
                     <newline/>
                     <field colspan="4" name="week_id" nolabel="1" widget="one2many_list"/>
                 </form>
@@ -88,7 +88,7 @@
                 <tree string="Working Period">
                     <field name="name"/>
                     <field name="manager" select="1"/>
-                    <field name="company_id" select="1"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -165,7 +165,7 @@
                 <form string="Resource">
                     <field name="name" />
                     <field name="active"/>
-                    <field name="company_id" widget="selection"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name="calendar_id" widget="selection"/>
                     <field name="resource_type" />
                     <field name="user_id" attrs="{'required':[('resource_type','=','user')]}"/>
@@ -180,7 +180,7 @@
             <field name="arch" type="xml">
                 <tree string="Resources">
                     <field name="name" />
-                    <field name="company_id" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="resource_type" />
                     <field name="calendar_id" />
                     <field name="time_efficiency" groups="base.group_extended"/>
@@ -202,7 +202,7 @@
             <field name="arch" type="xml">
                 <form string="Leave Detail">
                     <field name="name" />
-                    <field name="company_id"  widget="selection"/>
+                    <field name="company_id"  widget="selection" groups="base.group_multi_company"/>
                     <field name="calendar_id" />
                     <field name="date_from" />
                     <field name="date_to" />
@@ -217,7 +217,7 @@
             <field name="arch" type="xml">
                 <tree string="Leave Detail">
                     <field name="name" />
-                    <field name="company_id" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="calendar_id" />
                     <field name="date_from" />
                     <field name="date_to" />

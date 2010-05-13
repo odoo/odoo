@@ -226,7 +226,7 @@
                                 <separator string="Conditions" colspan="2"/>
                                 <field name="payment_term" widget="selection"/>
                                 <field name="fiscal_position" widget="selection"/>
-                                <field name="company_id" widget="selection"/>
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             </group>
                             <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Dates" colspan="2"/>
@@ -263,7 +263,7 @@
                     </field>
                     <field name="date_order" select="1" string="Order date" />
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="11" col="11">
+                    <group expand="1" string="Group By..." colspan="11" col="11" groups="base.group_extended">
                         <filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>

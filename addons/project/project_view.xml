@@ -122,7 +122,7 @@
                        <field name="user_id" string="Project Manager" default="1"/>
                        <field name="partner_id" string="Partner"/>
                    </group>
-                    <group expand="1" string="Group By..." colspan="4" col="20">
+                    <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
                         <filter string="Users" name="Users"  icon="terp-project" domain = "[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner"  icon="terp-project" domain = "[]" context="{'group_by':'partner_id'}"/>
                       </group>

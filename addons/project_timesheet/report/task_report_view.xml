@@ -84,7 +84,7 @@
 	            			<filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]" default="1"/>
                 		</field>
                 		<newline/>
-                		<group expand="1" string="Extended options..." colspan="10" col="12">
+                		<group expand="1" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
                     		<filter icon="terp-project"
                     		string="Very urgent"
                     		domain="[('priority','=','0')]"/>
@@ -102,7 +102,7 @@
                     		domain="[('priority','=','4')]"/>
                 		</group>
 	                    <newline/>
-                		<group expand="1" string="Group By..." colspan="10" col="11">
+                		<group expand="1" string="Group By..." colspan="10" col="11" groups="base.group_extended">
                     		<filter string="User" icon="terp-project" context="{'group_by':'user_id'}" />
                     		<filter string="Project" icon="terp-project" context="{'group_by':'project_id'}" />
                     		<filter string="Company" icon="terp-project" context="{'group_by':'company_id'}" />

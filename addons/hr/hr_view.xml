@@ -101,7 +101,7 @@
                     <field name="job_id" widget="selection"/>
                     <field name="parent_id" widget="selection" />
                     <newline />
-                    <group expand="1" string="Group By..." colspan="11" col="11">
+                    <group expand="1" string="Group By..." colspan="11" col="11" groups="base.group_extended">
                         <filter string="Manager" icon="terp-sale" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" icon="terp-sale" domain="[]" context="{'group_by':'coach_id'}" groups="base.group_extended"/>
                         <separator orientation="vertical" />

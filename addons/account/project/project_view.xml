@@ -67,7 +67,7 @@
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
                         <field name="parent_id" on_change="on_change_parent(parent_id)"/>
-                        <field name="company_id" select="2" widget="selection"/>
+                        <field name="company_id" select="2" widget="selection" groups="base.group_multi_company"/>
                         <field name="type" select="2"/>
                         <field name="company_currency_id" select="2"/>
                     </group>
@@ -152,7 +152,7 @@
                     <field name="ref" select="2"/>
                     <field name="currency_id" select="2"/>
                     <field name="amount_currency" select="2"/>
-                    <field name="company_id" select="2"/>
+                    <field name="company_id" select="2" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="product_id" select="2"/>
                     <field name="product_uom_id" select="2"/>
@@ -177,7 +177,7 @@
                     <field name="ref"/>
                     <field name="currency_id" />
                     <field name="amount_currency" />
-                    <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -286,7 +286,7 @@
                     <field name="code" select="1"/>
                     <field name="type" select="2"/>
                     <field name="active" select="2"/>
-                    <field name="company_id" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </form>
             </field>
         </record>

@@ -294,10 +294,10 @@
                       <field name="name"/>
 	                    <field name="code" string="Reference"/>
 	                    <field name="product_id"/>
-	                    <field name="company_id"/>
+	                    <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By" colspan="4" col="8">
+                    <group expand="1" string="Group By" colspan="4" col="8" groups="base.group_extended">
                         <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Routing" icon="terp-mrp" domain="[]" context="{'group_by':'routing_id'}"/>
                    </group>

@@ -8,7 +8,7 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
 				<form string="Print Aged Trial Balance">
-				    <field name="company_id"/>
+				    <field name="company_id" groups="base.group_multi_company"/>
 				    <newline/>
 				    <field name="date1"/>
 				    <field name="period_length"/>

@@ -117,7 +117,7 @@
                     <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <newline/>
-                  <group expand="1" string="Group By..." colspan="4" col="10">
+                  <group expand="1" string="Group By..." colspan="4" col="10" groups="base.group_extended">
                     <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Date Start" icon="terp-purchase" domain="[]" context="{'group_by':'date_start'}"/>
                     <filter string="Date End" icon="terp-purchase" domain="[]" context="{'group_by':'date_end'}"/>

@@ -13,7 +13,7 @@
                 <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="shop_id" invisible="1"/>
-                <field name="company_id" invisible="1"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="product_qty" invisible="1"/>
@@ -85,7 +85,7 @@
 	                <field name="product_id"/>
 				</group>
 				<newline/>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
+                <group expand="0" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
                     <filter icon="terp-sale" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
                     <filter icon="terp-sale" string="       Invoice Exception      " domain="[('state','=','invoice_except')]"/>
                     <separator orientation="vertical"/>
