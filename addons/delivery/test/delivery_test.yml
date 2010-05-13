@@ -1,5 +1,5 @@
 -
-  In order to test the delivery module, I will do Configuration ‣ Delivery ‣ Delivery Method 
+  In order to test the delivery module, I will do Configuration -> Delivery -> Delivery Method 
   And there are two methods for doing that 
      Delivery based on order quantities,
      Delivery based on delivered quantities.
@@ -37,14 +37,14 @@
     
 -    
 
-  Creating a Delivery Method
+  I create the Delivery Method
 - 
   !record {model: delivery.carrier, id: delivery_carrier_theopenerpexperss0}:
     name: The OpenERP Experss
     partner_id: res_partner_thepost0
     product_id: product_product_deliverybypost0
 - 
-  Creating a delivery.grid record and define the region for which the tariffs in the grid will be applicable.
+  I Create a delivery grid record and define the region for which the tariffs in the grid will be applicable.
   Then set the condition for which this rule is applicable
 - 
   !record {model: delivery.grid, id: delivery_grid_weight0}:

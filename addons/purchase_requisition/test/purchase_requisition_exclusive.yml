@@ -1,5 +1,5 @@
 -
-  In order to test the purchase requicisition module, I will do a sale order -> purchase_requisition ->
+  In order to test the purchase requisition module, I will do a sale order -> purchase_requisition ->
   purchase flow and I will buy the required products at two different suppliers.
   
 -
@@ -99,7 +99,9 @@
 -
  !python {model: purchase.order}: |
     partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','ASUStek')])[0]
-    purchase_id= self.search(cr, uid, [('partner_id','=',partner_id)])[0]
+    req_obj = self.pool.get('purchase.requisition')
+    ids =req_obj.search(cr, uid, [('origin','=','TEST/TENDER/0002')])    
+    purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','in',ids)])[0]
     import netsvc
     wf_service = netsvc.LocalService("workflow")  
     if purchase_id:
@@ -110,6 +112,8 @@
 -        
   !python {model: purchase.order}: |
    partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]
-   purchase_id= self.search(cr, uid, [('partner_id','=',partner_id)])[0]  
+   req_obj = self.pool.get('purchase.requisition')
+   ids =req_obj.search(cr, uid, [('origin','=','TEST/TENDER/0002')])     
+   purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','in',ids)])[0]
    state=self.browse(cr,uid,purchase_id).state
    assert (state=='cancel')

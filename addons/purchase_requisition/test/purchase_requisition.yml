@@ -1,6 +1,6 @@
 
 -
-  In order to test the purchase requicisition module, I will do a sale order -> purchase_requisition ->
+  In order to test the purchase requisition module, I will do a sale order -> purchase_requisition ->
   purchase flow and I will buy the required products at two different suppliers.
 - 
   I start by creating a new product 'Laptop ACER', which is purchased at Asustek, in MTO,
@@ -109,10 +109,12 @@
   !python {model: purchase.order}: |
     line_obj=self.pool.get('purchase.order.line')  
     partner_obj=self.pool.get('res.partner')    
+    requistion_obj=self.pool.get('purchase.requisition')
+    requistion_ids =requistion_obj.search(cr, uid, [('origin','=','TEST/TENDER/0001')])    
     partner_id1=partner_obj.search(cr,uid,[('name','=','ASUStek')])[0] 
-    partner_id2=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]   
-    purchase_id1= self.search(cr, uid, [('partner_id','=',partner_id1)])
-    purchase_id2= self.search(cr, uid, [('partner_id','=',partner_id2)])
+    partner_id2=partner_obj.search(cr,uid,[('name','=','Distrib PC')])[0]   
+    purchase_id1= self.search(cr, uid, [('partner_id','=',partner_id1),('requisition_id','in',requistion_ids)])
+    purchase_id2= self.search(cr, uid, [('partner_id','=',partner_id2),('requisition_id','in',requistion_ids)])
     order_line1=self.browse(cr, uid, purchase_id1, context)[0].order_line[0].id
     order_line2=self.browse(cr, uid, purchase_id2, context)[0].order_line[0].id
     line_obj.write(cr, uid, order_line1, {'product_qty':2})
@@ -147,6 +149,7 @@
   !python {model: stock.picking }: |
    import time
    partner_obj=self.pool.get('res.partner')    
+   order_obj=self.pool.get('purchase.order')
    partner_id=partner_obj.search(cr,uid,[('name','=','ASUStek')])[0]    
    picking_id = self.search(cr, uid, [('address_id.partner_id','=',partner_id),('type','=','in')])
    if picking_id:
