@@ -69,7 +69,7 @@
                 <page string="Lead">
                     <group colspan="2" col="4">
                         <separator string="Contact" colspan="4" col="4"/>
-                        <field name="partner_name" string="Contact Name" colspan="4"/>
+                        <field name="partner_name" colspan="4"/>
                         <newline/>
                         <field domain="[('domain', '=', 'contact')]" name="title"/>
                         <field name="function_name" />
@@ -141,8 +141,8 @@
                         <separator string="Dates" colspan="2" col="2"/>
                         <field name="create_date"/>
                         <field name="write_date"/>
-                        <field name="date_closed"/>
                         <field name="date_open"/>
+                        <field name="date_closed"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Statistics" colspan="2" col="2"/>

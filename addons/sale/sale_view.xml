@@ -163,8 +163,8 @@
                                             <field groups="product.group_uos" name="product_uos"/>
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id"/>
-                                            <separator colspan="4" string="Properties"/>
-                                            <field colspan="4" name="property_ids" nolabel="1"/>
+<!--                                            <separator colspan="4" string="Properties"/>-->
+<!--                                            <field colspan="4" name="property_ids" nolabel="1"/>-->
                                         </page>
                                         <page string="Notes">
                                             <field colspan="4" name="notes" nolabel="1"/>
@@ -188,7 +188,7 @@
                                 </tree>
                             </field>
                             <newline/>
-                            <group col="7" colspan="4">
+                            <group col="8" colspan="5">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total" sum="Total amount"/>
@@ -395,9 +395,9 @@
                                     icon="gtk-cancel" />
                             </group>
                         </page>
-                        <page string="Properties" groups="base.group_extended">
-                            <field name="property_ids" nolabel="1"/>
-                        </page>
+<!--                        <page string="Properties" groups="base.group_extended">-->
+<!--                            <field name="property_ids" nolabel="1"/>-->
+<!--                        </page>-->
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>

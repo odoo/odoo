@@ -48,7 +48,7 @@ class sale_journal(osv.osv):
         'date': fields.date('Journal date', required=True),
         'date_created': fields.date('Creation date', readonly=True, required=True),
         'date_validation': fields.date('Validation date', readonly=True),
-        'sale_stats_ids': fields.one2many("sale_journal.sale.stats", "journal_id", 'Sale Stats', readonly=True),
+        'sale_stats_ids': fields.one2many("sale.journal.report", "journal_id", 'Sale Stats', readonly=True),
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
@@ -98,7 +98,7 @@ class picking_journal(osv.osv):
         'date': fields.date('Journal date', required=True),
         'date_created': fields.date('Creation date', readonly=True, required=True),
         'date_validation': fields.date('Validation date', readonly=True),
-        'picking_stats_ids': fields.one2many("sale_journal.picking.stats", "journal_id", 'Journal Stats', readonly=True),
+        'picking_stats_ids': fields.one2many("sale.journal.picking.report", "journal_id", 'Journal Stats', readonly=True),
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
@@ -130,5 +130,55 @@ class picking_journal(osv.osv):
         return True
 picking_journal()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+#==============================================
+# sale journal inherit
+#==============================================
 
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+        'property_invoice_type': fields.property(
+        'sale_journal.invoice.type',
+        type='many2one',
+        relation='sale_journal.invoice.type',
+        string="Invoicing Method",
+        method=True,
+        view_load=True,
+        group_name="Accounting Properties",
+        help="The type of journal used for sales and picking."),
+    }
+res_partner()
+
+class picking(osv.osv):
+    _inherit="stock.picking"
+    _columns = {
+        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal'),
+        'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal'),
+        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
+    }
+picking()
+
+class sale(osv.osv):
+    _inherit="sale.order"
+    _columns = {
+        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal'),
+        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')
+    }
+    def action_ship_create(self, cr, uid, ids, *args):
+        result = super(sale, self).action_ship_create(cr, uid, ids, *args)
+        for order in self.browse(cr, uid, ids, context={}):
+            pids = [ x.id for x in order.picking_ids]
+            self.pool.get('stock.picking').write(cr, uid, pids, {
+                'invoice_type_id': order.invoice_type_id.id,
+                'sale_journal_id': order.journal_id.id
+            })
+        return result
+
+    def onchange_partner_id(self, cr, uid, ids, part):
+        result = super(sale, self).onchange_partner_id(cr, uid, ids, part)
+        if part:
+            itype = self.pool.get('res.partner').browse(cr, uid, part).property_invoice_type.id
+            result['value']['invoice_type_id'] = itype
+        return result
+sale()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

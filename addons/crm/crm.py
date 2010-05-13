@@ -319,8 +319,7 @@ class crm_case(osv.osv):
     _columns = {
         'id': fields.integer('ID', readonly=True), 
         'name': fields.char('Description', size=1024, required=True), 
-        'active': fields.boolean('Active', help="If the active field is set to\
-                     true, it will allow you to hide the case without removing it."), 
+        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."), 
         'description': fields.text('Description'), 
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
@@ -778,7 +777,7 @@ class crm_case_history(osv.osv):
         """
         res = {}
         for hist in self.browse(cursor, user, ids, context or {}):
-            res[hist.id] = (hist.email or '/') + ' (' + str(hist.date) + ')\n'
+            res[hist.id] = (hist.email_from or '/') + ' (' + str(hist.date) + ')\n'
             res[hist.id] += (hist.description or '')
         return res
 
