@@ -13,7 +13,7 @@
                             <group colspan="4" col="6">
                                 <field name="user_salesman_id" />
                                 <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
-                                <field name="contract_number" select="1" groups="base.group_extended"/>
+                                <field name="contract_number" groups="base.group_extended"/>
                             </group>
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
@@ -60,7 +60,7 @@
                               </group>
                             <separator colspan="4" string="Actions"/>
                             <group colspan="4" col="6">
-                                <field name="state" select="1"/>
+                                <field name="state"/>
                                 <button name="%(action_pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance" />
                                 <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
@@ -74,16 +74,16 @@
                                 <separator string="Order Information" colspan="4"/>
                                 <field name="company_id"/>
                                 <field name="shop_id" widget="selection"  />
-                                <field name="name" select="1"/>
+                                <field name="name"/>
                                 <field name="user_id" />
                                 <field name="sale_manager" />
                                 <field name="price_type" />
                             </group>
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Dates" colspan="4"/>
-                                <field name="date_order" select="1" />
-                                <field name="date_validation" select="1"  />
-                                <field name="date_payment" select="1"  groups="base.group_extended"/>
+                                <field name="date_order"/>
+                                <field name="date_validation" />
+                                <field name="date_payment" groups="base.group_extended"/>
                             </group>
                             <group colspan="4">
                                 <separator string="Invoicing" colspan="4"/>
@@ -135,12 +135,12 @@
             <field name="arch" type="xml">
                 <tree string="POS Orders">
                     <field name="name"/>
-                    <field name="date_order" select="1"/>
+                    <field name="date_order"/>
                     <field name="date_validation"/>
                     <field name="date_payment"/>
                     <field name="user_id"/>
                     <field name="invoice_id"/>
-                    <field name="state" select="1"/>
+                    <field name="state" />
                     <field name="amount_total" sum="Amount total"/>
                     <field name="company_id"/>
                 </tree>
@@ -155,12 +155,12 @@
                     <filter icon="terp-sale" string="Quotations" domain="[('state','=','draft')]"/>
                     <filter icon="terp-sale" string="Running" domain="[('state','in',('payment','advance'))]"/>
                     <separator orientation="vertical"/>
-                    <field name="name" select="1"/>
-                    <field name="partner_id" select="1"/>
-                    <field name="user_id" select="1" widget="selection">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="user_id" widget="selection">
                         <filter icon="terp-partner" string="My Sale" domain="[('user_id','=',uid)]" help="My Sale Orders" />
                     </field>
-                    <field name="date_order" select="1" string="Order date" />
+                    <field name="date_order" string="Order date" />
                     <newline/>
                     <group expand="1" string="Group By..." colspan="11" col="11">
                         <filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>

@@ -600,13 +600,13 @@
                 <form string="Picking list">
                     <group colspan="4" col="6">
 
-                        <field name="name" select="1" readonly="1"/>
-<!--                    <field name="address_id" select="1" context="{'contact_display' : 'partner'}" groups="base.group_extended"/>-->
+                        <field name="name" readonly="1"/>
+<!--                    <field name="address_id" context="{'contact_display' : 'partner'}" groups="base.group_extended"/>-->
                         <field name="origin"/>
 
                         <field name="backorder_id" groups="base.group_extended" readonly="1"/>
                         <field name="date"/>
-                        <field name="min_date" select="1"/>
+                        <field name="min_date"/>
                         <field name="type"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
@@ -734,7 +734,7 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-		    <field name="address_id" select="1"/>
+		    		<field name="address_id"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
                     <field name="date"/>
@@ -1036,9 +1036,9 @@
                         <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Outgoing Orders"/>
                         <separator orientation="vertical"/>
 
-                        <field name="name" select="1"/>
-                        <field name="address_id" select="1"/>
-<!--                        <field name="company_id" select="1" widget="selection"/>-->
+                        <field name="name"/>
+                        <field name="address_id" />
+<!--                        <field name="company_id" widget="selection"/>-->
 
                    </group>
                     <newline/>
@@ -1108,9 +1108,8 @@
                 <form string="Input Picking List">
                     <group colspan="4" col="6">
 
-                        <field name="name" readonly="1" select="1"/>
+                        <field name="name" readonly="1"/>
                         <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" />
-
                         <field name="origin"/>
                         <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         <field name="date"/>
@@ -1342,10 +1341,8 @@
 
                             <group colspan="2" col="2">
                                 <separator string="Locations &amp; Picking" colspan="2" />
-
-                                <field name="location_id" select="1" widget="selection"/>
-                                <field name="location_dest_id" select="1" widget="selection"/>
-
+                                <field name="location_id" widget="selection"/>
+                                <field name="location_dest_id" widget="selection"/>
                                 <field name="picking_id"/>
                                 <field name="address_id" context="{'contact_display':'partner'}"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
