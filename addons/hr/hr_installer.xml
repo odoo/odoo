@@ -8,18 +8,20 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Human Resources Modules Installation</attribute>
+            <attribute name="string">Select Human Resources Modules To Install</attribute>
           </form>
 
           <separator string="title" position="attributes">
-            <attribute name="string">Configure Human Resources"</attribute>
+            <attribute name="string">Select Human Resources Modules To Install</attribute>
           </separator>
+           <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='string'></attribute>
+	      		</xpath>
           <xpath expr="//label[@string='description']"
                  position="attributes">
-            <attribute name="string">The base Human Resources addon will help you manage your employee roster, but your can enhance it even further by installing a few HR-related applications.</attribute>
+            <attribute name="string">The base Human Resources addon will help you manage your employee roster, but you can enhance it even further by installing a few HR-related applications.</attribute>
           </xpath>
           <group colspan="8">
-            <separator string="Human Resources Management" colspan="4"/>
             <field name="hr_holidays"/>
             <field name="hr_expense"/>
             <field name="hr_recruitment"/>
@@ -28,6 +30,9 @@
             <field name="hr_evaluation"/>
             <field name="hr_attendance"/>
           </group>
+          <xpath expr="//button[@string='Install Modules']" position="attributes">
+          	<attribute name="string">Configure</attribute>
+          </xpath>
         </data>
       </field>
     </record>
@@ -46,5 +51,16 @@
       <field name="action_id" ref="action_hr_installer"/>
       <field name="sequence">3</field>
     </record>
+   <record id="hr_ir_actions_todo_tree" model="ir.ui.view">
+    <field name="model">ir.actions.todo</field>
+    <field name="name">hr_installer_action_replace</field>
+    <field name="type">tree</field>
+    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+	<field name="arch" type="xml">
+  		 <xpath expr="//button[@string='Launch']" position="replace">
+        	<button name="%(action_hr_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+      		</xpath>
+      	</field>
+	</record>
   </data>
 </openerp>

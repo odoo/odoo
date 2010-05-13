@@ -17,17 +17,51 @@
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
-            <attribute name="string">You can enhance OpenERP's basic accounting support with a few additional OpenERP applications</attribute>
+            <attribute name="string">You can enhance OpenERP's basic accounting support with a few additional OpenERP applications.</attribute>
           </xpath>
-
-          <group colspan="8">
-            <separator string="Accounting" colspan="4"/>
+		  <xpath expr="//button[@string='Install Modules']" position="attributes">
+                <attribute name="string">Configure</attribute>
+          </xpath>
+          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+              <attribute name='rowspan'>23</attribute>
+              <attribute name='string'></attribute>
+	      </xpath>
+	      <group colspan="8">
+	      <group colspan="4" height="450" width="600">
             <field name="charts"/>
-            <field name="account_analytic_default"/>
-            <field name="account_analytic_plans"/>
-            <field name="account_payment"/>
-            <field name="account_followup"/>
-            <field name="account_asset"/>
+            <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
+            	<field name="sale_tax" colspan="2"/>
+            	<field name="purchase_tax" colspan="2"/>
+            </group>
+             <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
+            	<separator col="4" colspan="4" string="Bank and Cost Account"/>
+            	 <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+            	 	<form string="Bank Information">
+                      <field name="acc_name"/>
+                      <field name="account_type"/>
+                      <field name="currency_id" widget="selection"/>
+                    </form>
+                    <tree editable="bottom" string="Bank Information">
+                      <field name="acc_name"/>
+                      <field name="account_type"/>
+                      <field name="currency_id" widget="selection"/>
+                    </tree>
+                  </field>
+            </group>
+            <group colspan="4">
+            	<separator col="4" colspan="4" string="Configure Fiscal Year"/>
+                <field name="date_start" on_change="on_change_start_date(date_start)"/>
+                <field name="date_stop"/>
+                <field name="period" colspan="4"/>
+            </group>
+            <group colspan="4" groups="base.group_extended">
+            	<separator col="4" colspan="4" string="Install Extra Account Module"/>
+            	<field name="account_analytic_plans"/>
+            	<field name="account_payment"/>
+            	<field name="account_followup"/>
+            	<field name="account_asset"/>
+            </group>
+          </group>
           </group>
         </data>
       </field>
@@ -46,6 +80,20 @@
     <record id="account_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_account_installer"/>
       <field name="sequence">3</field>
+      <field name="restart">onskip</field>
     </record>
+
+    <record id="account_ir_actions_todo_tree" model="ir.ui.view">
+        <field name="model">ir.actions.todo</field>
+        <field name="name">account_installer_action_replace</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+  		<field name="arch" type="xml">
+  		  <xpath expr="//button[@string='Launch']" position="replace">
+        	<button name="%(action_account_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+      </xpath>
+        </field>
+	</record>
+
   </data>
 </openerp>
