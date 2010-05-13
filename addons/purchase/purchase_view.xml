@@ -68,7 +68,7 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="date_order"/>
                         <field name="invoiced"/>
                         <newline/>
@@ -79,7 +79,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Purchase Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" domain="[('supplier','=', 1)]"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('supplier','=', 1)]"/>
                             <field name="partner_address_id"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="partner_ref"/>
@@ -157,10 +157,10 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-purchase" string="To Invoice" domain="[('invoiced','=',1)]" separator="1"/>
                     <separator orientation="vertical"/>
-                    <field name="name" select="1" string="Reference"/>
-                    <field name="partner_id" select="1"/>
-                    <field name="product_id" select="1"/>
-                    <field name="create_uid" select="1" widget="selection">
+                    <field name="name" string="Reference"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="create_uid" widget="selection">
                         <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>
                     </field>
                 </group>

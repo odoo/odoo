@@ -9,12 +9,12 @@
             <field name="arch" type="xml">
                 <search string="Search Location">
                     <group col="10" colspan="4">
-                        <filter icon="terp-stock" string="Internal Locations" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations" default="1" />
+                        <filter icon="terp-stock" name="internal_locations" string="Internal Locations" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations"/>
                         <filter icon="terp-stock" string="Customer Locations" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
                         <filter icon="terp-stock" string="Supplier Locations" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
                         <separator orientation="vertical"/>
-                        <field name="location_id" select="1"/>
-                        <field name="product_id" select="1" default="1"/>
+                        <field name="location_id"/>
+                        <field name="product_id"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="10">
@@ -73,7 +73,7 @@
             <field name="res_model">stock.report.prodlots</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'full':'1'}</field>
+            <field name="context">{'full':'1','search_default_internal_locations':1}</field>
             <field name="search_view_id" ref="view_stock_report_prodlots_filter" />
         </record>
         <record id="stock_report_tracklots_tree" model="ir.ui.view">
@@ -155,8 +155,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Dates of Inventories">
-                    <filter icon="gtk-media-rewind" string="Stockable"
-                        default="1"
+                    <filter icon="gtk-media-rewind" name="stockable" string="Stockable"
                         domain="[('product_id.type','=', 'product')]"/>
                     <filter icon="gtk-media-rewind" string="Consumable"
                         domain="[('product_id.type','=', 'consumable')]"/>
@@ -164,8 +163,8 @@
                     <filter icon="gtk-media-rewind" string="Non Inv"
                         domain="[('date','=', False)]"/>
                     <separator orientation="vertical"/>
-                    <field name="product_id" select="1"/>
-                    <field name="date" select="1" />
+                    <field name="product_id"/>
+                    <field name="date"/>
                 </search>
             </field>
         </record>
@@ -187,6 +186,7 @@
             <field name="name">Dates of Latest Inventories by Product</field>
             <field name="res_model">report.stock.lines.date</field>
             <field name="view_type">form</field>
+             <field name="context">{'search_default_stockable':1}</field>
             <field name="view_mode">tree,form</field>
         </record>
 
