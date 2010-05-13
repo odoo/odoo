@@ -241,7 +241,7 @@ class product_pricelist(osv.osv):
                         price = currency_obj.compute(cr, uid,
                                 price_type.currency_id.id, res['currency_id'],
                                 product_obj.price_get(cr, uid, [prod_id],
-                                    price_type.field)[prod_id], round=False)
+                                    price_type.field)[prod_id], round=False, context=context)
 
                     if price:
                         price_limit = price
