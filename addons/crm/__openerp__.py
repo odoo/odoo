@@ -45,7 +45,7 @@ between mails and Open ERP.""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': [
-        'base', 
+        'base',
         'base_action_rule',
         'process',
         'mail_gateway',
@@ -74,31 +74,29 @@ between mails and Open ERP.""",
 
         'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_send_email_view.xml',
-        'wizard/crm_email_add_cc_view.xml',
         'crm_view.xml',
 
         'crm_action_rule_view.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
-        
+
         'crm_meeting_view.xml',
         'crm_meeting_menu.xml',
-        
+
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
-        
+
         'crm_opportunity_view.xml',
         'crm_opportunity_menu.xml',
-        
+
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
-        'report/crm_report_view.xml',
         'report/crm_lead_report_view.xml',
-        'report/crm_opportunity_report_view.xml' ,
         'report/crm_phonecall_report_view.xml',
 
         'process/crm_configuration_process.xml',
+        'crm_installer_view.xml'
     ],
     'demo_xml': [
         'crm_demo.xml',
@@ -107,10 +105,11 @@ between mails and Open ERP.""",
         'crm_opportunity_demo.xml',
         'crm_phonecall_demo.xml'
     ],
-    'test': ['test/test_crm_lead.yml',
-            'test/test_crm_meeting.yml', 
+    'test': [
+            'test/test_crm_lead.yml',
+            'test/test_crm_meeting.yml',
             'test/test_crm_opportunity.yml',
-            'test/test_crm_phonecall.yml', 
+            'test/test_crm_phonecall.yml',
              ],
     'installable': True,
     'active': False,

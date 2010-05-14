@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+import time
 
 VoteValues = [('-1', 'Not Voted'), ('0', 'Very Bad'), ('25', 'Bad'), \
               ('50', 'Normal'), ('75', 'Good'), ('100', 'Very Good') ]
@@ -90,26 +91,6 @@ class idea_idea(osv.osv):
         cr.execute(sql, (ids,))
         return dict(cr.fetchall())
 
-    def _comment_count(self, cr, uid, ids, name, arg, context=None):
-
-        """ count number of comment
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of comment’s IDs
-        @return: dictionay of Idea """
-
-        if not ids:
-            return {}
-
-        sql = """SELECT i.id, COUNT(1)
-                   FROM idea_idea i LEFT OUTER JOIN idea_comment c ON i.id = c.idea_id
-                    WHERE i.id = ANY(%s)
-                    GROUP BY i.id
-                """
-
-        cr.execute(sql, (ids,))
-        return dict(cr.fetchall())
-
     def _vote_read(self, cr, uid, ids, name, arg, context = None):
 
         """ Read Vote
@@ -148,20 +129,16 @@ class idea_idea(osv.osv):
             if int(field_value) >= 0:
                 vote_obj.create(cr, uid, {'idea_id': id, 'user_id': uid, 'score': textual_value })
 
-
     _columns = {
-        'user_id': fields.many2one('res.users', 'Creator', required=True, readonly=True),
+        'user_id': fields.many2one('res.users', 'Responsible', required=True, readonly=True),
         'title': fields.char('Idea Summary', size=64, required=True),
         'description': fields.text('Description', required=True, help='Content of the idea'),
-        'comment_ids': fields.one2many('idea.comment', 'idea_id', 'Comments'),
-        'create_date': fields.datetime('Creation date', readonly=True),
-        'vote_ids': fields.one2many('idea.vote', 'idea_id', 'Vote'),
+        'created_date': fields.datetime('Date'),
+        'vote_ids': fields.one2many('idea.vote', 'idea_id', 'Vote', readonly=True),
         'my_vote': fields.function(_vote_read, fnct_inv = _vote_save, \
                 string="My Vote", method=True, type="selection", selection=VoteValues),
         'vote_avg': fields.function(_vote_avg_compute, method=True, string="Average Score", type="float"),
         'count_votes': fields.function(_vote_count, method=True, string="Count of votes", type="integer"),
-        'count_comments': fields.function(_comment_count, method=True, \
-                                 string="Count of comments", type="integer"),
         'category_id': fields.many2one('idea.category', 'Category', required=True),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Opened'), \
                                 ('close', 'Accepted'), ('cancel', 'Cancelled')], \
@@ -170,12 +147,16 @@ class idea_idea(osv.osv):
                                    opened by the user, the state is \'Opened\'.\
                                     \nIf the idea is accepted, the state is \'Accepted\'.'),
         'stat_vote_ids': fields.one2many('idea.vote.stat', 'idea_id', 'Statistics', readonly=True),
+        'vote_limit': fields.integer('Maximum Vote per User',
+                     help="Set to one if  you require only one Vote per user"),
     }
 
     _defaults = {
         'user_id': lambda self,cr,uid,context: uid,
         'my_vote': lambda *a: '-1',
-        'state': lambda *a: 'draft'
+        'state': lambda *a: 'draft',
+        'vote_limit': lambda * a: 1,
+        'created_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),        
     }
     _order = 'id desc'
 
@@ -196,30 +177,6 @@ class idea_idea(osv.osv):
         return True
 idea_idea()
 
-
-class idea_comment(osv.osv):
-    """ Apply Idea for Comment """
-
-    _name = 'idea.comment'
-    _description = 'Comments'
-    _rec_name = 'content'
-
-    _columns = {
-        'idea_id': fields.many2one('idea.idea', 'Idea', required=True, ondelete='cascade'),
-        'user_id': fields.many2one('res.users', 'User', required=True),
-        'content': fields.text('Comment', required=True),
-        'create_date': fields.datetime('Creation date', readonly=True),
-    }
-
-    _defaults = {
-        'user_id': lambda self, cr, uid, context: uid
-    }
-
-    _order = 'id desc'
-
-idea_comment()
-
-
 class idea_vote(osv.osv):
     """ Apply Idea for Vote """
 
@@ -228,16 +185,18 @@ class idea_vote(osv.osv):
     _rec_name = 'score'
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'User'),
-        'idea_id': fields.many2one('idea.idea', 'Idea', required=True, ondelete='cascade'),
-        'score': fields.selection(VoteValues, 'Score', required=True)
+        'user_id': fields.many2one('res.users', 'By user', readonly="True"),
+        'idea_id': fields.many2one('idea.idea', 'Idea', readonly="True", ondelete='cascade'),
+        'score': fields.selection(VoteValues, 'Vote Status', readonly="True"),
+        'date': fields.datetime('Date', readonly="True"),
+        'comment': fields.text('Comment', readonly="True"),
     }
     _defaults = {
         'score': lambda *a: DefaultVoteValue,
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),  
     }
 
 idea_vote()
-
 
 class idea_vote_stat(osv.osv):
     """ Idea votes Statistics """

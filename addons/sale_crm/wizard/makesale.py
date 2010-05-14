@@ -28,7 +28,7 @@ import pooler
 from tools.translate import _
 
 sale_form = """<?xml version="1.0"?>
-<form string="Convert to Quote">
+<form string="Create a Sale Order">
     <field name="partner_id" required="True"/>
     <field name="shop_id" required="True"/>
     <field name="analytic_account"/>
@@ -57,7 +57,7 @@ sale_fields = {
 class make_sale(wizard.interface):
 
     def _selectPartner(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')
+        case_obj = pooler.get_pool(cr.dbname).get('crm.lead')
         case = case_obj.read(cr, uid, data['ids'], ['partner_id'])
         return {'partner_id': case[0]['partner_id']}
 
@@ -66,7 +66,7 @@ class make_sale(wizard.interface):
         mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'sale', 'view_sales_order_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
-        case_obj = pool.get('crm.opportunity')
+        case_obj = pool.get('crm.lead')
         sale_obj = pool.get('sale.order')
         partner_obj = pool.get('res.partner')
         sale_line_obj = pool.get('sale.order.line')
@@ -130,10 +130,10 @@ class make_sale(wizard.interface):
 
         if data['form']['close']:
             case_obj.case_close(cr, uid, data['ids'])
-        
+
         if not new_ids:
             return {}
-            
+
         if len(new_ids)<=1:
             value = {
                 'domain': str([('id', 'in', new_ids)]),
@@ -154,14 +154,14 @@ class make_sale(wizard.interface):
                 'type': 'ir.actions.act_window',
                 'res_id':new_ids
                 }
-                
+
         return value
 
     states = {
         'init': {
             'actions': [_selectPartner],
             'result': {'type': 'form', 'arch': sale_form, 'fields': sale_fields,
-                'state' : [('end', 'Cancel', 'gtk-cancel'),('order', 'Create Quote', 'gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'),('order', 'Create', 'gtk-go-forward')]}
         },
         'order': {
             'actions': [],

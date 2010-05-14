@@ -49,7 +49,6 @@ def _incoterm_get(self, cr, uid, context=None):
     cr.execute('select code, code||\', \'||name from stock_incoterms where active')
     return cr.fetchall()
 
-
 class sale_order(osv.osv):
     _name = "sale.order"
     _description = "Sale Order"
@@ -1043,7 +1042,7 @@ class sale_order_line(osv.osv):
                 if product_obj.uos_id.category_id.id != uos2.category_id.id:
                     uos = False
             else:
-                uos = False        
+                uos = False
         if product_obj.description_sale:
             result['notes'] = product_obj.description_sale
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False

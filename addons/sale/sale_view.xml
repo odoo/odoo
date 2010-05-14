@@ -193,6 +193,7 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total" sum="Total amount"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
+                                <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute"/>
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state"/>
@@ -384,6 +385,11 @@
                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                             <separator colspan="4" string="States"/>
                             <field name="state"/>
+                            <button colspan="1"
+                              name="%(action_view_sale_order_line_make_invoice)d"
+                              string="Make Invoice"
+                              type="action"
+                              icon="gtk-print" />
                             <group col="2" colspan="2">
                                 <button name="button_done"
                                     states="confirmed,exception"

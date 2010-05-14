@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,15 +24,15 @@ from osv import osv, fields
 class res_partner(osv.osv):
     """ Inherits partner and adds more information in the partner form """
     _inherit = 'res.partner'
-    
+
     _columns = {
-                'opportunity_ids': fields.one2many('crm.opportunity', 'partner_id', 'Opportunities'), 
+                'opportunity_ids': fields.one2many('crm.lead', 'partner_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
                 'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
-                                                     'Meetings'), 
-                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
-                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'), 
+                                                     'Meetings'),
+                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'),
+                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'),
                 'contract_ids': fields.one2many('account.analytic.account', \
-                                                    'partner_id', 'Contracts'), 
+                                                    'partner_id', 'Contracts'),
                 'account_line_ids': fields.one2many('hr.analytic.timesheet', \
                                                     'partner_id', 'Anaylitic account lines '),
                 }

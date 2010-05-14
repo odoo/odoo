@@ -10,6 +10,7 @@
         view_mode="calendar,tree,form"
         context="{'default_partner_id': active_id, 'default_duration': 1.0}"
         domain="[('partner_id', '=', active_id)]"
+        groups="base.group_extended"
         />
 
 <!-- PHONE CALLS (menu)  -->
@@ -62,7 +63,7 @@
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming0">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="crm_case_phone_tree_view"/>
+        <field name="view_id" ref="crm_case_inbound_phone_tree_view"/>
         <field name="act_window_id" ref="crm_case_categ_phone_incoming0"/>
     </record>
 
@@ -76,7 +77,7 @@
     <record model="ir.actions.act_window.view" id="action_crm_tag_form_phone_incoming0">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="crm_case_phone_form_view"/>
+        <field name="view_id" ref="crm_case_inbound_phone_form_view"/>
         <field name="act_window_id" ref="crm_case_categ_phone_incoming0"/>
     </record>
 
