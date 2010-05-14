@@ -252,7 +252,6 @@ class hr_holidays(osv.osv):
                         }
         return {'warning': warning}
 
-
     def set_to_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'draft',
@@ -265,11 +264,26 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_validate2(self, cr, uid, ids, *args):
-        vals = {'state':'validate'}
-        data_holiday = self.browse(cr, uid, ids)
+        vals = {'state':'validate1'}
+        self.check_holidays(cr, uid, ids)
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
         if ids2:
-            vals['manager_id2'] = ids2[0]
+            vals['manager_id'] = ids2[0]
+        else:
+            raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
+        self.write(cr, uid, ids, vals)
+        return True
+
+    def holidays_validate(self, cr, uid, ids, *args):
+        data_holiday = self.browse(cr, uid, ids)
+        self.check_holidays(cr, uid, ids)
+        vals = {'state':'validate'}
+        ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+        if ids2:
+            if data_holiday[0].state == 'validate1':
+                vals['manager_id2'] = ids2[0]
+            else:
+                vals['manager_id'] = ids2[0]
         else:
             raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
         self.write(cr, uid, ids, vals)
@@ -285,34 +299,6 @@ class hr_holidays(osv.osv):
                    'holiday_id':record.id
                      }
                 self.pool.get('resource.calendar.leaves').create(cr, uid, vals)
-        return True
-
-    def holidays_validate(self, cr, uid, ids, *args):
-        data_holiday = self.browse(cr, uid, ids)
-        self.check_holidays(cr, uid, ids)
-        if data_holiday[0].holiday_status_id.double_validation:
-            vals = {'state':'validate1'}
-        else:
-            vals = {'state':'validate'}
-        ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
-        if ids2:
-            vals['manager_id'] = ids2[0]
-        else:
-            raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
-        self.write(cr, uid, ids, vals)
-        if not data_holiday[0].holiday_status_id.double_validation:
-            for record in data_holiday:
-                if record.holiday_type=='employee' and record.type=='remove':
-                    vals = {
-                       'name':record.name,
-                       'date_from':record.date_from,
-                       'date_to':record.date_to,
-                       'calendar_id':record.employee_id.calendar_id.id,
-                       'company_id':record.employee_id.company_id.id,
-                       'resource_id':record.employee_id.resource_id.id,
-                       'holiday_id':record.id
-                         }
-                    self.pool.get('resource.calendar.leaves').create(cr, uid, vals)
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
@@ -342,7 +328,6 @@ class hr_holidays(osv.osv):
                 'number_of_days': nb,
                 'user_id': user_id
             })
-            cr.commit()
         return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
