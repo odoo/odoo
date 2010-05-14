@@ -40,81 +40,12 @@ class crm_opportunity(osv.osv):
     _name = "crm.lead"
     _description = "Opportunity Cases"
     _order = "priority,date_action,id desc"
-
-    def case_open(self, cr, uid, ids, *args):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
-        """
-
-        res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
-        return res
-
-    def _compute_day(self, cr, uid, ids, fields, args, context={}):
-        """
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Openday’s IDs
-        @return: difference between current date and log date
-        @param context: A standard dictionary for contextual values
-        """
-        cal_obj = self.pool.get('resource.calendar')
-        res_obj = self.pool.get('resource.resource')
-
-        res = {}
-        for opportunity in self.browse(cr, uid, ids , context):
-            for field in fields:
-                res[opportunity.id] = {}
-                duration = 0
-                ans = False
-                if field == 'day_open':
-                    if opportunity.date_open:
-                        date_create = datetime.strptime(opportunity.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_open = datetime.strptime(opportunity.date_open, "%Y-%m-%d %H:%M:%S")
-                        ans = date_open - date_create
-                        date_until = opportunity.date_open
-                elif field == 'day_close':
-                    if opportunity.date_closed:
-                        date_create = datetime.strptime(opportunity.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_close = datetime.strptime(opportunity.date_closed, "%Y-%m-%d %H:%M:%S")
-                        date_until = opportunity.date_closed
-                        ans = date_close - date_create
-                if ans:
-                    resource_id = False
-                    if opportunity.user_id:
-                        resource_ids = res_obj.search(cr, uid, [('user_id','=',opportunity.user_id.id)])
-                        if resource_ids and len(resource_ids):
-                            resource_id = resource_ids[0]
-
-                    duration = float(ans.days)
-                    if opportunity.section_id and opportunity.section_id.resource_calendar_id:
-                        duration =  float(ans.days) * 24
-                        new_dates = cal_obj.interval_get(cr,
-                            uid,
-                            opportunity.section_id.resource_calendar_id and opportunity.section_id.resource_calendar_id.id or False,
-                            mx.DateTime.strptime(opportunity.create_date, '%Y-%m-%d %H:%M:%S'),
-                            duration,
-                            resource=resource_id
-                        )
-                        no_days = []
-                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
-                        for in_time, out_time in new_dates:
-                            if in_time.date not in no_days:
-                                no_days.append(in_time.date)
-                            if out_time > date_until:
-                                break
-                        duration =  len(no_days)
-                res[opportunity.id][field] = abs(int(duration))
-        return res
+    _inherit = 'crm.lead'
 
     _columns = {
         # From crm.case
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"),
+                                 domain="[('partner_id','=',partner_id)]"), 
 
         # Opportunity fields
         'probability': fields.float('Probability (%)'),
@@ -125,7 +56,7 @@ class crm_opportunity(osv.osv):
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action'),
          }
-
+    
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer
@@ -149,7 +80,7 @@ class crm_opportunity(osv.osv):
         res = super(crm_opportunity, self).case_cancel(cr, uid, ids, args)
         self.write(cr, uid, ids, {'probability' : 0.0})
         return res
-
+    
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date
         @param self: The object pointer

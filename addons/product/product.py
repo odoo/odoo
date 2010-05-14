@@ -446,7 +446,7 @@ class product_product(osv.osv):
         'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
         'price': fields.function(_product_price, method=True, type='float', string='Pricelist', digits_compute=dp.get_precision('Sale Price')),
         'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='List Price', digits_compute=dp.get_precision('Sale Price')),
-        'code': fields.function(_product_code, method=True, type='char', string='Code'),
+        'code': fields.function(_product_code, method=True, type='char', string='Reference'),
         'partner_ref' : fields.function(_product_partner_ref, method=True, type='char', string='Customer ref'),
         'default_code' : fields.char('Reference', size=64),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product without removing it."),
