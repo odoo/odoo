@@ -53,8 +53,6 @@ class hr_holidays_status(osv.osv):
         return_false = False
         employee_id = False
         res = {}
-        for id in ids:
-            res[id] = {}.fromkeys(name, 0)
         if context and context.has_key('employee_id'):
             if not context['employee_id']:
                 return_false = True
@@ -67,6 +65,8 @@ class hr_holidays_status(osv.osv):
                 return_false = True
         if employee_id:
             res = self.get_days(cr, uid, ids, employee_id, return_false, context=context)
+        else:
+            res = dict.fromkeys(ids, {name: 0})
         return res
 
     _columns = {
