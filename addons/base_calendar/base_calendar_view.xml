@@ -77,6 +77,8 @@
                     <field name="partner_address_id" string="Contact" />
                     <field name="role" />
                     <field name="state" />
+                    <field name="cutype" invisible="1"/>
+                    <field name="rsvp" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -99,6 +101,20 @@
                    <separator orientation="vertical"/>
                    <field name="cutype" string="Invitation type" select="1"/>
                    <field name="event_date" select="1"/>
+                   <newline/>
+					<group expand="0" string="Group By..." colspan="16">
+						<filter string="Type" icon="terp-project" help="Invitation Type"
+					        domain="[]" context="{'group_by':'cutype'}" />
+					    <filter string="Role" icon="terp-project"
+					        domain="[]" context="{'group_by':'role'}" />
+					    <filter string="Required Reply" icon="terp-crm"
+					        domain="[]" context="{'group_by':'rsvp'}" />
+					    <separator orientation="vertical" />
+					    <filter string="User" icon="terp-partner" domain="[]"
+					        context="{'group_by':'user_id'}" />
+					    <filter string="Contact" icon="terp-partner" domain="[]"
+					        context="{'group_by':'partner_address_id'}" />
+					</group>
                </search>
             </field>
         </record>
@@ -138,9 +154,6 @@
                     <field name="trigger_interval" select="1" />
                     <field name="trigger_occurs" select="1" />
                     <field name="trigger_related" select="1" />
-                    <separator string="" colspan="4" />
-                    <field name="duration" />
-                    <field name="repeat" />
                 </form>
             </field>
         </record>

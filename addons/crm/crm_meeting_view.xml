@@ -33,9 +33,9 @@
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
 					<field name="allday" colspan="2" on_change="onchange_allday(allday)" />
 					<field name="date" string="Start Date" required="1"
-                        on_change="onchange_dates(date,duration,False)" />
+                        on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="duration" widget="float_time"
-                        on_change="onchange_dates(date,duration,False)" />
+                        on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="date_deadline" string="End Date"
                         required="1"
                         on_change="onchange_dates(date,False,date_deadline)" />
