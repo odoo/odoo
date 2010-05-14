@@ -21,8 +21,6 @@
 #
 ##############################################################################
 
-from mx import DateTime
-import time
 import pooler
 import netsvc
 import datetime
