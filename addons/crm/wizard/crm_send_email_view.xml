@@ -10,6 +10,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Send New Mail" col="2">
+                	<separator string="Send New Mail" colspan="2"/>
                     <field name="email_from" />
                     <field name="email_to"  />
                     <field name="email_cc" />
@@ -30,6 +31,7 @@
                             </field>
                         </page>
                     </notebook>
+                    <separator string="" colspan="2"/>
                     <group colspan="2" col="4" >
                         <field name="state" />
                         <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />

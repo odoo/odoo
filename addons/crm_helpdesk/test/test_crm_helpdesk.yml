@@ -1,0 +1,38 @@
+-
+  |
+  I start by creating New helpdesk request regarding some functional questions.
+  I select Date at which helpdesk request is created.
+- 
+  !record {model: crm.helpdesk, id: crm_helpdesk_somefunctionalquestion0}:
+    date: '2010-04-22 10:17:00'
+    email_from: info@balmerinc.be
+    name: Some functional question.
+    partner_address_id: base.res_partner_address_1
+    partner_id: base.res_partner_9
+    section_id: crm.section_sales_department
+
+- |
+  I check that the Helpdesk request  is in 'Draft' state.
+-
+  !assert {model: crm.helpdesk, id: crm_helpdesk_somefunctionalquestion0}: 
+    - state == 'draft'  
+- |
+  In order to make this helpdesk request to be considered I make it "Open"
+-
+  !python {model: crm.helpdesk}: |
+    self.case_open(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')])  
+- |
+  I can see that "Send Reminder" button is visible, which is used to send reminder to partner from
+  responsible person  or send reminder to responsible person from partner.
+-  
+   #this is not work for yaml.
+-   
+#  !python {model: crm.helpdesk}: |
+#     self.remind_user(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')], context={}, attach=False, destination=True)  
+- |
+  After a proper communication for the request via email I make sure that the request is fulfilled and
+  I close this HelpDesk Request by clicking on "Close" button.
+- 
+  !python {model: crm.helpdesk}: |
+    self.case_close(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')])    
+-
