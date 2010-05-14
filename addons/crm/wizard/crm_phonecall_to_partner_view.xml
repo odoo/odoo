@@ -43,11 +43,15 @@
 
 	 <!-- Phonecall to Partner wizard -->
 
-	   <act_window id="action_crm_phonecall2partner"
-    		key2="client_action_multi" name="Create a Partner"
-    		res_model="crm.phonecall2partner" src_model="crm.phonecall"
-    		view_id="view_crm_phonecall2partner_create"
-    		view_mode="form" target="new" view_type="form" />
+		<record id="action_crm_phonecall2partner" model="ir.actions.act_window">
+            <field name="name">Create a Partner</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.phonecall2partner</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_crm_phonecall2partner_create"/>
+            <field name="target">new</field>
+        </record>
+		
 
  	</data>
 </openerp>
