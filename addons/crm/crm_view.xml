@@ -13,31 +13,28 @@
             <field name="arch" type="xml">
                 <form string="Sales Team">
                     <group col="6" colspan="4">
-                        <field name="name" select="1" colspan="4"/>
+                        <field name="name" select="1" colspan="2"/>
+                        <field name="parent_id" select="2" widget="selection"/>
                         <field name="code" select="1"/>
                         <newline/>
-                        <field name="resource_calendar_id" select="2"/>
+                        <field name="user_id" select="2"/>
+                        <field name="working_hours" widget="float_time"/>
+                        <field name="active" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Team">
                             <group col="2" colspan="1">
-                                <separator string="Responsible" colspan="2"/>
-                                <field name="parent_id" select="2" widget="selection"/>
-                                <field name="user_id" select="2"/>
-                            </group>
-                            <group col="2" colspan="1">
-                                <separator string="Contact Information" colspan="2"/>
-                                <field name="server_id" select="2"/>
+                                <separator string="Mailgateway" colspan="2"/>
                                 <field name="reply_to" select="2"/>
                             </group>
                             <group col="2" colspan="1">
-                                <separator string="Sales Team Property" colspan="2"/>
-                                <field name="active" select="2"/>
+                                <separator string="Configuration" colspan="2"/>
                                 <field name="allow_unlink" select="2"/>
                             </group>
-                            <separator string="Members List" colspan="4"/>
+                            <separator string="Team Members" colspan="4"/>
                             <field name="member_ids" nolabel="1" colspan="4"/>
-                            <separator string="Note" colspan="4"/>
+                        </page>
+                        <page string="Notes">
                             <field name="note" select="1" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
