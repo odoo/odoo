@@ -57,7 +57,7 @@ sale_fields = {
 class make_sale(wizard.interface):
 
     def _selectPartner(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')
+        case_obj = pooler.get_pool(cr.dbname).get('crm.lead')
         case = case_obj.read(cr, uid, data['ids'], ['partner_id'])
         return {'partner_id': case[0]['partner_id']}
 
@@ -66,7 +66,7 @@ class make_sale(wizard.interface):
         mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'sale', 'view_sales_order_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
-        case_obj = pool.get('crm.opportunity')
+        case_obj = pool.get('crm.lead')
         sale_obj = pool.get('sale.order')
         partner_obj = pool.get('res.partner')
         sale_line_obj = pool.get('sale.order.line')

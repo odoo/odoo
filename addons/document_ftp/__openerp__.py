@@ -37,6 +37,9 @@
         'security/ir.model.access.csv'
     ],
     'demo_xml': [],
+    'test': [
+        'test/document_ftp_test.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': None,

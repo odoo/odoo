@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Sale CRM Stuff',
+    'name': 'Creates Sale orders from Opportunity',
     'version': '1.0',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
