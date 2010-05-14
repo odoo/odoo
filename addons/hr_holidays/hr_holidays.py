@@ -135,12 +135,20 @@ class hr_holidays(osv.osv):
                 vals['allocation_type'] = context['allocation_type']
         return super(osv.osv,self).create(cr, uid, vals, context)
 
+    def _get_number_of_days(date_from, date_to):
+        """Returns a float equals to the timedelta between two dates given as string."""
+
+        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+        from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
+        to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
+        timedelta = to_dt - from_dt
+        diff_day = timedelta.days + float(timedelata.seconds) / 86400
+        return diff_day
+
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
         result = {}
         if date_to and date_from:
-            from_dt = time.mktime(time.strptime(date_from,'%Y-%m-%d %H:%M:%S'))
-            to_dt = time.mktime(time.strptime(date_to,'%Y-%m-%d %H:%M:%S'))
-            diff_day = (to_dt-from_dt)/(3600*24)
+            diff_day = self._get_number_of_days(date_from, date_to)
             result['value'] = {
                 'number_of_days_temp': round(diff_day)+1
             }
@@ -181,9 +189,7 @@ class hr_holidays(osv.osv):
     def onchange_date_to(self, cr, uid, ids, date_from, date_to):
         result = {}
         if date_from and date_to:
-            from_dt = time.mktime(time.strptime(date_from,'%Y-%m-%d %H:%M:%S'))
-            to_dt = time.mktime(time.strptime(date_to,'%Y-%m-%d %H:%M:%S'))
-            diff_day = (to_dt-from_dt)/(3600*24)
+            diff_day = self._get_number_of_days(date_from, date_to)
             result['value'] = {
                 'number_of_days_temp': round(diff_day)+1
             }
@@ -326,9 +332,7 @@ class hr_holidays(osv.osv):
                 vals={}
                 vals['name']=record.name
                 vals['categ_id']=record.holiday_status_id.categ_id.id
-                epoch_c = time.mktime(time.strptime(record.date_to,'%Y-%m-%d %H:%M:%S'))
-                epoch_d = time.mktime(time.strptime(record.date_from,'%Y-%m-%d %H:%M:%S'))
-                diff_day = (epoch_c - epoch_d)/(3600*24)
+                diff_day = self._get_number_of_days(record.date_from, record.date_to)
                 vals['duration'] = (diff_day) * 8
                 vals['note'] = record.notes
                 vals['user_id'] = record.user_id.id
