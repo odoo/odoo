@@ -42,7 +42,9 @@ This module may be useful for different purposes:
     'update_xml': ['stock_view.xml', 'security/ir.model.access.csv'],
     'demo_xml': [],
     'installable': True,
-    'test':['test/stock_location.yml',],
+    'test':[
+#            'test/stock_location.yml'
+            ],
     'active': False,
     'certificate': '0046505115101',
 }
