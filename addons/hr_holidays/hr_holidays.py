@@ -145,19 +145,6 @@ class hr_holidays(osv.osv):
         diff_day = timedelta.days + float(timedelata.seconds) / 86400
         return diff_day
 
-    def onchange_date_from(self, cr, uid, ids, date_to, date_from):
-        result = {}
-        if date_to and date_from:
-            diff_day = self._get_number_of_days(date_from, date_to)
-            result['value'] = {
-                'number_of_days_temp': round(diff_day)+1
-            }
-            return result
-        result['value'] = {
-            'number_of_days_temp': 0,
-        }
-        return result
-
     def _update_user_holidays(self, cr, uid, ids):
         for record in self.browse(cr, uid, ids):
             if record.state=='validate':
@@ -186,18 +173,21 @@ class hr_holidays(osv.osv):
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
 
-    def onchange_date_to(self, cr, uid, ids, date_from, date_to):
+    def onchange_date_from(self, cr, uid, ids, date_to, date_from):
         result = {}
-        if date_from and date_to:
+        if date_to and date_from:
             diff_day = self._get_number_of_days(date_from, date_to)
             result['value'] = {
                 'number_of_days_temp': round(diff_day)+1
             }
             return result
         result['value'] = {
-            'number_of_days_temp': 0
+            'number_of_days_temp': 0,
         }
         return result
+
+    def onchange_date_to(self, cr, uid, ids, date_from, date_to):
+        return onchange_date_from(cr, uid, ids, date_to, date_from)
 
     def onchange_sec_id(self, cr, uid, ids, status, context={}):
         warning = {}
