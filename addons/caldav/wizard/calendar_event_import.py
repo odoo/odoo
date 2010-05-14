@@ -56,11 +56,11 @@ class calendar_event_import(osv.osv_memory):
             if vals:
                 cnt = len(vals)
             value = {
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'calendar.event.import',
-                'views': [(id2,'form'),(False,'tree'),(False,'calendar'),(False,'graph')],
-                'type': 'ir.actions.act_window',
+                'view_type': 'form', 
+                'view_mode': 'form', 
+                'res_model': 'calendar.event.import', 
+                'views': [(id2, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')], 
+                'type': 'ir.actions.act_window', 
                 'target': 'new'
             }
             return value
@@ -69,12 +69,12 @@ class calendar_event_import(osv.osv_memory):
     _description = "Event Import"
 
     _columns = {
-                  'file_path': fields.binary('Select ICS file', filters='*.ics', required=True),
-                  'msg': fields.text('', readonly=True),
+                  'file_path': fields.binary('Select ICS file', filters='*.ics', required=True), 
+                  'msg': fields.text('', readonly=True), 
                }
 
     _defaults = {
-               'msg':lambda *a:'Import Sucessful'
+               'msg': lambda *a: 'Import Sucessful'
                }
 
 calendar_event_import()
