@@ -335,6 +335,7 @@
         product_id: product_product_lgviewtysmart0
         qty: 10.0
         qty_rfd: 0.0
+    partner_id: base.res_partner_agrolait
     name: POS/001
     price_type: tax_excluded
     pricelist_id: product.list0
@@ -461,5 +462,19 @@
 - 
   !python {model: pos.return}: |
     self.create_returns2(cr, uid, [ref("pos_return_0")], {"lang": "en_US", "active_model":
-      "pos.order", "active_ids": [ref("point_of_sale.pos_order_pos0")], "tz":
-      False, "active_id": ref("point_of_sale.pos_order_pos0"), })
+      "pos.order", "active_ids": [ref("pos_order_pos0")], "tz":
+      False, "active_id": ref("pos_order_pos0"), })
+- 
+  Creating a pos.confirm record
+- 
+  !record {model: pos.confirm, id: pos_confirm_0}:
+    {}
+    
+- 
+ I have close this order
+- 
+  !python {model: pos.confirm}: |
+    self.action_confirm(cr, uid, [ref("pos_confirm_0")], {"lang": "en_US", "active_model":
+      "pos.order", "active_ids": [ref("pos_order_pos0")], "tz": False, "active_id": ref("pos_order_pos0"),
+      })
+    

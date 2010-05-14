@@ -112,7 +112,7 @@ class pos_make_payment(osv.osv_memory):
                  
         order = self.pool.get('pos.order').browse(cr, uid, active_id)
         if order.amount_total == order.amount_paid:
-            res['arch'] = """ <form string="Make Payment" colspan="4">
+            result['arch'] = """ <form string="Make Payment" colspan="4">
                             <group col="2" colspan="2">
                                 <label string="Do you want to print the Receipt?" colspan="4"/>
                                 <separator colspan="4"/>
