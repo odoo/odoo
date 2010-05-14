@@ -24,7 +24,7 @@ from osv import fields
 import os
 import tools
 from tools.translate import _
-
+import base64
 
 class multi_company_default(osv.osv):
     """
@@ -85,17 +85,20 @@ class res_company(osv.osv):
         'logo' : fields.binary('Logo'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
-        'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users')
+        'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
+        'account_no':fields.char('Account No.', size=64),
     }
 
-    def search(self, cr, user, args, offset=0, limit=None, order=None,
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        if context and context.has_key('user_prefence') and context['user_prefence']:
-            cmp_ids = []
-            data_user = self.pool.get('res.users').browse(cr, user, [user], context=context)
-            map(lambda x: cmp_ids.append(x.id), data_user[0].company_ids)
-            return [data_user[0].company_id.id] + cmp_ids
-        return super(res_company, self).search(cr, user, args, offset=offset, limit=limit, order=order,
+
+        user_preference = context and context.get('user_preference', False) or False
+        if user_preference:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
+
+            return cmp_ids
+        return super(res_company, self).search(cr, uid, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
     def _company_default_get(self, cr, uid, object=False, field=False, context=None):
@@ -107,11 +110,9 @@ class res_company(osv.osv):
         proxy = self.pool.get('multi_company.default')
         args = [
             ('object_id.model', '=', object),
+            ('field_id', '=', field),
         ]
-        if field:
-            args.append(('field_id.name','=',field))
-        else:
-            args.append(('field_id','=',False))
+
         ids = proxy.search(cr, uid, args, context=context)
         for rule in proxy.browse(cr, uid, ids, context):
             user = self.pool.get('res.users').browse(cr, uid, uid)
@@ -179,6 +180,11 @@ class res_company(osv.osv):
             level -= 1
         return True
 
+    def _get_logo(self, cr, uid, ids):
+        file_data = open('../pixmaps/openerp-header.png','rb').read()
+        return base64.encodestring(file_data)
+
+
     def _get_header2(self,cr,uid,ids):
         return """
         <header>
@@ -240,7 +246,8 @@ class res_company(osv.osv):
     _defaults = {
         'currency_id': _get_euro,
         'rml_header':_get_header,
-        'rml_header2': _get_header2
+        'rml_header2': _get_header2,
+        'logo':_get_logo
     }
 
     _constraints = [

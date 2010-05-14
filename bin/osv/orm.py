@@ -170,6 +170,7 @@ class browse_record(object):
     def __getitem__(self, name):
         if name == 'id':
             return self._id
+
         if name not in self._data[self._id]:
             # build the list of fields we will fetch
 
@@ -179,10 +180,12 @@ class browse_record(object):
             elif name in self._table._inherit_fields:
                 col = self._table._inherit_fields[name][2]
             elif hasattr(self._table, str(name)):
-                if isinstance(getattr(self._table, name), (types.MethodType, types.LambdaType, types.FunctionType)):
-                    return lambda *args, **argv: getattr(self._table, name)(self._cr, self._uid, [self._id], *args, **argv)
+                attr = getattr(self._table, name)
+
+                if isinstance(attr, (types.MethodType, types.LambdaType, types.FunctionType)):
+                    return lambda *args, **argv: attr(self._cr, self._uid, [self._id], *args, **argv)
                 else:
-                    return getattr(self._table, name)
+                    return attr
             else:
                 self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING,
                     "Field '%s' does not exist in object '%s': \n%s" % (
@@ -250,6 +253,8 @@ class browse_record(object):
                                         context=self._context,
                                         list_class=self._list_class,
                                         fields_process=self._fields_process)
+                                else:
+                                    new_data[n] = ids2
                             else:
                                 new_data[n] = browse_null()
                         else:
@@ -271,6 +276,7 @@ class browse_record(object):
                     else:
                         new_data[n] = data[n]
                 self._data[data['id']].update(new_data)
+        
         if not name in self._data[self._id]:
             #how did this happen?
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
@@ -299,9 +305,13 @@ class browse_record(object):
         return "browse_record(%s, %d)" % (self._table_name, self._id)
 
     def __eq__(self, other):
+        if not isinstance(other, browse_record):
+            return False
         return (self._table_name, self._id) == (other._table_name, other._id)
 
     def __ne__(self, other):
+        if not isinstance(other, browse_record):
+            return True
         return (self._table_name, self._id) != (other._table_name, other._id)
 
     # we need to define __unicode__ even though we've already defined __str__
@@ -1138,17 +1148,22 @@ class orm_template(object):
             if isinstance(s, unicode):
                 return s.encode('utf8')
             return s
+
+        # return True if node can be displayed to current user
         def check_group(node):
             if node.get('groups'):
                 groups = node.get('groups').split(',')
-                readonly = False
                 access_pool = self.pool.get('ir.model.access')
-                for group in groups:
-                    readonly = readonly or access_pool.check_groups(cr, user, group)
-                if not readonly:
+                can_see = any(access_pool.check_groups(cr, user, group) for group in groups)
+                if not can_see:
                     node.set('invisible', '1')
-            del(node.attrib['groups'])
-    
+                    if 'attrs' in node.attrib:
+                        del(node.attrib['attrs']) #avoid making field visible later
+                del(node.attrib['groups'])
+                return can_see
+            else:
+                return True
+
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
                 attrs = {}
@@ -1180,7 +1195,8 @@ class orm_template(object):
                     column = False
 
                 if column:
-                    relation = column._obj
+                    relation = self.pool.get(column._obj)
+
                     childs = False
                     views = {}
                     for f in node:
@@ -1188,17 +1204,21 @@ class orm_template(object):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = self._name
-                            xarch, xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, view_id, ctx)
+                            xarch, xfields = relation.__view_look_dom_arch(cr, user, f, view_id, ctx)
                             views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields
                             }
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
-                        if 'groups' in node.attrib:
-                            check_group(node)
-                        if node.get('invisible'):
-                            attrs['selection'] = []
+                        if not check_group(node):
+                            # the field is just invisible. default value must be in the selection
+                            name = node.get('name')
+                            default = self.default_get(cr, user, [name], context=context).get(name)
+                            if default:
+                                attrs['selection'] = relation.name_get(cr, 1, default, context=context)
+                            else:
+                                attrs['selection'] = []
                         # We can not use the 'string' domain has it is defined according to the record !
                         else:
                             dom = []
@@ -1206,7 +1226,7 @@ class orm_template(object):
                                 dom = column._domain
                             dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
                             context.update(eval(node.get('context','{}')))
-                            attrs['selection'] = self.pool.get(relation)._name_search(cr, user, '', dom, context=context,limit=None,name_get_uid=1)
+                            attrs['selection'] = relation._name_search(cr, user, '', dom, context=context, limit=None, name_get_uid=1)
                             if (node.get('required') and not int(node.get('required'))) or not column.required:
                                 attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
@@ -2570,14 +2590,14 @@ class orm(orm_template):
                     or False
             if isinstance(fld_def, fields.property):
                 property_obj = self.pool.get('ir.property')
-                definition_id = fld_def._field_get(cr, uid, self._name, f)
-                nid = property_obj.search(cr, uid, [('fields_id', '=',
-                    definition_id), ('res_id', '=', False)])
-                if nid:
-                    prop_value = property_obj.browse(cr, uid, nid[0],
-                            context=context).value
-                    value[f] = (prop_value and int(prop_value.split(',')[1])) \
-                            or False
+                prop_value = property_obj.get(cr, uid, f, self._name, context=context)
+                if prop_value:
+                    if isinstance(prop_value, (browse_record, browse_null)):
+                        value[f] = prop_value.id
+                    else:
+                        value[f] = prop_value
+                else:
+                    value[f] = False
 
         # get the default values set by the user and override the default
         # values defined in the object
@@ -2969,7 +2989,7 @@ class orm(orm_template):
 
         properties = self.pool.get('ir.property')
         domain = [('res_id', '=', False),
-                  ('value', 'in', ['%s,%s' % (self._name, i) for i in ids]),
+                  ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
                  ]
         if properties.search(cr, uid, domain, context=context):
             raise except_orm(_('Error'), _('Unable to delete this document because it is used as a default property'))
@@ -3660,6 +3680,8 @@ class orm(orm_template):
         return [(r['id'], tools.ustr(r[self._rec_name])) for r in self.read(cr, user, ids,
             [self._rec_name], context, load='_classic_write')]
 
+    # private implementation of name_search, allows passing a dedicated user for the name_get part to
+    # solve some access rights issues
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
         if not args:
             args = []
@@ -3669,7 +3691,7 @@ class orm(orm_template):
         if name:
             args += [(self._rec_name, operator, name)]
         ids = self.search(cr, user, args, limit=limit, context=context)
-        res = self.name_get(cr, name_get_uid, ids, context)
+        res = self.name_get(cr, name_get_uid or user, ids, context)
         return res
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
@@ -3687,9 +3709,8 @@ class orm(orm_template):
         This method is equivalent of search() on name + name_get()
 
         """
+        return self._name_search(cr, user, name, args, operator, context, limit)
 
-        return self._name_search(cr, user, name, args, operator, context, limit, user)
-        
     def copy_data(self, cr, uid, id, default=None, context=None):
         """
         Copy given record's data with all its fields values
@@ -3794,9 +3815,12 @@ class orm(orm_template):
             trans_obj.create(cr, uid, record, context)
         return new_id
 
-    def exists(self, cr, uid, id, context=None):
-        cr.execute('SELECT count(1) FROM "%s" where id=%%s' % (self._table,), (id,))
-        return bool(cr.fetchone()[0])
+    def exists(self, cr, uid, ids, context=None):
+        if type(ids) in (int,long):
+            ids = [ids]
+        query = 'SELECT count(1) FROM "%s"' % (self._table)
+        cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
+        return cr.fetchone()[0] == len(ids)
 
     def check_recursion(self, cr, uid, ids, parent=None):
         """

@@ -254,21 +254,20 @@ class YamlInterpreter(object):
             b = bool(value)
         else:
             b = default
-        return b 
-    
+        return b
+
     def create_osv_memory_record(self, record, fields):
         model = self.get_model(record.model)
         record_dict = self._create_record(model, fields)
         id_new=model.create(self.cr, self.uid, record_dict, context=self.context)
         self.id_map[record.id] = int(id_new)
         return record_dict
-    
+
     def process_record(self, node):
         import osv
         record, fields = node.items()[0]
         model = self.get_model(record.model)
-        model_bases = model.__class__.__bases__ 
-        if osv.osv.osv_memory in model_bases:
+        if isinstance(model, osv.osv.osv_memory):
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
@@ -281,24 +280,22 @@ class YamlInterpreter(object):
                 else:
                     if not self._coerce_bool(record.forcecreate):
                         return None
-    
-            model = self.get_model(record.model)
+
             record_dict = self._create_record(model, fields)
             self.logger.debug("RECORD_DICT %s" % record_dict)
-            if not osv.osv.osv_memory in model_bases:
-                id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
-                        self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
-                self.id_map[record.id] = int(id)
-                if config.get('import_partial', False):
-                    self.cr.commit()
-    
+            id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
+                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
+            self.id_map[record.id] = int(id)
+            if config.get('import_partial'):
+                self.cr.commit()
+
     def _create_record(self, model, fields):
         record_dict = {}
         for field_name, expression in fields.items():
             field_value = self._eval_field(model, field_name, expression)
             record_dict[field_name] = field_value
-        return record_dict        
-    
+        return record_dict
+
     def process_ref(self, node, column=None):
         if node.search:
             if node.model:
@@ -320,10 +317,10 @@ class YamlInterpreter(object):
         else:
             value = None
         return value
-    
+
     def process_eval(self, node):
         return eval(node.expression, self.eval_context)
-    
+
     def _eval_field(self, model, field_name, expression):
         # TODO this should be refactored as something like model.get_field() in bin/osv
         if field_name in model._columns:
