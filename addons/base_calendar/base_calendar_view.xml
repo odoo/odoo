@@ -8,8 +8,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invitation details">
-                    <field name="email" string="Invitation To"/>
-                    <field name="sent_by_uid" string="Invitation From" />
+                	<group col="6" colspan="4">
+	                    <field name="email" string="Invitation To"/>
+	                    <field name="cutype" string="Invitation type" />
+                        <field name="rsvp" />
+                        <field name="role" string="Role" />
+	                    <field name="sent_by_uid" string="Invitation From" />
+                    </group>
                     <notebook colspan="4">
                         <page string="Invitation">
                             <separator string="Invitation Detail" colspan="4" />
@@ -20,9 +25,6 @@
                                     string="Partner Contact" />
                                 <field name="partner_id"
                                     string="Partner" readonly="1" />
-                                <field name="role" string="Role" />
-                                <field name="cutype" string="Invitation type" />
-                                <field name="rsvp" />
                             </group>
                             <separator string="Event Detail" colspan="4" />
                             <group colspan="4" col="4">
@@ -181,7 +183,7 @@
 	        <field name="model">calendar.event</field>
 	        <field name="type">form</field>
 	        <field name="arch" type="xml">
-	            <form string="Meetings">
+	            <form string="Events">
 	                <group col="6" colspan="4">
 	                    <field name="name" select="1" string="Summary"
 	                        colspan="4" />
@@ -257,7 +259,6 @@
 	                         <field name="user_id" string="Responsible User" />
 	                         <field name="show_as" string="Show time as"/>
 	                         <field name="class" string="Privacy"/>
-	                         <field name="rrule" groups="base.group_extended" />
 	                         <field name="recurrent_id" invisible="1" />
 	                         <field name="recurrent_uid" invisible="1" />
 	                    </group>
@@ -333,6 +334,7 @@
 	            	<field name="location" />
 	            	<field name="show_as" />
 	            	<field name="class" string="Privacy" />
+	            	<field name="user_id" invisible="1"/>
 	            </tree>
 	        </field>
 	    </record>
@@ -353,6 +355,44 @@
 	        </field>
 	    </record>
 	    
+		<!--	 Event Search View-->
+	    
+	    <record id="view_calendar_event_filter" model="ir.ui.view">
+	        <field name="name">Calendar Events Search</field>
+	        <field name="model">calendar.event</field>
+	        <field name="type">search</field>
+	        <field name="arch" type="xml">
+                <search string="Search Events">
+                       <group col="12" colspan="4">
+                           <filter icon="terp-partner" string="My Events"
+                               domain="[('user_id','=',uid)]"
+                               help="My Events" />
+                           <separator orientation="vertical"/>
+                           <field name="name" select="1" string="Summary"/>
+                           <field name="location" select="1" string="Location"/>
+                           <separator orientation="vertical"/>
+                           <field name="user_id" select="1" widget="selection"/>
+                           <separator orientation="vertical"/>
+                           <field name="show_as" select="1"/>
+                           <field name="class" select="1"/>
+                       </group>
+                       <newline/>
+						<group expand="0" string="Group By..." colspan="16">
+							<filter string="Date" icon="terp-project"
+						        domain="[]" context="{'group_by':'date'}" />
+						    <filter string="Availability" icon="terp-project"
+						        domain="[]" context="{'group_by':'show_as'}" />
+						    <filter string="Privacy" icon="terp-crm"
+						        domain="[]" context="{'group_by':'class'}" />
+						    <separator orientation="vertical" />
+						    <filter string="Responsible" icon="terp-crm" domain="[]"
+						        context="{'group_by':'user_id'}" />
+						</group>
+                </search>
+            </field>
+		</record>
+
+
 	    <!-- Event action  -->
 	    
 		<record id="action_view_event" model="ir.actions.act_window">
@@ -361,6 +401,7 @@
 	            <field name="res_model">calendar.event</field>
 	            <field name="view_type">form</field>
 	            <field name="view_mode">tree,form,calendar</field>
+	            <field name="search_view_id" ref="view_calendar_event_filter"/>
 	        </record>
 		
 		<!-- Event menu  -->

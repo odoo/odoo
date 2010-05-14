@@ -177,28 +177,12 @@ html_invitation = """
                 </div>
                 </td>
             </tr>
-            <tr valign="top">
-                <td><b>Are you coming?</b></td>
-                <td><b>:</b></td>
-                <td colspan="3">
-                <UL>
-                    <LI>YES</LI>
-                    <LI>NO</LI>
-                    <LI>MAYBE</LI>
-                </UL>
-                </td>
-            </tr>
         </table>
         </td>
     </tr>
 </table>
 <table border="0" cellspacing="10" cellpadding="0" width="100%%"
     style="font-family: Arial, Sans-serif; font-size: 14">
-    <tr>
-        <td width="100%%"><b>Note:</b> If you are interested please reply this
-        mail and keep only your response from options <i>YES, NO</i>
-        and <i>MAYBE</i>.</td>
-    </tr>
     <tr>
         <td width="100%%">From:</td>
     </tr>
@@ -258,22 +242,22 @@ class calendar_attendee(osv.osv):
                                         attdata.sent_by_uid.address_id.email)
             if name == 'cn':
                 if attdata.user_id:
-                    result[id][name] = self._get_address(attdata.user_id.name, attdata.email)
+                    result[id][name] = attdata.user_id.name
                 elif attdata.partner_address_id:
-                    result[id][name] = self._get_address(attdata.partner_id.name, attdata.email)
+                    result[id][name] = attdata.partner_address_id.name or attdata.partner_id.name
                 else:
-                    result[id][name] = self._get_address(None, attdata.email)
+                    result[id][name] = attdata.email or ''
             if name == 'delegated_to':
                 todata = []
-                for parent in attdata.parent_ids:
-                    if parent.email:
-                        todata.append('MAILTO:' + parent.email)
+                for child in attdata.child_ids:
+                    if child.email:
+                        todata.append('MAILTO:' + child.email)
                 result[id][name] = ', '.join(todata)
             if name == 'delegated_from':
                 fromdata = []
-                for child in attdata.child_ids:
-                    if child.email:
-                        fromdata.append('MAILTO:' + child.email)
+                for parent in attdata.parent_ids:
+                    if parent.email:
+                        fromdata.append('MAILTO:' + parent.email)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
                 if attdata.ref:
@@ -383,49 +367,6 @@ property or property parameter."),
     _defaults = {
         'state': lambda *x: 'needs-action',
     }
-
-    response_re = re.compile("Are you coming\?.*\n*.*(YES|NO|MAYBE).*", re.UNICODE)
-
-    def msg_new(self, cr, uid, msg):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        """
-        return False
-
-    def msg_act_get(self, msg):
-        """
-        Get Message.
-        @param self: The object pointer
-        @return: dictionary of actions which contain state field value.
-        """
-
-        mailgate_obj = self.pool.get('mail.gateway')
-        body = mailgate_obj.msg_body_get(msg)
-        actions = {}
-        res = self.response_re.findall(body['body'])
-        if res:
-            actions['state'] = res[0]
-        return actions
-
-    def msg_update(self, cr, uid, ids, msg, data={}, default_act='None'):
-        """
-        Update msg state which may be accepted.declined.tentative.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of calendar attendee’s IDs.
-        @param context: A standard dictionary for contextual values
-        @return: True
-        """
-        msg_actions = self.msg_act_get(msg)
-        if msg_actions.get('state'):
-            if msg_actions['state'] in ['YES', 'NO', 'MAYBE']:
-                mapping = {'YES': 'accepted', 'NO': 'declined', 'MAYBE': 'tentative'}
-                status = mapping[msg_actions['state']]
-                print 'Got response for invitation id: %s as %s' % (ids, status)
-                self.write(cr, uid, ids, {'state': status})
-        return True
 
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
@@ -638,7 +579,7 @@ class res_alarm(osv.osv):
 are both optional, but if one occurs, so MUST the other"""),
         'repeat': fields.integer('Repeat'),
         'active': fields.boolean('Active', help="If the active field is set to \
-                    true, it will allow you to hide the event alarm information without removing it.")
+true, it will allow you to hide the event alarm information without removing it.")
     }
     _defaults = {
         'trigger_interval': lambda *x: 'minutes',
@@ -1050,9 +991,9 @@ class calendar_event(osv.osv):
                                                 'Show as'),
         'base_calendar_url': fields.char('Caldav URL', size=264),
         'exdate': fields.text('Exception Date/Times', help="This property \
-                    defines the list of date/time exceptions for arecurring calendar component."),
+defines the list of date/time exceptions for arecurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
-                    rule or repeating pattern for anexception to a recurrence set"),
+rule or repeating pattern for an exception to a recurrence set"),
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, \
                                     string='Recurrent Rule', store=True, \
                                     fnct_inv=_set_rrulestring, help='Defines a\
@@ -1100,7 +1041,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'end_date': fields.date('Repeat Until'),
         'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', \
                                  'event_id', 'attendee_id', 'Attendees'),
-        'allday': fields.boolean('All Day')
+        'allday': fields.boolean('All Day'),
+        'active': fields.boolean('Active', help="If the active field is set to \
+true, it will allow you to hide the event alarm information without removing it.")
     }
 
     _defaults = {
@@ -1109,6 +1052,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
          'freq': lambda *x: 'None',
          'select1': lambda *x: 'date',
          'interval': lambda *x: 1,
+         'active': lambda *x: 1,
     }
 
     def open_event(self, cr, uid, ids, context=None):
@@ -1404,6 +1348,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             event_id = base_calendar_id2real_id(event_id)
             if not event_id in new_ids:
                 new_ids.append(event_id)
+
         res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'):
             alarm_obj = self.pool.get('res.alarm')

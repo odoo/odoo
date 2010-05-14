@@ -24,7 +24,7 @@
 {
     "name" : "Fetchmail Server",
     "version" : "1.0",
-    "depends" : ["base", "smtpclient"],
+    "depends" : ["base", "mail_gateway"],
     "author" : "Tiny",
     "description": """Fetchail: 
     * Fetch email from Pop / IMAP server

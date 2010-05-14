@@ -8,31 +8,34 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Base Setup Modules Installation</attribute>
+            <attribute name="string">Install OpenERP Modules</attribute>
           </form>
-          <separator string="title" position="attributes">
-            <attribute name="string">Install Modules</attribute>
-          </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
             <attribute name="string"
-                       >Now that OpenERP is installed, we have selected applications commonly useful to users which you can install directly, as well as sets of applications for more specific types or groups of businesses (the vertical modules).
+                       >Now that OpenERP is installed, We have selected applications commonly useful to users which you can install directly, as well as sets of applications for more specific types or groups of businesses (the vertical modules).
 
 If you don't think you need any of these right now, you can easily install them later on.</attribute>
           </xpath>
+          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  <attribute name='string'></attribute>
+	          	  <attribute name='rowspan'>15</attribute>
+	      </xpath>
+	      <separator string="title" position="attributes">
+            <attribute name="string">Install Generic Modules</attribute>
+          </separator>
           <group colspan="8">
-            <separator string="Generic Modules" colspan="4"/>
-            <field name="crm"/> <field name="sale"/>
-            <field name="project"/> <field name="knowledge"/>
-            <field name="stock"/> <field name="mrp"/>
-            <field name="account"/> <field name="purchase"/>
-            <field name="hr"/> <field name="point_of_sale"/>
-            <field name="marketing"/> <field name="misc_tools"/>
-            <field name="report_designer"/> <field name="thunderbird"/>
-            <separator string="Vertical Modules" colspan="4"/>
-            <field name="profile_association"/>
-            <field name="profile_auction"/>
-            <field name="profile_bookstore"/>
+            <field name="crm" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/> <field name="sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/>
+            <field name="project" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/> <field name="knowledge" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/>
+            <field name="stock" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/> <field name="mrp" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/>
+            <field name="account" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/> <field name="purchase" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/>
+            <field name="hr" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/> <field name="point_of_sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)" groups="base.group_extended"/>
+            <field name="marketing" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)" groups="base.group_extended"/> <field name="misc_tools" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/>
+            <field name="report_designer" groups="base.group_extended" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/>
+            <separator string="Install Specific Business Modules" colspan="4"/>
+            <field name="profile_association" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/>
+            <field name="profile_auction" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/>
+            <field name="profile_bookstore" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account,purchase,hr,point_of_sale,marketing,misc_tools,report_designer,profile_association,profile_auction,profile_bookstore)"/>
           </group>
         </data>
       </field>
@@ -52,5 +55,16 @@ If you don't think you need any of these right now, you can easily install them 
         <field name="action_id" ref="action_base_setup_installer"/>
         <field name="sequence">2</field>
     </record>
+   <record id="base_setup_ir_actions_todo_tree" model="ir.ui.view">
+        <field name="model">ir.actions.todo</field>
+        <field name="name">base_setup_installer_action_replace</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+  		<field name="arch" type="xml">
+  		 <xpath expr="//button[@string='Launch']" position="replace">
+        	<button name="%(action_base_setup_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+      		</xpath>
+      	</field>
+		</record>
   </data>
 </openerp>

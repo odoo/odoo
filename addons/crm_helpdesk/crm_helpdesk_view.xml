@@ -1,249 +1,263 @@
 <?xml version="1.0"?>
 <openerp>
-<data>
+    <data>
 
-<!-- Helpdesk Support Categories Form View -->
+        <!-- Helpdesk Support Categories Form View -->
 
-    <record id="crm_helpdesk_categ_action" model="ir.actions.act_window">
-        <field name="name">Helpdesk Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
-         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-        <field name="domain">[('object_id.model', '=', 'crm.helpdesk')]</field>
-        <field name="context">{'object_id':'crm.helpdesk'}</field>
-    </record>
+        <record id="crm_helpdesk_categ_action" model="ir.actions.act_window">
+            <field name="name">Helpdesk Categories</field>
+            <field name="res_model">crm.case.categ</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+            <field name="domain">[('object_id.model', '=', 'crm.helpdesk')]</field>
+            <field name="context">{'object_id':'crm.helpdesk'}</field>
+        </record>
 
-    <menuitem action="crm_helpdesk_categ_action"
-        id="menu_crm_case_helpdesk-act" parent="crm.menu_crm_case_categ" />
+        <menuitem action="crm_helpdesk_categ_action"
+            id="menu_crm_case_helpdesk-act" parent="crm.menu_crm_case_categ" />
 
-<!--  Helpdesk Support Form View -->
+        <!--  Helpdesk Support Form View -->
 
-    <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
-        <field name="name">CRM - Helpdesk Support Form</field>
-        <field name="model">crm.helpdesk</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Helpdesk Support">
-                <group colspan="4" col="4">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="date" select="1"/>
-                    <field name="date_deadline"/>
-                </group>
-                <notebook colspan="4">
-                    <page string="General">
-                        <separator colspan="4" string="Communication"/>
-                        <group col="7" colspan="4">
-                            <field name="partner_id"
-                                on_change="onchange_partner_id(partner_id, email_from)"
-                                select="1" />
-                            <field name="partner_address_id"
-                                on_change="onchange_partner_address_id(partner_address_id, email_from)"
+        <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
+            <field name="name">CRM - Helpdesk Support Form</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Helpdesk Support">
+                    <group colspan="4" col="7">
+                        <field name="name" select="1"/>
+                        <field name="section_id" widget="selection"/>
+                        <field name="user_id" select="1"/>
+                        <button name="remind_user"
+                            states="open,pending"
+                            string="Send Reminder" type="object"
+                            icon="gtk-go-forward" />
+                        <field name="som"/>
+                        <field name="date" select="1"/>
+                        <field name="date_deadline"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="General">
+                            <group col="3" colspan="2">
+                                <separator colspan="4" string="Communication"/>
+                                <field name="partner_id" colspan="2"
+                                    on_change="onchange_partner_id(partner_id, email_from)"
+                                    select="1" />
+                                <field name="partner_address_id" colspan="2"
+                                    on_change="onchange_partner_address_id(partner_address_id, email_from)"
                                 />
+                                <newline/>
+                                <field name="email_from" colspan="2"/>
+                                <button name="remind_partner"
+                                    states="open,pending"
+                                    string="Send Reminder" type="object"
+                                    icon="gtk-go-forward" />
+                            </group>
 
-                            <field name="email_from" />
-                            <button name="remind_partner"
-                                states="open,pending"
-                                string="Send Reminder" type="object"
-                                icon="gtk-go-forward" />
+                            <group col="2" colspan="2">
+                                <separator colspan="4" string="Categorization"/>
+                                <field name="priority"/>
+                                <field name="categ_id"/>
+                                <field name="canal_id"/>
+                            </group>
 
-                        </group>
-                        <separator colspan="4" string="Categorization"/>
-                        <group col="7" colspan="4">
-                            <field name="priority"/>
-                            <field name="section_id" widget="selection"/>
-                            <field name="user_id" select="1"/>
-                            <button name="remind_user"
-                                states="open,pending"
-                                string="Send Reminder" type="object"
-                                icon="gtk-go-forward" />
-                        </group>
-
-                        <separator colspan="4" string="Notes"/>
-                        <field name="description" colspan="4"
+                            <separator colspan="4" string="Notes"/>
+                            <field name="description" colspan="4"
                                 nolabel="1" widget="text_tag" readonly="1" />
-                        <separator colspan="4"/>
-                        <group col="8" colspan="4">
-                            <field name="state" select="1"/>
-                            <button name="case_close"
+                            <separator colspan="4"/>
+                            <group col="8" colspan="4">
+                                <field name="state" select="1"/>
+                                <button name="case_close"
                                 states="open,draft,pending" string="Close"
                                 type="object" icon="gtk-close" />
-                            <button name="case_open"
+                                <button name="case_open"
                                 states="draft,pending" string="Open"
                                 type="object" icon="gtk-go-forward" />
-                            <button name="case_cancel"
+                                <button name="case_cancel"
                                 states="draft,open,pending" string="Cancel"
                                 type="object" icon="gtk-cancel" />
-                            <button name="case_pending"
+                                <button name="case_pending"
                                 states="draft,open" string="Pending"
                                 type="object" icon="gtk-media-pause" />
-                            <button name="case_escalate"
+                                <button name="case_escalate"
                                 states="open,draft,pending"
                                 string="Escalate" type="object"
                                 icon="gtk-go-up" />
-                            <button name="case_reset"
+                                <button name="case_reset"
                                 states="done,cancel"
                                 string="Reset to Draft" type="object"
                                 icon="gtk-convert" />
-                        </group>
-                    </page>
-                    <page string="History" groups="base.group_extended">
-                        <field name="id" select="1"/>
-                        <field name="active"/>
-                        <field name="categ_id"/>
-                        <field name="som"/>
-                        <separator colspan="4" string="Dates"/>
-                        <field name="create_date"/>
-                        <field name="date_closed"/>
-                        <separator colspan="4" string="Estimates"/>
-                        <field name="planned_cost"/>
-                        <separator colspan="4" string="References"/>
-                        <field colspan="4" name="ref"/>
-                        <field colspan="4" name="ref2"/>
-                        <field colspan="4" name="log_ids" nolabel="1">
-                            <form string="Actions">
-                                <separator colspan="4" string="Action Information"/>
-                                <field colspan="4" name="name"/>
-                                <field name="date"/>
-                                <field name="user_id"/>
-                            </form>
-                        </field>
-                    </page>
-                    <page string="Emails" groups="base.group_extended">
-                       <group colspan="4">
-                           <field colspan="4" name="email_cc" string="CC"/>
-                       </group>
-                       <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
-                           <form string="Communication history">
-                               <group col="7" colspan="4">
-                                   <field name="date"/>
-                                   <field name="email_to"/>
-                                   <field name="email_from"/>
-                                   <button
-                                     string="Add a CC"
-                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                               icon="gtk-add" type="action"/>
-                                   </group>
-                                   <newline/>
-                                   <field name="description" colspan="4" nolabel="1"/>
-                                   <button colspan="4"
-                                       string="Reply to Last Email"
-                                       name="%(crm.action_crm_send_mail)d"
-                                       context="{'mail':'reply', 'model': 'crm.helpdesk'}"
-                                       icon="gtk-undo" type="action" />
-                               </form>
-                               <tree string="Communication history">
-                                   <field name="description"/>
-                                   <field name="email_to"/>
-                                   <field name="date"/>
-                               </tree>
-                           </field>
-                           <button colspan="4" string="Send New Email"
-                               name="%(crm.action_crm_send_mail)d"
-                               context="{'mail':'new', 'model': 'crm.helpdesk'}"
-                               icon="gtk-go-forward" type="action" />
-                    </page>
-                </notebook>
-            </form>
-        </field>
-    </record>
+                            </group>
+                        </page>
+                        <page string="History" groups="base.group_extended">
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Dates"/>
+                                <field name="create_date"/>
+                                <field name="date_closed"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Misc"/>
+                                <field name="id" select="1"/>
+                                <field name="active"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Estimates"/>
+                                <field name="planned_cost"/>
+                            </group>
+                            <newline/>
+                            <group colspan="4" col="2">
+                                <separator colspan="4" string="References"/>
+                                <field colspan="4" name="ref"/>
+                                <field colspan="4" name="ref2"/>
+                            </group>
+                            <field colspan="4" name="log_ids" nolabel="1">
+                                <tree string="Logs">
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </tree>
+                                <form string="Logs">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Emails" groups="base.group_extended">
+                            <group colspan="4">
+                                <field colspan="4" name="email_cc" string="CC"/>
+                            </group>
+                            <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
+                                <form string="Communication history">
+                                    <group col="6" colspan="4">
+                                        <field name="date"/>
+                                        <field name="email_to"/>
+                                        <field name="email_from"/>
+                                    </group>
+                                    <newline/>
+                                    <field name="description" colspan="4" nolabel="1"/>
+                                    <button colspan="4"
+                                        string="Reply to Last Email"
+                                        name="%(crm.action_crm_send_mail)d"
+                                        context="{'mail':'reply', 'model': 'crm.helpdesk'}"
+                                        icon="gtk-undo" type="action" />
+                                </form>
+                                <tree string="Communication history">
+                                    <field name="description"/>
+                                    <field name="email_to"/>
+                                    <field name="date"/>
+                                </tree>
+                            </field>
+                            <button colspan="4" string="Send New Email"
+                                name="%(crm.action_crm_send_mail)d"
+                                context="{'mail':'new', 'model': 'crm.helpdesk'}"
+                                icon="gtk-go-forward" type="action" />
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
 
-<!-- Helpdesk Support Tree View  -->
+        <!-- Helpdesk Support Tree View  -->
 
-    <record model="ir.ui.view" id="crm_case_tree_view_helpdesk">
-        <field name="name">CRM - Helpdesk Support Tree</field>
-        <field name="model">crm.helpdesk</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Helpdesk Support Tree"
-                colors="black:state=='open';blue:state=='pending';grey:state in ('cancel','close')">
-                <field name="id"/>
-                <field name="name" string="Query Description" />
-                <field name="partner_id" string="Partner"/>
-                <field name="date" string="Date"/>
-                <field name="date_deadline"/>
-                <field name="user_id"/>
-                <field name="section_id"/>
-                <field name="state"/>
-                <button name="case_close" string="Done"
-                    states="open,draft,pending" type="object"
-                    icon="gtk-close" />
-                <button name="case_open" string="Open"
-                    states="draft,pending" type="object"
-                    icon="gtk-go-forward" />
-                <button name="case_cancel" string="Cancel"
-                    states="draft,open,pending" type="object"
-                    icon="gtk-cancel" />
-                <button name="case_pending" string="Pending"
-                    states="draft,open" type="object"
-                    icon="gtk-media-pause" />
-                <button name="case_escalate" string="Escalate"
-                    groups="base.group_extended"
-                    states="open,draft,pending" type="object"
-                    icon="gtk-go-up" />
-                <button name="case_reset" string="Reset to Draft"
-                    states="done,cancel" type="object" icon="gtk-convert" />
-            </tree>
-        </field>
-    </record>
+        <record model="ir.ui.view" id="crm_case_tree_view_helpdesk">
+            <field name="name">CRM - Helpdesk Support Tree</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Helpdesk Support Tree"
+                    colors="black:state=='open';blue:state=='pending';grey:state in ('cancel','close')">
+                    <field name="id"/>
+                    <field name="name" string="Query Description" />
+                    <field name="partner_id" string="Partner"/>
+                    <field name="date" string="Date"/>
+                    <field name="date_deadline"/>
+                    <field name="user_id"/>
+                    <field name="section_id"/>
+                    <field name="priority"/>
+                    <field name="state"/>
+                    <button name="case_close" string="Done"
+                        states="open,draft,pending" type="object"
+                        icon="gtk-close" />
+                    <button name="case_open" string="Open"
+                        states="draft,pending" type="object"
+                        icon="gtk-go-forward" />
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
+                    <button name="case_pending" string="Pending"
+                        states="draft,open" type="object"
+                        icon="gtk-media-pause" />
+                    <button name="case_escalate" string="Escalate"
+                        groups="base.group_extended"
+                        states="open,draft,pending" type="object"
+                        icon="gtk-go-up" />
+                    <button name="case_reset" string="Reset to Draft"
+                        states="done,cancel" type="object" icon="gtk-convert" />
+                </tree>
+            </field>
+        </record>
 
-<!--  Helpdesk Support Calendar View -->
+        <!--  Helpdesk Support Calendar View -->
 
-    <record model="ir.ui.view" id="crm_case_helpdesk_calendar_view">
-        <field name="name">CRM - Helpdesk Support Calendar</field>
-        <field name="model">crm.helpdesk</field>
-        <field name="type">calendar</field>
-        <field name="priority" eval="2"/>
-        <field name="arch" type="xml">
-            <calendar string="Helpdesk Supports" date_start="date" color="user_id" date_delay="duration">
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="categ_id"/>
-            </calendar>
-        </field>
-    </record>
+        <record model="ir.ui.view" id="crm_case_helpdesk_calendar_view">
+            <field name="name">CRM - Helpdesk Support Calendar</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Helpdesk Supports" date_start="date" color="user_id" date_delay="duration">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="categ_id"/>
+                </calendar>
+            </field>
+        </record>
 
-<!-- Helpdesk Support Search View  -->
+        <!-- Helpdesk Support Search View  -->
 
-    <record id="view_crm_case_helpdesk_filter" model="ir.ui.view">
-        <field name="name">CRM - Helpdesk Search</field>
-        <field name="model">crm.helpdesk</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Search Helpdesk">
-                <filter icon="gtk-home" string="Today"
-                    separator="1"
-                    domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
-                    help="Todays's Helpdesk Requests"
-                    />
-                <filter icon="gtk-media-rewind"
-                    string="7 Days" separator="1"
-                    help="Helpdesk requests during last 7 days"
-                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                    />
-                <separator orientation="vertical"/>
-                <field name="name" select='1' string="Query"/>
-                <field name="partner_id" />
-                <field name="user_id" select="1" widget="selection">
-                    <filter icon="terp-partner"
-                        domain="[('user_id','=',uid)]"
-                        help="My Helpdesk Requests" default="1" />
-                </field>
-                <field name="section_id" select="1" widget="selection" string="Sales Team">
-                    <filter icon="terp-crm"
-                        domain="[('section_id','=',context.get('section_id',False))]"
-                        help="My section" />
-                </field>
-                <newline/>
-                <group expand="1" string="Group By..." colspan="12" col="20">
-                    <filter string="Customer" icon="terp-crm"
-                        domain="[]" context="{'group_by':'partner_id'}" />
-                    <filter string="State" icon="terp-crm" domain="[]"
-                        context="{'group_by':'state'}" />
-                    <filter string="Priority" icon="terp-crm"
-                        domain="[]" context="{'group_by':'priority'}" />
-                </group>
-            </search>
-        </field>
-    </record>
-</data>
+        <record id="view_crm_case_helpdesk_filter" model="ir.ui.view">
+            <field name="name">CRM - Helpdesk Search</field>
+            <field name="model">crm.helpdesk</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Helpdesk">
+                    <filter icon="gtk-home" string="Today"
+                        separator="1"
+                        domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                        help="Todays's Helpdesk Requests"
+                        />
+                    <filter icon="gtk-media-rewind"
+                        string="7 Days" separator="1"
+                        help="Helpdesk requests during last 7 days"
+                        domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                        />
+                    <separator orientation="vertical"/>
+                    <field name="name" select='1' string="Query"/>
+                    <field name="partner_id" />
+                    <field name="user_id" select="1" widget="selection">
+                        <filter icon="terp-partner"
+                            domain="[('user_id','=',uid)]"
+                            help="My Helpdesk Requests" default="1" />
+                    </field>
+                    <field name="section_id" select="1" widget="selection" string="Sales Team">
+                        <filter icon="terp-crm"
+                            domain="[('section_id','=',context.get('section_id',False))]"
+                            help="My section" />
+                    </field>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="12" col="20">
+                        <filter string="Customer" icon="terp-crm"
+                            domain="[]" context="{'group_by':'partner_id'}" />
+                        <filter string="State" icon="terp-crm" domain="[]"
+                            context="{'group_by':'state'}" />
+                        <filter string="Priority" icon="terp-crm"
+                            domain="[]" context="{'group_by':'priority'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    </data>
 </openerp>

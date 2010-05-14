@@ -48,23 +48,23 @@ class base_setup_company(osv.osv_memory):
             cr, uid, 'res.country.state', context=context)
     def _get_all_countries(self, cr, uid, context=None):
         return self._get_all(cr, uid, 'res.country', context=context)
-    def _get_all_currencies(self, cr, uid, context=None):
-        return self._get_all(cr, uid, 'res.currency', context=context)
 
     def default_get(self, cr, uid, fields_list=None, context=None):
         """ get default company if any, and the various other fields
         from the company's fields
         """
+        base_mod = self.pool.get('ir.module.module').search(cr, uid, [('name','ilike','base')])
+        base_mod_rec = self.pool.get('ir.module.module').browse(cr, uid, base_mod)[0]
         defaults = super(base_setup_company, self)\
               .default_get(cr, uid, fields_list=fields_list, context=context)
-
         companies = self.pool.get('res.company')
         company_id = companies.search(cr, uid, [], limit=1, order="id")
         if not company_id or 'company_id' not in fields_list:
             return defaults
         company = companies.browse(cr, uid, company_id[0])
-
         defaults['company_id'] = company.id
+        if not base_mod_rec.demo:
+            return defaults
         defaults['currency'] = company.currency_id.id
         for field in ['name','logo','rml_header1','rml_footer1','rml_footer2']:
             defaults[field] = company[field]
@@ -86,11 +86,11 @@ class base_setup_company(osv.osv_memory):
         'street2':fields.char('Street 2', size=128),
         'zip':fields.char('Zip Code', size=24),
         'city':fields.char('City', size=128),
-        'state_id':fields.selection(_get_all_states, 'States'),
-        'country_id':fields.selection(_get_all_countries, 'Countries'),
+        'state_id':fields.selection(_get_all_states, 'State'),
+        'country_id':fields.selection(_get_all_countries, 'Country'),
         'email':fields.char('E-mail', size=64),
         'phone':fields.char('Phone', size=64),
-        'currency':fields.selection(_get_all_currencies, 'Currency', required=True),
+        'currency':fields.many2one('res.currency', 'Currency', required=True),
         'rml_header1':fields.char('Report Header', size=200,
             help='''This sentence will appear at the top right corner of your reports.
 We suggest you to put a slogan here:
@@ -104,6 +104,8 @@ Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07''')
 We suggest you to put bank information here:
 IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
         'logo':fields.binary('Logo'),
+        'account_no':fields.char('Account No', size=64),
+        'website': fields.char('Web', size=64),
     }
 
     def execute(self, cr, uid, ids, context=None):
@@ -112,7 +114,6 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
         if not getattr(payload, 'company_id', None):
             raise ValueError('Case where no default main company is setup '
                              'not handled yet')
-
         company = payload.company_id
         company.write({
             'name':payload.name,
@@ -120,10 +121,13 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
             'rml_footer1':payload.rml_footer1,
             'rml_footer2':payload.rml_footer2,
             'logo':payload.logo,
+            'currency_id':payload.currency.id,
+            'account_no':payload.account_no,
         })
 
         company.partner_id.write({
             'name':payload.name,
+            'website':payload.website,
         })
 
         address_data = {

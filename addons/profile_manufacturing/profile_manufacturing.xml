@@ -11,15 +11,18 @@
                 <form position="attributes">
                   <attribute name="string">Manufacturing Profile: Install Extra Modules</attribute>
                 </form>
+                <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	          	  	<attribute name='rowspan'>15</attribute>
+			  		<attribute name='string'></attribute>
+			  	</xpath>
                 <xpath expr="//label[@string='description']"
                        position="attributes">
                   <attribute name="string">Here are a few modules which might be useful along with the rest of the Manufacturing profile. You can also install them the normal way later on, but if you think you'll need them to fit your requirements, you can select them now and they'll be installed immediately.</attribute>
                 </xpath>
                 <separator string="title" position="attributes">
-                  <attribute name="string">Manufacturing Modules</attribute>
+                  <attribute name="string">Stock &amp; Manufacturing</attribute>
                 </separator>
                 <group colspan="8">
-                  <separator string="Stock &amp; Manufacturing" colspan="4"/>
                   <field name="stock_location"/>
                   <field name="mrp_jit"/>
                   <field name="mrp_operation"/>
@@ -52,5 +55,16 @@
         <field name="action_id" ref="action_config_install_module"/>
         <field name="sequence">3</field>
       </record>
+      <record id="manufacturing_ir_actions_todo_tree" model="ir.ui.view">
+		    <field name="model">ir.actions.todo</field>
+		    <field name="name">manufacturing_installer_action_replace</field>
+		    <field name="type">tree</field>
+		    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+			<field name="arch" type="xml">
+	 			<xpath expr="//button[@string='Launch']" position="replace">
+        			<button name="%(action_config_install_module)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+  				</xpath>
+  			</field>
+	</record>
     </data>
 </openerp>

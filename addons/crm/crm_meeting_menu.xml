@@ -12,7 +12,6 @@
         domain="[('partner_id', '=', active_id)]"
     />
 
-
     <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
         <field name="context" eval="{'default_state':'draft'}"/>
     </record>
@@ -24,18 +23,21 @@
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet_create_partner"/>
     </record>
+
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_meet_partner">
         <field name="sequence" eval="2"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="crm_case_tree_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet_create_partner"/>
     </record>
+
     <record model="ir.actions.act_window.view" id="action_crm_tag_form_meet_partner">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="crm_case_form_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet_create_partner"/>
     </record>
+
 	<record model="ir.actions.act_window.view" id="action_crm_tag_gantt_meet_partner">
         <field name="sequence" eval="3"/>
         <field name="view_mode">gantt</field>
@@ -43,68 +45,36 @@
         <field name="act_window_id" ref="crm_case_categ_meet_create_partner"/>
     </record>
 
-	<act_window
-        id="crm_case_categ_meet_case"
-        name="Schedule a Meeting"
-        res_model="crm.meeting"
-        src_model="crm.case"
-        view_mode="calendar,tree,form,gantt"
-        context="{'default_case_id': active_id, 'default_duration': 4.0}"
-        />
-
-    <record model="ir.actions.act_window" id="crm_case_categ_meet_case">
-        <field name="context" eval="{'default_state':'draft'}"/>
-    </record>
-
-    <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet_case">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">calendar</field>
-        <field name="view_id" ref="crm_case_calendar_view_meet"/>
-        <field name="act_window_id" ref="crm_case_categ_meet_case"/>
-    </record>
-    <record model="ir.actions.act_window.view" id="action_crm_tag_tree_meet_case">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="crm_case_tree_view_meet"/>
-        <field name="act_window_id" ref="crm_case_categ_meet_case"/>
-    </record>
-    <record model="ir.actions.act_window.view" id="action_crm_tag_form_meet_case">
-        <field name="sequence" eval="3"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="crm_case_form_view_meet"/>
-        <field name="act_window_id" ref="crm_case_categ_meet_case"/>
-    </record>
-	<record model="ir.actions.act_window.view" id="action_crm_tag_gantt_meet_case">
-        <field name="sequence" eval="3"/>
-        <field name="view_mode">gantt</field>
-        <field name="view_id" ref="crm_case_gantt_view_meet"/>
-        <field name="act_window_id" ref="crm_case_categ_meet_case"/>
-    </record>
-
     <record model="ir.actions.act_window" id="crm_case_categ_meet">
+        <field name="name">Meetings</field>
         <field name="res_model">crm.meeting</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
+        <field name="context">{'search_default_current':1}</field>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
     </record>
+
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet">
         <field name="sequence" eval="1"/>
         <field name="view_mode">calendar</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet"/>
     </record>
+
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_meet">
         <field name="sequence" eval="2"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="crm_case_tree_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet"/>
     </record>
+
     <record model="ir.actions.act_window.view" id="action_crm_tag_form__meet">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="crm_case_form_view_meet"/>
         <field name="act_window_id" ref="crm_case_categ_meet"/>
     </record>
+
     <record model="ir.actions.act_window.view" id="action_crm_tag_gantt_meet">
         <field name="sequence" eval="1"/>
         <field name="view_mode">gantt</field>
@@ -121,6 +91,12 @@
     	action="crm_case_categ_meet" parent="menu_meeting_sale"
     	sequence="1" />
 
+	<record id="ir_ui_view_sc_calendar0" model="ir.ui.view_sc">
+        <field name="name">Calendar</field>
+        <field name="resource">ir.ui.menu</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
+	</record>
     <record id="action_view_attendee_form" model="ir.actions.act_window">
 	 	<field name="name">Meeting Invitations</field>
 	 	<field name="type">ir.actions.act_window</field>
@@ -136,57 +112,5 @@
 			name="Meeting Invitations" parent="crm.menu_meeting_sale"
 			sequence="10" action="action_view_attendee_form" />
 
-
-    <record model="ir.actions.act_window" id="crm_case_category_act_meetall3">
-        <field name="name">Next Meetings</field>
-        <field name="res_model">crm.meeting</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,calendar,form,gantt</field>
-        <field name="view_id" ref="crm_case_calendar_view_meet"/>
-        <field name="domain"
-        	eval="[('state','in',('pending','draft','open')),('date','>=',time.strftime('%Y-%m-%d'))]" />
-    </record>
-
-    <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_meetall3">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">calendar</field>
-        <field name="view_id" ref="crm_case_calendar_view_meet"/>
-        <field name="act_window_id" ref="crm_case_category_act_meetall3"/>
-    </record>
-
-    <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_meetall3">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="crm_case_tree_view_meet"/>
-        <field name="act_window_id" ref="crm_case_category_act_meetall3"/>
-    </record>
-
-    <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_meetall3">
-        <field name="sequence" eval="3"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="crm_case_form_view_meet"/>
-        <field name="act_window_id" ref="crm_case_category_act_meetall3"/>
-    </record>
-
-	<record model="ir.actions.act_window.view" id="action_crm_tag_gantt_view_meetall3">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">gantt</field>
-        <field name="view_id" ref="crm_case_gantt_view_meet"/>
-        <field name="act_window_id" ref="crm_case_category_act_meetall3"/>
-    </record>
-
-    <record id="ir_ui_view_sc_calendar0" model="ir.ui.view_sc">
-        <field name="name">Calendar</field>
-        <field name="resource">ir.ui.menu</field>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
-	</record>
-
-	<record id="ir_ui_view_sc_calendar1" model="ir.ui.view_sc">
-        <field name="name">Calendar</field>
-        <field name="resource">ir.ui.menu</field>
-        <field name="user_id" ref="base.user_demo"/>
-        <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
-	</record>
 </data>
 </openerp>

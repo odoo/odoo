@@ -69,7 +69,7 @@ class crm_send_new_email(osv.osv_memory):
         """ This sends an email to ALL the addresses of the selected partners.
         """
 
-        hist_obj = self.pool.get('crm.case.history')
+        hist_obj = self.pool.get('mailgate.message')
         smtp_pool = self.pool.get('email.smtpclient')
 
         if not context:
@@ -91,14 +91,14 @@ class crm_send_new_email(osv.osv_memory):
 
             case = case_pool.browse(cr, uid, res_id)
             if context.get('mail', 'new') == 'new':
-                if len(case.history_line):
-                    message_id = case.history_line[0].message_id
+                if len(case.message_ids):
+                    message_id = case.message_ids[0].message_id
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id
-                model = hist.log_id.model_id.model
+                model = hist.model_id.model
                 model_pool = self.pool.get(model)
-                case = model_pool.browse(cr, uid, hist.log_id.res_id)
+                case = model_pool.browse(cr, uid, hist.res_id)
             emails = [obj.email_to] + (obj.email_cc or '').split(',')
             emails = filter(None, emails)
             body = obj.text
@@ -195,26 +195,29 @@ class crm_send_new_email(osv.osv_memory):
         """
         This function gets default values for reply mail
         """
-        hist_obj = self.pool.get('crm.case.history')
+        hist_obj = self.pool.get('mailgate.message')
         res_ids = context and context.get('active_ids', []) or []
 
         include_original = context and context.get('include_original', False) or False
         res = {}
-        for hist in hist_obj.browse(cr, uid, res_ids):
-            model = hist.log_id.model_id.model
+        for hist in hist_obj.browse(cr, uid, res_ids, context=context):
+            model = hist.model_id.model
 
             # In the case where the crm.case does not exist in the database
             if not model:
                 return {}
 
             model_pool = self.pool.get(model)
-            case = model_pool.browse(cr, uid, hist.log_id.res_id)
+            case = model_pool.browse(cr, uid, hist.res_id)
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from or hist.email_from or False})
             if 'email_from' in fields:
                 res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
                             (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or hist.email_to or tools.config.get('email_from',False)})
+
+            signature = '\n' + (case.user_id.signature or '')
+            original = [signature]
 
             if include_original == True and 'text' in fields:
                 header = '-------- Original Message --------'
@@ -223,13 +226,10 @@ class crm_send_new_email(osv.osv_memory):
                 sentdate = 'Date: %s' % (hist.date)
                 desc = '\n%s'%(hist.description)
 
-                signature = ''
-                if case.user_id.signature:
-                    signature = '--\n' + case.user_id.signature
-
                 original = [header, sender, to, sentdate, desc, signature]
-                original = '\n'.join(original)
-                res['text']=original
+
+            res['text']= '\n'.join(original)
+
             if 'subject' in fields:
                 res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')})
             if 'state' in fields:

@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Detailed info on partner form', 
+    'name': 'Detailed information on partner form', 
     'version': '1.0', 
     'category': 'Generic Modules/Base', 
     'description': """
@@ -44,7 +44,7 @@ It adds the following fields on the partner form:
     'init_xml': [], 
     'update_xml': [
                    'security/ir.model.access.csv', 
-                   'partner_crm_view.xml'
+                   'partner_infotab_view.xml'
                    ], 
     'demo_xml': [], 
     'installable': True, 

@@ -24,18 +24,15 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Meetings">
-                <group col="6" colspan="4">
-                	<group col="6" colspan="6">
-	                    <field name="name" select="1" string="Summary"
-	                        colspan="2" />
-	                    <field name="categ_id" widget="selection"
-	                        string="Meeting Type"
-	                        groups="base.group_extended"
-	                        domain="[('object_id.model', '=', 'crm.meeting')]" />
-                        <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
-	                </group>
-                    <newline/>
-                    <field name="date" string="Start Date" required="1"
+               	<group col="6" colspan="4">
+                    <field name="name" select="1" string="Summary"
+                        colspan="2" />
+                    <field name="categ_id" widget="selection"
+                        string="Meeting Type"
+                        groups="base.group_extended"
+                        domain="[('object_id.model', '=', 'crm.meeting')]" />
+					<field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+					<field name="date" string="Start Date" required="1"
                         on_change="onchange_dates(date,duration,False)" />
                     <field name="duration" widget="float_time"
                         on_change="onchange_dates(date,duration,False)" />
@@ -60,7 +57,7 @@
                     </group>
                 </group>
                 <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
-                    <separator string="Select data for Custom Rule" colspan="8"/>
+                    <separator string="Data for Custom Rule" colspan="8"/>
                     <group col="8" colspan="4">
                         <field name="freq" />
                         <field name="interval" />
@@ -123,8 +120,7 @@
                             <separator colspan="2" string="Visibility"/>
                             <field name="class" string="Privacy"/>
                             <field name="show_as" string="Show time as" groups="base.group_extended"/>
-                            <field name="rrule" groups="base.group_extended" />
-                            <field name="exrule" groups="base.group_extended" />
+                            <field name="rrule" invisible="1" />
                             <field name="recurrent_id" invisible="1"/>
                             <field name="recurrent_uid" invisible="1"/>
                         </group>
@@ -137,6 +133,9 @@
                         <button name="case_close" string="Done"
                             states="open" type="object"
                             icon="gtk-jump-to" />
+						<button name="case_reset" string="Reset to Unconfirmed"
+                            states="open,done,cancel" type="object"
+                            icon="gtk-convert" />
                         <button name="case_open" string="Confirm"
                             states="draft" type="object"
                             icon="gtk-go-forward" />
@@ -219,7 +218,7 @@
                 <field name="date" string="Meeting Date" />
                 <field name="duration" />
                 <field name="user_id" />
-                <field name="state" invisible="1"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -265,12 +264,12 @@
         <field name="arch" type="xml">
                 <search string="Search Meetings">
                        <group col="12" colspan="4">
-                           <filter icon="terp-crm" string="My Meetings"
+                       		<filter icon="terp-project" name="current" string="Current"
+	                           domain="[('state','in',('draft', 'open'))]"
+	                           help="Current Meetings"/>
+                           <filter icon="terp-partner" string="My Meetings"
                                domain="[('user_id','=',uid)]"
                                help="My Meetings" />
-                           <filter icon="terp-crm" name="current" string="Current"
-                           domain="[('state','in',('draft', 'open'))]"
-                           help="Current Meetings"/>
                            <separator orientation="vertical"/>
                            <field name="name" select="1" string="Subject"/>
                            <field name="partner_id" select="1" />
@@ -282,6 +281,22 @@
                            </field>
                            <field name="user_id" select="1" widget="selection"/>
                        </group>
+                       <newline/>
+						<group expand="0" string="Group By..." colspan="16">
+							<filter string="Date" icon="terp-project"
+						        domain="[]" context="{'group_by':'date'}" />
+						    <filter string="Privacy" icon="terp-crm"
+						        domain="[]" context="{'group_by':'class'}" />
+						    <separator orientation="vertical" />
+						    <filter string="Responsible" icon="terp-crm" domain="[]"
+						        context="{'group_by':'user_id'}" />
+						    <filter string="Partner" icon="terp-partner" domain="[]"
+						        context="{'group_by':'partner_id'}" />
+						    <separator orientation="vertical" />
+						    <filter string="State" icon="terp-crm" domain="[]"
+						        context="{'group_by':'state'}" />
+						    <separator orientation="vertical" />
+						</group>
                 </search>
             </field>
         </record>
