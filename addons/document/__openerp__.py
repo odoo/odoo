@@ -46,6 +46,9 @@
         'report/document_report_view.xml'
     ],
     'demo_xml': [ 'document_demo.xml',],
+    'test': [
+        'test/document_test.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': None,

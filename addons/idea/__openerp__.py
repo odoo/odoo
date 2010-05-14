@@ -43,6 +43,7 @@
         'security/ir.model.access.csv',
     ],
     'demo_xml': [],
+    'test':['test/test_idea.yml'],
     'installable': True,
     'certificate': '0071515601309',
 }

@@ -554,8 +554,8 @@ class smtpclient(osv.osv):
             sids = queue.search(cr, uid, [('state','not in',['send','sending']), ('server_id','in',ids)], order="priority", limit=30)
 
         message = ""
-        if len(ids) > 1:
-            message = "sending %s emails from message queuq !" % (len(ids))
+        if len(sids) > 0:
+            message = "sending %s emails from message queue !" % (len(sids))
             logger.notifyChannel('smtp', netsvc.LOG_INFO, message)
 
         result = self. _send_emails(cr, uid, sids, {})
