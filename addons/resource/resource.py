@@ -30,7 +30,7 @@ class resource_calendar(osv.osv):
     _description = "Resource Calendar"
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
-        'company_id' : fields.many2one('res.company', 'Company', required=True),
+        'company_id' : fields.many2one('res.company', 'Company', required=False),
         'week_id' : fields.one2many('resource.calendar.week', 'calendar_id', 'Working Time'),
         'manager' : fields.many2one('res.users', 'Workgroup manager'),
     }
@@ -158,10 +158,10 @@ class resource_resource(osv.osv):
         'calendar_id' : fields.many2one("resource.calendar", "Working time", help="Define the schedule of resource"),
     }
     _defaults = {
-        'resource_type' : lambda *a: 'user',
-        'time_efficiency' : lambda *a: 1,
-        'active' : lambda *a: True,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', c)
+        'resource_type' : 'user',
+        'time_efficiency' : 1,
+        'active' : True,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', c)
     }
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):

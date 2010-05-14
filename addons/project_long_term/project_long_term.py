@@ -85,8 +85,8 @@ class project_phase(osv.osv):
 
     _columns = {
         'name': fields.char("Phase Name", size=64, required=True),
-        'date_start': fields.datetime('Starting Date'),
-        'date_end': fields.datetime('End Date'),
+        'date_start': fields.datetime('Starting Date', help="Start date of the phase"),
+        'date_end': fields.datetime('End Date', help="End date of the phase"),
         'constraint_date_start': fields.datetime('Start Date', help='force the phase to start after this date'),
         'constraint_date_end': fields.datetime('End Date', help='force the phase to finish before this date'),
         'project_id': fields.many2one('project.project', 'Project', required=True),
@@ -104,8 +104,8 @@ class project_phase(osv.osv):
      }
     _defaults = {
         'responsible_id': lambda obj,cr,uid,context: uid,
-        'state': lambda *a: 'draft',
-        'sequence': lambda *a: 10,
+        'state': 'draft',
+        'sequence': 10,
     }
     _order = "name"
     _constraints = [
@@ -237,7 +237,7 @@ class project_resource_allocation(osv.osv):
         'useability': fields.float('Useability', help="Useability of this ressource for this project phase in percentage (=50%)"),
     }
     _defaults = {
-        'useability': lambda *a: 100,
+        'useability': 100,
     }
 
 project_resource_allocation()
@@ -261,7 +261,7 @@ class task(osv.osv):
         'planned_hours': fields.float('Planned Hours', required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
     }
     _defaults = {
-         'occupation_rate':lambda *a: '1'
+         'occupation_rate': '1'
     }
 
     def onchange_planned(self, cr, uid, ids, project, user_id=False, planned=0.0, effective=0.0, date_start=None, occupation_rate=0.0):

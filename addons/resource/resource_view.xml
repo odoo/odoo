@@ -165,7 +165,7 @@
                     <field name="name" />
                     <field name="active"/>
                     <field name="company_id" widget="selection"/>
-                    <field name="calendar_id" />
+                    <field name="calendar_id" widget="selection"/>
                     <field name="resource_type" />
                     <field name="user_id" attrs="{'required':[('resource_type','=','user')]}"/>
                     <field name="time_efficiency" />
@@ -200,13 +200,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Leave Detail">
-                    <field name="name" />
+                    <field name="name"/>
                     <field name="company_id"  widget="selection"/>
-                    <field name="calendar_id" />
-                    <newline/>
-                    <field name="date_from" />
-                    <field name="date_to" />
+                    <field name="calendar_id"/>
                     <field name="resource_id"  on_change="onchange_resource(resource_id)"/>
+                    <newline/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
                 </form>
             </field>
         </record>
@@ -217,7 +217,7 @@
             <field name="arch" type="xml">
                 <tree string="Leave Detail">
                     <field name="name" />
-                    <field name="company_id" />
+                    <field name="company_id"/>
                     <field name="calendar_id" />
                     <field name="date_from" />
                     <field name="date_to" />
