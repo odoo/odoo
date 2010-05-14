@@ -19,38 +19,50 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import crm
-from datetime import datetime, timedelta
-from datetime import datetime, timedelta
-from tools.translate import _
 from base_calendar import base_calendar
+from crm import crm_case
+from datetime import datetime, timedelta
+from osv import fields, osv
+from tools.translate import _
+import time
 
-class crm_opportunity(osv.osv):
-    _name = 'crm.opportunity'
-crm_opportunity()
+class crm_lead(osv.osv, crm_case):
+    """ CRM Leads """
+    _name = 'crm.lead'
+crm_lead()
 
-
-class crm_phonecall(osv.osv):
+class crm_phonecall(osv.osv, crm_case):
     """ CRM Phonecall """
     _name = 'crm.phonecall'
 crm_phonecall()
 
 
-class crm_meeting(osv.osv):
+class crm_meeting(osv.osv, crm_case):
     """ CRM Meeting Cases """
 
     _name = 'crm.meeting'
     _description = "Meeting Cases"
     _order = "id desc"
-    _inherit = ["crm.case", "calendar.event"]
+    _inherit = ["mailgate.thread", "calendar.event"]
 
     _columns = {
+        # From crm.case
+        'name': fields.char('Summary', size=124, required=True), 
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                 domain="[('partner_id','=',partner_id)]"), 
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+                        select=True, help='Sales team to which Case belongs to.\
+                             Define Responsible user and Email account for mail gateway.'), 
+        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'id': fields.integer('ID'),
+
+        # Meeting fields
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
             ),
         'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
-        'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
+        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
         'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
                                  'event_id', 'attendee_id', 'Attendees'),
         'date_closed': fields.datetime('Closed', readonly=True),
@@ -63,9 +75,10 @@ class crm_meeting(osv.osv):
     }
 
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': lambda *a: 'draft', 
+        'active': lambda *a: 1, 
     }
-    
+
     def open_meeting(self, cr, uid, ids, context=None):
         """
         Open Crm Meeting Form for Crm Meeting.
@@ -75,13 +88,14 @@ class crm_meeting(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary value which open Crm Meeting form.
         """
+
         if not context:
             context = {}
-            
+
         data_obj = self.pool.get('ir.model.data')
-        
+
         value = {}
-        
+
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
         id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
         id4 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
@@ -93,19 +107,19 @@ class crm_meeting(osv.osv):
             id4 = data_obj.browse(cr, uid, id4, context=context).res_id
         for id in ids:
             value = {
-                    'name': _('Meeting'), 
-                    'view_type': 'form', 
-                    'view_mode': 'form,tree', 
-                    'res_model': 'crm.meeting', 
-                    'view_id': False, 
+                    'name': _('Meeting'),
+                    'view_type': 'form',
+                    'view_mode': 'form,tree',
+                    'res_model': 'crm.meeting',
+                    'view_id': False,
                     'views': [(id2, 'form'), (id3, 'tree'), (id4, 'calendar')],
-                    'type': 'ir.actions.act_window', 
-                    'res_id': base_calendar.base_calendar_id2real_id(id), 
+                    'type': 'ir.actions.act_window',
+                    'res_id': base_calendar.base_calendar_id2real_id(id),
                     'nodestroy': True
                     }
-        
-        return value
 
+        return value
+    
 crm_meeting()
 
 class calendar_attendee(osv.osv):
@@ -142,5 +156,17 @@ class calendar_attendee(osv.osv):
     }
 
 calendar_attendee()
+
+class res_partner(osv.osv):
+    """ Inherits partner and adds meetings information in the partner form """
+    _inherit = 'res.partner'
+    
+    _columns = {
+                'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+                                                     'Meetings'), 
+                }
+
+res_partner()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

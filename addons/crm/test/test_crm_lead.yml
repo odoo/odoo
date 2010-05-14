@@ -1,0 +1,112 @@
+-  |
+   In order to test the CRM in OpenERP, 
+   I will do a customer qualification process that
+   starts with a fist contact with a customer (a lead), which will be converted to a
+   business opportunity and a partner.
+-  |
+   In order to test the flow, I create a two new users "user_crm" and
+   I assign the group "salesman".
+- 
+   !record {model: res.users, id: res_users_usercrm0}:
+     company_id: base.main_company
+     context_lang: en_US
+     context_section_id: crm.section_sales_department
+     groups_id:
+       - crm.group_crm_user
+     login: user_crm
+     name: user_crm
+     password: user_crm
+
+  
+-  |
+   I start by creating a new lead "New Customer" and I provide an address to this
+   new customer, as well as an email "info@mycustomer.com".
+- 
+   !record {model: crm.lead, id: crm_lead_newcustomer0}:
+     email_from: info@mycustomer.com
+     name: New Customer
+     partner_name: Sandip zala
+     phone: (855) 924-4364
+     mobile: (333) 715-1450
+     section_id: crm.section_sales_department
+     referred: False
+     title: M.
+-  |
+   I check that the lead is in 'draft' state, 
+-    
+   !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in Draft}:
+     - state == "draft"
+-
+   I open lead by click on "Open" button,
+-   
+   !python {model: crm.lead}: |
+     self.case_open(cr, uid, [ref("crm_lead_newcustomer0")])
+       
+-  |
+   As the lead seems to be a real business opportunity, I will convert it to a
+   partner 
+   and a business opportunity by clicking on the "Convert" button.
+-  
+   !python {model: crm.lead}: |
+     lead = self.browse(cr, uid, ref('crm_lead_newcustomer0'))
+     if not lead.partner_id:
+       self.convert_opportunity(cr, uid, [ref("crm_lead_newcustomer0")], {'active_ids': [ref("crm_lead_newcustomer0")]})
+-
+   |
+   Now, select "create a new partner" option in this wizard.
+-
+   !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_0}:
+      action: 'create'
+-
+   I click on "Continue" button of this wizard.
+-
+   !python {model: crm.lead2opportunity.partner}: |
+      self.make_partner(cr, uid, [ref("crm_lead2opportunity_partner_create_0")], {'active_ids': [ref("crm_lead_newcustomer0")]})
+-
+  Now, I give value to this wizard field.     
+-
+  !record {model: crm.lead2opportunity, id: crm_lead2opportunity_stonage_0}: 
+      name:  Sandip zala
+      planned_revenue: 0.00
+      probability: 0.00
+-
+  Then, Click on "Create Opportunity" button of this wizard.
+-      
+  !python {model: crm.lead2opportunity}: |
+     self.action_apply(cr, uid, [ref('crm_lead2opportunity_stonage_0')], {'active_id': ref('crm_lead_newcustomer0')})
+
+-  |   
+   I can check that a lead and a business opportunity is now assigned to this
+   lead.
+-
+  # !python {model: crm.lead, id: crm_lead_newcustomer0}: 
+    #   - opportunity_id.id != False
+         
+-  |
+   I check that the partner associated to this lead as the same country, phone number
+   and name than the opportunity.
+-  
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref("crm_lead_newcustomer0"))
+    obj_opportunity = self.pool.get('crm.lead')
+    ids = obj_opportunity.search(cr, uid, [('name', '=', lead.partner_name)])
+    opportunity = obj_opportunity.browse(cr, uid, ids)[0]
+    assert lead.partner_name == opportunity.partner_id.name
+    assert lead.phone == opportunity.phone
+-
+  |
+  # yaml is also not working  smpt server and send new email.
+  
+- |
+  I configure with smtp server.
+- |
+  And I communicate with lead through send New mail to Lead using it email address from user which are loged.
+- |
+  I check that communication history generated when send email to lead.
+- |
+  Then,  I add a cc which receive copy of future communication between partner and users by mail.
+
+- |
+  I Reply to last Email to lead with some document attached.and check that communication history generated or not.
+
+  

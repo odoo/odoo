@@ -73,6 +73,7 @@ class base_setup_installer(osv.osv_memory):
         'report_designer':fields.boolean('Advanced Reporting',
             help="Lets you install various tools to simplify and enhance "
                  "OpenERP's report creation."),
+        'thunderbird' :fields.boolean('Thunderbird'),
         # Vertical modules
         'profile_association':fields.boolean('Associations',
             help="Installs a preselected set of OpenERP "
@@ -93,9 +94,9 @@ class base_setup_installer(osv.osv_memory):
 
 
     def onchange_moduleselection(self, cr, uid, ids, *args):
-        progress = self._progress(cr, uid) - (2.5 * len(filter(lambda x: x==1, args)))
-        if progress <= 5.0:
-            progress = 5.0
+        progress = self._progress(cr, uid) - round((len(filter(lambda x: x==1, args)))*80/len(args))
+        if progress <= 10.0:
+            progress = 10.0
         return {'value':{'progress':progress}}
 
     def modules_to_install(self, cr, uid, ids, context=None):
