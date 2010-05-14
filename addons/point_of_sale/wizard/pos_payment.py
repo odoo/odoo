@@ -44,48 +44,50 @@ class pos_make_payment(osv.osv_memory):
         """
         res = super(pos_make_payment, self).default_get(cr, uid, fields, context=context)
         
-        active_id = context and context.get('active_id',False)  
-        j_obj = self.pool.get('account.journal')
-        company_id = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
-        journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
-        
-        if journal:
-            journal = journal[0]
-        else:
-            journal = None
-        wf_service = netsvc.LocalService("workflow")
-
-        order_obj=self.pool.get('pos.order')
-        order = order_obj.browse(cr, uid, active_id, context)
-        #get amount to pay
-        amount = order.amount_total - order.amount_paid
-        if amount <= 0.0:
-            context.update({'flag': True})
-            order_obj.action_paid(cr, uid, [active_id], context)
-        elif order.amount_paid > 0.0:
-            order_obj.write(cr, uid, [active_id], {'state': 'advance'})
-        invoice_wanted_checked = False
-    
-        current_date = time.strftime('%Y-%m-%d')
+        active_id = context and context.get('active_id',False) 
+        if active_id: 
+            j_obj = self.pool.get('account.journal')
+            company_id = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
+            journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
             
-        if 'journal' in fields:
-            res.update({'journal':journal})         
-        if 'amount' in fields:
-            res.update({'amount':amount})   
-        if 'invoice_wanted' in fields:
-            res.update({'invoice_wanted':invoice_wanted_checked})               
-        if 'payment_date' in fields:
-            res.update({'payment_date':current_date})
-        if 'payment_name'  in fields: 
-            res.update({'payment_name':'Payment'})    
+            if journal:
+                journal = journal[0]
+            else:
+                journal = None
+            wf_service = netsvc.LocalService("workflow")
+    
+            order_obj=self.pool.get('pos.order')
+            order = order_obj.browse(cr, uid, active_id, context)
+            #get amount to pay
+            amount = order.amount_total - order.amount_paid
+            if amount <= 0.0:
+                context.update({'flag': True})
+                order_obj.action_paid(cr, uid, [active_id], context)
+            elif order.amount_paid > 0.0:
+                order_obj.write(cr, uid, [active_id], {'state': 'advance'})
+            invoice_wanted_checked = False
+        
+            current_date = time.strftime('%Y-%m-%d')
+                
+            if 'journal' in fields:
+                res.update({'journal':journal})         
+            if 'amount' in fields:
+                res.update({'amount':amount})   
+            if 'invoice_wanted' in fields:
+                res.update({'invoice_wanted':invoice_wanted_checked})               
+            if 'payment_date' in fields:
+                res.update({'payment_date':current_date})
+            if 'payment_name'  in fields: 
+                res.update({'payment_name':'Payment'})    
         return res
         
     def view_init(self, cr, uid, fields_list, context=None):
         res = super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
         active_id = context and context.get('active_id', False) or False        
-        order = self.pool.get('pos.order').browse(cr, uid, active_id)
-        if not order.lines:
-            raise osv.except_osv('Error!','No order lines defined for this sale ')
+        if active_id:
+            order = self.pool.get('pos.order').browse(cr, uid, active_id)
+            if not order.lines:
+                raise osv.except_osv('Error!','No order lines defined for this sale ')
         return True
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

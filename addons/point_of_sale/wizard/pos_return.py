@@ -167,10 +167,14 @@ class pos_return(osv.osv_memory):
                                                               'statement_ids':[],
                                                               'picking_id':[]})
                 for line in order_id.lines:
-                    if line.id  and (data['return%s' %line.id]!=0.0):
+                    if line.id  :
+                        try:
+                            qty= data['return%s' %line.id]
+                        except :
+                            qty= line.qty
                         new_move=stock_move_obj.create(cr, uid,{
-                            'product_qty': data['return%s' %line.id],
-                            'product_uos_qty': uom_obj._compute_qty(cr, uid,data['return%s' %line.id] ,line.product_id.uom_id.id),
+                            'product_qty': qty ,
+                            'product_uos_qty': uom_obj._compute_qty(cr, uid,qty ,line.product_id.uom_id.id),
                             'picking_id':new_picking,
                             'product_uom':line.product_id.uom_id.id,
                             'location_id':location_id,
@@ -179,7 +183,7 @@ class pos_return(osv.osv_memory):
                             'name':'%s (return)' %order_id.name,
                             'date':date_cur,
                             'date_planned':date_cur,})
-                        line_obj.copy(cr,uid,line.id,{'qty':-data['return%s' %line.id],
+                        line_obj.copy(cr,uid,line.id,{'qty':-qty  ,
                                                     'order_id': new_order,
                         })
                 order_obj.write(cr,uid, new_order, {'state':'done'})
