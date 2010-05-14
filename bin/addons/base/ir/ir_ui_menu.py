@@ -84,6 +84,9 @@ class ir_ui_menu(osv.osv):
             if count:
                 return 0
             return []
+        
+        if count and ids:
+            return ids
 
         modelaccess = self.pool.get('ir.model.access')
         user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
