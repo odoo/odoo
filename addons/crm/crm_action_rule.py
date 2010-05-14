@@ -37,7 +37,7 @@ import crm
 class case(osv.osv):
     """ Case """
 
-    _inherit = 'crm.case'
+    _inherit = 'mailgate.thread'
     _description = 'case'
 
     _columns = {
@@ -89,7 +89,7 @@ class case(osv.osv):
                 attach_to_send = None
 
                 if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'crm.case'), ('res_id', '=', case.id)])
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'mailgate.thread'), ('res_id', '=', case.id)])
                     attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
@@ -152,6 +152,18 @@ class base_action_rule(osv.osv):
     """ Base Action Rule """
     _inherit = 'base.action.rule'
     _description = 'Action Rules'
+    
+    _columns = {
+        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'trg_max_history': fields.integer('Maximum Communication History'),
+        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),
+        'regex_history' : fields.char('Regular Expression on Case History', size=128),
+        'act_section_id': fields.many2one('crm.case.section', 'Set Team to'),
+        'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
+        'act_mail_to_partner': fields.boolean('Mail to partner',help="Check \
+this if you want the rule to send an email to the partner."),
+    }
+    
 
     def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from',False), context={}):
         body = self.format_mail(obj, body)
@@ -183,16 +195,18 @@ class base_action_rule(osv.osv):
             ok = ok and (not action.trg_section_id or action.trg_section_id.id==obj.section_id.id)
         if hasattr(obj, 'categ_id'):
             ok = ok and (not action.trg_categ_id or action.trg_categ_id.id==obj.categ_id.id)
-        if hasattr(obj, 'history_line'):
-            ok = ok and (not action.trg_max_history or action.trg_max_history<=(len(obj.history_line)+1))
-            reg_history = action.regex_history
-            result_history = True
-            if reg_history:
-                ptrn = re.compile(str(reg_history))
-                if obj.history_line:
-                    _result = ptrn.search(str(obj.history_line[0].description))
-                    if not _result:
-                        result_history = False
+
+#    TODO: history_line is removed
+#        if hasattr(obj, 'history_line'):
+#            ok = ok and (not action.trg_max_history or action.trg_max_history<=(len(obj.history_line)+1))
+#            reg_history = action.regex_history
+#            result_history = True
+#            if reg_history:
+#                ptrn = re.compile(str(reg_history))
+#                if obj.history_line:
+#                    _result = ptrn.search(str(obj.history_line[0].description))
+#                    if not _result:
+#                        result_history = False
             regex_h = not reg_history or result_history
             ok = ok and regex_h
         return ok
@@ -207,7 +221,7 @@ class base_action_rule(osv.osv):
         res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
         
-        if hasattr(action, act_section_id) and action.act_section_id:
+        if hasattr(action, 'act_section_id') and action.act_section_id:
             obj.section_id = action.act_section_id
             write['section_id'] = action.act_section_id.id
 
@@ -231,13 +245,6 @@ class base_action_rule(osv.osv):
         return True
 
 
-base_action_rule()
-
-class base_action_rule_line(osv.osv):
-    """ Base Action Rule Line """
-    _inherit = 'base.action.rule.line'
-    _description = 'Base Action Rule Line'
-
     def state_get(self, cr, uid, context={}):
 
         """@param self: The object pointer
@@ -245,7 +252,7 @@ class base_action_rule_line(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
 
-        res = super(base_action_rule_line, self).state_get(cr, uid, context=context)
+        res = super(base_action_rule, self).state_get(cr, uid, context=context)
         return res + [('escalate','Escalate')] + crm.AVAILABLE_STATES
 
     def priority_get(self, cr, uid, context={}):
@@ -255,18 +262,10 @@ class base_action_rule_line(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
 
-        res = super(base_action_rule_line, self).priority_get(cr, uid, context=context)
+        res = super(base_action_rule, self).priority_get(cr, uid, context=context)
         return res + crm.AVAILABLE_PRIORITIES
 
-    _columns = {
-        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'trg_max_history': fields.integer('Maximum Communication History'),
-        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),
-        'regex_history' : fields.char('Regular Expression on Case History', size=128),
-        'act_section_id': fields.many2one('crm.case.section', 'Set Team to'),
-        'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
-        'act_mail_to_partner': fields.boolean('Mail to partner',help="Check this \
-                                if you want the rule to send an email to the partner."),
-    }
 
-base_action_rule_line()
+base_action_rule()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

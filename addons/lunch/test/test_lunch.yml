@@ -1,0 +1,130 @@
+- |
+  In order to test the Lunch module in OpenERP, 
+  I will create one lunch order and then check the effect on cashboxes and cashmoves
+  
+- |
+  Given that I have a category of lunch products "Burger".
+- 
+  !record {model: lunch.category, id: lunch_category_burger0}:
+    name: Burger
+- |
+  Given that I have a product "Club1" in this category with a price of "2.75".
+
+-    
+  !record {model: lunch.product, id: lunch_product_club1}:
+    category_id: lunch_category_burger0
+    name: Club1
+    price: 2.75 
+- |
+  Given that I have a cashbox "Employee Cashbox"
+- 
+  !record {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
+    manager: base.user_root
+    name: Employee Cashbox
+- |
+  I create a lunch order "LU001" for the "Club1" product
+- |
+  When I select the product "club1", the price of 2.75 is automatically proposed
+- 
+  !record {model: lunch.order, id: lunch_order_0}:
+    date: '2010-04-19'
+    product: 'lunch_product_club1'
+    price: 2.75
+    user_id: base.user_root
+    
+- |
+  I check that lunch order is on draft state after having created it.
+-
+  !assert {model: lunch.order, id: lunch_order_0}:
+    - state == 'draft'  
+- |
+  I confirm the order "LU001" using the "Confirm Order" wizard.
+- 
+  !record {model: lunch.order.confirm, id: lunch_order_confirm_0}:
+    confirm_cashbox: 'lunch_cashbox_cashbox0'
+-
+  I click on "Confirm Order" button of this wizard.    
+-
+  !python {model: lunch.order.confirm}: |
+    self.confirm(cr, uid, [ref('lunch_order_confirm_0')], {'active_ids': [ref('lunch_order_0')]}) 
+       
+- |
+  I check that the Cash Moves have been generated with the right box
+  name
+-
+  !assert {model: lunch.order, id: lunch_order_0}: 
+    - cashmove.id != False
+ 
+- |
+  I check that the Total on the "Employee Cashbox" is -2.75
+  
+-
+  !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
+    - sum_remain == -2.75
+      
+- |
+  I create a new lunch order "LU002" for the "Club1" product, at another date.
+- 
+  !record {model: lunch.order, id: lunch_order_1}:
+    date: '2010-04-22'
+    product: 'lunch_product_club1'
+    price: 2.75
+    user_id: base.user_root
+    
+- |
+  I confirm this order.open wizard and select "Employee Cashbox".
+- 
+  !record {model: lunch.order.confirm, id: lunch_order_confirm_1}:
+    confirm_cashbox: 'lunch_cashbox_cashbox0'
+- |
+  Now I click on "Confirm Order" button of this wizard.    
+-
+  !python {model: lunch.order.confirm}: |
+    self.confirm(cr, uid, [ref('lunch_order_confirm_1')],  {'active_ids': [ref('lunch_order_1')]})
+        
+- |
+  I check that the Total on the "Employee Cashbox" is -5.50
+-
+  !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
+    - sum_remain == -5.50  
+- |
+  I reset the "Employee Cashbox" to zero using the "Set CashBox to Zero" wizard.
+- 
+  !record {model: lunch.cashbox.clean, id: lunch_cashbox_clean_0}:
+    {}
+-
+  Now click on "Set to Zero" button of this wizard.
+-
+  !python {model: lunch.cashbox.clean, id: lunch_cashbox_clean_0}: |
+    self.set_to_zero(cr, uid, [ref('lunch_cashbox_clean_0')], {'active_ids': [ref('lunch_cashbox_cashbox0')]})
+      	  
+- |
+  I check that the Total on the "Employee Cashbox" is 0.0
+-
+  !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
+    - sum_remain == 0.00
+      
+- |
+  I cancel the order "LU002"
+- 
+  !record {model: lunch.order.cancel, id: lunch_order_cancel_0}:
+    {}
+- |
+  I click on "Yes" button of this wizard for cancel order. 
+      
+-
+  !python {model: lunch.order.cancel}: |
+    self.cancel(cr, uid, [ref('lunch_order_cancel_0')], {'active_ids': [ref('lunch_order_1')]})
+      
+- |
+  I test that the Cash Moves revord have been removed for the order LU002.
+-
+  !assert {model: lunch.order, id: lunch_order_1}: 
+    - cashmove.id == False
+    
+- |
+  I check that the Total on the "Employee Cashbox" is -2.75
+-
+  !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
+    - sum_remain == -2.75
+        

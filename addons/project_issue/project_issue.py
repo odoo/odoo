@@ -32,11 +32,11 @@ from osv import fields,osv,orm
 from osv.orm import except_orm
 from tools.translate import _
 
-class project_issue(osv.osv):
+class project_issue(osv.osv, crm.crm_case):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, id desc"
-    _inherit = 'crm.case'
+    _inherit = 'mailgate.thread'
 
     def case_open(self, cr, uid, ids, *args):
         """
@@ -84,10 +84,11 @@ class project_issue(osv.osv):
                     resource_id = False
                     if issue.user_id:
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
-                        resource_id = len(resource_ids) and resource_ids[0] or False
+                        if resource_ids and len(resource_ids):
+                            resource_id = resource_ids[0]
 
                     duration = float(ans.days)
-                    if issue.section_id.resource_calendar_id:
+                    if issue.section_id and issue.section_id.resource_calendar_id:
                         duration =  float(ans.days) * 24
                         new_dates = cal_obj.interval_get(cr,
                             uid,
@@ -109,6 +110,39 @@ class project_issue(osv.osv):
         return res
 
     _columns = {
+        'create_date': fields.datetime('Creation Date' , readonly=True), 
+        'write_date': fields.datetime('Update Date' , readonly=True), 
+        'date_deadline': fields.date('Deadline'), 
+        'date_closed': fields.datetime('Closed', readonly=True), 
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+                        select=True, help='Sales team to which Case belongs to.\
+                             Define Responsible user and Email account for mail gateway.'), 
+        'user_id': fields.many2one('res.users', 'Responsible'), 
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                 domain="[('partner_id','=',partner_id)]"), 
+        'company_id': fields.many2one('res.company', 'Company'), 
+        'description': fields.text('Description'), 
+        'state': fields.selection([
+                                    ('draft', 'Draft'), 
+                                    ('open', 'Todo'), 
+                                    ('cancel', 'Cancelled'), 
+                                    ('done', 'Closed'), 
+                                    ('pending', 'Pending'),
+                                ], 'State', size=16, readonly=True, 
+                                  help='The state is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the state is set to \'Open\'.\
+                                  \nWhen the case is over, the state is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+        'email_from': fields.char('Email', size=128, help="These people will receive email."), 
+        'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
+ will receive a copy of the future" \
+" communication between partner and users by email"), 
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', \
+                            domain="[('section_id','=',section_id),\
+                            ('object_id.model', '=', 'crm.phonecall')]"), 
+        'date_open': fields.datetime('Opened', readonly=True),
+        # Project Issue fields
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \

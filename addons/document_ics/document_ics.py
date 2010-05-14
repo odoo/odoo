@@ -332,8 +332,8 @@ class document_directory_content(osv.osv):
         return s
 document_directory_content()
 
-class crm_case(osv.osv):
-    _inherit = 'crm.case'
+class crm_meeting(osv.osv):
+    _inherit = 'crm.meeting'
     _columns = {
         'code': fields.char('Calendar Code', size=64),
         'date_deadline': fields.datetime('Deadline', help="Deadline Date is automatically\
@@ -341,7 +341,7 @@ class crm_case(osv.osv):
     }
 
     _defaults = {
-        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'crm.case'),
+        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'crm.meeting'),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -356,32 +356,10 @@ class crm_case(osv.osv):
 
         if not default: default = {}
         if not context: context = {}
-        default.update({'code': self.pool.get('ir.sequence').get(cr, uid, 'crm.case'), 'id': False})
-        return super(crm_case, self).copy(cr, uid, id, default, context)
+        default.update({'code': self.pool.get('ir.sequence').get(cr, uid, 'crm.meeting'), 'id': False})
+        return super(crm_meeting, self).copy(cr, uid, id, default, context)  
 
-    def on_change_duration(self, cr, uid, id, date, duration):
-        """ Change Duration
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param id: crm case's ID,
-            @param date: Pass the Date,
-            @param duration: Pass the duration,
-        """
-
-        if not date:
-            return {}
-        start_date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(date, "%Y-%m-%d %H:%M:%S")))
-        if duration >= 0 :
-            end = start_date + datetime.timedelta(hours=duration)
-        if duration < 0:
-            raise osv.except_osv(_('Warning !'),
-                    _('You can not set negative Duration.'))
-
-        res = {'value': {'date_deadline' : end.strftime('%Y-%m-%d %H:%M:%S')}}
-        return res
-
-crm_case()
+crm_meeting()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

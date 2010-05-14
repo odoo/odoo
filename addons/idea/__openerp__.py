@@ -45,6 +45,7 @@
     'demo_xml': [
         "idea_data.xml"
     ],
+    'test':['test/test_idea.yml'],
     'installable': True,
     'certificate': '0071515601309',
 }
