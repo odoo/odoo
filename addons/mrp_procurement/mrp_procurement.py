@@ -69,7 +69,7 @@ class mrp_procurement(osv.osv):
     _name = "mrp.procurement"
     _description = "Procurement"
     _order = 'priority,date_planned'
-    
+
     _columns = {
         'name': fields.char('Reason', size=64, required=True, help='Procurement name.'),
         'origin': fields.char('Source Document', size=64,
@@ -91,7 +91,7 @@ class mrp_procurement(osv.osv):
             " a make to order method."),
 
         'note': fields.text('Note'),
-        
+
         'property_ids': fields.many2many('mrp.property', 'mrp_procurement_property_rel', 'procurement_id','property_id', 'Properties'),
 
         'message': fields.char('Latest error', size=64, help="Exception occurred while computing procurement orders."),
@@ -144,7 +144,7 @@ class mrp_procurement(osv.osv):
 
     def check_product(self, cr, uid, ids):
         """ Checks product type.
-        @return: True or False 
+        @return: True or False
         """
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_id.type in ('product', 'consu'):
@@ -153,7 +153,7 @@ class mrp_procurement(osv.osv):
 
     def check_move_cancel(self, cr, uid, ids, context={}):
         """ Checks if move is cancelled or not.
-        @return: True or False. 
+        @return: True or False.
         """
         res = True
         ok = False
@@ -166,7 +166,7 @@ class mrp_procurement(osv.osv):
 
     def check_move_done(self, cr, uid, ids, context={}):
         """ Checks if move is done or not.
-        @return: True or False. 
+        @return: True or False.
         """
         res = True
         for proc in self.browse(cr, uid, ids, context):
@@ -190,7 +190,7 @@ class mrp_procurement(osv.osv):
         return False
 
     def _uom_compute_get(self, cr, uid, proc, context={}):
-        """ Finds UoS if product is Stockable Product. 
+        """ Finds UoS if product is Stockable Product.
         @param proc: Current procurement.
         @return: UoS or False.
         """
@@ -205,7 +205,7 @@ class mrp_procurement(osv.osv):
     #
     def quantity_get(self, cr, uid, id, context={}):
         """ Finds quantity of product used in procurement.
-        @return: Quantity of product. 
+        @return: Quantity of product.
         """
         proc = self.browse(cr, uid, id, context)
         result = self._quantity_compute_get(cr, uid, proc, context)
@@ -215,7 +215,7 @@ class mrp_procurement(osv.osv):
 
     def uom_get(self, cr, uid, id, context=None):
         """ Finds UoM of product used in procurement.
-        @return: UoM of product. 
+        @return: UoM of product.
         """
         proc = self.browse(cr, uid, id, context)
         result = self._uom_compute_get(cr, uid, proc, context)
@@ -225,7 +225,7 @@ class mrp_procurement(osv.osv):
 
     def check_waiting(self, cr, uid, ids, context=[]):
         """ Checks state of move.
-        @return: True or False 
+        @return: True or False
         """
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.move_id and procurement.move_id.state == 'auto':
@@ -244,7 +244,7 @@ class mrp_procurement(osv.osv):
 
     def check_make_to_stock(self, cr, uid, ids, context={}):
         """ Checks product type.
-        @return: True or False 
+        @return: True or False
         """
         ok = True
         for procurement in self.browse(cr, uid, ids, context=context):
@@ -299,7 +299,7 @@ class mrp_procurement(osv.osv):
         return True
 
     def test_cancel(self, cr, uid, ids):
-        """ Tests whether state of move is cancelled or not. 
+        """ Tests whether state of move is cancelled or not.
         @return: True or False
         """
         for record in self.browse(cr, uid, ids):
@@ -341,7 +341,7 @@ class mrp_procurement(osv.osv):
 
     def action_move_assigned(self, cr, uid, ids, context={}):
         """ Changes procurement state to Running and writes message.
-        @return: True 
+        @return: True
         """
         self.write(cr, uid, ids, {'state': 'running', 'message': _('from stock: products assigned.')})
         return True
@@ -361,12 +361,12 @@ class mrp_procurement(osv.osv):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
                 if not cr.fetchone()[0]:
-                    cr.execute('update mrp_procurement set message=%s where id=%s', (_('from stock and no minimum orderpoint rule defined'), procurement.id))
+                    cr.execute('update mrp_procurement set message=%s where id=%s', (_('Stock is not enough and No minimum orderpoint rule defined'), procurement.id))
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):
         """ Changes procurement state to Running.
-        @return: True 
+        @return: True
         """
         for procurement in self.browse(cr, uid, ids):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
@@ -378,7 +378,7 @@ class mrp_procurement(osv.osv):
         """
         return 0
 
-    
+
     def action_po_assign(self, cr, uid, ids, context={}):
         """ This is action which call from workflow to assign purchase order to procurements
         @return: True
@@ -387,7 +387,7 @@ class mrp_procurement(osv.osv):
 
     def action_cancel(self, cr, uid, ids):
         """ Cancels procurement and writes move state to Assigned.
-        @return: True 
+        @return: True
         """
         todo = []
         todo2 = []
@@ -413,8 +413,8 @@ class mrp_procurement(osv.osv):
         return self.check_move_done(cr, uid, ids)
 
     def action_check(self, cr, uid, ids):
-        """ Checks procurement move state whether assigned or done. 
-        @return: True 
+        """ Checks procurement move state whether assigned or done.
+        @return: True
         """
         ok = False
         for procurement in self.browse(cr, uid, ids):
@@ -425,14 +425,14 @@ class mrp_procurement(osv.osv):
 
     def action_ready(self, cr, uid, ids):
         """ Changes procurement state to Ready.
-        @return: True 
+        @return: True
         """
         res = self.write(cr, uid, ids, {'state': 'ready'})
         return res
 
     def action_done(self, cr, uid, ids):
         """ Changes procurement state to Done and writes Closed date.
-        @return: True 
+        @return: True
         """
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
@@ -454,7 +454,7 @@ class mrp_procurement(osv.osv):
         self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
         self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
                 use_new_cursor=use_new_cursor, context=context)
-        
+
 mrp_procurement()
 
 
@@ -464,7 +464,7 @@ class stock_warehouse_orderpoint(osv.osv):
     """
     _name = "stock.warehouse.orderpoint"
     _description = "Orderpoint minimum rule"
-    
+
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
@@ -492,7 +492,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
     }
-    
+
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         """ Finds location id for changed warehouse.
         @param warehouse_id: Changed id of warehouse.
@@ -503,7 +503,7 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'location_id': w.lot_stock_id.id}
             return {'value': v}
         return {}
-    
+
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         """ Finds UoM for changed product.
         @param product_id: Changed id of product.
@@ -514,7 +514,7 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
-    
+
     def copy(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
@@ -522,6 +522,6 @@ class stock_warehouse_orderpoint(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.warehouse.orderpoint') or '',
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context)
-    
+
 stock_warehouse_orderpoint()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

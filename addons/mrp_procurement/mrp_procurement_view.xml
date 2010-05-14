@@ -18,6 +18,7 @@
                     <field name="product_uom" string="UOM"/>
                     <field name="procure_method"/>
                     <field name="state"/>
+                    <field name="message"/>
                 </tree>
             </field>
         </record>
@@ -90,6 +91,7 @@
                        <filter icon="terp-mrp" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
                            help="Procurement started late" />
+                       <filter icon="terp-mrp" string="To Fix" domain="[('state', '=', 'exception'),('message','=','')]" help="Procurement Orders with exceptions and without message"/>
                        <separator orientation="vertical"/>
                        <field name="name"/>
                        <field name="origin"/>
@@ -248,6 +250,21 @@
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"
             src_model="product.product"/>
+
+        <act_window
+            context="{'product_uom': locals().has_key('uom_id') and uom_id}"
+            domain="[('product_id', '=', active_id)]"
+            id="act_mrp_procurement_2_stock_warehouse_orderpoint"
+            name="Minimum Stock Rules"
+            res_model="stock.warehouse.orderpoint"
+            src_model="mrp.procurement"/>
+
+        <act_window
+            domain="[('id', '=', product_id)]"
+            id="act_product_product_2_stock_warehouse_orderpoint"
+            name="Product"
+            res_model="product.product"
+            src_model="mrp.procurement"/>
 
     </data>
 </openerp>

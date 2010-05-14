@@ -23,7 +23,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Properties categories">
-                    <separator colspan="4" string="General Information"/>
                     <separator colspan="4" string="Property Group"/>
                     <field colspan="4" name="name" select="1" nolabel="1"/>
                     <separator colspan="4" string="Description"/>
@@ -661,7 +660,7 @@
                            help="Non confirmed manufacturing orders"/>
                        <filter icon="terp-mrp" string="Current" name="Current"
                            default="1"
-                           domain="[('state','in',('confirmed','ready'))]"
+                           domain="[('state','in',('confirmed','ready','exception'))]"
                            help="Manufacturing Orders which are waiting for raw materials"/>
                        <filter icon="terp-mrp" string="Ready"
                            domain="[('state','=','ready')]"
