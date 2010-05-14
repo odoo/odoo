@@ -46,10 +46,10 @@ class base_gtkcontactform(osv.osv_memory):
          return defaults
 
     _columns = {
-             'name':fields.char('Your Name', size=64, required=True),
+             'name':fields.char('Your Name', size=64),
              'job':fields.char('Job Title', size=64,),
-             'email':fields.char('E-mail', size=64, required=True),
-             'phone':fields.char('Phone', size=64, required=True),
+             'email':fields.char('E-mail', size=64),
+             'phone':fields.char('Phone', size=64),
              'total_employees':fields.selection([('1-5','1-5'),('5-20','5-20'),('20-100','20-100'),('100-500','100-500'),('500','500+')], 'No Of Employees', size=32),
              'industry':fields.selection([('apparel','Apparel'),('banking','Banking'),('biotechnology','Biotechnology'),('chemicals','Chemicals'),('communications','Communications'),
                                           ('construction','Construction'),('consulting','Consulting'),('education','Education'),('electronics','Electronics'),('energy','Energy'),('engineering','Engineering'),

@@ -31,10 +31,10 @@
 		       </group>
           		<group colspan="4" attrs="{'invisible':[('ebook','=',False),('updates','=',False)]}">
           		 	<separator colspan="4" string="About You"/>
-	            	<field name="name" colspan="2" required="True"/>
+	            	<field name="name" colspan="2" attrs="{'required':[('ebook','=',True),('updates','=',True)]}"/>
 	            	<field name="job" colspan="2"/>
-		            <field name="email" colspan="2"/>
-		            <field name="phone" colspan="2"/>
+		            <field name="email" colspan="2" attrs="{'required':[('ebook','=',True),('updates','=',True)]}"/>
+		            <field name="phone" colspan="2" attrs="{'required':[('ebook','=',True),('updates','=',True)]}"/>
 		            <field name="total_employees" colspan="2"/>
 		            <field name="industry" colspan="2"/>
 		        </group>
