@@ -26,27 +26,15 @@ import math
 import time
 import mx.DateTime
 from tools.translate import _
+from crm import crm_case
 
-class crm_lead(osv.osv):
+class crm_lead(osv.osv, crm_case):
     """ CRM Lead Case """
 
     _name = "crm.lead"
     _description = "Leads Cases"
     _order = "priority, id desc"
-    _inherit = ['res.partner.address', 'crm.case']
-
-    def case_open(self, cr, uid, ids, *args):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
-        """
-
-        res = super(crm_lead, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
-        return res
+    _inherit = ['res.partner.address', 'mailgate.thread']
 
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
@@ -106,22 +94,36 @@ class crm_lead(osv.osv):
         return res
 
     _columns = {
+        # From crm.case
+        'email_from': fields.char('Email', size=128, help="These people will receive email."), 
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+                        select=True, help='Sales team to which Case belongs to.\
+                             Define Responsible user and Email account for mail gateway.'), 
+        'create_date': fields.datetime('Creation Date' , readonly=True),
+        'email_cc': fields.text('Watchers Emails', size=252 , help="These \
+people will receive a copy of the future communication between partner \
+and users by email"),
+        'description': fields.text('Description'), 
+        'write_date': fields.datetime('Update Date' , readonly=True), 
 
+        # Lead fields 
         'categ_id': fields.many2one('crm.case.categ', 'Lead Source', \
                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.opportunity')]"),
+                        ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', \
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
-        'partner_name': fields.char("Company Name", size=64),
-
+        'partner_name': fields.char("Partner Name", size=64),
+        'type':fields.selection([
+            ('lead','Lead'),
+            ('opportunity','Opportunity'),
+            
+        ],'Type', help="Type is used to separate Leads and Opportunities"),        
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.lead')]"),
-        'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'),
-
         'user_id': fields.many2one('res.users', 'Salesman'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -129,14 +131,47 @@ class crm_lead(osv.osv):
                                 method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
-        'function_name': fields.char('Function', size=64),
+        'function_name': fields.char('Function', size=64), 
+        'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
+                                  help='The state is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the state is set to \'Open\'.\
+                                  \nWhen the case is over, the state is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         }
 
     _defaults = {
+        'active': lambda *a: 1, 
+        'user_id': crm_case._get_default_user, 
+        'email_from': crm_case._get_default_email, 
+        'state': lambda *a: 'draft', 
+        'section_id': crm_case._get_section, 
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
+    def case_open(self, cr, uid, ids, *args):
+        """Overrides cancel for crm_case for setting Open Date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+        res = super(crm_lead, self).case_open(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
+    
+    def case_close(self, cr, uid, ids, *args):
+        """Overrides close for crm_case for setting close date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_lead, self).case_close(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):
         """ Precomputation for converting lead to opportunity
@@ -158,7 +193,6 @@ class crm_lead(osv.osv):
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
         for case in self.browse(cr, uid, ids):
-            context.update({'opportunity_id': case.id})
             context.update({'active_id': case.id})
             if not case.partner_id:
                 data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_partner')

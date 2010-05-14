@@ -56,18 +56,19 @@
                     <field name="action" select="1" />
                     <newline/>
                     <group expand="1" string="Group By..." colspan="11" col="11">
-                        <filter string="Employee" icon="terp-sale" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter name="employee" string="Employee" icon="terp-sale" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Day" icon="terp-sale" domain="[]" context="{'group_by':'day'}"/>
                     </group>
                 </search>
             </field>
         </record>
-        
+
         <record id="open_view_attendance" model="ir.actions.act_window">
             <field name="name">Attendances</field>
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_employee":1}</field>
             <field name="search_view_id" ref="view_hr_attendance_filter" />
         </record>
 
@@ -76,7 +77,7 @@
         <menuitem
            id="menu_hr_time_tracking"
            name="Time Tracking"
-           parent="hr.menu_hr_root" sequence="5"/>
+           parent="hr.menu_hr_root" sequence="7"/>
         <menuitem action="open_view_attendance" id="menu_open_view_attendance"
             parent="menu_hr_time_tracking" groups="hr.group_hr_manager"/>
 

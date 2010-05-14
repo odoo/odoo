@@ -40,8 +40,8 @@
     ],
     'demo_xml': [
         'crm_claim_demo.xml',
-        'test/test_crm_claim.yml'
-    ],
+    ], 
+    'test': ['test/test_crm_claim.yml'], 
     'installable': True,
     'active': False,
 }

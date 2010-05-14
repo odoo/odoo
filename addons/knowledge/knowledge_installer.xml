@@ -13,14 +13,17 @@
 
           <separator string="title" position="attributes">
             <attribute name="string"
-                       >Configure Your Knowledge Management System</attribute>
+                       >Knowledge Management</attribute>
           </separator>
+          <xpath expr='//separator[@string="vsep"]' position='attributes'>
+          			<attribute name='string'></attribute>
+	      		</xpath>
           <xpath expr="//label[@string='description']"
                  position="attributes">
             <attribute name="string">From this screen, you can select various OpenERP applications which will help employees store information, distribute it and share it with one another.</attribute>
           </xpath>
-          <group colspan="8">
-            <separator string="Knowledge Management" colspan="4"/>
+          <group colspan="8" position="replace">
+          <group colspan="4">
             <field name="document_ftp"/>
             <field name="document_webdav"/>
             <field name="wiki"/>
@@ -28,6 +31,10 @@
             <field name="wiki_faq"/>
             <field name="wiki_quality_manual"/>
           </group>
+          </group>
+         <xpath expr="//button[@string='Install Modules']" position="attributes">
+          	<attribute name="string">Configure</attribute>
+         </xpath>
         </data>
       </field>
     </record>
@@ -45,6 +52,19 @@
     <record id="knowledge_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_knowledge_installer"/>
       <field name="sequence">3</field>
+      <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
     </record>
+
+    <record id="knowledge_ir_actions_todo_tree" model="ir.ui.view">
+    <field name="model">ir.actions.todo</field>
+    <field name="name">knowledge_installer_action_replace</field>
+    <field name="type">tree</field>
+    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+	<field name="arch" type="xml">
+	 <xpath expr="//button[@string='Launch']" position="replace">
+        <button name="%(action_knowledge_installer)d" states="open,skip" string="Launch" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+      </xpath>
+    </field>
+	</record>
   </data>
 </openerp>

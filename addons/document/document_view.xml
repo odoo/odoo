@@ -316,7 +316,8 @@
     <act_window domain="[('partner_id', '=', active_id)]"
         id="act_res_partner_document" name="Related Documents"
         res_model="ir.attachment"
-        src_model="res.partner"/>
+        src_model="res.partner"
+        groups="base.group_extended"/>
 
     <act_window domain="[('parent_id', '=', active_id)]"
         id="zoom_directory" name="Related Documents"

@@ -16,7 +16,9 @@
                 <form string="Action Rule">
                     <field name="name" select="1"/>
                     <field name="active"/>
+                    <field name="sequence"/>
                     <field name="max_level" />
+                    <field name="domain" colspan="4"/>
                     <notebook colspan="4">
                         <page string="Conditions">
                             <group col="2" colspan="2" name="model">
@@ -35,44 +37,45 @@
                                 <field name="trg_state_to"/>
                             </group>
                             <group col="2" colspan="2">
-                                <separator colspan="4" string="Conditions on Priority Range"/>
-                                <field name="trg_priority_from"/>
-                                <field name="trg_priority_to"/>
-                            </group>
-                            <group col="2" colspan="2">
                                 <separator colspan="4" string="Conditions on Timing"/>
                                 <field name="trg_date_type"/>
-                                <label align="1.0" string="Delay After Trigger Date:"/>
-                                <group col="2" colspan="1">
-                                    <field name="trg_date_range" nolabel="1"/>
+                                <group col="3" colspan="2" attrs="{'invisible': [('trg_date_type', '=', 'none')]}">
+                                    <field name="trg_date_range" string="Delay After Trigger Date"/>
                                     <field name="trg_date_range_type" nolabel="1"/>
-                                </group>
+	                            </group>
                             </group>
                             <separator colspan="4" string="Note"/>
-                            <label align="0.0"  string="The rule use a AND operator. The model must match all non empty fields so that the rule execute the action described in the 'Actions' tab." colspan="4"/>
+                            <label align="0.0" colspan="4" width="900"
+                            	string="The rule use a AND operator. The model must match all non empty fields so that the rule execute the action described in the 'Actions' tab." />
                         </page>
                         <page string="Actions">
                             <separator colspan="4" string="Fields to Change"/>
                             <field name="act_user_id"/>
                             <field name="act_state"/>
-                            <field name="act_priority"/>
-                            <separator colspan="4" string="E-Mail Reminders (includes the content of the object)"/>
-                            <field name="act_remind_partner"/>
-                            <field name="act_remind_attach"/>
-                            <field name="act_remind_user"/>
-                            <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
-                                <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
-                            </group>
-                            <field colspan="4" name="act_email_cc"/>
                             <separator colspan="4" string="Server Action to be Triggered"/>
                             <field name="server_action_id"/>
+                            <field name="filter_id"/>
                         </page>
                         <page string="E-Mail Actions">
-                            <separator colspan="4" string="Template of Email to Send"/>
-                            <field name="act_mail_to_user"/>
-                            <field name="act_mail_to_watchers"/>
-                            <field colspan="4" name="act_mail_to_email"/>
-                            <field colspan="4" name="act_mail_body" attrs="{'required':[('act_remind_user','=',True)]}"/>
+<!--                        	<group col="4" colspan="2">-->
+	                            <separator colspan="4" string="Template of Email to Send"/>
+	                            <field name="act_mail_to_watchers"/>
+	                            <field name="act_mail_to_user"/>
+	                            <field colspan="4" name="act_mail_to_email"/>
+<!--	                        </group>-->
+<!--	                        <group col="4" colspan="2">-->
+	                            <separator colspan="4" string="E-Mail Reminders (includes the content of the object)"/>
+	                            <field name="act_remind_partner"/>
+	                            <field name="act_remind_attach"/>
+	                            <field name="act_remind_user"/>
+	                            <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
+	                                <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
+	                            </group>
+	                            <field colspan="4" name="act_email_cc"/>
+<!--	                        </group>-->
+                            <separator colspan="4" string="Mail Body"/>
+                            <field colspan="4" name="act_mail_body" height="250"
+                            	nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
                             <separator colspan="4" string="Special Keywords to Be Used in The Body"/>
                             <label align="0.0" string="%%(object_id)s = Object ID" colspan="2"/>
                             <label align="0.0" string="%%(object_subject)s = Object subject" colspan="2"/>
@@ -83,7 +86,6 @@
                             <label align="0.0" string="%%(object_user)s = Responsible name" colspan="2"/>
                             <label align="0.0" string="%%(object_user_email)s = Responsible email" colspan="2"/>
                             <label align="0.0" string="%%(object_user_phone)s = Responsible phone" colspan="2"/>
-                            <label align="0.0" string="%% = The &apos;%%&apos; Character" colspan="2"/>
                         </page>
                     </notebook>
                 </form>
@@ -99,7 +101,9 @@
             <field name="arch" type="xml">
                 <tree string="Action Rule">
                     <field name="name" colspan="4"/>
+                    <field name="sequence"/>
                     <field name="max_level"/>
+                    <field name="domain"/>
                 </tree>
             </field>
            </record>
