@@ -10,11 +10,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="Open Page">
-             	<separator string="" colspan="6" />
-              	<label string="Want to open a wiki page? "/>
-              	<separator string="" colspan="6" />
-    	        <label string="" colspan="2" />
-    	        <group>
+              	<label string="Want to open a wiki page?" colspan="4"/>
+              	<separator string="" colspan="4"/>
+    	        <group col="4" colspan="4">
         	    <button special="cancel" string="Cancel" icon="gtk-cancel" />
                	<button name="open_wiki_page" string="Open Wiki Page" type="object" icon="gtk-ok"/>
                	</group>

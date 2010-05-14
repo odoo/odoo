@@ -11,11 +11,10 @@
             <field name="arch" type="xml">
               <form string=" To Load Data">
     			<field name='user_name'/>
-    			<separator string="" colspan="4" />
-    	        <label string="" colspan="2" />
-    	        <group colspan="4">
-        	    <button special="cancel" string="Cancel" />
-            	<button name="clear_logs" string="Clear Logs" type="object"/>
+    			<separator string="" colspan="6" />
+    	        <group col="4" colspan="4">
+        	    <button special="cancel" string="Cancel" icon="gtk-cancel" />
+            	<button name="clear_logs" string="Clear Logs" type="object" icon="gtk-clear"/>
             	</group>
 			</form>
             </field>
