@@ -48,14 +48,20 @@ class idea_post_vote(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         """
         idea_obj = self.pool.get('idea.idea')
+        vote_obj = self.pool.get('idea.vote')
+        
         for idea in idea_obj.browse(cr, uid, context.get('active_ids', [])):
             
             for active_id in context.get('active_ids'):
-                cr.execute('select count(id) from idea_vote where user_id=%s\
-                                                      and idea_id=%s' % (uid, active_id))
-                res = cr.fetchone()[0]
+                
+                vote_ids = vote_obj.search(cr, uid, [('user_id', '=', uid), ('idea_id', '=', active_id)])
+                vote_obj_id = vote_obj.browse(cr, uid, vote_ids)
+                count = 0
+                for vote in vote_obj_id:
+                    count += 1
+                    
                 user_limit = idea.vote_limit
-                if  res >= user_limit:
+                if  count >= user_limit:
                    raise osv.except_osv(_('Warning !'),_("You can not give Vote for this idea more than %s times") % (user_limit))
         
             if idea.state != 'open':
