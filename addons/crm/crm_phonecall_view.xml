@@ -53,7 +53,7 @@
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
                     states="draft,open,pending"
-                     name="action_make_meeting" type="action" />
+                     name="action_make_meeting" type="object" />
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                 <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
@@ -72,7 +72,7 @@
         <field name="arch" type="xml">
             <form string="Phone Call">
                 <group colspan="4" col="7">
-                    <field name="name" string="Call Summary"/>
+                    <field name="name" string="Summary"/>
                     <field name="date" string="Planned Date"/>
                     <field name="user_id"/>
                     <button string="Schedule a Meeting"
@@ -137,6 +137,93 @@
             </form>
         </field>
     </record>
+	
+	<!--Inbound Phonecalls Form View -->
+
+	<record model="ir.ui.view" id="crm_case_inbound_phone_form_view">
+        <field name="name">CRM - Inbound Phone Call Form</field>
+        <field name="model">crm.phonecall</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Phone Call">
+                <group colspan="4" col="7">
+                    <field name="name" string="Summary"/>
+                    <field name="date" string="Planned Date"/>
+                    <field name="user_id"/>
+                    <button string="Schedule a Meeting"
+                        name="action_make_meeting"
+                        icon="gtk-redo"
+                        type="object" />
+
+                    <field name="partner_phone"/>
+                    <field name="duration"/>
+                    <field name="section_id" colspan="1" widget="selection" />
+                    <button string="Convert to Opportunity"
+                        name="%(phonecall2opportunity_act)d"
+                        icon="gtk-index" type="action"
+                        attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                    <label colspan="6"  string=""/>
+                    <button string="Schedule Other Call"
+                     icon="gtk-redo"
+                    name="%(phonecall_to_phonecall_act)d"
+                    type="action"  />
+
+                </group>
+                <group col="3" colspan="2">
+                    <separator colspan="3" string="Contacts" />
+                    <field name="partner_id"
+                        on_change="onchange_partner_id(partner_id, email_from)" />
+                    <button string="Create a Partner"
+                        icon="terp-crm"
+                        name="%(action_crm_phonecall2partner)d"
+                        type="action"
+                        attrs="{'invisible':[('partner_id','!=',False)]}" />
+                    <newline/>
+                    <field name="partner_address_id" string="Contact"
+                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                    <newline/>
+                    <field name="partner_phone" />
+                    <newline/>
+                    <field name="partner_mobile" />
+                </group>
+                <group col="2" colspan="2">
+                    <separator colspan="2" string="Categorization" />
+                    <field name="priority"/>
+                    <field name="opportunity_id"/>
+                </group>
+                <separator string="Description" colspan="4" />
+                <field name="description" nolabel="1" colspan="4" />
+                <separator colspan="4" />
+            </form>
+        </field>
+    </record>
+    
+    <!--Inbound Phonecalls Tree View -->
+    
+    <record model="ir.ui.view" id="crm_case_inbound_phone_tree_view">
+        <field name="name">CRM - Inbound Phone Calls Tree</field>
+        <field name="model">crm.phonecall</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)">
+                <field name="date" string="Date"/>
+                <field name="name" string="Call Summary"/>
+                <field name="partner_id" string="Partner"/>
+                <field name="partner_contact"/>
+                <field name="partner_phone"/>
+                <field name="user_id"/>
+                <field name="state" invisible="1"/>
+                <button string="Opportunity"
+                    name="%(phonecall2opportunity_act)d"
+                    states="draft,open,pending"
+                    icon="gtk-convert"
+                    type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                <button string="Meeting"
+                    states="draft,open,pending" icon="gtk-redo"
+                     name="action_make_meeting" type="object" />
+            </tree>
+        </field>
+    </record>
 
 <!-- Phonecalls Calendar View -->
 
@@ -190,7 +277,7 @@
                        help="My section" />
                </field>
                <newline/>
-               <group expand="1" string="Group By..." colspan="4">
+               <group expand="0" string="Group By..." colspan="4">
                    <filter string="Partner" icon="terp-crm" domain="[]"
                        context="{'group_by':'partner_id'}" />
                    <filter string="Responsible" icon="terp-crm"
@@ -204,5 +291,20 @@
            </search>
         </field>
     </record>
+    
+        <!--  Partners inherited form -->
+        
+    <record id="view_phonecall_partner_info_form" model="ir.ui.view">
+            <field name="name">res.partner.phonecall.info.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+               		<field name="meeting_ids" position="after">
+               			<field name="phonecall_ids" colspan="4" nolabel="1" />
+               		</field>
+            </field>
+        </record>
+    
     </data>
 </openerp>

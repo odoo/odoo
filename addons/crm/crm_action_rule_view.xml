@@ -3,9 +3,9 @@
     <data>
         <!-- Case rules -->
         <record id="view_base_action_rule_line_form1" model="ir.ui.view">
-            <field name="name">base.action.rule.line.form.inherit</field>
-            <field name="model">base.action.rule.line</field>
-            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_line_form"/>
+            <field name="name">base.action.rule.form.inherit</field>
+            <field name="model">base.action.rule</field>
+            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <group name="partner" position="after">
@@ -19,9 +19,9 @@
        </record>
 
        <record id="view_base_action_rule_line_form2" model="ir.ui.view">
-            <field name="name">base.action.rule.line.form2.inherit</field>
-            <field name="model">base.action.rule.line</field>
-            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_line_form"/>
+            <field name="name">base.action.rule.form2.inherit</field>
+            <field name="model">base.action.rule</field>
+            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <group name="partner" position="after">
@@ -35,17 +35,29 @@
        </record>
 
        <record id="view_base_action_rule_line_form3" model="ir.ui.view">
-            <field name="name">base.action.rule.line.form3.inherit</field>
-            <field name="model">base.action.rule.line</field>
-            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_line_form"/>
+            <field name="name">base.action.rule.form3.inherit</field>
+            <field name="model">base.action.rule</field>
+            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="act_user_id" position="after">
                     <field name="act_section_id"/>
                     <field name="act_categ_id"/>
+                </field>
+            </field>
+       </record>
+       
+       <record id="view_base_action_rule_line_form4" model="ir.ui.view">
+            <field name="name">base.action.rule.form4.inherit</field>
+            <field name="model">base.action.rule</field>
+            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="act_mail_to_watchers" position="before">
                     <field name="act_mail_to_partner"/>
                 </field>
             </field>
        </record>
+
     </data>
 </openerp>

@@ -86,6 +86,7 @@ class crm_lead2partner(osv.osv_memory):
                 res.update({'partner_id': partner_id})
             if 'action' in fields:
                 res.update({'action': partner_id and 'exist' or 'create'})
+
         return res
     
     def open_create_partner(self, cr, uid, ids, context=None):

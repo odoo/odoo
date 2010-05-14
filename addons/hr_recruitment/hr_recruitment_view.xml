@@ -134,29 +134,30 @@
                        <field name="id"/>
                        <field name="active"/>
                        <field name="log_ids" nolabel="1" colspan="4">
-                           <form string="Actions">
-                               <separator string="Action Information" colspan="4"/>
-                               <field name="name" colspan="4"/>
-                               <field name="date"/>
-                               <field name="user_id"/>
-                           </form>
-                       </field>
-                   </page>
+                        <tree string="Logs">
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </tree>
+                        <form string="Logs">
+                            <separator string="Action Information" colspan="4"/>
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </form>
+                    </field>
+                    </page>
                    <page string="Emails" groups="base.group_extended">
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="CC"/>
                        </group>
-                       <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                       <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
-                            <group col="7" colspan="4">
+                            <group col="6" colspan="4">
                                 <field name="date"/>
                                 <field name="email_to"/>
                                 <field name="email_from"/>
-                                <button
-                                     string="Add a CC"
-                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                               icon="gtk-add" type="action"/>
-                                   </group>
+							</group>
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
@@ -232,7 +233,7 @@
                        help="My Department"/>
                </field>
                <newline/>
-                <group expand="1" string="Group By..." colspan="11" col="20">
+                <group expand="0" string="Group By..." colspan="11" col="20">
                     <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Responsible" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
