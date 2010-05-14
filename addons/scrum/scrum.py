@@ -126,15 +126,8 @@ class scrum_sprint(osv.osv):
             context = {}
         if default is None:
             default = {}
-        data = self.read(cr, uid, id, context=context)
-        data.pop('backlog_ids')
-        data.pop('meeting_ids')
-        data.update({'scrum_master_id': data['scrum_master_id'][0],
-                'product_owner_id': data['product_owner_id'][0],
-                'project_id': data['project_id'][0],
-                })
-        return self.create(cr, uid, data, context=context)
-
+        default.update({'backlog_ids': [], 'meeting_ids': []})
+        return super(scrum_sprint, self).copy(cr, uid, id, default=default, context=context)
 
     def onchange_project_id(self, cr, uid, ids, project_id):
         v = {}
