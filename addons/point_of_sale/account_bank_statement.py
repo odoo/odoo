@@ -132,6 +132,8 @@ class account_bank_statement(osv.osv):
     _columns = {
           'journal_id': fields.many2one('account.journal', 'Journal', required=True),
           'balance_start': fields.function(_get_starting_balance, method=True, string='Starting Balance', type='float',digits=(16,2)),
+         # 'balance_start': fields.float('Starting Balance',digits=(16,2)),
+         # 'balance_end': fields.float('Balance',digits=(16,2)),
           'state': fields.selection([('draft', 'Draft'),('confirm', 'Confirm'),('open','Open')],
                                     'State', required=True, states={'confirm': [('readonly', True)]}, readonly="1"),
           'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, string="Total of Entry encoding"),
@@ -140,8 +142,6 @@ class account_bank_statement(osv.osv):
           'starting_details_ids': fields.one2many('singer.statement', 'starting_id', string='Starting Details'),
           'ending_details_ids': fields.one2many('singer.statement', 'ending_id', string='Ending Details'),
           'name': fields.char('Name', size=64, required=True, readonly=True),
-          'company_id':fields.many2one('res.company', 'Company', required=True),
-          'user_id': fields.many2one('res.users',ondelete='cascade',string='User', readonly=True),        
 
     }
     _defaults = {
@@ -149,8 +149,7 @@ class account_bank_statement(osv.osv):
           'name': lambda *a: '/',
           'date': lambda *a:time.strftime("%Y-%m-%d %H:%M:%S"),
           'journal_id': _default_journal_id,
-          'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-          'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id        
+
          }
 
     def create(self, cr, uid, vals, context=None):
@@ -211,13 +210,12 @@ class account_bank_statement(osv.osv):
         @return: True 
         """       
         obj_inv = self.browse(cr, uid, ids)[0]
-        sequence_obj=self.pool.get('ir.sequence')
         s_id=obj_inv.journal_id
         if s_id.statement_sequence_id:
             s_id=s_id.id
-            number = sequence_obj.get_id(cr, uid, s_id)
+            number = self.pool.get('ir.sequence').get_id(cr, uid, s_id)
         else:
-            number = sequence_obj.get(cr, uid,
+            number = self.pool.get('ir.sequence').get(cr, uid,
                             'account.bank.statement')
 
         self.write(cr, uid, ids, {'date':time.strftime("%Y-%m-%d %H:%M:%S"), 'state':'open', 'name':number})
@@ -246,8 +244,17 @@ class account_bank_statement(osv.osv):
                     raise osv.except_osv(_('Invalid action !'), _(' You can not confirm your cashbox, Please enter ending details, missing value matches to "%s"')%(abs(Decimal(str(val))-(Decimal(str(val_statement_line))+Decimal(str(val2))))))
 
             self.write(cr, uid, statement.id, {'balance_end_real':Decimal(str(val_statement_line))+Decimal(str(val2)),'closing_date':time.strftime("%Y-%m-%d %H:%M:%S"),'state':'draft'})
+           # self.write(cr, uid, statement.id, {'balance_end_real':bal_st+val_statement_line,'closing_date':time.strftime("%Y-%m-%d %H:%M:%S"),'state':'draft'})
         return  super(account_bank_statement, self).button_confirm(cr, uid, ids, context=None)
 
 account_bank_statement()
+
+#class singer_account_bank_statement_line(osv.osv):
+#    _inherit = 'account.bank.statement.line'
+#    _columns = {
+#           'pos_statement_id': fields.many2one('pos.order',ondelete='cascade'),
+#     }
+#
+#singer_account_bank_statement_line()
 
 

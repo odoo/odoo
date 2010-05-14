@@ -5,7 +5,7 @@
      Delivery based on delivered quantities.
   
 -     
- I have creating the partner associated with the transport
+ I create the partner associated with the transport
 - 
   Creating a res.partner record
 - 
@@ -21,7 +21,7 @@
     
 - 
   
-  I have creating associated product for delivery.
+  I create associated product for delivery.
 - 
   !record {model: product.product, id: product_product_deliverybypost0}:
     categ_id: product.product_category_services
@@ -44,7 +44,7 @@
     partner_id: res_partner_thepost0
     product_id: product_product_deliverybypost0
 - 
-  I Create a delivery grid record and define the region for which the tariffs in the grid will be applicable.
+  I create a delivery grid record and define the region for which the tariffs in the grid will be applicable.
   Then set the condition for which this rule is applicable
 - 
   !record {model: delivery.grid, id: delivery_grid_weight0}:
@@ -108,21 +108,19 @@
   !record {model: delivery.sale.order, id: delivery_sale_order_0}:
     carrier_id: delivery_carrier_theopenerpexperss0
 - 
-   To add the delivery charges on the quotation, I have click on Delivery costs button and select the carrier 
+   To add the delivery charges on the quotation, I click on Delivery costs button and select the carrier. 
 - 
   !python {model: delivery.sale.order}: |
     self.delivery_set(cr, uid, [ref("delivery_sale_order_0")], {"lang": "en_US", "active_model":
       "sale.order", "tz": False, "order_id": 8, "active_ids": [ref("sale_order_so0")],
       "active_id": ref("sale_order_so0"), })
--
-  I check that I have two  order line on the sale order 
 - 
-  Performing a workflow action order_confirm on module sale.order
+  I confirm the sale order.
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}    
     
 -
- To check the  Invoicing based on deliveries.I have created new sale order and picking_policy is Complete Delivery
+ To check the  Invoicing based on deliveries.I create new sale order and picking_policy is Complete Delivery.
 - 
   !record {model: sale.order, id: sale_order_test_complete0}:
     name: Test/Complete Deliver  
@@ -148,7 +146,7 @@
     
     
 - 
-  Performing a workflow action order_confirm on module sale.order
+  I confirm the sale order.
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_test_complete0}
 - 
@@ -158,19 +156,12 @@
     journal_id: account.sales_journal
     type: out_invoice
 - 
-  Create a Invoice form picking
+  Create a Invoice form picking.
 - 
   !python {model: stock.invoice.onshipping}: |
     so=self.pool.get('sale.order').browse(cr,uid,ref('sale_order_test_complete0')) 
     self.create_invoice(cr, uid, [ref("stock_invoice_onshipping_0")], {"lang": "en_US",
       "tz": False, "active_model": "stock.picking", "contact_display": "partner",
       "active_ids": [so.picking_ids[0].id], "active_id": so.picking_ids[0].id })
--
-  To check  invoice corresponding to the delivery charge in invoice line
-- 
-  !python {model: account.invoice}: |
-    import base
-    so=self.pool.get('sale.order').browse(cr,uid,ref('sale_order_test_complete0'))
-    ids=len(so.invoice_ids[0].invoice_line)
-    assert (ids<2), "Invoice   hasn't Created"
+
     

@@ -232,7 +232,7 @@
     property_account_income: account_account_productsale0
     
 - 
-  I have creating Physical Inventory
+  I create Physical Inventory for the products.
 -  
    !record {model: stock.inventory, id: stock_inventory_physicalinventoy0}:  
     company_id: base.main_company
@@ -254,7 +254,7 @@
     
 
 - 
-  I have Confirm the Inventory
+  I confirm the Inventory for HP CD writers.
 - 
   !python {model: stock.inventory}: |
    self.action_done(cr,uid,[ref('stock_inventory_physicalinventoy0')])
@@ -265,7 +265,7 @@
     location_id: stock.stock_location_stock
        
 - 
-  I have fill_inventory on module stock.fill.inventory
+  I fill inventory for HP CD writers.
 - 
   !python {model: stock.fill.inventory}: |
     self.fill_inventory(cr, uid, [ref("stock_fill_inventory_0")], {"lang": 'en_US',
@@ -273,7 +273,7 @@
       [ref("stock_inventory_physicalinventoy0")], "active_id": ref("stock_inventory_physicalinventoy0"), })
 
 - 
-  Creating a stock.move.split record
+  Creating a stock.move.split record.
 - 
   !record {model: stock.move.split, id: stock_move_split_0}:
     line_ids:
@@ -283,7 +283,7 @@
     
     
 - 
-  Split into production line
+  Split into production line.
 - 
   !python {model: stock.move.split}: |
     move_obj=self.pool.get('stock.move')
@@ -295,7 +295,7 @@
       })
 -
  
-  In Order to test the picking i have  create picking with move lines
+  In Order to test the picking I create picking with move lines.
 - 
   !record {model: stock.picking, id: stock_picking_0}:
     address_id: res_partner_address_0
@@ -318,7 +318,7 @@
     
     
 - 
-  Performing an osv_memory action draft_force_assign on module stock.picking
+  I click on draft_force_assign on picking.
 - 
   !python {model: stock.picking}: |
     self.draft_force_assign(cr, uid, [ref("stock_picking_0")], {"lang": "en_US", "active_model":
@@ -328,7 +328,7 @@
     
     
 - 
-  Performing an osv_memory action force_assign on module stock.picking
+  I click on force_assign on picking.
 - 
   !python {model: stock.picking}: |
     self.force_assign(cr, uid, [ref("stock_picking_0")], {"lang": "en_US", "active_model":
@@ -338,7 +338,7 @@
     
     
 -
-  Performing an osv_memory action do_partial on module stock.partial.picking
+  I confirm the picking.
 -  
   !python {model: stock.picking }: |
    import time
