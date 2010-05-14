@@ -327,12 +327,6 @@
     for invoice in invoice_ids:
       wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr) 
 -
-  I will verify the picking associated with the sale order sale_order_so0
-- 
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
-    assert so.picking_ids,"Picking has not been generated for sale_order_so0"
--
   Creating a account.invoice.pay record
 - 
   !record {model: account.invoice.pay, id: account_invoice_pay_tst0}:
@@ -370,7 +364,7 @@
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))   
     self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
       {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
-      [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id, })
+      [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id })
     
     
 -
@@ -384,7 +378,9 @@
 - 
   !python {model: stock.picking }: |
    import time
-   picking_id = self.search(cr, uid, [('origin','=','SO004'),('type','=','out')])
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       pick.force_assign(cr, uid)
@@ -399,12 +395,15 @@
           'product_qty': move.product_qty,
           'product_uom': move.product_uom.id,
       } 
+      print "=====>>>>>>",partial_datas
       self.do_partial(cr, uid, picking_id,partial_datas)
 -
   I verify that picking order is in done state
 -
   !python {model: stock.picking }: |
-   picking_id = self.search(cr, uid, [('origin','=','SO004'),('type','=','out')])
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))  
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    if picking_id:
      pick = self.browse(cr,uid,picking_id[0])
      assert (pick.state) =='done', "Picking for SO is not in done state."
