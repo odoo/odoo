@@ -17,11 +17,12 @@
     			<field name="company_id" invisible="1"/>
 				<field name="partner_id" invisible="1"/>
 				<field name="day" invisible="1"/>
-				<field name="nbr" string="#Leads" sum="#Leads"/>
+				<field name="nbr" string="#Leads" sum="#Leads" attrs="{'string': 'type'=='opportunity' and '#opp' or '#lead'}"/>
                 <field name="delay_close" sum='Avg Closing Delay'/>
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="categ_id" invisible="1"/>
+                <field name="type" invisible="1"/>
              </tree>
             </field>
         </record>
@@ -31,13 +32,18 @@
         <record id="view_report_crm_lead_form" model="ir.ui.view">
             <field name="name">crm.lead.report.form</field>
             <field name="model">crm.lead.report</field>
-            <field name="inherit_id" ref="view_crm_case_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="nbr" position="after">
+                <form string="Cases">
+                    <field name="name" select="1"/>
+                    <field name="month" select="1"/>
+                    <field name="user_id" select="1"/>
+					<field name="section_id" select="1"/>
+                    <field name="nbr" select="1"/>
                     <field name="delay_close"/>
                     <field name="stage_id"/>
-                </field>
+                    <field name="state" select="1"/>
+                </form>
             </field>
         </record>
 
@@ -57,28 +63,135 @@
         </record>
 
 <!-- Leads by user and section Search View -->
-
-        <record id="view_report_crm_lead_filter" model="ir.ui.view">
+		
+		<record id="view_report_crm_lead_filter" model="ir.ui.view">
             <field name="name">crm.lead.report.select</field>
             <field name="model">crm.lead.report</field>
-            <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-            <data>
-                <xpath expr='//search[@string="Search"]/group[@string="Extended options..."]/filter[@string="Cancel"]' position='after'>
-                <group>
-            	    <separator orientation="vertical"/>
-            	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-	            </group>
-            	</xpath>
-			<xpath
-				expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
-				position='after'>
-				<filter string="Stage" icon="terp-sale" domain="[]"
-					context="{'group_by':'stage_id'}" />
-			</xpath>
-			</data>
+                <search string="Search">
+                  <group col="16" colspan="8">
+                   		<!--  <filter string="This Year" name="This Year" icon="terp-hr"
+                   			domain="[('name','=',time.localtime()[0])]"/>-->
+                   		<filter string="This Year" icon="terp-hr"
+                   			domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+
+                   		<!-- <filter string="This Month" name="This Year" icon="terp-hr"
+                   			domain="[('month','=',time.strftime('%%m'))]" />-->
+                       <filter string="This Month" icon="terp-hr" name="This Month"
+                    	   domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+
+                       <filter icon="gtk-media-rewind" string="7 Days" separator="1"
+                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+
+                   		<separator orientation="vertical" />
+                        <filter icon="terp-hr"
+                    		string="Draft"
+                    		domain="[('state','=','draft')]"/>
+					   <filter icon="terp-hr"
+                    		string="Open"
+                    		domain="[('state','=','open')]"/>
+					   <filter icon="terp-hr"
+                    		string="Pending"
+                    		domain="[('state','=','pending')]"/>
+
+                   		<separator orientation="vertical" />
+                   		<field name="section_id"
+                   			default="context.get('section_id', False)"
+                   			widget="selection"
+                   			context="{'invisible_section': False}">
+
+                   			<filter icon="terp-crm"
+                   				context="{'invisible_section': False}"
+                   				domain="[('section_id.user_id','=',uid)]"
+                   				help="My section" />
+
+                   		</field>
+                   		<field name="company_id" widget="selection">
+                           <filter icon="terp-crm"
+                        context="{'invisible_section': False}"
+                        domain="[('section_id.user_id.company_id','=',uid)]"
+                        help="My company"/>
+                        </field>
+
+                      	<field name="user_id" select="1" widget="selection">
+	            			<filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
+               			</field>
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Extended options..." colspan="10" col="12">
+                         <filter icon="terp-sale"
+                    		string="Done"
+                    		domain="[('state','=','done')]"/>
+                    	<filter icon="terp-sale"
+                    		string="Cancel"
+                    		domain="[('state','=','cancel')]"/>
+                   		<group>
+		            	    <separator orientation="vertical"/>
+		            	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+			                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+			            </group>
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="User" name="User" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'user_id'}" />
+
+                        <filter string="Company" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'company_id'}" />
+
+                        <filter string="Section" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'section_id'}" />
+                        	
+                        <separator orientation="vertical" />
+                        <filter string="State" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'state'}" />
+
+						<filter string="Stage" icon="terp-sale" domain="[]"
+							context="{'group_by':'stage_id'}" />
+					
+                        <filter string="Category" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'categ_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="Day" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'day'}"/>
+
+                        <filter string="Month" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'month'}" />
+
+                        <filter string="Year" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'name'}" />
+
+                  </group>
+               </search>
+            </field>
+        </record>
+
+<!--	 Opportunity tree view  -->
+
+	<record id="view_report_crm_opportunity_tree" model="ir.ui.view">
+            <field name="name">crm.lead.report.tree</field>
+            <field name="model">crm.lead.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            <tree string="Opportunities">
+				<field name="name" invisible="1"/>
+				<field name="month" invisible="1"/>
+				<field name="section_id" invisible="1"/>
+				<field name="user_id" invisible="1"/>
+    			<field name="company_id" invisible="1"/>
+				<field name="partner_id" invisible="1"/>
+				<field name="day" invisible="1"/>
+				<field name="nbr" string="#Opportunities" sum="#Opportunities"/>
+                <field name="delay_close" sum='Avg Closing Delay'/>
+                <field name="state"  invisible="1"/>
+                <field name="stage_id"  invisible="1"/>
+                <field name="categ_id" invisible="1"/>
+                <field name="type" invisible="1"/>
+             </tree>
             </field>
         </record>
 
@@ -90,8 +203,8 @@
             <field name="view_type">form</field>
             <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree,graph</field>
+            <field name="domain">[('type', '=', 'lead')]</field>
             <field name="search_view_id" ref="view_report_crm_lead_filter"/>
-
         </record>
 
        <record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
@@ -107,10 +220,38 @@
             <field name="view_id" ref="view_report_crm_lead_graph"/>
             <field name="act_window_id" ref="action_report_crm_lead"/>
        </record>
+	
+	<record id="action_report_crm_opportunity" model="ir.actions.act_window">
+            <field name="name">Opportunities</field>
+            <field name="res_model">crm.lead.report</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="domain">[('type', '=', 'opportunity')]</field>
+            <field name="search_view_id" ref="view_report_crm_lead_filter"/>
+        </record>
 
+       <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_crm_opportunity_tree"/>
+            <field name="act_window_id" ref="action_report_crm_opportunity"/>
+       </record>
+
+       <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_lead_graph"/>
+            <field name="act_window_id" ref="action_report_crm_opportunity"/>
+       </record>
+	
        <menuitem name="Leads" id="menu_report_crm_leads_tree"
            groups="base.group_extended"
            parent="base.next_id_64" action="action_report_crm_lead" />
+
+		<menuitem name="Opportunities" id="menu_report_crm_opportunities_tree"
+           groups="base.group_extended"
+           parent="base.next_id_64" action="action_report_crm_opportunity" />
 
     </data>
 </openerp>

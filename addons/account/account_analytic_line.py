@@ -160,5 +160,17 @@ class timesheet_invoice(osv.osv):
         )""")
 timesheet_invoice()
 
+
+class res_partner(osv.osv):
+    """ Inherits partner and adds contract information in the partner form """
+    _inherit = 'res.partner'
+    
+    _columns = {
+                'contract_ids': fields.one2many('account.analytic.account', \
+                                                    'partner_id', 'Contracts'), 
+                }
+
+res_partner()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

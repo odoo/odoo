@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from dateutil import parser
 from dateutil import rrule
 from osv import fields, osv
@@ -36,7 +36,7 @@ months = {
     10: "October", 11: "November", 12: "December"
 }
 
-def get_recurrent_dates(rrulestring, exdate, startdate=None):
+def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
     """
     Get recurrent dates based on Rule string considering exdate and start date
     @param rrulestring: Rulestring
@@ -56,6 +56,8 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None):
     for date in exdate:
         datetime_obj = todate(date)
         rset1._exdate.append(datetime_obj)
+    if exrule:
+        rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
     re_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), rset1._iter())
     return re_dates
 
@@ -176,28 +178,12 @@ html_invitation = """
                 </div>
                 </td>
             </tr>
-            <tr valign="top">
-                <td><b>Are you coming?</b></td>
-                <td><b>:</b></td>
-                <td colspan="3">
-                <UL>
-                    <LI>YES</LI>
-                    <LI>NO</LI>
-                    <LI>MAYBE</LI>
-                </UL>
-                </td>
-            </tr>
         </table>
         </td>
     </tr>
 </table>
 <table border="0" cellspacing="10" cellpadding="0" width="100%%"
     style="font-family: Arial, Sans-serif; font-size: 14">
-    <tr>
-        <td width="100%%"><b>Note:</b> If you are interested please reply this
-        mail and keep only your response from options <i>YES, NO</i>
-        and <i>MAYBE</i>.</td>
-    </tr>
     <tr>
         <td width="100%%">From:</td>
     </tr>
@@ -257,22 +243,22 @@ class calendar_attendee(osv.osv):
                                         attdata.sent_by_uid.address_id.email)
             if name == 'cn':
                 if attdata.user_id:
-                    result[id][name] = self._get_address(attdata.user_id.name, attdata.email)
+                    result[id][name] = attdata.user_id.name
                 elif attdata.partner_address_id:
-                    result[id][name] = self._get_address(attdata.partner_id.name, attdata.email)
+                    result[id][name] = attdata.partner_address_id.name or attdata.partner_id.name
                 else:
-                    result[id][name] = self._get_address(None, attdata.email)
+                    result[id][name] = attdata.email or ''
             if name == 'delegated_to':
                 todata = []
-                for parent in attdata.parent_ids:
-                    if parent.email:
-                        todata.append('MAILTO:' + parent.email)
+                for child in attdata.child_ids:
+                    if child.email:
+                        todata.append('MAILTO:' + child.email)
                 result[id][name] = ', '.join(todata)
             if name == 'delegated_from':
                 fromdata = []
-                for child in attdata.child_ids:
-                    if child.email:
-                        fromdata.append('MAILTO:' + child.email)
+                for parent in attdata.parent_ids:
+                    if parent.email:
+                        fromdata.append('MAILTO:' + parent.email)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
                 if attdata.ref:
@@ -383,49 +369,72 @@ property or property parameter."),
         'state': lambda *x: 'needs-action', 
     }
 
-    response_re = re.compile("Are you coming\?.*\n*.*(YES|NO|MAYBE).*", re.UNICODE)
-
-    def msg_new(self, cr, uid, msg):
-        """ 
+    def get_ics_file(self, cr, uid, event_obj, context=None):
+        """
+        Returns iCalendar file for the event invitation
         @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks, 
-        """
-        return False
-
-    def msg_act_get(self, msg):
-        """
-        Get Message.
-        @param self: The object pointer
-        @return: dictionary of actions which contain state field value.
-        """
-
-        mailgate_obj = self.pool.get('mail.gateway')
-        body = mailgate_obj.msg_body_get(msg)
-        actions = {}
-        res = self.response_re.findall(body['body'])
-        if res:
-            actions['state'] = res[0]
-        return actions
-
-    def msg_update(self, cr, uid, ids, msg, data={}, default_act='None'):
-        """
-        Update msg state which may be accepted.declined.tentative.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of calendar attendee’s IDs.
+        @param event_obj: Event object (browse record)
         @param context: A standard dictionary for contextual values
-        @return: True
+        @return: .ics file content
         """
-        msg_actions = self.msg_act_get(msg)
-        if msg_actions.get('state'):
-            if msg_actions['state'] in ['YES', 'NO', 'MAYBE']:
-                mapping = {'YES': 'accepted', 'NO': 'declined', 'MAYBE': 'tentative'}
-                status = mapping[msg_actions['state']]
-                print 'Got response for invitation id: %s as %s' % (ids, status)
-                self.write(cr, uid, ids, {'state': status})
-        return True
-
+        res = None
+        def ics_datetime(idate, short=False):
+            if short:
+                return date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
+            else:
+                return datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
+        try:
+            import vobject
+        except ImportError:
+            return res
+        cal = vobject.iCalendar()
+        event = cal.add('vevent')
+        event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
+        event.add('dtstart').value = ics_datetime(event_obj.date)
+        event.add('dtend').value = ics_datetime(event_obj.date_deadline)
+        event.add('summary').value = event_obj.name
+        if  event_obj.description:
+            event.add('description').value = event_obj.description
+        if event_obj.location:
+            event.add('location').value = event_obj.location
+        if event_obj.rrule:
+            event.add('rrule').value = event_obj.rrule
+        
+        if event_obj.alarm_id:
+            # computes alarm data
+            valarm = event.add('valarm')
+            alarm_object = self.pool.get('res.alarm')
+            alarm_data = alarm_object.read(cr, uid, event_obj.alarm_id.id, context=context)
+            # Compute trigger data
+            interval = alarm_data['trigger_interval']
+            occurs = alarm_data['trigger_occurs']
+            duration = (occurs == 'after' and alarm_data['trigger_duration']) \
+                                            or -(alarm_data['trigger_duration'])
+            related = alarm_data['trigger_related']
+            trigger = valarm.add('TRIGGER')
+            trigger.params['related'] = [related.upper()]
+            if interval == 'days':
+                delta = timedelta(days=duration)
+            if interval == 'hours':
+                delta = timedelta(hours=duration)
+            if interval == 'minutes':
+                delta = timedelta(minutes=duration)
+            trigger.value = delta
+    
+            # Compute other details
+            valarm.add('DESCRIPTION').value = alarm_data['name'] or 'OpenERP'
+        
+        for attendee in event_obj.attendee_ids:
+            attendee_add = event.add('attendee')
+            attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
+            attendee_add.params['ROLE'] = [str(attendee.role)]
+            attendee_add.params['RSVP'] = [str(attendee.rsvp)]
+            attendee_add.value = 'MAILTO:' + attendee.email
+        res = cal.serialize()
+        return res
+    
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context={}):
         """
         Send mail for calendar attendee.
@@ -443,7 +452,7 @@ property or property parameter."),
             res_obj = att.ref
             sub = '[%s Invitation][%d] %s' % (company, att.id, res_obj.name)
             att_infos = []
-            other_invitaion_ids = self.search(cr, uid, [('ref', '=', att.ref._name + ',' + str(att.ref.id))])
+            other_invitaion_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
             for att2 in self.browse(cr, uid, other_invitaion_ids):
                 att_infos.append(((att2.user_id and att2.user_id.name) or \
                              (att2.partner_id and att2.partner_id.name) or \
@@ -459,15 +468,17 @@ property or property parameter."),
                         'company': company
             }
             body = html_invitation % body_vals
+            attach = self.get_ics_file(cr, uid, res_obj, context=context)
             if mail_to and email_from:
                 tools.email_send(
-                        email_from, 
-                        mail_to, 
-                        sub, 
-                        body, 
-                        subtype='html', 
-                        reply_to=email_from
-                    )
+                    email_from,
+                    mail_to,
+                    sub,
+                    body,
+                    attach=attach and [('invitation.ics', attach)] or None,
+                    subtype='html',
+                    reply_to=email_from
+                )
             return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
@@ -569,7 +580,7 @@ class res_alarm(osv.osv):
 are both optional, but if one occurs, so MUST the other"""), 
         'repeat': fields.integer('Repeat'), 
         'active': fields.boolean('Active', help="If the active field is set to \
-                    true, it will allow you to hide the event alarm information without removing it.")
+true, it will allow you to hide the event alarm information without removing it.")
     }
     _defaults = {
         'trigger_interval': lambda *x: 'minutes', 
@@ -659,41 +670,41 @@ class calendar_alarm(osv.osv):
     __attribute__ = {}
 
     _columns = {
-            'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'), 
-            'name': fields.char('Summary', size=124, help="""Contains the text to be \
-                        used as the message subject for email \
-                        or contains the text to be used for display"""), 
-            'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
-                    ('procedure', 'Procedure'), ('email', 'Email') ], 'Action', \
-                    required=True, help="Defines the action to be invoked when an alarm is triggered"), 
-            'description': fields.text('Description', help='Provides a more complete \
-                                description of the calendar component, than that \
-                                provided by the "SUMMARY" property'), 
-            'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
-                                          'alarm_id', 'attendee_id', 'Attendees', readonly=True), 
-            'attach': fields.binary('Attachment', help="""* Points to a sound resource,\
-                         which is rendered when the alarm is triggered for audio,
-                        * File which is intended to be sent as message attachments for email,
-                        * Points to a procedure resource, which is invoked when\
-                          the alarm is triggered for procedure."""), 
-            'res_id': fields.integer('Resource ID'), 
-            'model_id': fields.many2one('ir.model', 'Model'), 
-            'user_id': fields.many2one('res.users', 'Owner'), 
-            'event_date': fields.datetime('Event Date'), 
-            'event_end_date': fields.datetime('Event End Date'), 
-            'trigger_date': fields.datetime('Trigger Date', readonly="True"), 
-            'state':fields.selection([('draft', 'Draft'), 
-                                        ('run', 'Run'), 
-                                        ('stop', 'Stop'), 
-                                        ('done', 'Done'), 
-                                    ], 'State', select=True, readonly=True), 
-        }
+        'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'),
+        'name': fields.char('Summary', size=124, help="""Contains the text to be \
+                     used as the message subject for email \
+                     or contains the text to be used for display"""),
+        'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
+                ('procedure', 'Procedure'), ('email', 'Email') ], 'Action', \
+                required=True, help="Defines the action to be invoked when an alarm is triggered"),
+        'description': fields.text('Description', help='Provides a more complete \
+                            description of the calendar component, than that \
+                            provided by the "SUMMARY" property'),
+        'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
+                                      'alarm_id', 'attendee_id', 'Attendees', readonly=True),
+        'attach': fields.binary('Attachment', help="""* Points to a sound resource,\
+                     which is rendered when the alarm is triggered for audio,
+                    * File which is intended to be sent as message attachments for email,
+                    * Points to a procedure resource, which is invoked when\
+                      the alarm is triggered for procedure."""),
+        'res_id': fields.integer('Resource ID'),
+        'model_id': fields.many2one('ir.model', 'Model'),
+        'user_id': fields.many2one('res.users', 'Owner'),
+        'event_date': fields.datetime('Event Date'),
+        'event_end_date': fields.datetime('Event End Date'),
+        'trigger_date': fields.datetime('Trigger Date', readonly="True"),
+        'state':fields.selection([
+                    ('draft', 'Draft'),
+                    ('run', 'Run'),
+                    ('stop', 'Stop'),
+                    ('done', 'Done'),
+                ], 'State', select=True, readonly=True),
+     }
 
     _defaults = {
-                'action': lambda *x: 'email', 
-                'state': lambda *x: 'run', 
-                }
-
+        'action': lambda *x: 'email', 
+        'state': lambda *x: 'run', 
+     }
     def create(self, cr, uid, vals, context={}):
         """
         create new record.
@@ -983,7 +994,7 @@ class calendar_event(osv.osv):
         'exdate': fields.text('Exception Date/Times', help="This property \
 defines the list of date/time exceptions for arecurring calendar component."), 
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
-                    rule or repeating pattern for anexception to a recurrence set"), 
+rule or repeating pattern for an exception to a recurrence set"), 
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, \
                                     string='Recurrent Rule', store=True, \
                                     fnct_inv=_set_rrulestring, help='Defines a\
@@ -1031,7 +1042,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'end_date': fields.date('Repeat Until'), 
         'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel',\
                                  'event_id', 'attendee_id', 'Attendees'),
-        'allday': fields.boolean('All Day')
+        'allday': fields.boolean('All Day'), 
+        'active': fields.boolean('Active', help="If the active field is set to \
+true, it will allow you to hide the event alarm information without removing it.")
     }
 
     _defaults = {
@@ -1040,6 +1053,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
          'freq': lambda *x: 'None', 
          'select1': lambda *x: 'date', 
          'interval': lambda *x: 1, 
+         'active': lambda *x: 1, 
     }
     
     def open_event(self, cr, uid, ids, context=None):
@@ -1164,8 +1178,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 if count > limit:
                     break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
-                if start_date and start_date <= event_date:
-                    start_date = event_date
+#                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
+#                if start_date and start_date <= event_date:
+#                        start_date = event_date
+                start_date = event_date
                 if not data['rrule']:
                     if start_date and (event_date < start_date):
                         continue
@@ -1213,7 +1229,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         if isinstance(select, (str, int, long)):
             return ids and ids[0] or False
         return ids
-
+    
     def compute_rule_string(self, cr, uid, datas, context=None, *args):
         """
         Compute rule string.
@@ -1332,6 +1348,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             event_id = base_calendar_id2real_id(event_id)
             if not event_id in new_ids:
                 new_ids.append(event_id)
+        
         res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'):
             alarm_obj = self.pool.get('res.alarm')
