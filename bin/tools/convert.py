@@ -29,7 +29,6 @@ import sys
 
 from datetime import datetime
 from lxml import etree
-import time
 import ir
 import misc
 import netsvc
@@ -400,12 +399,12 @@ form: module.record_id""" % (xml_id,)
         uid = self.uid
         # def ref() added because , if context has ref('id') eval wil use this ref
 
-        active_id=str("active_id") # for further reference in client/bin/tools/__init__.py
+        active_id = str("active_id") # for further reference in client/bin/tools/__init__.py
 
         def ref(str_id):
             return self.id_get(cr, None, str_id)
-        context=eval(context)
-        domain=eval(domain)
+        context = eval(context)
+#        domain = eval(domain) # XXX need to test this line -> uid, active_id, active_ids, ...
 
         res = {
             'name': name,
