@@ -28,16 +28,18 @@ class report_stock_move(osv.osv):
     _description = "Stock Statistics"
     _auto = False
     _columns = {
-        'date': fields.date('Date', readonly=True),
+        'date_planned': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'location_id': fields.many2one('stock.location', 'Source Location', readonly=True, select=True, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', readonly=True, select=True, help="Location where the system will stock the finished products."),
         'product_qty':fields.integer('Qty',readonly=True),
+        'value' : fields.float('Total Value', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
                                   help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
@@ -49,18 +51,24 @@ class report_stock_move(osv.osv):
         tools.drop_view_if_exists(cr, 'report_stock_move')
         cr.execute("""
             create or replace view report_stock_move as (
-                select min(m.id) as id,
-                m.date as date,
-                to_char(date_trunc('day',m.date), 'YYYY') as year,
-                to_char(date_trunc('day',m.date), 'MM') as month,
-                to_char(date_trunc('day',m.date), 'YYYY-MM-DD') as day,
-                m.location_id as location_id,
-                m.location_dest_id as location_dest_id,
-                m.product_id as product_id,
-                m.state as state,
-                m.product_uom as product_uom,
-                sum(m.product_qty) as product_qty
-                from stock_move as m group by m.id, m.product_id, m.location_id, m.location_dest_id, m.date, m.state, m.product_uom
-            )
+               select min(m.id) as id,
+                    m.date_planned as date_planned,
+                    to_char(date_trunc('day',m.date_planned), 'YYYY') as year,
+                    to_char(date_trunc('day',m.date_planned), 'MM') as month,
+                    to_char(date_trunc('day',m.date_planned), 'YYYY-MM-DD') as day,
+                    m.address_id as partner_id,
+                    m.location_id as location_id,
+                    m.location_dest_id as location_dest_id,
+                    m.product_id as product_id,
+                    m.state as state,
+                    m.product_uom as product_uom,
+                    sum(m.product_qty) as product_qty,
+                    pt.standard_price * sum(m.product_qty) as value
+               from stock_move m ,product_product pp,product_template pt
+               where 
+                    m.product_id=pp.id and pp.product_tmpl_id=pt.id
+               group by 
+                    m.id, m.product_id,m.address_id, m.location_id, m.location_dest_id,
+                    m.date_planned, m.state, m.product_uom,pt.standard_price     )      
         """)
 report_stock_move()
