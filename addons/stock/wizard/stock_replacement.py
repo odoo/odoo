@@ -34,10 +34,10 @@ class stock_replacement(osv.osv_memory):
     _name = "stock.replacement"
     _description = "Stock Replacement"
 
-    def get_composant(self, cr, uid, ids, context):
+    def get_composant(self, cr, uid, ids, context = {}):
         return {}
 
-    def replace_composant(self, cr, uid, ids, context):
+    def replace_composant(self, cr, uid, ids, context = {}):
         """ 
            to open a new wizard that acknowledge, a replacement task 
             

@@ -86,8 +86,8 @@ class base_setup_company(osv.osv_memory):
         'street2':fields.char('Street 2', size=128),
         'zip':fields.char('Zip Code', size=24),
         'city':fields.char('City', size=128),
-        'state_id':fields.selection(_get_all_states, 'States'),
-        'country_id':fields.selection(_get_all_countries, 'Countries'),
+        'state_id':fields.selection(_get_all_states, 'State'),
+        'country_id':fields.selection(_get_all_countries, 'Country'),
         'email':fields.char('E-mail', size=64),
         'phone':fields.char('Phone', size=64),
         'currency':fields.many2one('res.currency', 'Currency', required=True),
@@ -104,6 +104,8 @@ Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07''')
 We suggest you to put bank information here:
 IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
         'logo':fields.binary('Logo'),
+        'account_no':fields.char('Account No', size=64),
+        'website': fields.char('Web', size=64),
     }
 
     def execute(self, cr, uid, ids, context=None):
@@ -120,10 +122,12 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
             'rml_footer2':payload.rml_footer2,
             'logo':payload.logo,
             'currency_id':payload.currency.id,
+            'account_no':payload.account_no,
         })
 
         company.partner_id.write({
             'name':payload.name,
+            'website':payload.website,
         })
 
         address_data = {

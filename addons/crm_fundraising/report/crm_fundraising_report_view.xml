@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- Fundraising by user and section Tree View-->
+
+        <record id="view_report_crm_fundraising_tree" model="ir.ui.view">
+            <field name="name">crm.fundraising.report.tree</field>
+            <field name="model">crm.fundraising.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            	<tree string="Fundraising">
+	              	<field name="name" invisible="1"/>
+					<field name="month" invisible="1"/>
+					<field name="section_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+    				<field name="company_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                	<field name="nbr" string='#Fundraising' sum="#Fundraising"/>
+                    <field name="amount_revenue"  sum='Est.Revenue'/>
+                    <field name="probability" avg='Avg. Probability' widget="progressbar"/>
+                    <field name="amount_revenue_prob" sum='Est. Rev*Prob.'/>
+                    <field name="delay_close" avg='Avg Closing Delay'/>
+                    <field name="state" invisible="1"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="day" invisible="1"/>
+               </tree>
+            </field>
+
+<!-- Fundraising by user and section Form View-->
+
+        </record>
+        <record id="view_report_crm_fundraising_form" model="ir.ui.view">
+            <field name="name">crm.fundraising.report.form</field>
+            <field name="model">crm.fundraising.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            	<form string="Cases">
+                    <field name="name" select="1"/>
+                    <field name="month" select="1"/>
+                    <field name="user_id" select="1"/>
+					<field name="section_id" select="1"/>
+                    <field name="nbr" select="1"/>
+                    <field name="delay_close"/>
+                    <field name="amount_revenue"/>
+                    <field name="amount_revenue_prob"/>
+                    <field name="probability"/>
+                    <field name="state" select="1"/>
+                </form>
+            </field>
+        </record>
+
+<!-- Fundraising by user and section Graph View-->
+
+        <record id="view_report_crm_fundraising_graph" model="ir.ui.view">
+            <field name="name">crm.fundraising.report.graph</field>
+            <field name="model">crm.fundraising.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Fundraising" type="bar">
+                    <field name="state"/>
+                    <field name="nbr" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
+
+<!-- Fundraising by user and section Search View-->
+
+		<record id="view_report_crm_fundraising_filter" model="ir.ui.view">
+            <field name="name">crm.fundraising.report.selectt</field>
+            <field name="model">crm.fundraising.report</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                  <group col="16" colspan="8">
+                   		<!--  <filter string="This Year" name="This Year" icon="terp-hr"
+                   			domain="[('name','=',time.localtime()[0])]"/>-->
+                   		<filter string="This Year" icon="terp-hr"
+                   			domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+
+                   		<!-- <filter string="This Month" name="This Year" icon="terp-hr"
+                   			domain="[('month','=',time.strftime('%%m'))]" />-->
+                       <filter string="This Month" icon="terp-hr" name="This Month"
+                    	   domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+
+                       <filter icon="gtk-media-rewind" string="7 Days" separator="1"
+                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+
+                   		<separator orientation="vertical" />
+                        <filter icon="terp-hr"
+                    		string="Draft"
+                    		domain="[('state','=','draft')]"/>
+					   <filter icon="terp-hr"
+                    		string="Open"
+                    		domain="[('state','=','open')]"/>
+					   <filter icon="terp-hr"
+                    		string="Pending"
+                    		domain="[('state','=','pending')]"/>
+
+                   		<separator orientation="vertical" />
+                   		<field name="section_id"
+                   			default="context.get('section_id', False)"
+                   			widget="selection"
+                   			context="{'invisible_section': False}">
+
+                   			<filter icon="terp-crm"
+                   				context="{'invisible_section': False}"
+                   				domain="[('section_id.user_id','=',uid)]"
+                   				help="My section" />
+
+                   		</field>
+                   		<field name="company_id" widget="selection">
+                           <filter icon="terp-crm"
+                        context="{'invisible_section': False}"
+                        domain="[('section_id.user_id.company_id','=',uid)]"
+                        help="My company"/>
+                        </field>
+
+                      	<field name="user_id" select="1" widget="selection">
+	            			<filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
+               			</field>
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Extended options..." colspan="10" col="12">
+                         <filter icon="terp-sale"
+                    		string="Done"
+                    		domain="[('state','=','done')]"/>
+
+                    	<filter icon="terp-sale"
+                    		string="Cancel"
+                    		domain="[('state','=','cancel')]"/>
+                    	
+                    	<group>
+		            	    <separator orientation="vertical"/>
+			                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
+			             </group>
+
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="User" name="User" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'user_id'}" />
+
+                        <filter string="Company" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'company_id'}" />
+
+                        <filter string="Section" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'section_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="State" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'state'}" />
+
+                        <filter string="Category" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'categ_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="Day" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'day'}"/>
+
+                        <filter string="Month" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'month'}" />
+
+                        <filter string="Year" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'name'}" />
+
+                  </group>
+               </search>
+            </field>
+        </record>
+
+<!-- Fundraising by user and section Action -->
+
+        <record id="action_report_crm_fundraising" model="ir.actions.act_window">
+            <field name="name">Fundraising</field>
+            <field name="res_model">crm.fundraising.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="view_id" ref="view_report_crm_fundraising_tree"/>
+            <field name="search_view_id" ref="view_report_crm_fundraising_filter"/>
+        </record>
+
+
+           <record model="ir.actions.act_window.view" id="action_report_crm_fundrising_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_crm_fundraising_tree"/>
+            <field name="act_window_id" ref="action_report_crm_fundraising"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_report_crm_fundrising_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_fundraising_graph"/>
+            <field name="act_window_id" ref="action_report_crm_fundraising"/>
+        </record>
+
+        <menuitem name="Fundraising"
+            action="action_report_crm_fundraising"
+            groups="base.group_extended"
+            id="menu_report_crm_fundraising_tree" parent="base.next_id_64" />
+
+    </data>
+</openerp>

@@ -1,0 +1,93 @@
+-
+  In order to test the sale order working with procurements I will create some
+  products with different supply method and procurement method.
+-
+  I create two products.
+-
+  !record {model: product.product, id: product_product_table0}:
+    categ_id: product.cat1
+    name: Table
+    procure_method: make_to_order
+    supply_method: produce
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+-
+  !record {model: product.product, id: product_product_wood0}:
+    categ_id: product.cat1
+    name: Wood
+    procure_method: make_to_stock
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+-
+  I define Minimum stock rule for my stockable product wood
+- 
+  !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
+    company_id: base.main_company
+    location_id: stock.stock_location_stock
+    logic: max
+    name: OP/00002
+    product_id: product_product_wood0
+    product_max_qty: 15.0
+    product_min_qty: 10.0
+    product_uom: product.product_uom_kgm
+    qty_multiple: 1
+    warehouse_id: stock.warehouse0
+-
+  Now I make a sale order for table.
+- 
+  !record {model: sale.order, id: sale_order_so0}:
+    amount_total: 5.0
+    amount_untaxed: 5.0
+    date_order: '2010-04-30'
+    invoice_quantity: order
+    name: SO006
+    order_line:
+      - company_id: base.main_company
+        delay: 7.0
+        name: Table
+        price_unit: 1.0
+        product_id: product_product_table0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 5.0
+        product_uos_qty: 5.0
+        state: draft
+        type: make_to_order
+    order_policy: manual
+    partner_id: base.res_partner_agrolait
+    partner_invoice_id: base.res_partner_address_8
+    partner_order_id: base.res_partner_address_8
+    partner_shipping_id: base.res_partner_address_8
+    picking_policy: direct
+    pricelist_id: product.list0
+    shop_id: sale.shop
+-
+  I confirm the order.
+- 
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+-
+  I check that one procurement is generated.
+-
+  !python {model: mrp.procurement}: |
+    from tools.translate import _
+    proc_ids = self.search(cr, uid, [('state','=','confirmed')])
+    assert proc_ids, _('No Procurements!')
+- 
+  The scheduler runs.
+-
+  !function {model: mrp.procurement, name: run_scheduler}:
+    - model: mrp.procurement
+      search: "[('state','=','confirmed')]"
+-
+  I check that the procurement for the product table is in exception state.
+  As my product's supply method is produce and mrp module is yet not installed.
+-
+  !python {model: mrp.procurement}: |
+    from tools.translate import _
+    proc_ids = self.search(cr, uid, [('state','=','exception')])
+    assert proc_ids, _('No Procurements are in exception state!')
+  
+  
+  

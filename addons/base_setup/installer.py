@@ -73,6 +73,7 @@ class base_setup_installer(osv.osv_memory):
         'report_designer':fields.boolean('Advanced Reporting',
             help="Lets you install various tools to simplify and enhance "
                  "OpenERP's report creation."),
+        'thunderbird' :fields.boolean('Thunderbird'),
         # Vertical modules
         'profile_association':fields.boolean('Associations',
             help="Installs a preselected set of OpenERP "

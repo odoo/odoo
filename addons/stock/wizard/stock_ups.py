@@ -30,7 +30,7 @@ class stock_ups(osv.osv_memory):
     _name = "stock.ups"
     _description = "Stock ups"
 
-    def ups_save(self, cr, uid, ids, context):
+    def ups_save(self, cr, uid, ids, context = {}):
        
         return {
                     'name': False, 
@@ -40,7 +40,7 @@ class stock_ups(osv.osv_memory):
                     'type': 'ir.actions.act_window', 
                     'target':'new',
             }
-    def ups_upload(self, cr, uid, ids, context):
+    def ups_upload(self, cr, uid, ids, context = {}):
          
         return {
                     'name': False, 
@@ -63,10 +63,10 @@ class stock_ups_final(osv.osv_memory):
     _name = "stock.ups.final"
     _description = "Stock ups final"
 
-#    def create_xmlfile(self, cr, uid, ids, context):
-#        report = netsvc._group['report']['report.stock.move.lot.ups_xml']
-#        data['report_type'] = 'raw'
-#        return {'xmlfile' : report.create(uid, context['active_id'], ids, {})}
+    def create_xmlfile(self, cr, uid, ids, context = {}):
+        report = netsvc._group['report']['report.stock.move.lot.ups_xml']
+        data['report_type'] = 'raw'
+        return {'xmlfile' : report.create(uid, context['active_id'], ids, {})}
 
     _columns = {
         'xmlfile': fields.binary('XML File'), 
@@ -78,11 +78,11 @@ class stock_ups_upload(osv.osv_memory):
     _name = "stock.ups.upload"
     _description = "Stock ups upload"
 
-    def upload_xmlfile(self, cr, uid, ids, context):
-#        report = netsvc._group['report']['report.stock.move.lot.ups_xml']
-#        data['report_type'] = 'raw'
+    def upload_xmlfile(self, cr, uid, ids, context = {}):
+        report = netsvc._group['report']['report.stock.move.lot.ups_xml']
+        data['report_type'] = 'raw'
 #FIXME: this seems unfinished   
-#        fp = file('/tmp/test.xml', 'w').write(report.create(uid, context['active_id'], ids, {}))
+        fp = file('/tmp/test.xml', 'w').write(report.create(uid, context['active_id'], ids, {}))
         return {}
 
 stock_ups_upload()

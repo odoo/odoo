@@ -28,10 +28,26 @@
 
 
 import netsvc
-from dav_fs import tinydav_handler
+import tools
+from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
 from service.websrv_lib import HTTPDir,FixSendError
+import urlparse
+import urllib
+from string import atoi,split
+from DAV.errors import *
+
+def OpenDAVConfig(**kw):
+    class OpenDAV:
+        def __init__(self, **kw):
+            self.__dict__.update(**kw)
+
+    class Config:
+        DAV = OpenDAV(**kw)
+
+    return Config()
+
 
 class DAVHandler(FixSendError,DAVRequestHandler):
     verbose = False
@@ -43,16 +59,24 @@ class DAVHandler(FixSendError,DAVRequestHandler):
         netsvc.Logger().notifyChannel("webdav",netsvc.LOG_DEBUG,message)
     
     def handle(self):
-        pass
+        self._init_buffer()
 
     def finish(self):
         pass
 
+    def get_db_from_path(self, uri):
+        if uri or uri == '/':
+            dbs = self.IFACE_CLASS.db_list()
+            res = len(dbs) and dbs[0] or False
+        else:
+            res =  self.IFACE_CLASS.get_db(uri)        
+        return res
+
     def setup(self):
-        davpath = '/'+config.get_misc('webdav','vdir','webdav')+'/'
-        self.baseuri = "http://%s:%d%s"% (self.server.server_name,self.server.server_port,davpath)
-        self.IFACE_CLASS  = tinydav_handler(self)
-        pass
+        davpath = '/'+config.get_misc('webdav','vdir','webdav')
+        self.baseuri = "http://%s:%d/"% (self.server.server_name,self.server.server_port)
+        self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
+        
     
     def log_message(self, format, *args):
         netsvc.Logger().notifyChannel('webdav',netsvc.LOG_DEBUG_RPC,format % args)
@@ -60,16 +84,102 @@ class DAVHandler(FixSendError,DAVRequestHandler):
     def log_error(self, format, *args):
         netsvc.Logger().notifyChannel('xmlrpc',netsvc.LOG_WARNING,format % args)
 
+    def do_PUT(self):
+        dc=self.IFACE_CLASS        
+        uri=urlparse.urljoin(self.get_baseuri(dc), self.path)
+        uri=urllib.unquote(uri)
+        # Handle If-Match
+        if self.headers.has_key('If-Match'):
+            test = False
+            etag = None
+            
+            for match in self.headers['If-Match'].split(','):                
+                if match == '*':
+                    if dc.exists(uri):
+                        test = True
+                        break
+                else:
+                    if dc.match_prop(uri, match, "DAV:", "getetag"):
+                        test = True
+                        break
+            if not test:
+                self.send_status(412)
+                return
+
+        # Handle If-None-Match
+        if self.headers.has_key('If-None-Match'):
+            test = True
+            etag = None            
+            for match in self.headers['If-None-Match'].split(','):
+                if match == '*':
+                    if dc.exists(uri):
+                        test = False
+                        break
+                else:
+                    if dc.match_prop(uri, match, "DAV:", "getetag"):
+                        test = False
+                        break
+            if not test:
+                self.send_status(412)
+                return
+
+        # Handle expect
+        expect = self.headers.get('Expect', '')
+        if (expect.lower() == '100-continue' and
+                self.protocol_version >= 'HTTP/1.1' and
+                self.request_version >= 'HTTP/1.1'):
+            self.send_status(100)
+            self._flush()
+
+        # read the body
+        body=None
+        if self.headers.has_key("Content-Length"):
+            l=self.headers['Content-Length']
+            body=self.rfile.read(atoi(l))
+
+        # locked resources are not allowed to be overwritten
+        if self._l_isLocked(uri):
+            return self.send_body(None, '423', 'Locked', 'Locked')
+
+        ct=None
+        if self.headers.has_key("Content-Type"):
+            ct=self.headers['Content-Type']
+        try:
+            location = dc.put(uri,body,ct)
+        except DAV_Error, (ec,dd):
+            return self.send_status(ec)
+
+        headers = {}
+        if location:
+            headers['Location'] = location
+
+        try:
+            etag = dc.get_prop(location or uri, "DAV:", "getetag")
+            headers['ETag'] = etag
+        except:
+            pass
+
+        self.send_body(None, '201', 'Created', '', headers=headers)
+
 
 try:
-    from service.http_server import reg_http_service,OpenERPAuthProvider
+    from service.http_server import reg_http_service,OpenERPAuthProvider   
+
     if (config.get_misc('webdav','enable',True)):
-        davpath = '/'+config.get_misc('webdav','vdir','webdav')+'/'
+        directory = '/'+config.get_misc('webdav','vdir','webdav') 
         handler = DAVHandler
-        handler.verbose = config.get_misc('webdav','verbose',True)
+        verbose = config.get_misc('webdav','verbose',True)
         handler.debug = config.get_misc('webdav','debug',True)
-        reg_http_service(HTTPDir(davpath,DAVHandler,OpenERPAuthProvider()))
-        netsvc.Logger().notifyChannel('webdav',netsvc.LOG_INFO,"WebDAV service registered at path: %s/ "% davpath)
+        _dc = { 'verbose' : verbose,
+                'directory' : directory,
+                'lockemulation' : False,
+                    
+                }
+
+        conf = OpenDAVConfig(**_dc)
+        handler._config = conf
+        reg_http_service(HTTPDir(directory,DAVHandler,OpenERPAuthProvider()))
+        netsvc.Logger().notifyChannel('webdav',netsvc.LOG_INFO,"WebDAV service registered at path: %s/ "% directory)
 except Exception, e:
     logger = netsvc.Logger()
     logger.notifyChannel('webdav', netsvc.LOG_ERROR, 'Cannot launch webdav: %s' % e)

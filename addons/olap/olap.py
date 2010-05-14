@@ -2058,7 +2058,6 @@ class olap_warehouse_wizard(osv.osv_memory):
             @param uid: the current user’s ID for security checks,
             @param context: A standard dictionary for contextual values
         """
-
         query_obj = self.pool.get('olap.query.logs')
         qry_ids = query_obj.search(cr, uid, [('user_id', '=', uid), ('count', '>=', 3)])
 
