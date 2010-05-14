@@ -4,7 +4,7 @@
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">CRM - Opportunities - Quote Inherit</field>
-        <field name="model">crm.opportunity</field>
+        <field name="model">crm.lead</field>
         <field name="type">form</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
@@ -34,11 +34,11 @@
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
             <field name="date_order" position="after">
-                <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
+                <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section" groups="base.group_extended">
                     <filter icon="terp-crm"
                             domain="[('section_id','=',context.get('section_id',False))]"
                             groups="base.group_extended"
-                            help="My section"/>
+                            help="My Sales Team"/>
                 </field>
             </field>
         </field>

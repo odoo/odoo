@@ -2,7 +2,7 @@
    I start by creating a new Opportunity. And I select partner for opportunity.
    I can see that after selecting partner his contact and email is automatically filled.
 -
-   !record {model: crm.opportunity, id: crm_opportunity_abcfuelcounits0}:
+   !record {model: crm.lead, id: crm_opportunity_abcfuelcounits0}:
     email_from: info@balmerinc.be
     name: 'ABC FUEL CO 829264 - 10002 units '
     partner_address_id: base.res_partner_address_1
@@ -15,19 +15,19 @@
 -  |
    I check that the opportunity is in 'New' state.
 -
-   !assert {model: crm.opportunity, id: crm_opportunity_abcfuelcounits0}:
+   !assert {model: crm.lead, id: crm_opportunity_abcfuelcounits0}:
      - state == "draft"
 -  |  
    I open opportunity by click on "Open" button,
 -
-   !python {model: crm.opportunity}: |
+   !python {model: crm.lead}: |
     self.case_open(cr, uid, [ref("crm_opportunity_abcfuelcounits0")])
 
 -  |
    I schedule Meeting on this current opportunity by clicking on "schedule
    Meeting".
 -
-   !python {model: crm.opportunity}: |
+   !python {model: crm.lead}: |
     self.action_makeMeeting(cr, uid, [ref("crm_opportunity_abcfuelcounits0")])
     
 -  |

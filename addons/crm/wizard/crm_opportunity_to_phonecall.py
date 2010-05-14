@@ -46,7 +46,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
         @return : default values of fields.
         """
-        opp_obj = self.pool.get('crm.opportunity')
+        opp_obj = self.pool.get('crm.lead')
         record_ids = context and context.get('active_ids', []) or []
         res = super(crm_opportunity2phonecall, self).default_get(cr, uid, fields, context=context)
         for opp in opp_obj.browse(cr, uid, record_ids, context=context):
@@ -84,7 +84,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
         record_ids = context and context.get('active_ids', []) or []
 
         phonecall_obj = self.pool.get('crm.phonecall')
-        opp_obj = self.pool.get('crm.opportunity')
+        opp_obj = self.pool.get('crm.lead')
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])

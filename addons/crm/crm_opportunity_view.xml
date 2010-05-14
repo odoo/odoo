@@ -9,8 +9,8 @@
         <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
         <field name="view_id"  ref="crm.crm_case_categ_tree-view"/>
-        <field name="domain">[('object_id.model', '=', 'crm.opportunity')]</field>
-        <field name="context">{'object_id':'crm.opportunity'}</field>
+        <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
+        <field name="context">{'object_id':'crm.lead'}</field>
     </record>
 
     <menuitem action="crm_opportunity_categ_action"
@@ -24,8 +24,8 @@
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
              <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.opportunity')]</field>
-             <field name="context">{'object_id':'crm.opportunity'}</field>
+            <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
+             <field name="context">{'object_id':'crm.lead'}</field>
         </record>
 
         <menuitem action="crm_opportunity_stage_act"
@@ -39,8 +39,8 @@
             <field name="res_model">crm.case.resource.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.opportunity')]</field>
-             <field name="context">{'object_id':'crm.opportunity'}</field>
+            <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
+             <field name="context">{'object_id':'crm.lead'}</field>
         </record>
 
         <menuitem action="crm_opportunity_resource_act"
@@ -51,7 +51,7 @@
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">Opportunities</field>
-        <field name="model">crm.opportunity</field>
+        <field name="model">crm.lead</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Opportunities">
@@ -62,7 +62,7 @@
                         <field name="stage_id" nolabel="1"
                             on_change="onchange_stage_id(stage_id)"
                             widget="selection"
-                            domain="[('object_id.model', '=', 'crm.opportunity')]" />
+                            domain="[('object_id.model', '=', 'crm.lead')]" />
                         <button name="stage_previous"
                             states="open,pending" type="object"
                             icon="gtk-go-back" string="" />
@@ -86,7 +86,7 @@
                 </group>
                 <notebook colspan="4">
                 <page string="Opportunity">
-                    <group col="3" colspan="2">
+                    <group col="4" colspan="2">
                         <separator colspan="4" string="Contacts"/>
                         <field name="partner_id" select="1"
                             on_change="onchange_partner_id(partner_id, email_from)"
@@ -101,9 +101,9 @@
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Categorization"/>
                         <field name="section_id" colspan="1" widget="selection"/>
-                        <field name="categ_id" select="1"
+                        <field name="categ_id" select="1" groups="base.group_extended"
                             string="Category" widget="selection"
-                            domain="[('object_id.model', '=', 'crm.opportunity')]" />
+                            domain="[('object_id.model', '=', 'crm.lead')]" />
                     </group>
 
                     <separator colspan="4" string="Details"/>
@@ -124,7 +124,7 @@
                             icon="gtk-media-pause" />
                         <button name="case_close" string="Mark Won"
                             states="open,draft,pending" type="object"
-                            icon="gtk-close" />
+                            icon="gtk-apply" />
                         <button name="case_cancel" string="Mark Lost"
                             states="draft,open,pending" type="object"
                             icon="gtk-cancel" />
@@ -153,7 +153,12 @@
                     <field name="ref"/>
                     <field name="ref2"/>
                     <field name="log_ids" nolabel="1" colspan="4">
-                        <form string="Actions">
+                    	 <tree string="Logs">
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </tree>
+                        <form string="Logs">
                             <separator string="Action Information" colspan="4"/>
                             <field name="name" colspan="4"/>
                             <field name="date"/>
@@ -165,23 +170,19 @@
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
                    </group>
-                    <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                    <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
-                            <group col="7" colspan="4">
+                            <group col="6" colspan="4">
                                 <field name="date"/>
                                 <field name="email_to"/>
                                 <field name="email_from"/>
-                                <button
-                                     string="Add a CC"
-                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                               icon="gtk-add" type="action"/>
-                                   </group>
+							</group>
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
                                        string="Reply to Last Email"
                                        name="%(action_crm_send_mail)d"
-                                       context="{'mail':'reply', 'model': 'crm.opportunity'}"
+                                       context="{'mail':'reply', 'model': 'crm.lead'}"
                                        icon="gtk-undo" type="action" />
                                </form>
                                <tree string="Communication history">
@@ -192,10 +193,10 @@
                            </field>
                            <button colspan="2" string="Send New Email"
                                name="%(action_crm_send_mail)d"
-                               context="{'mail':'new', 'model': 'crm.opportunity'}"
+                               context="{'mail':'new', 'model': 'crm.lead'}"
                                icon="gtk-go-forward" type="action" />
                            <button colspan="2" string="Forward to Partner"
-                               name="%(crm_opportunity_forward_to_partner_act)d"
+                               name="%(crm_lead_forward_to_partner_act)d"
                                icon="gtk-go-forward" type="action" />
                  </page>
                 </notebook>
@@ -207,7 +208,7 @@
 
     <record model="ir.ui.view" id="crm_case_tree_view_oppor">
         <field name="name">Opportunities Tree</field>
-        <field name="model">crm.opportunity</field>
+        <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel','done')">
@@ -224,7 +225,7 @@
                 <field name="planned_revenue" sum="Total of Planned Revenue"/>
                 <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
                 <field name="date_action"/>
-                <field name="section_id"/>
+                <field name="section_id" groups="base.group_extended"/>
                 <field name="user_id"/>
                 <field name="priority"/>
                 <field name="state"/>
@@ -248,7 +249,7 @@
 
     <record model="ir.ui.view" id="crm_case_graph_view_opportunity">
         <field name="name">CRM - Opportunity Graph</field>
-        <field name="model">crm.opportunity</field>
+        <field name="model">crm.lead</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
@@ -263,13 +264,13 @@
 
     <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
         <field name="name">CRM - Opportunities Search</field>
-        <field name="model">crm.opportunity</field>
+        <field name="model">crm.lead</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Opportunities">
                 <filter icon="terp-project"
                     string="Current"
-                    default="1"
+                    name="current"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-project"
                     string="Open"
@@ -288,7 +289,6 @@
                 />
                 <separator orientation="vertical"/>
                 <field name="name" string="Opportunity"/>
-                <field name="partner_id"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
                         domain="[('user_id','=',uid)]"
@@ -306,7 +306,7 @@
                         help="My section" />
                 </field>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="16">
+                <group expand="0" string="Group By..." colspan="16">
                     <filter string="Stage" icon="terp-crm" domain="[]"
                         context="{'group_by':'stage_id'}" />
                     <filter string="Priority" icon="terp-crm" domain="[]"
@@ -318,7 +318,7 @@
                     <filter string="Partner" icon="terp-crm" domain="[]"
                         context="{'group_by':'partner_id'}" />
                     <filter string="Salesman" icon="terp-crm"
-                        domain="[]" context="{'group_by':'user_id'}" />
+                        domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}" />
                     <separator orientation="vertical" />
                     <filter string="Creation" icon="terp-project"
                         domain="[]" context="{'group_by':'create_date'}" />

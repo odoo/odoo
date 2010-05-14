@@ -19,36 +19,24 @@
 #
 ##############################################################################
 
+from osv import osv, fields
 
-{
-    'name': 'Detailed info on partner form', 
-    'version': '1.0', 
-    'category': 'Generic Modules/Base', 
-    'description': """
-This module allows a salesman to have a direct overlook at all events related to this partner directly from the partner form.
+class res_partner(osv.osv):
+    """ Inherits partner and adds more information in the partner form """
+    _inherit = 'res.partner'
+    
+    _columns = {
+                'opportunity_ids': fields.one2many('crm.lead', 'partner_id', 'Opportunities', domain=[('type', '=', 'opportunity')]), 
+                'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+                                                     'Meetings'), 
+                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
+                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'), 
+                'contract_ids': fields.one2many('account.analytic.account', \
+                                                    'partner_id', 'Contracts'), 
+                'account_line_ids': fields.one2many('hr.analytic.timesheet', \
+                                                    'partner_id', 'Anaylitic account lines '),
+                }
 
-It adds the following fields on the partner form:
-
-    * Opportunities
-    * Meetings
-    * Phone Calls
-    * Invoices
-       - group by product_id
-    * Contracts
-    * Timesheets
-
-    """, 
-    'author': 'Tiny', 
-    'website': 'http://www.openerp.com', 
-    'depends': ['crm', 'account_analytic_analysis'], 
-    'init_xml': [], 
-    'update_xml': [
-                   'security/ir.model.access.csv', 
-                   'partner_crm_view.xml'
-                   ], 
-    'demo_xml': [], 
-    'installable': True, 
-    'active': False, 
-}
+res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

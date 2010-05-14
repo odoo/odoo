@@ -61,14 +61,16 @@
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
                     <field name="carrier_id" select="1"/>
-                    <field name="sequence" select="1"/>
+                    <field name="sequence" groups="base.group_extended" select="1"/>
                     <notebook colspan="4">
                         <page string="Grid definition">
                             <field colspan="4" name="line_ids" nolabel="1" select="1"/>
                         </page>
                         <page string="Destination">
-                            <field colspan="4" name="country_ids"/>
-                            <field colspan="4" name="state_ids"/>
+                        	<separator colspan="4" string="Countries"/>
+                            <field colspan="4" name="country_ids" nolabel="1"/>
+                            <separator colspan="4" string="States"/>
+                            <field colspan="4" name="state_ids" nolabel="1"/>
                             <field name="zip_from"/>
                             <field name="zip_to"/>
                         </page>

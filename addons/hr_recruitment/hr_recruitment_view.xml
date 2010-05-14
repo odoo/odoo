@@ -69,27 +69,27 @@
         <field name="arch" type="xml">
             <form string="Jobs - Recruitment Form">
                 <group colspan="4" col="8">
-                    <field name="name" string="Subject"/>
-                    <label string="Stage: " align="1.0"/>
-                    <group colspan="1" col="2">
-                        <field name="stage_id" nolabel="1"/>
+                     <group colspan="3" col="6">
+                        <field name="name" string="Subject"/>
+                        <field name="stage_id"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
-                    <field name="user_id"/>
-                    <button string="Schedule a Phone Call"
-                        name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
-						icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
                     <newline/>
-                    <field name="partner_name"/>
-                    <field name="job_id"/>
-                    <field name="department_id" widget="selection"/>
-                    <button name="action_makeMeeting" type="object"
-                        string="Schedule Meeting" icon="terp-hr" />
-                    <button name="action_print_survey" string="Print Interview" type="object"
-                        icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                </group>
+                    <group colspan="3" col="6">
+	                  	<field name="partner_name"/>
+	                   	<field name="job_id" on_change="onchange_job(job_id)"/>
+	                   	<button string="Schedule a Phone Call" name="223" icon="gtk-redo" type="action"/>
+                     </group>
+                    <newline/>
+                    <group colspan="3" col="6">
+                        <field name="user_id"/>
+                        <field name="department_id" widget="selection"/>
+                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
+                    </group>
+                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+            	</group>
                 <notebook colspan="4">
                     <page string="Job Info">
                         <group col="2" colspan="2">
@@ -134,29 +134,30 @@
                        <field name="id"/>
                        <field name="active"/>
                        <field name="log_ids" nolabel="1" colspan="4">
-                           <form string="Actions">
-                               <separator string="Action Information" colspan="4"/>
-                               <field name="name" colspan="4"/>
-                               <field name="date"/>
-                               <field name="user_id"/>
-                           </form>
-                       </field>
-                   </page>
+                        <tree string="Logs">
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </tree>
+                        <form string="Logs">
+                            <separator string="Action Information" colspan="4"/>
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </form>
+                    </field>
+                    </page>
                    <page string="Emails" groups="base.group_extended">
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="CC"/>
                        </group>
-                       <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                       <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
-                            <group col="7" colspan="4">
+                            <group col="6" colspan="4">
                                 <field name="date"/>
                                 <field name="email_to"/>
                                 <field name="email_from"/>
-                                <button
-                                     string="Add a CC"
-                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                               icon="gtk-add" type="action"/>
-                                   </group>
+							</group>
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
@@ -232,7 +233,7 @@
                        help="My Department"/>
                </field>
                <newline/>
-                <group expand="1" string="Group By..." colspan="11" col="20">
+                <group expand="0" string="Group By..." colspan="11" col="20">
                     <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Responsible" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
