@@ -49,8 +49,8 @@
   !python {model:  crm.phonecall}: | 
     xid= ref('crm_phonecall_interviewcall0')
     obj_phonecall = self.browse(cr, uid, xid)
-    ids = self.pool.get('crm.opportunity').search(cr, uid, [('name', '=', obj_phonecall.opportunity_id.name)])
-    obj_opp = self.pool.get('crm.opportunity').browse(cr, uid, ids)[0]
+    ids = self.pool.get('crm.lead').search(cr, uid, [('name', '=', obj_phonecall.opportunity_id.name)])
+    obj_opp = self.pool.get('crm.lead').browse(cr, uid, ids)[0]
     assert obj_phonecall.partner_id == obj_opp.partner_id
   
 - |
