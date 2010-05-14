@@ -319,14 +319,15 @@ class hr_holidays(osv.osv):
                 self.holidays_validate(cr, uid, holiday_ids)
 
             if record.holiday_status_id.categ_id and record.date_from and record.date_to and record.employee_id:
-                vals={}
-                vals['name']=record.name
-                vals['categ_id']=record.holiday_status_id.categ_id.id
                 diff_day = self._get_number_of_days(record.date_from, record.date_to)
-                vals['duration'] = (diff_day) * 8
-                vals['note'] = record.notes
-                vals['user_id'] = record.user_id.id
-                vals['date'] = record.date_from
+                vals = {
+                    'name' : record.name,
+                    'categ_id' : record.holiday_status_id.categ_id.id,
+                    'duration' : (diff_day) * 8,
+                    'note' : record.notes,
+                    'user_id' : record.user_id.id,
+                    'date' : record.date_from,
+                }
                 case_id = self.pool.get('crm.meeting').create(cr,uid,vals)
                 self.write(cr, uid, ids, {'case_id':case_id})
         return True
