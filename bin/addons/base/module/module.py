@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -123,6 +124,8 @@ class module(osv.osv):
         'shortdesc': fields.char('Short Description', size=256, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
+        'maintainer': fields.char('Maintainer', size=128, readonly=True),
+        'contributors': fields.text('Contributors', readonly=True),
         'website': fields.char("Website", size=256, readonly=True),
 
         # attention: Incorrect field names !!
@@ -306,6 +309,19 @@ class module(osv.osv):
         self.update_translations(cr, uid, ids)
         return True
 
+    @staticmethod
+    def get_values_from_terp(terp):
+        return {
+            'description': terp.get('description', ''),
+            'shortdesc': terp.get('name', ''),
+            'author': terp.get('author', 'Unknown'),
+            'maintainer': terp.get('maintainer', False),
+            'contributors': ', '.join(terp.get('contributors', [])),
+            'website': terp.get('website', ''),
+            'license': terp.get('license', 'GPL-2'),
+            'certificate': terp.get('certificate') or None,
+        }
+
     # update the list of available packages
     def update_list(self, cr, uid, context={}):
         res = [0, 0] # [update, add]
@@ -313,46 +329,31 @@ class module(osv.osv):
         # iterate through installed modules and mark them as being so
         for mod_name in addons.get_modules():
             ids = self.search(cr, uid, [('name','=',mod_name)])
+
+            terp = self.get_module_info(mod_name)
+            values = self.get_values_from_terp(terp)
+
             if ids:
                 id = ids[0]
                 mod = self.browse(cr, uid, id)
-                terp = self.get_module_info(mod_name)
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     self.write(cr, uid, id, {'state': 'uninstalled'})
                 if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
                     self.write(cr, uid, id, { 'url': ''})
                     res[0] += 1
-                self.write(cr, uid, id, {
-                    'description': terp.get('description', ''),
-                    'shortdesc': terp.get('name', ''),
-                    'author': terp.get('author', 'Unknown'),
-                    'website': terp.get('website', ''),
-                    'license': terp.get('license', 'GPL-2'),
-                    'certificate': terp.get('certificate') or None,
-                    })
+                self.write(cr, uid, id, values)
                 cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s', (id,))
-                self._update_dependencies(cr, uid, ids[0], terp.get('depends', []))
-                self._update_category(cr, uid, ids[0], terp.get('category', 'Uncategorized'))
-                continue
-            mod_path = addons.get_module_path(mod_name)
-            if mod_path:
-                terp = self.get_module_info(mod_name)
+            else:
+                mod_path = addons.get_module_path(mod_name)
+                if not mod_path:
+                    continue
                 if not terp or not terp.get('installable', True):
                     continue
 
-                id = self.create(cr, uid, {
-                    'name': mod_name,
-                    'state': 'uninstalled',
-                    'description': terp.get('description', ''),
-                    'shortdesc': terp.get('name', ''),
-                    'author': terp.get('author', 'Unknown'),
-                    'website': terp.get('website', ''),
-                    'license': terp.get('license', 'GPL-2'),
-                    'certificate': terp.get('certificate') or None,
-                })
+                id = self.create(cr, uid, dict(name=mod_name, state='uninstalled', **values))
                 res[1] += 1
-                self._update_dependencies(cr, uid, id, terp.get('depends', []))
-                self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
+            self._update_dependencies(cr, uid, id, terp.get('depends', []))
+            self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
 
         return res
 
@@ -379,14 +380,7 @@ class module(osv.osv):
             except Exception, e:
                 raise orm.except_orm(_('Error'), _('Can not create the module file:\n %s') % (fname,))
             terp = self.get_module_info(mod.name)
-            self.write(cr, uid, mod.id, {
-                'description': terp.get('description', ''),
-                'shortdesc': terp.get('name', ''),
-                'author': terp.get('author', 'Unknown'),
-                'website': terp.get('website', ''),
-                'license': terp.get('license', 'GPL-2'),
-                'certificate': terp.get('certificate') or None,
-                })
+            self.write(cr, uid, mod.id, self.get_values_from_terp(terp))
             cr.execute('DELETE FROM ir_module_module_dependency ' \
                     'WHERE module_id = %s', (mod.id,))
             self._update_dependencies(cr, uid, mod.id, terp.get('depends',

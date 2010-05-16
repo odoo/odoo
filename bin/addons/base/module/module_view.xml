@@ -95,10 +95,16 @@
                             <field colspan="4" name="description" select="2"/>
                             <field name="installed_version"/>
                             <field name="latest_version"/>
-                            <field name="author" select="2"/>
-                            <field name="website" select="2" widget="url"/>
-                            <field name="url" widget="url"/>
-                            <field name="published_version"/>
+                            <group colspan='2' col='2'>
+                                <field name="author" select="2"/>
+                                <field name='maintainer'/>
+                                <field name='contributors'/>
+                            </group>
+                            <group colspan='2' col='2'>
+                                <field name="website" select="2" widget="url"/>
+                                <field name="url" widget="url"/>
+                                <field name="published_version"/>
+                            </group>
                             <field name="license"/>
                             <field name="demo" readonly="1"/>
                             <newline/>
@@ -141,6 +147,8 @@
                     <field name="name"/>
                     <field name="shortdesc"/>
                     <field name="author"/>
+                    <field name='maintainer'/>
+                    <field name='contributors'/>
                     <field name="installed_version"/>
                     <field name="latest_version"/>
                     <field name="published_version"/>
