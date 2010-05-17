@@ -334,7 +334,7 @@ class account_invoice(osv.osv):
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
                 raise except_orm(_('UnknownError'), str(e))
-            
+
     def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -351,7 +351,6 @@ class account_invoice(osv.osv):
 #       return [{}]
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
             date_invoice=False, payment_term=False, partner_bank=False, company_id=False):
-        print "onchange_partner_id::::::::::: 354::::"
         invoice_addr_id = False
         contact_addr_id = False
         partner_payment_term = False
@@ -650,14 +649,14 @@ class account_invoice(osv.osv):
             if res and res['value']:
                 self.write(cr, uid, [inv.id], res['value'])
         return True
-    
+
     def finalize_invoice_move_lines(self, cr, uid, invoice_browse, move_lines):
         """finalize_invoice_move_lines(cr, uid, invoice, move_lines) -> move_lines
-        Hook method to be overridden in additional modules to verify and possibly alter the 
+        Hook method to be overridden in additional modules to verify and possibly alter the
         move lines to be created by an invoice, for special cases.
         :param invoice_browse: browsable record of the invoice that is generating the move lines
         :param move_lines: list of dictionaries with the account.move.lines (as for create())
-        :return: the (possibly updated) final move_lines to create for this invoice 
+        :return: the (possibly updated) final move_lines to create for this invoice
         """
         return move_lines
 
@@ -1516,9 +1515,9 @@ account_invoice_tax()
 class res_partner(osv.osv):
     """ Inherits partner and adds invoice information in the partner form """
     _inherit = 'res.partner'
-    
+
     _columns = {
-                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'), 
+                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'),
                 }
 
 res_partner()
