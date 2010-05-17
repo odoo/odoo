@@ -48,7 +48,9 @@ class marketing_campaign(osv.osv): #{{{
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled'),],
                                    'State',
-                                   readonly=True),                                    
+                                   readonly=True), 
+        'activity_ids': fields.one2many('marketing.campaign.activity', 
+                                       'campaign_id', 'Activities'),
         
     }
 
@@ -103,8 +105,11 @@ class marketing_campaign_activity(osv.osv): #{{{
         'report_directory_id': fields.many2one('document.directory', 'Directory'),
         'server_action_id': fields.many2one('ir.actions.server', string='Action'),
         'to_ids': fields.one2many('marketing.campaign.transition',
-                                                   'activity_from_id',
-                                                   'Next Activities'),
+                                            'activity_to_id',
+                                            'Next Activities'),
+        'from_ids': fields.one2many('marketing.campaign.transition',
+                                            'activity_from_id',
+                                            'Previous Activities'), 
         'subcampaign_id' :fields.many2one('marketing.campaign', 'Sub-Campaign'),
         'subcampaign_segment_id' :fields.many2one('marketing.campaign.segment',
                                                    'Sub Campaign Segment'),
