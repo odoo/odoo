@@ -141,22 +141,23 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <form string="Supplier invoice">
-                    <group col="6" colspan="4">
-                        <field domain="[('type', '=', 'purchase')]" name="journal_id"/>
-                        <field name="number" readonly="1"/>
-                        <field name="type" invisible="1"/>
-                        <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)"/>
-                        <newline/>
-                        <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" context="{'default_customer': 0}"/>
-                        <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
-                        <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
-                        <newline/>
-                        <field name="date_invoice"/>
-                        <field name="period_id" groups="base.group_user"/>
-                        <group colspan="2" col="1" groups="base.group_user">
-                            <label align="0.0" string="(keep empty to use the current period)"/>
-                        </group>
-                    </group>
+					<group col="8" colspan="4">
+						<field domain="[('type', '=', 'purchase')]" name="journal_id"/>
+						<field name="number" readonly="1"/>
+						<field name="type" invisible="1"/>
+						<field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
+						<button name="%(action_account_change_currency)d" type="action" icon="gtk-apply" string="Change Currency" />
+						<newline/>
+						<field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" context="{'default_customer': 0}"/>
+						<field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
+						<field name="fiscal_position" groups="base.group_extended" widget="selection"/>
+						<newline/>
+						<field name="date_invoice"/>
+						<field name="period_id" groups="base.group_user"/>
+						<group colspan="2" col="1" groups="base.group_user">
+						    <label align="0.0" string="(keep empty to use the current period)"/>
+						</group>
+					</group>
                     <notebook colspan="4">
                         <page string="Invoice">
                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
@@ -200,10 +201,12 @@
                                 <field name="state"/>
                                 <field name="residual"/>
                                 <group col="3" colspan="4">
-                                    <button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-apply"/>
-                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
-                                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                    <button name="%(action_account_state_open)d" type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
+									<button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-apply"/>
+									<button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
+									<button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-convert"/>
+									<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+									<button name="%(action_account_state_open)d" type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
+									<button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='paid' icon="gtk-convert"/>
                                 </group>
                             </group>
                         </page>
@@ -247,23 +250,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invoice">
-                    <group colspan="4" col="6">
-                        <field name="journal_id" groups="base.group_user"/>
-                        <field name="number"/>
-                        <field name="type" invisible="1"/>
-                        <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)"/>
-                        <newline/>
-                        <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" groups="base.group_user"/>
-                        <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
-                        <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
-                        <newline/>
-
-                        <field name="date_invoice"/>
-                        <field name="period_id" groups="base.group_user"/>
-                        <group colspan="2" col="1" groups="base.group_user">
-                            <label align="0.0" string="(keep empty to use the current period)"/>
-                        </group>
-                    </group>
+					<group colspan="4" col="8">
+					<field name="journal_id" groups="base.group_user"/>
+					<field name="number"/>
+					<field name="type" invisible="1"/>
+					<field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
+					<button name="%(action_account_change_currency)d" type="action" icon="gtk-apply" string="Change Currency"/>
+					<newline/>
+					<field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" groups="base.group_user"/>
+					<field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
+					<field name="fiscal_position" groups="base.group_extended" widget="selection"/>
+					<newline/>
+					<field name="date_invoice"/>
+					<field name="period_id" groups="base.group_user"/>
+					<group colspan="2" col="1" groups="base.group_user">
+					    <label align="0.0" string="(keep empty to use the current period)"/>
+					</group>
+					</group>
                     <notebook colspan="4">
                         <page string="Invoice">
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
@@ -290,12 +293,14 @@
                                 <field name="amount_total"/>
                                 <field name="state"/>
                                 <field name="residual"/>
-                                <group col="3" colspan="4" groups="base.group_user">
-                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="gtk-print"/>
-                                    <button name="invoice_open" states="draft,proforma2" string="Create" icon="gtk-execute"/>
-                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
-                                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-                                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
+                                <group col="4" colspan="4" groups="base.group_user">
+									<button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="gtk-print"/>
+									<button name="invoice_open" states="draft,proforma2" string="Create" icon="gtk-execute"/>
+									<button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-convert"/>
+									<button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
+									<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+									<button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='paid' icon="gtk-convert"/>
+									<button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
                                 </group>
                             </group>
                         </page>
@@ -478,7 +483,7 @@
         <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
 
         <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
-		
+
 		<!--  Partners inherited form -->
 
 		<record id="view_invoice_partner_info_form" model="ir.ui.view">
@@ -495,6 +500,6 @@
             </field>
         </record>
 
-		
+
     </data>
 </openerp>

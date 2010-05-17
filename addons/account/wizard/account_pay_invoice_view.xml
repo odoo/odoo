@@ -25,14 +25,25 @@
             </field>
         </record>
 
+		<record id="action_account_invoice_pay" model="ir.actions.act_window">
+            <field name="name">Pay Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.invoice.pay</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_invoice_pay"/>
+	        <field name="context">{'record_id' : active_id}</field>
+            <field name="target">new</field>
+    	</record>
 
-		<act_window name="Pay Invoice"
+
+<!-- 		<act_window name="Pay Invoice"
 				res_model="account.invoice.pay"
 				src_model="account.invoice"
 				view_mode="form"
 				target="new"
 				key2="client_action_multi"
-			id="action_view_account_invoice_pay"/>
+			id="action_view_account_invoice_pay"/> -->
 
 		<record id="view_account_invoice_pay_writeoff" model="ir.ui.view">
             <field name="name">account.invoice.pay.writeoff.form</field>
