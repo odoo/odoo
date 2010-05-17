@@ -21,8 +21,6 @@
 #
 ##############################################################################
 
-from mx import DateTime
-import time
 import pooler
 import netsvc
 import datetime
@@ -53,8 +51,6 @@ class hr_holidays_status(osv.osv):
         return_false = False
         employee_id = False
         res = {}
-        for id in ids:
-            res[id] = {}.fromkeys(name, 0)
         if context and context.has_key('employee_id'):
             if not context['employee_id']:
                 return_false = True
@@ -67,6 +63,8 @@ class hr_holidays_status(osv.osv):
                 return_false = True
         if employee_id:
             res = self.get_days(cr, uid, ids, employee_id, return_false, context=context)
+        else:
+            res = dict.fromkeys(ids, {name: 0})
         return res
 
     _columns = {
@@ -135,20 +133,15 @@ class hr_holidays(osv.osv):
                 vals['allocation_type'] = context['allocation_type']
         return super(osv.osv,self).create(cr, uid, vals, context)
 
-    def onchange_date_from(self, cr, uid, ids, date_to, date_from):
-        result = {}
-        if date_to and date_from:
-            from_dt = time.mktime(time.strptime(date_from,'%Y-%m-%d %H:%M:%S'))
-            to_dt = time.mktime(time.strptime(date_to,'%Y-%m-%d %H:%M:%S'))
-            diff_day = (to_dt-from_dt)/(3600*24)
-            result['value'] = {
-                'number_of_days_temp': round(diff_day)+1
-            }
-            return result
-        result['value'] = {
-            'number_of_days_temp': 0,
-        }
-        return result
+    def _get_number_of_days(date_from, date_to):
+        """Returns a float equals to the timedelta between two dates given as string."""
+
+        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+        from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
+        to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
+        timedelta = to_dt - from_dt
+        diff_day = timedelta.days + float(timedelata.seconds) / 86400
+        return diff_day
 
     def _update_user_holidays(self, cr, uid, ids):
         for record in self.browse(cr, uid, ids):
@@ -180,20 +173,21 @@ class hr_holidays(osv.osv):
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
 
-    def onchange_date_to(self, cr, uid, ids, date_from, date_to):
+    def onchange_date_from(self, cr, uid, ids, date_to, date_from):
         result = {}
-        if date_from and date_to:
-            from_dt = time.mktime(time.strptime(date_from,'%Y-%m-%d %H:%M:%S'))
-            to_dt = time.mktime(time.strptime(date_to,'%Y-%m-%d %H:%M:%S'))
-            diff_day = (to_dt-from_dt)/(3600*24)
+        if date_to and date_from:
+            diff_day = self._get_number_of_days(date_from, date_to)
             result['value'] = {
                 'number_of_days_temp': round(diff_day)+1
             }
             return result
         result['value'] = {
-            'number_of_days_temp': 0
+            'number_of_days_temp': 0,
         }
         return result
+
+    def onchange_date_to(self, cr, uid, ids, date_from, date_to):
+        return onchange_date_from(cr, uid, ids, date_to, date_from)
 
     def onchange_sec_id(self, cr, uid, ids, status, context={}):
         warning = {}
@@ -325,16 +319,15 @@ class hr_holidays(osv.osv):
                 self.holidays_validate(cr, uid, holiday_ids)
 
             if record.holiday_status_id.categ_id and record.date_from and record.date_to and record.employee_id:
-                vals={}
-                vals['name']=record.name
-                vals['categ_id']=record.holiday_status_id.categ_id.id
-                epoch_c = time.mktime(time.strptime(record.date_to,'%Y-%m-%d %H:%M:%S'))
-                epoch_d = time.mktime(time.strptime(record.date_from,'%Y-%m-%d %H:%M:%S'))
-                diff_day = (epoch_c - epoch_d)/(3600*24)
-                vals['duration'] = (diff_day) * 8
-                vals['note'] = record.notes
-                vals['user_id'] = record.user_id.id
-                vals['date'] = record.date_from
+                diff_day = self._get_number_of_days(record.date_from, record.date_to)
+                vals = {
+                    'name' : record.name,
+                    'categ_id' : record.holiday_status_id.categ_id.id,
+                    'duration' : (diff_day) * 8,
+                    'note' : record.notes,
+                    'user_id' : record.user_id.id,
+                    'date' : record.date_from,
+                }
                 case_id = self.pool.get('crm.meeting').create(cr,uid,vals)
                 self.write(cr, uid, ids, {'case_id':case_id})
         return True
