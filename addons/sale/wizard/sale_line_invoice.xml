@@ -16,13 +16,14 @@
             </field>
 		</record>
 
-        <act_window name="Make Invoices"		    
-		    res_model="sale.order.line.make.invoice"
-		    src_model="sale.order.line"
-		    view_mode="form"
-		    target="new"        
-            key2="client_action_multi"    
-		    id="action_view_sale_order_line_make_invoice"/>		
+		<record id="action_view_sale_order_line_make_invoice" model="ir.actions.act_window">
+            <field name="name">Make Invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line.make.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
     </data>
 </openerp>

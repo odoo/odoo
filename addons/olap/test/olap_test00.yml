@@ -11,20 +11,23 @@
       name: OpenERP
       type: postgres
 -
-    I will check the connection for successful login. >>>>>>(Problem)
-#    !python {model: olap.fact.database}: |
-  #    self.test_connection(cr, uid,[ref('olap_fact_database_openerp0')], context)    
+    I will check the connection for successful login.
+-
+   !python {model: olap.fact.database}: |
+      import tools
+      if tools.config['db_name'] == 'tiny' and tools.config['db_password'] == '123456' and tools.config['db_host'] == 'localhost':
+        self.test_connection(cr, uid, ids ,{'active_ids':[ref('olap_fact_database_openerp0')]})
 -
     In order to test schema,I create a new schema record.
 -
     !record {model: olap.schema, id: olap_schema_Partners0}:
       database_id: olap_fact_database_openerp0
       name: Partners
-- 
+-
     I press "Connect to Database" and I see that the Schema State is "Database Connected" now
-- 
+-
     !workflow {model: olap.schema, action: dbconnect, ref: olap_schema_Partners0}
-- 
+-
     Now I will load the structure of the database. by structure we mean tables, columns and the relations. This will help in defining cube easily.
 -
     !record {model: bi.load.db.wizard, id: bi_load_db_wizard_0}:
@@ -45,7 +48,7 @@
     !workflow {model: olap.schema, action: dbconfigure, ref: olap_schema_Partners0}
 -
     Performing a workflow action dbready on module olap.schema
-- 
+-
     !workflow {model: olap.schema, action: dbready, ref: olap_schema_Partners0}
 -
     In order to create Cube I first define the fact table.Fact table are the key tables in which measures are stored and we can branch to other tables for other parameters.
@@ -93,7 +96,7 @@
       table_id: olap_cube_table_partnercubetable0
 -
     After adding the hierarchy I create level.I select Product's default_code as Columns Name that is loaded in Fact columns.
--   
+-
     !record {model: olap.level, id: olap_level_productscode0}:
       column_id_name: name
       column_name: olap.columns_res_user_name
@@ -107,5 +110,4 @@
 -
     !python {model: olap.load.column}: |
       ids = self.search(cr, uid, [])
-      self.get_table_data(cr, uid, ids, {'active_ids': [ref('olap_cube_table_partnercubetable0')]})    
-    
+      self.get_table_data(cr, uid, ids, {'active_ids': [ref('olap_cube_table_partnercubetable0')]})
