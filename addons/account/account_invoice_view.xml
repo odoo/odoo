@@ -146,7 +146,7 @@
 						<field name="number" readonly="1"/>
 						<field name="type" invisible="1"/>
 						<field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
-						<button name="%(action_account_change_currency)d" type="action" icon="gtk-apply" string="Change Currency" />
+						<button name="%(action_account_change_currency)d" type="action" icon="gtk-apply" string="Change Currency"/>
 						<newline/>
 						<field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" context="{'default_customer': 0}"/>
 						<field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
@@ -202,11 +202,11 @@
                                 <field name="residual"/>
                                 <group col="3" colspan="4">
 									<button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-apply"/>
+									<button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-ok"/>
 									<button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
-									<button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-convert"/>
 									<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
 									<button name="%(action_account_state_open)d" type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
-									<button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='paid' icon="gtk-convert"/>
+									<button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='paid' icon="gtk-execute"/>
                                 </group>
                             </group>
                         </page>
@@ -296,11 +296,11 @@
                                 <group col="4" colspan="4" groups="base.group_user">
 									<button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="gtk-print"/>
 									<button name="invoice_open" states="draft,proforma2" string="Create" icon="gtk-execute"/>
-									<button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-convert"/>
+									<button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-ok"/>
 									<button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
 									<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
-									<button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='paid' icon="gtk-convert"/>
 									<button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
+									<button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='paid' icon="gtk-execute"/>
                                 </group>
                             </group>
                         </page>

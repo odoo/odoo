@@ -8,6 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Credit Note">
+                	<separator string="This wizard is used to refund the invoice" colspan="4"/>
                 	<group colspan="4" >
                     	 <label string="Are you sure you want to refund this invoice ?" colspan="2"/>
                     	 <newline/>
@@ -15,7 +16,7 @@
                     	 <field name="period"/>
                     	 <field name="description"/>
                     </group>
-                       	<separator string="" colspan="4" />
+                       	<separator colspan="4"/>
                     <group colspan="4" col="6">
                        	<label string ="" colspan="2"/>
                     	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
