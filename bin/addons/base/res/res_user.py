@@ -167,6 +167,39 @@ class users(osv.osv):
                                 body=self.get_welcome_mail_body(
                                     cr, uid, context=context) % user)
 
+    def update_user_group(self, cr, uid, ids, name, value, arg, context):
+        """ update User groups according to the interface.
+        @param name: Name of the field
+        @param arg: User defined argument
+        @param value: new value returned
+        @return:  True/False
+        """
+        if not value: return False
+        if not isinstance(ids, list):
+            ids = [ids]
+        group_obj = self.pool.get('res.groups')
+        extended_group = group_obj.search(cr,uid,[('name','ilike','Extended')])[0]
+        user_groups = self.read(cr, uid, ids, ['groups_id'])[0]['groups_id']
+        if value == 'simple':
+            cr.execute(""" delete from res_groups_users_rel where gid=%s and uid=ANY(%s)""",(extended_group, ids))
+        else:
+            self.write(cr, uid, ids,{'groups_id':[(6, 0, list(set([extended_group] + user_groups)))]})
+        return True
+
+    def _set_interface(self, cr, uid, ids, name, args, context=None):
+        """ Sets interface for the User.
+        @param field_name: Name of the field
+        @param arg: User defined argument
+        @return:  Dictionary of values
+        """
+        group_obj = self.pool.get('res.groups')
+        extended_group = group_obj.search(cr,uid,[('name','ilike','Extended')])[0]
+        user_groups = self.read(cr, uid, ids, ['groups_id'])[0]['groups_id']
+        if extended_group not in user_groups:
+            return {ids[0]:'simple'}
+        else:
+            return {ids[0]:'extended'}
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
@@ -195,7 +228,11 @@ class users(osv.osv):
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
+        'view': fields.function(_set_interface, method=True, type='selection', fnct_inv=update_user_group,
+                                selection=[('simple','Simplified'),('extended','Extended')],
+                                string='Interface', help="Choose between the simplified interface and the extended one"),
     }
+
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
@@ -463,15 +500,10 @@ class res_config_view(osv.osv_memory):
     }
 
     def execute(self, cr, uid, ids, context=None):
-        res=self.read(cr,uid,ids)[0]
-        users_obj = self.pool.get('res.users')
-        group_obj=self.pool.get('res.groups')
-        if 'view' in res and res['view'] and res['view']=='extended':
-            group_ids=group_obj.search(cr,uid,[('name','ilike','Extended')])
-            if group_ids and len(group_ids):
-                users_obj.write(cr, uid, [uid],{
-                                'groups_id':[(4,group_ids[0])]
-                            }, context=context)
+        res = self.read(cr, uid, ids)[0]
+        self.pool.get('res.users').write(cr, uid, [uid],
+                                 {'view':res['view']}, context=context)
+
 res_config_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
