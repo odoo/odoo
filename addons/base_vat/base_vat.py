@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    Copyright (C) 2008-2009 B2CK, Cedric Krier, Bertrand Chenal (the methods "check_vat_[a-z]{2}" 
+#    Copyright (C) 2008-2009 B2CK, Cedric Krier, Bertrand Chenal (the methods "check_vat_[a-z]{2}"
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,16 +19,28 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import osv
-from osv import fields
 import string
+
+from osv import osv, fields
 from tools.func import partial
 from tools.translate import _
 
 _ref_vat = {
-    'be': 'BE0477472701',
-}
+    'be': 'BE0477472701', 'at': 'ATU12345675',
+    'bg': 'BG1234567892', 'cy': 'CY12345678F',
+    'cz': 'CZ12345679', 'de': 'DE123456788',
+    'dk': 'DK12345674', 'ee': 'EE123456780',
+    'es': 'ESA12345674', 'fi': 'FI12345671',
+    'fr': 'FR32123456789', 'gb': 'GB123456782',
+    'gr': 'GR12345670', 'hu': 'HU12345676',
+    'ie': 'IE1234567T', 'it': 'IT12345670017',
+    'lt': 'LT123456715', 'lu': 'LU12345613',
+    'lv': 'LV41234567891', 'mt': 'MT12345634',
+    'nl': 'NL123456782B90', 'pl': 'PL1234567883',
+    'pt': 'PT123456789', 'ro': 'RO1234567897',
+    'se': 'SE123456789701', 'si': 'SI12345679',
+    'sk': 'SK0012345675', 'el': 'EL12345670'
+            }
 
 def mult_add(i, j):
     """Sum each digits of the multiplication of i and j."""
@@ -48,18 +60,16 @@ class res_partner(osv.osv):
         '''
         for partner in self.browse(cr, uid, ids):
             if not partner.vat:
-                continue    
-
+                continue
             vat_country, vat_number = self._split_vat(partner.vat)
             if not hasattr(self, 'check_vat_' + vat_country):
                 return False
             check = getattr(self, 'check_vat_' + vat_country)
             if not check(vat_number):
                 return False
-
         return True
 
-    def vat_change(self, cr, uid, ids, value, context={}):
+    def vat_change(self, cr, uid, ids, value, context=None):
         return {'value': {'vat_subjected': bool(value)}}
 
     _columns = {
@@ -75,13 +85,14 @@ class res_partner(osv.osv):
 
         vat_country, vat_number = self._split_vat(self.browse(cr, uid, ids)[0].vat)
         if default_vat_check(vat_country, vat_number):
-            return _('The Vat does not seems to be correct. You should have entered something like this %s'), (_ref_vat[vat_country])
-        return _('The VAT is invalid, it shoul begin with the country code'), ()
+            vat_no = vat_country in _ref_vat and _ref_vat[vat_country] or 'Country Code + Vat Number'
+            return _('The Vat does not seems to be correct. You should have entered something like this %s'), (vat_no)
+        return _('The VAT is invalid, It should begin with the country code'), ()
 
     _constraints = [(check_vat, _construct_constraint_msg, ["vat"])]
 
     # code from the following methods come from Tryton (B2CK)
-    # http://www.tryton.org/hgwebdir.cgi/modules/relationship/file/544d1de586d9/party.py 
+    # http://www.tryton.org/hgwebdir.cgi/modules/relationship/file/544d1de586d9/party.py
     def check_vat_at(self, vat):
         '''
         Check Austria VAT number.
@@ -980,10 +991,10 @@ class res_partner(osv.osv):
 
         if int(vat[9:11]) < 0:
             return False
-        
+
 #        if int(vat[-2:]) != 1:
 #            return False
-        
+
         sum = mult_add(2, int(vat[0])) + int(vat[1]) + \
                 mult_add(2, int(vat[2])) + int(vat[3]) + \
                 mult_add(2, int(vat[4])) + int(vat[5]) + \
@@ -1067,4 +1078,3 @@ class res_partner(osv.osv):
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
