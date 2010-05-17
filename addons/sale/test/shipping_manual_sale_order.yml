@@ -390,7 +390,9 @@
 - 
   !python {model: stock.picking }: |
    import time
-   picking_id = self.search(cr, uid, [('origin','=','SO001'),('type','=','out')])
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       pick.force_assign(cr, uid)
@@ -410,7 +412,9 @@
   I verify that picking order is in done state
 -
   !python {model: stock.picking }: |
-   picking_id = self.search(cr, uid, [('origin','=','SO001'),('type','=','out')])
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    if picking_id:
      pick = self.browse(cr,uid,picking_id[0])
      assert (pick.state) =='done', "Picking for SO is not in done state." 
