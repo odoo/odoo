@@ -167,15 +167,14 @@ class account_voucher(osv.osv):
             return {'value':{'account_id':account_id.id}}
 
     def open_voucher(self, cr, uid, ids, context={}):
-        obj=self.pool.get('account.voucher').browse(cr,uid,ids)
-        total=0
+        obj = self.pool.get('account.voucher').browse(cr,uid,ids)
+        total = 0
         for i in obj[0].payment_ids:
-            total+=i.amount
-        if total!=0:
-            self.write(cr,uid,ids,{'amount':total})
-            self.write(cr, uid, ids, {'state':'proforma'})
+            total += i.amount
+        if total != 0:
+            self.write(cr, uid, ids, {'amount':total, 'state':'proforma'})
         else:
-            raise osv.except_osv('Invalid action !', 'You can not post to Pro-Forma a voucher with Total amount = 0')
+            raise osv.except_osv('Invalid action !', 'You cannot post to Pro-Forma a voucher with Total amount = 0 !')
         return True
 
     def proforma_voucher(self, cr, uid, ids, context={}):
