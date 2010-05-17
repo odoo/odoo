@@ -349,6 +349,7 @@ class pos_order(osv.osv):
             return False
 
     _defaults = {
+        'user_salesman_id':lambda self, cr, uid, context: uid,                
         'user_id': lambda self, cr, uid, context: uid,
         'sale_manager': lambda self, cr, uid, context: uid,
         'state': lambda *a: 'draft',
@@ -773,7 +774,8 @@ class pos_order(osv.osv):
             comp_id=comp_id and comp_id.id or False
             to_reconcile = []
             group_tax = {}
-            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
+            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context).id
+            
             order_account = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def or curr_c.account_receivable.id
 
             # Create an entry for the sale
