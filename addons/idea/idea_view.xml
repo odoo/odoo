@@ -47,10 +47,10 @@
          id="base.menu_lunch_survey_root" sequence="6"/>
 
     <menuitem name="Ideas" parent="base.menu_lunch_survey_root" id="menu_ideas"/>
-
+    
     <menuitem name="Categories" parent="menu_ideas"
     	id="menu_idea_category" action="action_idea_category" />
-
+    	
 <!-- Idea Category Action -->
 
     <record model="ir.actions.act_window" id="action_idea_category_tree">
@@ -61,13 +61,18 @@
     </record>
 
     <menuitem name="Ideas" parent="base.menu_tools" id="menu_ideas1" sequence="4"/>
-
+    
     <menuitem
         name="Ideas by Categories" parent="menu_ideas1"
         id="menu_idea_category_tree"
         action="action_idea_category_tree"/>
+        
+    <menuitem name="Give Vote" parent="menu_ideas1"  
+    	id="menu_give_vote"
+    	action="action_idea_select"/>   
 
-<!-- Oepn Ideas Action  -->
+
+    <!-- Open Ideas Action  -->
 
     <record model="ir.actions.act_window" id="action_idea_idea_categ_open">
         <field name="name">Open Ideas</field>
@@ -108,9 +113,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
         <tree string="Votes">
-            <field name="idea_id"/>
-            <field name="user_id"/>
-            <field name="score" />
+            <field name="user_id" />
+            <field name="score"/>
+            <field name="date"/>
         </tree>
         </field>
     </record>
@@ -123,9 +128,14 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
         <form string="Votes">
-            <field name="idea_id" select="1" />
-            <field name="user_id" select="1" />
-            <field name="score"/>
+        	<group colspan="4">
+	            <field name="user_id" select="1" />
+	            <field name="date"/>
+	            <newline/>
+	            <field name="score"/>
+            </group>
+            <separator string="Comments:" colspan="4"/>
+            <field name="comment" colspan="4" nolabel="1"/>
         </form>
         </field>
     </record>
@@ -144,6 +154,7 @@
 				</group>
 				<newline/>
 	            <group expand="1" string="Group By..." colspan="14">
+	            	<filter string="Vote date" icon="terp-crm" domain="[]" context="{'group_by':'date'}"/>
 	                <filter string="Idea" icon="terp-crm" domain="[]" context="{'group_by':'idea_id'}"/>
 	                <filter string="User" name="user" icon="terp-partner" domain="[]" context="{'group_by':'user_id'}"/>
 	            </group>
@@ -159,37 +170,25 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
         <form string="New Idea">
-            <notebook>
-                <page string="Idea">
-                    <field name="title" select="1" />
-                    <field name="category_id" select="1"/>
-                    <field name="date" />
-                    <field name="user_id" select="1"/>
-                    <field name="vote_avg" widget="progressbar"/>
-                    <field name="vote_user"/>
-                    <separator string="Description" colspan="4"/>
-                    <field name="description" colspan="4" widget="text_wiki" nolabel="1"/>
-                    <field name="state"/>
-                    <group colspan="2" col="3">
-                        <button name="idea_open" string="Open" states="draft" icon="gtk-go-forward"/>
-                        <button name="idea_close" string="Close" states="open" icon="gtk-close" groups="base.group_extended"/>
-                        <button name="idea_cancel" string="Cancel" states="open"  icon="gtk-cancel" groups="base.group_extended"/>
-                    </group>
-                </page>
-                <page string="Comments">
-                    <field name="comment_ids" nolabel="1" colspan="4">
-                        <form string="Comment">
-                        	<field name="user_id" colspan="2"/>
-                            <separator string="User comment" colspan="4"/>
-                            <field name="content" nolabel="1" colspan="4"/>
-                        </form>
-                    </field>
-                </page>
-                <page string="Vote">
-                    <field name="vote_ids" nolabel="1" colspan="4" />
-                </page>
-                <page string="Statistics">
-                    <field name="stat_vote_ids" colspan="4" mode="graph,tree" nolabel="1">
+        	<group colspan="4" col="6">
+              <field name="title" select="1"/>
+              <field name="created_date" />
+              <field name="user_id" select="1"/>
+              <newline/>
+              <field name="category_id" select="1"/>
+              <field name="vote_avg" widget="progressbar"/>
+              <field name="vote_limit"/>
+           	</group>
+           	<notebook colspan="4">
+ 	          	<page string="Notes">
+ 	          		<separator string="Description" colspan="4"/>
+ 	          		<field name="description" nolabel="1"/>
+ 	          	</page>
+ 	          	<page string="Votes">
+ 	          		<field name="vote_ids" nolabel="1" colspan="4" />
+ 	          	</page>
+ 	          	<page string="Statistics">
+ 	          		<field name="stat_vote_ids" colspan="4" mode="graph,tree" nolabel="1">
                         <graph string="vote_stat of ideas" type="bar">
                             <field name="score"/>
                             <field name="nbr"/>
@@ -199,8 +198,17 @@
                             <field name="nbr"/>
                         </tree>
                     </field>
-                </page>
-            </notebook>
+ 	          	</page>
+           	</notebook>
+           	<group colspan="4" col="6">
+	           	<field name="state"/>
+	            <button name="idea_open" string="Open" states="draft" icon="gtk-go-forward"/>
+	            <button name="idea_close" string="Close" states="open" icon="gtk-close" groups="base.group_extended"/>
+	            <button name="idea_cancel" string="Cancel" states="open"  icon="gtk-cancel" groups="base.group_extended"/>
+	            <button name="%(action_idea_post_vote)d"
+	                 	icon="gtk-execute" type="action" states="draft,open"
+	                 	string="Give vote" />
+            </group> 
         </form>
         </field>
     </record>
@@ -213,12 +221,11 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
         <tree string="All Ideas">
-            <field name="category_id" />
-            <field name="create_date"/>
-            <field name="user_id" />
-            <field name="title"/>
+        	<field name="title"/>
+        	<field name="category_id"/>
+        	<field name="user_id"/>
+        	<field name="created_date"/>
             <field name="vote_avg" />
-            <field name="count_comments" />
             <field name="count_votes" />
             <button name="%(action_idea_post_vote)d" icon="gtk-execute"
             	type="action" states="draft,open" string="Vote" />
@@ -251,29 +258,12 @@
 	                <filter string="Category" icon="terp-crm" domain="[]" context="{'group_by':'category_id'}"/>
 	                <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
 	                <separator orientation="vertical"/>
-	                <filter string="Idea date" icon="terp-crm" domain="[]" context="{'group_by':'date'}"/>
+	               	<filter string="Vote date" icon="terp-crm" domain="[]" context="{'group_by':'created_date'}"/>
 	                <filter string="User" name="user" icon="terp-partner" domain="[]" context="{'group_by':'user_id'}"/>
 	            </group>
 	        </search>
         </field>
     </record>
-
-<!-- Comments on Idea Tree View -->
-
-    <record model="ir.ui.view" id="view_idea_comment_tree">
-        <field name="name">idea.comment.tree</field>
-        <field name="model">idea.comment</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-        <tree string="Comments">
-            <field name="create_date" />
-            <field name="user_id" />
-            <field name="content" string="Comment" />
-        </tree>
-        </field>
-    </record>
-
-<!-- Idea Action -->
 
     <record model="ir.actions.act_window" id="action_idea_idea">
         <field name="name">Ideas</field>

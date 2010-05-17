@@ -12,22 +12,31 @@
                   <attribute name="string">Thunderbird Module Installation</attribute>
               </form>
               <separator string="title" position="attributes">
-                   <attribute name="string">Configure Thunderbird Module</attribute>
+                   <attribute name="string">Thunderbird</attribute>
               </separator>
               <xpath expr="//label[@string='description']" position="attributes">
                   <attribute name="string">This module is required for the thuderbird plug-in to work properly.This allows you to select an object that you had like to add to your email and its attachments. You can select a partner, a task, a project, an analytical account, or any other object and attach selected mail as .eml file in attachment of selected record.</attribute>
               </xpath>
-              <group colspan="8">
-                  <separator string="Thunderbird" colspan="4"/>
+              <xpath expr='//separator[@string="vsep"]' position='attributes'>
+		  		<attribute name='string'></attribute>
+		  		<attribute name='rowspan'>15</attribute>
+		  	  </xpath>
+		  	  <group colspan="8" position="replace">
+              <group colspan="8" height="400" width="700">
                   <field name="thunderbird"/>
                   <field name="name" invisible="1"/>
+                  <field name="pdf_name" invisible="1"/>
                   <newline/>
 
-                  <field name="plugin_file"/>
+                  <field name="plugin_file" filename="name"/>
                   <button name="process_plugin"  icon="gtk-execute" string="Get Plugin File" type="object"/>
+                  <newline/>
+                  <field name="pdf_file" filename="pdf_name"/>
+                  <button name="process_pdf_file"  icon="gtk-execute" string="Get Plugin Installation File" type="object"/>
                   <newline/>
                   <separator string="Thunderbird plugin installation note." colspan="4"/>
                   <label colspan="8" string="Save The thunderbird plug­in Follow the following step to install thunderbird plug­in ? 1. From Menu Bar, Open Tools ­> Add ons. 2. Now click on install button and a browser window will appear. 3. Just select the (.xpi) file from thunderbird/plugin directory and click ok, a new software installation window will appear and within a short time Install Now  button will be enabled. 4. Click on Install Now and restart Thunderbird. 5. Now Thunderbird plug­in is installed."/>
+              </group>
               </group>
           </data>
       </field>

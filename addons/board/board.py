@@ -143,7 +143,8 @@ class board_board(osv.osv):
     _columns = {
         'name': fields.char('Dashboard', size=64, required=True),
         'view_id': fields.many2one('ir.ui.view', 'Board View'),
-        'line_ids': fields.one2many('board.board.line', 'board_id', 'Action Views')
+        'line_ids': fields.one2many('board.board.line', 'board_id', 'Action Views'),
+        'menu_id':fields.many2one('ir.ui.menu', 'Menu', required=False),
     }
 
     # the following lines added to let the button on dashboard work.
