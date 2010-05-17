@@ -1618,6 +1618,9 @@ class ir_model(osv.osv):
         @param context: A standard dictionary for contextual values 
         """
 
+        if isinstance(ids, (str, int, long)):
+            ids = [ids]
+
         data = super(ir_model, self).read(cr, uid, ids, fields=fields, \
                         context=context, load=load)
         if data:

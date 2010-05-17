@@ -161,7 +161,7 @@ class resource_resource(osv.osv):
         'resource_type' : 'user',
         'time_efficiency' : 1,
         'active' : True,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', c)
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', context=context)
     }
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
