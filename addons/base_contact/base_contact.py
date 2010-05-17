@@ -127,8 +127,9 @@ class res_partner_address(osv.osv):
             @param limit: The Number of Results to Return
             @param context: A standard dictionary for contextual values
         """
-
-        if context and context.has_key('address_partner_id' ) and context['address_partner_id']:
+        if context is None:
+            context = {}
+        if context.get('address_partner_id',False):
             args.append(('partner_id', '=', context['address_partner_id']))
         return super(res_partner_address, self).search(cr, user, args, offset, limit, order, context, count)
 
