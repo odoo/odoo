@@ -442,6 +442,7 @@ class report_sxw(report_rml, preprocess.report):
         processed_rml = etree.XML(rml)
         if report_xml.header:
             rml_parser._add_header(processed_rml, self.header)
+        processed_rml = self.preprocess_rml(processed_rml,report_xml.report_type)
         if rml_parser.logo:
             logo = base64.decodestring(rml_parser.logo)
         create_doc = self.generators[report_xml.report_type]
