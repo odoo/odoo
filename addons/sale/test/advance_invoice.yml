@@ -321,7 +321,7 @@
       "active_model": 'sale.order', "active_ids": [ref("sale_order_so0")], "tz":
       False, "active_id": ref("sale_order_so0"), })
 -
-  I will verify whether the invoice has been generated for SO since Shipping policy is 'Payment Before Delivery'
+  I will verify whether the invoice has been generated.
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so0"))

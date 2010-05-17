@@ -280,10 +280,10 @@
 -
   Creating a sale.order record
 - 
-  !record {model: sale.order, id: sale_order_so0}:
+  !record {model: sale.order, id: sale_order_so1}:
     date_order: '2010-05-03'
     invoice_quantity: order
-    name: SO004
+    name: SO001
     order_line:
       - name: LG Viewty Smart
         price_unit: 170.0
@@ -308,19 +308,19 @@
 - 
   Performing a workflow action order_confirm on module sale.order
 - 
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so1}
 -
   I will verify whether the invoice has been generated for SO since Shipping policy is 'Payment Before Delivery'
 -
   !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
-    assert so.invoice_ids, "Invoices has not been generated for sale_order_so0"
+    so = self.browse(cr, uid, ref("sale_order_so1"))
+    assert so.invoice_ids, "Invoices has not been generated for sale_order_so1"
 - 
   Performing a workflow action invoice_open on module account.invoice
 - 
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
     import netsvc
     wf_service = netsvc.LocalService("workflow")  
     invoice_ids = so.invoice_ids
@@ -329,7 +329,7 @@
 -
   Creating a account.invoice.pay record
 - 
-  !record {model: account.invoice.pay, id: account_invoice_pay_tst0}:
+  !record {model: account.invoice.pay, id: account_invoice_pay_tst1}:
     amount: 85000.0
     date: '2010-05-10'
     journal_id: sale.account_journal_bankjournal0
@@ -340,8 +340,8 @@
 - 
   !python {model: account.invoice.pay}: |
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))  
-    self.wo_check(cr, uid, [ref("account_invoice_pay_tst0")], {"lang": "en_US", "tz":
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))  
+    self.wo_check(cr, uid, [ref("account_invoice_pay_tst1")], {"lang": "en_US", "tz":
       False, "active_model": 'account.invoice', "active_ids": [so.invoice_ids[0].id], "type":
       "out_invoice", "active_id": so.invoice_ids[0].id, })
     
@@ -361,25 +361,25 @@
 - 
   !python {model: account.invoice.pay.writeoff}: |
     sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))   
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))   
     self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
       {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
       [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id })
     
     
 -
-  I will verify the picking associated with the sale order sale_order_so0
+  I will verify the picking associated with the sale order sale_order_so1
 - 
   !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
-    assert so.picking_ids,"Picking has not been generated for sale_order_so0"
+    so = self.browse(cr, uid, ref("sale_order_so1"))
+    assert so.picking_ids,"Picking has not been generated for sale_order_so1"
 - 
   Creating a stock.partial.picking record
 - 
   !python {model: stock.picking }: |
    import time
    sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
@@ -395,14 +395,13 @@
           'product_qty': move.product_qty,
           'product_uom': move.product_uom.id,
       } 
-      print "=====>>>>>>",partial_datas
       self.do_partial(cr, uid, picking_id,partial_datas)
 -
   I verify that picking order is in done state
 -
   !python {model: stock.picking }: |
    sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))  
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))  
    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    if picking_id:
      pick = self.browse(cr,uid,picking_id[0])
