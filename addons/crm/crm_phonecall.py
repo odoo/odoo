@@ -175,4 +175,15 @@ class crm_phonecall(osv.osv, crm_case):
 
 crm_phonecall()
 
+class res_partner(osv.osv):
+    """ Inherits partner and adds Phonecalls information in the partner form """
+    _inherit = 'res.partner'
+    
+    _columns = {
+                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
+                }
+
+res_partner()
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

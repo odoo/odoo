@@ -326,5 +326,60 @@
            </search>
         </field>
     </record>
+    
+    <!--  Partners inherited form -->
+
+		<record id="view_opp_partner_info_form" model="ir.ui.view">
+            <field name="name">res.partner.opportunity.info.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+               		<field name="phonecall_ids" position="after">
+               			<field name="opportunity_ids" colspan="4" nolabel="1" domain="[('type', '=', 'opportunity')]">
+               				<tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+				                <field name="create_date"/>
+				                <field name="partner_name"/>
+				                <field name="name"/>
+				                <field name="email_from"/>
+				                <field name="phone"/>
+				
+				                <field name="categ_id" invisible="1"/>
+				                <field name="type_id" invisible="1"/>
+				                <field name="referred" invisible="1"/>
+				
+				                <field name="stage_id"/>
+				                <button name="stage_previous" string="Previous"
+				                    states="open,pending" type="object" icon="gtk-go-back" />
+				                <button name="stage_next" string="Next"
+				                    states="open,pending" type="object"
+				                    icon="gtk-go-forward" />
+				                <field name="section_id"
+				                    invisible="context.get('invisible_section', True)" />
+				                <field name="user_id" />
+				                <field name="state" />
+				                <button name="case_open" string="Open"
+				                    states="draft,pending" type="object"
+				                    icon="gtk-go-forward" />
+				                <button name="case_close" string="Close"
+				                    states="open,draft,pending" type="object"
+				                    icon="gtk-close" />
+				                <button string="Convert to Opportunity"
+				                    name="convert_opportunity"
+				                    states="draft,open,pending" icon="gtk-index"
+				                    type="object" />
+				                <button name="case_escalate" string="Escalate"
+				                    states="open,draft,pending" type="object"
+				                    icon="gtk-go-up" />
+				                <button name="case_cancel" string="Cancel"
+				                    states="draft,open,pending" type="object"
+				                    icon="gtk-cancel" />
+				            </tree>
+               			</field>
+               		</field>
+            </field>
+        </record>
+
+
 </data>
 </openerp>
