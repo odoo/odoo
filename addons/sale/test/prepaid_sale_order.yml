@@ -283,7 +283,7 @@
   !record {model: sale.order, id: sale_order_so1}:
     date_order: '2010-05-03'
     invoice_quantity: order
-    name: SO001
+    name: Test_SO001
     order_line:
       - name: LG Viewty Smart
         price_unit: 170.0
@@ -403,6 +403,7 @@
    sale_order_obj = self.pool.get('sale.order')
    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))  
    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
+   
    if picking_id:
      pick = self.browse(cr,uid,picking_id[0])
      assert (pick.state) =='done', "Picking for SO is not in done state."

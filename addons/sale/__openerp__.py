@@ -62,7 +62,7 @@
     'demo_xml': ['sale_demo.xml'],
     'test': [
              'test/shipping_manual_sale_order.yml',
-#             'test/prepaid_sale_order.yml',
+             'test/prepaid_sale_order.yml',
              'test/advance_invoice.yml',
              'test/sale_procurement.yml',
             ],
