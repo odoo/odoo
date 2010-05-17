@@ -27,7 +27,7 @@
     * IMAP / IMAP with SSL
     * POP / POP with SSL
     * SMTP / SMTP with TLS
-    * ACL basd access polocy 
+    * ACL basd access polocy
     * Queing and History for Emails
     * Easy Integration with any Module""",
     'author': 'Tiny',
@@ -35,7 +35,8 @@
     'depends': ['smtpclient'],
     'init_xml': [],
     'update_xml': [
-        "mail_gateway_view.xml"
+        "mail_gateway_view.xml",
+        'security/ir.model.access.csv'
     ],
     'demo_xml': [],
     'installable': True,
