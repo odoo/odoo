@@ -166,4 +166,16 @@ class crm_opportunity(osv.osv):
 
 crm_opportunity()
 
+class res_partner(osv.osv):
+    """ Inherits partner and adds Opportunities information in the partner form """
+    _inherit = 'res.partner'
+    
+    _columns = {
+                'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
+                                                     'Opportunities', domain=[('type', '=', 'opportunity')]), 
+                }
+
+res_partner()
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
