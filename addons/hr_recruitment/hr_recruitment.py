@@ -19,47 +19,75 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields, osv
+from crm import crm
 
 AVAILABLE_STATES = [
-    ('draft','New'),
-    ('open','In Progress'),
-    ('cancel', 'Refused'),
-    ('done', 'Hired'),
-    ('pending','Pending')
+    ('draft', 'New'), 
+    ('open', 'In Progress'), 
+    ('cancel', 'Refused'), 
+    ('done', 'Hired'), 
+    ('pending', 'Pending')
 ]
 
 AVAILABLE_PRIORITIES = [
-    ('5','Not Good'),
-    ('4','On Average'),
-    ('3','Good'),
-    ('2','Very Good'),
-    ('1','Excellent')
+    ('5', 'Not Good'), 
+    ('4', 'On Average'), 
+    ('3', 'Good'), 
+    ('2', 'Very Good'), 
+    ('1', 'Excellent')
 ]
 
 
-class hr_applicant(osv.osv):
+class hr_applicant(osv.osv, crm.crm_case):
     _name = "hr.applicant"
     _description = "Applicant Cases"
     _order = "id desc"
-    _inherit ='crm.case'
+    _inherit ='mailgate.thread'
+
     _columns = {
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'date': fields.datetime('Date'),
-        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
-        'job_id': fields.many2one('hr.job', 'Applied Job'),
-        'salary_proposed': fields.float('Proposed Salary'),
-        'salary_expected': fields.float('Expected Salary'),
-        'availability': fields.integer('Availability (Days)'),
-        'partner_name': fields.char("Applicant's Name", size=64),
-        'partner_phone': fields.char('Phone', size=32),
-        'partner_mobile': fields.char('Mobile', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
-        'department_id':fields.many2one('hr.department','Department'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
-        'response' : fields.integer("Response"),
+        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."), 
+        'description': fields.text('Description'), 
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+                        select=True, help='Sales team to which Case belongs to.\
+                             Define Responsible user and Email account for mail gateway.'), 
+        'email_from': fields.char('Email', size=128, help="These people will receive email."), 
+        'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
+                             will receive a copy of the future" \
+                            " communication between partner and users by email"), 
+        'probability': fields.float('Probability'), 
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                 domain="[('partner_id','=',partner_id)]"), 
+        'create_date': fields.datetime('Creation Date' , readonly=True), 
+        'write_date': fields.datetime('Update Date' , readonly=True), 
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
+                         domain="[('section_id','=',section_id),\
+                        ('object_id.model', '=', 'crm.opportunity')]"), 
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True, 
+                                  help='The state is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the state is set to \'Open\'.\
+                                  \nWhen the case is over, the state is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+        'company_id': fields.many2one('res.company', 'Company'), 
+        'user_id': fields.many2one('res.users', 'Responsible'), 
+        # Applicant Columns
+        'date_closed': fields.datetime('Closed', readonly=True), 
+        'date': fields.datetime('Date'), 
+        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'), 
+        'job_id': fields.many2one('hr.job', 'Applied Job'), 
+        'salary_proposed': fields.float('Proposed Salary'), 
+        'salary_expected': fields.float('Expected Salary'), 
+        'availability': fields.integer('Availability (Days)'), 
+        'partner_name': fields.char("Applicant's Name", size=64), 
+        'partner_phone': fields.char('Phone', size=32), 
+        'partner_mobile': fields.char('Mobile', size=32), 
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"), 
+        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"), 
+        'department_id':fields.many2one('hr.department', 'Department'), 
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True), 
+        'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'), 
+        'response' : fields.integer("Response"), 
     }
 
     def onchange_job(self,cr, uid, ids, job, context={}):
@@ -135,24 +163,24 @@ class hr_applicant(osv.osv):
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
             context = {
-                'default_opportunity_id': opp.id,
-                'default_partner_id': opp.partner_id and opp.partner_id.id or False,
-                'default_section_id': opp.section_id and opp.section_id.id or False,
-                'default_email_from': opp.email_from,
-                'default_state': 'open',
+                'default_opportunity_id': opp.id, 
+                'default_partner_id': opp.partner_id and opp.partner_id.id or False, 
+                'default_section_id': opp.section_id and opp.section_id.id or False, 
+                'default_email_from': opp.email_from, 
+                'default_state': 'open', 
                 'default_name': opp.name
             }
             value = {
-                'name': ('Meetings'),
-                'domain': "[('user_id','=',%s)]" % (uid),
-                'context': context,
-                'view_type': 'form',
-                'view_mode': 'calendar,form,tree',
-                'res_model': 'crm.meeting',
-                'view_id': False,
-                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id'],
+                'name': ('Meetings'), 
+                'domain': "[('user_id','=',%s)]" % (uid), 
+                'context': context, 
+                'view_type': 'form', 
+                'view_mode': 'calendar,form,tree', 
+                'res_model': 'crm.meeting', 
+                'view_id': False, 
+                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')], 
+                'type': 'ir.actions.act_window', 
+                'search_view_id': res['res_id'], 
                 'nodestroy': True
             }
         return value
@@ -172,7 +200,7 @@ class hr_applicant(osv.osv):
             context = {}
         record = self.browse(cr, uid, ids, context)
         record = record and record[0]
-        context.update({'survey_id': record.survey.id, 'response_id' : [record.response], 'response_no':0,})
+        context.update({'survey_id': record.survey.id, 'response_id' : [record.response], 'response_no':0, })
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
         return value
 hr_applicant()
@@ -181,7 +209,7 @@ class hr_job(osv.osv):
     _inherit = "hr.job"
     _name = "hr.job"
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey'),
+        'survey_id': fields.many2one('survey', 'Survey'), 
     }
 
 hr_job()

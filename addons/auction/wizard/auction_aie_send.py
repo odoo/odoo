@@ -138,8 +138,9 @@ class auction_lots_send_aie(osv.osv_memory):
     
     
     def _photos_send(cr, uid, uname, passwd, did, ids):
+        service = netsvc.LocalService("object_proxy")
         for (ref,id) in ids:
-            service = netsvc.LocalService("object_proxy")
+            
     #       ids_attach = service.execute(db_name,uid, 'ir.attachment', 'search', [('res_model','=','auction.lots'), ('res_id', '=',id)])
             datas = service.execute(cr.db_name,uid, 'auction.lots', 'read',[id], ['name','image'])
             if len(datas):

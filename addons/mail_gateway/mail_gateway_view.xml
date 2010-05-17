@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_maligate_message_form">
+            <field name="name">maligate.message.form</field>
+            <field name="model">maligate.message</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="maligate message">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="model_id" />
+                    <field name="res_id" />
+                    <field name="user_id" />
+                    <field name="message_id" />
+                    <notebook colspan="4">
+	                    <page>
+	                    	<group col="4" colspan="4">
+	                    		<separator string="Email Details" colspan="4"/>
+			                    <field name="email_from" />
+			                    <field name="email_to" />
+			                    <field name="email_cc" />
+			                    <field name="email_bcc" />
+			               </group>
+		                </page>
+		                <page>
+		                	<separator string="Attachments" colspan="4"/>
+		                    <field name="attachment_ids" nolabel="1" colspan="4" />
+                 		</page>
+	                </notebook>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_mailgate_message_tree">
+            <field name="name">maligate.message.tree</field>
+            <field name="model">maligate.message</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Mailgateway Message">
+                    <field name="name" select="1" />
+                    <field name="date" />
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record model="ir.ui.view" id="view_mailgate_thread_form">
+            <field name="name">mailgate.thread.form</field>
+            <field name="model">mailgate.thread</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Mailgateway Thread">
+                    <field name="name" select="1"/>
+                    <separator string="Messages" colspan="4"/>
+                    <field name="message_ids" nolabel="1" colspan="4">
+                    	<tree string="Mailgateway Message">
+		                    <field name="name" select="1" />
+		                    <field name="date" />
+		                </tree>
+	                    <form string="Maligate Message">
+		                    <field name="name" />
+		                    <field name="date" />
+		                    <field name="model_id" />
+		                    <field name="res_id" />
+		                    <field name="user_id" />
+		                    <field name="message_id" />
+		                    <notebook colspan="4">
+			                    <page string="Email Details">
+			                    	<group col="4" colspan="4">
+			                    		<separator string="Email Details" colspan="4"/>
+					                    <field name="email_from" />
+					                    <field name="email_to" />
+					                    <field name="email_cc" />
+					                    <field name="email_bcc" />
+					               </group>
+				                </page>
+				                <page string="Attachments">
+				                	<separator string="Attachments" colspan="4"/>
+				                    <field name="attachment_ids" nolabel="1" colspan="4" />
+		                 		</page>
+			                </notebook>
+		                </form>
+                    </field>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_mailgate_thread_tree">
+            <field name="name">mailgate.thread.tree</field>
+            <field name="model">mailgate.thread</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Mailgateway Thread">
+                    <field name="name" select="1" />
+                    <field name="message_ids" />
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_view_mailgate_thread">
+	        <field name="name">Mailgateway Threads</field>
+	        <field name="res_model">mailgate.thread</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="view_type">form</field>
+	        <field name="view_id" ref="view_mailgate_thread_tree"/>
+	    </record>
+		
+		<record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view1">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_mailgate_thread_tree"/>
+	        <field name="act_window_id" ref="action_view_mailgate_thread"/>
+	    </record>
+	    <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view2">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="view_mailgate_thread_form"/>
+	        <field name="act_window_id" ref="action_view_mailgate_thread"/>
+	    </record>
+		
+		
+		 <menuitem id="base.menu_crm_configuration" name="Cases"
+            parent="base.menu_base_config" sequence="0"/>
+
+        <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
+        	parent="base.menu_crm_configuration"  sequence="20"/>
+        	
+      	
+    </data>
+</openerp>
