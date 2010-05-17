@@ -3,7 +3,7 @@
 	<data>
 
 	<!-- Wizard view for the load data -->
-	
+
 	        <record id="bi_load_db_form" model="ir.ui.view">
 	            <field name="name">bi.load.db.form</field>
 	            <field name="model">bi.load.db.wizard</field>
@@ -22,7 +22,7 @@
 	                </form>
 	            </field>
 	        </record>
-	        
+
 	        <record id="act_bi_load_db_wizard" model="ir.actions.act_window">
 	            <field name="name">Load database Structure</field>
 	            <field name="res_model">bi.load.db.wizard</field>
@@ -33,10 +33,10 @@
 	            <field name="auto_refresh" eval="1"/>
 	            <field name="target">new</field>
 	        </record>
-	
-	
+
+
 	<!-- Wizard For Olap Warehouse -->
-	
+
 	        <record id="view_warehouse_bi" model="ir.ui.view">
 	            <field name="name">Olap Warehouse</field>
 	            <field name="model">olap.warehouse.wizard</field>
@@ -51,7 +51,7 @@
 	                </form>
 	            </field>
 	        </record>
-	        
+
 	        <record id="action_olap_warehouse" model="ir.actions.act_window">
 	            <field name="name">Olap Warehouse</field>
 	            <field name="type">ir.actions.act_window</field>
@@ -60,7 +60,7 @@
 	            <field name="view_mode">form</field>
 	            <field name="target">new</field>
 	        </record>
-	        
+
 	        <menuitem
 	        name="Olap Warehouse"
 	        action="action_olap_warehouse"
@@ -68,9 +68,9 @@
 	        sequence="51"
 	        parent="base.next_id_50"
 	        />
-	
+
 	<!-- Wizard View for the parameters wizard -->
-	
+
 	        <record id="view_config_bi" model="ir.ui.view">
 	            <field name="name">Parameters Configuration</field>
 	            <field name="model">olap.parameters.config.wizard</field>
@@ -90,7 +90,7 @@
 	                </form>
 	            </field>
 	        </record>
-	
+
 	        <record id="action_config_bi_parameters" model="ir.actions.act_window">
 	            <field name="name">Parameters Configuration</field>
 	            <field name="type">ir.actions.act_window</field>
@@ -99,7 +99,7 @@
 	            <field name="view_mode">form</field>
 	            <field name="target">new</field>
 	        </record>
-	        
+
 	        <menuitem
 	        name="Server Parameters"
 	        action="action_config_bi_parameters"
@@ -107,16 +107,16 @@
 	        sequence="50"
 	        parent="base.next_id_50"
 	        />
-	        
+
 	        <record model="ir.actions.todo" id="config_auto_directory">
 	            <field name="name">Server Parameters Configuration</field>
 	            <field name="note">This wizard will configure the URL of the web client</field>
 	            <field name="action_id" ref="action_config_bi_parameters"/>
 	        </record>
-	
-	
+
+
 	<!-- Wizard view for the Auto Configuring the data -->
-	
+
 	        <record id="bi_auto_configure_form" model="ir.ui.view">
 	            <field name="name">bi.auto.configure.form</field>
 	            <field name="model">bi.auto.configure.wizard</field>
@@ -131,7 +131,7 @@
 	                </form>
 	            </field>
 	        </record>
-	        
+
 	        <record id="act_bi_auto_configure" model="ir.actions.act_window">
 	            <field name="name">Auto Configuration</field>
 	            <field name="res_model">bi.auto.configure.wizard</field>
@@ -142,13 +142,13 @@
 	            <field name="auto_refresh" eval="1"/>
 	            <field name="target">new</field>
 	        </record>
-	
-	
-	
+
+
+
 	    # ------------------------------------------------------------------
 	    # Olap Schema
 	    # ------------------------------------------------------------------
-	
+
 	    <record model="ir.ui.view" id="view_olap_schema_tree">
 	        <field name="name">olap.schema.tree</field>
 	        <field name="model">olap.schema</field>
@@ -160,7 +160,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	
+
 	    <record model="ir.ui.view" id="view_olap_schema_form">
 	        <field name="name">olap.schema.form</field>
 	        <field name="model">olap.schema</field>
@@ -195,19 +195,19 @@
 	            </form>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.actions.act_window" id="action_olap_schema_form">
 	        <field name="name">Olap Schemas</field>
 	        <field name="res_model">olap.schema</field>
 	        <field name="view_type">form</field>
 	    </record>
-	    
+
 	    <menuitem
 	        name="Olap Schema"
 	        action="action_olap_schema_form"
 	        id="menu_action_olap_schema_form"
 	        parent="menu_bi_conf_cubes"/>
-	
+
 	    # ------------------------------------------------------------------
 	    # Olap Cubes Table
 	    # ------------------------------------------------------------------
@@ -245,23 +245,23 @@
 	            </form>
 	        </field>
 	    </record>
-	
+
 	    <record model="ir.actions.act_window" id="action_olap_cube_table_form">
 	        <field name="name">Olap Cube Tables</field>
 	        <field name="res_model">olap.cube.table</field>
 	        <field name="view_type">form</field>
 	    </record>
-	    
+
 	    <menuitem
 	        name="Olap Cubes Table"
 	        parent = "menu_bi_conf_cubes"
 	        action="action_olap_cube_table_form"
 	        id="menu_action_olap_cube_table_form"/>
-	
+
 	    # ------------------------------------------------------------------
 	    # Olap Cubes
 	    # ------------------------------------------------------------------
-	
+
 	    <record model="ir.ui.view" id="view_olap_cube_tree">
 	        <field name="name">olap.cube.tree</field>
 	        <field name="model">olap.cube</field>
@@ -273,7 +273,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.ui.view" id="view_olap_cube_form">
 	        <field name="name">olap.cube.form</field>
 	        <field name="model">olap.cube</field>
@@ -287,24 +287,24 @@
 	            </form>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.actions.act_window" id="action_olap_cube_form">
 	        <field name="name">Olap Cubes</field>
 	        <field name="res_model">olap.cube</field>
 	        <field name="view_type">form</field>
 	    </record>
-	    
+
 	    <menuitem
 	        name="Olap Cubes"
 	        parent ="menu_bi_conf_cubes"
 	        action="action_olap_cube_form"
 	        id="menu_action_olap_cube_form"/>
-	
-	
+
+
 	    # ------------------------------------------------------------------
 	    # Olap Dimensions
 	    # ------------------------------------------------------------------
-	
+
 	    <record model="ir.ui.view" id="view_olap_dimension_tree">
 	        <field name="name">olap.dimension.tree</field>
 	        <field name="model">olap.dimension</field>
@@ -316,7 +316,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.ui.view" id="view_olap_dimension_form">
 	        <field name="name">olap.dimension.form</field>
 	        <field name="model">olap.dimension</field>
@@ -328,23 +328,23 @@
 	            </form>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.actions.act_window" id="action_olap_dimension_form">
 	        <field name="name">Olap Dimensions</field>
 	        <field name="res_model">olap.dimension</field>
 	        <field name="view_type">form</field>
 	    </record>
-	    
+
 	    <menuitem
 	        name="Olap Dimension"
 	        parent = "menu_bi_conf_cubes"
 	        action="action_olap_dimension_form"
 	        id="menu_action_olap_dimension_form"/>
-	
+
 	    # ------------------------------------------------------------------
 	    # Olap Hierarchies
 	    # ------------------------------------------------------------------
-	
+
 	    <record model="ir.ui.view" id="view_olap_hierarchy_tree">
 	        <field name="name">olap.hierarchy.tree</field>
 	        <field name="model">olap.hierarchy</field>
@@ -356,7 +356,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.ui.view" id="view_olap_hierarchy_form">
 	        <field name="name">olap.hierarchy.form</field>
 	        <field name="model">olap.hierarchy</field>
@@ -365,33 +365,29 @@
 	            <form string="Olap hierarchy">
 	                <field name="name" select="1" colspan="2"/>
 	                <field name="sequence" colspan="2"/>
-	                <field name="dimension_id" select="1" attrs="{'readonly':[('dimension_id','!=','')]}" colspan="4"/>
-	<!--                <field name="field_name" select="2"/>-->
-	                
-	                <field name="table_id" select="2" colspan="4" context="{'d_id':dimension_id}"/>
-	<!--                <separator string="Levels" colspan="4"/>
-	                <field name="level_ids" colspan="4" nolabel="1"/>-->
+	                <field name="dimension_id" select="1" attrs="{'readonly':[('dimension_id','!=','')]}" colspan="2"/>
+	                <field name="table_id" select="2" colspan="2" context="{'d_id':dimension_id}"/>
 	            </form>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.actions.act_window" id="action_olap_hierarchy_form">
 	        <field name="name">Olap Hierarchies</field>
 	        <field name="res_model">olap.hierarchy</field>
 	        <field name="view_type">form</field>
 	    </record>
-	    
+
 	    <menuitem
 	        name="Olap Hierarchy"
 	        parent = "menu_bi_conf_cubes"
 	        action="action_olap_hierarchy_form"
 	        id="menu_action_olap_hierarchy_form"/>
-	
-	
+
+
 	    # ------------------------------------------------------------------
 	    # Olap Levels
 	    # ------------------------------------------------------------------
-	
+
 	    <record model="ir.ui.view" id="view_olap_level_tree">
 	        <field name="name">olap.level.tree</field>
 	        <field name="model">olap.level</field>
@@ -408,7 +404,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.ui.view" id="view_olap_level_form">
 	        <field name="name">olap.level.form</field>
 	        <field name="model">olap.level</field>
@@ -427,24 +423,24 @@
 	            </form>
 	       </field>
 	    </record>
-	    
+
 	    <record model="ir.actions.act_window" id="action_olap_level_form">
 	        <field name="name">Olap Level</field>
 	        <field name="res_model">olap.level</field>
 	        <field name="view_type">form</field>
 	    </record>
-	    
+
 	    <menuitem
 	        name="Olap Level"
 	        parent = "menu_bi_conf_cubes"
 	        action="action_olap_level_form"
 	        id="menu_action_olap_level_form"/>
-	
-	
+
+
 	    # ------------------------------------------------------------------
 	    # Olap Measure
 	    # ------------------------------------------------------------------
-	
+
 	    <record model="ir.ui.view" id="view_olap_measure_tree">
 	        <field name="name">olap.measure.tree</field>
 	        <field name="model">olap.measure</field>
@@ -456,7 +452,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.ui.view" id="view_olap_measure_form">
 	        <field name="name">olap.measure.form</field>
 	        <field name="model">olap.measure</field>
@@ -471,7 +467,7 @@
 	                <group colspan="4" attrs="{'invisible':[('measure_type','!=','fact_column')]}">
 	                    <newline/>
 	                    <field name="value_column" select="1" attrs="{'required':[('measure_type','=','fact_column')]}" on_change="onchange_measure_name(value_column)" context="{'filter_cols_cube':cube_id}"/>
-	                    <field name="agregator" select="2" />
+	                    <field name="agregator" select="2"/>
 	                    <field name="formatstring" select="2"/>
 	                </group>
 	                <group colspan="4"  attrs="{'invisible':[('measure_type','!=','sql_expr')]}">
@@ -484,19 +480,19 @@
 	            </form>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.actions.act_window" id="action_olap_measure_form">
 	        <field name="name">Olap Measures</field>
 	        <field name="res_model">olap.measure</field>
 	        <field name="view_type">form</field>
 	    </record>
-	    
+
 	    <menuitem
 	        name="Olap Measures"
 	        parent = "menu_bi_conf_cubes"
 	        action="action_olap_measure_form"
 	        id="menu_action_olap_measure_form"/>
-	
+
 	    # ------------------------------------------------------------------
 	    # Olap Saved Query
 	    # ------------------------------------------------------------------
@@ -515,7 +511,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	
+
 	    <record model="ir.ui.view" id="view_olap_saved_query_form_mdx">
 	        <field name="name">olap.saved.query.mdx</field>
 	        <field name="model">olap.saved.query</field>
@@ -531,7 +527,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.ui.view" id="view_olap_saved_query_form">
 	        <field name="name">olap.saved.query.form</field>
 	        <field name="model">olap.saved.query</field>
@@ -553,22 +549,22 @@
 	            </form>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.actions.act_window" id="action_olap_saved_query_form">
 	        <field name="name">Olap Saved Query</field>
 	        <field name="res_model">olap.saved.query</field>
 	        <field name="view_type">form</field>
 	        <field name="view_mode">tree,form,mdx</field>
 	    </record>
-	    
+
 	    <menuitem
 	        name="Olap Saved Query"
 	        parent = "menu_bi_conf_tools"
 	        action="action_olap_saved_query_form"
 	        id="menu_action_olap_saved_query_form"/>
-	
+
 	<!-- All Logs -->
-	
+
 	    <record model="ir.ui.view" id="view_olap_query_logs_tree">
 	        <field name="name">olap.query.logs</field>
 	        <field name="model">olap.query.logs</field>
@@ -582,7 +578,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.ui.view" id="view_olap_query_logs_form">
 	        <field name="name">olap.query.logs.form</field>
 	        <field name="model">olap.query.logs</field>
@@ -599,21 +595,21 @@
 	            </form>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.actions.act_window" id="action_olap_query_logs_form">
 	        <field name="name">All Logs</field>
 	        <field name="res_model">olap.query.logs</field>
 	        <field name="view_type">form</field>
 	    </record>
-	
+
 	    <menuitem
 	        name="All Logs"
 	        action="action_olap_query_logs_form"
 	        id="menu_action_olap_query_logs_form"
 	        parent="menu_bi_conf_tools"/>
-	
+
 	<!-- All Logs / My logs -->
-	
+
 	    <record model="ir.ui.view" id="view_olap_query_logs_my_tree">
 	        <field name="name">olap.query.logs</field>
 	        <field name="model">olap.query.logs</field>
@@ -626,7 +622,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	    
+
 	    <record model="ir.ui.view" id="view_olap_query_logs_my_tree">
 	        <field name="name">olap.query.logs</field>
 	        <field name="model">olap.query.logs</field>
@@ -639,9 +635,9 @@
 	            </tree>
 	        </field>
 	    </record>
-	
+
 	<!-- Query Logs  -->
-	
+
 	    <record model="ir.ui.view" id="view_olap_query_logs_my_form">
 	        <field name="name">olap.query.logs.form</field>
 	        <field name="model">olap.query.logs</field>
@@ -657,7 +653,7 @@
 	            </form>
 	        </field>
 	    </record>
-	
+
 	    <record model="ir.actions.act_window" id="action_olap_query_logs_my_form">
 	        <field name="name">My Logs</field>
 	        <field name="res_model">olap.query.logs</field>
@@ -665,12 +661,12 @@
 	        <field name="view_mode">tree,form,mdx</field>
 	        <field name="domain">[('user_id','=',uid)]</field>
 	    </record>
-	
+
 	    <menuitem
 	        name="My Logs"
 	        action="action_olap_query_logs_my_form"
 	        id="menu_action_olap_query_logs_my_form"
 	        parent="menu_action_olap_query_logs_form"/>
-	
+
 	</data>
 </openerp>

@@ -49,7 +49,7 @@
 	        <field name="model">sale_journal.sale.journal</field>
 	        <field name="type">form</field>
 	        <field name="arch" type="xml">
-	            <form string="Sale Journal">
+	            <form string="Sales Journals">
 	                <notebook>
 	                <page string="Journal">
 	                    <separator string="Journal Information" colspan="4"/>
@@ -96,7 +96,7 @@
 	        <field name="model">sale_journal.sale.journal</field>
 	        <field name="type">tree</field>
 	        <field name="arch" type="xml">
-	            <tree string="Sale Journal">
+	            <tree string="Sales Journals">
 	                <field name="name" select="1"/>
 	                <field name="code" select="1"/>
 	                <field name="user_id" select="1"/>
@@ -146,9 +146,10 @@
 	        <field name="model">sale.order</field>
 	        <field name="inherit_id" ref="sale.view_order_form" />
 	        <field name="arch" type="xml">
-	            <field name="invoiced" position="after">
-	                <field name="journal_id" select="1"/>
-	                <field name="invoice_type_id" select="1"/>
+	            <field name="user_id" position="after">
+                    <separator string="Journal" colspan="4"/>
+	                <field name="journal_id" select="1" widget="selection"/>
+	                <field name="invoice_type_id" select="1" widget="selection"/>
 	            </field>
 	        </field>
 	    </record>
@@ -192,7 +193,7 @@
 	        <field name="model">stock.picking</field>
 	        <field name="inherit_id" ref="stock.vpicktree" />
 	        <field name="arch" type="xml">
-	            <field name="invoice_state" position="after">
+	            <field name="origin" position="after">
 	                <field name="journal_id" select="1"/>
 	                <field name="invoice_type_id" select="1"/>
 	                <field name="sale_journal_id" select="1"/>
@@ -252,7 +253,7 @@
 	        <field name="model">stock.picking</field>
 	        <field name="inherit_id" ref="stock.view_picking_in_tree" />
 	        <field name="arch" type="xml">
-	            <field name="invoice_state" position="after">
+	            <field name="origin" position="after">
 	                <field name="journal_id" select="1"/>
 	                <field name="invoice_type_id" select="1"/>
 	                <field name="sale_journal_id" select="1"/>
@@ -280,7 +281,7 @@
 	        <field name="model">stock.picking</field>
 	        <field name="inherit_id" ref="stock.view_picking_out_tree" />
 	        <field name="arch" type="xml">
-	            <field name="invoice_state" position="after">
+	            <field name="origin" position="after">
 	                <field name="journal_id" select="1"/>
 	                <field name="invoice_type_id" select="1"/>
 	                <field name="sale_journal_id" select="1"/>
@@ -417,7 +418,7 @@
 	        <field name="model">sale_journal.picking.journal</field>
 	        <field name="type">search</field>
 	        <field name="arch" type="xml">
-	            <search string="Picking Journal">
+	            <search string="Picking Journals">
 	                <group col="8" colspan="4">
 	                    <filter icon="terp-hr" string="My Picking Journals" domain="[('user_id','=',uid)]" help="My Picking Journals"/>
 	                    <filter icon="terp-hr" string="Open" domain="[('state','=','open')]" help="Open Picking Journals"/>
@@ -434,7 +435,7 @@
 <!-- Action of Picking journals -->	    
 	    
 	    <record model="ir.actions.act_window" id="action_definition_picking_journal">
-	        <field name="name">Picking journals</field>
+	        <field name="name">Picking Journals</field>
 	        <field name="res_model">sale_journal.picking.journal</field>
 	        <field name="view_type">form</field>
 	        <field name="view_mode">tree,form</field>

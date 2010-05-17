@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
     	<record id="view_sale_advance_payment_inv" model="ir.ui.view">
@@ -20,15 +19,14 @@
             </field>
 		</record>
 
-
-        <act_window name="Advance Invoice"		    
-		    res_model="sale.advance.payment.inv"
-		    src_model="sale.order"
-		    view_mode="form"
-		    target="new"        
-            key2="client_action_multi"    
-		    id="action_view_sale_advance_payment_inv"/>	
-
+		<record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
+            <field name="name">Advance Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.advance.payment.inv</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
     	<record id="view_sale_open_invoice" model="ir.ui.view">
             <field name="name">Open Invoice</field>

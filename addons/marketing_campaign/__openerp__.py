@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,40 +15,30 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
 {
-    'name': 'Detailed information on partner form', 
-    'version': '1.0', 
-    'category': 'Generic Modules/Base', 
-    'description': """
-This module allows a salesman to have a direct overlook at all events related to this partner directly from the partner form.
-
-It adds the following fields on the partner form:
-
-    * Opportunities
-    * Meetings
-    * Phone Calls
-    * Invoices
-       - group by product_id
-    * Contracts
-    * Timesheets
-
-    """, 
-    'author': 'Tiny', 
-    'website': 'http://www.openerp.com', 
-    'depends': ['crm', 'account_analytic_analysis'], 
-    'init_xml': [], 
+    "name" : "",
+    "version" : "1.1",
+    "depends" : ["crm", 
+                "document",
+                "poweremail" # need to get this module form the branch 
+                # lp:poweremail  
+                ],
+    "author" : "Tiny",
+    "category": 'Generic Modules/Marketing',
+    "description": """
+    """,
+    'website': 'http://www.openerp.com',
+    'init_xml': [],
     'update_xml': [
-                   'security/ir.model.access.csv', 
-                   'partner_infotab_view.xml'
-                   ], 
-    'demo_xml': [], 
-    'installable': True, 
-    'active': False, 
+        'marketing_campaign_view.xml',
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
