@@ -47,6 +47,7 @@
     'update_xml': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
+        'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
         'company_view.xml',
