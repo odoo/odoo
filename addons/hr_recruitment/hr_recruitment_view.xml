@@ -70,9 +70,9 @@
             <form string="Jobs - Recruitment Form">
                 <group colspan="4" col="8">
                         <field name="name" string="Subject"/>
-                        <field name="partner_name"/>
+                        <field name="partner_name" required = "True"/>
 	                   	<field name="job_id" on_change="onchange_job(job_id)"/>
-	                   	<button string="Schedule a Phone Call" name="223" icon="gtk-redo" type="action"/>
+	                   	<button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
                         <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
                     	<newline/>
                     	<group colspan="2" col="4">
