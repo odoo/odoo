@@ -333,14 +333,11 @@ class Partner(osv.osv):
         res = {}
         member_line_obj = self.pool.get('membership.membership_line')
         for partner in self.browse(cr, uid, ids, context=context):
-            if partner.membership_state != 'canceled':
-                res[partner.id] = False
-            else:
+            res[partner.id] = False
+            if partner.membership_state == 'canceled':
                 line_id = member_line_obj.search(cr, uid, [('partner', '=', partner.id)],limit=1, order='date_cancel')
                 if line_id:
                     res[partner.id] = member_line_obj.read(cr, uid, line_id[0],['date_cancel'])['date_cancel']
-                else:
-                    res[partner.id] = False    
         return res
 
     def _get_partners(self, cr, uid, ids, context={}):
@@ -389,7 +386,7 @@ class Partner(osv.osv):
                     _membership_cancel, method = True,
                     string = 'Cancel membership date', type='date',
                     store = {
-                        'account.invoice':(_get_invoice_partner,['state'], 10),
+                        'account.invoice':(_get_invoice_partner,['state'], 11),
                         'membership.membership_line':(_get_partner_id,['state'], 10),
                         'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)
                         }
