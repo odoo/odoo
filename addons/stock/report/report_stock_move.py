@@ -44,7 +44,7 @@ class report_stock_move(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
                                   help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
-
+        'day_diff':fields.integer('Days difference',readonly=True),
     }
     
     def init(self, cr):
@@ -56,6 +56,7 @@ class report_stock_move(osv.osv):
                     to_char(date_trunc('day',m.date_planned), 'YYYY') as year,
                     to_char(date_trunc('day',m.date_planned), 'MM') as month,
                     to_char(date_trunc('day',m.date_planned), 'YYYY-MM-DD') as day,
+                    (date(m.date_planned)-date(m.date_expected)) as day_diff,
                     m.address_id as partner_id,
                     m.location_id as location_id,
                     m.location_dest_id as location_dest_id,
@@ -69,6 +70,6 @@ class report_stock_move(osv.osv):
                     m.product_id=pp.id and pp.product_tmpl_id=pt.id
                group by 
                     m.id, m.product_id,m.address_id, m.location_id, m.location_dest_id,
-                    m.date_planned, m.state, m.product_uom,pt.standard_price     )      
+                    m.date_planned, m.state, m.product_uom,pt.standard_price,m.date_expected     )      
         """)
 report_stock_move()
