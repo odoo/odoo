@@ -1191,7 +1191,7 @@ class stock_move(osv.osv):
 
         'date': fields.datetime('Created Date'),
         'date_planned': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
-
+        'date_expected': fields.datetime('Date Expected', readonly=True,required=True, help="Scheduled date for the movement of the products"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
 
         'product_qty': fields.float('Quantity', required=True),
@@ -1269,7 +1269,8 @@ class stock_move(osv.osv):
         'scraped' : lambda *a: False,
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
+        'date_expected': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),        
     }
 
     def copy(self, cr, uid, id, default=None, context={}):
