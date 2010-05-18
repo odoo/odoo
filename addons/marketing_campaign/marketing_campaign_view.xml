@@ -17,13 +17,54 @@
             <form string="Campaign">
                <group colspan="4">
                     <field name="name" select="1"/>
-                    <field name="object_id" select="1"/>
+                    <field name="object_id" readonly="True" select="1"/>
                     <field name="mode"/>
                 </group>
-               <field name="activity_ids" nolabel = "1" colspan="4"/>
-               <separator string="Status" colspan="4" />
-               <field name="state" nolabel = "1" colspan="4"/>
-               <field name="state" nolabel = "1" />
+               <field name="activity_ids" nolabel = "1" colspan="4">
+               		<form string="Activities">
+	                <field name="name" select="1" />
+	                <field name="object_id" readonly="True"/>  
+	                 <field name="start"/>              
+	                <field name="condition" colspan="4"/>
+	                <newline/>
+	                <field name="type"/>
+	                <group colspan="4" attrs="{'invisible':[('type','!=','email')]}" >                
+	                    <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
+	                </group>
+	                <group colspan="4" attrs="{'invisible':[('type','!=','paper')]}" >
+	                    <field name="report_id" attrs="{'required':[('type','=','paper')]}" />
+	                    <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
+	                </group>
+	                <group colspan="4" attrs="{'invisible':[('type','!=','action')]}" >                
+	                    <field name="server_action_id" attrs="{'required':[('type','=','action')]}" />
+	                </group>
+	                <group colspan="4" attrs="{'invisible':[('type','!=','subcampaign')]}" >                
+	                    <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
+	                    <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
+	                </group>                
+	                <field name="to_ids" nolabel="1" colspan="4" mode="tree">
+	                    <tree string="All Transitions" editable="bottom">
+	                        <field name="activity_from_id"/>
+	                        <field name="activity_to_id"/>
+	                        <field name="interval_nbr"/>
+	                        <field name="interval_type"/>
+	                    </tree>
+                	</field>
+            </form>
+		    <tree string="All Activities">
+                <field name="name" select="1"/>
+                <field name="object_id"/>
+                <field name="start"/>
+                <field name="condition"/>
+                <field name="type"/>
+                <field name="report_id"/>
+                 <field name="to_ids"/>
+                <field name="subcampaign_id"/>
+                <field name="subcampaign_segment_id"/>
+            </tree>
+		    </field>    
+            	<separator string="Status" colspan="4" />
+            	<field name="state" nolabel = "1" colspan="4"/>
             </form>
         </field>
     </record>
@@ -92,7 +133,7 @@
                 <field name="name" select="1"/>
                 <newline/>
                 <field name="campaign_id" select="1"/>
-                <field name="object_id" select="1"/>
+                <field name="object_id" select="1" readonly="True"/>
                 <newline/>
                 <field name="ir_filter_id" select="1"/>
                 <newline/>
@@ -116,11 +157,12 @@
             <tree string="All Segments">
                 <field name="name" select="1"/>
                 <field name="campaign_id" select="1"/>
-                <field name="sync_last_date"/>
-                <field name="sync_mode"/>
-                <field name="state"/>
+                <field name="object_id" select="1" />
                 <field name="date_run"/>
                 <field name="date_done"/>
+                <field name="sync_last_date" string="Sync Date"/>
+                <field name="sync_mode" string="Sync Mode"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -169,9 +211,9 @@
                     <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
                     <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
                 </group>                
-                <field name="to_ids" nolabel="1" colspan="4" mode="tree">
+                <field name="to_ids" nolabel="1"  colspan="4" mode="tree,form" >
                     <tree string="All Transitions" editable="bottom">
-                        <field name="activity_from_id"/>
+                        <field name="activity_from_id" />
                         <field name="activity_to_id" />
                         <field name="interval_nbr" />
                         <field name="interval_type"/>
@@ -194,7 +236,7 @@
                 <field name="condition"/>
                 <field name="type"/>
                 <field name="report_id"/>
-                 <field name="to_ids"/>
+                 <field name="to_ids" />
                 <field name="subcampaign_id"/>
                 <field name="subcampaign_segment_id"/>
             </tree>
@@ -227,6 +269,8 @@
             <tree string="All Workitems">
                 <field name="segment_id"/>
                 <field name="activity_id" />
+                <field name="object_id"/>
+                <field name="partner_id" select="1"/>
                 <field name="res_id" />
                 <field name="date"/>
                 <field name="state"/>
@@ -241,11 +285,11 @@
         <field name="arch" type="xml">
             <form string="Workitem">
                 <field name="segment_id" select="1"/>
-                <field name="activity_id" select="1"/>
-                <field name="object_id"/>
+                <field name="activity_id" context="{'segment_id':segment_id}" select="1"/>
+                <field name="object_id" readonly="True"/>
+                 <field name="partner_id" select="1"/>
                 <field name="res_id"/>
                 <field name="date" select="1"/>
-                <field name="partner_id" select="1"/>
                 <separator string="Status" colspan="4"/>
                 <field name="state" nolabel="1" colspan="4" readonly="True" select="1"/>
             </form>
