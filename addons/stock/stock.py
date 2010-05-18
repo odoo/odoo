@@ -1753,7 +1753,7 @@ class stock_move(osv.osv):
 
         @ return: Consumed lines
         '''
-        if not context:
+        if context is None:
             context = {}
 
         if quantity <= 0:
