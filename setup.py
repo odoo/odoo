@@ -60,6 +60,7 @@ required_modules = [
     ('pytz', 'Timezone handling library for Python'),
     ('reportlab', 'reportlab module'),
     ('yaml', 'YAML parser and emitter for Python'),
+    ('pywebdav', 'PyWebDAV is a standards compliant WebDAV server and library written in Python'),
 ]
 
 def check_modules():
@@ -180,7 +181,7 @@ options = {
                      "lxml.objectify", "decimal", "xml", "encodings",
                      "dateutil", "wizard", "pychart", "PIL", "pyparsing",
                      "pydot", "asyncore","asynchat", "reportlab", "vobject",
-                     "HTMLParser", "select", "yaml"],
+                     "HTMLParser", "select", "yaml", "pywebdav"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }
