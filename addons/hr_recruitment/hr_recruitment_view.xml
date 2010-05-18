@@ -82,7 +82,7 @@
 						</group>
                         <field name="user_id"/>
                         <field name="department_id" widget="selection"/>
-	                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+	                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
 	                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
             	</group>
                 <notebook colspan="4">

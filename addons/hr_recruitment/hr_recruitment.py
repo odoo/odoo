@@ -75,9 +75,9 @@ class hr_applicant(osv.osv, crm.crm_case):
                                  domain="[('partner_id','=',partner_id)]"),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Update Date' , readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.opportunity')]"),
+#        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
+#                         domain="[('section_id','=',section_id),\
+#                        ('object_id.model', '=', 'crm.opportunity')]"),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
@@ -96,10 +96,11 @@ class hr_applicant(osv.osv, crm.crm_case):
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
+#        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
+        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
+        'type_id': fields.many2one('crm.case.resource.type', 'Degree'),
         'department_id':fields.many2one('hr.department', 'Department'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+#        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response' : fields.integer("Response"),
     }
