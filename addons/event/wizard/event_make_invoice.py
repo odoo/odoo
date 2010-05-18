@@ -82,8 +82,9 @@ class event_make_invoice(osv.osv_memory):
                 tax_ids.append(tax.id)
 
             vals = value['value']
+            c_name = reg.contact_id and ('-' + self.pool.get('res.partner.contact').name_get(cr, uid, [reg.contact_id.id])[0][1]) or ''
             vals.update({
-                'name': reg.invoice_label + '-' + reg.name,
+                'name': reg.invoice_label + '-' + c_name,
                 'price_unit': reg.unit_price,
                 'quantity': reg.nb_register,
                 'product_id':reg.event_id.product_id.id,
