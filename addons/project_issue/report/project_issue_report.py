@@ -17,7 +17,7 @@ class project_issue_report(osv.osv):
         'company_id' : fields.many2one('res.company', 'Company'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
-        'type_id': fields.many2one('crm.case.resource.type', 'Type', domain="[('object_id.model', '=', 'project.issue')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Version', domain="[('object_id.model', '=', 'project.issue')]"),
         'date_closed': fields.datetime('Close Date', readonly=True),
         'date_open': fields.datetime('Opened', readonly=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),

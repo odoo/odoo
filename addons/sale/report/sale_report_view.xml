@@ -226,7 +226,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Product bought by sale order">
-                <field name="name"/>
+                <field name="product_id"/>
+                 <field name="month"/>
+                 <field name="year"/>
                 <field name="total_products"/>
             </tree>
         </field>
@@ -238,8 +240,9 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Product bought by sale order" type="bar">
-                 <field name="name"/>
-                 <field name="total_products" operator="+"/>
+                 <field name="product_id" select="1"/>
+                 <field name="total_products" select="1"/>
+                 <field name="month" group = "True"/>
              </graph>
          </field>
     </record>
@@ -248,7 +251,8 @@
         <field name="name">Product bought by sale order</field>
         <field name="res_model">product.bought.by.sale.order</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('year','=', time.strftime('%Y'))]</field>
         <field name="view_id" ref="view_product_bought_by_sale_order_tree"/>
     </record>
 
