@@ -18,7 +18,6 @@
                 <field name="account_id" invisible="1"/>
                 <field name="general_account_id" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
-                <field name="move_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="product_uom_id" invisible="1"/>
                 <field name="nbr" sum="Entries"/>
@@ -36,10 +35,10 @@
         <field name="arch" type="xml">
             <search string="Analytic Entries">
               <group col="10" colspan="12">
-	            	<filter icon="terp-account" string="This Year"
+	            	<filter icon="terp-account" string="Last 365 DAys"
 		                    domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 		                    help="Analytic Entries of the year"/>
-	                <filter icon="terp-account" string="This Month"
+	                <filter icon="terp-account" string="Last 30 Days"
 	                		name="month"
 	                		domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                		help="Analytic Entries of this month"/>
@@ -54,7 +53,6 @@
 	                <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Case"/>
 	                </field>
 	                <field name="currency_id"/>
-	                <field name="company_id" widget="selection" groups="base.multi_company"/>
 	            </group>
                 <newline/>
                 <group expand="0" string="Extended options..." colspan="10" col="12">
@@ -62,21 +60,20 @@
 					<field name="general_account_id" widget="selection"/>
 					<field name="journal_id" widget="selection"/>
 					<separator orientation="vertical"/>
-					<field name="move_id"/>
 					<field name="product_id" />
 					<field name="product_uom_id" widget="selection"/>
+            <field name="company_id" widget="selection" groups="base.multi_company"/>
         		</group>
         		<newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="User" icon="terp-account" context="{'group_by':'user_id'}"/>
+                    <filter string="User" name="User" icon="terp-account" context="{'group_by':'user_id'}"/>
                     <filter string="Currency" icon="terp-account" context="{'group_by':'currency_id'}"/>
                     <filter string="Company"  icon="terp-account" context="{'group_by':'company_id'}" groups="base.multi_company"/>
                     <separator orientation="vertical"/>
-                    <filter string="Account" name="Account" icon="terp-account" context="{'group_by':'account_id'}"/>
+                    <filter string="Account"  icon="terp-account" context="{'group_by':'account_id'}"/>
                     <filter string="General Account" icon="terp-account" context="{'group_by':'general_account_id'}"/>
                     <filter string="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Move" icon="terp-account" context="{'group_by':'move_id'}"/>
                     <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
                     <filter string="Product UOM" icon="terp-account" context="{'group_by':'product_uom_id'}"/>
                     <separator orientation="vertical"/>
@@ -87,13 +84,25 @@
             </search>
         </field>
     </record>
-
+    <record id="view_account_analytic_entries_search" model="ir.ui.view">
+         <field name="name">account.analytic.entries.graph</field>
+         <field name="model">analytic.entries.report</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Analytic Entries" type="bar">
+             	<field name="user_id"/>
+                <field name="amount" operator="+"/>
+                <field name="unit_amount" operator="+"/>
+                <field name="amount_currency" operator="+"/>
+             </graph>
+         </field>
+    </record>
     <record id="action_analytic_entries_report" model="ir.actions.act_window">
         <field name="name">Analytic Entries</field>
         <field name="res_model">analytic.entries.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_Account':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_analytic_entries_report_search"/>
     </record>
 

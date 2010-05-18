@@ -168,13 +168,14 @@ class email_parser(object):
 
     def _decode_header(self, s):
         from email.Header import decode_header
-        s = decode_header(s) 
+        s = decode_header(s.replace('\r', '')) 
         return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s or []))
 
     def msg_new(self, msg):
         message = self.msg_body_get(msg)
         msg_subject = self._decode_header(msg['Subject'])
         msg_from = self._decode_header(msg['From'])
+        msg_to = self._decode_header(msg['To'])
         msg_cc = self._decode_header(msg['Cc'] or '')
         
         data = {
@@ -189,7 +190,7 @@ class email_parser(object):
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'], False, False, {'model' : self.model})
+            self.rpc(self.model, 'history', [id], 'Receive', True, msg_to, message['body'], msg_from, False, {'model' : self.model})
             #self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
@@ -314,7 +315,8 @@ class email_parser(object):
                 'res_id': id
             }
             self.rpc('ir.attachment', 'create', data_attach)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], body['body'])
+
+        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['To']), body['body'], self._decode_header(msg['From']), False, {'model' : self.model})
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -357,7 +359,8 @@ class email_parser(object):
                 'res_id': id
             }
             self.rpc('ir.attachment', 'create', data_attach)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+
+        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['To']), message['body'], self._decode_header(msg['From']), False, {'model' : self.model})
         return id
 
     def msg_test(self, msg, case_str):

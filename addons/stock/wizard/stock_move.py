@@ -86,9 +86,10 @@ class stock_move_consume(osv.osv_memory):
         if 'product_uom' in fields:
             res.update({'product_uom': move.product_uom.id})    
         if 'product_qty' in fields:
-            res.update({'product_qty': move.product_qty})    
+            res.update({'product_qty': move.product_qty})
         if 'location_id' in fields:
             res.update({'location_id': move.location_id.id})
+        
         return res   
             
     def do_move_consume(self, cr, uid, ids, context={}):
@@ -121,9 +122,41 @@ class stock_move_scrap(osv.osv_memory):
     _inherit = "stock.move.consume"
     
     _defaults = {
-                 'location_id': lambda *x: False
+        'location_id': lambda *x: False
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        """ 
+             Get default values
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for default value 
+             @param context: A standard dictionary 
+             
+             @return: default values of fields
+        
+        """
+        res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)        
+        move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
+        location_obj = self.pool.get('stock.location')
+        scrpaed_location_ids = location_obj.search(cr, uid, [('scrap_location','=',True)])
+        
+        if 'product_id' in fields:
+            res.update({'product_id': move.product_id.id})     
+        if 'product_uom' in fields:
+            res.update({'product_uom': move.product_uom.id})    
+        if 'product_qty' in fields:
+            res.update({'product_qty': move.product_qty})
+        if 'location_id' in fields:
+            if scrpaed_location_ids:
+                res.update({'location_id': scrpaed_location_ids[0]})
+            else:
+                res.update({'location_id': False})
+        
+        return res
+        
     def move_scrap(self, cr, uid, ids, context={}):
         """ 
              To move scraped products

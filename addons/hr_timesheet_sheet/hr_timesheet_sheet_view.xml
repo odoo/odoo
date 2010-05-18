@@ -114,7 +114,7 @@
                             </group>
 
                             <field colspan="3" context="name=date_current,user_id=user_id" height="100" name="attendances_ids" nolabel="1" groups="hr_attendance.group_hr_attendance">
-                                <tree string="Attendances">
+                                <tree string="Attendances" editable="bottom">
                                     <field name="name"/>
                                     <field name="action"/>
                                     <field invisible="1" name="employee_id"/>
@@ -192,7 +192,7 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <group col="10" colspan="4">
-                        <filter icon="terp-partner" string="My Timesheet" domain="[('user_id','=',uid)]" help="My Timesheets" />
+                        <filter name="my_timesheet" icon="terp-partner" string="My Timesheet" domain="[('user_id','=',uid)]" help="My Timesheets" />
                         <separator orientation="vertical"/>
                         <filter icon="terp-crm" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-crm" string="To Validate" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
@@ -220,8 +220,10 @@
             <field name="res_model">hr_timesheet_sheet.sheet</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
+            <field name="context">{'search_default_my_timesheet':1}</field>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
+
         <!--Time Tracking menu in project Management-->
         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
           <menuitem

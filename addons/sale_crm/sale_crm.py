@@ -25,7 +25,7 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
     _description = 'Sale orders'
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Section'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
     def _get_section(self, cr, uid, context):

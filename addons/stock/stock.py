@@ -182,6 +182,7 @@ class stock_location(osv.osv):
         'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock"),
         'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock"),
         'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
+        'scrap_location': fields.boolean('Scrap Location', help='Check this box if the current location is a place for destroyed items'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -194,6 +195,7 @@ class stock_location(osv.osv):
         'posy': lambda *a: 0,
         'posz': lambda *a: 0,
         'icon': lambda *a: False,
+        'scrap_location': lambda *a: False,
     }
 
     def chained_location_get(self, cr, uid, location, partner=None, product=None, context={}):
@@ -488,10 +490,10 @@ class stock_picking(osv.osv):
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for Picking. Default it takes current date"),
         'date': fields.datetime('Order Date', help="Date of Order"),
-        'date_done': fields.datetime('Date Done', help="Date of completion"),
+        'date_done': fields.datetime('Date Done', help="Date of Completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Expected Date', select=2),
-        'move_lines': fields.one2many('stock.move', 'picking_id', 'Entry lines', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
+        'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'delivery_line':fields.one2many('stock.delivery', 'picking_id', 'Delivery lines', readonly=True),
         'auto_picking': fields.boolean('Auto-Picking'),
         'address_id': fields.many2one('res.partner.address', 'Partner', help="Address of partner"),
@@ -1212,7 +1214,7 @@ class stock_move(osv.osv):
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
         'delivered_id': fields.many2one('stock.delivery', 'Product delivered'),
-        'scraped': fields.boolean('Scraped'),
+        'scraped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scraped'),
     }
     _constraints = [
         (_check_tracking,
@@ -1249,8 +1251,8 @@ class stock_move(osv.osv):
         'location_dest_id': _default_location_destination,
         'state': lambda *a: 'draft',
         'priority': lambda *a: '1',
-        'scraped' : lambda *a:False,
         'product_qty': lambda *a: 1.0,
+        'scraped' : lambda *a: False,
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c)

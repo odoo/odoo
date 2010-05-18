@@ -1,61 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-        <!-- <record id="res_partner_tinyshop0" model="res.partner">
-            <field eval="0" name="customer"/>
-            <field eval="0" name="supplier"/>
-            <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;Tiny Shop 1&quot;&quot;&quot;" name="name"/>
-        </record>
-        <record id="res_partner_address_fabien0" model="res.partner.address">
-            <field eval="&quot;&quot;&quot;Fabien&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;92000&quot;&quot;&quot;" name="zip"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
-            <field name="partner_id" ref="stock.res_partner_tinyshop0"/>
-            <field name="country_id" ref="base.fr"/>
-            <field eval="&quot;&quot;&quot;Avenue de Paris&quot;&quot;&quot;" name="street"/>
-            <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;default&quot;&quot;&quot;" name="type"/>
-        </record>
-        <record id="res_company_shop0" model="res.company">
-            <field eval="5.0" name="security_lead"/>
-            <field name="currency_id" ref="base.EUR"/>
-            <field eval="1.0" name="po_lead"/>
-            <field name="partner_id" ref="res_partner_tinyshop0"/>
-            <field eval="1.0" name="manufacturing_lead"/>
-            <field name="parent_id" ref="base.main_company"/>
-            <field eval="80.0" name="schedule_range"/>
-            <field eval="&quot;&quot;&quot;Shop 1&quot;&quot;&quot;" name="name"/>
-
-        </record>
-        <record id="res_partner_tinyshop1" model="res.partner">
-            <field eval="1" name="customer"/>
-            <field eval="0" name="supplier"/>
-            <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;Tiny Shop 2&quot;&quot;&quot;" name="name"/>
-       </record>
-        <record id="res_partner_address_eric0" model="res.partner.address">
-            <field eval="&quot;&quot;&quot;Eric&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;1500&quot;&quot;&quot;" name="zip"/>
-            <field eval="&quot;&quot;&quot;M.&quot;&quot;&quot;" name="title"/>
-            <field name="partner_id" ref="res_partner_tinyshop1"/>
-            <field name="country_id" ref="base.fr"/>
-            <field eval="&quot;&quot;&quot;Avenue de la Resistance&quot;&quot;&quot;" name="street"/>
-            <field eval="1" name="active"/>
-            <field eval="&quot;&quot;&quot;default&quot;&quot;&quot;" name="type"/>
-            <field name="partner_id" ref="res_partner_tinyshop1"/>
-            <field eval="1" name="active"/>
-        </record>-->
-<!--        <record id="res_company_tinyshop0" model="res.company">-->
-<!--            <field name="currency_id" ref="base.EUR"/>-->
-<!--            <field eval="1.0" name="po_lead"/>-->
-<!--            <field name="partner_id" ref="res_partner_tinyshop1"/>-->
-<!--            <field eval="1.0" name="manufacturing_lead"/>-->
-<!--            <field name="parent_id" ref="base.main_company"/>-->
-<!--            <field eval="80.0" name="schedule_range"/>-->
-<!--            <field eval="&quot;&quot;&quot;Shop 2&quot;&quot;&quot;" name="name"/>-->
-<!--        </record>-->
-
 
    		<record id="res_users_shopuser0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name','=','Menu')]"/>
@@ -67,6 +12,7 @@
             <field eval="&quot;&quot;&quot;en_US&quot;&quot;&quot;" name="context_lang"/>
             <field eval="&quot;&quot;&quot;Shop 1 User&quot;&quot;&quot;" name="name"/>
             <field name="company_id" ref="stock.res_company_shop0"/>
+            <field name="company_ids" eval="[(4, ref('stock.res_company_shop0'))]"/>
             <field eval="&quot;&quot;&quot;shop1&quot;&quot;&quot;" name="login"/>
             <field model="ir.actions.actions" name="action_id" search="[('name','=','Menu')]"/>
         </record>
@@ -77,26 +23,22 @@
             <field eval="&quot;&quot;&quot;shop2&quot;&quot;&quot;" name="password"/>
             <field eval="&quot;&quot;&quot;Shop 2 User&quot;&quot;&quot;" name="name"/>
             <field name="company_id" ref="stock.res_company_tinyshop0"/>
+            <field name="company_ids" eval="[(4, ref('stock.res_company_tinyshop0'))]"/>
             <field eval="&quot;&quot;&quot;shop2&quot;&quot;&quot;" name="login"/>
             <field model="ir.actions.actions" name="action_id" search="[('name','=','Menu')]"/>
         </record>
-		<record id="ir_rule_group_posline0" model="ir.rule.group">
-			<field name="model_id" ref="point_of_sale.model_pos_order_line"/>
-			<field eval="&quot;&quot;&quot;POS line&quot;&quot;&quot;" name="name"/>
-			<field eval="1" name="global"/>
-		</record>
 		<record id="ir_rule_0" model="ir.rule">
-			<field eval="&quot;&quot;&quot;child_of&quot;&quot;&quot;" name="operator"/>
-			<field eval="&quot;&quot;&quot;user.company_id.id&quot;&quot;&quot;" name="operand"/>
-			<field name="field_id" ref="point_of_sale.field_pos_order_line_company_id"/>
-			<field name="rule_group" ref="ir_rule_group_posline0"/>
+			<field name="name">POS line</field>
+	        <field name="model_id" ref="model_pos_order_line"/>
+	        <field name="global" eval="True"/>
+	        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
 		</record>
 	</data>
 
 	<data>
 		<record id="res_groups_posuserposline0" model="res.groups">
 			<field eval="[(6,0,[ref('point_of_sale.menu_action_pos_order_line'),ref('point_of_sale.menu_action_pos_order_line_day')])]" name="menu_access"/>
-			<field eval="[(6,0,[ref('ir_rule_group_posline0')])]" name="rule_groups"/>
+			<field eval="[(6,0,[ref('ir_rule_0')])]" name="rule_groups"/>
 			<field eval="[(6,0,[ref('res_users_shopuser0'),ref('res_users_shopuser1')])]" name="users"/>
 			<field eval="&quot;&quot;&quot;POS_user_pos_line&quot;&quot;&quot;" name="name"/>
 		</record>
@@ -121,42 +63,21 @@
 	</data>
 
 	<data>
-		<record id="ir_rule_group_point0" model="ir.rule.group">
-			<field name="model_id" ref="point_of_sale.model_pos_order"/>
-			<field eval="&quot;&quot;&quot;point&quot;&quot;&quot;" name="name"/>
-			<field eval="1" name="global"/>
-		</record>
-		<record id="ir_rule_0" model="ir.rule">
-			<field eval="&quot;&quot;&quot;child_of&quot;&quot;&quot;" name="operator"/>
-			<field eval="&quot;&quot;&quot;user.company_id.id&quot;&quot;&quot;" name="operand"/>
-			<field name="field_id" ref="point_of_sale.field_pos_order_company_id"/>
-			<field name="rule_group" ref="ir_rule_group_point0"/>
-		</record>
-
-
-		 <record id="ir_rule_group_poslinecompany0" model="ir.rule.group">
-			<field name="model_id" ref="point_of_sale.model_pos_order_line"/>
-			<field eval="&quot;&quot;&quot;POS line company&quot;&quot;&quot;" name="name"/>
-			<field eval="1" name="global"/>
-		</record>
-		<record id="ir_rule_4" model="ir.rule">
-			<field eval="&quot;&quot;&quot;child_of&quot;&quot;&quot;" name="operator"/>
-			<field eval="&quot;&quot;&quot;user.company_id.id&quot;&quot;&quot;" name="operand"/>
-			<field name="field_id" ref="point_of_sale.field_pos_order_line_company_id"/>
-			<field name="rule_group" ref="ir_rule_group_poslinecompany0"/>
-		</record>
-
-		<record id="ir_rule_group_posreporting0" model="ir.rule.group">
+	<record id="ir_rule_0" model="ir.rule">		
+    	<field eval="&quot;&quot;&quot;point&quot;&quot;&quot;" name="name"/>
+		<field name="model_id" ref="model_pos_order"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+	</record>     
+		<record id="ir_rule_group_posreporting0" model="ir.rule">
 			<field name="model_id" ref="point_of_sale.model_report_transaction_pos"/>
 			<field eval="&quot;&quot;&quot;POS Reporting&quot;&quot;&quot;" name="name"/>
-			<field eval="1" name="global"/>
+	  		<field name="global" eval="True"/>
 		</record>
 
 		<record id="ir_rule_5" model="ir.rule">
-			<field eval="&quot;&quot;&quot;=&quot;&quot;&quot;" name="operator"/>
-			<field eval="&quot;&quot;&quot;user.id&quot;&quot;&quot;" name="operand"/>
-			<field name="field_id" ref="point_of_sale.field_report_transaction_pos_user_id"/>
-			<field name="rule_group" ref="ir_rule_group_posreporting0"/>
+			<field name="model_id" ref="point_of_sale.model_report_transaction_pos"/>		
+			<field name="domain_force">['|',('user_id','=',False),('user_id','=',[user.id])]</field>			
 		</record>
 
 	</data>
@@ -174,7 +95,7 @@
       ref('stock.menu_action_picking_tree7'),
 	 		ref('stock.menu_action_picking_tree8'),
       ref('stock.menu_action_picking_tree9'),
-	 		ref('mrp.menu_mrp_procurement_action3'),
+	 		ref('mrp_procurement.menu_mrp_procurement_action3'),
 	 		ref('point_of_sale.menu_point_root')])]" name="menu_access"/>
 			<field eval="[(6,0,[ref('res_users_shopuser0'),ref('res_users_shopuser1')])]" name="users"/>
  				<field eval="[(6,0,[ref('point_of_sale.ir_rule_group_point0'),ref('point_of_sale.ir_rule_group_poslinecompany0'),ref('point_of_sale.ir_rule_group_posreporting0')])]" name="rule_groups"/>
@@ -211,7 +132,7 @@
 		</record>
 
 		<record id="ir_modelsmrp_pdt0" model="ir.model.access">
-			<field name="model_id" ref="mrp.model_mrp_procurement"/>
+			<field name="model_id" ref="mrp_procurement.model_mrp_procurement"/>
 			<field eval="1" name="perm_read"/>
 			<field eval="&quot;&quot;&quot;MRP - Procurement&quot;&quot;&quot;" name="name"/>
 			<field eval="0" name="perm_unlink"/>
@@ -285,7 +206,7 @@
 			<field name="group_id" ref="res_groups_posuser0"/>
 		</record>
 		<record id="ir_model_access_stockwarehouseorderpoint0" model="ir.model.access">
-			<field name="model_id" ref="mrp.model_stock_warehouse_orderpoint"/>
+			<field name="model_id" ref="mrp_procurement.model_stock_warehouse_orderpoint"/>
 			<field eval="1" name="perm_read"/>
 			<field eval="&quot;&quot;&quot;stock.warehouse.orderpoint&quot;&quot;&quot;" name="name"/>
 			<field eval="0" name="perm_unlink"/>
@@ -553,7 +474,7 @@
 			<field name="group_id" ref="res_groups_posuser0"/>
 		</record>
         <record id="ir_model_access_procurement0" model="ir.model.access">
-            <field name="model_id" ref="mrp.model_mrp_procurement" />
+            <field name="model_id" ref="mrp_procurement.model_mrp_procurement" />
             <field eval="1" name="perm_read" />
             <field eval="1" name="perm_write" />
             <field eval="1" name="perm_create" />
@@ -575,13 +496,8 @@
             id="stock.next_id_61"
             name="Reporting"
             parent="stock.menu_stock_root" groups="base.group_user"/>
-<!--        <menuitem-->
-<!--            id="stock.next_id_62"-->
-<!--            name="Traceability"-->
-<!--            parent="stock.next_id_61" groups="base.group_user"/>-->
-<!--        <menuitem id="stock.menu_traceability_low" name="Low Level" parent="stock.menu_traceability" groups="base.group_user"/>-->
 		<menuitem action="stock.action_picking_tree" id="stock.menu_action_picking_tree" parent="stock.menu_stock_root" sequence="19" groups="res_groups_posuser0"/>
-        <menuitem id="mrp.menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4" groups="base.group_user"/>
+        <menuitem id="mrp_procurement.menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4" groups="base.group_user"/>
         <menuitem parent="stock.next_id_61" action="stock.action_stock_line_date" id="stock.menu_report_stock_line_date" groups="base.group_user"/>
 
 	</data>

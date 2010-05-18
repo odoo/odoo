@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,40 +15,38 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
 {
-    'name': 'Detailed info on partner form', 
-    'version': '1.0', 
-    'category': 'Generic Modules/Base', 
-    'description': """
-This module allows a salesman to have a direct overlook at all events related to this partner directly from the partner form.
-
-It adds the following fields on the partner form:
-
-    * Opportunities
-    * Meetings
-    * Phone Calls
-    * Invoices
-       - group by product_id
-    * Contracts
-    * Timesheets
-
-    """, 
-    'author': 'Tiny', 
-    'website': 'http://www.openerp.com', 
-    'depends': ['crm', 'account_analytic_analysis'], 
-    'init_xml': [], 
+    "name" : "Procurements",
+    "version" : "1.0",
+    "author" : "Tiny",
+    "website" : "http://www.openerp.com",
+    "category" : "Generic Modules/Production",
+    "depends" : ["base","process", "product", "stock"],
+    "description": """
+    This is the module for computing Procurements.
+    """,
+    'init_xml': [],
     'update_xml': [
-                   'security/ir.model.access.csv', 
-                   'partner_crm_view.xml'
-                   ], 
-    'demo_xml': [], 
-    'installable': True, 
-    'active': False, 
+        'security/ir.model.access.csv',
+        'security/mrp_procurement_security.xml',
+        'mrp_procurement_data.xml',
+        'wizard/make_procurement_view.xml',
+        'wizard/mrp_procurement_view.xml',
+        'wizard/orderpoint_procurement_view.xml',
+        'mrp_procurement_view.xml',
+        'wizard/schedulers_all_view.xml',
+        'mrp_procurement_workflow.xml',
+        'process/procurement_process.xml',
+        "company_view.xml",
+    ],
+#    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '',
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

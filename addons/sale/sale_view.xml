@@ -163,8 +163,8 @@
                                             <field groups="product.group_uos" name="product_uos"/>
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id"/>
-                                            <separator colspan="4" string="Properties"/>
-                                            <field colspan="4" name="property_ids" nolabel="1"/>
+<!--                                            <separator colspan="4" string="Properties"/>-->
+<!--                                            <field colspan="4" name="property_ids" nolabel="1"/>-->
                                         </page>
                                         <page string="Notes">
                                             <field colspan="4" name="notes" nolabel="1"/>
@@ -188,7 +188,7 @@
                                 </tree>
                             </field>
                             <newline/>
-                            <group col="7" colspan="4">
+                            <group col="8" colspan="5">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total" sum="Total amount"/>
@@ -395,9 +395,9 @@
                                     icon="gtk-cancel" />
                             </group>
                         </page>
-                        <page string="Properties" groups="base.group_extended">
-                            <field name="property_ids" nolabel="1"/>
-                        </page>
+<!--                        <page string="Properties" groups="base.group_extended">-->
+<!--                            <field name="property_ids" nolabel="1"/>-->
+<!--                        </page>-->
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
@@ -486,7 +486,7 @@
 
         <act_window context="{'partner_id': active_id}" domain="[('partner_id', '=', active_id)]" id="act_res_partner_2_sale_order" name="Sales" res_model="sale.order" src_model="res.partner"/>
 
-        <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product"/>
+        <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product" groups="base.group_extended"/>
 
         <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="6"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2"/>
@@ -502,12 +502,18 @@
                 <form position="attributes">
                   <attribute name="string">Sales Configuration</attribute>
                 </form>
+                <separator string="title" position="attributes">
+            	<attribute name="string"
+                       >Configure Sale Order Logistic</attribute>
+          		</separator>
+          		<xpath expr="//label[@string='description']" position="attributes">
+            		<attribute name="string">Setup your sales workflow and default values.</attribute>
+          		</xpath>
+                <xpath expr='//separator[@string="vsep"]' position='attributes'>
+          			<attribute name='rowspan'>15</attribute>
+          			<attribute name='string'></attribute>
+	      		</xpath>
                 <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0"
-                         string="Setup your sales workflow and default values."/>
-                  <separator colspan="4"
-                       string="Configure Sale Order Logistic"/>
-                  <newline/>
                   <field name="picking_policy" groups="base.group_extended"/>
                   <newline/>
                   <field name="order_policy"/>
@@ -532,6 +538,7 @@
         <!-- register configuration wizard -->
         <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
             <field name="action_id" ref="action_config_picking_policy"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
         </record>
 
     </data>

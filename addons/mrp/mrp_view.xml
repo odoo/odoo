@@ -12,6 +12,7 @@
                   id="menu_mrp_bom"
                   parent="base.menu_mrp_root"
                   sequence="5" />
+
         <!--
         Property / Property Group
         -->
@@ -257,14 +258,14 @@
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="General Information">
+                    <notebook colspan="4" >
+                        <page string="General Information" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
                             <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list" />
                         </page>
-                        <page string="Revisions" groups="base.group_extended">
+                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Properties" groups="base.group_extended">
+                        <page string="Properties" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
                             <field name="position"/>
                             <field name="active"/>
                             <field name="sequence"/>
@@ -379,9 +380,26 @@
             </field>
         </record>
 
+		<!--
+        Procurement
+        -->
+
+		<menuitem action="mrp_procurement.mrp_procurement_action" id="menu_mrp_procurement_action"
+        		  parent="mrp.menu_mrp_manufacturing" sequence="2" />
+        <menuitem action="mrp_procurement.mrp_procurement_action5" id="menu_mrp_procurement_exception_action"
+        		  parent="mrp.menu_mrp_control" sequence="1" />
+
+     	<menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="4"/>
+        <menuitem action="mrp_procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
+
+		<!--
+		Order Point
+		-->
+		<menuitem action="mrp_procurement.action_orderpoint_form" id="menu_action_orderpoint_form" parent="mrp.menu_mrp_reordering"/>
+
         <!--
-    Production Management
-    -->
+	    Production Management
+	    -->
 
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
@@ -767,258 +785,20 @@
         </record>
 
         <!--
-        Procurement
+        	Procurements
         -->
 
-        <record id="mrp_procurement_tree_view" model="ir.ui.view">
-            <field name="name">mrp.procurement.tree</field>
-            <field name="model">mrp.procurement</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Procurement Lines" colors="red:state=='draft';black:state=='running';green:state=='confirmed';gray:state in ['done','cancel']">
-                    <field name="date_planned" widget="date"/>
-                    <field name="origin"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom" string="UOM"/>
-                    <field name="procure_method"/>
-                    <field name="state"/>
-                </tree>
-            </field>
+        <record id="view_procurement_form_inherit" model="ir.ui.view">
+        	<field name="name">mrp.procurement.form.inherit</field>
+        	<field name="model">mrp.procurement</field>
+        	<field name="inherit_id" ref="mrp_procurement.mrp_procurement_form_view"/>
+        	<field name="type">form</field>
+        	<field name="arch" type="xml">
+        		<xpath expr="/form/notebook/page/field[@name='move_id']" position="before">
+        			<field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+        		</xpath>
+        	</field>
         </record>
-        <record id="mrp_procurement_form_view" model="ir.ui.view">
-            <field name="name">mrp.procurement.form</field>
-            <field name="model">mrp.procurement</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Procurement">
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="References"/>
-                        <field name="name" select="1" string="Procurement Reason"/>
-                        <field name="origin"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Planification"/>
-                        <field name="date_planned" select="1"/>
-                        <field name="procure_method"/>
-                        <field name="priority" groups="base.group_extended"/>
-                    </group>
-                    <notebook colspan="4">
-                    <page string="Procurement Details">
-                        <separator colspan="4" string="Product &amp; Location"/>
-                        <field name="product_id" select="1" on_change="onchange_product_id(product_id)"/>
-                        <field name="location_id" domain="[('usage','=','internal')]"/>
-                        <field name="product_qty"/>
-                        <field name="product_uom"/>
-
-                        <field name="product_uos_qty" groups="product.group_uos"/>
-                        <field name="product_uos" groups="product.group_uos"/>
-
-                        <separator colspan="4" string="Status"/>
-                        <field colspan="4" name="message" readonly="1"/>
-                        <field name="state" readonly="1"/>
-                        <group col="7" colspan="2">
-                            <button name="button_confirm" states="draft" string="Confirm" icon="gtk-apply"/>
-                            <button name="button_restart" states="exception" string="Retry" icon="gtk-convert"/>
-                            <button name="button_cancel" states="draft,exception,waiting" string="Cancel" icon="gtk-cancel"/>
-                            <button name="button_check" states="confirmed" string="Run     Procurement" icon="gtk-media-play"/>
-                        </group>
-                    </page>
-                    <page string="Extra Information">
-                        <separator colspan="4" string="Details"/>
-                        <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
-                        <field name="move_id" groups="base.group_extended"/>
-                        <field name="date_close"/>
-                        <field name="close_move" groups="base.group_extended"/>
-                        <field name="purchase_id"/>
-                        <group colspan="4"  groups="base.group_extended">
-                            <separator colspan="4" string="Properties" />
-                            <field colspan="4" name="property_ids" nolabel="1"/>
-                        </group>
-                    </page>
-                    <page string="Notes">
-                        <separator colspan="4" string="Note" />
-                        <field name="note" colspan="4" nolabel="1"/>
-                    </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-        <record id="view_mrp_procurement_filter" model="ir.ui.view">
-            <field name="name">mrp.procurement.select</field>
-            <field name="model">mrp.procurement</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Procurement">
-                    <group col='10' colspan='4'>
-                       <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" default="1" help="Procurement Orders in draft or open state."/>
-                       <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement Orders with exceptions"/>
-                       <filter icon="terp-mrp" string="Late"
-                           domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
-                           help="Procurement started late" />
-                       <separator orientation="vertical"/>
-                       <field name="name"/>
-                       <field name="origin"/>
-                       <field name="product_id" />
-                       <field name="date_planned" widget="date"/>
-                       <field name="state" />
-                    </group>
-                    <newline/>
-                    <group expand="1" string="Group By" colspan="4" col="8">
-                        <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Reason" icon="terp-mrp" domain="[]" context="{'group_by':'name'}"/>
-                        <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        <record id="mrp_procurement_action" model="ir.actions.act_window">
-            <field name="name">Procurement Orders</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_id" eval="False"/>
-            <field name="search_view_id" ref="view_mrp_procurement_filter"/>
-        </record>
-        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_manufacturing"
-                  sequence="2" />
-
-        <record id="mrp_procurement_action3" model="ir.actions.act_window">
-            <field name="name">Procurements</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_mrp_procurement_filter"/>
-            <field name="domain">[]</field>
-            <field name="context">{}</field>
-        </record>
-
-        <record id="mrp_procurement_action5" model="ir.actions.act_window">
-            <field name="name">Procurement Exceptions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','exception')]</field>
-        </record>
-
-        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_exception_action" parent="mrp.menu_mrp_control"
-                  sequence="1" />
-        <record id="mrp_procurement_action4" model="ir.actions.act_window">
-            <field name="name">Procurement Exceptions to Fix</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
-            <field name="filter" eval="True"/>
-        </record>
-
-        <record id="mrp_procurement_action11" model="ir.actions.act_window">
-            <field name="name">Temporary Procurement Exceptions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
-        </record>
-
-        <!-- Order Point -->
-        <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">
-            <field name="name">stock.warehouse.orderpoint.tree</field>
-            <field name="model">stock.warehouse.orderpoint</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Minimum Stock Rules">
-                    <field name="name"/>
-                    <field name="warehouse_id"/>
-                    <field name="location_id"/>
-                    <field name="product_id"/>
-                    <field name="product_uom"/>
-                    <field name="product_min_qty"/>
-                    <field name="product_max_qty"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="warehouse_orderpoint_search">
-            <field name="name">stock.warehouse.orderpoint.search</field>
-            <field name="model">stock.warehouse.orderpoint</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Minimum Stock Rules Search">
-                    <group col="10" colspan="4">
-                        <field name="name" select="1" />
-                        <field name="warehouse_id" select="1" widget="selection"/>
-                        <field name="location_id" select="1" />
-                        <field name="company_id" select="1" widget="selection"/>
-                        <field name="product_id" select="1"/>
-                    </group>
-                    <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="10">
-                        <filter string="Warehouse" icon="terp-stock" domain="[]"  context="{'group_by':'warehouse_id'}"/>
-                        <filter string="Location" icon="terp-stock" domain="[]" context="{'group_by':'location_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-        <record id="view_warehouse_orderpoint_form" model="ir.ui.view">
-            <field name="name">stock.warehouse.orderpoint.form</field>
-            <field name="model">stock.warehouse.orderpoint</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Minimum Stock Rules">
-                    <group col="2" colspan="2">
-                        <separator string="General Information" colspan="2" />
-                        <field name="name" />
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                        <field name="product_uom"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Locations" colspan="2" />
-                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                        <field name="location_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Quantity Rules" colspan="2" />
-                        <field name="product_min_qty"/>
-                        <field name="product_max_qty"/>
-                        <field name="qty_multiple"/>
-                    </group>
-                    <group col="2" colspan="2" groups="base.group_extended">
-                        <separator string="Misc" colspan="2" />
-                        <field name="procurement_id" readonly="1"/>
-                        <field name="active" />
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_orderpoint_form" model="ir.actions.act_window">
-            <field name="name">Minimum Stock Rules</field>
-            <field name="res_model">stock.warehouse.orderpoint</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
-            <field name="search_view_id" ref="warehouse_orderpoint_search" />
-        </record>
-        <menuitem action="action_orderpoint_form" id="menu_action_orderpoint_form" parent="menu_mrp_reordering"/>
-
-        <act_window domain="[('warehouse_id', '=', active_id)]" id="act_stock_warehouse_2_stock_warehouse_orderpoint" name="Minimum Stock Rules" res_model="stock.warehouse.orderpoint" src_model="stock.warehouse"/>
-
-        <!-- add product_uom to context to be the default value when adding new orderpoints -->
-        <act_window
-            context="{'product_uom': locals().has_key('uom_id') and uom_id}"
-            domain="[('product_id', '=', active_id)]"
-            id="act_product_product_2_stock_warehouse_orderpoint"
-            name="Minimum Stock Rules"
-            res_model="stock.warehouse.orderpoint"
-            src_model="product.product"/>
-
         <act_window
             id="action_product_bom_structure"
             name="Product BoM Structure"
