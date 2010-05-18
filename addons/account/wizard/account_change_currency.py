@@ -42,6 +42,7 @@ class account_change_currency(osv.osv_memory):
         obj_inv = self.pool.get('account.invoice')
         obj_inv_line = self.pool.get('account.invoice.line')
         obj_currency = self.pool.get('res.currency')
+        invoice_ids = []
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
@@ -66,7 +67,8 @@ class account_change_currency(osv.osv_memory):
                     new_price = (line.price_unit / old_rate ) * rate
 
                 obj_inv_line.write(cr, uid, [line.id], {'price_unit' : new_price})
-            obj_inv.write(cr, uid, [invoice.id], {'currency_id' : new_currency})
+                invoice_ids.append(invoice.id)
+        obj_inv.write(cr, uid, invoice_ids, {'currency_id' : new_currency}, context=context)
         return {}
 
 account_change_currency()

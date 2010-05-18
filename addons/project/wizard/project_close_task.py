@@ -31,8 +31,8 @@ class project_close_task(osv.osv_memory):
     _name = "close.task"
     _description = "Project Close Task"
     _columns = {
-        'email': fields.char('E-Mails', size=64,),
-        'description': fields.text('Description',),
+        'email': fields.char('E-Mail', size=64, help="Email Address"),
+        'description': fields.text('Description'),
                }
 
     def _get_email(self, cr, uid, context={}):

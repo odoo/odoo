@@ -132,7 +132,7 @@ class project_compute_tasks(osv.osv_memory):
                     ctx.update({'scheduler': True})
                     user_id = user_obj.search(cr, uid, [('name', '=', t.booked_resource[0].__name__)])
                     task_pool.write(cr, uid, [tasks[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
-                                                                         'date_deadline': e_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                                         'date_end': e_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                          'user_id': user_id[0]},
                                                                          context=ctx)
                 loop_no +=1

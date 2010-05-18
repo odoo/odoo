@@ -20,8 +20,10 @@
                     <field name="object_id" select="1"/>
                     <field name="mode"/>
                 </group>
-                <separator string="Status" colspan="4" />
-                <field name="state" nolabel = "1" colspan="4"/>
+               <field name="activity_ids" nolabel = "1" colspan="4"/>
+               <separator string="Status" colspan="4" />
+               <field name="state" nolabel = "1" colspan="4"/>
+               <field name="state" nolabel = "1" />
             </form>
         </field>
     </record>
@@ -40,7 +42,8 @@
         </field>
     </record>
 
-    <!--record id="view_marketing_campaign_diagram" model="ir.ui.view">
+
+    <record id="view_marketing_campaign_diagram" model="ir.ui.view">
         <field name="name">marketing.campaign.diagram</field>
         <field name="model">marketing.campaign</field>
         <field name="type">diagram</field>
@@ -49,15 +52,18 @@
 			  <node object="marketing.campaign.activity" shape="rectangle:type!='subcampaign'" bgcolor="gray:start==True">
 			    <field name="name"/>
 			    <field name="type"/>
-                <field name="start" invisible="1"/> 
+                <field name="start" invisible="1"/>
+                <field name="condition"/> 
 			  </node>
 			  <arrow object="marketing.campaign.transition" source="activity_from_id" destination="activity_to_id">
 			    <field name="activity_from_id"/>
 			    <field name="activity_to_id"/>
+			    <field name="interval_nbr"/>
+     			<field name="interval_type"/>
 			  </arrow>
 			</diagram>
         </field>
-    </record-->
+    </record>
 
     <record model="ir.actions.act_window" id="action_marketing_campaign_form">
         <field name="name">All Campaigns</field>
