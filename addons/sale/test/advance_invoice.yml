@@ -1,49 +1,41 @@
 -
   In order to test the sale module in the Open-ERP, I need to configure details regarding product & customer.
 -
-  I want to sell my mobile products to the customer with name Cleartrail
+  I am going to sell my Mobile products to the customer with name Cleartrail
 - 
-  Creating an account.account.type record
+  I create View Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_view0}:
     close_method: none
     code: View
     name: View
     sign: 1
-    
-    
 - 
-  Creating an account.account.type record
+  I create Income Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_income0}:
     close_method: unreconciled
     code: Income
     name: Income
     sign: 1
-    
-    
 - 
-  Creating an account.account.type record
+  I create Expense Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_expense0}:
     close_method: unreconciled
     code: Expense
     name: Expense
     sign: 1
-    
-    
 - 
-  Creating an account.account.type record
+  I create Cash Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_cash0}:
     close_method: balance
     code: Cash
     name: Cash
     sign: 1
-    
-    
 - 
-  Creating an account.account record
+  I create Minimal Chart Account.
 - 
   !record {model: account.account, id: account_account_minimalchart0}:
     code: '0'
@@ -55,7 +47,7 @@
     type: view
     user_type: account_account_type_view0
 - 
-  Creating an account.account record
+  I create Payable Account.
 - 
   !record {model: account.account, id: account_account_payable1}:
     code: AP
@@ -68,10 +60,8 @@
     reconcile: true
     type: payable
     user_type: account_account_type_expense0
-    
-    
 - 
-  Creating an account.account record
+  I create Receivable Account.
 - 
   !record {model: account.account, id: account_account_receivable0}:
     code: AR
@@ -84,10 +74,8 @@
     reconcile: true
     type: receivable
     user_type: account_account_type_income0
-    
-    
 - 
-  Creating an account.account record
+  I create Cash Account.
 - 
   !record {model: account.account, id: account_account_cash0}:
     code: C
@@ -99,10 +87,8 @@
     parent_right: 7
     type: other
     user_type: account_account_type_cash0
-    
-    
 - 
-  Creating an account.account record
+  I create Purchases Account.
 - 
   !record {model: account.account, id: account_account_purchases0}:
     code: P
@@ -115,7 +101,7 @@
     type: other
     user_type: account_account_type_expense0
 - 
-  Creating an account.account record
+  I create Sales Account.
 - 
   !record {model: account.account, id: account_account_sales0}:
     code: S
@@ -127,10 +113,8 @@
     parent_right: 11
     type: other
     user_type: account_account_type_income0
-
-    
 - 
-  Creating an account.journal record
+  I create Purchase Journal.
 - 
   !record {model: account.journal, id: account_journal_purchasejournal0}:
     code: PUJ
@@ -141,10 +125,8 @@
     sequence_id: account.sequence_purchase_journal
     type: purchase
     view_id: account.account_journal_view
-    
-    
 - 
-  Creating an account.journal record
+  I create Sale Journal.
 - 
   !record {model: account.journal, id: account_journal_salejournal0}:
     code: SAJ
@@ -155,10 +137,8 @@
     sequence_id: account.sequence_sale_journal
     type: sale
     view_id: account.account_journal_view
-    
-    
 - 
-  Creating an account.journal record
+  I create Bank Journal.
 - 
   !record {model: account.journal, id: account_journal_bankjournal0}:
     code: BNK
@@ -169,20 +149,16 @@
     sequence_id: account.sequence_journal
     type: cash
     view_id: account.account_journal_bank_view
-    
-    
 - 
-  Creating a ir.property record
+  I create ir.property for account payable.
 - 
   !record {model: ir.property, id: ir_property_propertyaccountexpensecateg0}:
     company_id: base.main_company
     fields_id: account.field_res_partner_property_account_payable
     name: property_account_expense_categ
     value_reference: account.account,5
-    
-    
 - 
-  Creating a ir.property record
+  I create ir.property for account receivable.
 - 
   !record {model: ir.property, id: ir_property_propertyaccountincomecateg0}:
     company_id: base.main_company
@@ -190,59 +166,54 @@
     name: property_account_income_categ
     value_reference: account.account,6
 - 
-  Creating a res.partner.category record
+  I create Partner category Customers.
 - 
   !record {model: res.partner.category, id: res_partner_category_customers0}:
     name: Customers
 -
-  Creating an res.partner record
+  I create Cleartrail Customer.
 - 
   !record {model: res.partner, id: res_partner_cleartrail0}:
     category_id:
       - res_partner_category_customers0
     name: Cleartrail
-    
-    
 - 
-  Creating an res.partner.address record
+  I create contact address for Cleartrail.
 - 
   !record {model: res.partner.address, id: res_partner_address_1}:
     partner_id: res_partner_cleartrail0
     street: onam plaza, 14 B palasia A B Road
     type: contact
-    
-    
 - 
-  Creating an res.partner.address record
+  I create invoice address for Cleartrail.
 - 
   !record {model: res.partner.address, id: res_partner_address_2}:
     partner_id: res_partner_cleartrail0
+    street: sarda house 24 B palasia, A B Road
     type: invoice
-    
-    
 - 
-  Creating an res.partner.address record
+  I create delivery address for Cleartrail.
 - 
   !record {model: res.partner.address, id: res_partner_address_3}:
     partner_id: res_partner_cleartrail0
     street: sangam house 15 B palasia, A B Road
     type: delivery
 -
-  Customer Cleartrail has specific instrument requirements regarding the stockable products
+  Customer Cleartrail has specific instrument requirement regarding the stockable products.
 - 
-  Creating an product.category record
+  I define product category Mobile Products Sellable.
 - 
   !record {model: product.category, id: product_category_allproductssellable0}:
     name: Mobile Products Sellable
     
     
 - 
-  Creating an product.category record
+  I define product category Mobile Services. 
 - 
   !record {model: product.category, id: product_category_services0}:
     name: Mobile Services
 - 
-  Creating an product.template record
+  I define LG Viewty Smart product template.
 - 
   !record {model: product.template, id: product_template_lgviewtysmart0}:
     categ_id: product_category_allproductssellable0
@@ -258,7 +229,7 @@
     uom_po_id: product.product_uom_unit
     
 -    
-  Creating an product.product record
+  I define LG Viewty Smart product.
 - 
   !record {model: product.product, id: product_product_lgviewtysmart0}:
     categ_id: product_category_allproductssellable0
@@ -278,7 +249,7 @@
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
 -
-  Creating a sale.order record
+  I create a Sale Order for LG Viewty Smart for qty 500 having order_policy prepaid.
 - 
   !record {model: sale.order, id: sale_order_so0}:
     date_order: '2010-05-03'
@@ -305,7 +276,7 @@
     shop_id: sale.shop
     
 - 
-  Creating a sale.advance.payment.inv record
+  I use the Advance Payment wizard.
 - 
   !record {model: sale.advance.payment.inv, id: sale_advance_payment_inv_0}:
     amount: 1000.0
