@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class available_holidays_report(osv.osv):
@@ -31,6 +31,7 @@ class available_holidays_report(osv.osv):
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'employee_id': fields.many2one ('hr.employee', 'Employee', readonly=True),
+        'category_id' : fields.many2one('hr.employee.category', "Category's Name", readonly=True),
         'holiday_status_id': fields.many2one('hr.holidays.status', 'Leave Type', readonly=True),
         'max_leave': fields.float('Allocated Leaves', readonly=True),
         'taken_leaves': fields.float('Taken Leaves', readonly=True),
@@ -47,6 +48,7 @@ class available_holidays_report(osv.osv):
                     to_char(s.create_date, 'YYYY') as year,
                     to_char(s.create_date, 'MM') as month,
                     h.employee_id as employee_id,
+                    h.category_id as category_id,
                     h.user_id as user_id,
                     h.state as state,
                     h.holiday_status_id as holiday_status_id,
@@ -64,11 +66,10 @@ class available_holidays_report(osv.osv):
                 from hr_holidays h
                 left join hr_holidays_status s on (s.id = h.holiday_status_id)
                 where h.state='validate'
-                and h.employee_id is not null
                 and s.active <> 'f'
                 group by h.holiday_status_id, h.employee_id,
                          date_trunc('day',h.create_date),to_char(s.create_date, 'YYYY'),
-                         to_char(s.create_date, 'MM'),h.user_id,h.state
+                         to_char(s.create_date, 'MM'),h.user_id,h.state, h.category_id
 
             )""")
 available_holidays_report()

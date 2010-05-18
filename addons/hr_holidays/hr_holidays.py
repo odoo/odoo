@@ -272,10 +272,12 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_validate(self, cr, uid, ids, *args):
+        obj_res_leave = self.pool.get('resource.calendar.leaves')
+        obj_emp = self.pool.get('hr.employee')
         data_holiday = self.browse(cr, uid, ids)
         self.check_holidays(cr, uid, ids)
         vals = {'state':'validate'}
-        ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+        ids2 = obj_emp.search(cr, uid, [('user_id','=', uid)])
         if ids2:
             if data_holiday[0].state == 'validate1':
                 vals['manager_id2'] = ids2[0]
@@ -287,15 +289,28 @@ class hr_holidays(osv.osv):
         for record in data_holiday:
             if record.holiday_type=='employee' and record.type=='remove':
                 vals = {
-                   'name':record.name,
-                   'date_from':record.date_from,
-                   'date_to':record.date_to,
-                   'calendar_id':record.employee_id.calendar_id.id,
-                   'company_id':record.employee_id.company_id.id,
-                   'resource_id':record.employee_id.resource_id.id,
-                   'holiday_id':record.id
+                   'name': record.name,
+                   'date_from': record.date_from,
+                   'date_to': record.date_to,
+                   'calendar_id': record.employee_id.calendar_id.id,
+                   'company_id': record.employee_id.company_id.id,
+                   'resource_id': record.employee_id.resource_id.id,
+                   'holiday_id': record.id
                      }
-                self.pool.get('resource.calendar.leaves').create(cr, uid, vals)
+                obj_res_leave.create(cr, uid, vals)
+            elif record.holiday_type=='category' and record.type=='remove':
+                emp_ids = obj_emp.search(cr, uid, [('category_id', '=', record.category_id.id)])
+                for emp in obj_emp.browse(cr, uid, emp_ids):
+                    vals = {
+                       'name': record.name,
+                       'date_from': record.date_from,
+                       'date_to': record.date_to,
+                       'calendar_id': emp.calendar_id.id,
+                       'company_id': emp.company_id.id,
+                       'resource_id': emp.resource_id.id,
+                       'holiday_id':record.id
+                         }
+                    obj_res_leave.create(cr, uid, vals)
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):

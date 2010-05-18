@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-	<record model="workflow.transition" id="mrp.trans_produce_service_make_done">
-		<field name="act_from" ref="mrp.act_produce_service"/>
-		<field name="act_to" ref="mrp.act_make_done"/>
-		<field name="signal">subflow.done</field>
-	</record>
+    <record model="workflow.transition" id="mrp.trans_produce_service_make_done">
+        <field name="act_from" ref="mrp.act_produce_service"/>
+        <field name="act_to" ref="mrp_procurement.act_make_done"/>
+        <field name="signal">subflow.done</field>
+    </record>
 </data>
 </openerp>
 

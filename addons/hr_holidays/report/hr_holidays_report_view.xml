@@ -9,6 +9,7 @@
             <tree string="Leaves Statistics">
                 <field name="date"/>
                 <field name="employee_id"/>
+                <field name="category_id"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="number_of_days_temp"/>
@@ -61,16 +62,12 @@
 
                 <separator orientation="vertical"/>
                 <field name="employee_id"/>
-                <field name="user_id" widget="selection">
-                    <filter icon="terp-sale"
-                        string="My Leaves"
-                        default="1"
-                        domain="[('user_id','=',uid)]"/>
-                </field>
+                <field name="user_id" widget="selection"/>
                 <field name="date"/>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Employee" name="employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Employee" name="employee" domain="[('category_id', '=', 'False')]" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Category" name="category" domain="[('employee_id', '=', 'False')]" icon="terp-hr" context="{'group_by':'category_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
@@ -82,11 +79,12 @@
     </record>
 
     <record id="action_hr_holidays_report_all" model="ir.actions.act_window">
-        <field name="name">Leaves By Employee</field>
+        <field name="name">Leaves</field>
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_employee': 1}</field>
+        <field name="context">{'search_default_user_id': uid}</field>
+       <!-- <field name="context">{'search_default_employee': 1}</field>-->
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 
