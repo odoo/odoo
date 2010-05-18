@@ -24,9 +24,11 @@
 #
 ##############################################################################
 
+import errno
 import logging
 import logging.handlers
 import os
+import socket
 import sys
 import threading
 import time
@@ -357,6 +359,21 @@ class Server:
         res = ["Servers %s" % ('stopped', 'started')[cls.__is_started]]
         res.extend(srv.stats() for srv in cls.__servers)
         return '\n'.join(res)
+
+    def _close_socket(self):
+        if os.name != 'nt':
+            try:
+                self.socket.shutdown(getattr(socket, 'SHUT_RDWR', 2))
+            except socket.error, e:
+                if e.errno != errno.ENOTCONN: raise
+                # OSX, socket shutdowns both sides if any side closes it
+                # causing an error 57 'Socket is not connected' on shutdown
+                # of the other side (or something), see
+                # http://bugs.python.org/issue4397
+                self.__logger.debug(
+                    '"%s" when shutting down server socket, '
+                    'this is normal under OS X', e)
+        self.socket.close()
 
 class OpenERPDispatcherException(Exception):
     def __init__(self, exception, traceback):

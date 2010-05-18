@@ -31,9 +31,11 @@
 """
 from websrv_lib import *
 import netsvc
+import errno
 import threading
 import tools
 import os
+import select
 import socket
 import xmlrpclib
 
@@ -128,31 +130,25 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
                 "Error occur when starting the server daemon: %s" % (e,))
             raise
 
+    @property
+    def socket(self):
+        return self.server.socket
+
     def attach(self, path, gw):
         pass
 
     def stop(self):
         self.running = False
-        if os.name != 'nt':
-            try:
-                self.server.socket.shutdown(
-                    getattr(socket, 'SHUT_RDWR', 2))
-            except socket.error, e:
-                if e.errno != 57: raise
-                # OSX, socket shutdowns both sides if any side closes it
-                # causing an error 57 'Socket is not connected' on shutdown
-                # of the other side (or something), see
-                # http://bugs.python.org/issue4397
-                netsvc.Logger().notifyChannel(
-                    'server', netsvc.LOG_DEBUG,
-                    '"%s" when shutting down server socket, '
-                    'this is normal under OS X'%e)
-        self.server.socket.close()
+        self._close_socket()
 
     def run(self):
         self.running = True
         while self.running:
-            self.server.handle_request()
+            try:
+                self.server.handle_request()
+            except (socket.error, select.error), e:
+                if self.running or e.args[0] != errno.EBADF:
+                    raise
         return True
 
 class HttpDaemon(BaseHttpDaemon):
