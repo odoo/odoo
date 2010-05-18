@@ -46,6 +46,7 @@ class account_invoice_refund(osv.osv_memory):
         account_m_line_obj = self.pool.get('account.move.line')
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
+        wf_service = netsvc.LocalService('workflow')
 
         if context is None:
             context = {}
@@ -111,7 +112,6 @@ class account_invoice_refund(osv.osv_memory):
                             to_reconcile_ids[line.account_id.id] = [line.id]
                         if type(line.reconcile_id) != osv.orm.browse_null :
                             reconcile_obj.unlink(cr, uid, line.reconcile_id.id)
-                    wf_service = netsvc.LocalService('workflow')
                     wf_service.trg_validate(uid, 'account.invoice', \
                                         refund.id, 'invoice_open', cr)
                     refund = inv_obj.browse(cr, uid, refund_id[0],context=context)

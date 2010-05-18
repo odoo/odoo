@@ -785,7 +785,7 @@ class account_move_line(osv.osv):
                 self.pool.get('account.move').validate(cr, uid, [line.move_id.id], context=context)
         return result
 
-    def check_date(self, cr, uid, vals, context=None, check=True):
+    def _check_date(self, cr, uid, vals, context=None, check=True):
         if context is None:
             context = {}
         if 'date' in vals.keys():
@@ -800,10 +800,10 @@ class account_move_line(osv.osv):
             else:
                 journal_id = context['journal_id']
                 period_id = context['period_id']
-            journal=self.pool.get('account.journal').browse(cr,uid,[journal_id])[0]
+            journal = self.pool.get('account.journal').browse(cr,uid,[journal_id])[0]
             if journal.allow_date:
-                period=self.pool.get('account.period').browse(cr,uid,[period_id])[0]
-                if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') and time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
+                period = self.pool.get('account.period').browse(cr,uid,[period_id])[0]
+                if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
                     raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
         else:
             return True
@@ -813,7 +813,7 @@ class account_move_line(osv.osv):
             context={}
         if vals.get('account_tax_id', False):
             raise osv.except_osv(_('Unable to change tax !'), _('You can not change the tax, you should remove and recreate lines !'))
-        self.check_date(cr, uid, vals, context, check)
+        self._check_date(cr, uid, vals, context, check)
         account_obj = self.pool.get('account.account')
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
@@ -871,7 +871,7 @@ class account_move_line(osv.osv):
         tax_obj=self.pool.get('account.tax')
         if context is None:
             context = {}
-        self.check_date(cr, uid, vals, context, check)
+        self._check_date(cr, uid, vals, context, check)
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
         if 'journal_id' in vals and 'journal_id' not in context:

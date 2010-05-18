@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+
+    <!-- Cron -->
+
+        <record model="ir.cron" id="ir_cron_marketing_campaign_every_hour">
+            <field name="name">Check Workitem</field>
+            <field name="interval_number">60</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'marketing.campaign.workitem'"/>
+            <field name="function" eval="'process_all'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+    </data>
+</openerp>
