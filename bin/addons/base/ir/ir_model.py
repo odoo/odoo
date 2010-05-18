@@ -558,30 +558,32 @@ class ir_model_data(osv.osv):
             res_id=None
             model = models[0]
 
+        clause = "model=%s AND key=%s AND name=%s"
+        params = (model, key, name)
         if res_id:
-            where = ' and res_id=%s' % (res_id,)
+            clause += ' AND res_id=%s'
+            params += (res_id,)
         else:
-            where = ' and (res_id is null)'
+            clause += ' AND (res_id IS NULL)'
 
         if key2:
-            where += ' and key2=\'%s\'' % (key2,)
+            clause += ' AND key2=%s'
+            params += (key2,)
         else:
-            where += ' and (key2 is null)'
+            clause += ' AND (key2 IS NULL)'
 
-        cr.execute('select * from ir_values where model=%s and key=%s and name=%s'+where,(model, key, name))
+        cr.execute('SELECT 1 FROM ir_values WHERE ' + clause, params)
         res = cr.fetchone()
         if not res:
-            res = ir.ir_set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
+            ir.ir_set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         elif xml_id:
-            cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
+            cr.execute('UPDATE ir_values SET value=%s WHERE ' + clause, (value,) + params)
         return True
 
     def _process_end(self, cr, uid, modules):
         if not modules:
             return True
-        modules = list(modules)
-        module_in = ",".join(["%s"] * len(modules))
-        cr.execute('select id,name,model,res_id,module from ir_model_data where module in (' + module_in + ') and noupdate=%s', modules + [False])
+        cr.execute('select id,name,model,res_id,module from ir_model_data where module in %s and noupdate=%s', (tuple(modules), False))
         wkf_todo = []
         for (id, name, model, res_id,module) in cr.fetchall():
             if (module,name) not in self.loads:

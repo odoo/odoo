@@ -76,8 +76,8 @@ class Graph(dict):
         ## Then we get the values from the database
         cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
                    '  FROM ir_module_module'
-                   ' WHERE name in (%s)' % (','.join(['%s'] * len(self))),
-                    additional_data.keys()
+                   ' WHERE name in %s',
+                    (tuple(additional_data),)
                    )
 
         ## and we update the default values with values from the database
@@ -681,7 +681,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
        if len(cr.fetchall())==0:    
            logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
            tools.init_db(cr)
-#           cr.execute("update res_users set password=%s where id=%s",('admin',1))
            # in that case, force --init=all
            tools.config["init"]["all"] = 1
            tools.config['update']['all'] = 1
@@ -726,7 +725,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             loop_guardrail += 1
             if loop_guardrail > 100:
                 raise ProgrammingError()
-            cr.execute("SELECT name from ir_module_module WHERE state in (%s)" % ','.join(['%s']*len(STATES_TO_LOAD)), STATES_TO_LOAD)
+            cr.execute("SELECT name from ir_module_module WHERE state in %s",
+                       (tuple(STATES_TO_LOAD),)
+                      )
 
             module_list = [name for (name,) in cr.fetchall() if name not in graph]
             if not module_list:

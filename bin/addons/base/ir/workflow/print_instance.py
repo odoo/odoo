@@ -20,10 +20,11 @@
 #
 ##############################################################################
 
-import time, os
+import os
 
 import netsvc
-import report,pooler,tools
+import report, tools
+from operator import itemgetter
 
 
 def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
@@ -57,7 +58,8 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
             graph.add_node(pydot.Node(n['id'], **args))
             actfrom[n['id']] = (n['id'],{})
             actto[n['id']] = (n['id'],{})
-    cr.execute('select * from wkf_transition where act_from in ('+','.join(map(lambda x: str(x['id']),nodes))+')')
+    node_ids = tuple(map(itemgetter('id'), nodes))
+    cr.execute('select * from wkf_transition where act_from in %s', (node_ids,))
     transitions = cr.dictfetchall()
     for t in transitions:
         args = {}
@@ -77,7 +79,7 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
         activity_from = actfrom[t['act_from']][1].get(t['signal'], actfrom[t['act_from']][0])
         activity_to = actto[t['act_to']][1].get(t['signal'], actto[t['act_to']][0])
         graph.add_edge(pydot.Edge( str(activity_from) ,str(activity_to), fontsize='10', **args))
-    nodes = cr.dictfetchall()
+
     cr.execute('select id from wkf_activity where flow_start=True and wkf_id=%s limit 1', (wkf_id,))
     start = cr.fetchone()[0]
     cr.execute("select 'subflow.'||name,id from wkf_activity where flow_stop=True and wkf_id=%s", (wkf_id,))
@@ -88,7 +90,6 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
 
 
 def graph_instance_get(cr, graph, inst_id, nested=False):
-    workitems = {}
     cr.execute('select * from wkf_instance where id=%s', (inst_id,))
     inst = cr.dictfetchone()
 

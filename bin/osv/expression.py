@@ -50,15 +50,15 @@ class expression(object):
             if op in ['<','>','>=','<=']:
                 cr.execute('SELECT "%s"'    \
                                '  FROM "%s"'    \
-                               ' WHERE "%s" %s %s' % (s, f, w, op, ids[0]))
+                               ' WHERE "%s" %s %%s' % (s, f, w, op), (ids[0],))
                 res.extend([r[0] for r in cr.fetchall()])
             else:
                 for i in range(0, len(ids), cr.IN_MAX):
                     subids = ids[i:i+cr.IN_MAX]
                     cr.execute('SELECT "%s"'    \
                                '  FROM "%s"'    \
-                               ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%s']*len(subids))),
-                               subids)
+                               ' WHERE "%s" in %%s' % (s, f, w),
+                               (tuple(subids),))
                     res.extend([r[0] for r in cr.fetchall()])
         else:
             cr.execute('SELECT distinct("%s")'    \
@@ -237,7 +237,7 @@ class expression(object):
                         if isinstance(right, basestring):
                             res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
                             if res_ids:
-                                opeartor = 'in'
+                                operator = 'in'
                         else:
                             if not isinstance(right, list):
                                 res_ids = [right]

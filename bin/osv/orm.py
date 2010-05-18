@@ -208,7 +208,6 @@ class browse_record(object):
                     if f._type in ('many2one', 'one2one'):
                         if data[n]:
                             obj = self._table.pool.get(f._obj)
-                            compids = False
                             if type(data[n]) in (type([]),type( (1,) )):
                                 ids2 = data[n][0]
                             else:
@@ -966,7 +965,6 @@ class orm_template(object):
             context = {}
         res = {}
         translation_obj = self.pool.get('ir.translation')
-        model_access_obj = self.pool.get('ir.model.access')
         for parent in self._inherits:
             res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
 
@@ -1299,8 +1297,12 @@ class orm_template(object):
                         view_id = view_ref_res[0]
 
             if view_id:
-                where = (model and (" and model='%s'" % (self._name,))) or ''
-                cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%s'+where, (view_id,))
+                query = "SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%s"
+                params = (view_id,)
+                if model:
+                    query += " AND model=%s"
+                    params += (self._name,)
+                cr.execute(query, params)
             else:
                 cr.execute('''SELECT
                         arch,name,field_parent,id,type,inherit_id
@@ -1640,8 +1642,8 @@ class orm_memory(orm_template):
         for id in ids:
             if id in self.datas:
                 del self.datas[id]
-        if len(ids):
-            cr.execute('delete from wkf_instance where res_type=%s and res_id in ('+','.join(map(str, ids))+')', (self._name, ))
+        if ids:
+            cr.execute('delete from wkf_instance where res_type=%s and res_id in %s', (self._name, tuple(ids)))
         return True
 
     def perm_read(self, cr, user, ids, context=None, details=True):
@@ -1724,12 +1726,12 @@ class orm(orm_template):
         columns += ('id', 'write_uid', 'write_date', 'create_uid', 'create_date') # openerp access columns
         cr.execute("SELECT a.attname, a.attnotnull"
                    "  FROM pg_class c, pg_attribute a"
-                   " WHERE c.relname=%%s"
+                   " WHERE c.relname=%s"
                    "   AND c.oid=a.attrelid"
-                   "   AND a.attisdropped=%%s"
+                   "   AND a.attisdropped=%s"
                    "   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')"
-                   "   AND a.attname NOT IN (%s)" % ",".join(['%s']*len(columns)),
-                       [self._table, False] + columns)
+                   "   AND a.attname NOT IN %s",
+                       (self._table, False, tuple(columns)))
         for column in cr.dictfetchall():
             if log:
                 logger.notifyChannel("orm", netsvc.LOG_DEBUG, "column %s is in the table %s but not in the corresponding object %s" % (column['attname'], self._table, self._name))
@@ -1743,9 +1745,9 @@ class orm(orm_template):
         todo_end = []
         self._field_create(cr, context=context)
         if not hasattr(self, "_auto") or self._auto:
-            cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
+            cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (self._table,))
             if not cr.rowcount:
-                cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITH OIDS" % self._table)
+                cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITH OIDS' % (self._table,))
                 create = True
             cr.commit()
             if self._parent_store:
@@ -1866,7 +1868,7 @@ class orm(orm_template):
                                 try:
                                     cr.commit()
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
-                                except Exception, e:
+                                except Exception:
                                     logger.notifyChannel('orm', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: openerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                             cr.commit()
                     elif len(res)==1:
@@ -1942,7 +1944,7 @@ class orm(orm_template):
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
                                     cr.commit()
-                                except Exception, e:
+                                except Exception:
                                     logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                                 cr.commit()
                             elif not f.required and f_pg_notnull == 1:
@@ -2017,11 +2019,12 @@ class orm(orm_template):
             conname = '%s_%s' % (self._table, key)
             cr.execute("SELECT conname FROM pg_constraint where conname=%s", (conname,))
             if not cr.dictfetchall():
+                query = 'ALTER TABLE "%s" ADD CONSTRAINT "%s" %s' % (self._table, conname, con,)
                 try:
-                    cr.execute('alter table "%s" add constraint "%s_%s" %s' % (self._table, self._table, key, con,))
+                    cr.execute(query)
                     cr.commit()
                 except:
-                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\nALTER table %s ADD CONSTRAINT %s_%s %s' % (con, self._table, self._table, self._table, key, con,))
+                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\n%s' % (con, self._table, query))
                     cr.rollback()
 
         if create:
@@ -2223,10 +2226,10 @@ class orm(orm_template):
         if isinstance(ids, (int, long)):
             select = [ids]
         result = self._read_flat(cr, user, select, fields, context, load)
-        
+
         for r in result:
             for key, v in r.items():
-                if v == None:
+                if v is None:
                     r[key] = False
                 if key in self._columns.keys():
                     type = self._columns[key]._type
@@ -2237,12 +2240,13 @@ class orm(orm_template):
                 if type == 'reference' and v:
                     model,ref_id = v.split(',')
                     table = self.pool.get(model)._table
-                    cr.execute('select id from "%s" where id=%s' % (table,ref_id))
+                    cr.execute('select id from "%s" where id=%%s' % (table,), (ref_id,))
                     id_exist = cr.fetchone()
                     if not id_exist:
-                        cr.execute('update "'+self._table+'" set "'+key+'"=NULL where "%s"=%s' %(key,''.join("'"+str(v)+"'")))
-                        r[key] = ''                    
-        
+                        query = 'UPDATE "%s" SET "%s"=NULL WHERE "%s"=%%s' % (self._table, key, key)
+                        cr.execute(query, (v,))
+                        r[key] = ''
+
         if isinstance(ids, (int, long)):
             return result and result[0] or False
         return result
@@ -2279,21 +2283,22 @@ class orm(orm_template):
                 return '"%s"' % (f,)
             fields_pre2 = map(convert_field, fields_pre)
             order_by = self._parent_order or self._order
+
+            select_fields = ','.join(fields_pre2 + ['id'])
+            query = 'SELECT %s FROM "%s" WHERE id in %%s' % (select_fields, self._table)
+            if d1:
+                query += " AND " + d1
+            query += " ORDER BY " + order_by
+
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) AND %s ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join(['%s' for x in sub_ids]), d1,
-                                order_by),sub_ids + d2)
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
+                    cr.execute(query, [tuple(sub_ids)] + d2)
+                    if cr.rowcount != len(set(sub_ids)):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % self._description)
                 else:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ORDER BY %s' % \
-                            (','.join(fields_pre2 + ['id']), self._table,
-                                ','.join(['%s' for x in sub_ids]),
-                                order_by), sub_ids)
+                    cr.execute(query, (tuple(sub_ids),))
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
@@ -2377,7 +2382,7 @@ class orm(orm_template):
                     for group in groups:
                         module = group.split(".")[0]
                         grp = group.split(".")[1]
-                        cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+                        cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s", \
                                    (grp, module, 'res.groups', user))
                         readonly = cr.fetchall()
                         if readonly[0][0] >= 1:
@@ -2404,14 +2409,15 @@ class orm(orm_template):
             context = {}
         if not ids:
             return []
-        fields = ''
+        uniq = isinstance(ids, (int, long))
+        if uniq:
+            ids = [ids]
+
+        fields = 'id'
         if self._log_access:
-            fields = ', u.create_uid, u.create_date, u.write_uid, u.write_date'
-        if isinstance(ids, (int, long)):
-            ids_str = str(ids)
-        else:
-            ids_str = string.join(map(lambda x: str(x), ids), ',')
-        cr.execute('select u.id'+fields+' from "'+self._table+'" u where u.id in ('+ids_str+')')
+            fields += ', create_uid, create_date, write_uid, write_date'
+        query = 'SELECT %s FROM "%s" WHERE id in %%s' % (fields, self._table)
+        cr.execute(query, (tuple(ids),))
         res = cr.dictfetchall()
         for r in res:
             for key in r:
@@ -2419,8 +2425,8 @@ class orm(orm_template):
                 if key in ('write_uid', 'create_uid', 'uid') and details:
                     if r[key]:
                         r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
-        if isinstance(ids, (int, long)):
-            return res[ids]
+        if uniq:
+            return res[ids[0]]
         return res
 
     def _check_concurrency(self, cr, ids, context):
@@ -2463,38 +2469,29 @@ class orm(orm_template):
         for oid in ids:
             wf_service.trg_delete(uid, self._name, oid, cr)
 
-        #cr.execute('select * from '+self._table+' where id in ('+str_d+')', ids)
-        #res = cr.dictfetchall()
-        #for key in self._inherits:
-        #   ids2 = [x[self._inherits[key]] for x in res]
-        #   self.pool.get(key).unlink(cr, uid, ids2)
-
         d1, d2 = self.pool.get('ir.rule').domain_get(cr, uid, self._name)
+
+        from_where = ' FROM "%s" WHERE id IN %%s' % (self._table,)
         if d1:
-            d1 = ' AND '+d1
+            from_where += ' AND ' + d1
 
         for i in range(0, len(ids), cr.IN_MAX):
             sub_ids = ids[i:i+cr.IN_MAX]
-            str_d = string.join(('%s',)*len(sub_ids), ',')
             if d1:
-                cr.execute('SELECT id FROM "'+self._table+'" ' \
-                        'WHERE id IN ('+str_d+')'+d1, sub_ids+d2)
-                if not cr.rowcount == len(sub_ids):
+                cr.execute('SELECT id' + from_where, [tuple(sub_ids)] + d2)
+                if not cr.rowcount == len(set(sub_ids)):
                     raise except_orm(_('AccessError'),
                             _('You try to bypass an access rule (Document type: %s).') % \
                                     self._description)
 
-            if d1:
-                cr.execute('delete from "'+self._table+'" ' \
-                        'where id in ('+str_d+')'+d1, sub_ids+d2)
+                cr.execute('DELETE' + from_where, [tuple(sub_ids)] + d2)
             else:
-                cr.execute('delete from "'+self._table+'" ' \
-                        'where id in ('+str_d+')', sub_ids)
+                cr.execute('DELETE' + from_where, (tuple(sub_ids),))
 
         for order, object, store_ids, fields in result_store:
-            if object<>self._name:
-                obj =  self.pool.get(object)
-                cr.execute('select id from '+obj._table+' where id in ('+','.join(map(str, store_ids))+')')
+            if object != self._name:
+                obj = self.pool.get(object)
+                cr.execute('select id from '+obj._table+' where id in %s', (tuple(store_ids),))
                 rids = map(lambda x: x[0], cr.fetchall())
                 if rids:
                     obj._store_set_values(cr, uid, rids, fields, context)
@@ -2520,7 +2517,7 @@ class orm(orm_template):
                 for group in groups:
                     module = group.split(".")[0]
                     grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+                    cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s", \
                                (grp, module, 'res.groups', user))
                     readonly = cr.fetchall()
                     if readonly[0][0] >= 1:
@@ -2555,7 +2552,7 @@ class orm(orm_template):
             # The parent_left/right computation may take up to
             # 5 seconds. No need to recompute the values if the
             # parent is the same. Get the current value of the parent
-            base_query = 'SELECT id FROM %s WHERE id IN %%s AND %s' % \
+            base_query = 'SELECT id FROM "%s" WHERE id IN %%s AND %s' % \
                             (self._table, self._parent_name)
             params = (tuple(ids),)
             parent_val = vals[self._parent_name]
@@ -2606,35 +2603,35 @@ class orm(orm_template):
             upd0.append('write_date=now()')
             upd1.append(user)
 
-        if len(upd0):
+        if upd0:
 
+            clause = " WHERE id IN %s"
             d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
             if d1:
-                d1 = ' and '+d1
+                clause += ' AND ' + d1
+
+            select_query = 'SELECT id FROM "%s" %s' % (self._table, clause)
+            update_query = 'UPDATE "%s" SET %s %s' % (self._table, ','.join(upd0), clause)
 
             for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                ids_str = string.join(map(str, sub_ids), ',')
+                sub_ids = set(ids[i:i+cr.IN_MAX])
                 if d1:
-                    cr.execute('SELECT id FROM "'+self._table+'" ' \
-                            'WHERE id IN ('+ids_str+')'+d1, d2)
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
+                    cr.execute(select_query, [tuple(sub_ids)] + d2)
+                    if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % \
                                         self._description)
+
+                    cr.execute(update_query, upd1 + [tuple(sub_ids)] + d2)
                 else:
-                    cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
+                    cr.execute(select_query, (tuple(sub_ids),))
+                    if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
                                 _('You try to write on an record that doesn\'t exist ' \
                                         '(Document type: %s).') % self._description)
-                if d1:
-                    cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
-                            'where id in ('+ids_str+')'+d1, upd1+ d2)
-                else:
-                    cr.execute('update "'+self._table+'" set '+string.join(upd0, ',')+' ' \
-                            'where id in ('+ids_str+')', upd1)
-            
+
+                    cr.execute(update_query, upd1 + [tuple(sub_ids)])
+
             if totranslate:
                 for f in direct:
                     if self._columns[f].translate:
@@ -2662,12 +2659,11 @@ class orm(orm_template):
 
         for table in self._inherits:
             col = self._inherits[table]
+            query = 'SELECT DISTINCT "%s" FROM "%s" WHERE id IN %%s' % (col, self._table)
             nids = []
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
-                ids_str = string.join(map(str, sub_ids), ',')
-                cr.execute('select distinct "'+col+'" from "'+self._table+'" ' \
-                        'where id in ('+ids_str+')', upd1)
+                cr.execute(query, (tuple(sub_ids),))
                 nids.extend([x[0] for x in cr.fetchall()])
 
             v = {}
@@ -2692,11 +2688,11 @@ class orm(orm_template):
                     clause, params = '%s=%%s' % (self._parent_name,), (parent_val,)
                 else:
                     clause, params = '%s IS NULL' % (self._parent_name,), ()
-                cr.execute('SELECT parent_right, id FROM %s WHERE %s ORDER BY %s' % (self._table, clause, order), params)
+                cr.execute('SELECT parent_right, id FROM "%s" WHERE %s ORDER BY %s' % (self._table, clause, order), params)
                 parents = cr.fetchall()
 
                 for id in parents_changed:
-                    cr.execute('SELECT parent_left, parent_right FROM %s WHERE id=%%s' % (self._table,), (id,))
+                    cr.execute('SELECT parent_left, parent_right FROM "%s" WHERE id=%%s' % (self._table,), (id,))
                     pleft, pright = cr.fetchone()
                     distance = pright - pleft + 1
 
@@ -3162,13 +3158,12 @@ class orm(orm_template):
         if not parent:
             parent = self._parent_name
         ids_parent = ids[:]
-        while len(ids_parent):
+        query = 'SELECT distinct "%s" FROM "%s" WHERE id IN %%s' % (parent, self._table)
+        while ids_parent:
             ids_parent2 = []
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids_parent = ids_parent[i:i+cr.IN_MAX]
-                cr.execute('SELECT distinct "'+parent+'"'+
-                    ' FROM "'+self._table+'" ' \
-                    'WHERE id in ('+','.join(map(str, sub_ids_parent))+')')
+                cr.execute(query, (tuple(sub_ids_parent),))
                 ids_parent2.extend(filter(None, map(lambda x: x[0], cr.fetchall())))
             ids_parent = ids_parent2
             for i in ids_parent:
