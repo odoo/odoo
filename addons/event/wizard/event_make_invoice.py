@@ -83,7 +83,7 @@ class event_make_invoice(osv.osv_memory):
 
             vals = value['value']
             vals.update({
-                'name': reg.name,
+                'name': reg.invoice_label + '-' + reg.name,
                 'price_unit': reg.unit_price,
                 'quantity': reg.nb_register,
                 'product_id':reg.event_id.product_id.id,
