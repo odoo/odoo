@@ -44,7 +44,7 @@
     
     """,
     'author': 'Tiny',
-    'depends': ['mrp', 'sale'],
+    'depends': ['mrp_procurement', 'sale'],
     'update_xml': ['mrp_jit.xml'],
     'demo_xml': [],
     'installable': True,

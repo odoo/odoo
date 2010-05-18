@@ -32,7 +32,7 @@ When installed, this module will automatically create a new task
 for each procurement order line, when the corresponding product
 meets the following characteristics:
   * Type = Service
-  * Procurement method (Order fulfillment) = MTO (make to order)
+  * Procurement method (Order fulfilment) = MTO (make to order)
   * Supply/Procurement method = Produce
 
 The new task is created outside of any existing project, but
