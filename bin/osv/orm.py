@@ -1023,7 +1023,14 @@ class orm_template(object):
         for constraint in self._constraints:
             fun, msg, fields = constraint
             if not fun(self, cr, uid, ids):
-                translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+                # Check presence of __call__ directly instead of using
+                # callable() because it will be deprecated as of Python 3.0
+                if hasattr(msg, '__call__'):
+                    txt_msg, params = msg(self, cr, uid, ids)
+                    tmp_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=txt_msg) or txt_msg
+                    translated_msg = tmp_msg % params
+                else:
+                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
                 error_msgs.append(
                         _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
