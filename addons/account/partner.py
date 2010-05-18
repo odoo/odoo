@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from operator import itemgetter
 
 from osv import fields, osv
 import ir
@@ -89,22 +90,19 @@ class res_partner(osv.osv):
     _name = 'res.partner'
     _inherit = 'res.partner'
     _description = 'Partner'
+
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(("""select
-                l.partner_id, a.type, sum(l.debit-l.credit)
-            from
-                account_move_line l
-            left join
-                account_account a on (l.account_id=a.id)
-            where
-                a.type in ('receivable','payable') and
-                l.partner_id in (%s) and
-                l.reconcile_id is null and
-                """ % (','.join(map(str, ids)),))+query+"""
-            group by
-                l.partner_id, a.type
-            """)
+        cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
+                      FROM account_move_line l
+                      LEFT JOIN account_account a ON (l.account_id=a.id)
+                      WHERE a.type IN ('receivable','payable')
+                      AND l.partner_id in %s
+                      AND l.reconcile_id IS NULL
+                      AND """ + query + """
+                      GROUP BY l.partner_id, a.type
+                      """,
+                   (tuple(ids),))
         tinvert = {
             'credit': 'receivable',
             'debit': 'payable'
@@ -118,27 +116,38 @@ class res_partner(osv.osv):
             res[pid][maps[type]] = (type=='receivable') and val or -val
         return res
 
-    def _credit_search(self, cr, uid, obj, name, args, context):
+    def _asset_difference_search(self, cr, uid, obj, name, type, args,
+                                 context=None):
         if not len(args):
             return []
-        where = ' and '.join(map(lambda x: '(sum(debit-credit)'+x[1]+str(x[2])+')',args))
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context={})
-        cr.execute(('select partner_id from account_move_line l where account_id in (select id from account_account where type=%s and active) and reconcile_id is null and '+query+' and partner_id is not null group by partner_id having '+where), ('receivable',) )
+        having_values = tuple(map(itemgetter(2), args))
+        where = ' AND '.join(
+            map(lambda x: '(SUM(debit-credit) %(operator)s %%s)' % {
+                                'operator':x[1]},
+                args))
+        query = self.pool.get('account.move.line')._query_get(cr, uid,
+                                                              context=context)
+        cr.execute(('SELECT partner_id FROM account_move_line l '\
+                    'WHERE account_id IN '\
+                        '(SELECT id FROM account_account '\
+                        'WHERE type=%s AND active) '\
+                    'AND reconcile_id IS NULL '\
+                    'AND '+query+' '\
+                    'AND partner_id IS NOT NULL '\
+                    'GROUP BY partner_id HAVING '+where),
+                   (type,) + having_values)
         res = cr.fetchall()
         if not len(res):
             return [('id','=','0')]
-        return [('id','in',map(lambda x:x[0], res))]
+        return [('id','in',map(itemgetter(0), res))]
+
+    def _credit_search(self, cr, uid, obj, name, args, context):
+        return self._asset_difference_search(
+            cr, uid, obj, name, 'receivable', args, context=context)
 
     def _debit_search(self, cr, uid, obj, name, args, context):
-        if not len(args):
-            return []
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context={})
-        where = ' and '.join(map(lambda x: '(sum(debit-credit)'+x[1]+str(x[2])+')',args))
-        cr.execute(('select partner_id from account_move_line l where account_id in (select id from account_account where type=%s and active) and reconcile_id is null and '+query+' and partner_id is not null group by partner_id having '+where), ('payable',) )
-        res = cr.fetchall()
-        if not len(res):
-            return [('id','=','0')]
-        return [('id','in',map(lambda x:x[0], res))]
+        return self._asset_difference_search(
+            cr, uid, obj, name, 'payable', args, context=context)
 
     _columns = {
         'credit': fields.function(_credit_debit_get,

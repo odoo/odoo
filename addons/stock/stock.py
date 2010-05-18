@@ -368,13 +368,15 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context):
             sql_str = """update stock_move set
-                    date_planned='%s'
+                    date_planned=%s
                 where
-                    picking_id=%d """ % (value, pick.id)
+                    picking_id=%s """
+            sqlargs = (value, pick.id)
 
             if pick.max_date:
-                sql_str += " and (date_planned='" + pick.max_date + "' or date_planned>'" + value + "')"
-            cr.execute(sql_str)
+                sql_str += " and (date_planned=%s or date_planned>%s)"
+                sqlargs += (pick.max_date, value)
+            cr.execute(sql_str, sqlargs)
         return True
 
     def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
@@ -384,12 +386,14 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context):
             sql_str = """update stock_move set
-                    date_planned='%s'
+                    date_planned=%s
                 where
-                    picking_id=%s """ % (value, pick.id)
+                    picking_id=%s """
+            sqlargs = (value, pick.id)
             if pick.min_date:
-                sql_str += " and (date_planned='" + pick.min_date + "' or date_planned<'" + value + "')"
-            cr.execute(sql_str)
+                sql_str += " and (date_planned=%s or date_planned<%s)"
+                sqlargs += (pick.min_date, value)
+            cr.execute(sql_str, sqlargs)
         return True
 
     def get_min_max_date(self, cr, uid, ids, field_name, arg, context={}):
@@ -405,9 +409,9 @@ class stock_picking(osv.osv):
             from
                 stock_move
             where
-                picking_id in (""" + ','.join(map(str, ids)) + """)
+                picking_id in %s
             group by
-                picking_id""")
+                picking_id""", (tuple(ids),))
         for pick, dt1, dt2 in cr.fetchall():
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
@@ -841,11 +845,11 @@ class stock_production_lot(osv.osv):
                 from
                     stock_report_prodlots
                 where
-                    location_id in ('''+','.join(map(str, locations))+''')  and
-                    prodlot_id in  ('''+','.join(map(str, ids))+''')
+                    location_id in %s  and
+                    prodlot_id in  %s
                 group by
                     prodlot_id
-            ''')
+            ''', (tuple(locations), tuple(ids)))
             res.update(dict(cr.fetchall()))
         return res
 
@@ -857,11 +861,11 @@ class stock_production_lot(osv.osv):
             from
                 stock_report_prodlots
             where
-                location_id in ('''+','.join(map(str, locations)) + ''')
+                location_id in %s
             group by
                 prodlot_id
-            having  sum(name)  ''' + str(args[0][1]) + ''' ''' + str(args[0][2])
-        )
+            having sum(name) ''' + str(args[0][1]) + ' %s',
+                   (tuple(locations), args[0][2]))
         res = cr.fetchall()
         ids = [('id', 'in', map(lambda x: x[0], res))]
         return ids
@@ -1204,7 +1208,6 @@ class stock_move(osv.osv):
                         r = res.pop(0)
                         move_id = self.copy(cr, uid, move.id, {'product_qty': r[0], 'location_id': r[1]})
                         done.append(move_id)
-                        #cr.execute('insert into stock_move_history_ids values (%s,%s)', (move.id,move_id))
         if done:
             count += len(done)
             self.write(cr, uid, done, {'state': 'assigned'})
@@ -1547,4 +1550,3 @@ class report_stock_lines_date(osv.osv):
             )""")
 
 report_stock_lines_date()
-

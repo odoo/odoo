@@ -48,40 +48,40 @@ class idea_idea(osv.osv):
         if not len(ids):
             return {}
 
-        sql = """select i.id, avg(v.score::integer) 
+        sql = """select i.id, avg(v.score::integer)
                    from idea_idea i left outer join idea_vote v on i.id = v.idea_id
-                    where i.id in (%s)
+                    where i.id in %s
                     group by i.id
-                """ % ','.join(['%d']*len(ids))
+                """
 
-        cr.execute(sql, ids)
+        cr.execute(sql, (tuple(ids),))
         return dict(cr.fetchall())
 
     def _vote_count(self,cr,uid,ids,name,arg,context=None):
         if not len(ids):
             return {}
 
-        sql = """select i.id, count(1) 
+        sql = """select i.id, count(1)
                    from idea_idea i left outer join idea_vote v on i.id = v.idea_id
-                    where i.id in (%s)
+                    where i.id in %s
                     group by i.id
-                """ % ','.join(['%d']*len(ids))
+                """
 
-        cr.execute(sql, ids)
+        cr.execute(sql, (tuple(ids),))
         return dict(cr.fetchall())
 
     def _comment_count(self,cr,uid,ids,name,arg,context=None):
         if not len(ids):
             return {}
 
-        sql = """select i.id, count(1) 
+        sql = """select i.id, count(1)
                    from idea_idea i left outer join idea_comment c on i.id = c.idea_id
-                    where i.id in (%s)
+                    where i.id in %s
                     group by i.id
-                """ % ','.join(['%d']*len(ids))
+                """
 
 
-        cr.execute(sql,ids)
+        cr.execute(sql, (tuple(ids),))
         return dict(cr.fetchall())
 
     def _vote_read(self, cr, uid, ids, name, arg, context = None):

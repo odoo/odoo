@@ -148,8 +148,8 @@ class membership_line(osv.osv):
             )
         JOIN account_invoice ai ON (
             ai.id = ail.invoice_id)
-        WHERE ml.id in (%s)
-        ''' % ','.join([str(id) for id in ids]))
+        WHERE ml.id in %s
+        ''', (tuple(ids),))
 
         res = cr.fetchall()
         for r in res:
@@ -417,7 +417,7 @@ class Partner(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct associate_member from res_partner where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct associate_member from res_partner where id in %s', (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
