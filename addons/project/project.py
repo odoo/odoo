@@ -550,12 +550,12 @@ class config_compute_remaining(osv.osv_memory):
         return False
 
     _columns = {
-        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Re-estimated time that will change the remaining hours of the task"),
-            }
+        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Put here the remaining hours required to close the task."),
+    }
 
     _defaults = {
         'remaining_hours': _get_remaining
-        }
+    }
 
     def compute_hours(self, cr, uid, ids, context=None):
         task_obj = self.pool.get('project.task')
