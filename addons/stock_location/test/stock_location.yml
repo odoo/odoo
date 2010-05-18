@@ -1,7 +1,7 @@
 
 -
-  In order to test the stock location module, I will create product,locations,
-  create physical inventory ,fill inventory lines,
+  In order to test the stock location module, I will create product, locations, SO, warehouse. 
+  
 - 
   Creating a account.account.type record
 - 
@@ -209,7 +209,6 @@
     property_stock_procurement: stock.location_procurement
     property_stock_production: stock.location_production
 -
-- 
   Creating a stock.location record
 - 
   !record {model: stock.location, id: stock_location_suppiler0}:
@@ -222,15 +221,17 @@
     name: Suppiler 1
     usage: internal
 -
- I  create warehouse 
+  I create warehouse.
 - 
-  !record {model: stock.warehouse, id: sale.shop}:
+  !record {model: stock.warehouse, id: warehouse0}:
     company_id: base.main_company
     lot_input_id: stock.stock_location_stock
-    lot_output_id: stock_location.stock_location_suppiler0
-    lot_stock_id: stock_location.stock_location_suppiler0
+    lot_output_id: stock_location_suppiler0
+    lot_stock_id: stock_location_suppiler0
     name: OpenERP S.A.
     partner_address_id: res_partner_address_0
+-
+  I create Sale order for HP CD writers.
 - 
   !record {model: sale.order, id: sale_order_01}:
     date_order: '2010-04-20'
@@ -242,8 +243,8 @@
         product_uom: product.product_uom_unit
         product_uom_qty: 5.0
         state: draft
-        'product_id': product_product_hpcdwriters0
-        'type': make_to_order
+        product_id: product_product_hpcdwriters0
+        type: make_to_order
     order_policy: manual
     partner_id: base.res_partner_agrolait
     partner_invoice_id: base.res_partner_address_8
@@ -253,19 +254,20 @@
     pricelist_id: product.list0
     shop_id: sale.shop
 - 
-  I confirm the order
+  I confirm the sale order.
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_01}     
 -
-  I check the dealy in move 
+  I check the delay mentioned in pushed flow in move. 
 -  
   !python {model: stock.move}: |
     product_id=self.pool.get('product.product').search(cr,uid,[('name','=','HP CD writers')])
     location_id=self.pool.get('stock.location').search(cr,uid,[('name','=','Inventory loss')])
     move_ids =self.search(cr, uid, [('product_id','in',product_id),('location_dest_id','=',location_id)])
-    move_obj=self.browse(cr,uid,move_ids)[0]
-    import time
-    from_dt = time.mktime(time.strptime(move_obj.date,'%Y-%m-%d %H:%M:%S'))
-    to_dt = time.mktime(time.strptime(move_obj.date_planned,'%Y-%m-%d %H:%M:%S'))
-    diff_day = (to_dt-from_dt)/(3600*24)
-    assert (round(diff_day)+1 ==30)    
+    if move_ids:
+      move_obj=self.browse(cr,uid,move_ids)[0]
+      import time
+      from_dt = time.mktime(time.strptime(move_obj.date,'%Y-%m-%d %H:%M:%S'))
+      to_dt = time.mktime(time.strptime(move_obj.date_planned,'%Y-%m-%d %H:%M:%S'))
+      diff_day = (to_dt-from_dt)/(3600*24)
+      assert (round(diff_day)+1 ==30)    

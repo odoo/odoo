@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,38 +15,30 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
 {
-    'name': 'Stock Location Paths',
-    'version': '1.0',
-    'category': 'Generic Modules/Inventory Control',
-    'description': """
-Manages product's path in locations.
-
-This module may be useful for different purposes:
-* Manages the product in his whole manufacturing chain
-* Manages different default locations by products
-* Define paths within the warehouse to route products based on operations:
-   - Quality Control
-   - After Sales Services
-   - Supplier Return
-* Manage products to be rent.
+    "name" : "",
+    "version" : "1.1",
+    "depends" : ["crm", 
+                "document",
+                "poweremail" # need to get this module form the branch 
+                # lp:poweremail  
+                ],
+    "author" : "Tiny",
+    "category": 'Generic Modules/Marketing',
+    "description": """
     """,
-    'author': 'Tiny',
-    'depends': ['stock'],
+    'website': 'http://www.openerp.com',
     'init_xml': [],
-    'update_xml': ['stock_view.xml', 'security/ir.model.access.csv'],
+    'update_xml': [
+        'marketing_campaign_view.xml',
+    ],
     'demo_xml': [],
     'installable': True,
-    'test':[
-#            'test/stock_location.yml'
-            ],
     'active': False,
-    'certificate': '0046505115101',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
