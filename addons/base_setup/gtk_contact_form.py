@@ -77,7 +77,7 @@ class base_gtkcontactform(osv.osv_memory):
         company_id = self.pool.get('base.setup.company').search(cr, uid, [])
         company_data = self.pool.get('base.setup.company').read(cr, uid, company_id)
         company_data = company_data and company_data[0] or False
-        country1 = ''
+        country = ''
         if company_data and company_data.get('country_id', False):
             country = self.pool.get('res.country').read(cr, uid, company_data['country_id'],['name'])['name']
         for res in self.read(cr, uid, ids):
