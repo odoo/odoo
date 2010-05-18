@@ -18,13 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import tools
 from osv import fields,osv
 
 class hr_holidays_report(osv.osv):
     _name = "hr.holidays.report"
-    _description = "Leaves Statistics"
+    _description = "Leaves Statistics By Employee and category"
     _auto = False
     _rec_name = 'date'
     _columns = {
@@ -36,7 +35,8 @@ class hr_holidays_report(osv.osv):
         'date_from' : fields.datetime('Start Date', readonly=True),
         'date_to' : fields.datetime('End Date', readonly=True),
         'number_of_days_temp': fields.float('Number of Days', readonly=True),
-        'employee_id' : fields.many2one('hr.employee', "Employee's Name",readonly=True),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", readonly=True),
+        'category_id' : fields.many2one('hr.employee.category', "Category's Name", readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'state': fields.selection([('draft', 'Draft'),
                                    ('confirm', 'Waiting Validation'),
@@ -57,19 +57,20 @@ class hr_holidays_report(osv.osv):
                      date_trunc('day',s.date_to) as date_to,
                      s.number_of_days_temp,
                      s.employee_id,
+                     s.category_id,
                      s.user_id as user_id,
                      to_char(s.create_date, 'YYYY') as year,
                      to_char(s.create_date, 'MM') as month,
                      s.state
                      from
                  hr_holidays s
-                 where type='remove' and
-                 s.employee_id is not null
+                 where type='remove'
                  group by
                      s.create_date,s.state,s.date_from,s.date_to,
-                     s.number_of_days_temp,s.employee_id,s.user_id
+                     s.number_of_days_temp,s.employee_id,s.user_id,s.category_id
             )
         """)
+
 hr_holidays_report()
 
 class hr_holidays_remaining_leaves_user(osv.osv):
@@ -106,3 +107,5 @@ class hr_holidays_remaining_leaves_user(osv.osv):
         """)
 
 hr_holidays_remaining_leaves_user()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
