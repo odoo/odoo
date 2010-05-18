@@ -2226,7 +2226,7 @@ class orm(orm_template):
         
         for r in result:
             for key, v in r.items():
-                if v == None:
+                if v is None:
                     r[key] = False
                 if key in self._columns.keys():
                     type = self._columns[key]._type
