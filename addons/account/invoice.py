@@ -333,7 +333,7 @@ class account_invoice(osv.osv):
                 raise except_orm(_('Configuration Error!'),
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
-                raise except_orm(_('UnknownError'), str(e))
+                raise
             
     def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])
