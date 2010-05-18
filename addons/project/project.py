@@ -266,10 +266,10 @@ class task(osv.osv):
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
             if (task.remaining_hours + hours.get(task.id, 0.0)):
-                if hours.get(task.id, 0.0) > res[task.id]['total_hours']:
-                    res[task.id]['progress'] = round(100 - (max(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 100)) % 100, 2)
+                if task.state =='done':
+                    res[task.id]['progress'] = 100.0
                 else:
-                    res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 100),2)
+                    res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
             else:
                 res[task.id]['progress'] = 0.0
             if task.state in ('done','cancel'):
