@@ -550,7 +550,7 @@ class config_compute_remaining(osv.osv_memory):
         return False
 
     _columns = {
-        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Re-estimated Time to change the remaining hours of the task"),
+        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Re-estimated time that will change the remaining hours of the task"),
             }
 
     _defaults = {
