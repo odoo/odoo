@@ -69,26 +69,21 @@
         <field name="arch" type="xml">
             <form string="Jobs - Recruitment Form">
                 <group colspan="4" col="8">
-                     <group colspan="3" col="6">
                         <field name="name" string="Subject"/>
+                        <field name="partner_name"/>
+	                   	<field name="job_id" on_change="onchange_job(job_id)"/>
+	                   	<button string="Schedule a Phone Call" name="223" icon="gtk-redo" type="action"/>
+                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
+                    	<newline/>
+                    	<group colspan="2" col="4">
                         <field name="stage_id"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                    </group>
-                    <newline/>
-                    <group colspan="3" col="6">
-	                  	<field name="partner_name"/>
-	                   	<field name="job_id" on_change="onchange_job(job_id)"/>
-	                   	<button string="Schedule a Phone Call" name="223" icon="gtk-redo" type="action"/>
-                     </group>
-                    <newline/>
-                    <group colspan="3" col="6">
+						</group>
                         <field name="user_id"/>
                         <field name="department_id" widget="selection"/>
-                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
-                    </group>
-                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+	                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+	                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
             	</group>
                 <notebook colspan="4">
                     <page string="Job Info">
@@ -233,7 +228,7 @@
                        help="My Department"/>
                </field>
                <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="20">
+                <group expand="1" string="Group By..." colspan="11" col="20">
                     <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Responsible" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>

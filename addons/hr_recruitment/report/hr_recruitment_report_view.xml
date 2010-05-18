@@ -85,32 +85,10 @@
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-hr"
-                        string="My Recruitments"
-                        help="My Recruitments"
-                        domain="[('user_id','=',uid)]"/>
-                    <filter icon="terp-hr"
                         string="Recruitments non assigned"
                         help="Recruitments non assigned"
                         domain="[('user_id','=',False)]"/>
                 </field>
-                </group>
-                <newline/>
-                <group expand="1" string="Extended options..." colspan="10" col="12">
-                    <filter icon="terp-hr"
-                    		string="Hired"
-                        name="done"
-                    		domain="[('state','=','done')]"/>
-                    <filter icon="terp-hr"
-                    		string="Refused"
-                    		domain="[('state','=','cancel')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="priority"/>
-                    <field name="stage_id" widget="selection"/>
-                  	<field name="job_id" widget="selection"/>
-                  	<newline/>
-                  	<field name="type_id" widget="selection"/>
-                    <field name="date"/>
-                    <field name="date_closed"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By ..." colspan="10" col="12">
@@ -127,6 +105,24 @@
             	   <filter string="Month" icon="terp-hr" domain="[]" context="{'group_by':'month'}"/>
             	   <filter string="Year" icon="terp-hr" domain="[]" context="{'group_by':'year'}"/>
                 </group>
+                <newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-hr"
+                    		string="Hired"
+                        name="done"
+                    		domain="[('state','=','done')]"/>
+                    <filter icon="terp-hr"
+                    		string="Refused"
+                    		domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="priority"/>
+                    <field name="stage_id" widget="selection"/>
+                  	<field name="job_id" widget="selection"/>
+                  	<newline/>
+                  	<field name="type_id" widget="selection"/>
+                    <field name="date"/>
+                    <field name="date_closed"/>
+                </group>
             </search>
         </field>
     </record>
@@ -136,7 +132,7 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid, 'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
 	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10"/>
