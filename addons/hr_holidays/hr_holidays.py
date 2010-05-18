@@ -21,6 +21,7 @@
 #
 ##############################################################################
 import time
+import datetime
 
 import pooler
 import netsvc
@@ -182,14 +183,14 @@ class hr_holidays(osv.osv):
                                     }
         return result
 
-    def _get_number_of_days(date_from, date_to):
+    def _get_number_of_days(self, date_from, date_to):
         """Returns a float equals to the timedelta between two dates given as string."""
 
         DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
         from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
         to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
         timedelta = to_dt - from_dt
-        diff_day = timedelta.days + float(timedelata.seconds) / 86400
+        diff_day = timedelta.days + float(timedelta.seconds) / 86400
         return diff_day
 
     def _update_user_holidays(self, cr, uid, ids):
@@ -235,7 +236,7 @@ class hr_holidays(osv.osv):
         return result
 
     def onchange_date_to(self, cr, uid, ids, date_from, date_to):
-        return onchange_date_from(cr, uid, ids, date_to, date_from)
+        return self.onchange_date_from(cr, uid, ids, date_to, date_from)
 
     def onchange_sec_id(self, cr, uid, ids, status, context={}):
         warning = {}
