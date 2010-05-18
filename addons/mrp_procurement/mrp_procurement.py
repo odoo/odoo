@@ -334,7 +334,7 @@ class mrp_procurement(osv.osv):
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
                 else:
                     # TODO: check this
-                    if procurement.procure_method == 'make_to_stock' and procurement.move_id.state in ('waiting',):
+                    if procurement.procure_method == 'make_to_stock' and procurement.move_id.state in ('waiting','draft'):
                         id = move_obj.write(cr, uid, [procurement.move_id.id], {'state':'confirmed'})
         self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
         return True
