@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+     	<record id="res_partner_share" model="ir.ui.view">
+            <field name="name">partner.share.create.form</field>
+            <field name="model">partner.share.create</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Share">
+			  <separator colspan="4" string="Users"/>
+			  <field name="user_ids" colspan="4" nolabel="1"/>
+			  <separator colspan="4"/>
+			   <group col="2" colspan="4">
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+					<button name="do_share" string="Share" colspan="1" type="object" icon="gtk-execute"/>
+				</group>
+			</form>
+            </field>
+        </record>
+
+        <record id="res_partner_share_act" model="ir.actions.act_window">
+            <field name="name">Share</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">partner.share.create</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="res_partner_share_values">
+            <field name="model_id" ref="model_res_partner" />
+            <field name="object" eval="1" />
+            <field name="name">Share</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('res_partner_share_act'))" />
+            <field name="key">action</field>
+            <field name="model">res.partner</field>
+        </record>
+
+	</data>
+</openerp>

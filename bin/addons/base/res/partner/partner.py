@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -149,12 +149,12 @@ class res_partner(osv.osv):
         'active': fields.boolean('Active'),
         'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
-        'city': fields.related('address', 'city', type='char', string='City'), 
-        'phone': fields.related('address', 'phone', type='char', string='Phone'), 
+        'city': fields.related('address', 'city', type='char', string='City'),
+        'phone': fields.related('address', 'phone', type='char', string='Phone'),
         'country': fields.related('address', 'country_id', type='many2one', relation='res.country', string='Country'),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
         'email': fields.related('address', 'email', type='char', size=240, string='E-mail'),
-        'company_id': fields.many2one('res.company', 'Company', select=1), 
+        'company_id': fields.many2one('res.company', 'Company', select=1),
     }
 
     def _default_category(self, cr, uid, context={}):
@@ -172,6 +172,9 @@ class res_partner(osv.osv):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
+
+    def do_share(self, cr, uid, ids, *args):
+        return True
 
     def _check_ean_key(self, cr, uid, ids):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
@@ -469,7 +472,7 @@ class res_partner_category(osv.osv):
     _columns = {
         'partner_ids': fields.many2many('res.partner', 'res_partner_category_rel', 'category_id', 'partner_id', 'Partners'),
     }
-   
+
 res_partner_category()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
