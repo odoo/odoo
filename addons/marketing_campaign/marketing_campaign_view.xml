@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<menuitem name="Direct Marketing" id="menu_marketing" parent="base.menu_base_partner"/>
+	
+	<!--
+    ======================
+    Marketing Campaign
+    ======================
+    -->
+
+    <record model="ir.ui.view" id="view_marketing_campaign_form">
+        <field name="name">marketing.campaign.form</field>
+        <field name="model">marketing.campaign</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Campaign">
+               <group colspan="4">
+                    <field name="name" select="1"/>
+                    <field name="object_id" select="1"/>
+                    <field name="mode"/>
+                </group>
+               <field name="activity_ids" nolabel = "1" colspan="4"/>
+               <separator string="Status" colspan="4" />
+               <field name="state" nolabel = "1" colspan="4"/>
+               <field name="state" nolabel = "1" />
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_marketing_campaign_tree">
+        <field name="name">marketing.campaign.tree</field>
+        <field name="model">marketing.campaign</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="All Campaigns">
+                <field name="name" select="1"/>
+                <field name="object_id" select="1"/>
+                <field name="mode"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="view_marketing_campaign_diagram" model="ir.ui.view">
+        <field name="name">marketing.campaign.diagram</field>
+        <field name="model">marketing.campaign</field>
+        <field name="type">diagram</field>
+        <field name="arch" type="xml">
+            <diagram string="Campaign Editor">
+			  <node object="marketing.campaign.activity" shape="rectangle:type!='subcampaign'" bgcolor="gray:start==True">
+			    <field name="name"/>
+			    <field name="type"/>
+                <field name="start" invisible="1"/>
+                <field name="condition"/> 
+			  </node>
+			  <arrow object="marketing.campaign.transition" source="activity_from_id" destination="activity_to_id">
+			    <field name="activity_from_id"/>
+			    <field name="activity_to_id"/>
+			    <field name="interval_nbr"/>
+     			<field name="interval_type"/>
+			  </arrow>
+			</diagram>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_marketing_campaign_form">
+        <field name="name">All Campaigns</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">marketing.campaign</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,diagram</field>
+        <field name="view_id" ref="view_marketing_campaign_tree"/>
+    </record>
+
+    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing" action="action_marketing_campaign_form" sequence="20" />
+		
+	<!--
+    ======================
+    Marketing Segments
+    ======================
+    -->
+
+    <record model="ir.ui.view" id="view_marketing_campaign_segment_form">
+        <field name="name">marketing.campaign.segment.form</field>
+        <field name="model">marketing.campaign.segment</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Segments">
+            <group colspan="4">
+                <field name="name" select="1"/>
+                <newline/>
+                <field name="campaign_id" select="1"/>
+                <field name="object_id" select="1"/>
+                <newline/>
+                <field name="ir_filter_id" select="1"/>
+                <newline/>
+                <field name="date_run"/>
+                <field name="date_done"/>
+                <separator string="Synchronization" colspan="4" />
+               	<field name="sync_last_date"/>
+                <field name="sync_mode"/>
+            </group>
+                <separator string="Status" colspan="4" />
+                <field name="state" nolabel = "1" colspan="4"/>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_marketing_campaign_segment_tree">
+        <field name="name">marketing.campaign.segment.tree</field>
+        <field name="model">marketing.campaign.segment</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="All Segments">
+                <field name="name" select="1"/>
+                <field name="campaign_id" select="1"/>
+                <field name="sync_last_date"/>
+                <field name="sync_mode"/>
+                <field name="state"/>
+                <field name="date_run"/>
+                <field name="date_done"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_marketing_campaign_segment_form">
+        <field name="name">All Segments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">marketing.campaign.segment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_marketing_campaign_segment_tree"/>
+    </record>
+
+    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing" action="action_marketing_campaign_segment_form" sequence="10" />
+		
+	<!--
+    ======================
+    Marketing Activities
+    ======================
+    -->
+
+    <record model="ir.ui.view" id="view_marketing_campaign_activity_form">
+        <field name="name">marketing.campaign.activity.form</field>
+        <field name="model">marketing.campaign.activity</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Activities">
+                <field name="name" select="1" />
+                <field name="start"/>
+                <field name="campaign_id" select="1"/>
+                <field name="object_id"/>                
+                <field name="condition" colspan="4"/>
+                <newline/>
+                <field name="type"/>
+                <group colspan="4" attrs="{'invisible':[('type','!=','email')]}" >                
+                    <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
+                </group>
+                <group colspan="4" attrs="{'invisible':[('type','!=','paper')]}" >
+                    <field name="report_id" attrs="{'required':[('type','=','paper')]}" />
+                    <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
+                </group>
+                <group colspan="4" attrs="{'invisible':[('type','!=','action')]}" >                
+                    <field name="server_action_id" attrs="{'required':[('type','=','action')]}" />
+                </group>
+                <group colspan="4" attrs="{'invisible':[('type','!=','subcampaign')]}" >                
+                    <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
+                    <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
+                </group>                
+                <field name="to_ids" nolabel="1" colspan="4" mode="tree">
+                    <tree string="All Transitions" editable="bottom">
+                        <field name="activity_from_id"/>
+                        <field name="activity_to_id" />
+                        <field name="interval_nbr" />
+                        <field name="interval_type"/>
+                    </tree>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_marketing_campaign_activity_tree">
+        <field name="name">marketing.campaign.activity.tree</field>
+        <field name="model">marketing.campaign.activity</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="All Activities">
+                <field name="name" select="1"/>
+                <field name="campaign_id" select="1"/>
+                <field name="start"/>
+                <field name="object_id"/>
+                <field name="condition"/>
+                <field name="type"/>
+                <field name="report_id"/>
+                 <field name="to_ids"/>
+                <field name="subcampaign_id"/>
+                <field name="subcampaign_segment_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_marketing_campaign_activity_form">
+        <field name="name">All Activities</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">marketing.campaign.activity</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_marketing_campaign_activity_tree"/>
+    </record>
+    <!--
+
+    <menuitem id="menu_marketing_campaign_activity_form" parent="menu_marketing" action="action_marketing_campaign_activity_form" sequence="3" />-->
+
+    <!--
+    ======================
+    Marketing Workitems
+    ======================
+    -->
+
+    <record model="ir.ui.view" id="view_marketing_campaign_workitem_tree">
+        <field name="name">marketing.campaign.workitem.tree</field>
+        <field name="model">marketing.campaign.workitem</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="All Workitems">
+                <field name="segment_id"/>
+                <field name="activity_id" />
+                <field name="res_id" />
+                <field name="date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_marketing_campaign_workitem_form">
+        <field name="name">marketing.campaign.workitem.form</field>
+        <field name="model">marketing.campaign.workitem</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Workitem">
+                <field name="segment_id" select="1"/>
+                <field name="activity_id" select="1"/>
+                <field name="object_id"/>
+                <field name="res_id"/>
+                <field name="date" select="1"/>
+                <field name="partner_id" select="1"/>
+                <separator string="Status" colspan="4"/>
+                <field name="state" nolabel="1" colspan="4" readonly="True" select="1"/>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_marketing_campaign_workitem">
+        <field name="name">All Workitems</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">marketing.campaign.workitem</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_marketing_campaign_workitem_tree"/>
+    </record>
+
+    <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing" action="action_marketing_campaign_workitem" sequence="30" groups="base.group_extended"/>
+		
+	</data>
+</openerp>
