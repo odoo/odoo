@@ -120,9 +120,9 @@ class hr_expense_expense(osv.osv):
             for l in exp.line_ids:
                 tax_id = []
                 if l.product_id:
-                    acc = l.product_id.product_tmpl_id.property_account_expense.id
+                    acc = l.product_id.product_tmpl_id.property_account_expense
                     if not acc:
-                        acc = l.product_id.categ_id.property_account_expense_categ.id
+                        acc = l.product_id.categ_id.property_account_expense_categ
                     tax_id = [x.id for x in l.product_id.supplier_taxes_id]
                 else:
                     acc = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
