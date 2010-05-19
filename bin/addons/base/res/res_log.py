@@ -15,22 +15,28 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import tools
+from osv import fields, osv
 
-import country
-import bank
-import res_lang
-import partner
-import res_config
-import res_currency
-import res_company
-import res_user
-import res_request
-import res_lang 
-import res_log 
-import ir_property
+class res_log(osv.osv_memory):
+    _name = 'res.log'
+    _columns = {
+        'name': fields.char('Message', size=128, help='The logging message.', required=True),
+        'user_id': fields.many2one('res.users','User', required=True),
+        'res_model': fields.char('Object', size=128),
+        'res_id': fields.integer('Object ID')
+    }
+    _defaults = {
+        'user_id': lambda self,cr,uid,ctx: uid
+    }
+    _order='id desc'
+    def get(self, cr, uid, context={}):
+        ids = self.search(cr, uid, [('user_id','=',uid)], context=context)
+        result = self.read(cr, uid, ids, ['name','res_model','res_id'], context=context)
+        self.unlink(cr, uid, ids, context=context)
+        return result
+res_log()
 

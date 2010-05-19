@@ -398,8 +398,16 @@ class orm_template(object):
     _inherits = {}
     _table = None
     _invalids = set()
+    _log_create = True
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
+    def log(self, cr, uid, id, message, context=None):
+        return self.pool.get('res.log').create(cr, uid, {
+            'name': message,
+            'res_model': self._name,
+            'res_id': id},
+                context=context
+        )
 
     def view_init(self, cr , uid , fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
@@ -1731,6 +1739,7 @@ class orm_memory(orm_template):
     _max_count = 200
     _max_hours = 1
     _check_time = 20
+    _log_create = False
 
     def __init__(self, cr):
         super(orm_memory, self).__init__(cr)
@@ -1831,6 +1840,12 @@ class orm_memory(orm_template):
         for field in upd_todo:
             self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
         self._validate(cr, user, [id_new], context)
+        if self._log_create and not (context and context.get('no_store_function', False)):
+            message = self._description + \
+                " '" + \
+                self.name_get(cr, user, [id_new], context=context)[0][1] + \
+                "' "+ _("created.")
+            self.log(cr, user, id_new, message, context=context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
         return id_new
@@ -1918,7 +1933,6 @@ class orm_memory(orm_template):
             res=e.__dict__['_expression__exp']
         return res or []
 
-
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
         if not context:
@@ -1990,6 +2004,7 @@ class orm_memory(orm_template):
 class orm(orm_template):
     _sql_constraints = []
     _table = None
+    _log_create = True
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count', 'exists']
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
@@ -3440,6 +3455,13 @@ class orm(orm_template):
                 if not (object, ids, fields2) in done:
                     self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
                     done.append((object, ids, fields2))
+
+        if self._log_create and not (context and context.get('no_store_function', False)):
+            message = self._description + \
+                " '" + \
+                self.name_get(cr, user, [id_new], context=context)[0][1] + \
+                "' "+ _("created.")
+            self.log(cr, user, id_new, message, context=context)
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
