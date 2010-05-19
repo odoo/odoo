@@ -358,6 +358,10 @@
                             <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
                         </field>
                    </group>
+                   <newline />
+                   <group expand="0" string="Group By..." colspan="16">
+                       <filter string="Salesman" icon="terp-crm" domain="[]" context="{'group_by' : 'user_id'}" />
+                   </group>
                </search>
             </field>
         </record>
