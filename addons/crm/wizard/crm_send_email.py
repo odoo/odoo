@@ -69,7 +69,7 @@ class crm_send_new_email(osv.osv_memory):
         """ This sends an email to ALL the addresses of the selected partners.
         """
 
-        hist_obj = self.pool.get('crm.case.history')
+        hist_obj = self.pool.get('mailgate.message')
         smtp_pool = self.pool.get('email.smtpclient')
 
         if not context:
@@ -91,14 +91,14 @@ class crm_send_new_email(osv.osv_memory):
 
             case = case_pool.browse(cr, uid, res_id)
             if context.get('mail', 'new') == 'new':
-                if len(case.history_line):
-                    message_id = case.history_line[0].message_id
+                if len(case.message_ids):
+                    message_id = case.message_ids[0].message_id
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id
-                model = hist.log_id.model_id.model
+                model = hist.model_id.model
                 model_pool = self.pool.get(model)
-                case = model_pool.browse(cr, uid, hist.log_id.res_id)
+                case = model_pool.browse(cr, uid, hist.res_id)
             emails = [obj.email_to] + (obj.email_cc or '').split(',')
             emails = filter(None, emails)
             body = obj.text
@@ -115,28 +115,17 @@ class crm_send_new_email(osv.osv_memory):
                 x_headers['References'] = "%s" % (message_id)
 
             flag = False
-            if case.section_id and case.section_id.server_id:
-                flag = smtp_pool.send_email(
-                    cr=cr,
-                    uid=uid, 
-                    server_id=case.section_id.server_id.id,
-                    emailto=emails,
-                    subject=obj.subject,
-                    body="<pre>%s</pre>" % body,
-                    attachments=attach,
-                    headers=x_headers
-                )
-            else:
-                flag = tools.email_send(
-                    email_from,
-                    emails,
-                    obj.subject,
-                    body,
-                    attach=attach,
-                    reply_to=case.section_id.reply_to,
-                    openobject_id=str(case.id),
-                    x_headers=x_headers
-                )
+            
+            flag = tools.email_send(
+                email_from,
+                emails,
+                obj.subject,
+                body,
+                attach=attach,
+                reply_to=case.section_id.reply_to,
+                openobject_id=str(case.id),
+                x_headers=x_headers
+            )
             
             if flag:
                 if obj.state == 'unchanged':
@@ -195,20 +184,20 @@ class crm_send_new_email(osv.osv_memory):
         """
         This function gets default values for reply mail
         """
-        hist_obj = self.pool.get('crm.case.history')
+        hist_obj = self.pool.get('mailgate.message')
         res_ids = context and context.get('active_ids', []) or []
 
         include_original = context and context.get('include_original', False) or False
         res = {}
-        for hist in hist_obj.browse(cr, uid, res_ids):
-            model = hist.log_id.model_id.model
+        for hist in hist_obj.browse(cr, uid, res_ids, context=context):
+            model = hist.model_id.model
 
             # In the case where the crm.case does not exist in the database
             if not model:
                 return {}
 
             model_pool = self.pool.get(model)
-            case = model_pool.browse(cr, uid, hist.log_id.res_id)
+            case = model_pool.browse(cr, uid, hist.res_id)
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from or hist.email_from or False})
             if 'email_from' in fields:

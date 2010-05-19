@@ -38,8 +38,8 @@ from tools import command_re
 class crm_cases(osv.osv):
     """ crm cases """
 
-    _name = "crm.case"
-    _inherit = "crm.case"    
+    _name = "mailgate.thread"
+    _inherit = "mailgate.thread"    
 
     def message_new(self, cr, uid, msg, context):
         """

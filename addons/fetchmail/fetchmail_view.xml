@@ -74,9 +74,15 @@
             <field name="context">{'type':'pop'}</field>
             <field name="domain">[('type','=','pop')]</field>
         </record>
+
+        <menuitem 
+            parent="base.menu_config" 
+            id="menu_action_fetchmail_server_tree" 
+            name="Fetchmail Services"
+        />
         
         <menuitem 
-            parent="smtpclient.menu_smtpclient_administration_server" 
+            parent="menu_action_fetchmail_server_tree" 
             id="menu_action_email_server_tree" 
             action="action_email_server_tree"
         />
@@ -92,7 +98,7 @@
         </record>
         
         <menuitem 
-            parent="smtpclient.menu_smtpclient_administration_server" 
+            parent="menu_action_fetchmail_server_tree" 
             id="menu_action_email_server_tree_imap" 
             action="action_email_server_tree_imap"
         />
@@ -145,7 +151,7 @@
             res_model="mail.server.history" src_model="email.server"/>
             
         <record model="ir.actions.act_window" id="action_email_server_history_tree">
-            <field name="name">Receive Email History</field>
+            <field name="name">Received Email History</field>
             <field name="res_model">mail.server.history</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -160,7 +166,7 @@
             action="action_email_server_history_tree"/>
             
         <record model="ir.actions.act_window" id="action_email_server_history_tree_pop">
-            <field name="name">Receive Email History</field>
+            <field name="name">Received Email History</field>
             <field name="res_model">mail.server.history</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -173,5 +179,6 @@
             parent="menu_action_email_server_tree" 
             id="menu_action_email_server_history_tree_pop" 
             action="action_email_server_history_tree_pop"/>
+
     </data>
 </openerp>

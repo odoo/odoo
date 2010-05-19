@@ -89,28 +89,29 @@
                                 <field name="active"/>
                             </group>
                             <field name="log_ids" nolabel="1" colspan="4">
-                                <form string="Actions">
-                                    <separator string="Action Information" colspan="4"/>
-                                    <field name="name" colspan="4"/>
-                                    <field name="date" />
-                                    <field name="user_id" />
-                                </form>
-                            </field>
+		                        <tree string="Logs">
+		                            <field name="name" colspan="4"/>
+		                            <field name="date"/>
+		                            <field name="user_id"/>
+		                        </tree>
+		                        <form string="Logs">
+		                            <separator string="Action Information" colspan="4"/>
+		                            <field name="name" colspan="4"/>
+		                            <field name="date"/>
+		                            <field name="user_id"/>
+		                        </form>
+		                    </field>
                         </page>
                         <page string="Emails" groups="base.group_extended">
                             <group colspan="4">
                                 <field colspan="4" name="email_cc" string="CC"/>
                             </group>
-                            <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                                 <form string="Communication history">
-                                    <group col="7" colspan="4">
+                                    <group col="6" colspan="4">
                                         <field name="date"/>
                                         <field name="email_to"/>
                                         <field name="email_from"/>
-                                        <button
-                                     string="Add a CC"
-                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                               icon="gtk-add" type="action"/>
                                    </group>
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
@@ -187,9 +188,7 @@
                     <separator orientation="vertical"/>
                     <group>
                         <field name="name" select='1' string="Subject"/>
-                        <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" name="my_bugs"/>
-                        </field>
+                        <field name="user_id" widget="selection"/>
                         <field name="state" select="1">
                             <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" name="current_bugs"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
@@ -288,9 +287,7 @@
                     <separator orientation="vertical"/>
                     <group>
                         <field name="name" select='1' string="Feature description"/>
-                        <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Features" name="my_feature"/>
-                        </field>
+                        <field name="user_id" select="1" widget="selection"/>
                         <field name="state" select="1">
                             <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Features"/>

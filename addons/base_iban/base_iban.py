@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,50 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import string
 
 import netsvc
 from osv import fields, osv
+from tools.translate import _
+
+# Length of IBAN
+_iban_len = {'al':28, 'ad':24, 'at':20, 'be': 16, 'ba': 20, 'bg': 22, 'hr': 21, 'cy': 28,
+'cz': 24, 'dk': 18, 'ee': 20, 'fo':18, 'fi': 18, 'fr': 27, 'ge': 22, 'de': 22, 'gi': 23,
+'gr': 27, 'gl': 18, 'hu': 28, 'is':26, 'ie': 22, 'il': 23, 'it': 27, 'kz': 20, 'lv': 21,
+'lb': 28, 'li': 21, 'lt': 20, 'lu':20 ,'mk': 19, 'mt': 31, 'mu': 30, 'mc': 27, 'gb': 22,
+'me': 22, 'nl': 18, 'no': 15, 'pl':28, 'pt': 25, 'ro': 24, 'sm': 27, 'sa': 24, 'rs': 22,
+'sk': 24, 'si': 19, 'es': 24, 'se':24, 'ch': 21, 'tn': 24, 'tr': 26}
+
+# Reference Examples of IBAN
+_ref_iban = { 'al':'ALkk BBBS SSSK CCCC CCCC CCCC CCCC', 'ad':'ADkk BBBB SSSS CCCC CCCC CCCC',
+'at':'ATkk BBBB BCCC CCCC CCCC', 'be': 'BEkk BBBC CCCC CCKK', 'ba': 'BAkk BBBS SSCC CCCC CoKK',
+'bg': 'BGkk BBBB SSSS DDCC CCCC CC', 'hr': 'HRkk BBBB BBBC CCCC CCCC C',
+'cy': 'CYkk BBBS SSSS CCCC CCCC CCCC CCCC',
+'cz': 'CZkk BBBB SSSS SSCC CCCC CCCC', 'dk': 'DKkk BBBB CCCC CCCC CC',
+ 'ee': 'EEkk BBSS CCCC CCCC CCCK', 'fo': 'FOkk CCCC CCCC CCCC CC',
+ 'fi': 'FIkk BBBB BBCC CCCC CK', 'fr': 'FRkk BBBB BGGG GGCC CCCC CCCC CKK',
+ 'ge': 'GEkk BBCC CCCC CCCC CCCC CC', 'de': 'DEkk BBBB BBBB CCCC CCCC CC',
+ 'gi': 'GIkk BBBB CCCC CCCC CCCC CCC', 'gr': 'GRkk BBBS SSSC CCCC CCCC CCCC CCC',
+ 'gl': 'GLkk BBBB CCCC CCCC CC', 'hu': 'HUkk BBBS SSSC CCCC CCCC CCCC CCCC',
+ 'is':'ISkk BBBB SSCC CCCC XXXX XXXX XX', 'ie': 'IEkk AAAA BBBB BBCC CCCC CC',
+ 'il': 'ILkk BBBN NNCC CCCC CCCC CCC', 'it': 'ITkk KAAA AABB BBBC CCCC CCCC CCC',
+ 'kz': 'KZkk BBBC CCCC CCCC CCCC', 'lv': 'LVkk BBBB CCCC CCCC CCCC C',
+'lb': 'LBkk BBBB AAAA AAAA AAAA AAAA AAAA', 'li': 'LIkk BBBB BCCC CCCC CCCC C',
+'lt': 'LTkk BBBB BCCC CCCC CCCC', 'lu': 'LUkk BBBC CCCC CCCC CCCC' ,
+'mk': 'MKkk BBBC CCCC CCCC CKK', 'mt': 'MTkk BBBB SSSS SCCC CCCC CCCC CCCC CCC',
+'mu': 'MUkk BBBB BBSS CCCC CCCC CCCC CCCC CC', 'mc': 'MCkk BBBB BGGG GGCC CCCC CCCC CKK',
+'gb': 'GBkk BBBB SSSS SSCC CCCC CC', 'me': 'MEkk BBBC CCCC CCCC CCCC KK',
+'nl': 'NLkk BBBB CCCC CCCC CC', 'no': 'NOkk BBBB CCCC CCK', 'pl':'PLkk BBBS SSSK CCCC CCCC CCCC CCCC',
+'pt': 'PTkk BBBB SSSS CCCC CCCC CCCK K', 'ro': 'ROkk BBBB CCCC CCCC CCCC CCCC',
+'sm': 'SMkk KAAA AABB BBBC CCCC CCCC CCC', 'sa': 'SAkk BBCC CCCC CCCC CCCC CCCC',
+'rs': 'RSkk BBBC CCCC CCCC CCCC KK', 'sk': 'SKkk BBBB SSSS SSCC CCCC CCCC',
+'si': 'SIkk BBSS SCCC CCCC CKK', 'es': 'ESkk BBBB GGGG KKCC CCCC CCCC',
+'se': 'SEkk BBBB CCCC CCCC CCCC CCCC', 'ch': 'CHkk BBBB BCCC CCCC CCCC C',
+'tn': 'TNkk BBSS SCCC CCCC CCCC CCCC', 'tr': 'TRkk BBBB BRCC CCCC CCCC CCCC CC'
+}
 
 def _format_iban(string):
     '''
@@ -54,7 +92,9 @@ class res_partner_bank(osv.osv):
         for bank_acc in self.browse(cr, uid, ids):
             if not bank_acc.iban:
                 continue
-            iban =_format_iban(bank_acc.iban) 
+            iban = _format_iban(bank_acc.iban)
+            if iban[:2] in _iban_len and len(iban) != _iban_len[iban[:2]]:
+                return False
             #the four first digits have to be shifted to the end
             iban = iban[4:] + iban[:4]
             #letters have to be transformed into numbers (a = 10, b = 11, ...)
@@ -68,6 +108,17 @@ class res_partner_bank(osv.osv):
             if not int(iban2) % 97 == 1:
                 return False
         return True
+
+    def _construct_constraint_msg(self, cr, uid, ids):
+
+        def default_iban_check(iban_cn):
+            return iban_cn[0] in string.ascii_lowercase and iban_cn[1] in string.ascii_lowercase
+
+        iban_country = self.browse(cr, uid, ids)[0].iban[:2]
+        if default_iban_check(iban_country):
+            iban_example = iban_country in _ref_iban and _ref_iban[iban_country] + ' \nWhere A = Account number, B = National bank code, S = Branch code, C = account No, N = branch No, K = National check digits....' or ''
+            return _('The IBAN does not seems to be correct. You should have entered something like this %s'), (iban_example)
+        return _('The IBAN is invalid, It should begin with the country code'), ()
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -122,10 +173,8 @@ class res_partner_bank(osv.osv):
         'iban': fields.char('IBAN', size=34, readonly=True, help="International Bank Account Number"),
     }
 
-    _constraints = [(check_iban, "The IBAN number doesn't seem to be correct.", ["iban"])]
+    _constraints = [(check_iban, _construct_constraint_msg, ["iban"])]
 
 res_partner_bank()
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

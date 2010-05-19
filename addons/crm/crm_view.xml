@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem id="menu_crm_configuration" name="Cases"
+        <menuitem id="base.menu_crm_configuration" name="Cases"
             parent="base.menu_base_config" sequence="0" groups="base.group_extended"/>
 
-<!-- Case Sections Form View -->
+        <menuitem id="base.next_id_64" name="Reporting"
+        	parent="base.menu_base_partner" sequence="8" />
+
+        <!-- Case Sections Form View -->
 
         <record id="crm_case_section_view_form" model="ir.ui.view">
             <field name="name">crm.case.section.form</field>
             <field name="model">crm.case.section</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Case Section">
+                <form string="Sales Team">
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
@@ -19,22 +22,23 @@
                         <field name="resource_calendar_id" select="2"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Case section">
-                            <group col="2" colspan="2">
+                        <page string="Sales Team">
+                            <group col="2" colspan="1">
                                 <separator string="Responsible" colspan="2"/>
                                 <field name="parent_id" select="2" widget="selection"/>
                                 <field name="user_id" select="2"/>
                             </group>
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="1">
                                 <separator string="Contact Information" colspan="2"/>
-                                <field name="server_id" select="2"/>
                                 <field name="reply_to" select="2"/>
                             </group>
-                            <group col="2" colspan="2">
-                                <separator string="Section Property" colspan="2"/>
+                            <group col="2" colspan="1">
+                                <separator string="Sales Team Property" colspan="2"/>
                                 <field name="active" select="2"/>
                                 <field name="allow_unlink" select="2"/>
                             </group>
+                            <separator string="Members List" colspan="4"/>
+                            <field name="member_ids" nolabel="1" colspan="4"/>
                             <separator string="Note" colspan="4"/>
                             <field name="note" select="1" colspan="4" nolabel="1"/>
                         </page>
@@ -51,7 +55,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree string="Case Section">
+                <tree string="Sales Team">
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
                     <field name="user_id" select="1"/>
@@ -62,7 +66,7 @@
 <!-- Case Sections Action -->
 
         <record id="crm_case_section_act" model="ir.actions.act_window">
-            <field name="name">Sections</field>
+            <field name="name">Sales Team</field>
             <field name="res_model">crm.case.section</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
@@ -115,7 +119,7 @@
             <field name="view_id" ref="crm_case_stage_tree"/>
         </record>
 
-        <menuitem  id="menu_crm_case_stage" name="Stages" parent="crm.menu_crm_configuration" groups="base.group_extended"/>
+        <menuitem  id="menu_crm_case_stage" name="Stages" parent="base.menu_crm_configuration" groups="base.group_extended"/>
 
 
 <!-- Case Categories Form View -->
@@ -155,11 +159,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_categ_tree-view"/>
         </record>
-        <menuitem id="menu_crm_case_categ"   name="Categories"  parent="crm.menu_crm_configuration" groups="base.group_extended"/>
+        <menuitem id="menu_crm_case_categ"   name="Categories"  parent="base.menu_crm_configuration" groups="base.group_extended"/>
 
         <menuitem action="crm_case_section_act"
             id="menu_crm_case_section_act"
-            parent="crm.menu_crm_configuration" />
+            parent="base.menu_crm_configuration" />
 
 
 <!-- Resource Type of case Tree View -->
@@ -201,7 +205,7 @@
             <field name="view_id" ref="crm_case_resource_type_tree"/>
         </record>
         <menuitem id="menu_crm_case_resource_type" name="Resource Type"
-            parent="crm.menu_crm_configuration" groups="base.group_extended" />
+            parent="base.menu_crm_configuration" groups="base.group_extended" />
 
         <record id="crm_case_section_act_tree" model="ir.actions.act_window">
             <field name="name">Cases by section</field>
@@ -254,7 +258,7 @@
 
         <record id="crm_case_calendar-view" model="ir.ui.view">
             <field name="name">crm.case.calendar</field>
-            <field name="model">crm.case</field>
+            <field name="model">mailgate.thread</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="create_date"
@@ -271,7 +275,7 @@
 
         <record id="crm_case_tree-view" model="ir.ui.view">
             <field name="name">crm.case.tree</field>
-            <field name="model">crm.case</field>
+            <field name="model">mailgate.thread</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:date_deadline&lt;current_date and state=='open';black:state in ('draft', 'cancel','done','pending')" string="Cases">
@@ -309,7 +313,7 @@
 
         <record id="crm_case-view" model="ir.ui.view">
             <field name="name">crm.case.form</field>
-            <field name="model">crm.case</field>
+            <field name="model">mailgate.thread</field>
             <field name="type">form</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
@@ -390,16 +394,12 @@
                            <group colspan="4">
                                <field colspan="4" name="email_cc" string="CC"/>
                            </group>
-                           <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                           <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                                <form string="Communication history">
-                                   <group col="7" colspan="4">
+                                   <group col="6" colspan="4">
                                        <field name="date"/>
                                        <field name="email_to"/>
                                        <field name="email_from"/>
-                                       <button
-                                     string="Add a CC"
-                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                               icon="gtk-add" type="action"/>
                                    </group>
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
@@ -427,9 +427,10 @@
 
 <!-- Case Search View  -->
 
+		
         <record id="view_crm_case_filter" model="ir.ui.view">
             <field name="name">crm.case.select</field>
-            <field name="model">crm.case</field>
+            <field name="model">mailgate.thread</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Case">
@@ -461,7 +462,7 @@
 
         <record id="crm_case_categ0-act" model="ir.actions.act_window">
             <field name="name">Cases</field>
-            <field name="res_model">crm.case</field>
+            <field name="res_model">mailgate.thread</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_tree-view"/>
             <field name="search_view_id" ref="view_crm_case_filter"/>
@@ -469,7 +470,7 @@
 
         <record id="crm_case_categ0-act_open" model="ir.actions.act_window">
             <field name="name">Open Cases</field>
-            <field name="res_model">crm.case</field>
+            <field name="res_model">mailgate.thread</field>
             <field name="view_type">form</field>
             <field name="domain">
                 [('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]
@@ -479,7 +480,7 @@
 
         <record id="crm_case_section_open_act" model="ir.actions.act_window">
             <field name="name">Cases</field>
-            <field name="res_model">crm.case</field>
+            <field name="res_model">mailgate.thread</field>
             <field name="domain">[('section_id','child_of',[active_id])]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
@@ -660,7 +661,7 @@
         <menuitem action="crm_segmentation_tree-act"
             id="menu_crm_segmentation-act"
             groups="base.group_extended"
-            parent="crm.menu_crm_configuration" />
+            parent="base.menu_crm_configuration" />
 
         <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
             <field name="name">view.users.form.crm.modif.inherited1</field>

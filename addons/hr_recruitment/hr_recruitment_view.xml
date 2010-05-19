@@ -7,12 +7,12 @@
     # ------------------------------------------------------
 
     <record id="hr_job_categ_action" model="ir.actions.act_window">
-        <field name="name">Applicant Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-           <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
-        <field name="context">{'object_id':'hr.applicant'}</field>
+		<field name="name">Applicant Categories</field>
+		<field name="res_model">crm.case.categ</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+		<field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
+		<field name="context">{'object_id':'hr.applicant'}</field>
     </record>
     # ------------------------------------------------------
     # Stage
@@ -108,7 +108,7 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Qualification"/>
-                            <field name="type_id"/>
+                            <field name="type_id" domain="[('object_id.model', '=', 'hr.applicant')]"/>
                             <field name="priority" string="Appreciation"/>
                         </group>
                         <group col="2" colspan="2">
@@ -134,29 +134,30 @@
                        <field name="id"/>
                        <field name="active"/>
                        <field name="log_ids" nolabel="1" colspan="4">
-                           <form string="Actions">
-                               <separator string="Action Information" colspan="4"/>
-                               <field name="name" colspan="4"/>
-                               <field name="date"/>
-                               <field name="user_id"/>
-                           </form>
-                       </field>
-                   </page>
+                        <tree string="Logs">
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </tree>
+                        <form string="Logs">
+                            <separator string="Action Information" colspan="4"/>
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </form>
+                    </field>
+                    </page>
                    <page string="Emails" groups="base.group_extended">
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="CC"/>
                        </group>
-                       <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                       <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
-                            <group col="7" colspan="4">
+                            <group col="6" colspan="4">
                                 <field name="date"/>
                                 <field name="email_to"/>
                                 <field name="email_from"/>
-                                <button
-                                     string="Add a CC"
-                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                               icon="gtk-add" type="action"/>
-                                   </group>
+							</group>
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
@@ -232,7 +233,7 @@
                        help="My Department"/>
                </field>
                <newline/>
-                <group expand="1" string="Group By..." colspan="11" col="20">
+                <group expand="0" string="Group By..." colspan="11" col="20">
                     <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Responsible" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
@@ -265,6 +266,59 @@
             </field>
         </field>
     </record>
+
+<!-- Stage Tree View -->
+
+	<record model="ir.ui.view" id="hr_recruitment_stage_tree">
+	    <field name="name">hr.recruitment.stage.tree</field>
+	    <field name="model">hr.recruitment.stage</field>
+	    <field name="type">tree</field>
+	    <field name="arch" type="xml">
+	        <tree string="Stages">
+	            <field name="sequence"/>
+	            <field name="name"/>
+	        </tree>
+	    </field>
+	</record>
+
+<!-- Stage Form View -->
+
+	<record model="ir.ui.view" id="hr_recruitment_stage_form">
+	    <field name="name">hr.recruitment.stage.form</field>
+	    <field name="model">hr.recruitment.stage</field>
+	    <field name="type">form</field>
+	    <field name="arch" type="xml">
+	        <form string="Stage">
+	            <separator string="Stage Definition" colspan="4"/>
+	            <field name="name" select="1"/>
+	            <field name="sequence"/>
+	            <separator string="Requirements" colspan="4"/>
+	            <field name="requirements" nolabel="1" colspan="4"/>
+	        </form>
+	    </field>
+	</record>
+
+<!-- Stage Action -->
+
+	<record id="hr_recruitment_stage_act" model="ir.actions.act_window">
+	    <field name="name">Stages</field>
+	    <field name="res_model">hr.recruitment.stage</field>
+	    <field name="view_type">form</field>
+	    <field name="view_id" ref="hr_recruitment_stage_tree"/>
+	</record>
+
+	<menuitem
+	    id="menu_hr_recruitment_recruitment"
+	    name="Recruitment"
+	    parent="hr.menu_hr_configuration"
+	    />
+
+	<menuitem
+		id="menu_hr_recruitment_stage"
+		name="Stages"
+		parent="menu_hr_recruitment_recruitment"
+		action="hr_recruitment_stage_act"
+		sequence="1"/>
 
     </data>
 </openerp>

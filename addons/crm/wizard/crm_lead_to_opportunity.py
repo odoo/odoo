@@ -56,7 +56,6 @@ class crm_lead2opportunity(osv.osv_memory):
             return {}
 
         lead_obj = self.pool.get('crm.lead')
-        opp_obj = self. pool.get('crm.opportunity')
         data_obj = self.pool.get('ir.model.data')
         history_obj = self.pool.get('crm.case.history')
         model_obj = self.pool.get('ir.model')
@@ -72,56 +71,29 @@ class crm_lead2opportunity(osv.osv_memory):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         lead = lead_obj.browse(cr, uid, record_id, context=context)
-        model_ids = model_obj.search(cr, uid, [('model', '=', 'crm.opportunity')])
+        model_ids = model_obj.search(cr, uid, [('model', '=', 'crm.lead')])
 
 
         for this in self.browse(cr, uid, ids, context=context):
-            new_opportunity_id = opp_obj.create(cr, uid, {
-                'name': this.name,
-                'referred': lead.referred,
-                'planned_revenue': this.planned_revenue,
+            vals ={
+                'planned_revenue': this.planned_revenue, 
                 'probability': this.probability,
-                'partner_id': lead.partner_id and lead.partner_id.id or False,
-                'section_id': lead.section_id and lead.section_id.id or False,
-                'description': lead.description or False,
-                'date_deadline': lead.date_deadline or False,
-                'partner_address_id': lead.partner_address_id and lead.partner_address_id.id or False ,
-                'priority': lead.priority,
-                'phone': lead.phone,
-                'email_from': lead.email_from
-            })
-            new_opportunity = opp_obj.browse(cr, uid, new_opportunity_id)
-            vals = {
-                'partner_id': this.partner_id and this.partner_id.id or False,
+                'name': this.name, 
+                'partner_id': this.partner_id.id, 
+                'type': 'opportunity'
             }
-            if not lead.opportunity_id:
-                vals.update({'opportunity_id' : new_opportunity.id})
-
-            model_opportunity_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.opportunity')], context=context)[0]
-
-            for model in ('crm.case.log', 'crm.case.history'):
-                log_proxy = self.pool.get(model)
-                log_ids = log_proxy.search(cr, uid, [('model_id.model', '=', 'crm.lead'),('res_id', '=', lead.id)], context=context)
-                for log_id in log_ids:
-                    log_proxy.copy(cr, uid, log_id, {'model_id':model_opportunity_id}, context=context)
-
-            lead_obj.write(cr, uid, [lead.id], vals)
-            lead_obj.case_close(cr, uid, [lead.id])
             
-            # Copy lead history to opportunity
-            for his_id in lead.history_line:
-                history_ids = history_obj.copy(cr, uid, his_id.id, \
-                                            {'model_id': model_ids[0], \
-                                            'res_id': new_opportunity_id})
-
-            #opp_obj.case_open(cr, uid, [new_opportunity_id])
+            lead_obj.write(cr, uid, lead.id, vals, context=context)
+            
+            lead_obj._history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
 
         value = {
             'name': _('Opportunity'), 
             'view_type': 'form', 
             'view_mode': 'form,tree', 
-            'res_model': 'crm.opportunity', 
-            'res_id': int(new_opportunity_id), 
+            'res_model': 'crm.lead', 
+            'domain': [('type', '=', 'opportunity')], 
+            'res_id': int(lead.id), 
             'view_id': False, 
             'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')], 
             'type': 'ir.actions.act_window', 
@@ -170,14 +142,13 @@ Leads Could not convert into Opportunity"))
         """
         lead_obj = self.pool.get('crm.lead')
         rec_ids = context and context.get('active_ids', [])
-        partner_id = context.get('partner_id', False)
         data = context and context.get('active_ids', []) or []
         res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
         for lead in lead_obj.browse(cr, uid, data, context=context):
             if 'name' in fields:
-                res.update({'name': lead.partner_name})
+                res.update({'name': lead.name})
             if 'partner_id' in fields:
-                res.update({'partner_id': partner_id and partner_id[0] or False})
+                res.update({'partner_id': lead.partner_id.id or False})
         return res
 
 crm_lead2opportunity()
@@ -284,7 +255,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         view_id = False
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-        
+
         context.update({'partner_id': False})
         value = {            
             'name': _('Create Opportunity'), 

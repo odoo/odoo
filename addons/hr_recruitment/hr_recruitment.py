@@ -19,31 +19,73 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields, osv
+from crm import crm
 
 AVAILABLE_STATES = [
-    ('draft','New'),
-    ('open','In Progress'),
+    ('draft', 'New'),
+    ('open', 'In Progress'),
     ('cancel', 'Refused'),
     ('done', 'Hired'),
-    ('pending','Pending')
+    ('pending', 'Pending')
 ]
 
 AVAILABLE_PRIORITIES = [
-    ('5','Not Good'),
-    ('4','On Average'),
-    ('3','Good'),
-    ('2','Very Good'),
-    ('1','Excellent')
+    ('5', 'Not Good'),
+    ('4', 'On Average'),
+    ('3', 'Good'),
+    ('2', 'Very Good'),
+    ('1', 'Excellent')
 ]
 
+class hr_recruitment_stage(osv.osv):
+    """ Stage of HR Recruitment """
 
-class hr_applicant(osv.osv):
+    _name = "hr.recruitment.stage"
+    _description = "Stage of Recruitment"
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
+        'requirements': fields.text('Requirements')
+    }
+    _defaults = {
+        'sequence': 1,
+    }
+hr_recruitment_stage()
+
+class hr_applicant(osv.osv, crm.crm_case):
     _name = "hr.applicant"
     _description = "Applicant Cases"
     _order = "id desc"
-    _inherit ='crm.case'
+    _inherit ='mailgate.thread'
+
     _columns = {
+        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
+        'description': fields.text('Description'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+                        select=True, help='Sales team to which Case belongs to.\
+                             Define Responsible user and Email account for mail gateway.'),
+        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
+                             will receive a copy of the future" \
+                            " communication between partner and users by email"),
+        'probability': fields.float('Probability'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
+                                 domain="[('partner_id','=',partner_id)]"),
+        'create_date': fields.datetime('Creation Date' , readonly=True),
+        'write_date': fields.datetime('Update Date' , readonly=True),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
+                         domain="[('section_id','=',section_id),\
+                        ('object_id.model', '=', 'crm.opportunity')]"),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
+                                  help='The state is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the state is set to \'Open\'.\
+                                  \nWhen the case is over, the state is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+        'company_id': fields.many2one('res.company', 'Company'),
+        'user_id': fields.many2one('res.users', 'Responsible'),
+        # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
@@ -56,7 +98,7 @@ class hr_applicant(osv.osv):
         'partner_mobile': fields.char('Mobile', size=32),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
-        'department_id':fields.many2one('hr.department','Department'),
+        'department_id':fields.many2one('hr.department', 'Department'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response' : fields.integer("Response"),
@@ -83,7 +125,7 @@ class hr_applicant(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             section = (case.section_id.id or False)
             st = case.stage_id.id  or False
-            stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [])
+            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [])
             if st and stage_ids.index(st):
                 self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)-1]})
         return True
@@ -101,7 +143,7 @@ class hr_applicant(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             section = (case.section_id.id or False)
             st = case.stage_id.id  or False
-            stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [])
+            stage_ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [])
             if st and len(stage_ids) != stage_ids.index(st)+1:
                 self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)+1]})
         return True
@@ -172,7 +214,7 @@ class hr_applicant(osv.osv):
             context = {}
         record = self.browse(cr, uid, ids, context)
         record = record and record[0]
-        context.update({'survey_id': record.survey.id, 'response_id' : [record.response], 'response_no':0,})
+        context.update({'survey_id': record.survey.id, 'response_id' : [record.response], 'response_no':0, })
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
         return value
 hr_applicant()
@@ -185,3 +227,5 @@ class hr_job(osv.osv):
     }
 
 hr_job()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

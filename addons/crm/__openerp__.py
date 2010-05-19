@@ -21,12 +21,12 @@
 
 
 {
-    'name': 'Customer & Supplier Relationship Management',
-    'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'name': 'Customer & Supplier Relationship Management', 
+    'version': '1.0', 
+    'category': 'Generic Modules/CRM & SRM', 
     'description': """The generic Open ERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
-leads, opportunities, claims, meeting, phonecall etc.
+leads, opportunities, meeting, phonecall etc.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
@@ -41,86 +41,78 @@ appropriate staff, and making sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
-between mails and Open ERP.""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
+between mails and Open ERP.""", 
+    'author': 'Tiny', 
+    'website': 'http://www.openerp.com', 
     'depends': [
         'base', 
-        'base_action_rule',
-        'process',
-        'mail_gateway',
-        'base_calendar',
-        'resource',
-    ],
+        'base_action_rule', 
+        'process', 
+        'mail_gateway', 
+        'base_calendar', 
+        'resource', 
+    ], 
     'init_xml': [
-        'crm_data.xml',
-        'crm_meeting_data.xml',
-         'crm_claims_data.xml',
-         'crm_fund_data.xml',
-         'crm_helpdesk_data.xml',
-         'crm_lead_data.xml',
-         'crm_meeting_data.xml',
-         'crm_opportunity_data.xml',
-         'crm_phonecall_data.xml',
-    ],
+        'crm_data.xml', 
+        'crm_meeting_data.xml', 
+        'crm_lead_data.xml', 
+        'crm_meeting_data.xml', 
+        'crm_opportunity_data.xml', 
+        'crm_phonecall_data.xml', 
+    ], 
 
     'update_xml': [
-        'wizard/crm_lead_to_partner_view.xml',
-        'wizard/crm_lead_to_opportunity_view.xml',
+        'wizard/crm_lead_to_partner_view.xml', 
+        'wizard/crm_lead_to_opportunity_view.xml', 
 
-        'wizard/crm_phonecall_to_phonecall_view.xml',
-        'wizard/crm_phonecall_to_partner_view.xml',
-        'wizard/crm_phonecall_to_opportunity_view.xml',
+        'wizard/crm_phonecall_to_phonecall_view.xml', 
+        'wizard/crm_phonecall_to_partner_view.xml', 
+        'wizard/crm_phonecall_to_opportunity_view.xml', 
 
-        'wizard/crm_opportunity_to_phonecall_view.xml',
-        'wizard/crm_partner_to_opportunity_view.xml',
+        'wizard/crm_opportunity_to_phonecall_view.xml', 
+        'wizard/crm_partner_to_opportunity_view.xml', 
 
-        'wizard/crm_forward_to_partner_view.xml',
-        'wizard/crm_send_email_view.xml',
-        'wizard/crm_email_add_cc_view.xml',
-        'crm_view.xml',
+        'wizard/crm_forward_to_partner_view.xml', 
+        'wizard/crm_send_email_view.xml', 
+        'crm_view.xml', 
 
-        'crm_action_rule_view.xml',
-        'crm_lead_view.xml',
-        'crm_lead_menu.xml',
-        'crm_meeting_view.xml',
-        'crm_meeting_menu.xml',
-        'crm_phonecall_view.xml',
-        'crm_phonecall_menu.xml',
-        'crm_opportunity_view.xml',
-        'crm_opportunity_menu.xml',
-        'crm_fund_view.xml',
-        'crm_fund_menu.xml',
-        'crm_claims_view.xml',
-        'crm_claims_menu.xml',
+        'crm_action_rule_view.xml', 
+        'crm_lead_view.xml', 
+        'crm_lead_menu.xml', 
+        
+        'crm_meeting_view.xml', 
+        'crm_meeting_menu.xml', 
+        
+        'crm_phonecall_view.xml', 
+        'crm_phonecall_menu.xml', 
+        
+        'crm_opportunity_view.xml', 
+        'crm_opportunity_menu.xml', 
+        
+        'security/crm_security.xml', 
+        'security/ir.model.access.csv', 
 
-        'crm_helpdesk_view.xml',
-        'crm_helpdesk_menu.xml',
+        'report/crm_lead_report_view.xml', 
+        'report/crm_phonecall_report_view.xml', 
 
-        'security/crm_security.xml',
-        'security/ir.model.access.csv',
-
-        'report/crm_report_view.xml',
-        'report/crm_claim_report_view.xml',
-        'report/crm_lead_report_view.xml',
-        'report/crm_fundraising_report_view.xml',
-        'report/crm_opportunity_report_view.xml' ,
-        'report/crm_phonecall_report_view.xml',
-
-        'process/crm_configuration_process.xml',
-    ],
+        'process/crm_configuration_process.xml', 
+        'crm_installer_view.xml'
+    ], 
     'demo_xml': [
-        'crm_demo.xml',
-        'crm_claims_demo.xml',
-        'crm_fund_demo.xml',
-        'crm_helpdesk_demo.xml',
-        'crm_lead_demo.xml',
-        'crm_meeting_demo.xml',
-        'crm_opportunity_demo.xml',
+        'crm_demo.xml', 
+        'crm_lead_demo.xml', 
+        'crm_meeting_demo.xml', 
+        'crm_opportunity_demo.xml', 
         'crm_phonecall_demo.xml'
-    ],
-    'installable': True,
-    'active': False,
-    'certificate': '0079056041421',
+    ], 
+    'test': [
+#            'test/test_crm_lead.yml', 
+#            'test/test_crm_meeting.yml', 
+#            'test/test_crm_opportunity.yml', 
+#            'test/test_crm_phonecall.yml', 
+             ], 
+    'installable': True, 
+    'active': False, 
+    'certificate': '0079056041421', 
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
