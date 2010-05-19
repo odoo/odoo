@@ -30,7 +30,7 @@ from tools import config
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
-    _description = 'Analytic lines'
+    _description = 'Analytic Line'
     _columns = {
         'product_uom_id' : fields.many2one('product.uom', 'UoM'),
         'product_id' : fields.many2one('product.product', 'Product'),
@@ -118,7 +118,7 @@ account_analytic_line()
 
 class timesheet_invoice(osv.osv):
     _name = "report.hr.timesheet.invoice.journal"
-    _description = "Analytic account costs and revenues"
+    _description = "Analytic Account Costs and Revenues"
     _auto = False
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),

@@ -29,7 +29,7 @@ from tools.translate import _
 
 class hr_holidays_status(osv.osv):
     _name = "hr.holidays.status"
-    _description = "Leave Types"
+    _description = "Leave Type"
 
     def get_days_cat(self, cr, uid, ids, category_id, return_false, context={}):
         res = {}
@@ -106,7 +106,7 @@ hr_holidays_status()
 
 class hr_holidays(osv.osv):
     _name = "hr.holidays"
-    _description = "Holidays"
+    _description = "Leave"
     _order = "type desc, date_from asc"
 
     def _employee_get(obj, cr, uid, context=None):
@@ -432,7 +432,7 @@ class resource_calendar_leaves(osv.osv):
     _description = "Leave Detail"
     _columns = {
         'holiday_id': fields.many2one("hr.holidays", "Holiday"),
-                }
+    }
 
 resource_calendar_leaves()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

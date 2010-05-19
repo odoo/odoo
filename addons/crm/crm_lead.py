@@ -32,7 +32,7 @@ class crm_lead(osv.osv, crm_case):
     """ CRM Lead Case """
 
     _name = "crm.lead"
-    _description = "Leads Cases"
+    _description = "Lead"
     _order = "priority, id desc"
     _inherit = ['res.partner.address', 'mailgate.thread']
 

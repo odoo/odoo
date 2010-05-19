@@ -1169,7 +1169,7 @@ class account_invoice_line(osv.osv):
         return 0
 
     _name = "account.invoice.line"
-    _description = "Invoice line"
+    _description = "Invoice Line"
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'origin': fields.char('Origin', size=256, help="Reference of the document that produced this invoice."),

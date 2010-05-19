@@ -30,7 +30,7 @@ import tools
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
-    _description = "Entry lines"
+    _description = "Entry Lines"
 
     def _query_get(self, cr, uid, obj='l', context={}):
         fiscalyear_obj = self.pool.get('account.fiscalyear')

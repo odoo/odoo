@@ -811,7 +811,7 @@ class sale_order_line(osv.osv):
         return res
 
     _name = 'sale.order.line'
-    _description = 'Sale Order line'
+    _description = 'Sale Order Line'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'name': fields.char('Description', size=256, required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),

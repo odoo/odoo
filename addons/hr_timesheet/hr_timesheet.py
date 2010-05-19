@@ -39,7 +39,7 @@ hr_employee()
 class hr_analytic_timesheet(osv.osv):
     _name = "hr.analytic.timesheet"
     _table = 'hr_analytic_timesheet'
-    _description = "Timesheet line"
+    _description = "Timesheet Line"
     _inherits = {'account.analytic.line': 'line_id'}
     _order = "id desc"
     _columns = {

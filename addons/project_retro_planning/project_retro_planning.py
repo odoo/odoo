@@ -26,7 +26,6 @@ from datetime import datetime
 
 class project_project(osv.osv):
     _inherit = 'project.project'
-    _description = 'project.project'
 
     def write(self, cr, uid, ids,vals, *args, **kwargs):
         if 'date' in vals and vals['date']:

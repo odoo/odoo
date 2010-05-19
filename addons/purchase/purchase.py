@@ -210,7 +210,7 @@ class purchase_order(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
     }
     _name = "purchase.order"
-    _description = "Purchase order"
+    _description = "Purchase Order"
     _order = "name desc"
 
     def unlink(self, cr, uid, ids, context=None):
@@ -611,7 +611,7 @@ class purchase_order_line(osv.osv):
     }
     _table = 'purchase_order_line'
     _name = 'purchase.order.line'
-    _description = 'Purchase Order lines'
+    _description = 'Purchase Order Line'
     def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}

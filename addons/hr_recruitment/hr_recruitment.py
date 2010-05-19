@@ -55,7 +55,7 @@ hr_recruitment_stage()
 
 class hr_applicant(osv.osv, crm.crm_case):
     _name = "hr.applicant"
-    _description = "Applicant Cases"
+    _description = "Applicant"
     _order = "id desc"
     _inherit ='mailgate.thread'
 

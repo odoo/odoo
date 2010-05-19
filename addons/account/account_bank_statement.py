@@ -387,7 +387,7 @@ account_bank_statement()
 
 class account_bank_statement_reconcile(osv.osv):
     _name = "account.bank.statement.reconcile"
-    _description = "Statement reconcile"
+    _description = "Statement Reconcile"
 
     def _total_entry(self, cursor, user, ids, name, attr, context=None):
         result = {}

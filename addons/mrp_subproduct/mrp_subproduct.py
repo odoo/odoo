@@ -24,7 +24,7 @@ from osv import osv
 
 class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'
-    _description = 'Mrp Sub Product'
+    _description = 'Sub Product'
     _columns={
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Product Qty', required=True),

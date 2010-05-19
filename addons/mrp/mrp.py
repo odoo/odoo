@@ -94,7 +94,7 @@ class mrp_routing_workcenter(osv.osv):
     Defines working cycles and hours of a workcenter using routings.
     """
     _name = 'mrp.routing.workcenter'
-    _description = 'Routing workcenter usage'
+    _description = 'Workcenter Usage'
     _columns = {
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'name': fields.char('Name', size=64, required=True),
@@ -118,7 +118,7 @@ class mrp_bom(osv.osv):
     Defines bills of material for a product.
     """
     _name = 'mrp.bom'
-    _description = 'Bills of Material'
+    _description = 'Bill of Material'
     
     def _child_compute(self, cr, uid, ids, name, arg, context={}):
         """ Gets child bom.
@@ -351,8 +351,7 @@ mrp_bom()
 
 class mrp_bom_revision(osv.osv):
     _name = 'mrp.bom.revision'
-    _description = 'Bill of material revisions'
-    
+    _description = 'Bill of Material Revision'
     _columns = {
         'name': fields.char('Modification name', size=64, required=True),
         'description': fields.text('Description'),
@@ -934,7 +933,7 @@ mrp_production()
 
 class mrp_production_workcenter_line(osv.osv):
     _name = 'mrp.production.workcenter.line'
-    _description = 'Work Orders'
+    _description = 'Work Order'
     _order = 'sequence'
     
     _columns = {
@@ -954,8 +953,7 @@ mrp_production_workcenter_line()
 
 class mrp_production_product_line(osv.osv):
     _name = 'mrp.production.product.line'
-    _description = 'Production scheduled products'
-    
+    _description = 'Production Scheduled Product'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),

@@ -33,7 +33,7 @@ class stock_warehouse_orderpoint(osv.osv):
     Defines Minimum stock rules.
     """
     _name = "stock.warehouse.orderpoint"
-    _description = "Orderpoint minimum rule"
+    _description = "Minimum Inventory Rule"
     
     _columns = {
         'name': fields.char('Name', size=32, required=True),

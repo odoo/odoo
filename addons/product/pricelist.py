@@ -53,7 +53,7 @@ class price_type(osv.osv):
         return comp.currency_id.id
 
     _name = "product.price.type"
-    _description = "Price type"
+    _description = "Price Type"
     _columns = {
         "name" : fields.char("Price Name", size=32, required=True, translate=True, help="Name of this kind of price."),
         "active" : fields.boolean("Active"),

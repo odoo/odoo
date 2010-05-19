@@ -458,8 +458,6 @@ class Product(osv.osv):
 
     '''Product'''
     _inherit = 'product.product'
-    _description = 'product.product'
-
     _columns = {
             'membership': fields.boolean('Membership', help='Specify if this product is a membership product'),
             'membership_date_from': fields.date('Date from'),
