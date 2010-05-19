@@ -1348,7 +1348,6 @@ class account_tax(osv.osv):
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code',size=32),
-        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
@@ -1381,7 +1380,6 @@ class account_tax(osv.osv):
         'applicable_type': lambda *a: 'true',
         'type': lambda *a: 'percent',
         'amount': lambda *a: 0,
-        'price_include': lambda *a: 0,
         'active': lambda *a: 1,
         'type_tax_use': lambda *a: 'all',
         'sequence': lambda *a: 1,

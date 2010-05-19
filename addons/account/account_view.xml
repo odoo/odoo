@@ -596,7 +596,6 @@
             <field name="arch" type="xml">
                 <tree string="Account Tax">
                     <field name="name"/>
-                    <field name="price_include"/>
                     <field name="description"/>
                 </tree>
             </field>
@@ -628,7 +627,6 @@
                             <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
                             <field groups="base.group_extended" name="child_depend"/>
                             <field groups="base.group_extended" name="sequence"/>
-                            <field groups="base.group_extended" name="price_include"/>
                             <field name="type_tax_use"/>
                             <newline/>
                             <field colspan="4" groups="base.group_extended" name="child_ids"/>
