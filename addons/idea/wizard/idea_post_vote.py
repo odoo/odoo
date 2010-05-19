@@ -93,19 +93,21 @@ class idea_post_vote(osv.osv_memory):
 
         for do_vote_obj in self.read(cr, uid, ids):
             score = str(do_vote_obj['vote'])
-            comment = do_vote_obj['note']
+            comment = do_vote_obj.get('note', False)
             vote = {
                 'idea_id': vote_id, 
                 'user_id': uid, 
                 'score': score
             }
-            comment = {
-                'user_id':uid,
-                'idea_id':vote_id,
-                'content': comment,
-            }
+            if comment:
+                comment = {
+                    'user_id':uid,
+                    'idea_id':vote_id,
+                    'content': comment,
+                }
+                comment = comment_pool.create(cr, uid, comment)
+                
             vote = vote_pool.create(cr, uid, vote)
-            comment = comment_pool.create(cr, uid, comment)
             return {}
 
 idea_post_vote()

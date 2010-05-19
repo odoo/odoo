@@ -284,7 +284,7 @@
                             <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="user_id" groups="base.group_extended"/>
-                            <field name="allow_date" />
+                            <field name="allow_date" groups="base.group_extended"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <newline/>
                             <field name="centralisation"/>
@@ -596,7 +596,6 @@
             <field name="arch" type="xml">
                 <tree string="Account Tax">
                     <field name="name"/>
-                    <field name="price_include"/>
                     <field name="description"/>
                 </tree>
             </field>
@@ -628,7 +627,6 @@
                             <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
                             <field groups="base.group_extended" name="child_depend"/>
                             <field groups="base.group_extended" name="sequence"/>
-                            <field groups="base.group_extended" name="price_include"/>
                             <field name="type_tax_use"/>
                             <newline/>
                             <field colspan="4" groups="base.group_extended" name="child_ids"/>

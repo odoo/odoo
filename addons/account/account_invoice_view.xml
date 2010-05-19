@@ -486,20 +486,18 @@
 
 		<!--  Partners inherited form -->
 
-		<record id="view_invoice_partner_info_form" model="ir.ui.view">
+        <record id="view_invoice_partner_info_form" model="ir.ui.view">
             <field name="name">res.partner.invoice.info.inherit</field>
             <field name="model">res.partner</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-               		<page string="Account Info">
-						<field name="invoice_ids" colspan="4" nolabel="1" context="{'group_by':'product_id'}"/>
-					</page>
+                    <page string="Account Info">
+                        <field name="invoice_ids" colspan="4" nolabel="1" context="{'group_by':'product_id'}"/>
+                    </page>
                 </notebook>
             </field>
         </record>
-
-
     </data>
 </openerp>

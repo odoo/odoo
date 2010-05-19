@@ -124,10 +124,10 @@ class account_account_type(osv.osv):
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
         'report_type':fields.selection([
             ('none','/'),
-            ('income','Profilt & Loss (Income Accounts)'),
-            ('expanse','Profilt & Loss (Expanse Accounts)'),
+            ('income','Profit & Loss (Income Accounts)'),
+            ('expense','Profit & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
-            ('liabilities','Balance Sheet (Liabilities Accounts)')
+            ('liability','Balance Sheet (Liability Accounts)')
         ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
         'parent_id':fields.many2one('account.account.type', 'Parent Type', required=False),
         'child_ids':fields.one2many('account.account.type', 'parent_id', 'Child Types', required=False),
@@ -1348,7 +1348,6 @@ class account_tax(osv.osv):
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code',size=32),
-        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
@@ -1381,7 +1380,6 @@ class account_tax(osv.osv):
         'applicable_type': lambda *a: 'true',
         'type': lambda *a: 'percent',
         'amount': lambda *a: 0,
-        'price_include': lambda *a: 0,
         'active': lambda *a: 1,
         'type_tax_use': lambda *a: 'all',
         'sequence': lambda *a: 1,
