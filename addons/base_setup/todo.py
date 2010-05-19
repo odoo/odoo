@@ -152,5 +152,23 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
                     context=context)
 base_setup_company()
 
+class res_currency(osv.osv):
+    _inherit = 'res.currency'
+    
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+#        We can use the following line,if we want to restrict this name_get for company setup only
+#        But, its better to show currencies as name(Code).
+#        if not (context.get('active_model','') == 'ir.actions.todo'):
+#            return super(res_currency,self).name_get(cr, uid, ids, context=context)
+        if not len(ids):
+            return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
+        return [(x['id'], tools.ustr(x['name']) + ' (' + tools.ustr(x['code']) + ')')   for x in reads]
+        
+res_currency()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

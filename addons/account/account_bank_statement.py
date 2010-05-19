@@ -558,35 +558,40 @@ class account_bank_statement_line(osv.osv):
 
     def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id,
             context={}):
+        res = {'value': {}}
         if not partner_id:
-            return {}
-        res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
-
-        company_currency_id = res_users_obj.browse(cursor, user, user,
-                context=context).company_id.currency_id.id
-
-        if not currency_id:
-            currency_id = company_currency_id
-
-        part = self.pool.get('res.partner').browse(cursor, user, partner_id,
+            return res
+        line = self.browse(cursor, user, line_id)
+  
+        if not line or (line and not line[0].account_id):
+            part = self.pool.get('res.partner').browse(cursor, user, partner_id,
                 context=context)
-        if type == 'supplier':
-            account_id = part.property_account_payable.id
-        else:
-            account_id =  part.property_account_receivable.id
+            if type == 'supplier':
+                account_id = part.property_account_payable.id
+            else:
+                account_id = part.property_account_receivable.id
+            res['value']['account_id'] = account_id
 
-        cursor.execute('SELECT sum(debit-credit) \
+        if not line or (line and not line[0].amount):
+            res_users_obj = self.pool.get('res.users')
+            res_currency_obj = self.pool.get('res.currency')
+            company_currency_id = res_users_obj.browse(cursor, user, user,
+                    context=context).company_id.currency_id.id
+            if not currency_id:
+                currency_id = company_currency_id
+
+            cursor.execute('SELECT sum(debit-credit) \
                 FROM account_move_line \
                 WHERE (reconcile_id is null) \
                     AND partner_id = %s \
                     AND account_id=%s', (partner_id, account_id))
-        res = cursor.fetchone()
-        balance = res and res[0] or 0.0
+            pgres = cursor.fetchone()
+            balance = pgres and pgres[0] or 0.0
 
-        balance = res_currency_obj.compute(cursor, user, company_currency_id,
+            balance = res_currency_obj.compute(cursor, user, company_currency_id,
                 currency_id, balance, context=context)
-        return {'value': {'amount': balance, 'account_id': account_id}}
+            res['value']['amount'] = balance
+        return res
 
     def _reconcile_amount(self, cursor, user, ids, name, args, context=None):
         if not ids:
@@ -633,7 +638,7 @@ class account_bank_statement_line(osv.osv):
         'note': fields.text('Notes'),
         'reconcile_amount': fields.function(_reconcile_amount,
             string='Amount reconciled', method=True, type='float'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement line."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement lines."),
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),

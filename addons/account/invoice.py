@@ -23,8 +23,8 @@ import time
 import decimal_precision as dp
 
 import netsvc
+
 from osv import fields, osv, orm
-import ir
 import pooler
 from tools import config
 from tools.translate import _
@@ -333,7 +333,7 @@ class account_invoice(osv.osv):
                 raise orm.except_orm(_('Configuration Error!'),
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
-                raise
+                raise orm.except_orm(_('UnknownError'), str(e))
 
     def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])
@@ -350,7 +350,7 @@ class account_invoice(osv.osv):
 #       res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
 #       return [{}]
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
+            date_invoice=False, payment_term=False, partner_bank=False, company_id=False):
         invoice_addr_id = False
         contact_addr_id = False
         partner_payment_term = False
@@ -415,7 +415,7 @@ class account_invoice(osv.osv):
             else:
                 result['value']['date_due'] = False
 
-        if partner_bank_id != bank_id:
+        if partner_bank != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             result['value'].update(to_update['value'])
         return result
@@ -450,7 +450,7 @@ class account_invoice(osv.osv):
     def onchange_invoice_line(self, cr, uid, ids, lines):
         return {}
 
-    def onchange_partner_bank(self, cursor, user, ids, partner_bank_id):
+    def onchange_partner_bank(self, cursor, user, ids, partner_bank):
         return {'value': {}}
 
     def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):
@@ -649,6 +649,16 @@ class account_invoice(osv.osv):
             if res and res['value']:
                 self.write(cr, uid, [inv.id], res['value'])
         return True
+
+    def finalize_invoice_move_lines(self, cr, uid, invoice_browse, move_lines):
+        """finalize_invoice_move_lines(cr, uid, invoice, move_lines) -> move_lines
+        Hook method to be overridden in additional modules to verify and possibly alter the
+        move lines to be created by an invoice, for special cases.
+        :param invoice_browse: browsable record of the invoice that is generating the move lines
+        :param move_lines: list of dictionaries with the account.move.lines (as for create())
+        :return: the (possibly updated) final move_lines to create for this invoice
+        """
+        return move_lines
 
     def check_tax_lines(self, cr, uid, inv, compute_taxes, ait_obj):
         if not inv.tax_line:
@@ -912,7 +922,12 @@ class account_invoice(osv.osv):
                 # will be automatically deleted too
                 account_move_obj.unlink(cr, uid, [i['move_id'][0]])
             if i['payment_ids']:
-                self.pool.get('account.move.line').write(cr, uid, i['payment_ids'], {'reconcile_partial_id': False})
+                account_move_line_obj = self.pool.get('account.move.line')
+                pay_ids = account_move_line_obj.browse(cr, uid , i['payment_ids'])
+                for move_line in pay_ids:
+                    if move_line.reconcile_partial_id and move_line.reconcile_partial_id.line_partial_ids:
+                        raise osv.except_osv(_('Error !'), _('You cannot cancel the Invoice which is Partially Paid! You need to unreconcile concerned payment entries!'))
+
         self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})
         self._log_event(cr, uid, ids,-1.0, 'Cancel Invoice')
         return True
@@ -1147,7 +1162,7 @@ class account_invoice_line(osv.osv):
                     t = t - (p * l[2].get('quantity'))
                     taxes = l[2].get('invoice_line_tax_id')
                     if len(taxes[0]) >= 3 and taxes[0][2]:
-                        taxes=tax_obj.browse(cr, uid, taxes[0][2])
+                        taxes = tax_obj.browse(cr, uid, taxes[0][2])
                         for tax in tax_obj.compute(cr, uid, taxes, p,l[2].get('quantity'), context.get('address_invoice_id', False), l[2].get('product_id', False), context.get('partner_id', False)):
                             t = t - tax['amount']
             return t
@@ -1200,8 +1215,8 @@ class account_invoice_line(osv.osv):
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
 
-        lang=part.lang
-        context.update({'lang': lang})
+        if part.lang:
+            context.update({'lang': part.lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
