@@ -109,6 +109,7 @@ class project_issue(osv.osv, crm.crm_case):
         return res
 
     _columns = {
+        'id': fields.integer('ID'),  
         'create_date': fields.datetime('Creation Date' , readonly=True), 
         'write_date': fields.datetime('Update Date' , readonly=True), 
         'date_deadline': fields.date('Deadline'), 
