@@ -189,7 +189,7 @@ class membership_line(osv.osv):
                 state = 'paid'
                 inv = self.pool.get('account.invoice').browse(cr, uid, fetched[1])
                 for payment in inv.payment_ids:
-                    if payment.invoice.type == 'out_refund':
+                    if payment.invoice and payment.invoice.type == 'out_refund':
                         state = 'canceled'
             elif istate == 'cancel':
                 state = 'canceled'
@@ -356,6 +356,9 @@ class Partner(osv.osv):
             ids+=ids2
         return ids
 
+    def __get_membership_state(self, *args, **kwargs):
+        return self._membership_state(*args, **kwargs)
+    
     _columns = {
         'associate_member': fields.many2one('res.partner', 'Associate member'),
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
@@ -364,7 +367,7 @@ class Partner(osv.osv):
                     'Membership amount', digits=(16, 2),
                     help='The price negociated by the partner'),
         'membership_state': fields.function(
-                    _membership_state, method = True,
+                    __get_membership_state, method = True,
                     string = 'Current membership state', type = 'selection',
                     selection = STATE ,store = {
                         'account.invoice':(_get_invoice_partner,['state'], 10),

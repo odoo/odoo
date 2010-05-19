@@ -212,9 +212,9 @@ class account_account(osv.osv):
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
             wheres = [""]
-            if query:
+            if query.strip():
                 wheres.append(query.strip())
-            if aml_query:
+            if aml_query.strip():
                 wheres.append(aml_query.strip())
             query = " AND ".join(wheres)
 
@@ -459,7 +459,6 @@ class account_account(osv.osv):
                     raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type which contains account entries!"))
                 #Check for change From group1 to group2 and vice versa
                 if (old_type in group1 and new_type in group2) or (old_type in group2 and new_type in group1):
-                    print " fdsfdsgdsfgdfgdfg "
                     raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from '%s' to '%s' type as it contains account entries!") % (old_type,new_type,))
         return True
 
