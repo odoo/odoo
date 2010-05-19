@@ -37,7 +37,7 @@
             <field name="model">project.issue.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Project Issue" type="bar">
+                <graph orientation="vertical" string="Project Issue" type="bar">
                     <field name="state"/>
                     <field name="nbr" operator="+"/>
                     <field group="True" name="user_id"/>
