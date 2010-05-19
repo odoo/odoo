@@ -122,6 +122,16 @@ class account_account_type(osv.osv):
         'partner_account': fields.boolean('Partner account'),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True),
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
+        'report_type':fields.selection([
+            ('none','/'),
+            ('income','Profilt & Loss (Income Accounts)'),
+            ('expanse','Profilt & Loss (Expanse Accounts)'),
+            ('asset','Balance Sheet (Assets Accounts)'),
+            ('liabilities','Balance Sheet (Liabilities Accounts)')
+        ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
+        'parent_id':fields.many2one('account.account.type', 'Parent Type', required=False),
+        'child_ids':fields.one2many('account.account.type', 'parent_id', 'Child Types', required=False),
+        'note': fields.text('Description'),
     }
     _defaults = {
         'close_method': lambda *a: 'none',
@@ -129,6 +139,15 @@ class account_account_type(osv.osv):
         'sign': lambda *a: 1,
     }
     _order = "sequence"
+
+    def _check_recursion(self, cr, uid, ids):
+        #TODO: Need to check for recusrion
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive types.', ['parent_id'])
+    ]
+
 account_account_type()
 
 def _code_get(self, cr, uid, context={}):
@@ -515,6 +534,7 @@ class account_journal(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
             help="The sequence used for invoice numbers in this journal."),
+        'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
     _defaults = {
