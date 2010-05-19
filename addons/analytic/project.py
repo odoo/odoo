@@ -261,7 +261,7 @@ class account_analytic_account(osv.osv):
             partner = parent['partner_id'][0]
         else:
             partner = False
-        res = {'value' : {'code' : '%s - %03d' % (parent['code'] or '', numchild + 1),}}
+        res = {'value' : {}}
         if partner:
             res['value']['partner_id'] = partner
         return res

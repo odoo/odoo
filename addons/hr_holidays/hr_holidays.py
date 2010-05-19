@@ -20,16 +20,34 @@
 #     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+import time
+import datetime
 import pooler
 import netsvc
-import datetime
 from osv import fields, osv
 from tools.translate import _
 
 class hr_holidays_status(osv.osv):
     _name = "hr.holidays.status"
     _description = "Leave Types"
+
+    def get_days_cat(self, cr, uid, ids, category_id, return_false, context={}):
+        res = {}
+        for record in self.browse(cr, uid, ids, context):
+            res[record.id] = {}
+            max_leaves = leaves_taken = 0
+            if not return_false:
+                cr.execute("""SELECT type, sum(number_of_days) FROM hr_holidays WHERE category_id = %s AND state='validate' AND holiday_status_id = %s GROUP BY type""", (str(category_id), str(record.id)))
+                for line in cr.fetchall():
+                    if line[0] =='remove':
+                        leaves_taken = -line[1]
+                    if line[0] =='add':
+                        max_leaves = line[1]
+            res[record.id]['max_leaves'] = max_leaves
+            res[record.id]['leaves_taken'] = leaves_taken
+            res[record.id]['remaining_leaves'] = max_leaves - leaves_taken
+        return res
+
     def get_days(self, cr, uid, ids, employee_id, return_false, context={}):
         res = {}
         for record in self.browse(cr, uid, ids, context):
@@ -67,21 +85,23 @@ class hr_holidays_status(osv.osv):
             res = dict.fromkeys(ids, {name: 0})
         return res
 
+    # To do: we can add remaining_leaves_category field to display remaining leaves for particular type
     _columns = {
-        'name' : fields.char('Name', size=64, required=True, translate=True),
+        'name': fields.char('Name', size=64, required=True, translate=True),
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Category', domain="[('object_id.model', '=', 'crm.meeting')]", help='If you link this type of leave with a category in the CRM, it will synchronize each leave asked with a case in this category, to display it in the company shared calendar for example.'),
-        'color_name' : fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
-        'limit' : fields.boolean('Allow to Override Limit', help='If you thick this checkbox, the system will allow, for this team, the employees to take more leaves than the available ones.'),
-        'active' : fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
-        'max_leaves' : fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
-        'leaves_taken' : fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
-        'remaining_leaves' : fields.function(_user_left_days, method=True, string='Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
-
+        'color_name': fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color in Report', required=True, help='This color will be used in the leaves summary located in Reporting\Leaves by Departement'),
+        'limit': fields.boolean('Allow to Override Limit', help='If you thick this checkbox, the system will allow, for this section, the employees to take more leaves than the available ones.'),
+        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
+        'max_leaves': fields.function(_user_left_days, method=True, string='Maximum Leaves Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
+        'leaves_taken': fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
+        'remaining_leaves': fields.function(_user_left_days, method=True, string='Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
+        'double_validation': fields.boolean('Apply Double Validation', help="If its True then its Allocation/Request have to be validated by second validator")
     }
     _defaults = {
-        'color_name': lambda *args: 'red',
-        'active' : lambda *a: True,
+        'color_name': 'red',
+        'active': True,
     }
+
 hr_holidays_status()
 
 class hr_holidays(osv.osv):
@@ -89,7 +109,7 @@ class hr_holidays(osv.osv):
     _description = "Holidays"
     _order = "type desc, date_from asc"
 
-    def _employee_get(obj,cr,uid,context={}):
+    def _employee_get(obj, cr, uid, context=None):
         ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
         if ids:
             return ids[0]
@@ -97,7 +117,7 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate', 'Validated'), ('cancel', 'Cancelled')], 'State', readonly=True, help='When the holiday request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Validation\'.\
+        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate1', 'Waiting Second Validation'), ('validate', 'Validated'), ('cancel', 'Cancelled')], 'State', readonly=True, help='When the holiday request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Validation\'.\
             If the admin accepts it, the state is \'Validated\'. If it is refused, the state is \'Refused\'.'),
         'date_from' : fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}),
         'user_id':fields.many2one('res.users', 'User', states={'draft':[('readonly',False)]}, select=True, readonly=True),
@@ -114,33 +134,62 @@ class hr_holidays(osv.osv):
         'parent_id': fields.many2one('hr.holidays', 'Parent'),
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
-    }
+        'category_id': fields.many2one('hr.employee.category', "Employee Category", help='Category Of employee'),
+        'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Holiday Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category'),
+        'manager_id2': fields.many2one('hr.employee', 'Second Validator', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
+            }
 
     _defaults = {
         'employee_id' : _employee_get ,
-        'state' : lambda *a: 'draft',
-        'type': lambda *a: 'remove',
-        'allocation_type': lambda *a: 'employee',
+        'state' : 'draft',
+        'type': 'remove',
+        'allocation_type': 'employee',
         'user_id': lambda obj, cr, uid, context: uid,
+        'holiday_type': 'employee'
     }
-    _order = 'date_from desc'
 
-    def create(self, cr, uid, vals, context={}):
-        if context:
-            if context.has_key('type'):
-                vals['type'] = context['type']
-            if context.has_key('allocation_type'):
-                vals['allocation_type'] = context['allocation_type']
-        return super(osv.osv,self).create(cr, uid, vals, context)
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if 'holiday_type' in vals:
+            if vals['holiday_type'] == 'employee':
+                vals.update({'category_id': False})
+            else:
+                vals.update({'employee_id': False})
+        if context.has_key('type'):
+            vals['type'] = context['type']
+        if context.has_key('allocation_type'):
+            vals['allocation_type'] = context['allocation_type']
+        return super(hr_holidays, self).create(cr, uid, vals, context=context)
 
-    def _get_number_of_days(date_from, date_to):
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        if 'holiday_type' in vals:
+            if vals['holiday_type'] == 'employee':
+                vals.update({'category_id': False})
+            else:
+                vals.update({'employee_id': False})
+        return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+
+    def onchange_type(self, cr, uid, ids, holiday_type):
+        result = {}
+        if holiday_type=='employee':
+            ids_employee = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+            if ids_employee:
+                result['value'] = {
+                    'employee_id': ids_employee[0]
+                                    }
+        return result
+
+    def _get_number_of_days(self, date_from, date_to):
         """Returns a float equals to the timedelta between two dates given as string."""
 
         DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
         from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
         to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
         timedelta = to_dt - from_dt
-        diff_day = timedelta.days + float(timedelata.seconds) / 86400
+        diff_day = timedelta.days + float(timedelta.seconds) / 86400
         return diff_day
 
     def _update_user_holidays(self, cr, uid, ids):
@@ -150,14 +199,13 @@ class hr_holidays(osv.osv):
                     self.pool.get('crm.meeting').unlink(cr,uid,[record.case_id.id])
                 if record.linked_request_ids:
                     list_ids = []
-                    for id in record.linked_request_ids:
-                        list_ids.append(id.id)
-                    self.holidays_cancel(cr,uid,list_ids)
-                    self.unlink(cr,uid,list_ids)
+                    [list_ids.append(i) for id in record.linked_request_ids]
+                    self.holidays_cancel(cr, uid, list_ids)
+                    self.unlink(cr, uid, list_ids)
 
     def _check_date(self, cr, uid, ids):
-        for rec in self.read(cr, uid, ids, ['number_of_days','date_from','date_to']):
-            if rec['number_of_days'] < 0:
+        for rec in self.read(cr, uid, ids, ['number_of_days_temp','date_from','date_to']):
+            if rec['number_of_days_temp'] < 0:
                 return False
             date_from = time.strptime(rec['date_from'], '%Y-%m-%d %H:%M:%S')
             date_to = time.strptime(rec['date_to'], '%Y-%m-%d %H:%M:%S')
@@ -165,11 +213,13 @@ class hr_holidays(osv.osv):
                 return False
         return True
     
-    _constraints = [(_check_date, 'Start date should not be larger than end date!\nNumber of Days should be greater than 1!', ['number_of_days'])]
-
+    _constraints = [(_check_date, 'Start date should not be larger than end date!\nNumber of Days should be greater than 1!', ['number_of_days_temp'])]
 
     def unlink(self, cr, uid, ids, context={}):
+        leave_obj = self.pool.get('resource.calendar.leaves')
         self._update_user_holidays(cr, uid, ids)
+        leave_ids = leave_obj.search(cr, uid, [('holiday_id', 'in', ids)])
+        leave_obj.unlink(cr, uid, leave_ids)
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
 
@@ -187,7 +237,7 @@ class hr_holidays(osv.osv):
         return result
 
     def onchange_date_to(self, cr, uid, ids, date_from, date_to):
-        return onchange_date_from(cr, uid, ids, date_to, date_from)
+        return self.onchange_date_from(cr, uid, ids, date_to, date_from)
 
     def onchange_sec_id(self, cr, uid, ids, status, context={}):
         warning = {}
@@ -200,7 +250,6 @@ class hr_holidays(osv.osv):
                         }
         return {'warning': warning}
 
-
     def set_to_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'draft',
@@ -212,43 +261,64 @@ class hr_holidays(osv.osv):
             wf_service.trg_create(uid, 'hr.holidays', holiday_id, cr)
         return True
 
-    def holidays_validate(self, cr, uid, ids, *args):
-        self.check_holidays(cr,uid,ids)
-        vals = {
-            'state':'validate',
-        }
+    def holidays_validate2(self, cr, uid, ids, *args):
+        vals = {'state':'validate1'}
+        self.check_holidays(cr, uid, ids)
         ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
         if ids2:
             vals['manager_id'] = ids2[0]
         else:
             raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
         self.write(cr, uid, ids, vals)
-        for record in self.browse(cr, uid, ids):
-            if record.type=='remove':
-                vals= {
-                       'name':record.name,
-                       'date_from':record.date_from,
-                       'date_to':record.date_to,
-                       'calendar_id':record.employee_id.calendar_id.id,
-                       'company_id':record.employee_id.company_id.id,
-                       'resource_id':record.employee_id.resource_id.id
+        return True
+
+    def holidays_validate(self, cr, uid, ids, *args):
+        data_holiday = self.browse(cr, uid, ids)
+        self.check_holidays(cr, uid, ids)
+        vals = {'state':'validate'}
+        ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+        if ids2:
+            if data_holiday[0].state == 'validate1':
+                vals['manager_id2'] = ids2[0]
+            else:
+                vals['manager_id'] = ids2[0]
+        else:
+            raise osv.except_osv(_('Warning !'),_('No user related to the selected employee.'))
+        self.write(cr, uid, ids, vals)
+        for record in data_holiday:
+            if record.holiday_type=='employee' and record.type=='remove':
+                vals = {
+                   'name':record.name,
+                   'date_from':record.date_from,
+                   'date_to':record.date_to,
+                   'calendar_id':record.employee_id.calendar_id.id,
+                   'company_id':record.employee_id.company_id.id,
+                   'resource_id':record.employee_id.resource_id.id,
+                   'holiday_id':record.id
                      }
-                self.pool.get('resource.calendar.leaves').create(cr,uid,vals)
+                self.pool.get('resource.calendar.leaves').create(cr, uid, vals)
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
         for record in self.browse(cr, uid, ids):
             user_id = False
             leave_asked = record.number_of_days_temp
-            if record.type == 'remove':
+            if record.holiday_type=='employee' and record.type == 'remove':
                 if record.employee_id and not record.holiday_status_id.limit:
                     leaves_rest = self.pool.get('hr.holidays.status').get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                     if leaves_rest < leave_asked:
                         raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for %s while available leaves are less than asked leaves.' %(record.employee_id.name)))
                 nb = -(record.number_of_days_temp)
+            elif record.holiday_type=='category' and record.type == 'remove':
+                if record.category_id and not record.holiday_status_id.limit:
+                    leaves_rest = self.pool.get('hr.holidays.status').get_days_cat( cr, uid, [record.holiday_status_id.id], record.category_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
+                    if leaves_rest < leave_asked:
+                        raise osv.except_osv(_('Warning!'),_('You cannot validate leaves for %s while available leaves are less than asked leaves.' %(record.category_id.name)))
+                nb = -(record.number_of_days_temp)
             else:
                 nb = record.number_of_days_temp
-            if record.employee_id:
+
+            if record.holiday_type=='employee' and record.employee_id:
                 user_id = record.employee_id.user_id and record.employee_id.user_id.id or uid
 
             self.write(cr, uid, [record.id], {
@@ -269,31 +339,41 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, *args):
+        leave_obj = self.pool.get('resource.calendar.leaves')
         self._update_user_holidays(cr, uid, ids)
         self.write(cr, uid, ids, {
             'state':'cancel'
             })
+        leave_ids = leave_obj.search(cr, uid, [('holiday_id', 'in', ids)])
+        leave_obj.unlink(cr, uid, leave_ids)
         return True
 
     def holidays_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'draft'
         })
+        self.pool.get('resource.calendar.leaves')
         return True
 
-    def check_holidays(self,cr,uid,ids):
+    def check_holidays(self, cr, uid, ids):
         for record in self.browse(cr, uid, ids):
             if not record.number_of_days:
-                    raise osv.except_osv(_('Warning!'),_('Wrong leave definition.'))
-            if record.employee_id:
+                raise osv.except_osv(_('Warning!'),_('Wrong leave definition.'))
+            if record.holiday_type=='employee' and record.employee_id:
                 leave_asked = record.number_of_days
                 if leave_asked < 0.00:
                     if not record.holiday_status_id.limit:
-                        leaves_rest = self.pool.get('hr.holidays.status').get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
-
+                        leaves_rest = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
                         if leaves_rest < -(leave_asked):
                             raise osv.except_osv(_('Warning!'),_('You Cannot Validate leaves while available leaves are less than asked leaves.'))
-            else:
+            elif record.holiday_type=='category' and record.category_id:
+                leave_asked = record.number_of_days
+                if leave_asked < 0.00:
+                    if not record.holiday_status_id.limit:
+                        leaves_rest = self.pool.get('hr.holidays.status').get_days_cat(cr, uid, [record.holiday_status_id.id], record.category_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
+                        if leaves_rest < -(leave_asked):
+                            raise osv.except_osv(_('Warning!'),_('You Cannot Validate leaves while available leaves are less than asked leaves.'))
+            else:# This condition will never meet!!
                 holiday_ids = []
                 vals = {
                     'name' : record.name,
@@ -318,6 +398,20 @@ class hr_holidays(osv.osv):
                 self.holidays_confirm(cr, uid, holiday_ids)
                 self.holidays_validate(cr, uid, holiday_ids)
 
+            #if record.holiday_status_id.categ_id and record.date_from and record.date_to and record.employee_id:
+#            if record.holiday_status_id.categ_id and record.date_from and record.date_to:
+#                vals={}
+#                vals['name']=record.name
+#                vals['categ_id']=record.holiday_status_id.categ_id.id
+#                epoch_c = time.mktime(time.strptime(record.date_to,'%Y-%m-%d %H:%M:%S'))
+#                epoch_d = time.mktime(time.strptime(record.date_from,'%Y-%m-%d %H:%M:%S'))
+#                diff_day = (epoch_c - epoch_d)/(3600*24)
+#                vals['duration'] = (diff_day) * 8
+#                vals['note'] = record.notes
+##                vals['user_id'] = record.user_id.id
+#                vals['date'] = record.date_from
+#                if record.holiday_type=='employee':
+#                    vals['user_id'] = record.user_id.id
             if record.holiday_status_id.categ_id and record.date_from and record.date_to and record.employee_id:
                 diff_day = self._get_number_of_days(record.date_from, record.date_to)
                 vals = {
@@ -333,3 +427,12 @@ class hr_holidays(osv.osv):
         return True
 hr_holidays()
 
+class resource_calendar_leaves(osv.osv):
+    _inherit = "resource.calendar.leaves"
+    _description = "Leave Detail"
+    _columns = {
+        'holiday_id': fields.many2one("hr.holidays", "Holiday"),
+                }
+
+resource_calendar_leaves()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

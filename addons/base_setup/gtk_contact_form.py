@@ -82,17 +82,28 @@ class base_gtkcontactform(osv.osv_memory):
         country = ''
         if company_data.get('country_id', False):
             country = self.pool.get('res.country').read(cr, uid, company_data['country_id'],['name'], context=context)['name']
+        
         for res in self.read(cr, uid, ids, context=context):
             email = res.get('email','')
             result = "\ncompany: "+ tools.ustr(company_data.get('name',''))
             result += "\nname: " + tools.ustr(res.get('name',''))
+            result += "\njob: " + tools.ustr(res.get('job',''))
             result += "\nphone: " + str(res.get('phone',''))
             result += "\ncity: " + tools.ustr(company_data.get('city',''))
             result += "\ncountry: " + str(country)
             result += "\nindustry: " + tools.ustr(res.get('industry', ''))
             result += "\ntotal_employees: " + str(res.get('total_employees', ''))
             result += "\nplan_use: " +  str(res.get('use_openerp', False))
+            result += "\nalready_using_openerp: " + str(res.get('already_using_openerp', False))
             result += "\nsell_openerp: " + str(res.get('sell_openerp', False))
+            result += "\nalready_selling__openerp: " + str(res.get('already_selling__openerp', False))
+            result += "\nfeatures: " +  str(res.get('features', False))
+            result += "\nsaas: " +  str(res.get('saas', False))
+            result += "\npartners_program: " +  str(res.get('partners_program', False))
+            result += "\nsupport: " +  str(res.get('support', False))
+            result += "\ntraining: " +  str(res.get('training', False))
+            result += "\nupdates: " +  str(res.get('updates', False))
+            result += "\ncontact_me: " +  str(res.get('contact_me', False))
             result += "\nebook: " + str(res.get('ebook',False))
             result += "\ngtk: " + str(True)
         misc.upload_data(email, result, type='SURVEY')
