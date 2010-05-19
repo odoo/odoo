@@ -125,9 +125,9 @@ class account_account_type(osv.osv):
         'report_type':fields.selection([
             ('none','/'),
             ('income','Profilt & Loss (Income Accounts)'),
-            ('expanse','Profilt & Loss (Expanse Accounts)'),
+            ('expense','Profilt & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
-            ('liabilities','Balance Sheet (Liabilities Accounts)')
+            ('liability','Balance Sheet (Liability Accounts)')
         ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
         'parent_id':fields.many2one('account.account.type', 'Parent Type', required=False),
         'child_ids':fields.one2many('account.account.type', 'parent_id', 'Child Types', required=False),
