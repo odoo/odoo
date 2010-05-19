@@ -161,7 +161,7 @@ class make_sale(wizard.interface):
         'init': {
             'actions': [_selectPartner],
             'result': {'type': 'form', 'arch': sale_form, 'fields': sale_fields,
-                'state' : [('end', 'Cancel', 'gtk-cancel'),('order', 'Create Quote', 'gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'),('order', 'Create', 'gtk-apply')]}
         },
         'order': {
             'actions': [],
