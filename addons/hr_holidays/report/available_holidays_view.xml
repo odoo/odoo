@@ -65,12 +65,7 @@
 		                    	help="Leaves of this month"/>
 		                <separator orientation="vertical"/>
 		                <field name="employee_id"/>
-		                <field name="user_id" widget="selection">
-		                    <filter icon="terp-sale"
-		                        	string="My Leaves"
-		                        	default="1"
-		                        	domain="[('user_id','=',uid)]"/>
-		                </field>
+		                <field name="user_id" widget="selection"/>
 	                </group>
 	                <newline/>
 	                <group expand="1" string="Group By..." colspan="10" col="12">
@@ -93,6 +88,7 @@
             <field name="res_model">available.holidays.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="view_id" ref="view_hr_available_holidays_report_search"/>
 
         </record>

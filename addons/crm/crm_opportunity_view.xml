@@ -292,10 +292,6 @@
                 <field name="name" string="Opportunity"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
-                        domain="[('user_id','=',uid)]"
-                        help="My Opportunities" default="1"
-                    />
-                    <filter icon="terp-partner"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Opportunities" />
                 </field>
