@@ -62,10 +62,6 @@
 	                    <separator orientation="vertical"/>
 	  					<field name="user_id" widget="selection">
 	                        <filter icon="terp-hr"
-	                        		string="My timesheet lines"
-	                        		help = "My timesheet lines"
-	                        		domain="[('user_id','=',uid)]" />
-	                        <filter icon="terp-hr"
 	                        		string="Non Assigned timesheets to users"
 	                        		help="Non Assigned timesheets to users"
 	                        		domain="[('user_id','=',False)]"/>
@@ -74,22 +70,22 @@
                         <field name="product_id"/>
                     </group>
                     <newline/>
-	                <group expand="0" string="Extended options..." colspan="10" col="12">
-	                    <field name="date"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="invoice_id" widget="selection"/>
+                    <group expand="1" string="Group By..." colspan="10" col="12">
+                        <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Account" icon="terp-hr" context="{'group_by':'account_id'}"/>
+                        <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
+                        <filter string="Invoice" icon="terp-hr" context="{'group_by':'invoice_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
+                        <filter string="Month" icon="terp-hr" context="{'group_by':'month'}"/>
+                        <filter string="Year" icon="terp-hr" context="{'group_by':'name'}"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="12">
-	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
-	                    <separator orientation="vertical"/>
-	                    <filter string="Account" icon="terp-hr" context="{'group_by':'account_id'}"/>
-	                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
-	                    <filter string="Invoice" icon="terp-hr" context="{'group_by':'invoice_id'}"/>
-	                    <separator orientation="vertical"/>
-	                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
-	                    <filter string="Month" icon="terp-hr" context="{'group_by':'month'}"/>
-	                    <filter string="Year" icon="terp-hr" context="{'group_by':'name'}"/>
+                    <group expand="0" string="Extended options..." colspan="10" col="12">
+                        <field name="date"/>
+                        <separator orientation="vertical"/>
+                        <field name="invoice_id" widget="selection"/>
                     </group>
                 </search>
             </field>
@@ -100,7 +96,7 @@
             <field name="res_model">report.timesheet.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_line_search"/>
         </record>
         <menuitem action="action_timesheet_line_stat_all" id="menu_report_timesheet_line_all" parent="hr.menu_hr_reporting"/>
@@ -491,6 +487,7 @@
             <field name="res_model">random.timesheet.lines</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_user_id':uid }</field>
             <field name="view_id" ref="view_random_timesheet_lines_tree"/>
         </record>
          <!--Time Tracking menu in project Management-->

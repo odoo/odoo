@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -42,23 +42,23 @@ class account_analytic_line(osv.osv):
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', c),
+        'company_id': lambda self,cr,uid,context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context),
     }
     _order = 'date'
-    
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
 
         if context.get('from_date',False):
             args.append(['date', '>=',context['from_date']])
-            
+
         if context.get('to_date',False):
             args.append(['date','<=',context['to_date']])
-            
+
         return super(account_analytic_line, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
-        
+
     def _check_company(self, cr, uid, ids):
         lines = self.browse(cr, uid, ids)
         for l in lines:
@@ -68,7 +68,7 @@ class account_analytic_line(osv.osv):
     _constraints = [
 #        (_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
     ]
-    
+
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
@@ -90,7 +90,7 @@ class account_analytic_line(osv.osv):
                                 (prod.name, prod.id,))
             if not company_id:
                 company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
-      
+
             # Compute based on pricetype
             pricetype=self.pool.get('product.price.type').browse(cr,uid,company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
             # Take the company currency as the reference one
@@ -164,10 +164,10 @@ timesheet_invoice()
 class res_partner(osv.osv):
     """ Inherits partner and adds contract information in the partner form """
     _inherit = 'res.partner'
-    
+
     _columns = {
                 'contract_ids': fields.one2many('account.analytic.account', \
-                                                    'partner_id', 'Contracts'), 
+                                                    'partner_id', 'Contracts'),
                 }
 
 res_partner()
