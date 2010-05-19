@@ -28,7 +28,6 @@
     company_id: base.main_company
     location_id: stock.stock_location_stock
     logic: max
-    name: OP/00002
     product_id: product_product_wood0
     product_max_qty: 15.0
     product_min_qty: 10.0
@@ -38,12 +37,11 @@
 -
   Now I make a sale order for table.
 - 
-  !record {model: sale.order, id: sale_order_so0}:
+  !record {model: sale.order, id: sale_order_so3}:
     amount_total: 5.0
     amount_untaxed: 5.0
     date_order: '2010-04-30'
     invoice_quantity: order
-    name: SO006
     order_line:
       - company_id: base.main_company
         delay: 7.0
@@ -66,7 +64,7 @@
 -
   I confirm the order.
 - 
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so3}
 -
   I check that one procurement is generated.
 -
