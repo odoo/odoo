@@ -478,23 +478,22 @@
         <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
 
         <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
-		
-		<!--  Partners inherited form -->
+        
+        <!--  Partners inherited form -->
 
-		<record id="view_invoice_partner_info_form" model="ir.ui.view">
+        <record id="view_invoice_partner_info_form" model="ir.ui.view">
             <field name="name">res.partner.invoice.info.inherit</field>
             <field name="model">res.partner</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-               		<page string="Account Info">
-						<field name="invoice_ids" colspan="4" nolabel="1" context="{'group_by':'product_id'}"/>
-					</page>
+                    <page string="Account Info">
+                        <field name="invoice_ids" colspan="4" nolabel="1" context="{'group_by':'product_id'}"/>
+                    </page>
                 </notebook>
             </field>
         </record>
 
-		
     </data>
 </openerp>
