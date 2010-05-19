@@ -197,7 +197,8 @@
         <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leads Tree"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+            <tree string="Leads Tree"  colors="blue:state=='pending';grey:state in ('cancel', 'done');red:date_deadline &lt; current_date">
+                <field name="date_deadline" invisible="1"/>
                 <field name="create_date"/>
                 <field name="partner_name"/>
                 <field name="name"/>
