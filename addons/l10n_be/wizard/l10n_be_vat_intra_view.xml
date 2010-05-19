@@ -7,38 +7,40 @@
         name="Belgium Statements"
         parent="account.menu_finance_legal_statement"/>
 
-    	<record id="view_vat_intra" model="ir.ui.view">
-            <field name="name">Partner VAT intra</field>
-            <field name="model">partner.vat.intra</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
+		<record id="view_vat_intra" model="ir.ui.view">
+			<field name="name">Partner VAT intra</field>
+			<field name="model">partner.vat.intra</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
 				<form string="Partner VAT intra">
-					    <notebook>
-						    <page string="General Information">
-							    <label string="This wizard will create an XML file for Vat Intra" colspan="4"/>
-							    <newline/>
-							    <field name="fyear" default_focus="1" />
-                  <field name="period_code"/>
-                  <newline/>
-                  <field name="period_ids"/>
-							    <newline/>
-							    <field name="mand_id"/>
-							    <newline/>
-								<button colspan="4" name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
-				           	 	<separator colspan="4"/>
-				              	<group colspan="4" >
-									<field name="msg" nolabel="1" colspan="4"/>
-							    	<field name="file_save" readonly="True"/>
-							    </group>
-				              	<button special="cancel" colspan="4" string="Cancel" icon="gtk-cancel"/>
-						    </page>
-						    <page string="European Countries">
-						    	<field name="country_ids" colspan="4" nolabel="1" />
-						    </page>
-						</notebook>
-						<newline/>
+					<separator string="This wizard will create an XML file for Vat Intra" colspan="4"/>
+					<notebook>
+						<page string="General Information">
+							<newline/>
+							<field name="period_code" colspan="4"/>
+							<newline/>
+							<field name="mand_id" colspan="4"/>
+							<newline/>
+							<separator string="Periods" colspan="4"/>
+							<field name="period_ids" nolabel="1" colspan="4"/>
+							<newline/>
+							<button colspan="2" name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
+							<separator colspan="4"/>
+							<field name="msg" colspan="4" nolabel="1"/>
+							<field name="name" colspan="4"/>
+							<newline/>
+							<field name="file_save" colspan="4"/>
+							<newline/>
+							<field name="no_vat" colspan="4"/>
+							<separator colspan="4"/>
+							<button colspan="2" special="cancel" string="Cancel" icon="gtk-cancel"/>
+						</page>
+						<page string="European Countries">
+							<field name="country_ids" colspan="4" nolabel="1" />
+						</page>
+					</notebook>
 				</form>
-            </field>
+			</field>
 		</record>
 
 		<record id="action_vat_intra" model="ir.actions.act_window">

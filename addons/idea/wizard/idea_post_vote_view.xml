@@ -2,43 +2,38 @@
 <openerp>
     <data>
 
-<!-- Post Idea for vote Form View  -->
+    <!-- Post Idea for vote Form View  -->
 
-  		<record id="view_idea_post_vote" model="ir.ui.view">
-            <field name="name">idea.post.vote.form</field>
-            <field name="model">idea.post.vote</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Create Tasks">
-                	<group colspan="4" >
-                		 <field name="vote"/>
-                    </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                    	<button  icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button  icon="gtk-ok" name="do_vote" string="Post Vote" type="object"/>
-                   </group>
-               </form>
-            </field>
-  		</record>
+      <record id="view_idea_post_vote" model="ir.ui.view">
+        <field name="name">idea.post.vote.form</field>
+        <field name="model">idea.post.vote</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Create Tasks">
+                <group colspan="4" >
+                     <field name="vote" colspan="4"/>
+                     <separator string="Comment" colspan="4"/>
+                     <field name="note" colspan="4" nolabel="1"/>
+                </group>
+               <separator string="" colspan="4" />
+               <group colspan="4" col="6">
+                    <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button  icon="gtk-ok" name="do_vote" string="Post Vote" type="object"/>
+               </group>
+           </form>
+        </field>
+    </record>
 
-<!-- Post Idea for vote Action  -->
+    <!-- Post Idea for vote Action  -->
 
-        <record id="action_idea_post_vote" model="ir.actions.act_window">
-            <field name="name">Vote</field>
-            <field name="res_model">idea.post.vote</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_idea_post_vote"/>
-           <field name="target">new</field>
-        </record>
-
-<!-- Post Idea for vote Action Window  -->
-
-        <act_window id="action_idea_post_vote_values"
-    		key2="client_action_multi" name="vote"
-    		res_model="idea.post.vote" src_model="idea.idea"
-    		view_mode="form" target="new" view_type="form" />
-
+    <record id="action_idea_post_vote" model="ir.actions.act_window">
+        <field name="name">Vote</field>
+        <field name="res_model">idea.post.vote</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+       <field name="view_id" ref="view_idea_post_vote"/>
+       <field name="target">new</field>
+    </record>
+        
     </data>
 </openerp>

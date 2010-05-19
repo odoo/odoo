@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data noupdate="1">
+		<record id="hr_expense_expense_septemberexpenses0" model="hr.expense.expense">
+			<field name="currency_id" ref="base.EUR"/>
+			<field name="employee_id" ref="hr.employee1"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field name="name">September Expenses</field>
+			<field name="company_id" ref="base.main_company"/>
+			<field name="date">2010-05-03</field>
+			<field name="state">draft</field>
+		</record>
+		<record id="hr_expense_line_travelbycarcustomerseagatedouble0" model="hr.expense.line">
+			<field name="name">Travel by Car - Customer Seagate 2 - Double</field>
+			<field name="date_value">2010-05-03</field>
+			<field name="analytic_account" ref="account.analytic_thymbra"/>
+			<field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'September Expenses')]"/>
+			<field eval="200.0" name="unit_amount"/>
+			<field eval="130.0" name="unit_quantity"/>
+		</record>
+		<record id="hr_expense_line_basicpcserverforseagate0" model="hr.expense.line">
+			<field name="name">Basic PC - Server for Seagate</field>
+			<field name="date_value">2010-05-03</field>
+			<field name="analytic_account" ref="account.analytic_seagate_p2"/>
+			<field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'September Expenses')]"/>
+			<field eval="500.0" name="unit_amount"/>
+			<field eval="1.0" name="unit_quantity"/>
+		</record>
+	</data>
+	<data noupdate="1">
+		<record id="hr_expense_expense_septemberexpenses1" model="hr.expense.expense">
+			<field name="currency_id" ref="base.EUR"/>
+			<field name="employee_id" ref="hr.employee1"/>
+			<field name="user_id" ref="base.user_root"/>
+			<field name="name">Hotel Expenses</field>
+			<field name="company_id" ref="base.main_company"/>
+			<field name="date">2010-04-20</field>
+			<field name="state">draft</field>
+		</record>
+		<record id="hr_expense_line_hotelexpensesthymbra0" model="hr.expense.line">
+			<field name="name">Hotel Expenses - Thymbra</field>
+			<field name="date_value">2010-05-03</field>
+			<field name="analytic_account" ref="account.analytic_thymbra"/>
+			<field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'Hotel Expenses')]"/>
+			<field eval="2000.0" name="unit_amount"/>
+			<field eval="5.0" name="unit_quantity"/>
+		</record>
+
+	</data>
+</openerp>

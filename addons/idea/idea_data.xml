@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+        <record model="idea.category" id="idea_category_general">
+            <field name="name">General</field>
+            <field name="summary">General Ideas</field>
+            <field name="visibility">True</field>
+        </record>
+        
+        <record model="idea.idea" id="idea_idea_one">
+            <field name="title">TODO: Need to put a good idea on OpenERP</field>
+            <field name="description">TODO: Need to put a good idea on OpenERP</field>
+            <field name="category_id" ref="idea_category_general"/>
+            <field name="visibility">True</field>
+        </record>
+    </data>
+</openerp>
+
