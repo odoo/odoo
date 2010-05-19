@@ -861,15 +861,23 @@ class stock_picking(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
+        move_obj = self.pool.get('stock.move')
+        if not context:
+            context = {}
+            
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
                 raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
-            elif pick.state in ['confirmed','assigned']:
+            elif pick.state in ['confirmed','assigned', 'draft']:
                 ids2 = [move.id for move in pick.move_lines]
-                context.update({'call_unlink':True})
-                self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
-            else:
-                continue
+                ctx = context.copy()
+                ctx.update({'call_unlink':True})
+                if pick.state != 'draft':
+                    #Cancelling the move in order to affect Virtual stock of product
+                    move_obj.action_cancel(cr, uid, ids2, ctx)
+                #Removing the move
+                move_obj.unlink(cr, uid, ids2, ctx)
+                    
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
     def do_partial(self, cr, uid, ids, partial_datas, context={}):
@@ -1613,6 +1621,8 @@ class stock_move(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}        
         for move in self.browse(cr, uid, ids, context=context):
             if move.state != 'draft':
                 raise osv.except_osv(_('UserError'),
@@ -1743,7 +1753,7 @@ class stock_move(osv.osv):
 
         @ return: Consumed lines
         '''
-        if not context:
+        if context is None:
             context = {}
 
         if quantity <= 0:
@@ -2053,9 +2063,9 @@ class stock_warehouse(osv.osv):
 #       'partner_id': fields.many2one('res.partner', 'Owner'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
         'partner_address_id': fields.many2one('res.partner.address', 'Owner Address'),
-        'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True),
-        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True),
-        'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True),
+        'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True, domain=[('usage','<>','view')]),
+        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','<>','view')]),
+        'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True, domain=[('usage','<>','view')]),
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),

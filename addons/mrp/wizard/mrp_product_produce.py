@@ -20,8 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
-import netsvc
 
 class mrp_product_produce(osv.osv_memory):
     _name = "mrp.product.produce"

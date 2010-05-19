@@ -21,7 +21,7 @@
 #
 ##############################################################################
 import time
-
+import datetime
 import pooler
 import netsvc
 from osv import fields, osv
@@ -182,14 +182,14 @@ class hr_holidays(osv.osv):
                                     }
         return result
 
-    def _get_number_of_days(date_from, date_to):
+    def _get_number_of_days(self, date_from, date_to):
         """Returns a float equals to the timedelta between two dates given as string."""
 
         DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
         from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
         to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
         timedelta = to_dt - from_dt
-        diff_day = timedelta.days + float(timedelata.seconds) / 86400
+        diff_day = timedelta.days + float(timedelta.seconds) / 86400
         return diff_day
 
     def _update_user_holidays(self, cr, uid, ids):
@@ -204,14 +204,16 @@ class hr_holidays(osv.osv):
                     self.unlink(cr, uid, list_ids)
 
     def _check_date(self, cr, uid, ids):
-        if ids:
-            cr.execute('select number_of_days_temp from hr_holidays where id in ('+','.join(map(str, ids))+')')
-            res =  cr.fetchall()
-            if res and res[0][0] and res[0][0] < 0:
+        for rec in self.read(cr, uid, ids, ['number_of_days_temp','date_from','date_to']):
+            if rec['number_of_days_temp'] < 0:
+                return False
+            date_from = time.strptime(rec['date_from'], '%Y-%m-%d %H:%M:%S')
+            date_to = time.strptime(rec['date_to'], '%Y-%m-%d %H:%M:%S')
+            if date_from > date_to:
                 return False
         return True
 
-    _constraints = [(_check_date, 'Start date should not be larger than end date! ', ['number_of_days'])]
+    _constraints = [(_check_date, 'Start date should not be larger than end date!\nNumber of Days should be greater than 1!', ['number_of_days_temp'])]
 
     def unlink(self, cr, uid, ids, context={}):
         leave_obj = self.pool.get('resource.calendar.leaves')
@@ -235,7 +237,7 @@ class hr_holidays(osv.osv):
         return result
 
     def onchange_date_to(self, cr, uid, ids, date_from, date_to):
-        return onchange_date_from(cr, uid, ids, date_to, date_from)
+        return self.onchange_date_from(cr, uid, ids, date_to, date_from)
 
     def onchange_sec_id(self, cr, uid, ids, status, context={}):
         warning = {}
