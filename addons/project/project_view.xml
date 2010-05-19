@@ -122,6 +122,7 @@
                        <field name="user_id" string="Project Manager" default="1"/>
                        <field name="partner_id" string="Partner"/>
                    </group>
+                   <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
                         <filter string="Users" name="Users"  icon="terp-project" domain = "[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner"  icon="terp-project" domain = "[]" context="{'group_by':'partner_id'}"/>
@@ -418,7 +419,6 @@
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
                         </field>
                         <field name="user_id" select="1" widget="selection">
-                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
@@ -444,7 +444,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_project_id":context.get('project_id',False)}</field>
+            <field name="context">{"search_default_project_id":project_id,'search_default_user_id':uid}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
 
         </record>
@@ -607,12 +607,10 @@
                    <group col="20" colspan="4">
                        <filter domain="[('date','&gt;=',time.strftime('%%Y-%%m-01'))]" icon="terp-project" string="This Month" />
                        <filter domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" icon="terp-project" string="Today" />
-
 	                   <separator orientation="vertical"/>
 	                   <field name="subject"/>
 	                   <field name="project_id" select="1" widget="selection"/>
 	                   <field name="user_id" select="1" widget="selection">
-	                       <filter domain="[('user_id','=',uid)]" help="My Message" icon="gtk-execute" default="1"/>
 	                   </field>
                    </group>
                    <newline/>
@@ -631,7 +629,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_project_message_tree"/>
-            <field name="context">{"search_default_project_id":context.get('project_id',False), "search_default_my_msg":1}</field>
+            <field name="context">{"search_default_project_id":project_id, "search_default_my_msg":1, "search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_project_message_search"/>
        </record>
 
