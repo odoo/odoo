@@ -134,38 +134,6 @@
                     </group>
                 </page>
 
-                <page string="History" groups="base.group_extended">
-                    <group col="2" colspan="2">
-                        <separator string="Dates" colspan="2"/>
-                        <field name="create_date"/>
-                        <field name="write_date"/>
-                        <field name="date_closed"/>
-                        <field name="date_open"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Misc" colspan="2"/>
-                        <field name="active"/>
-                        <field name="day_open"/>
-                        <field name="day_close"/>
-                        <field name="referred"/>
-                    </group>
-                    <separator colspan="4" string="References"/>
-                    <field name="ref"/>
-                    <field name="ref2"/>
-                    <field name="log_ids" nolabel="1" colspan="4">
-                    	 <tree string="Logs">
-                            <field name="name" colspan="4"/>
-                            <field name="date"/>
-                            <field name="user_id"/>
-                        </tree>
-                        <form string="Logs">
-                            <separator string="Action Information" colspan="4"/>
-                            <field name="name" colspan="4"/>
-                            <field name="date"/>
-                            <field name="user_id"/>
-                        </form>
-                    </field>
-                </page>
                  <page string="Emails" groups="base.group_extended">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
@@ -199,6 +167,38 @@
                                name="%(crm_lead_forward_to_partner_act)d"
                                icon="gtk-go-forward" type="action" />
                  </page>
+                <page string="History" groups="base.group_extended">
+                    <group col="2" colspan="2">
+                        <separator string="Dates" colspan="2"/>
+                        <field name="create_date"/>
+                        <field name="write_date"/>
+                        <field name="date_closed"/>
+                        <field name="date_open"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Misc" colspan="2"/>
+                        <field name="active"/>
+                        <field name="day_open"/>
+                        <field name="day_close"/>
+                        <field name="referred"/>
+                    </group>
+                    <separator colspan="4" string="References"/>
+                    <field name="ref"/>
+                    <field name="ref2"/>
+                    <field name="log_ids" nolabel="1" colspan="4">
+                    	 <tree string="Logs">
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </tree>
+                        <form string="Logs">
+                            <separator string="Action Information" colspan="4"/>
+                            <field name="name" colspan="4"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                        </form>
+                    </field>
+                </page>
                 </notebook>
             </form>
         </field>
