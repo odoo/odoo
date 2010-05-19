@@ -569,7 +569,7 @@ class account_bank_statement_line(osv.osv):
             if type == 'supplier':
                 account_id = part.property_account_payable.id
             else:
-                account_id =  part.property_account_receivable.id
+                account_id = part.property_account_receivable.id
             res['value']['account_id'] = account_id
 
         if not line or (line and not line[0].amount):
@@ -638,7 +638,7 @@ class account_bank_statement_line(osv.osv):
         'note': fields.text('Notes'),
         'reconcile_amount': fields.function(_reconcile_amount,
             string='Amount reconciled', method=True, type='float'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement line."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement lines."),
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),

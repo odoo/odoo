@@ -577,7 +577,7 @@ class account_move_line(osv.osv):
         merges_rec = []
         for line in self.browse(cr, uid, ids, context):
             if line.reconcile_id:
-                raise osv.except_osv(_('Already Reconciled'), _('Already Reconciled'))
+                raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:
@@ -927,7 +927,7 @@ class account_move_line(osv.osv):
                         break
             if journal.account_control_ids and not ok:
                 for a in journal.account_control_ids:
-                    if a.id==vals['account_id']:
+                    if a.id == vals['account_id']:
                         ok = True
                         break
             if (account.currency_id) and 'amount_currency' not in vals and account.currency_id.id <> company_currency:
@@ -962,8 +962,8 @@ class account_move_line(osv.osv):
 
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
-        if 'account_tax_id' in vals and vals['account_tax_id']:
-            tax_id=tax_obj.browse(cr,uid,vals['account_tax_id'])
+        if vals.get('account_tax_id',False):
+            tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
             total = vals['debit'] - vals['credit']
             if journal.refund_journal:
                 base_code = 'ref_base_code_id'
@@ -979,7 +979,7 @@ class account_move_line(osv.osv):
                 tax_sign = 'tax_sign'
 
             tmp_cnt = 0
-            for tax in tax_obj.compute(cr,uid,[tax_id],total,1.00):
+            for tax in tax_obj.compute(cr, uid, [tax_id], total, 1.00):
                 #create the base movement
                 if tmp_cnt == 0:
                     if tax[base_code]:
