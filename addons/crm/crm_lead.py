@@ -28,13 +28,14 @@ import mx.DateTime
 from tools.translate import _
 from crm import crm_case
 
-class crm_lead(osv.osv, crm_case):
+class crm_lead(osv.osv, crm_case, ):
     """ CRM Lead Case """
 
     _name = "crm.lead"
     _description = "Leads Cases"
     _order = "priority, id desc"
-    _inherit = ['res.partner.address', 'mailgate.thread']
+    _inherit = ['res.partner.address']
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
@@ -95,6 +96,10 @@ class crm_lead(osv.osv, crm_case):
 
     _columns = {
         # From crm.case
+        'name': fields.char('Name', size=64), 
+        'active': fields.boolean('Active', required=False), 
+        'date_action_last': fields.datetime('Last Action', readonly=1),
+        'date_action_next': fields.datetime('Next Action', readonly=1),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
@@ -107,6 +112,7 @@ and users by email"),
         'write_date': fields.datetime('Update Date' , readonly=True),
 
         # Lead fields
+        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'categ_id': fields.many2one('crm.case.categ', 'Lead Source', \
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
@@ -148,7 +154,7 @@ and users by email"),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
-
+    
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date
         @param self: The object pointer

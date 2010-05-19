@@ -35,6 +35,8 @@ class crm_phonecall(osv.osv, crm_case):
 
     _columns = {
         # From crm.case
+        'name': fields.char('Name', size=64),
+        'active': fields.boolean('Active', required=False), 
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'), 
