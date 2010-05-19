@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    	<record id="scrum_backlog_merge_view" model="ir.ui.view">
-            <field name="name">Merger Product Backlogs</field>
+        <record id="scrum_backlog_merge_view" model="ir.ui.view">
+            <field name="name">Merge Backlogs</field>
             <field name="model">scrum.backlog.merge</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="Merge Backlogs">
-               		<label colspan="4" string="This wizard merge backlogs and create one new backlog with draft state (Old backlogs state changed to Done). And it also merge old tasks from backlogs" />
-        			<separator string="Are you sure you want to merge these Backlogs?" colspan="4"/>
-					<button colspan="2" special="cancel" string="Cancel" icon="gtk-cancel"/>
-            	    <button colspan="2" default_focus="1" name="check_backlogs" string="Merge Backlogs" type="object" icon="gtk-execute"/>
-    			</form>
+                   <label colspan="4" string="This wizard merge backlogs and create one new backlog with draft state (Old backlogs state changed to Done). And it also merge old tasks from backlogs" />
+                   <separator string="Are you sure you want to merge these Backlogs?" colspan="4"/>
+                   <button colspan="2" special="cancel" string="Cancel" icon="gtk-cancel"/>
+                   <button colspan="2" default_focus="1" name="check_backlogs" string="Merge Backlogs" type="object" icon="gtk-execute"/>
+               </form>
             </field>
-		</record>
+        </record>
 
-         <act_window name="Merge Product Backlogs"
-		    res_model="scrum.backlog.merge"
-		    src_model="scrum.product.backlog"
-		    view_mode="form"
-		    target="new"
+         <act_window name="Merge"
+            res_model="scrum.backlog.merge"
+            src_model="scrum.product.backlog"
+            view_mode="form"
+            target="new"
             key2="client_action_multi"
-		    id="action_scrum_backlog_merge"/>
+            id="action_scrum_backlog_merge"/>
 
-    	<record id="scrum_merge_project_id_view" model="ir.ui.view">
-            <field name="name">Merger Backlogs</field>
+        <record id="scrum_merge_project_id_view" model="ir.ui.view">
+            <field name="name">Merge Backlogs</field>
             <field name="model">scrum.backlog.merge</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="Merge Backlogs">
-               		<separator string="Select the Project" colspan="4"/>
-               		<field name="project_id"/>
-        			<separator colspan="4"/>
-					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            	    <button name="do_merge" string="Merge Backlogs" type="object" icon="gtk-execute"/>
-    			</form>
+                       <separator string="Select the Project" colspan="4"/>
+                       <field name="project_id"/>
+                    <separator colspan="4"/>
+                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <button name="do_merge" string="Merge Backlogs" type="object" icon="gtk-execute"/>
+                </form>
             </field>
-		</record>
+        </record>
 
 
     </data>
