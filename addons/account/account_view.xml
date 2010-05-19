@@ -284,11 +284,11 @@
                             <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="user_id" groups="base.group_extended"/>
+                            <field name="allow_date" groups="base.group_extended"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <newline/>
                             <field name="centralisation"/>
                             <field name="group_invoice_lines"/>
-
                             <field name="update_posted"/>
                             <field name="entry_posted"/>
                         </page>
@@ -467,12 +467,24 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Type">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="sequence"/>
-                    <field name="sign"/>
-                    <field name="close_method"/>
-                    <field name="partner_account"/>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1" colspan="4"/>
+                        <field name="code" select="1"/>
+                        <field name="sequence"/>
+                        <field name="parent_id"/>
+                        <field name="partner_account"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Reporting Configuration" colspan="4"/>
+                        <field name="report_type" select="2"/>
+                        <field name="sign"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Closing Method" colspan="4"/>
+                        <field name="close_method"/>
+                    </group>
+                    <separator string="Description" colspan="4"/>
+                    <field name="note" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>

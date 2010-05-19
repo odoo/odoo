@@ -74,9 +74,15 @@
             <field name="context">{'type':'pop'}</field>
             <field name="domain">[('type','=','pop')]</field>
         </record>
+
+        <menuitem 
+            parent="base.menu_config" 
+            id="menu_action_fetchmail_server_tree" 
+            name="Fetchmail Services"
+        />
         
         <menuitem 
-            parent="smtpclient.menu_smtpclient_administration_server" 
+            parent="menu_action_fetchmail_server_tree" 
             id="menu_action_email_server_tree" 
             action="action_email_server_tree"
         />
@@ -92,7 +98,7 @@
         </record>
         
         <menuitem 
-            parent="smtpclient.menu_smtpclient_administration_server" 
+            parent="menu_action_fetchmail_server_tree" 
             id="menu_action_email_server_tree_imap" 
             action="action_email_server_tree_imap"
         />

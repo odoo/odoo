@@ -105,7 +105,8 @@ class project_issue(osv.osv, crm.crm_case):
                             if out_time > date_until:
                                 break
                         duration =  len(no_days)
-                res[issue.id][field] = abs(int(duration))
+                res[issue.id][field] = abs(float(duration))
+
         return res
 
     _columns = {
@@ -158,9 +159,9 @@ class project_issue(osv.osv, crm.crm_case):
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="integer", store=True),
+                                method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="integer", store=True),
+                                method=True, multi='day_close', type="float", store=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to'),
     }
 

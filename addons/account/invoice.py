@@ -23,7 +23,7 @@ import time
 import decimal_precision as dp
 
 import netsvc
-from osv import fields, osv
+from osv import fields, osv, orm
 import ir
 import pooler
 from tools import config
@@ -330,11 +330,11 @@ class account_invoice(osv.osv):
             return res
         except Exception,e:
             if '"journal_id" viol' in e.args[0]:
-                raise except_orm(_('Configuration Error!'),
+                raise orm.except_orm(_('Configuration Error!'),
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
-                raise except_orm(_('UnknownError'), str(e))
-            
+                raise
+
     def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -1500,9 +1500,9 @@ account_invoice_tax()
 class res_partner(osv.osv):
     """ Inherits partner and adds invoice information in the partner form """
     _inherit = 'res.partner'
-    
+
     _columns = {
-                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'), 
+                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'),
                 }
 
 res_partner()

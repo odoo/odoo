@@ -36,7 +36,7 @@ class marketing_campaign(osv.osv): #{{{
     _description = "Marketing Campaigns"
     
     _columns = {
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Name', size=64, required=True),
         'object_id': fields.many2one('ir.model', 'Objects'),
         'mode':fields.selection([('test', 'Test'),
                                 ('test_realtime', 'Realtime Time'),
@@ -61,8 +61,9 @@ class marketing_campaign_segment(osv.osv): #{{{
     _description = "Marketing Campaign Segments"
 
     _columns = {
-        'name': fields.char('Name', size=64),
-        'campaign_id': fields.many2one('marketing.campaign', 'Campaign'),
+        'name': fields.char('Name', size=64,required=True),
+        'campaign_id': fields.many2one('marketing.campaign', 'Campaign', 
+                                                required=True),
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
                                       string='Object'),
@@ -115,6 +116,19 @@ class marketing_campaign_activity(osv.osv): #{{{
                                                    'Sub Campaign Segment'),
 
         }
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, 
+                                        context=None, count=False):
+        if context == None:
+            context = {}
+        if 'segment_id' in context  and context['segment_id']:
+            segment_obj = self.pool.get('marketing.campaign.segment').browse(cr,
+                                                    uid, context['segment_id'])
+            act_ids = []
+            for activity in segment_obj.campaign_id.activity_ids:
+                act_ids.append(activity.id)
+            return act_ids
+        return super(marketing_campaign_activity, self).search(cr, uid, args, 
+                                           offset, limit, order, context, count)
 
 marketing_campaign_activity()#}}}
 
@@ -129,9 +143,10 @@ class marketing_campaign_transition(osv.osv): #{{{
                                                         'Destination Activity'),
         'interval_nbr': fields.integer('Interval No.'),
         'interval_type': fields.selection([('hours', 'Hours'), ('days', 'Days'), 
-        ('months', 'Months'), ('years','Years')], 'Interval Type')
+                                           ('months', 'Months'),
+                                            ('years','Years')],'Interval Type')
         }
-
+    
 marketing_campaign_transition() #}}}
 
 class marketing_campaign_workitem(osv.osv): #{{{
@@ -139,14 +154,16 @@ class marketing_campaign_workitem(osv.osv): #{{{
     _description = "Campaign Workitems"
 
     _columns = {
-        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment'),
-        'activity_id': fields.many2one('marketing.campaign.activity', 'Activity'),
+        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment',
+                                                        required=True),
+        'activity_id': fields.many2one('marketing.campaign.activity','Activity',
+                                                        required=True),
         'object_id': fields.related('segment_id', 'campaign_id', 'object_id', 
                                         type='many2one', relation='ir.model', 
                                         string='Object'),
         'res_id': fields.integer('Results'),
         'date': fields.datetime('Execution Date'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner',required=True),
         'state': fields.selection([('todo', 'ToDo'), ('inprogress', 'In Progress'), 
         ('exception', 'Exception'), ('done', 'Done'),
         ('cancelled', 'Cancelled')], 'State')
@@ -171,7 +188,8 @@ class marketing_campaign_workitem(osv.osv): #{{{
             
     def process(self, cr, uid, workitem_ids, context={}):
         #for wi in self.browse(cr, uid, workitem_ids):
-        #    if wi.state == 'todo'# we searched the wi which are in todo state then y v keep this filter again 
+        #    if wi.state == 'todo'# we searched the wi which are in todo state 
+                    #then y v keep this filter again 
         return True
         
     def process_all(self, cr, uid, context={}):
@@ -179,7 +197,7 @@ class marketing_campaign_workitem(osv.osv): #{{{
                         ('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))])
         if workitem_ids:
             self.parocess(cr, uid, workitem_ids, context)
-            
+    
 marketing_campaign_workitem() #}}}  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
