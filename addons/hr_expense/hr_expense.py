@@ -131,7 +131,7 @@ class hr_expense_expense(osv.osv):
 
                 lines.append((0, False, {
                     'name': l.name,
-                    'account_id': acc,
+                    'account_id': acc.id,
                     'price_unit': l.unit_amount,
                     'quantity': l.unit_quantity,
                     'uos_id': l.uom_id.id,
