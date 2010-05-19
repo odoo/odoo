@@ -163,8 +163,8 @@ class crm_make_sale(osv.osv_memory):
     _columns = {
                 'shop_id': fields.many2one('sale.shop', 'Shop', required = True),
                 'partner_id': fields.many2one('res.partner', 'Customer',  required = True,  help = 'Use this partner if there is no partner on the case'),
-                'picking_policy': fields.selection([('direct','Direct Delivery'),
-                                                    ('one','All at once')], 'Picking Policy', required = True),
+                'picking_policy': fields.selection([('direct','Partial Delivery'),
+                                                    ('one','Complete Delivery')], 'Picking Policy', required = True),
                 'product_ids': fields.many2many('product.product', 'product_sale_rel',\
                                  'sale_id', 'product_id', 'Products'),
                 'analytic_account': fields.many2one('account.analytic.account', 'Analytic Account'),   
