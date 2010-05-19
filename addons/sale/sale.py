@@ -460,10 +460,27 @@ class sale_order(osv.osv):
     
     def action_invoice_end(self, cr, uid, ids, context={}):
         for order in self.browse(cr, uid, ids, context=context):
+            #
+            # Update the sale order lines state (and invoiced flag)
+            #
             for line in order.order_line:
-                if line.state == 'exception':
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'confirmed'}, context=context)
-            
+                #
+                # Check if lines are invoiced (if they have asociated invoice
+                # lines from non-cancelled invoices)
+                #
+                invoiced = False
+                for iline in line.invoice_lines:
+                    if iline.invoice_id and iline.invoice_id.state == 'cancel':
+                        continue
+                    else:
+                        invoiced = True
+                # Compute the new state of the line
+                state = (line.state == 'exception') and 'confirmed' or line.state
+                # Update the line
+                self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced, 'state': state})
+            #
+            # Update the sale order state
+            #
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
             
