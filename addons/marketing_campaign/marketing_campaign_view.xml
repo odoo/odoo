@@ -2,7 +2,6 @@
 <openerp>
 	<data>
 		<menuitem name="Direct Marketing" id="menu_marketing" parent="base.menu_base_partner"/>
-	
 	<!--
     ======================
     Marketing Campaign
@@ -17,8 +16,9 @@
             <form string="Campaign">
                <group colspan="4">
                     <field name="name" select="1"/>
-                    <field name="object_id" readonly="True" select="1"/>
+                    <field name="object_id" select="1"/>
                     <field name="mode"/>
+                    <field name="fixed_cost"/>
                 </group>
                <field name="activity_ids" nolabel = "1" colspan="4">
                		<form string="Activities">
@@ -26,7 +26,7 @@
 	                <field name="object_id" readonly="True"/>  
 	                 <field name="start"/>              
 	                <field name="condition" colspan="4"/>
-	                <newline/>
+                    <field name="variable_cost" select="1"/>	                
 	                <field name="type"/>
 	                <group colspan="4" attrs="{'invisible':[('type','!=','email')]}" >                
 	                    <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
@@ -56,6 +56,7 @@
                 <field name="object_id"/>
                 <field name="start"/>
                 <field name="condition"/>
+                <field name="variable_cost" select="1"/>	                
                 <field name="type"/>
                 <field name="report_id"/>
                  <field name="to_ids"/>
@@ -64,7 +65,7 @@
             </tree>
 		    </field>    
             	<separator string="Status" colspan="4" />
-            	<field name="state" nolabel = "1" colspan="4"/>
+            	<field name="state" nolabel = "1" colspan="4" readonly="True"/>
             </form>
         </field>
     </record>
@@ -78,6 +79,7 @@
                 <field name="name" select="1"/>
                 <field name="object_id" select="1"/>
                 <field name="mode"/>
+                <field name="fixed_cost"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -130,7 +132,7 @@
         <field name="arch" type="xml">
             <form string="Segments">
             <group colspan="4">
-                <field name="name" select="1"/>
+                <field name="name" select="1" colspan="4"/>
                 <newline/>
                 <field name="campaign_id" select="1"/>
                 <field name="object_id" select="1" readonly="True"/>
@@ -144,7 +146,7 @@
                 <field name="sync_mode"/>
             </group>
                 <separator string="Status" colspan="4" />
-                <field name="state" nolabel = "1" colspan="4"/>
+                <field name="state" nolabel = "1" colspan="4" readonly="1"/>
             </form>
         </field>
     </record>
@@ -162,7 +164,7 @@
                 <field name="date_done"/>
                 <field name="sync_last_date" string="Sync Date"/>
                 <field name="sync_mode" string="Sync Mode"/>
-                <field name="state"/>
+                <field name="state" />
             </tree>
         </field>
     </record>
@@ -193,7 +195,7 @@
                 <field name="name" select="1" />
                 <field name="start"/>
                 <field name="campaign_id" select="1"/>
-                <field name="object_id"/>                
+                <field name="object_id" readonly="True"/>                
                 <field name="condition" colspan="4"/>
                 <newline/>
                 <field name="type"/>
@@ -306,6 +308,6 @@
     </record>
 
     <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing" action="action_marketing_campaign_workitem" sequence="30" groups="base.group_extended"/>
-		
+    
 	</data>
 </openerp>

@@ -47,10 +47,10 @@ class marketing_campaign(osv.osv): #{{{
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled'),],
-                                   'State',
-                                   readonly=True), 
+                                   'State',), 
         'activity_ids': fields.one2many('marketing.campaign.activity', 
                                        'campaign_id', 'Activities'),
+        'fixed_cost': fields.float('Fixed Cost'),                                       
         
     }
 
@@ -76,8 +76,7 @@ class marketing_campaign_segment(osv.osv): #{{{
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled')],
-                                   'State',
-                                   readonly=True), 
+                                   'State',), 
         'date_run': fields.datetime('Running'),
         'date_done': fields.datetime('Done'),
     }
@@ -114,7 +113,8 @@ class marketing_campaign_activity(osv.osv): #{{{
         'subcampaign_id' :fields.many2one('marketing.campaign', 'Sub-Campaign'),
         'subcampaign_segment_id' :fields.many2one('marketing.campaign.segment',
                                                    'Sub Campaign Segment'),
-
+        'variable_cost': fields.float('Variable Cost'),
+        'revenue': fields.float('Revenue')
         }
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
                                         context=None, count=False):
@@ -146,7 +146,7 @@ class marketing_campaign_transition(osv.osv): #{{{
                                            ('months', 'Months'),
                                             ('years','Years')],'Interval Type')
         }
-    
+
 marketing_campaign_transition() #}}}
 
 class marketing_campaign_workitem(osv.osv): #{{{

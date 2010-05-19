@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+	<record id="view_campaign_analysis_tree" model="ir.ui.view">
+        <field name="name">campaign.analysis.tree</field>
+        <field name="model">campaign.analysis</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Marketing Reports">
+				<field name="month"/>
+                <field name="year"/>
+				<field name="date"/>
+            	<field name="campaign_id"/>
+            	<field name="activity_id"/>
+                <field name="segment_id"/>
+                <field name="partner_id"/>
+                <field name="country_id" />
+                <!--field name="case_id"/-->
+                <!--field name="count"/-->
+                <field name="total_cost"/>
+                <field name="revenue"/>
+            </tree>
+        </field>
+    </record>
+
+	<record id="view_campaign_analysis_search" model="ir.ui.view">
+        <field name="name">campaign.analysis.search</field>
+        <field name="model">campaign.analysis</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Marketing Reports">
+            	<group>
+	                <filter icon="terp-account"
+	                    	string="This Year"
+	                    	domain="[('year','=',time.strftime('%%Y'))]"/>
+	                <filter icon="terp-account"
+	                    	string="This Month"
+	                    	domain="[('month','=',time.strftime('%%m'))]"/>
+	                <separator orientation="vertical"/>
+		            <filter string="Date" icon="terp-account" domain="[('date','=',time.strftime('%%Y/%%m/%%d'))]"/>
+	                <separator orientation="vertical"/>
+					<field name="campaign_id"/>
+					<field name="activity_id"/>
+					<field name="segment_id"/>
+	                <field name="partner_id"/>
+					<field name="country_id"/>
+					<!--field name="case_id"/-->
+                </group>
+            </search>
+        </field>
+    </record>
+
+	<record id="action_campaign_analysis_all" model="ir.actions.act_window">
+        <field name="name">Marketing Report</field>
+        <field name="res_model">campaign.analysis</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{'group_by': [], 'search_default_group_campaign': 1, 'search_default_group_segment': 1}</field>
+        <field name="search_view_id" ref="view_campaign_analysis_search"/>
+    </record>
+
+    <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="menu_marketing" sequence="40"/>
+
+		
+	</data>
+</openerp>

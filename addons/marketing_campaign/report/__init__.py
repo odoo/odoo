@@ -19,27 +19,6 @@
 #
 ##############################################################################
 
-
-{
-    "name" : "",
-    "version" : "1.1",
-    "depends" : ["crm", 
-                "document",
-                "poweremail" # need to get this module form the branch 
-                # lp:poweremail  
-                ],
-    "author" : "Tiny",
-    "category": 'Generic Modules/Marketing',
-    "description": """
-    """,
-    'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        'marketing_campaign_view.xml',
-        'report/campaign_analysis_view.xml',
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-}
+import campaign_analysis
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
