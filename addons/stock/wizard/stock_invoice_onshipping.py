@@ -114,7 +114,7 @@ class stock_invoice_onshipping(osv.osv_memory):
                   context=context)
             invoice_ids = res.values()
             if not invoice_ids:
-                raise  osv.except_osv(_('Error'), _('Invoice is not created'))
+                raise osv.except_osv(_('Error'), _('Invoice is not created'))
 
             if type == 'out_invoice':
                 xml_id = 'action_invoice_tree1'
@@ -126,12 +126,12 @@ class stock_invoice_onshipping(osv.osv_memory):
                 xml_id = 'action_invoice_tree4'
 
             result = mod_obj._get_id(cr, uid, 'account', xml_id)
-            id = mod_obj.read(cr, uid, result, ['res_id'])
-            result = act_obj.read(cr, uid, id['res_id'])
+            id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
+            result = act_obj.read(cr, uid, id['res_id'], context=context)
             result['res_id'] = invoice_ids
+            result['context'] = context
             return result
 
 stock_invoice_onshipping()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
