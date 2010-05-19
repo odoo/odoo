@@ -50,19 +50,19 @@
     pricelist_id: product.list0
     shop_id: sale.shop    
 - 
-  Performing a workflow action order_confirm on module sale.order
+  I confirm  sale order.
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_testtender1}
 
 - 
-  I launch he scheduler to compute all procurements, and planify all requisitions orders
+  I launch he scheduler to compute all procurements, and planify all requisitions orders.
 -  
   !python {model: mrp.procurement.compute.all}: |
     proc_obj = self.pool.get('mrp.procurement')
     proc_obj._procure_confirm(cr,uid)
 -
   I should find a purchase requisition with the origin 'TEST/TENDER/0002', that includes a request for
-  5 Laptop ACER, and a purchase order on the default supplier for this product
+  5 Laptop ACER, and a purchase order on the default supplier for this product.
 -    
  !python {model: purchase.requisition}: |
     requisition_ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0002')])
@@ -70,16 +70,16 @@
     assert len(requisition_ids), "Purchase requisition  hasn't Created"
 -
   On the purchase tender, I create a new purchase order for the supplier 'DistriPC' by clicking on
-  the button 'New RfQ'. This opens a window to ask me the supplier and I set DistriPC  
+  the button 'New RfQ'. This opens a window to ask me the supplier and I set DistriPC .
 - 
-  Creating a purchase.requisition.partner record
+  I Create  purchase.requisition.partner .
 - 
   !record {model: purchase.requisition.partner, id: purchase_requisition_partner_0}:
     partner_address_id: base.res_partner_address_7
     partner_id: base.res_partner_4
         
 - 
-  Performing an osv_memory action create_order on module purchase.requisition.partner
+  I create a new purchase order for the supplier 'DistriPC'.
 - 
   !python {model: purchase.requisition.partner}: |
     req_obj = self.pool.get('purchase.requisition')
@@ -91,11 +91,11 @@
 -
   I set the purchase tender as 'Exclusive'      
 - 
- !python {model: purchase.requisition}: |
+  !python {model: purchase.requisition}: |
     ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0002')])
     self.write(cr,uid,ids[0],{'exclusive': 'exclusive' })
 -
- I confirm and validate the RfQ of ASUStek      
+  I confirm and validate the RfQ of ASUStek.      
 -
  !python {model: purchase.order}: |
     partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','ASUStek')])[0]

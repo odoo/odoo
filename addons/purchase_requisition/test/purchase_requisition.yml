@@ -27,7 +27,7 @@
     weight_net: 0.0
     list_price: 100.0    
 - 
-  Then I sell 5 Laptop ACER to the customer Agrolait, sale order TEST/TENDER/0001
+  Then I sell 5 Laptop ACER to the customer Agrolait, sale order TEST/TENDER/0001.
 - 
   !record {model: sale.order, id: sale_order_testtender0}:
     date_order: '2010-05-10'
@@ -54,7 +54,7 @@
     shop_id: sale.shop
         
 - 
-  Performing a workflow action order_confirm on module sale.order
+  I confirm the sale order.
 - 
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_testtender0}
     
@@ -66,17 +66,14 @@
     proc_obj._procure_confirm(cr,uid)
 -
   On the purchase tender, I create a new purchase order for the supplier 'DistriPC' by clicking on
-  
-- 
-  Creating a purchase.requisition.partner record
-  
+  the button 'New RfQ'. This opens a window to ask me the supplier and I set DistriPC . 
 - 
   !record {model: purchase.requisition.partner, id: purchase_requisition_partner_0}:
     partner_address_id: base.res_partner_address_7
     partner_id: base.res_partner_4
     
 - 
-  Performing an osv_memory action create_order on module purchase.requisition.partner
+  I create a new purchase order .
   
 - 
   !python {model: purchase.requisition.partner}: |
@@ -120,7 +117,7 @@
     line_obj.write(cr, uid, order_line1, {'product_qty':2})
     line_obj.write(cr, uid, order_line2, {'product_qty':3})  
 -
-  I confirm and validate both purchase orders
+  I confirm and validate both purchase orders.
   
 -
   !python {model: purchase.order}: |
@@ -132,7 +129,7 @@
       wf_service.trg_validate(uid, 'purchase.order',id,'purchase_approve', cr) 
    
 -
-  I check that the delivery order of the customer is in state 'Waiting Goods'
+  I check that the delivery order of the customer is in state 'Waiting Goods'.
   
 -
   !python {model: stock.picking }: |
@@ -143,7 +140,7 @@
       assert(pick.move_lines[0].state=='wating'),'Order is  not wating"'
 
 -
-  I receive the order of the supplier Asustek from the Incoming Products menu
+  I receive the order of the supplier Asustek from the Incoming Products menu.
   
 -
   !python {model: stock.picking }: |
@@ -167,7 +164,7 @@
       } 
      self.do_partial(cr, uid, picking_id,partial_datas)
 -
- I receive the order of the supplier DistriPC from the Incoming Shipments menu
+ I receive the order of the supplier DistriPC from the Incoming Shipments menu.
  
 -   
   !python {model: stock.picking }: |
@@ -189,7 +186,7 @@
       } 
       self.do_partial(cr, uid, picking_id,partial_datas)
 -
-  Now, I can check that the delivery order of the customer is in the state Available
+  Now, I can check that the delivery order of the customer is in the state Available.
   
 -
   !python {model: stock.picking }: |
