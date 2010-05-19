@@ -110,7 +110,7 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" widget="selection"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
                                 groups="base.group_extended"/>
@@ -265,9 +265,10 @@
                     <newline/>
                     <group expand="1" string="Group By..." colspan="11" col="11">
                         <filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
-                        <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
                     </group>
                </search>
             </field>
