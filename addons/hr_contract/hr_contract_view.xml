@@ -142,13 +142,12 @@
                    <group col='15' colspan='4'>
                    		<field name="name"/>
                       	<field name="employee_id"/>
-                      	<field name="department_id"/>
                        	<field name="date_start"/>
                        	<field name="date_end"/>
                    </group>
                    <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Contract Type" icon="terp-project" domain="[]" context="{'group_by':'type_id'}"/>
                     </group>
                </search>
             </field>
@@ -203,6 +202,7 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="working_hours"/>
+                    <field name="type_id"/>
                     <field name="wage_type_id"/>
                     <field name="wage"/>
                 </tree>
