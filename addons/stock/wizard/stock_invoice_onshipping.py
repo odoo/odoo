@@ -41,7 +41,7 @@ class stock_invoice_onshipping(osv.osv_memory):
             'invoice_date': fields.date('Invoiced date'),
             }
 
-    def _get_type(self, cr, uid, context):
+    def _get_type(self, cr, uid, context=None):
         """ 
              To get invoice type
             
@@ -53,10 +53,12 @@ class stock_invoice_onshipping(osv.osv_memory):
              
              @return: invoice type
         
-        """                
+        """
+        if context is None:
+            context = {}     
         picking_obj = self.pool.get('stock.picking')
         usage = 'customer'
-        pick = picking_obj.browse(cr, uid, context['active_id'])
+        pick = picking_obj.browse(cr, uid, context['active_id'], context=context)
         if pick.invoice_state == 'invoiced':
             raise osv.except_osv(_('UserError'), _('Invoice is already created.'))
         if pick.invoice_state == 'none':
