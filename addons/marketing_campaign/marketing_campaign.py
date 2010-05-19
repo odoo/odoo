@@ -116,6 +116,7 @@ class marketing_campaign_activity(osv.osv): #{{{
         'variable_cost': fields.float('Variable Cost'),
         'revenue': fields.float('Revenue')
         }
+   
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
                                         context=None, count=False):
         if context == None:
@@ -129,7 +130,7 @@ class marketing_campaign_activity(osv.osv): #{{{
             return act_ids
         return super(marketing_campaign_activity, self).search(cr, uid, args, 
                                            offset, limit, order, context, count)
-
+    
 marketing_campaign_activity()#}}}
 
 class marketing_campaign_transition(osv.osv): #{{{
@@ -147,6 +148,13 @@ class marketing_campaign_transition(osv.osv): #{{{
                                             ('years','Years')],'Interval Type')
         }
 
+    def default_get(self, cr, uid, fields, context={}):
+        value = super(marketing_campaign_transition, self).default_get(cr, uid,
+                                                                fields, context)
+        if context.has_key('type_id'):
+            value[context['type_id']] = context['activity_id']
+        return value
+    
 marketing_campaign_transition() #}}}
 
 class marketing_campaign_workitem(osv.osv): #{{{

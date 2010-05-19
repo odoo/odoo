@@ -42,7 +42,7 @@
 	                    <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
 	                    <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
 	                </group>                
-	                <field name="to_ids" nolabel="1" colspan="4" mode="tree">
+	                <field name="to_ids" nolabel="1" colspan="4" mode="tree"  default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
 	                    <tree string="All Transitions" editable="bottom">
 	                        <field name="activity_from_id"/>
 	                        <field name="activity_to_id"/>
@@ -213,7 +213,7 @@
                     <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
                     <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
                 </group>                
-                <field name="to_ids" nolabel="1"  colspan="4" mode="tree,form" >
+                <field name="to_ids" nolabel="1" colspan="4" mode="tree,form">
                     <tree string="All Transitions" editable="bottom">
                         <field name="activity_from_id" />
                         <field name="activity_to_id" />
@@ -253,10 +253,9 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_marketing_campaign_activity_tree"/>
     </record>
-    <!--
-
-    <menuitem id="menu_marketing_campaign_activity_form" parent="menu_marketing" action="action_marketing_campaign_activity_form" sequence="3" />-->
-
+    
+   	<!--menuitem id="menu_marketing_campaign_activity_form" parent="menu_marketing" action="action_marketing_campaign_activity_form" sequence="3" /-->
+    
     <!--
     ======================
     Marketing Workitems
