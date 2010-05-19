@@ -44,7 +44,7 @@ class report_stock_move(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
                                   help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
-        'day_diff':fields.integer('Days difference',readonly=True),
+        'day_diff':fields.integer('Expected Performance',readonly=True),
     }
     
     def init(self, cr):
