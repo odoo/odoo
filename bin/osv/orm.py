@@ -398,13 +398,14 @@ class orm_template(object):
     _inherits = {}
     _table = None
     _invalids = set()
-    _log_create = True
+    _log_create = False
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
-    def log(self, cr, uid, id, message, context=None):
+    def log(self, cr, uid, id, message, secondary=False, context=None):
         return self.pool.get('res.log').create(cr, uid, {
             'name': message,
             'res_model': self._name,
+            'secondary': secondary,
             'res_id': id},
                 context=context
         )
@@ -1739,7 +1740,6 @@ class orm_memory(orm_template):
     _max_count = 200
     _max_hours = 1
     _check_time = 20
-    _log_create = False
 
     def __init__(self, cr):
         super(orm_memory, self).__init__(cr)
@@ -1845,7 +1845,7 @@ class orm_memory(orm_template):
                 " '" + \
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' "+ _("created.")
-            self.log(cr, user, id_new, message, context=context)
+            self.log(cr, user, id_new, message, True, context=context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
         return id_new
@@ -2004,7 +2004,6 @@ class orm_memory(orm_template):
 class orm(orm_template):
     _sql_constraints = []
     _table = None
-    _log_create = True
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count', 'exists']
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
@@ -3461,8 +3460,7 @@ class orm(orm_template):
                 " '" + \
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' "+ _("created.")
-            self.log(cr, user, id_new, message, context=context)
-
+            self.log(cr, user, id_new, message, True, context=context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
         return id_new

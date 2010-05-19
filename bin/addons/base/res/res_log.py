@@ -27,12 +27,14 @@ class res_log(osv.osv_memory):
         'name': fields.char('Message', size=128, help='The logging message.', required=True),
         'user_id': fields.many2one('res.users','User', required=True),
         'res_model': fields.char('Object', size=128),
-        'res_id': fields.integer('Object ID')
+        'res_id': fields.integer('Object ID'),
+        'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on')
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid
     }
     _order='id desc'
+    # TODO: do not return secondary log if same object than in the model (but unlink it)
     def get(self, cr, uid, context={}):
         ids = self.search(cr, uid, [('user_id','=',uid)], context=context)
         result = self.read(cr, uid, ids, ['name','res_model','res_id'], context=context)
