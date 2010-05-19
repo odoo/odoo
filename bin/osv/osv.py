@@ -65,7 +65,16 @@ class osv_pool(netsvc.Service):
                 for key in self._sql_error.keys():
                     if key in inst[0]:
                         self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
-                self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
+                if inst.pgcode == "23502":
+                    context = inst.pgerror.split('"public".')[1]
+                    table = context.split('"')[1]
+                    model = table.replace("_",".")
+                    if not self.obj_pool.get(model,False):
+                        model = table
+                    msg = 'You can not delete current record because it refered by ' + model
+                    self.abortResponse(1, 'Integrity Error', 'warning', msg)
+                else:
+                    self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
             except Exception, e:
                 self.logger.exception("Uncaught exception")
                 raise
