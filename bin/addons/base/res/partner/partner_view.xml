@@ -347,24 +347,27 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
-                        <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
-                        <separator orientation="vertical"/>
                         <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
                         <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-                         <filter string="Employees" icon="terp-partner" domain="[('employee','=',1)]" help="Employee Partners"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address" select="1"/>
                         <field name="country" select="1"/>
                         <field name="category_id" select="1"/>
-                        <field name="user_id" select="1"/>
+                        <field name="user_id" select="1">
+                            <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
+                        </field>
+                   </group>
+                   <newline />
+                   <group expand="0" string="Group By..." colspan="16">
+                       <filter string="Salesman" icon="terp-crm" domain="[]" context="{'group_by' : 'user_id'}" />
                    </group>
                </search>
             </field>
         </record>
 
         <record id="action_partner_form" model="ir.actions.act_window">
-            <field name="name">Partners</field>
+            <field name="name">Customers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
@@ -639,7 +642,7 @@
             />
 
         <record id="ir_ui_view_sc_partner0" model="ir.ui.view_sc">
-            <field name="name">Partner</field>
+            <field name="name">Address Book</field>
             <field name="resource">ir.ui.menu</field>
             <field name="user_id" ref="base.user_root"/>
              <field name="res_id" ref="menu_partner_form"/>

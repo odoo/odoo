@@ -83,8 +83,7 @@ class configmanager(object):
             'list_db' : True,
             'timezone' : False, # to override the default TZ
             'test-disable' : False,
-            'test-rollback' : True,
-            'test-continue' : False
+            'test-commit' : False,
         }
 
         self.misc = {}
@@ -142,10 +141,8 @@ class configmanager(object):
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-disable", action="store_true", dest="test_disable",
                          default=False, help="Disable loading test files.")
-        group.add_option("--test-no-rollback", action="store_false", dest="test_rollback",
-                         default=True, help="Don't rollback after running test.")
-        group.add_option("--test-continue", action="store_true", dest="test_continue",
-                         default=False, help="Display exception but then test should continue.")
+        group.add_option("--test-commit", action="store_true", dest="test_commit",
+                         default=False, help="Commit database changes performed by tests.")
         parser.add_option_group(group)
         
         # Logging Group
@@ -288,8 +285,7 @@ class configmanager(object):
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
         self.options["test-disable"] =  opt.test_disable
-        self.options["test-rollback"] =  opt.test_rollback
-        self.options["test-continue"] =  opt.test_continue
+        self.options["test-commit"] =  opt.test_commit
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
 
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
