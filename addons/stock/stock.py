@@ -402,6 +402,7 @@ stock_tracking()
 #----------------------------------------------------------
 class stock_picking(osv.osv):
     _name = "stock.picking"
+    _log_create = True
     _description = "Picking List"
 
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
@@ -599,7 +600,16 @@ class stock_picking(osv.osv):
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
-    def action_assign_wkf(self, cr, uid, ids):
+    def action_assign_wkf(self, cr, uid, ids, context=None):
+        for pick in self.browse(cr, uid, ids, context=context):
+            type_list = {
+                'out':'Packing List',
+                'in':'Reception',
+                'internal': 'Internal picking',
+                'delivery': 'Delivery order'
+            }
+            message = type_list.get(pick.type, _('Document')) + " '" + pick.name + "' "+ _("is ready to be processed.")
+            self.log(cr, uid, id, message)
         self.write(cr, uid, ids, {'state': 'assigned'})
         return True
 
@@ -1153,6 +1163,7 @@ class stock_move(osv.osv):
         return (res and res[0]) or False
     _name = "stock.move"
     _description = "Stock Move"
+    _log_create = False
 
     def name_get(self, cr, uid, ids, context={}):
         res = []

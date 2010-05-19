@@ -68,8 +68,8 @@ class mrp_procurement(osv.osv):
     """
     _name = "mrp.procurement"
     _description = "Procurement"
-    _order = 'priority,date_planned'
-    
+    _order = 'priority,date_planned desc'
+    _log_create = False
     _columns = {
         'name': fields.char('Reason', size=64, required=True, help='Procurement name.'),
         'origin': fields.char('Source Document', size=64,

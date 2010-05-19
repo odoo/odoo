@@ -52,6 +52,7 @@ def _incoterm_get(self, cr, uid, context=None):
 
 class sale_order(osv.osv):
     _name = "sale.order"
+    _log_create = True
     _description = "Sale Order"
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -551,16 +552,10 @@ class sale_order(osv.osv):
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        event_p = self.pool.get('res.partner.event.type').check(cr, uid, 'sale_open')
-        event_obj = self.pool.get('res.partner.event')
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Quotation ') + " '" + name + "' "+ _("converted to sale order.")
+            self.log(cr, uid, id, message)
         for o in self.browse(cr, uid, ids):
-            if event_p:
-                event_obj.create(cr, uid, {'name': 'Sale Order: '+ o.name,\
-                        'partner_id': o.partner_id.id,\
-                        'date': time.strftime('%Y-%m-%d %H:%M:%S'),\
-                        'user_id': (o.user_id and o.user_id.id) or uid,\
-                        'partner_type': 'customer', 'probability': 1.0,\
-                        'planned_revenue': o.amount_untaxed})
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
             else:

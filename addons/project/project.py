@@ -251,6 +251,7 @@ project()
 class task(osv.osv):
     _name = "project.task"
     _description = "Task"
+    _log_create = True
     _date_name = "date_start"
 
     def _str_get(self, task, level=0, border='***', context={}):

@@ -419,7 +419,8 @@ class mrp_production(osv.osv):
     """
     _name = 'mrp.production'
     _description = 'Production'
-    _date_name  = 'date_planned'    
+    _date_name  = 'date_planned'
+    _log_create = True
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
         """ Calculates total hours and total no. of cycles for a production order.
@@ -647,6 +648,9 @@ class mrp_production(osv.osv):
         """ Changes the production state to Ready and location id of stock move.
         @return: True
         """
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Manufacturing Order ') + " '" + name + "' "+ _("is ready to produce.")
+            self.log(cr, uid, id, message)
         move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state': 'ready'})
         for production in self.browse(cr, uid, ids):

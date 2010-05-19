@@ -217,6 +217,7 @@ class account_invoice(osv.osv):
     _name = "account.invoice"
     _description = 'Invoice'
     _order = "number"
+    _log_create = True
     _columns = {
         'name': fields.char('Description', size=64, select=True,readonly=True, states={'draft':[('readonly',False)]}),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that produced this invoice."),
@@ -334,6 +335,13 @@ class account_invoice(osv.osv):
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
                 raise orm.except_orm(_('UnknownError'), str(e))
+
+    def confirm_paid(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'paid'}, context=context)
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Document ') + " '" + name + "' "+ _("has been paid.")
+            self.log(cr, uid, id, message)
+        return True
 
     def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])

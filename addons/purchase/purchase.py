@@ -211,6 +211,7 @@ class purchase_order(osv.osv):
     }
     _name = "purchase.order"
     _description = "Purchase Order"
+    _log_create = True
     _order = "name desc"
 
     def unlink(self, cr, uid, ids, context=None):
