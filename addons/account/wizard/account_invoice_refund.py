@@ -21,6 +21,7 @@
 from osv import fields, osv
 from tools.translate import _
 import netsvc
+import time
 
 class account_invoice_refund(osv.osv_memory):
 
@@ -35,7 +36,7 @@ class account_invoice_refund(osv.osv_memory):
     }
     
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
     }
 
     def compute_refund(self, cr, uid, ids, mode, context=None):
