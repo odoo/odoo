@@ -18,16 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import fields, osv
 import tools
+from osv import fields, osv
 
 class campaign_analysis(osv.osv): #{{{
     _name = "campaign.analysis"
     _description = "Campaign Analysis"
     _auto = False
     _rec_name = 'date'
-  
     
     def _total_cost(self, cr, uid, ids, field_name, arg, context={}):
 
@@ -58,14 +56,15 @@ class campaign_analysis(osv.osv): #{{{
                                                                  readonly=True),
         'segment_id': fields.many2one('marketing.campaign.segment', 'Segment', 
                                                                 readonly=True),
-        'partner_id' : fields.many2one('res.partner', 'Partner', readonly=True),
-        'country_id' : fields.related('partner_id','address', 'country_id', type='many2one', 
-                                      relation='res.country', string='Country'),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
+        'country_id': fields.related('partner_id','address', 'country_id',
+        							 type='many2one', relation='res.country',
+        							 				  string='Country'),
 #        'case_id': fields.many2one('crm.lead', 'Opportunity', readonly=True),
 #       'count' : fields.integer('Count', readonly=True),
-        'total_cost' : fields.function(_total_cost, string='Cost', method=True, 
+        'total_cost': fields.function(_total_cost, string='Cost', method=True, 
                                                                 type="float"),
-        'revenue' : fields.float('Revenue',readonly=True),
+        'revenue': fields.float('Revenue',readonly=True),
 
     }
     

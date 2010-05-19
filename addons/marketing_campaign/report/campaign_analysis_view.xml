@@ -6,19 +6,19 @@
         <field name="model">campaign.analysis</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Marketing Reports">
+        	<tree string="Marketing Reports">
 				<field name="month"/>
-                <field name="year"/>
+		        <field name="year"/>
 				<field name="date"/>
-            	<field name="campaign_id"/>
-            	<field name="activity_id"/>
-                <field name="segment_id"/>
-                <field name="partner_id"/>
-                <field name="country_id" />
-                <!--field name="case_id"/-->
-                <!--field name="count"/-->
-                <field name="total_cost"/>
-                <field name="revenue"/>
+		    	<field name="campaign_id"/>
+		    	<field name="activity_id"/>
+		        <field name="segment_id"/>
+		        <field name="partner_id"/>
+		        <field name="country_id" />
+		        <!--field name="case_id"/-->
+		        <!--field name="count"/-->
+		        <field name="total_cost"/>
+		        <field name="revenue"/>
             </tree>
         </field>
     </record>
@@ -29,15 +29,17 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Marketing Reports">
-            	<group>
-	                <filter icon="terp-account"
+           		<group>
+	            	<filter icon="terp-account"
 	                    	string="This Year"
 	                    	domain="[('year','=',time.strftime('%%Y'))]"/>
 	                <filter icon="terp-account"
 	                    	string="This Month"
 	                    	domain="[('month','=',time.strftime('%%m'))]"/>
 	                <separator orientation="vertical"/>
-		            <filter string="Date" icon="terp-account" domain="[('date','=',time.strftime('%%Y/%%m/%%d'))]"/>
+		            <filter icon="terp-account" 
+		            		string="Date" 
+		            		domain="[('date','=',time.strftime('%%Y/%%m/%%d'))]"/>
 	                <separator orientation="vertical"/>
 					<field name="campaign_id"/>
 					<field name="activity_id"/>
@@ -60,7 +62,6 @@
     </record>
 
     <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="menu_marketing" sequence="40"/>
-
 		
 	</data>
 </openerp>
