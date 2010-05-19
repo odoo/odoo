@@ -124,8 +124,8 @@ class account_account_type(osv.osv):
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
         'report_type':fields.selection([
             ('none','/'),
-            ('income','Profilt & Loss (Income Accounts)'),
-            ('expense','Profilt & Loss (Expense Accounts)'),
+            ('income','Profit & Loss (Income Accounts)'),
+            ('expense','Profit & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
         ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
