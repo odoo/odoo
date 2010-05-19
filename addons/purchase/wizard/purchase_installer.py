@@ -25,7 +25,7 @@ class purchase_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     _columns = {
-        'purchase_requisition':fields.boolean('Purchase Requisition'),
+        'purchase_requisition':fields.boolean('Purchase Requisition',help="Manage your Purchase Requisition and regroup and  allow you to easily keep track and order all your purchase orders."),
         }
 purchase_installer()
 
