@@ -23,12 +23,7 @@ import time
 import decimal_precision as dp
 
 import netsvc
-<<<<<<< TREE
-from osv import fields, osv
-from osv.orm import except_orm
-=======
 from osv import fields, osv, orm
->>>>>>> MERGE-SOURCE
 import pooler
 from tools import config
 from tools.translate import _
@@ -337,11 +332,7 @@ class account_invoice(osv.osv):
                 raise orm.except_orm(_('Configuration Error!'),
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
-<<<<<<< TREE
-                raise except_orm(_('UnknownError'), str(e))
-=======
-                raise
->>>>>>> MERGE-SOURCE
+                raise orm.except_orm(_('UnknownError'), str(e))
 
     def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])
