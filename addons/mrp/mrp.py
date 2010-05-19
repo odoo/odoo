@@ -417,7 +417,7 @@ class mrp_production(osv.osv):
     Production Orders / Manufacturing Orders
     """
     _name = 'mrp.production'
-    _description = 'Production'
+    _description = 'Manufacturing Order'
     _date_name  = 'date_planned'
     _log_create = True
 
