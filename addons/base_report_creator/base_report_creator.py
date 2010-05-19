@@ -116,9 +116,11 @@ class report_creator(osv.osv):
             
         arch = '<?xml version="1.0" encoding="utf-8"?>\n'
         if view_type == 'graph':
-            arch  += '<graph string="%s" type="%s" orientation="%s">' % (report.name, report.view_graph_type, report.view_graph_orientation)
+            orientation_eval = {'horz':'horizontal','vert' :'vertical'}
+            orientation = eval(report.view_graph_orientation,orientation_eval)
+            arch +='<graph string="%s" type="%s" orientation="%s">' % (report.name, report.view_graph_type, orientation)
+            i = 0
             for val in ('x','y'):
-                i = 0
                 for f in report.field_ids:
                     if f.graph_mode == val:
                         if f.field_id.model:
@@ -372,9 +374,10 @@ class report_creator(osv.osv):
                 t = self.pool.get(f.field_id.model_id.model)._table
                 if f.group_method == 'group':
                     fields.append('\t'+t+'.'+f.field_id.name+' as field'+str(i))
+                    groupby.append(t+'.'+f.field_id.name)
                 else:
                     fields.append('\t'+f.group_method+'('+t+'.'+f.field_id.name+')'+' as field'+str(i))
-                groupby.append(t+'.'+f.field_id.name)
+                    
                 i += 1
             models = self._path_get(cr, uid, obj.model_ids, obj.filter_ids)
             check = self._id_get(cr, uid, ids[0], context)
