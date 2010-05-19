@@ -508,62 +508,6 @@ def _links_get(self, cr, uid, context=None):
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
-
-class crm_case_log(osv.osv):
-    """ Case Communication History """
-    _name = "crm.case.log"
-    _description = "Case Communication History"
-
-    _order = "id desc"
-    _columns = {
-        'name': fields.char('Status', size=64), 
-        'date': fields.datetime('Date'), 
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
-        'model_id': fields.many2one('ir.model', "Model"), 
-        'res_id': fields.integer('Resource ID'), 
-    }
-
-    _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
-    }
-
-crm_case_log()
-
-class crm_case_history(osv.osv):
-    """Case history"""
-
-    _name = "crm.case.history"
-    _description = "Case history"
-    _order = "id desc"
-    _inherits = {'crm.case.log': "log_id"}
-
-    def _note_get(self, cursor, user, ids, name, arg, context=None):
-        """ Gives case History Description
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case History’s IDs
-        @param context: A standard dictionary for contextual values
-        """
-        res = {}
-        for hist in self.browse(cursor, user, ids, context or {}):
-            res[hist.id] = (hist.email_from or '/') + ' (' + str(hist.date) + ')\n'
-            res[hist.id] += (hist.description or '')
-        return res
-
-    _columns = {
-        'description': fields.text('Description'),
-        'note': fields.function(_note_get, method=True, string="Description", type="text"),
-        'email_to': fields.char('Email To', size=84),
-        'email_from' : fields.char('Email From', size=84),
-        'log_id': fields.many2one('crm.case.log','Log',ondelete='cascade'),
-        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True),
-    }
-
-crm_case_history()
-
-
 class users(osv.osv):
     _inherit = 'res.users'
     _description = "Users"
