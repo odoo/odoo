@@ -20,11 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-import wizard
-import netsvc
-import ir
-import pooler
+from tools.translate import _
 
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
@@ -110,6 +106,8 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
                 sales_order_obj.write(cr,uid,[line.order_id.id],{'state' : 'progress'})
 
+        if not invoices:
+            raise osv.except_osv(_('Warning'),_('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
         for result in invoices.values():
             order = result[0][0].order_id
             il = map(lambda x: x[1], result)

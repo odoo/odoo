@@ -22,9 +22,6 @@ from osv import fields, osv
 from service import web_services
 from tools.translate import _
 import ir
-import netsvc
-import pooler
-import wizard
 
 
 class sale_advance_payment_inv(osv.osv_memory):
