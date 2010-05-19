@@ -188,17 +188,12 @@
                     <separator orientation="vertical"/>
                     <group>
                         <field name="name" select='1' string="Subject"/>
-                        <field name="user_id" widget="selection"/>
+                        <field name="user_id" select="1" widget="selection"/>
                         <field name="state" select="1">
                             <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" name="current_bugs"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
                         </field>
-                        <field name="project_id" select="1" widget="selection" string="Project">
-                            <filter icon="terp-crm"
-                                domain="[('project_id','=',context.get('project_id',False))]"
-                                help="My Project"
-                                />
-                        </field>
+                        <field name="project_id" select="1" widget="selection" string="Project"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="16">
@@ -292,12 +287,8 @@
                             <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
-                        <field name="project_id" select="1" widget="selection" string="Project">
-                            <filter icon="terp-crm"
-                                domain="[('project_id','=',context.get('project_id',False))]"
-                                help="My Project"
-                                />
-                        </field>
+                        <field name="project_id" select="1" widget="selection" string="Project"/>
+
                     </group>
                 </search>
             </field>

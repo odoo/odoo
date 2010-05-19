@@ -435,9 +435,6 @@
             <field name="arch" type="xml">
                 <search string="Search Case">
                     <group col='6' colspan='4'>
-                        <filter icon="terp-partner" string="My Cases"
-                            domain="[('user_id','=',uid)]" separator="1"
-                            default="1" help="Cases Related to Current User" />
                         <field name="state" select="1">
                             <filter icon="gtk-new"
                                 domain="[('state','in',('draft', 'open'))]"
@@ -465,6 +462,7 @@
             <field name="res_model">mailgate.thread</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_tree-view"/>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
 
@@ -522,10 +520,6 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
                 <search string="Search Histories">
-                       <filter icon="terp-crm" string="My Histories"
-                           domain="[('user_id','=',uid)]"
-                           help="My Histories" />
-                       <separator orientation="vertical"/>
                      <group col="6" colspan="2">
                        <field name="date" select="1"/>
                     <field name="user_id" select="1" widget="selection"/>
@@ -545,6 +539,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="crm_case_history_tree-view"/>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="crm_case_history_search"/>
         </record>
 

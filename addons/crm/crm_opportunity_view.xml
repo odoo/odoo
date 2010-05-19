@@ -291,20 +291,16 @@
                 <field name="name" string="Opportunity"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
-                        domain="[('user_id','=',uid)]"
-                        help="My Opportunities" default="1"
-                    />
-                    <filter icon="terp-partner"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Opportunities" />
                 </field>
                 <field name="section_id"
                     default="context.get('section_id', False)" select="1"
                     widget="selection">
-                    <filter icon="terp-crm"
-                        domain="[('section_id','=',context.get('section_id',False))]"
-                        help="My section" />
-                </field>
+	                <filter icon="terp-crm"
+	                        domain="[('section_id','=',context.get('section_id',False))]"
+	                        help="My section" />
+	                </field>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="16">
                     <filter string="Stage" icon="terp-crm" domain="[]"
