@@ -328,14 +328,11 @@ class mrp_procurement(osv.osv):
                         'product_qty': procurement.product_qty,
                         'product_uom': procurement.product_uom.id,
                         'date_planned': procurement.date_planned,
-                        'state': 'confirmed',
+                        'state': 'draft',
                         'company_id': procurement.company_id.id,
                     })
+                    move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
-                else:
-                    # TODO: check this
-                    if procurement.procure_method == 'make_to_stock' and procurement.move_id.state in ('waiting','draft'):
-                        id = move_obj.write(cr, uid, [procurement.move_id.id], {'state':'confirmed'})
         self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
         return True
 

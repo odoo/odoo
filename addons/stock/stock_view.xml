@@ -69,7 +69,7 @@
             <field name="model">stock.inventory</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Lot Inventory" colors="grey:state in ('done', 'cancel')">
+                <tree string="Lot Inventory" colors="grey:state in ('cancel')">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="state"/>
@@ -307,7 +307,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
+                <tree colors="grey:state in ('cancel')" string="Moves">
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
@@ -329,7 +329,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
+                <tree colors="grey:state in ('cancel')" string="Moves">
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
@@ -455,7 +455,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal';black:usage not in ('view','internal')">
+                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal'">
                     <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="stock_real" invisible="'product_id' not in context"/>
@@ -580,7 +580,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
@@ -611,7 +611,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
-                                <tree colors="grey:state in ('done','cancel');black:state not in ('cancel','done')" string="Stock Moves">
+                                <tree colors="grey:state in ('cancel')" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -730,7 +730,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="address_id" select="1"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -761,7 +761,7 @@
                         <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
-                                <tree colors="grey:state in ('done','cancel');black:state not in ('cancel','done')" string="Stock Moves">
+                                <tree colors="grey:state in ('cancel')" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -907,7 +907,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="address_id"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -939,7 +939,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
-                                <tree colors="grey:state in ('done','cancel');black:state not in ('cancel','done')" string="Stock Moves">
+                                <tree colors="grey:state in ('cancel')" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1082,7 +1082,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="address_id"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -1116,7 +1116,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}">
-                                <tree colors="grey:state in ('done','cancel');black:state not in ('cancel','done')" string="Stock Moves">
+                                <tree colors="grey:state in ('cancel')" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" string="Product Unit of Measure"/>
@@ -1298,7 +1298,7 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('done', 'cancel');black:state not in ('done', 'cancel');red:date_planned > current_date" string="Moves">
+                <tree colors="grey:state in ('cancel');red:date_planned > current_date" string="Moves">
                     <field name="name" string="Move Name"/>
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1422,7 +1422,7 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel','done');black:state not in ('cancel','done')" string="Moves">
+                <tree colors="grey:state in ('cancel')" string="Moves">
                     <field name="picking_id" string="Reference"/>
                     <field name="origin" string="Latest Procurement"/>
                     <field name="partner_id" string="Supplier"/>

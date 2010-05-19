@@ -314,7 +314,6 @@ class mrp_bom(osv.osv):
                     d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
                     mult = (d + (m and 1.0 or 0.0))
                     cycle = mult * wc_use.cycle_nbr
-                    print mult, wc_use.hour_nbr, wc.time_start, wc.time_stop, cycle
                     result2.append({
                         'name': bom.routing_id.name,
                         'workcenter_id': wc.id,
