@@ -42,8 +42,8 @@ class account_analytic_line(osv.osv):
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'company_id': lambda self,cr,uid,context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context),
-    }
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
+                }
     _order = 'date'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
