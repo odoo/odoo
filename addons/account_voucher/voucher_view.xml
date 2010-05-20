@@ -7,12 +7,15 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Vouchers">
+                    <field name="date"/>
+                    <field name="number"/>
                     <field name="name"/>
                     <field name="journal_id"/>
+                    <field name="type" invisible=" not context.get('set_visible',True)"/>
                     <field name="account_id" />
-                    <field name="amount"/>
-                    <field name="date"/>
+                    <field name="amount" sum="Total Amount"/>
                     <field name="period_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -24,7 +27,7 @@
             <field name="arch" type="xml">
                 <form string="Voucher">
                     <group col="6" colspan="4">
-                        <field name="name" select="1" colspan="4"/>
+                        <field name="name" colspan="4"/>
                         <field name="journal_id" select="1" on_change="onchange_journal(journal_id,type)"/>
                         <field name="account_id" on_change="onchange_account(account_id)"/>
                         <field name="type" on_change="onchange_journal(journal_id,type)"/>
@@ -69,7 +72,37 @@
                 </form>
             </field>
         </record>
-
+        
+        <record id="view_account_move_filter" model="ir.ui.view">
+            <field name="name">account.voucher.select</field>
+            <field name="model">account.voucher</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Vouchers">
+                    <group col='8' colspan='4'>
+                        <filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                        <filter icon="terp-account" string="Proforma" domain="[('state','=','proforma')]" help="Proforma Vouchers"/>
+                        <filter icon="terp-account" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                        <filter icon="terp-account" string="Cancel" domain="[('state','=','cancel')]" help="Cancel Vouchers"/>
+                        <separator orientation="vertical"/>
+                        <field name="date" select='1'/>
+                        <field name="name" select='1'/>
+                        <field name="number" select='1'/>
+                        <field name="journal_id" select='1'/>
+                        <field name="partner_id" select='1'/>
+                        <field name="period_id" select='1'/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="12" col="10">
+                        <filter string="Journal" icon="terp-account" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-account" domain="[]" context="{'group_by':'period_id'}"/>
+                        <filter string="Type" icon="terp-account" domain="[]" context="{'group_by':'type', 'set_visible':True}"/>
+                        <filter string="States" icon="terp-account" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
         <record model="ir.actions.act_window" id="action_voucher_list">
             <field name="name">Vouchers</field>
             <field name="res_model">account.voucher</field>
