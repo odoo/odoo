@@ -111,11 +111,11 @@ class purchase_requisition_partner(osv.osv_memory):
                         })   
                     list_line.append(purchase_order_line)
                 purchase_id = order_obj.create(cr, uid, {
-                            'origin': tender.name,
+                            'origin': tender.purchase_ids and tender.purchase_ids[0].origin or tender.name,
                             'partner_id': partner_id,
                             'partner_address_id': address_id,
                             'pricelist_id': pricelist_id,
-                            'location_id': line.product_id.product_tmpl_id.property_stock_production.id,                            
+                            'location_id': tender.purchase_ids and tender.purchase_ids[0].location_id.id or line.product_id.product_tmpl_id.property_stock_production.id,                        
                             'company_id': tender.company_id.id,
                             'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
                             'requisition_id':tender.id,

@@ -1,0 +1,384 @@
+-
+  In order to test the sale module in the Open-ERP, I need to configure details regarding product & customer.
+-
+  I am going to sell my Mobile products to the customer with name Cleartrail
+- 
+  I create View Account Type.
+- 
+  !record {model: account.account.type, id: account_account_type_view0}:
+    close_method: none
+    code: View
+    name: View
+    sign: 1
+- 
+  I create Income Account Type.
+- 
+  !record {model: account.account.type, id: account_account_type_income0}:
+    close_method: unreconciled
+    code: Income
+    name: Income
+    sign: 1
+- 
+  I create Expense Account Type.
+- 
+  !record {model: account.account.type, id: account_account_type_expense0}:
+    close_method: unreconciled
+    code: Expense
+    name: Expense
+    sign: 1
+- 
+  I create Cash Account Type.
+- 
+  !record {model: account.account.type, id: account_account_type_cash0}:
+    close_method: balance
+    code: Cash
+    name: Cash
+    sign: 1
+- 
+  I create Minimal Chart Account.
+- 
+  !record {model: account.account, id: account_account_minimalchart0}:
+    code: '0'
+    company_id: base.main_company
+    currency_mode: current
+    name: Minimal Chart
+    parent_left: 1
+    parent_right: 12
+    type: view
+    user_type: account_account_type_view0
+- 
+  I create Payable Account.
+- 
+  !record {model: account.account, id: account_account_payable1}:
+    code: AP
+    company_id: base.main_company
+    currency_mode: current
+    name: Payable
+    parent_id: account_account_minimalchart0
+    parent_left: 2
+    parent_right: 3
+    reconcile: true
+    type: payable
+    user_type: account_account_type_expense0
+- 
+  I create Receivable Account.
+- 
+  !record {model: account.account, id: account_account_receivable0}:
+    code: AR
+    company_id: base.main_company
+    currency_mode: current
+    name: Receivable
+    parent_id: account_account_minimalchart0
+    parent_left: 4
+    parent_right: 5
+    reconcile: true
+    type: receivable
+    user_type: account_account_type_income0
+- 
+  I create Cash Account.
+- 
+  !record {model: account.account, id: account_account_cash0}:
+    code: C
+    company_id: base.main_company
+    currency_mode: current
+    name: Cash
+    parent_id: account_account_minimalchart0
+    parent_left: 6
+    parent_right: 7
+    type: other
+    user_type: account_account_type_cash0
+- 
+  I create Purchases Account.
+- 
+  !record {model: account.account, id: account_account_purchases0}:
+    code: P
+    company_id: base.main_company
+    currency_mode: current
+    name: Purchases
+    parent_id: account_account_minimalchart0
+    parent_left: 8
+    parent_right: 9
+    type: other
+    user_type: account_account_type_expense0
+- 
+  I create Sales Account.
+- 
+  !record {model: account.account, id: account_account_sales0}:
+    code: S
+    company_id: base.main_company
+    currency_mode: current
+    name: Sales
+    parent_id: account_account_minimalchart0
+    parent_left: 10
+    parent_right: 11
+    type: other
+    user_type: account_account_type_income0
+- 
+  I create Purchase Journal.
+- 
+  !record {model: account.journal, id: account_journal_purchasejournal0}:
+    code: PUJ
+    company_id: base.main_company
+    default_credit_account_id: account_account_purchases0
+    default_debit_account_id: account_account_purchases0
+    name: Purchase Journal
+    sequence_id: account.sequence_purchase_journal
+    type: purchase
+    view_id: account.account_journal_view
+- 
+  I create Sale Journal.
+- 
+  !record {model: account.journal, id: account_journal_salejournal0}:
+    code: SAJ
+    company_id: base.main_company
+    default_credit_account_id: account_account_sales0
+    default_debit_account_id: account_account_sales0
+    name: Sale Journal
+    sequence_id: account.sequence_sale_journal
+    type: sale
+    view_id: account.account_journal_view
+- 
+  I create Bank Journal.
+- 
+  !record {model: account.journal, id: account_journal_bankjournal0}:
+    code: BNK
+    company_id: base.main_company
+    default_credit_account_id: account_account_cash0
+    default_debit_account_id: account_account_cash0
+    name: Bank Journal
+    sequence_id: account.sequence_journal
+    type: cash
+    view_id: account.account_journal_bank_view
+- 
+  I create ir.property for account payable.
+- 
+  !record {model: ir.property, id: ir_property_propertyaccountexpensecateg0}:
+    company_id: base.main_company
+    fields_id: account.field_res_partner_property_account_payable
+    name: property_account_expense_categ
+    value_reference: account.account,5
+- 
+  I create ir.property for account receivable.
+- 
+  !record {model: ir.property, id: ir_property_propertyaccountincomecateg0}:
+    company_id: base.main_company
+    fields_id: account.field_res_partner_property_account_receivable
+    name: property_account_income_categ
+    value_reference: account.account,6
+- 
+  I create Partner category Customers.
+- 
+  !record {model: res.partner.category, id: res_partner_category_customers0}:
+    name: Customers
+-
+  I create Cleartrail Customer.
+- 
+  !record {model: res.partner, id: res_partner_cleartrail0}:
+    category_id:
+      - res_partner_category_customers0
+    name: Cleartrail
+- 
+  I create contact address for Cleartrail.
+- 
+  !record {model: res.partner.address, id: res_partner_address_1}:
+    partner_id: res_partner_cleartrail0
+    street: onam plaza, 14 B palasia A B Road
+    type: contact
+- 
+  I create invoice address for Cleartrail.
+- 
+  !record {model: res.partner.address, id: res_partner_address_2}:
+    partner_id: res_partner_cleartrail0
+    street: sarda house 24 B palasia, A B Road
+    type: invoice
+- 
+  I create delivery address for Cleartrail.
+- 
+  !record {model: res.partner.address, id: res_partner_address_3}:
+    partner_id: res_partner_cleartrail0
+    street: sangam house 15 B palasia, A B Road
+    type: delivery
+-
+  Customer Cleartrail has specific instrument requirement regarding the stockable products.
+- 
+  I define product category Mobile Products Sellable.
+- 
+  !record {model: product.category, id: product_category_allproductssellable0}:
+    name: Mobile Products Sellable
+- 
+  I define product category Mobile Services. 
+- 
+  !record {model: product.category, id: product_category_services0}:
+    name: Mobile Services
+- 
+  I define LG Viewty Smart product template.
+- 
+  !record {model: product.template, id: product_template_newchocolateslidermobile0}:
+    categ_id: product_category_allproductssellable0
+    cost_method: standard
+    list_price: 200.0
+    mes_type: fixed
+    name: New Chocolate Slider Mobile
+    procure_method: make_to_order
+    standard_price: 189.0
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+- 
+  I define LG Viewty Smart product.
+- 
+  !record {model: product.product, id: product_product_newchocolateslidermobile0}:
+    categ_id: product_category_allproductssellable0
+    cost_method: standard
+    list_price: 200.0
+    mes_type: fixed
+    name: New Chocolate Slider Mobile
+    pricelist_purchase: 'Default Purchase Pricelist (0.00) : 189.00\n'
+    pricelist_sale: 'Public Pricelist (0.00) : 200.00\n'
+    procure_method: make_to_order
+    property_account_expense: sale.account_account_payable1
+    property_account_income: sale.account_account_receivable0
+    seller_delay: '1'
+    standard_price: 189.0
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+- 
+  I create a Sale Order for LG Viewty Smart for qty 500 having order_policy manual.
+-
+  !record {model: sale.order, id: sale_order_so0}:
+    date_order: '2010-05-12'
+    invoice_quantity: order
+    name: Test_SO002
+    order_line:
+      - name: New Chocolate Slider Mobile
+        price_unit: 200.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 500.0
+        state: draft
+        delay: 7.0
+        product_id: sale.product_product_newchocolateslidermobile0
+        product_uos_qty: 500.0
+        type: make_to_order
+    order_policy: manual
+    partner_id: sale.res_partner_cleartrail0
+    partner_invoice_id: sale.res_partner_address_2
+    partner_order_id: sale.res_partner_address_1
+    partner_shipping_id: sale.res_partner_address_3
+    picking_policy: direct
+    pricelist_id: product.list0
+    shop_id: sale.shop
+- 
+  I confirm the Sale Order.
+- 
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+-
+  I click on Create Invoice button to create the invoice.
+- 
+  !workflow {model: sale.order, action: manual_invoice, ref: sale_order_so0}
+-
+  I verify whether the invoice has been generated for SO
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    assert so.invoice_ids, "Invoices has not been generated for sale_order_so0"
+- 
+  I open the Invoice for the SO.
+- 
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")  
+    invoice_ids = so.invoice_ids
+    for invoice in invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr) 
+-
+  Creating a account invoice pay entry.
+- 
+  !record {model: account.invoice.pay, id: account_invoice_pay_tst0}:
+    amount: 100000.0
+    date: '2010-05-10'
+    journal_id: sale.account_journal_bankjournal0
+    name: test
+    period_id: account.period_5
+- 
+  I pay the invoice.
+- 
+  !python {model: account.invoice.pay}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))  
+    self.wo_check(cr, uid, [ref("account_invoice_pay_tst0")], {"lang": "en_US", "tz":
+      False, "active_model": 'account.invoice', "active_ids": [so.invoice_ids[0].id], "type":
+      "out_invoice", "active_id": so.invoice_ids[0].id})
+    
+    
+- 
+  Creating an account invoice pay writeoff entry.
+- 
+  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_0}:
+    analytic_id: account.analytic_customers
+    comment: Write-Off
+    writeoff_acc_id: account.a_sale
+    writeoff_journal_id: sale.account_journal_bankjournal0
+    
+    
+- 
+  Pay and Reconcile the Invoice.
+- 
+  !python {model: account.invoice.pay.writeoff}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))   
+    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
+      {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
+      [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id, })
+-
+  I verify the invoice are in paid state or not. 
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    invoice_ids = so.invoice_ids
+    for invoice in invoice_ids:
+        assert (invoice.state) =='paid', "Invoice for SO is not in done state."
+- 
+  I verify the picking associated with the sale order sale_order_so0.
+- 
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    assert so.picking_ids,"Picking has not been generated for sale_order_so0"
+-
+  Products are delivered to the Cleartrail Customer.
+- 
+  !python {model: stock.picking }: |
+   import time
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
+   if picking_id:
+      pick=self.browse(cr,uid,picking_id[0])
+      pick.force_assign(cr, uid)
+      partial_datas = {
+           'partner_id':pick.address_id.partner_id.id,
+            'address_id': pick.address_id.id,
+            'delivery_date' : time.strftime('%Y-%m-%d'),
+           }
+      move = pick.move_lines[0]
+      partial_datas['move%s'%(move.id)]= {
+          'product_id': move.product_id.id,
+          'product_qty': move.product_qty,
+          'product_uom': move.product_uom.id,
+      } 
+      self.do_partial(cr, uid, [pick.id],partial_datas)
+-
+  I verify that picking order is in done state.
+-
+  !python {model: stock.picking }: |
+   sale_order_obj = self.pool.get('sale.order')
+   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
+   if picking_id:
+     pick = self.browse(cr,uid,picking_id[0])
+     assert (pick.state) =='done', "Picking for SO is not in done state." 
