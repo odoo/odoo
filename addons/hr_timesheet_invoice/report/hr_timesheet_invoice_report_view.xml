@@ -482,23 +482,37 @@
 
         <record model="ir.actions.act_window" id="action_random_timesheet_lines_board">
             <field name="type">ir.actions.act_window</field>
-            <field name="name">Timesheet Lines</field>
+            <field name="name">Working Hours</field>
             <field name="res_model">random.timesheet.lines</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_user_id':uid }</field>
             <field name="view_id" ref="view_random_timesheet_lines_tree"/>
+            <field name="search_view_id" ref="view_random_timesheet_lines_search"/>
         </record>
          <!--Time Tracking menu in project Management-->
-         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
          <menuitem
-             id="base.menu_project_management_time_tracking"
-             name="Time Tracking"
-             parent="base.menu_main_pm" sequence="3"/>
-        <menuitem action="action_random_timesheet_lines_board" id="menu_project_management_timesheet_lines_board" parent="base.menu_project_management_time_tracking" sequence="7"/>
+                icon="terp-project"
+                id="base.menu_main_pm"
+                name="Project Management"
+                sequence="1"/>
+         <menuitem
+                id="base.menu_project_management_time_tracking"
+                name="Time Tracking"
+                parent="base.menu_main_pm"
+                sequence="3"/>
+        <menuitem
+                action="action_random_timesheet_lines_board"
+                id="menu_project_management_timesheet_lines_board"
+                parent="base.menu_project_management_time_tracking"
+                sequence="7"/>
       <!--<menuitem action="action_random_timesheet_lines_board" id="menu_hr_action_random_timesheet_lines_board"
             parent="hr_attendance.menu_hr_time_tracking" groups="hr.group_hr_manager"/>-->
-       <menuitem action="action_random_timesheet_lines_board" id="menu_hr_action_random_timesheet_lines_board" name="Timesheets Lines"
-            parent="hr_attendance.menu_hr_time_tracking" groups="hr.group_hr_manager"/>
+        <menuitem
+                action="action_random_timesheet_lines_board"
+                id="menu_hr_action_random_timesheet_lines_board"
+                name="Working Hours"
+                parent="hr_attendance.menu_hr_time_tracking"
+                groups="hr.group_hr_manager"/>
     </data>
 </openerp>
