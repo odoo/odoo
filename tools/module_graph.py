@@ -23,6 +23,7 @@
 # TODO handle the case of zip modules
 
 import os
+import optparse
 import sys
 import glob
 
@@ -37,29 +38,48 @@ def load_information_from_description_file(module):
 
     return {}
 
-if len(sys.argv) == 2 and (sys.argv[1] in ['-h', '--help']):
-    print >>sys.stderr, 'Usage: module_graph.py [module1 module2 module3]\n\tWhen no module is specified, all modules in current directory are used'
-    sys.exit(1)
+def get_valid_path(paths, module):
+    for path in paths:
+        full = os.path.join(path, module)
+        if os.path.exists(full):
+            return full
+    return None
 
-modules = sys.argv[1:]
-if not len(modules):
-    modules = map(os.path.dirname, glob.glob(os.path.join('*', '__openerp__.py')))
-    modules += map(os.path.dirname, glob.glob(os.path.join('*', '__terp__.py')))
+parser = optparse.OptionParser(usage="%prog [options] [module1 [module2 ...]]")
+parser.add_option("-p", "--addons-path", dest="path", help="addons directory", action="append")
+(opt, args) = parser.parse_args()
 
-done = []
+modules = []
+if not opt.path:
+    opt.path = ["."]
 
+if not args:
+    for path in opt.path:
+        modules += map(os.path.dirname, glob.glob(os.path.join(path, '*', '__openerp__.py')))
+        modules += map(os.path.dirname, glob.glob(os.path.join(path, '*', '__terp__.py')))
+else:
+    for module in args:
+        valid_path = get_valid_path(opt.path, module)
+        if valid_path:
+            modules.append(valid_path)
+
+all_modules = set(map(os.path.basename, modules))
 print 'digraph G {'
 while len(modules):
     f = modules.pop(0)
-    done.append(f)
+    module_name = os.path.basename(f)
+    all_modules.add(module_name)
     info = load_information_from_description_file(f)
     if info.get('installable', True):
-        for name in info['depends']:
-            if name not in done+modules:
-                modules.append(name)
-            if not os.path.exists(name):
-                print '\t%s [color=red]' % (name,)
-            print '\t%s -> %s;' % (f, name)
+        for name in info.get('depends',[]):
+            valid_path = get_valid_path(opt.path, name)
+            if name not in all_modules:
+                if valid_path:
+                    modules.append(valid_path)
+                else:
+                    all_modules.add(name)
+                    print '\t%s [color=red]' % (name,)
+            print '\t%s -> %s;' % (module_name, name)
 print '}'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
