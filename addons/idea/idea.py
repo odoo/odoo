@@ -22,6 +22,7 @@
 from osv import osv
 from osv import fields
 from tools.translate import _
+import time
 
 VoteValues = [('-1', 'Not Voted'), ('0', 'Very Bad'), ('25', 'Bad'), \
               ('50', 'Normal'), ('75', 'Good'), ('100', 'Very Good') ]
@@ -155,7 +156,7 @@ class idea_idea(osv.osv):
         'title': fields.char('Idea Summary', size=64, required=True),
         'description': fields.text('Description', required=True, help='Content of the idea'),
         'comment_ids': fields.one2many('idea.comment', 'idea_id', 'Comments'),
-        'create_date': fields.datetime('Creation date', readonly=True),
+        'created_date': fields.datetime('Creation date', readonly=True),
         'vote_ids': fields.one2many('idea.vote', 'idea_id', 'Vote'),
         'my_vote': fields.function(_vote_read, fnct_inv = _vote_save, string="My Vote", method=True, type="selection", selection=VoteValues),
         'vote_avg': fields.function(_vote_avg_compute, method=True, string="Average Score", type="float"),

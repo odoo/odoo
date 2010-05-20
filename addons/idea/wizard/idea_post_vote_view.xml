@@ -17,11 +17,32 @@
                <separator string="" colspan="4" />
                <group colspan="4" col="6">
                     <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button  icon="gtk-ok" name="do_vote" string="Post Vote" type="object"/>
+                    <button  icon="gtk-ok" name="do_vote" string="Post" type="object"/>
                </group>
            </form>
         </field>
     </record>
+
+
+    <record id="view_idea_select" model="ir.ui.view">
+            <field name="name">idea.select.form</field>
+            <field name="model">idea.select</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Select Idea for Vote">
+                	<group colspan="4" >
+                		 <separator string="Select Idea for Vote" colspan="4"/>
+                		 <field name="idea_id"/>
+                    </group>
+                       	<separator string="" colspan="4"/>
+                    <group colspan="4" col="6">
+                    	<label string="" colspan="2"/>
+                    	<button  icon="gtk-cancel" special="cancel" string="Close"/>
+                    	<button  icon="gtk-go-forward" name="open_vote" string="Next" type="object"/>
+                   </group>
+               </form>
+            </field>
+  		</record>
 
     <!-- Post Idea for vote Action  -->
 

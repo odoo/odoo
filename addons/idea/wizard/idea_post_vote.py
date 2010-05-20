@@ -100,29 +100,31 @@ class idea_post_vote(osv.osv_memory):
         @return: Dictionary {}
         """
         
-        vote_id = context and context.get('active_id', False) or False
+        vote_ids = context and context.get('active_ids', []) or []
         vote_pool = self.pool.get('idea.vote')
         comment_pool = self.pool.get('idea.comment')
-
 
         for do_vote_obj in self.read(cr, uid, ids):
             score = str(do_vote_obj['vote'])
             comment = do_vote_obj.get('note', False)
-            vote = {
-                'idea_id': vote_id, 
-                'user_id': uid, 
-                'score': score
-            }
-            if comment:
-                comment = {
-                    'user_id':uid,
-                    'idea_id':vote_id,
-                    'content': comment,
-                }
-                comment = comment_pool.create(cr, uid, comment)
+            
+            for vote_id in vote_ids:
                 
-            vote = vote_pool.create(cr, uid, vote)
-        return {}
+                vote = {
+                    'idea_id': vote_id, 
+                    'user_id': uid, 
+                    'score': score
+                    }
+                if comment:
+                    comment = {
+                        'user_id':uid,
+                        'idea_id':vote_id,
+                        'content': comment,
+                        }
+                    comment = comment_pool.create(cr, uid, comment)
+                    
+                vote = vote_pool.create(cr, uid, vote)
+            return {}
         
 idea_post_vote()
 

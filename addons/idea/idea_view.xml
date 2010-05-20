@@ -216,9 +216,6 @@
                 <button name="%(idea.action_idea_post_vote)d" icon="gtk-execute" states="open"  type="action" string="Submit Vote"/>
                 <button name="idea_close" string="Accept" states="open" icon="gtk-jump-to"/>
                 <button name="idea_cancel" string="Refuse" states="open"  icon="gtk-cancel"/> 
-                <button name="%(action_idea_post_vote)d"
-	                 	icon="gtk-execute" type="action" states="draft,open"
-	                 	string="Give vote" />
             </group>
         </form>
         </field>
@@ -234,12 +231,12 @@
         <tree string="Ideas">
             <field name="title"/>
             <field name="category_id" />
-            <field name="create_date"/>
+            <field name="created_date"/>
             <field name="vote_avg" widget="progressbar"/>
             <field name="count_comments" />
             <field name="count_votes" />
             <field name="state"/>
-            <button name="%(action_idea_post_vote)d" icon="gtk-execute" type="action" states="draft,open" string="Vote"/>
+            <button name="%(idea.action_idea_post_vote)d" icon="gtk-execute" type="action" states="open" string="Submit Vote"/>
             <button name="idea_close" string="Accept" states="open" icon="gtk-jump-to"/>
             <button name="idea_cancel" string="Refuse" states="open"  icon="gtk-cancel"/> 
         </tree>
