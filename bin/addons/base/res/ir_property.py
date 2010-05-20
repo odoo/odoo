@@ -40,8 +40,7 @@ class ir_property(osv.osv):
         return res
 
     def _models_get(self, cr, uid, context=None):
-        return self._models_field_get(cr, uid, 'model_id.model', 'model_id.name',
-                                     context)
+        return self._models_field_get(cr, uid, 'model', 'name', context)
 
     def _models_get2(self, cr, uid, context=None):
         return self._models_field_get(cr, uid, 'relation', 'relation', context)
