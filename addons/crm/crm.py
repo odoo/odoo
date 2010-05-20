@@ -207,17 +207,6 @@ class crm_case(object):
         mailgate_pool = self.pool.get('mailgate.thread')
         return mailgate_pool._history(cr, uid, cases, keyword, history=history, email=email, details=details, email_from=email_from, message_id=message_id, context=context)
     
-    def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
-        if not context:
-            context = {}
-        context['state_to'] = state_to
-        rule_obj = self.pool.get('base.action.rule')
-        model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('name','=',model_ids[0])])
-        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
-
-
     def case_open(self, cr, uid, ids, *args):
         """Opens Case
         @param self: The object pointer

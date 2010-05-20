@@ -40,18 +40,18 @@ class base_action_rule(osv.osv):
     _description = 'Action Rules'
     
     _columns = {
-        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'trg_max_history': fields.integer('Maximum Communication History'),
-        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),
-        'regex_history' : fields.char('Regular Expression on Case History', size=128),
-        'act_section_id': fields.many2one('crm.case.section', 'Set Team to'),
-        'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
-        'act_mail_to_partner': fields.boolean('Mail to partner',help="Check \
-this if you want the rule to send an email to the partner."),
+        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'), 
+        'trg_max_history': fields.integer('Maximum Communication History'), 
+        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'), 
+        'regex_history' : fields.char('Regular Expression on Case History', size=128), 
+        'act_section_id': fields.many2one('crm.case.section', 'Set Team to'), 
+        'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'), 
+        'act_mail_to_partner': fields.boolean('Mail to Partner', help="Check \
+this if you want the rule to send an email to the partner."), 
     }
     
 
-    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from',False), context={}):
+    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context={}):
         body = self.format_mail(obj, body)
         if not emailfrom:
             if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and obj.user_id.address_id.email:
@@ -64,7 +64,7 @@ this if you want the rule to send an email to the partner."),
         else:
             reply_to = emailfrom
         if not emailfrom:
-            raise osv.except_osv(_('Error!'),
+            raise osv.except_osv(_('Error!'), 
                     _("No E-Mail ID Found for your Company address!"))
         return tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, openobject_id=str(obj.id))
     
@@ -139,7 +139,7 @@ this if you want the rule to send an email to the partner."),
         @param context: A standard dictionary for contextual values """
 
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
-        return res + [('escalate','Escalate')] + crm.AVAILABLE_STATES
+        return res + [('escalate', 'Escalate')] + crm.AVAILABLE_STATES
 
     def priority_get(self, cr, uid, context={}):
 
