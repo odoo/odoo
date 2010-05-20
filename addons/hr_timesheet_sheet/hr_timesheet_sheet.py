@@ -383,7 +383,7 @@ class hr_timesheet_line(osv.osv):
                 res[line_id] = False
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args, context):
+    def _sheet_search(self, cursor, user, obj, name, args, context=None):
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -501,7 +501,7 @@ class hr_attendance(osv.osv):
                 res[line_id] = False
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args, context={}):
+    def _sheet_search(self, cursor, user, obj, name, args, context=None):
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -600,7 +600,7 @@ hr_attendance()
 
 class hr_timesheet_sheet_sheet_day(osv.osv):
     _name = "hr_timesheet_sheet.sheet.day"
-    _description = "Timesheets by period"
+    _description = "Timesheets by Period"
     _auto = False
     _order='name'
     _columns = {
@@ -681,7 +681,7 @@ hr_timesheet_sheet_sheet_day()
 
 class hr_timesheet_sheet_sheet_account(osv.osv):
     _name = "hr_timesheet_sheet.sheet.account"
-    _description = "Timesheets by period"
+    _description = "Timesheets by Period"
     _auto = False
     _order='name'
     _columns = {

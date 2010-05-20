@@ -484,6 +484,8 @@
 
         <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
 
+		<act_window domain="[('partner_id', '=', partner_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]" id="act_account_invoice_account_move_unreconciled" name="Unreconciled Receivables &amp; Payables" res_model="account.move.line" src_model="account.invoice"/>
+
 		<!--  Partners inherited form -->
 
         <record id="view_invoice_partner_info_form" model="ir.ui.view">

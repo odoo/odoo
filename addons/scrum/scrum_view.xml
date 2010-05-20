@@ -44,11 +44,9 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
-                    <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
+                    <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
-                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
-                    <button type="object" string="Cancel" name="button_cancel" states="open,pending" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -149,13 +147,7 @@
                                 domain="[('sprint_id','=',False)]"
                                 help="Backlogs Not Assigned To Sprints."/>
                         </field>
-                        <field name="user_id" widget="selection">
-                            <filter default="1"
-                                icon="terp-project"
-                                string="My Features"
-                                domain="[('user_id','=',uid)]"
-                                help="My Backlogs"/>
-                        </field>
+                        <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
@@ -173,6 +165,7 @@
             <field name="name">Product Backlogs</field>
             <field name="res_model">scrum.product.backlog</field>
             <field name="view_type">form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
         </record>
         <menuitem
@@ -267,17 +260,13 @@
             <field name="arch" type="xml">
                 <search string="Sprints">
                     <group col="10" colspan="4">
-                        <filter default="1" icon="terp-project" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
+                        <filter name="filter_current" icon="terp-project" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
                         <filter icon="terp-project" string="Draft" domain="[('state','=','draft')]" help="Draft Sprints"/>
                         <filter icon="terp-project" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id" widget="selection"/>
-                        <field name="scrum_master_id" widget="selection">
-                            <filter icon="gtk-execute" domain="[('scrum_master_id','=',uid)]"
-                                default="1"
-                                help="My Sprints"/>
-                        </field>
+                        <field name="scrum_master_id" widget="selection"/>
                         <field name="date_start"/>
                     </group>
                     <newline/>
@@ -298,7 +287,9 @@
             <field name="res_model">scrum.sprint</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_filter_current': 1}</field>
             <field name="view_id" ref="view_scrum_sprint_tree"/>
+            <field name="context">{"search_default_scrum_master_id":uid}</field>
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
         </record>
         <menuitem

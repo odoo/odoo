@@ -44,12 +44,7 @@
 	         		<filter string="End" icon="terp-account" domain="[('date_end','=',time.strftime('%%Y/%%m/%%d'))]"/>
 	                <separator orientation="vertical"/>
 	                <field name="name"/>
-	                <field name="user_id" widget="selection">
-	                    <filter icon="terp-account"
-	                        	string="My Accounts"
-	                        	name="User"
-	                        	domain="[('user_id','=',uid)]"/>
-	                </field>
+	                <field name="user_id" widget="selection"/>
 	                <field name="partner_id"/>
                 </group>
                 <newline/>

@@ -34,45 +34,31 @@
 
     <record model="hr.recruitment.stage" id="stage_job1">
         <field name="name">Initial Jobs Demand</field>
-        <field name="sequence">1</field>
         <field name="object_id" search="[('model','=','hr.applicant')]" model="ir.model"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
-        <field name="sequence">2</field>
         <field name="object_id" search="[('model','=','hr.applicant')]" model="ir.model"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">
         <field name="name">Second Interview</field>
-        <field name="sequence">3</field>
         <field name="object_id" search="[('model','=','hr.applicant')]" model="ir.model"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job4">
         <field name="name">Contract Proposed</field>
-        <field name="sequence">4</field>
         <field name="object_id" search="[('model','=','hr.claim')]" model="ir.model"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job5">
         <field name="name">Contract Signed</field>
-        <field name="sequence">5</field>
         <field name="object_id" search="[('model','=','hr.applicant')]" model="ir.model"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job6">
         <field name="name">Refused by Employee</field>
-        <field name="sequence">6</field>
         <field name="object_id" search="[('model','=','hr.applicant')]" model="ir.model"/>
     </record>
     <record model="hr.recruitment.stage" id="stage_job7">
         <field name="name">Refused by Company</field>
-        <field name="sequence">7</field>
         <field name="object_id" search="[('model','=','hr.applicant')]" model="ir.model"/>
     </record>
-
-        <!--  Department(section_id)    -->
-	<record model="crm.case.section" id="section_hr_department">
-		<field name="name">HR Department</field>
-		<field name="code">HR</field>
-	</record>
-
 </data>
 </openerp>

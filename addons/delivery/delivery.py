@@ -26,7 +26,7 @@ from tools.translate import _
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
-    _description = "Carrier and delivery grids"
+    _description = "Carrier"
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
@@ -144,7 +144,7 @@ delivery_grid()
 
 class delivery_grid_line(osv.osv):
     _name = "delivery.grid.line"
-    _description = "Delivery line of grid"
+    _description = "Delivery Grid Line"
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True),

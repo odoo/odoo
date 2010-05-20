@@ -32,7 +32,7 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 class account_report(osv.osv):
     _name = "account.report.report"
-    _description = "Account reporting"
+    _description = "Account Reporting"
 #    _color = [
 #            ('', ''),
 #            ('green','Green'),

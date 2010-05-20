@@ -38,7 +38,8 @@
     'init_xml': [],
     'update_xml': [
         "fetchmail_view.xml",
-        "fetchmail_data.xml"
+        "fetchmail_data.xml",
+        'security/ir.model.access.csv',
     ],
     'demo_xml': [
 

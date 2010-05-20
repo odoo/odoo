@@ -29,7 +29,7 @@ from tools.translate import _
 
 class subscription_document(osv.osv):
     _name = "subscription.document"
-    _description = "Subscription document"
+    _description = "Subscription Document"
     _columns = {
         'name': fields.char('Name', size=60, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the subscription document without removing it."),
@@ -49,7 +49,7 @@ subscription_document()
 
 class subscription_document_fields(osv.osv):
     _name = "subscription.document.fields"
-    _description = "Subscription document fields"
+    _description = "Subscription Document Fields"
     _rec_name = 'field'
     _columns = {
         'field': fields.many2one('ir.model.fields', 'Field', domain="[('model_id', '=', parent.model)]", required=True),

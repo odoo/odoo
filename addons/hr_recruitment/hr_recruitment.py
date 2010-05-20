@@ -55,7 +55,7 @@ hr_recruitment_stage()
 
 class hr_applicant(osv.osv, crm.crm_case):
     _name = "hr.applicant"
-    _description = "Applicant Cases"
+    _description = "Applicant"
     _order = "id desc"
     _inherit ='mailgate.thread'
 
@@ -75,9 +75,9 @@ class hr_applicant(osv.osv, crm.crm_case):
                                  domain="[('partner_id','=',partner_id)]"),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Update Date' , readonly=True),
-#        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-#                         domain="[('section_id','=',section_id),\
-#                        ('object_id.model', '=', 'crm.opportunity')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
+                         domain="[('section_id','=',section_id),\
+                        ('object_id.model', '=', 'crm.opportunity')]"),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
@@ -90,31 +90,19 @@ class hr_applicant(osv.osv, crm.crm_case):
         'date': fields.datetime('Date'),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
         'job_id': fields.many2one('hr.job', 'Applied Job'),
-        'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
-        'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
-        'availability': fields.integer('Availability (Days)', help=""),
+        'salary_proposed': fields.float('Proposed Salary'),
+        'salary_expected': fields.float('Expected Salary'),
+        'availability': fields.integer('Availability (Days)'),
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-#        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
-        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree'),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
         'department_id':fields.many2one('hr.department', 'Department'),
-#        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response' : fields.integer("Response"),
     }
-
-    def _get_stage(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [], context=context)
-        return ids and ids[0] or False
-
-    _defaults = {
-         'stage_id': _get_stage,
-         'user_id':  lambda self, cr, uid, context: uid,
-                 }
 
     def onchange_job(self,cr, uid, ids, job, context={}):
         result = {}

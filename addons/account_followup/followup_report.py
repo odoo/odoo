@@ -30,7 +30,7 @@ def _code_get(self, cr, uid, context={}):
 
 class account_followup_stat(osv.osv):
     _name = "account_followup.stat"
-    _description = "Followup statistics"
+    _description = "Followup Statistics"
     _auto = False
     _columns = {
         'name': fields.many2one('res.partner', 'Partner', readonly=True),
