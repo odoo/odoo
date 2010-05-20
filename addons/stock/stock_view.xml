@@ -192,9 +192,9 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree colors="grey:not active" string="Tracking Number">
-                    <field name="name" select="1"/>
-                    <field name="serial" select="1"/>
-                    <field name="date" select="1"/>
+                    <field name="name" />
+                    <field name="serial" />
+                    <field name="date" />
                 </tree>
             </field>
         </record>
@@ -308,17 +308,17 @@
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancel')" string="Moves">
-                    <field name="product_id" select="1"/>
-                    <field name="product_qty" select="1"/>
-                    <field name="product_uom" select="1" string="UOM"/>
-                    <field name="prodlot_id" select="1" groups="base.group_extended"/>
+                    <field name="product_id" />
+                    <field name="product_qty" />
+                    <field name="product_uom"  string="UOM"/>
+                    <field name="prodlot_id"  groups="base.group_extended"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="base.group_extended"/>
                     <field name="picking_id"/>
-                    <field name="location_id" select="1"/>
-                    <field name="location_dest_id" select="1"/>
-                    <field name="date" select="1"/>
-                    <field name="date_planned" select="1" string="Date"/>
-                    <field name="date_expected" select="1" string="Date Expected"/>
+                    <field name="location_id" />
+                    <field name="location_dest_id" />
+                    <field name="date"/>
+                    <field name="date_planned" string="Date"/>
+                    <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -331,17 +331,17 @@
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancel')" string="Moves">
-                    <field name="product_id" select="1"/>
-                    <field name="product_qty" select="1"/>
-                    <field name="product_uom" select="1" string="UOM"/>
-                    <field name="prodlot_id" select="1" groups="base.group_extended"/>
+                    <field name="product_id" />
+                    <field name="product_qty" />
+                    <field name="product_uom"  string="UOM"/>
+                    <field name="prodlot_id"  groups="base.group_extended"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="base.group_extended"/>
                     <field name="picking_id"/>
-                    <field name="location_id" select="1"/>
-                    <field name="location_dest_id" select="1"/>
-                    <field name="date" select="1"/>
-                    <field name="date_planned" select="1" string="Date"/>
- 					<field name="date_expected" select="1" string="Date Expected"/>                    
+                    <field name="location_id" />
+                    <field name="location_dest_id" />
+                    <field name="date" />
+                    <field name="date_planned" string="Date"/>
+ 					<field name="date_expected" string="Date Expected"/>                    
                     <field name="state"/>
                 </tree>
             </field>
@@ -625,7 +625,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
-                                    <field name="date_expected" select="1" string="Date Expected"/>
+                                    <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
                                     <button
                                         name="%(stock.track_line)d"
@@ -652,7 +652,7 @@
                                             <field colspan="4" invisible="1" name="name"/>
                                             <field invisible="1" name="date"/>
                                             <field name="date_planned"/>
- 											<field name="date_expected" select="1" string="Date Expected"/>                                            
+ 											<field name="date_expected" string="Date Expected"/>                                            
                                             <field name="address_id" context="{'contact_display':'partner'}"/>
                                             <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                             <field name="prodlot_id" groups="base.group_extended"
@@ -777,7 +777,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
- 									<field name="date_expected" select="1" string="Date Expected"/>                                    
+ 									<field name="date_expected" string="Date Expected"/>                                    
                                     <field name="state"/>
                                     <button
                                            name="%(stock.track_line)d"
@@ -1528,7 +1528,7 @@
                     </group>
                     <newline/>
                     <group col='8' colspan='14' expand="1" string="Tracking Lots">
-                       <field name="tracking_id" context="{'tracking_id': self}" />
+                       <field name="tracking_id" context="{'tracking_lot': self}" />
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">

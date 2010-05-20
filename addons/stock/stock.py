@@ -351,20 +351,18 @@ class stock_tracking(osv.osv):
     _name = "stock.tracking"
     _description = "Stock Tracking Lots"
     
-    def get_create_tracking_lot(self, cr, uid, ids, context):
-        tracking_id = context.get('tracking_id', False)
-        tracking_id_list = self.search(cr, uid, [('name', '=', tracking_id)],
+    def get_create_tracking_lot(self, cr, uid, ids, tracking_lot):
+        tracking_lot_list = self.search(cr, uid, [('name', '=', tracking_lot)],
                                             limit=1)
-        if tracking_id_list:
-            tracking_id = tracking_id_list[0]
-        tracking_obj = self.browse(cr, uid, tracking_id)
+        if tracking_lot_list:
+            tracking_lot = tracking_lot_list[0]
+        tracking_obj = self.browse(cr, uid, tracking_lot)
         if not tracking_obj:
             tracking_lot_vals = {
-                'name': tracking_id
+                'name': tracking_lot
                 }
-            tracking_id = self.create(cr, uid, tracking_lot_vals,
-                    context=context)
-        return tracking_id
+            tracking_lot = self.create(cr, uid, tracking_lot_vals)
+        return tracking_lot
     def checksum(sscc):
         salt = '31' * 8 + '3'
         sum = 0
@@ -1650,15 +1648,15 @@ class stock_move(osv.osv):
                         'line_id': lines,
                         'ref': ref,
                     })
-        tracking_id = False                    
+        tracking_lot = False                    
         if context:
-            tracking_id = context.get('tracking_id', False)
-            if tracking_id:
+            tracking_lot = context.get('tracking_lot', False)
+            if tracking_lot:
                 rec_id = context and context.get('active_id', False)
                 tracking = self.pool.get('stock.tracking')
-                tracking_id = tracking.get_create_tracking_lot(cr, uid,[rec_id], context=context )        
+                tracking_lot = tracking.get_create_tracking_lot(cr, uid,[rec_id], tracking_lot)        
                  
-        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S'), 'tracking_id': tracking_id or False})
+        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S'), 'tracking_id': tracking_lot or False})
         picking_obj = self.pool.get('stock.picking')
         for pick in picking_obj.browse(cr, uid, picking_ids):
             if all(move.state == 'done' for move in pick.move_lines):
@@ -1878,7 +1876,7 @@ class stock_move(osv.osv):
         partner_id = partial_datas.get('partner_id', False)
         address_id = partial_datas.get('address_id', False)
         delivery_date = partial_datas.get('delivery_date', False)
-        tracking_id = context.get('tracking_id', False)
+        tracking_lot = context.get('tracking_lot', False)
         
         new_moves = []
 
@@ -1897,7 +1895,7 @@ class stock_move(osv.osv):
             if move.product_qty == product_qty:
                 self.write(cr, uid, move.id,
                 {
-                    'tracking_id': tracking_id
+                    'tracking_id': tracking_lot
                 })
                 complete.append(move)
             elif move.product_qty > product_qty:
@@ -1943,7 +1941,7 @@ class stock_move(osv.osv):
                         'state': 'assigned',
                         'move_dest_id': False,
                         'price_unit': move.price_unit,
-                        'tracking_id': tracking_id,
+                        'tracking_id': tracking_lot,
                     })
                 complete.append(self.browse(cr, uid, new_move))
             self.write(cr, uid, move.id,
@@ -1958,7 +1956,7 @@ class stock_move(osv.osv):
                     {
                         'product_qty': move.product_qty,
                         'product_uos_qty': move.product_qty,
-                        'tracking_id': tracking_id
+                        'tracking_id': tracking_lot
                     })
             complete.append(move)
 

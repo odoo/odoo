@@ -166,7 +166,7 @@
             <field name="arch" type="xml">
                 <tree string="Routing Work Centers">
                     <field name="sequence"/>
-                    <field name="workcenter_id" select="1"/>
+                    <field name="workcenter_id"/>
                     <field name="cycle_nbr"/>
                     <field name="hour_nbr"/>
                 </tree>
@@ -249,7 +249,7 @@
                         <newline/>
                         <field name="product_uom"/>
                         <field name="product_qty"/>
-                        <field name="routing_id" groups="base.group_extended" select="1"/>
+                        <field name="routing_id" groups="base.group_extended"/>
                         <newline/>
                         <field name="product_uos" groups="product.group_uos"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
