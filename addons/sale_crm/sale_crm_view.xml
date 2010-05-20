@@ -34,8 +34,7 @@
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
             <field name="date_order" position="after">
-            <field name="section_id" default="context.get('section_id', False)" widget="selection" string="Section" groups="base.group_extended">
-
+            <field name="section_id" default="context.get('section_id', False)" widget="selection" string="Sale Team" groups="base.group_extended">
                     <filter icon="terp-crm"
                             domain="[('section_id','=',context.get('section_id',False))]"
                             groups="base.group_extended"

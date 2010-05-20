@@ -260,25 +260,21 @@
         <field name="arch" type="xml">
                 <search string="Search Meetings">
                        <group col="12" colspan="4">
-                       		<filter icon="terp-project" name="current" string="Current"
-	                           domain="[('state','in',('draft', 'open'))]"
-	                           help="Current Meetings"/>
-                           <filter icon="terp-partner" string="My Meetings"
-                               domain="[('user_id','=',uid)]"
-                               help="My Meetings" />
+                           <filter icon="terp-project" name="current" string="Current"
+                                domain="[('state','in',('draft', 'open'))]"
+                                help="Current Meetings"/>
                            <separator orientation="vertical"/>
                            <field name="name" select="1" string="Subject"/>
                            <field name="partner_id" select="1" />
-                           <field name="section_id"
-                               select="1" widget="selection">
+                           <field name="section_id" select="1" widget="selection">
                                <filter icon="terp-crm"
                                    domain="[('section_id','=',context.get('section_id',False))]"
-                                   help="My section" />
+                                   help="My Sale Team" />
                            </field>
                            <field name="user_id" select="1" widget="selection"/>
                        </group>
                        <newline/>
-						<group expand="0" string="Group By..." colspan="16">
+					   	<group expand="0" string="Group By..." colspan="16">
 							<filter string="Date" icon="terp-project"
 						        domain="[]" context="{'group_by':'date'}" />
 						    <filter string="Privacy" icon="terp-crm"

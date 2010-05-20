@@ -161,6 +161,7 @@ class stock_sale_forecast_createlines(osv.osv_memory):
     def create_forecast(self,cr, uid, ids, context={}):
         product_obj = self.pool.get('product.product')
         forecast_obj=self.pool.get('stock.sale.forecast')
+        mod_obj =self.pool.get('ir.model.data')
         for f in self.browse(cr, uid, ids, context):
             prod_categ_obj=self.pool.get('product.category')
             template_obj=self.pool.get('product.template')
@@ -212,11 +213,14 @@ class stock_sale_forecast_createlines(osv.osv_memory):
                         'product_uom_categ' : p.uom_id.category_id.id,
                         'product_uos_categ' : prod_uos_categ,
                      })
+        result = mod_obj._get_id(cr, uid, 'stock_planning', 'view_stock_sale_forecast_filter')
+        id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         return {
                 'view_type': 'form',
                 "view_mode": 'tree',
                 'res_model': 'stock.sale.forecast',
-                'type': 'ir.actions.act_window',                
+                'type': 'ir.actions.act_window',
+                'search_view_id': id['res_id'],                
             }
 stock_sale_forecast_createlines()
 
@@ -488,7 +492,7 @@ class stock_planning_createlines(osv.osv_memory):
     def create_planning(self,cr, uid, ids, context={}):
         product_obj = self.pool.get('product.product')
         planning_obj=self.pool.get('stock.planning')
-
+        mod_obj =self.pool.get('ir.model.data')
         for f in self.browse(cr, uid, ids, context=context):
             if f.forecasted_products:
                 cr.execute("SELECT product_id \
@@ -562,11 +566,14 @@ class stock_planning_createlines(osv.osv_memory):
                         'stock_supply_location': stock_supply_location,
 
                     })
+        result = mod_obj._get_id(cr, uid, 'stock_planning', 'view_stock_planning_filter')
+        id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         return {
                 'view_type': 'form',
                 "view_mode": 'tree',
                 'res_model': 'stock.planning',
-                'type': 'ir.actions.act_window',                
+                'type': 'ir.actions.act_window', 
+                'search_view_id': id['res_id'],               
             }
 stock_planning_createlines()
 

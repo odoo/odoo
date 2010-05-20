@@ -69,7 +69,7 @@
             <field name="model">stock.inventory</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Lot Inventory" colors="grey:state in ('done', 'cancel')">
+                <tree string="Lot Inventory" colors="grey:state in ('cancel')">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="state"/>
@@ -307,7 +307,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
+                <tree colors="grey:state in ('cancel')" string="Moves">
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
@@ -318,6 +318,7 @@
                     <field name="location_dest_id" select="1"/>
                     <field name="date" select="1"/>
                     <field name="date_planned" select="1" string="Date"/>
+                    <field name="date_expected" select="1" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -329,7 +330,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel');black:state not in ('cancel')" string="Moves">
+                <tree colors="grey:state in ('cancel')" string="Moves">
                     <field name="product_id" select="1"/>
                     <field name="product_qty" select="1"/>
                     <field name="product_uom" select="1" string="UOM"/>
@@ -340,6 +341,7 @@
                     <field name="location_dest_id" select="1"/>
                     <field name="date" select="1"/>
                     <field name="date_planned" select="1" string="Date"/>
+ 					<field name="date_expected" select="1" string="Date Expected"/>                    
                     <field name="state"/>
                 </tree>
             </field>
@@ -455,7 +457,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal';black:usage not in ('view','internal')">
+                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal'">
                     <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="stock_real" invisible="'product_id' not in context"/>
@@ -580,7 +582,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
@@ -613,7 +615,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
-                                <tree colors="grey:state in ('done','cancel');black:state not in ('cancel','done')" string="Stock Moves">
+                                <tree colors="grey:state in ('cancel')" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -623,6 +625,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
+                                    <field name="date_expected" select="1" string="Date Expected"/>
                                     <field name="state"/>
                                     <button
                                         name="%(stock.track_line)d"
@@ -641,7 +644,7 @@
                                             <separator colspan="4" string="Move Information"/>
                                             <field name="location_id" domain="[('usage','=','internal')]"/>
                                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
-                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
+                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)" select="1"/>
                                             <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                             <field name="product_uom"/>
                                             <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -649,8 +652,9 @@
                                             <field colspan="4" invisible="1" name="name"/>
                                             <field invisible="1" name="date"/>
                                             <field name="date_planned"/>
+ 											<field name="date_expected" select="1" string="Date Expected"/>                                            
                                             <field name="address_id" context="{'contact_display':'partner'}"/>
-                                            <field groups="base.group_extended" name="product_packaging"/>
+                                            <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                             <field name="prodlot_id" groups="base.group_extended"
                                                 context="{'location_id':location_id, 'product_id':product_id}"
                                                 domain="[('product_id','=?',product_id)]"
@@ -662,7 +666,7 @@
                                             <button name="%(move_scrap)d" string="Scrap Move Line" type="action" icon="gtk-justify-fill"/>
                                             <separator colspan="4" string="Move State"/>
                                             <field name="state"/>
-                                            <group>
+                                            <group colspan="2">
                                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                                 <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-no"/>
                                                 <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
@@ -732,7 +736,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
 		    		<field name="address_id"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -763,7 +767,7 @@
                         <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
-                                <tree colors="grey:state in ('done','cancel');black:state not in ('cancel','done')" string="Stock Moves">
+                                <tree colors="grey:state in ('cancel')" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -773,6 +777,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
+ 									<field name="date_expected" select="1" string="Date Expected"/>                                    
                                     <field name="state"/>
                                     <button
                                            name="%(stock.track_line)d"
@@ -791,7 +796,7 @@
                                             <separator colspan="4" string="Move Information"/>
                                             <field name="location_id" domain="[('usage','=','internal')]"/>
                                             <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)"/>
+                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)"/>
                                             <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                             <field name="product_uom"/>
                                             <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -799,7 +804,8 @@
                                             <field colspan="4" invisible="1" name="name"/>
                                             <field invisible="1" name="date"/>
                                             <field name="date_planned"/>
-                                            <field groups="base.group_extended" name="product_packaging"/>
+ 											<field name="date_expected"  string="Date Expected"/>                                            
+                                            <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]"/>
                                             <field name="prodlot_id" groups="base.group_extended"
                                                 context="{'location_id':location_id, 'product_id':product_id}"
                                                 domain="[('product_id','=?',product_id)]"
@@ -807,7 +813,7 @@
                                             <field groups="base.group_extended" name="tracking_id"/>
                                             <separator colspan="4" string="Move State"/>
                                             <field name="state"/>
-                                            <group>
+                                            <group colspan="2">
                                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                                 <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon="gtk-find"/>
                                                 <button name="action_cancel" states="assigned" string="Cancel" type="object" icon="gtk-cancel"/>
@@ -909,7 +915,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="address_id"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -941,7 +947,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
-                                <tree colors="grey:state in ('done','cancel');black:state not in ('cancel','done')" string="Stock Moves">
+                                <tree colors="grey:state in ('cancel')" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -951,6 +957,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
+ 									<field name="date_expected" string="Date Expected"/>                                    
                                     <field name="state"/>
                                     <button
                                            name="%(stock.track_line)d"
@@ -969,7 +976,7 @@
                                             <separator colspan="4" string="Move Information"/>
                                             <field name="location_id" domain="[('usage','=','internal')]"/>
                                             <field name="location_dest_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)"/>
+                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)"/>
                                             <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" />
                                             <field name="product_uom"/>
                                             <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -977,7 +984,8 @@
                                             <field colspan="4" invisible="1" name="name"/>
                                             <field invisible="1" name="date"/>
                                             <field name="date_planned"/>
-                                            <field groups="base.group_extended" name="product_packaging"/>
+ 											<field name="date_expected"  string="Date Expected"/>                                            
+                                            <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                             <field name="prodlot_id" groups="base.group_extended"
                                                 context="{'location_id':location_id, 'product_id':product_id}"
                                                 domain="[('product_id','=?',product_id)]"
@@ -987,7 +995,7 @@
                                             <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
                                             <separator colspan="4" string="Move State"/>
                                             <field name="state"/>
-                                            <group>
+                                            <group colspan="2">
                                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object"  icon="gtk-jump-to"/>
                                                 <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"  icon="gtk-no"/>
                                                 <button name="action_cancel" states="assigned" string="Cancel" type="object"  icon="gtk-cancel"/>
@@ -1086,7 +1094,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="address_id"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -1121,7 +1129,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}">
-                                <tree colors="grey:state in ('done','cancel');black:state not in ('cancel','done')" string="Stock Moves">
+                                <tree colors="grey:state in ('cancel')" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" string="Product Unit of Measure"/>
@@ -1144,16 +1152,17 @@
                                             <separator colspan="4" string="Move Information"/>
                                             <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
                                             <field domain="[('usage','=','internal')]" name="location_dest_id" />
-                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)"/>
+                                            <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)"/>
                                             <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                             <field name="product_uom"/>
                                             <field groups="product.group_uos" name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                             <field groups="product.group_uos" name="product_uos_qty"/>
                                             <field colspan="4" invisible="1" name="name" />
                                             <field groups="base.group_extended" name="date_planned"/>
+ 											<field name="date_expected" groups="base.group_extended" string="Date Expected"/>                                            
                                             <newline/>
                                             <newline/>
-                                            <field groups="base.group_extended" name="product_packaging"/>
+                                            <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                             <newline/>
                                             <field name="prodlot_id" groups="base.group_extended"
                                                 context="{'location_id':location_id, 'product_id':product_id}"
@@ -1165,7 +1174,7 @@
                                             <button groups="base.group_extended" name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
                                             <separator colspan="4" string="Move State"/>
                                             <field name="state"/>
-                                            <group>
+                                            <group colspan="2">
                                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon=""/>
                                                 <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" icon=""/>
                                                 <button name="action_cancel" states="assigned" string="Cancel" type="object" icon=""/>
@@ -1303,7 +1312,7 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('done', 'cancel');black:state not in ('done', 'cancel');red:date_planned > current_date" string="Moves">
+                <tree colors="grey:state in ('cancel');red:date_planned > current_date" string="Moves">
                     <field name="name" string="Move Name"/>
                     <field name="product_id"/>
                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -1314,6 +1323,7 @@
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
                     <field name="date_planned"/>
+					<field name="date_expected"/>              
                     <field name="state"/>
                 </tree>
             </field>
@@ -1333,7 +1343,7 @@
                             <group colspan="2" col="2">
                                 <separator colspan="2" string="Move Information"/>
                                 <field name="name"/>
-                                <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id)"/>
+                                <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.address_id)"/>
                                 <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                 <field name="product_uom" string="Unit Of Measure" widget="selection"/>
                                 <field name="product_uos" groups="base.group_extended" />
@@ -1352,6 +1362,7 @@
                                 <separator string="Dates &amp; Priority" colspan="2" />
                                 <field name="date"/>
                                 <field name="date_planned"/>
+								<field name="date_expected"/>                                
                                 <field name="priority"/>
                             </group>
 
@@ -1428,7 +1439,7 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel','done');black:state not in ('cancel','done')" string="Moves">
+                <tree colors="grey:state in ('cancel')" string="Moves">
                     <field name="picking_id" string="Reference"/>
                     <field name="origin" string="Latest Procurement"/>
                     <field name="partner_id" string="Supplier"/>
@@ -1437,6 +1448,7 @@
                     <field name="product_uom" string="Uint Of Measure"/>
                     <field name="prodlot_id" string="Lot" groups="base.group_extended"/>
                     <field name="date_planned"/>
+                    <field name="date_expected"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="state"/>
                     <button name="%(action_partial_move)d" string="Partial" type="action" states="assigned" icon="gtk-justify-fill"/>
@@ -1458,7 +1470,7 @@
                             <separator colspan="4" string="Move Information"/>
                             <field name="location_id"/>
                             <field name="location_dest_id"/>
-                            <field colspan="4" name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id)"/>
+                            <field colspan="4" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)"/>
                             <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                             <field name="product_uom"/>
                             <field name="product_uos"/>
@@ -1466,6 +1478,7 @@
                             <field name="date"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="date_planned"/>
+                            <field name="date_expected"/>
                             <field name="priority"/>
                             <field name="address_id" context="{'contact_display':'partner'}"/>
                             <newline/>

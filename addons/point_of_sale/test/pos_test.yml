@@ -4,7 +4,7 @@
 -
  I  configure all details for the customer,Salesman  and  Product ,Account.
 - 
-  Creating an account.account.type record
+   I create View Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_view0}:
     close_method: none
@@ -14,7 +14,7 @@
     
     
 - 
-  Creating an account.account.type record
+   I create Income Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_income0}:
     close_method: unreconciled
@@ -24,7 +24,7 @@
     
     
 - 
-  Creating an account.account.type record
+   I create Expense Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_expense0}:
     close_method: unreconciled
@@ -34,7 +34,7 @@
     
     
 - 
-  Creating an account.account.type record
+   I create Cash Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_cash0}:
     close_method: balance
@@ -44,7 +44,7 @@
     
     
 - 
-  Creating an account.account record
+  I create Minimal Chart Account.
 - 
   !record {model: account.account, id: account_account_minimalchart0}:
     code: '0'
@@ -56,7 +56,7 @@
     type: view
     user_type: account_account_type_view0
 - 
-  Creating an account.account record
+   I create Payable Account.
 - 
   !record {model: account.account, id: account_account_payable1}:
     code: AP
@@ -72,7 +72,7 @@
     
     
 - 
-  Creating an account.account record
+   I create Receivable Account.
 - 
   !record {model: account.account, id: account_account_receivable0}:
     code: AR
@@ -88,7 +88,7 @@
     
     
 - 
-  Creating an account.account record
+  I create Cash Account.
 - 
   !record {model: account.account, id: account_account_cash0}:
     code: C
@@ -103,7 +103,7 @@
     
     
 - 
-  Creating an account.account record
+  I create Purchases Account.
 - 
   !record {model: account.account, id: account_account_purchases0}:
     code: P
@@ -116,7 +116,7 @@
     type: other
     user_type: account_account_type_expense0
 - 
-  Creating an account.account record
+   I create Sales Account.
 - 
   !record {model: account.account, id: account_account_sales0}:
     code: S
@@ -130,7 +130,7 @@
     user_type: account_account_type_income0
 
 - 
-  Creating an account.journal record
+  I create Purchase Journal.
 - 
   !record {model: account.journal, id: account_journal_purchasejournal0}:
     code: PUJ
@@ -144,7 +144,7 @@
     
     
 - 
-  Creating an account.journal record
+   I create Sale Journal.
 - 
   !record {model: account.journal, id: account_journal_salejournal0}:
     code: SAJ
@@ -158,7 +158,7 @@
     
     
 - 
-  Creating an account.journal record
+   I create Bank Journal.
 - 
   !record {model: account.journal, id: account_journal_bankjournal0}:
     code: BNK
@@ -172,7 +172,7 @@
     
     
 - 
-  Creating a ir.property record
+  I create property for account payable.
 - 
   !record {model: ir.property, id: ir_property_propertyaccountexpensecateg0}:
     company_id: base.main_company
@@ -182,7 +182,7 @@
     
     
 - 
-  Creating a ir.property record
+   I create property for account receivable.
 - 
   !record {model: ir.property, id: ir_property_propertyaccountincomecateg0}:
     company_id: base.main_company
@@ -190,12 +190,12 @@
     name: property_account_income_categ
     value_reference: account.account,6
 - 
-  Creating a res.partner.category record
+  I create Partner category Customers.
 - 
   !record {model: res.partner.category, id: res_partner_category_customers0}:
     name: Customers
 -
-  Creating an res.partner record
+  I create partner
 - 
   !record {model: res.partner, id: res_partner_cleartrail0}:
     category_id:
@@ -204,7 +204,7 @@
     
     
 - 
-  Creating an res.partner.address record
+ I create partner address.
 - 
   !record {model: res.partner.address, id: res_partner_address_1}:
     partner_id: res_partner_cleartrail0
@@ -213,7 +213,7 @@
     
     
 - 
-  Creating an res.partner.address record
+  I create partner  invoice address.
 - 
   !record {model: res.partner.address, id: res_partner_address_2}:
     partner_id: res_partner_cleartrail0
@@ -221,21 +221,19 @@
     
     
 - 
-  Creating an res.partner.address record
+  I create partner delivery address.
 - 
   !record {model: res.partner.address, id: res_partner_address_3}:
     partner_id: res_partner_cleartrail0
     street: sangam house 15 B palasia, A B Road
     type: delivery
 -
-  Customer Cleartrail has specific instrument requirements regarding the stockable products
-- 
-  Creating an product.category record
+  I create product category.    
 - 
   !record {model: product.category, id: product_category_allproductssellable0}:
     name: Mobile Products Sellable
 -
-  Creating a res.partner record
+   I create partner.
 - 
   !record {model: res.partner, id: res_partner_microlinktechnologies0}:
     address:
@@ -246,23 +244,20 @@
     supplier: true        
     
 -
-  Creating a res.partner.address record
+  I create partner address .
 - 
   !record {model: res.partner.address, id: res_partner_address_0}:
     country_id: base.in
     partner_id: res_partner_microlinktechnologies0
     street: Ash House, Ash Road
     title: Ms.
-    
-                   
-    
 - 
-  Creating an product.category record
+  I create product category .
 - 
   !record {model: product.category, id: product_category_services0}:
     name: Mobile Services
 - 
-  Creating an product.template record
+  I create product template .
 - 
   !record {model: product.template, id: product_template_lgviewtysmart0}:
     categ_id: product_category_allproductssellable0
@@ -278,7 +273,7 @@
     uom_po_id: product.product_uom_unit
     
 -    
-  Creating an product.product record
+  I create product  LG Viewty Smart.
 - 
   !record {model: product.product, id: product_product_lgviewtysmart0}:
     categ_id: product_category_allproductssellable0
@@ -296,13 +291,15 @@
     supply_method: produce
     type: product
     uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit    
+    uom_po_id: product.product_uom_unit
+-  
+  I create product category .        
 -
   !record {model: product.category, id: product_category_computer0}:
     name: Computer
 
 - 
-  Creating a product.product record
+  I create product  HP Pavilion Desktop PCs
 - 
   !record {model: product.product, id: product_product_hppaviliondesktoppcs0}:
     categ_id: product_category_computer0
@@ -321,9 +318,11 @@
     uom_po_id: product.product_uom_unit
     property_account_expense: account_account_payable1
     property_account_income: account_account_receivable0
-- 
-  Creating a pos.order record
-- 
+ 
+-  
+  I create New Order by adding the details of Salesman and  "Product" as LG Viewty Smart Quantity as 10.
+-
+
   !record {model: pos.order, id: pos_order_pos0}:
     company_id: base.main_company
     date_order: '2010-05-13 15:02:48'
@@ -343,13 +342,13 @@
     shop_id: sale.shop
     user_salesman_id: base.user_root
 - 
-  I have add discount 
+  I add discount. 
 - 
   !record {model: pos.discount, id: pos_discount_0}:
     discount: 5.0
     discount_notes: More then 5 product
 - 
-   Apply the discount 
+  I Apply the discount. 
 - 
   !python {model: pos.discount}: |
     self.apply_discount(cr, uid, [ref("pos_discount_0")], {"lang": "en_US", "active_model":
@@ -357,13 +356,13 @@
       ref("pos_order_pos0"), })
     
 - 
-  Creating a pos.open.statement record
+  I open the register.
 - 
   !record {model: pos.open.statement, id: pos_open_statement_0}:
     {}
     
 - 
-  Performing an osv_memory action open_statement on module pos.open.statement
+  I open the statement.
 - 
   !python {model: pos.open.statement}: |
     self.open_statement(cr, uid, [ref("pos_open_statement_0")], {"lang": "en_US", "active_model":
@@ -371,7 +370,7 @@
       False, "active_id": ref("point_of_sale.menu_open_statement"), })
      
 -
- Creating a pos.make.payment record
+  I click on the "Make Payment" wizard.  
 - 
   !record {model: pos.make.payment, id: pos_make_payment_0}:
     amount: 1615.0
@@ -381,34 +380,34 @@
     product_id: product_product_hppaviliondesktoppcs0
     
 - 
-   For payment  I click on  Make Payment. 
+  I make the payment.
 - 
   !python {model: pos.make.payment}: |
     self.check(cr, uid, [ref("pos_make_payment_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("point_of_sale.pos_order_pos0")], "tz":
       False, "active_id": ref("point_of_sale.pos_order_pos0"), })
 -
-  I have check the Statement lines are created automatically when payment are done.
+  I check the Statement lines are created automatically when payment is done.
 -
   !python {model: pos.order}: |
    order=self.browse(cr,uid,ref("pos_order_pos0"))
    assert(order.statement_ids!=[]), "Statement lines not created"    
                                             
 -
-  When i click on Return picking button , i get three option.
+  When I click on Return picking button , I get three option.
 -
   1. Cancel 2.Return Goods and Exchange 3.Return without Refund
 -
-  When i click on  Return Goods and Exchange   
+  When I click on  Return Goods and Exchange.  
 -  
-  Then allows me to define the quantity of products, which will return to the stock. 
+  Then it allows me to define the quantity of products, which will return to the stock. 
 - 
-  Creating a pos.return record
+  I click on Return Picking button.
 - 
   !record {model: pos.return, id: pos_return_0}:
    {}
 - 
-  Performing an osv_memory action create_returns on module pos.return
+  I Return the product.
 - 
   !python {model: pos.return}: |
     self.create_returns(cr, uid, [ref("pos_return_0")], {"lang": "en_US", "active_model":
@@ -417,15 +416,15 @@
     
     
 - 
-  Then allows me to define the quantity of products, which will return to the stock.
+  Then it allows me to define the quantity of products, which will return to the stock.
 -
-  I have select the  HP Pavilion Desktop PCs for exchange   
+  I select the  HP Pavilion Desktop PCs for exchange.   
 - 
   !record {model: pos.add.product, id: pos_add_product_0}:
     product_id: product_product_hppaviliondesktoppcs0
     quantity: 5.0
 -    
-  I click on close on button.
+  I click on close button.
 - 
   !python {model: pos.add.product}: |
     self.close_action(cr, uid, [ref("pos_add_product_0")], {"lang": "en_US", "active_model":
@@ -433,7 +432,7 @@
       })
        
 -    
-  Creating a pos.make.payment record
+  I create payment.
 - 
   !record {model: pos.make.payment, id: pos_make_payment_1}:
     amount: 680.0
@@ -443,7 +442,7 @@
     product_id: product_product_hppaviliondesktoppcs0
 
 - 
-   For payment  I click on  Make Payment. 
+  For payment, I click on  Make Payment. 
 - 
   !python {model: pos.make.payment}: |
     self.check(cr, uid, [ref("pos_make_payment_1")], {"lang": "en_US", "active_model":
@@ -451,27 +450,24 @@
       False, "active_id": ref("pos_order_pos0"), })    
 
 - 
-  Creating a pos.return record
+  To check the Return without Refund . I click button "Return without Refund ".
 - 
   !record {model: pos.return, id: pos_return_0}:
    {}
-- 
-  To check the Return without Refund . I click button "Return without Refund ".
 -
-  The quantity which are selected in Return lines wizard are refunded..
+  The quantity which is selected in Return lines wizard is refunded.
 - 
   !python {model: pos.return}: |
     self.create_returns2(cr, uid, [ref("pos_return_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz":
       False, "active_id": ref("pos_order_pos0"), })
 - 
-  Creating a pos.confirm record
+  To Close order, I use the wizard "Sale Confirm".
 - 
   !record {model: pos.confirm, id: pos_confirm_0}:
     {}
-    
 - 
- I have close this order
+  I close this order.
 - 
   !python {model: pos.confirm}: |
     self.action_confirm(cr, uid, [ref("pos_confirm_0")], {"lang": "en_US", "active_model":

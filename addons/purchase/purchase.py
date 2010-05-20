@@ -162,7 +162,7 @@ class purchase_order(osv.osv):
                 "In this case, it will remove the warehouse link and set the customer location."
         ),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}),
-        'location_id': fields.many2one('stock.location', 'Destination', required=True),
+        'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')]),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
         'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Waiting Supplier Ack'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)],'done':[('readonly',True)]}),
@@ -210,7 +210,8 @@ class purchase_order(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
     }
     _name = "purchase.order"
-    _description = "Purchase order"
+    _description = "Purchase Order"
+    _log_create = True
     _order = "name desc"
 
     def unlink(self, cr, uid, ids, context=None):
@@ -414,6 +415,7 @@ class purchase_order(osv.osv):
                 'purchase_id': order.id,
                 'company_id': order.company_id.id,
             })
+            todo_moves = []
             for order_line in order.order_line:
                 if not order_line.product_id:
                     continue
@@ -437,8 +439,9 @@ class purchase_order(osv.osv):
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
-                    self.pool.get('stock.move').action_confirm(cr, uid, [move])
-                    self.pool.get('stock.move').force_assign(cr,uid, [move])
+                    todo_moves.append(move)    
+            self.pool.get('stock.move').action_confirm(cr, uid, todo_moves)
+            self.pool.get('stock.move').force_assign(cr, uid, todo_moves)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return picking_id
@@ -516,6 +519,7 @@ class purchase_order(osv.osv):
                 'state': 'draft',
                 'order_line': {},
                 'notes': '%s' % (porder.notes or '',),
+                'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
                 })
             else:
                 #order_infos['name'] += ', %s' % porder.name
@@ -608,7 +612,7 @@ class purchase_order_line(osv.osv):
     }
     _table = 'purchase_order_line'
     _name = 'purchase.order.line'
-    _description = 'Purchase Order lines'
+    _description = 'Purchase Order Line'
     def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}

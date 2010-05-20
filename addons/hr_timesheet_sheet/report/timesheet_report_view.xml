@@ -69,10 +69,6 @@
 	                    <separator orientation="vertical"/>
 	  					<field name="user_id" widget="selection">
 	                        <filter icon="terp-hr"
-	                        		string="My timesheet"
-	                        		help = "My timesheet "
-	                        		domain="[('user_id','=',uid)]" />
-	                        <filter icon="terp-hr"
 	                        		string="Non Assigned timesheets to users"
 	                        		help="Non Assigned timesheets to users"
 	                        		domain="[('user_id','=',False)]"/>
@@ -111,7 +107,7 @@
             <field name="res_model">timesheet.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_report_search"/>
         </record>
         <menuitem action="action_timesheet_report_stat_all" id="menu_timesheet_report_all" parent="hr.menu_hr_reporting"/>

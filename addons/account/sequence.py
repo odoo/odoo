@@ -42,7 +42,7 @@ class ir_sequence(osv.osv):
     _columns = {
         'fiscal_ids' : fields.one2many('account.sequence.fiscalyear', 'sequence_main_id', 'Sequences')
     }
-    def get_id(self, cr, uid, sequence_id, test='id', context={}):        
+    def get_id(self, cr, uid, sequence_id, test='id', context={}):
         cr.execute('select id from ir_sequence where '+test+'=%s and active=%s', (sequence_id, True,))
         res = cr.dictfetchone()
         if res:

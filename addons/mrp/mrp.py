@@ -94,7 +94,7 @@ class mrp_routing_workcenter(osv.osv):
     Defines working cycles and hours of a workcenter using routings.
     """
     _name = 'mrp.routing.workcenter'
-    _description = 'Routing workcenter usage'
+    _description = 'Workcenter Usage'
     _columns = {
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'name': fields.char('Name', size=64, required=True),
@@ -118,7 +118,7 @@ class mrp_bom(osv.osv):
     Defines bills of material for a product.
     """
     _name = 'mrp.bom'
-    _description = 'Bills of Material'
+    _description = 'Bill of Material'
     
     def _child_compute(self, cr, uid, ids, name, arg, context={}):
         """ Gets child bom.
@@ -314,7 +314,6 @@ class mrp_bom(osv.osv):
                     d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
                     mult = (d + (m and 1.0 or 0.0))
                     cycle = mult * wc_use.cycle_nbr
-                    print mult, wc_use.hour_nbr, wc.time_start, wc.time_stop, cycle
                     result2.append({
                         'name': bom.routing_id.name,
                         'workcenter_id': wc.id,
@@ -351,8 +350,7 @@ mrp_bom()
 
 class mrp_bom_revision(osv.osv):
     _name = 'mrp.bom.revision'
-    _description = 'Bill of material revisions'
-    
+    _description = 'Bill of Material Revision'
     _columns = {
         'name': fields.char('Modification name', size=64, required=True),
         'description': fields.text('Description'),
@@ -419,8 +417,9 @@ class mrp_production(osv.osv):
     Production Orders / Manufacturing Orders
     """
     _name = 'mrp.production'
-    _description = 'Production'
-    _date_name  = 'date_planned'    
+    _description = 'Manufacturing Order'
+    _date_name  = 'date_planned'
+    _log_create = True
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
         """ Calculates total hours and total no. of cycles for a production order.
@@ -648,6 +647,9 @@ class mrp_production(osv.osv):
         """ Changes the production state to Ready and location id of stock move.
         @return: True
         """
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Manufacturing Order ') + " '" + name + "' "+ _("is ready to produce.")
+            self.log(cr, uid, id, message)
         move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state': 'ready'})
         for production in self.browse(cr, uid, ids):
@@ -934,7 +936,7 @@ mrp_production()
 
 class mrp_production_workcenter_line(osv.osv):
     _name = 'mrp.production.workcenter.line'
-    _description = 'Work Orders'
+    _description = 'Work Order'
     _order = 'sequence'
     
     _columns = {
@@ -954,8 +956,7 @@ mrp_production_workcenter_line()
 
 class mrp_production_product_line(osv.osv):
     _name = 'mrp.production.product.line'
-    _description = 'Production scheduled products'
-    
+    _description = 'Production Scheduled Product'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),

@@ -4,7 +4,7 @@
   create physical inventory ,fill inventory lines from location,split inventory line into production lot
      
 - 
-  Creating a account.account.type record
+  I create Asset Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_asset0}:
     close_method: balance
@@ -12,18 +12,8 @@
     name: Asset
     sign: 1
     
-    
 - 
-  Creating a account.account.type record
-- 
-  !record {model: account.account.type, id: account_account_type_liability0}:
-    close_method: balance
-    code: liability
-    name: Liability
-    sign: 1    
-    
-- 
-  Creating a account.account.type record
+   I create Income Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_income0}:
     close_method: unreconciled
@@ -33,7 +23,7 @@
     
     
 - 
-  Creating a account.account.type record
+  I create Expense Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_expense0}:
     close_method: unreconciled
@@ -41,7 +31,7 @@
     name: Expense
     sign: 1    
 - 
-  Creating a account.account.type record
+  I create Cash Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_cash0}:
     close_method: balance
@@ -51,7 +41,7 @@
     
     
 - 
-  Creating a account.account.type record
+  I create Receivable Account Type.
 - 
   !record {model: account.account.type, id: account_account_type_receivable0}:
     close_method: balance
@@ -60,7 +50,7 @@
     sign: 1
 -
  
-  Creating a account.account record
+  I create Receivable Account .
 - 
   !record {model: account.account, id: account_account_receivable0}:
     code: '40000'
@@ -72,7 +62,7 @@
     type: receivable
     user_type: account_account_type_receivable0
 - 
-  Creating a account.account record
+  I create Payable Account.
 - 
   !record {model: account.account, id: account_account_payable0}:
     code: '440000'
@@ -84,7 +74,7 @@
     type: payable
     user_type: account_account_type_expense0    
 - 
-  Creating a account.journal record
+  I create Purchase Journal.
 - 
   !record {model: account.journal, id: account_journal_purchasejournal0}:
     code: pur
@@ -95,18 +85,18 @@
     view_id: account.account_journal_bank_view
     
 - 
-  Creating a account.journal record
+  I create Sale Journal.
 - 
   !record {model: account.journal, id: account_journal_salejouran0}:
     code: sal
     company_id: base.main_company
-    name: Sale Jouran
+    name: Sale Journal
     sequence_id: account.sequence_sale_journal
     type: sale
     view_id: account.account_journal_view
     
 - 
-  Creating a account.account record
+  I create Expense Account.
 - 
   !record {model: account.account, id: account_account_expenseaccount0}:
     code: Expe
@@ -118,7 +108,7 @@
     type: consolidation
     user_type: account_account_type_asset0
 - 
-  Creating a account.account record
+  I create Product Sale Account.
 - 
   !record {model: account.account, id: account_account_productsale0}:
     code: '001'
@@ -130,7 +120,7 @@
     
     
 - 
-  Creating a account.account record
+  I create Product Purchase Account.
 - 
   !record {model: account.account, id: account_account_productpurchase0}:
     code: '0002'
@@ -141,7 +131,7 @@
     user_type: account_account_type_expense0
         
 - 
-  Creating a res.partner record
+  I create partner.
 - 
   !record {model: res.partner, id: res_partner_shawtrust0}:
     address:
@@ -152,7 +142,7 @@
     property_account_payable: account_account_payable0
     property_account_receivable: account_account_receivable0
 -    
-  Creating a res.partner record
+  I create partner.
 - 
   !record {model: res.partner, id: res_partner_diasorinltd0}:
     address:
@@ -163,7 +153,7 @@
     
         
 -
-  Creating a res.partner record
+  I create partner.
 - 
   !record {model: res.partner, id: res_partner_microlinktechnologies0}:
     address:
@@ -174,7 +164,7 @@
     supplier: true        
     
 -
-  Creating a res.partner.address record
+  I create partner address.
 - 
   !record {model: res.partner.address, id: res_partner_address_0}:
     country_id: base.in
@@ -184,13 +174,13 @@
     
                
 -     
-  Creating a product.category record
+  I create  product.category .
 - 
   !record {model: product.category, id: product_category_computer0}:
     name: Computer
 
 - 
-  Creating a product.product record
+   I create  product HP Pavilion Desktop PCs .
 - 
   !record {model: product.product, id: product_product_hppaviliondesktoppcs0}:
     categ_id: stock.product_category_computer0
@@ -211,7 +201,7 @@
     property_account_income: account_account_productsale0    
     
 - 
-  Creating a product.product record
+  I create  product HP CD writers.
 - 
   !record {model: product.product, id: product_product_hpcdwriters0}:
     categ_id: stock.product_category_computer0
@@ -259,7 +249,7 @@
   !python {model: stock.inventory}: |
    self.action_done(cr,uid,[ref('stock_inventory_physicalinventoy0')])
 - 
-  Creating a stock.fill.inventory record
+  I create stock.fill.inventory .
 - 
   !record {model: stock.fill.inventory, id: stock_fill_inventory_0}:
     location_id: stock.stock_location_stock
@@ -273,7 +263,7 @@
       [ref("stock_inventory_physicalinventoy0")], "active_id": ref("stock_inventory_physicalinventoy0"), })
 
 - 
-  Creating a stock.move.split record.
+  I create stock.move.split record.
 - 
   !record {model: stock.move.split, id: stock_move_split_0}:
     line_ids:
@@ -283,7 +273,7 @@
     
     
 - 
-  Split into production line.
+  I Split into production line.
 - 
   !python {model: stock.move.split}: |
     move_obj=self.pool.get('stock.move')
