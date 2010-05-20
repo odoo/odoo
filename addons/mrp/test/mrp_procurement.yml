@@ -4,7 +4,7 @@
 -
   I am creating products.   
 - 
-  Creating a product.product record
+  I create record for product Shirt.
 - 
   !record {model: product.product, id: product_product_shirt0}:
     categ_id: product.cat1
@@ -27,7 +27,7 @@
     weight: 0.0
     weight_net: 0.0
 - 
-  Creating a product.product record
+  I create record for product Cloth.
 - 
   !record {model: product.product, id: product_product_cloth0}:
     categ_id: product.cat1
@@ -53,7 +53,7 @@
     weight: 0.0
     weight_net: 0.0
 - 
-  Creating a product.product record
+  I create record for product Buttons.
 - 
   !record {model: product.product, id: product_product_buttons0}:
     categ_id: product.cat1
@@ -81,7 +81,7 @@
 -
   I am creating bills of material for 'Shirt'.      
 - 
-  Creating a mrp.bom record
+  I create bills of material for Shirt.
 - 
   !record {model: mrp.bom, id: mrp_bom_shirt0}:
     bom_lines:
@@ -217,10 +217,14 @@
     pick_ids = self.search(cr, uid, [('address_id.name','=','Wong'),('state','=','assigned')])
     assert pick_ids, _('No Incoming Shipments found!')
 -
+  I create record for partial picking.
+-
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
     partner_id: base.res_partner_maxtor
     address_id: base.res_partner_address_wong
+-
+  I make my picking done.
 -
   !python {model: stock.partial.picking}: |
      pick_obj = self.pool.get('stock.picking')
@@ -252,10 +256,14 @@
     pick_ids = self.search(cr, uid, [('address_id.name','=','Tang'),('state','=','assigned')])
     assert pick_ids, _('No Incoming Shipments found!')
 -
+  I create record for partial picking.
+-
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
     partner_id: base.res_partner_maxtor
     address_id: base.res_partner_address_wong
+-
+  I make my picking done.
 -
   !python {model: stock.partial.picking}: |
      pick_obj = self.pool.get('stock.picking')
@@ -304,9 +312,13 @@
     for p_id in prod_ids:
     	wf_service.trg_validate(uid, 'mrp.production', p_id, 'button_produce', cr)
 -
+  I create record for producing products with quantity 5.00.
+-
   !record {model: mrp.product.produce, id: mrp_product_produce0}:
     product_qty: 5.00
     mode: 'consume_produce'
+-
+  I produce 2 products with 5.00 quantities each.
 -
   !python {model: mrp.product.produce}: |
     from tools.translate import _
@@ -314,11 +326,15 @@
     prod_ids = prod_obj.search(cr, uid, [('product_id.name','=','Shirt')])
     self.do_produce(cr, uid, [1], context={'active_ids': prod_ids})
 -
+  I create record for remaining products with quantity 35.00.
+-
   !record {model: stock.move.consume, id: stock_move_consume0}:
     product_id: product_product_buttons0
     product_qty: 35.00
     product_uom: product.product_uom_unit
     location_id: stock.stock_location_stock
+-
+  I produce remaining product Buttons with 35.00 quantity.
 -
   !python {model: stock.move.consume}: |
     from tools.translate import _

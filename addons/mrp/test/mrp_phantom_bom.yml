@@ -9,6 +9,8 @@
     factor: 1.0
     name: Litre
     rounding: 0.01 
+-
+  I create record for product Orange Juice.
 - 
   !record {model: product.product, id: product_product_orangejuice0}:
     categ_id: product.cat1
@@ -18,6 +20,8 @@
     type: product
     uom_id: product_uom_litre0
     uom_po_id: product_uom_litre0
+-
+  I create record for product Orange.
 - 
   !record {model: product.product, id: product_product_orange0}:
     categ_id: product.cat1
@@ -31,6 +35,8 @@
     type: product
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
+-
+  I create record for product Sugar.
 - 
   !record {model: product.product, id: product_product_sugar0}:
     categ_id: product.cat1
@@ -44,6 +50,8 @@
     type: product
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
+-
+  I create record for product Water.
 - 
   !record {model: product.product, id: product_product_water0}:
     categ_id: product.cat1
@@ -64,6 +72,8 @@
     product_qty: 1.0
     product_uom: product_uom_litre0
     type: phantom
+-
+  I create bom lines for BoM for Orange Juice.
 - 
   !record {model: mrp.bom, id: mrp_bom_orangejuice0}:
     bom_lines:
@@ -92,7 +102,7 @@
         product_uom: product_uom_litre0
         type: normal
 -
-  I define Minimum stock rules for my stockable products orange and sugar
+  I define Minimum stock rules for my stockable products Orange.
 - 
   !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
     company_id: base.main_company
@@ -105,6 +115,8 @@
     product_uom: product.product_uom_kgm
     qty_multiple: 1
     warehouse_id: stock.warehouse0
+-
+  I define Minimum stock rules for my stockable products Sugar.
 - 
   !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op1}:
     company_id: base.main_company
@@ -177,14 +189,14 @@
 -
   !function {model: mrp.procurement, name: run_scheduler}:
     - model: mrp.procurement
-      search: "[('origin','=',':MO/00002')]"
+      search: "[('state','!=','cofirmed')]"
 -
   I am checking Internal picking. I see one picking for Orange juice and its 
   stock moves for Oranges, Sugar and Water made correctly.
 -
   !python {model: stock.picking}: |
     from tools.translate import _
-    pick_ids = self.search(cr, uid, [('origin','=',':MO/00002'),('type','=','internal')])
+    pick_ids = self.search(cr, uid, [('type','=','internal')])
     assert pick_ids, _('No Internal Pickings!')
 -
   According to minimum stock rules. I have 2 purchase orders for 
@@ -221,10 +233,14 @@
 -
   I receive both the products. My incoming pickings are done.
 -
+  I create record for the incoming picking wizard.
+-
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
     date: '2010-04-30 16:53:36'
     partner_id: base.res_partner_asus
     address_id: base.res_partner_address_tang
+-
+  I make my pickings done.
 -
   !python {model: stock.partial.picking}: |
      pick_obj = self.pool.get('stock.picking')
