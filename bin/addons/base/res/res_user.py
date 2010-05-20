@@ -106,10 +106,11 @@ roles()
 
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [])
+    ids = obj.search(cr, uid, [('translatable','=',True)])
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
     res = [(r['code'], r['name']) for r in res]
     return res
+
 def _tz_get(self,cr,uid, context={}):
     return [(x, x) for x in pytz.all_timezones]
 
@@ -245,6 +246,15 @@ class users(osv.osv):
                 result = override_password(result)
             else:
                 result = map(override_password, result)
+        
+        if isinstance(result, list):
+            for rec in result:
+                if not rec.get('action_id',True):
+                    rec['action_id'] = (self._get_menu(cr, uid),'Menu')
+        else:
+            if not result.get('action_id',True):
+                result['action_id'] = (self._get_menu(cr, uid),'Menu')
+        
         return result
 
 
@@ -467,6 +477,13 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _columns = {
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        for record in self.read(cr, uid, ids, ['users'], context=context):
+            if record['users']:
+                raise osv.except_osv(_('Warning !'), _('Make sure you have no users linked with the group(s)!'))
+        return super(groups2, self).unlink(cr, uid, ids, context=context)
+
 groups2()
 
 class res_config_view(osv.osv_memory):
