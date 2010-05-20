@@ -29,7 +29,7 @@ class account_unreconcile(osv.osv_memory):
         obj_move_reconcile = self.pool.get('account.move.reconcile')
         if context is None:
             context = {}
-        recs = pool.get('account.move.line').read(cr, uid, data['ids'], ['reconcile_id','reconcile_partial_id'])
+        recs = obj_move_line.read(cr, uid, data['ids'], ['reconcile_id','reconcile_partial_id'])
         unlink_ids = []
         full_recs = filter(lambda x: x['reconcile_id'], recs)
         rec_ids = [rec['reconcile_id'][0] for rec in full_recs]
@@ -37,9 +37,9 @@ class account_unreconcile(osv.osv_memory):
         part_rec_ids = [rec['reconcile_partial_id'][0] for rec in part_recs]
         unlink_ids += rec_ids
         unlink_ids += part_rec_ids
-    
+
         if len(unlink_ids):
-            pooler.get_pool(cr.dbname).get('account.move.reconcile').unlink(cr, uid, unlink_ids)
+            self.pool.get('account.move.reconcile').unlink(cr, uid, unlink_ids)
         return {}
 
 account_unreconcile()
