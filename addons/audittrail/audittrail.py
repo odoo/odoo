@@ -231,7 +231,6 @@ class audittrail_objects_proxy(osv_pool):
         @param object: Object who's values are being changed
         @param lines: List of values for line is to be created
         """
-
         pool = pooler.get_pool(cr.dbname)
         obj = pool.get(object.model)
         #start Loop
@@ -282,6 +281,7 @@ class audittrail_objects_proxy(osv_pool):
         @return: Returns result as per method of Object proxy
         """
         logged_uids = []
+        res2 = args
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
         obj_ids = pool.get('ir.model').search(cr, uid, [('model', '=', object)])
@@ -448,7 +448,7 @@ class audittrail_objects_proxy(osv_pool):
         return res
 
 
-    def workflow_log(self, db, uid, object, method, *args, **argv):
+    def workflow_log(self, db, uid, object, method,*args, **argv):
         """
         Logging function: This function is performs logging oprations according to method
         @param db: the current database
@@ -464,14 +464,40 @@ class audittrail_objects_proxy(osv_pool):
         cr = pooler.get_db(db).cursor()
         obj_ids = pool.get('ir.model').search(cr, uid, [('model', '=', object)])
         model_object = pool.get('ir.model').browse(cr, uid, obj_ids)[0]
+
         workflow_obj = pool.get('workflow')
         wkf_ids = workflow_obj.search(cr, uid, [('osv', '=', object)])
         wkf_name= workflow_obj.browse(cr, uid, wkf_ids)[0].name
 
+        res_id = args[0]
+        old_values_text = {}
+        old_values = pool.get(model_object.model).read(cr, uid, res_id)
+        for field in old_values.keys():
+            old_values_text[field] = self.get_value_text(cr, uid, field, old_values[field], model_object)
+
         res = super(audittrail_objects_proxy, self).exec_workflow(db, uid, object, method, *args, **argv)
+        cr.commit()
+        new_values = pool.get(model_object.model).read(cr, uid, res_id)
+
         resource_name = pool.get(model_object.model).name_get(cr, uid, [args[0]])
         resource_name = resource_name and resource_name[0][1] or ''
         l_id = pool.get('audittrail.log').create(cr, uid, {"method": 'workflow', "object_id": model_object.id, "user_id": uid, "res_id": args[0], "name": resource_name +"/"+ wkf_name })
+        lines = []
+        diff = {}
+        log_line_pool = pool.get('audittrail.log.line')
+
+        for field in old_values.keys():
+            if old_values[field] == new_values[field]:
+                continue
+            else:
+                diff.update({field: (old_values[field], new_values[field])})
+                f_id = pool.get('ir.model.fields').search(cr, uid, [('name', '=', field), ('model_id', '=', model_object.id)])
+                log_line_pool.create(cr, uid, {'field_id': f_id[0], 'log_id': l_id, \
+                                'old_value': str(old_values[field]),\
+                                 'new_value': str(new_values[field]),\
+                                 'old_value_text':str(old_values_text[field]),
+                                 'new_value_text':self.get_value_text(cr, uid, field, new_values[field], model_object),
+                                 })
         cr.commit()
         cr.close()
         return res
