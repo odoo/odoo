@@ -13,7 +13,7 @@
                         <filter icon="terp-hr" domain="[('state','=','validate')]" string="Validated"
                             default="context.get('report', False)"/>
                         <separator orientation="vertical"/>
-                        <field name="user_id" widget="selection" default="uid"/>
+                        <field name="user_id" widget="selection"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-hr"
                                 domain="[('department_id.manager_id','=',uid)]"
@@ -230,6 +230,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_holiday_new"/>
             <field name="domain">[('type','=','remove')]</field>
+            <field name="context">{'search_default_user_id':uid}</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
@@ -248,20 +249,21 @@
     </record>
 
 
-       <menuitem
-          name="Leave Requests"
-            parent="menu_open_ask_holidays"
-            id="menu_open_ask_holidays_new"
-            action="open_ask_holidays"/>
+    <menuitem
+       name="Leave Requests"
+         parent="menu_open_ask_holidays"
+         id="menu_open_ask_holidays_new"
+         action="open_ask_holidays"/>
 
-        <record model="ir.actions.act_window" id="open_allocation_holidays">
-            <field name="name">Allocation Requests</field>
-            <field name="res_model">hr.holidays</field>
-            <field name="view_type">form</field>
-            <field name="context">{'type':'add'}</field>
-            <field name="domain">[('type','=','add')]</field>
-            <field name="view_id" ref="allocation_leave_new" />
-        </record>
+	<record model="ir.actions.act_window" id="open_allocation_holidays">
+	    <field name="name">Allocation Requests</field>
+	    <field name="res_model">hr.holidays</field>
+	    <field name="view_type">form</field>
+	    <field name="context">{'search_default_user_id':uid,'type':'add'}</field>
+	    <field name="domain">[('type','=','add')]</field>
+	    <field name="view_id" ref="allocation_leave_new"/>
+	    <field name="search_view_id" ref="view_hr_holidays_filter"/>
+	</record>
 
     <record model="ir.actions.act_window.view" id="action_open_allocation_holidays_tree">
         <field name="sequence" eval="1"/>
@@ -288,8 +290,9 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" eval="view_holiday_simple" />
-            <field name="context">{'allocation_type':'company', 'report':True}</field>
+            <field name="view_id" eval="view_holiday_simple"/>
+            <field name="context">{'search_default_user_id':uid,'allocation_type':'company', 'report':True}</field>
+            <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
         <menuitem

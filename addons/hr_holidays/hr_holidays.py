@@ -23,7 +23,6 @@
 import time
 import datetime
 
-import pooler
 import netsvc
 from osv import fields, osv
 from tools.translate import _
