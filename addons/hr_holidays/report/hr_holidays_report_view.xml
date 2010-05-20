@@ -83,8 +83,7 @@
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_user_id': uid}</field>
-       <!-- <field name="context">{'search_default_employee': 1}</field>-->
+        <field name="context">{'search_default_employee': 1, "search_default_user_id": uid}</field>
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 

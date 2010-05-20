@@ -65,7 +65,7 @@
                                 <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
                                 <button name="%(action_view_pos_return)d" string="Return Picking" type="action" icon="gtk-ok" states="paid"
-                                    attrs="{'invisible':[('state','!=','paid'),('state','!=','invoiced')]}"/>                             
+                                    attrs="{'invisible':[('state','!=','paid'),('state','!=','invoiced')]}"/>
                             </group>
                         </page>
 
@@ -157,9 +157,7 @@
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
-                    <field name="user_id" select="1" widget="selection">
-                        <filter icon="terp-partner" string="My Sale" domain="[('user_id','=',uid)]" help="My Sale Orders" />
-                    </field>
+                    <field name="user_id" select="1" widget="selection"/>
                     <field name="date_order" select="1" string="Order date" />
                     <newline/>
                     <group expand="1" string="Group By..." colspan="11" col="11">
@@ -171,12 +169,12 @@
                </search>
             </field>
         </record>
-        
+
         <menuitem name="Point of Sale" id="menu_point_root" sequence="10"/>
         <menuitem name="Point of Sale" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
         <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="2" />
-        
+
         <menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale_product" sequence="2" name="Products"/>
 
         <!--  POS Order view (date_payment)  -->
@@ -188,8 +186,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
             <field name="domain">['|',('state_2','=','to_verify'),('state','=','advance')]</field>
-			<field name="search_view_id" ref="view_pos_order_filter"/>	             
- 				           
+            <field name="context">{"search_default_user_id":uid}</field>
+			<field name="search_view_id" ref="view_pos_order_filter"/>
+
         </record>
 
         <record model="ir.actions.act_window" id="action_pos_order_tobinvoiced">
@@ -200,8 +199,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
             <field name="domain">[('state','!=', 'invoiced')]</field>
-			<field name="search_view_id" ref="view_pos_order_filter"/>	             
-		    	             
+            <field name="context">{"search_default_user_id":uid}</field>
+			<field name="search_view_id" ref="view_pos_order_filter"/>
+
         </record>
         <menuitem name="Invoicing" id="menu_point_of_sale_invoicing" parent="menu_point_root" sequence="4" />
         <menuitem name="Sales to Invoice" action="action_pos_order_tobinvoiced" id="menu_point_of_sale_tobinvoiced" parent="menu_point_of_sale_invoicing"/>
@@ -212,7 +212,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=', 'paid')]</field>
- 			<field name="search_view_id" ref="view_pos_order_filter"/>	               
+            <field name="context">{"search_default_user_id":uid}</field>
+ 			<field name="search_view_id" ref="view_pos_order_filter"/>
         </record>
         <record model="ir.actions.act_window" id="action_pos_order_tree2">
             <field name="name">Point of Sale</field>
@@ -221,7 +222,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('date_order','&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
- 			<field name="search_view_id" ref="view_pos_order_filter"/>	               
+            <field name="context">{"search_default_user_id":uid}</field>
+ 			<field name="search_view_id" ref="view_pos_order_filter"/>
         </record>
 
         <record model="ir.actions.act_window" id="action_pos_order_tree3">
@@ -230,7 +232,8 @@
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-			<field name="search_view_id" ref="view_pos_order_filter"/>            
+            <field name="context">{"search_default_user_id":uid}</field>
+			<field name="search_view_id" ref="view_pos_order_filter"/>
         </record>
         <record model="ir.actions.act_window" id="action_pos_order_tree_open">
             <field name="name">Opened Sales</field>
@@ -238,7 +241,8 @@
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-			<field name="search_view_id" ref="view_pos_order_filter"/>            
+            <field name="context">{"search_default_user_id":uid}</field>
+			<field name="search_view_id" ref="view_pos_order_filter"/>
         </record>
 
         <record model="ir.ui.view" id="view_pos_order_line">
@@ -789,7 +793,7 @@
                     parent="menu_point_config_product"
                     action="action_product_output"
                     id="products_for_output_operations"/>
-            
+
         <menuitem name="Register Management" parent="menu_point_root"
             id="menu_point_config" sequence="3"/>
         <menuitem
@@ -797,7 +801,7 @@
             string="Refloat"
             action="action_box_entries"
             id="menu_wizard_enter_jrnl" sequence="3" />
-            
+
         <menuitem
             name="Output Operations" parent="menu_point_config"
             string="Refloat"
@@ -920,7 +924,7 @@
 
         <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
                 id="menu_pos_payment_report_date" parent="menu_trans_pos_tree" sequence="5" groups="base.group_extended"/>
- 
+
         <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
                 id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
         <menuitem icon="STOCK_PRINT" action="action_pos_sales_user_today"

@@ -80,10 +80,6 @@
                 <field name="user_id" widget="selection">
 
                     <filter icon="terp-account"
-                    		string="My Invoices"
-                    		help = "My Invoices"
-                    		domain="[('user_id','=',uid)]" />
-                    <filter icon="terp-account"
                     		string="Invoices Non Users"
                     		help="Invoices Non Users"
                     		domain="[('user_id','=',False)]"/>
@@ -141,7 +137,7 @@
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[],'search_default_user_id':uid}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
     </record>
 

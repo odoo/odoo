@@ -50,7 +50,7 @@ class hr_expense_expense(osv.osv):
             return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
 
     _name = "hr.expense.expense"
-    _description = "HR Expense"
+    _description = "Expense"
     _columns = {
         'name': fields.char('Expense Sheet', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),

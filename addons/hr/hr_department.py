@@ -101,7 +101,7 @@ ir_action_window()
 
 class res_users(osv.osv):
     _inherit = 'res.users'
-    _description = 'res.users'
+    _description = 'User'
 
     def _parent_compute(self, cr, uid, ids, name, args, context={}):
         result = {}

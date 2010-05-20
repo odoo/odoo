@@ -459,7 +459,15 @@ class stock_picking(osv.osv):
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'stock.picking')
-
+        type_list = {
+            'out':_('Packing List'),
+            'in':_('Reception'),
+            'internal': _('Internal picking'),
+            'delivery': _('Delivery order')
+        }
+        if not vals.get('auto_picking', False):
+            message = type_list.get(vals.get('type',_('Picking'))) + " '" + vals['name'] + "' "+ _("created.")
+            self.log(cr, user, id, message)
         return super(stock_picking, self).create(cr, user, vals, context)
 
     _columns = {
@@ -532,7 +540,7 @@ class stock_picking(osv.osv):
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
-        for picking in self.browse(cr, uid, ids):
+        for picking in self.browse(cr, uid, ids, context=context):
             for r in picking.move_lines:
                 if r.state == 'draft':
                     todo.append(r.id)
@@ -599,7 +607,16 @@ class stock_picking(osv.osv):
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
-    def action_assign_wkf(self, cr, uid, ids):
+    def action_assign_wkf(self, cr, uid, ids, context=None):
+        for pick in self.browse(cr, uid, ids, context=context):
+            type_list = {
+                'out':'Packing List',
+                'in':'Reception',
+                'internal': 'Internal picking',
+                'delivery': 'Delivery order'
+            }
+            message = type_list.get(pick.type, _('Document')) + " '" + pick.name + "' "+ _("is ready to be processed.")
+            self.log(cr, uid, id, message)
         self.write(cr, uid, ids, {'state': 'assigned'})
         return True
 
@@ -861,15 +878,23 @@ class stock_picking(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
+        move_obj = self.pool.get('stock.move')
+        if not context:
+            context = {}
+            
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
                 raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
-            elif pick.state in ['confirmed','assigned']:
+            elif pick.state in ['confirmed','assigned', 'draft']:
                 ids2 = [move.id for move in pick.move_lines]
-                context.update({'call_unlink':True})
-                self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
-            else:
-                continue
+                ctx = context.copy()
+                ctx.update({'call_unlink':True})
+                if pick.state != 'draft':
+                    #Cancelling the move in order to affect Virtual stock of product
+                    move_obj.action_cancel(cr, uid, ids2, ctx)
+                #Removing the move
+                move_obj.unlink(cr, uid, ids2, ctx)
+                    
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
     def do_partial(self, cr, uid, ids, partial_datas, context={}):
@@ -1145,6 +1170,7 @@ class stock_move(osv.osv):
         return (res and res[0]) or False
     _name = "stock.move"
     _description = "Stock Move"
+    _log_create = False
 
     def name_get(self, cr, uid, ids, context={}):
         res = []
@@ -1268,6 +1294,11 @@ class stock_move(osv.osv):
     def create(self, cr, user, vals, context=None):
         if vals.get('move_stock_return_history',False):
             vals['move_stock_return_history'] = []
+        # Check that the stock.move is in draft state at creation to force
+        # passing through button_confirm
+        if vals.get('state','draft') not in ('draft','done','waiting'):
+            logger = netsvc.Logger()
+            logger.notifyChannel("code", netsvc.LOG_WARNING, "All new stock.move must be in state draft at the creation !")
         return super(stock_move, self).create(cr, user, vals, context)
 
     def _auto_init(self, cursor, context):
@@ -1613,6 +1644,8 @@ class stock_move(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}        
         for move in self.browse(cr, uid, ids, context=context):
             if move.state != 'draft':
                 raise osv.except_osv(_('UserError'),
@@ -1743,7 +1776,7 @@ class stock_move(osv.osv):
 
         @ return: Consumed lines
         '''
-        if not context:
+        if context is None:
             context = {}
 
         if quantity <= 0:
@@ -2017,7 +2050,7 @@ stock_inventory()
 
 class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
-    _description = "Inventory line"
+    _description = "Inventory Line"
     _columns = {
         'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
@@ -2053,9 +2086,9 @@ class stock_warehouse(osv.osv):
 #       'partner_id': fields.many2one('res.partner', 'Owner'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
         'partner_address_id': fields.many2one('res.partner.address', 'Owner Address'),
-        'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True),
-        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True),
-        'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True),
+        'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True, domain=[('usage','<>','view')]),
+        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','<>','view')]),
+        'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True, domain=[('usage','<>','view')]),
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),

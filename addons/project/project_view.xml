@@ -415,7 +415,7 @@
                         <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-project"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1" widget="selection" default="context.get('project_id', False)">
+                        <field name="project_id" select="1" widget="selection">
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
                         </field>
                         <field name="user_id" select="1" widget="selection">
@@ -629,7 +629,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_project_message_tree"/>
+<<<<<<< TREE
             <field name="context">{"search_default_project_id":project_id, "search_default_my_msg":1, "search_default_user_id":uid}</field>
+=======
+            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid}</field>
+>>>>>>> MERGE-SOURCE
             <field name="search_view_id" ref="view_project_message_search"/>
        </record>
 

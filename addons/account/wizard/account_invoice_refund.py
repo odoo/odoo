@@ -21,6 +21,7 @@
 from osv import fields, osv
 from tools.translate import _
 import netsvc
+import time
 
 class account_invoice_refund(osv.osv_memory):
 
@@ -29,10 +30,14 @@ class account_invoice_refund(osv.osv_memory):
     _name = "account.invoice.refund"
     _description = "Invoice Refund"
     _columns = {
-       'date': fields.date('Operation date', required=False),
+       'date': fields.date('Operation date', required=False, help='This date will be used as the invoice date for Refund Invoice and Period will be chosen accordingly!'),
        'period': fields.many2one('account.period', 'Force period', required=False),
        'description': fields.char('Description', size=150, required=True),
-                }
+    }
+    
+    _defaults = {
+        'date': time.strftime('%Y-%m-%d'),
+    }
 
     def compute_refund(self, cr, uid, ids, mode, context=None):
         """
@@ -167,7 +172,7 @@ class account_invoice_refund(osv.osv_memory):
                 xml_id = 'action_invoice_tree1'
             elif inv.type == 'in_invoice':
                 xml_id = 'action_invoice_tree2'
-            elif type == 'out_refund':
+            elif inv.type == 'out_refund':
                 xml_id = 'action_invoice_tree3'
             else:
                 xml_id = 'action_invoice_tree4'
