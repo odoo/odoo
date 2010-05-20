@@ -507,7 +507,6 @@ def _links_get(self, cr, uid, context=None):
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
 
-
 class crm_case_log(osv.osv):
     """ Case Communication History """
     _name = "crm.case.log"
