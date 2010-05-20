@@ -23,8 +23,7 @@
     "name" : "Accounting Reports",
     "version" : "1.0",
     "depends" : [
-        "account",
-        "account_voucher"
+        "account"
     ],
     "author" : "Tiny ERP",
     "description": """Accounting Reports 
