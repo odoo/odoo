@@ -29,14 +29,36 @@ class idea_post_vote(osv.osv_memory):
     _description = "Post vote"
 
     _columns = {
-                'vote': fields.selection([('-1', 'Not Voted'),
-                                          ('0', 'Very Bad'),
-                                          ('25', 'Bad'),
-                                          ('50', 'Normal'),
-                                          ('75', 'Good'),
-                                          ('100', 'Very Good') ], 'Give Vote', required=True),
-                'content': fields.text('Comment'),
-                }
+        'vote': fields.selection([('-1', 'Not Voted'),
+              ('0', 'Very Bad'),
+              ('25', 'Bad'),
+              ('50', 'Normal'),
+              ('75', 'Good'),
+              ('100', 'Very Good') ], 
+        'Post Vote', required=True),
+        'note': fields.text('Description'),
+    }
+    
+    def get_default(self, cr, uid, context={}):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+        """
+        idea_obj = self.pool.get('idea.idea')
+        
+        if context.get('active_id'):
+            idea = idea_obj.browse(cr, uid, context.get('active_id'))
+            return idea.my_vote
+        else:
+            return 75
+        
+    _defaults = {
+        'vote': get_default,
+    }
     
     def view_init(self, cr, uid, fields, context=None):
         """
@@ -51,7 +73,7 @@ class idea_post_vote(osv.osv_memory):
         vote_obj = self.pool.get('idea.vote')
         
         for idea in idea_obj.browse(cr, uid, context.get('active_ids', [])):
-            
+          
             for active_id in context.get('active_ids'):
                 
                 vote_ids = vote_obj.search(cr, uid, [('user_id', '=', uid), ('idea_id', '=', active_id)])
@@ -70,7 +92,6 @@ class idea_post_vote(osv.osv_memory):
         return False
 
     def do_vote(self, cr, uid, ids, context=None):
-
         """
         Create idea vote.
         @param cr: the current row, from the database cursor,
@@ -78,15 +99,30 @@ class idea_post_vote(osv.osv_memory):
         @param ids: List of Idea Post vote’s IDs.
         @return: Dictionary {}
         """
-        data = context and context.get('active_ids', []) or []
-        vote_obj = self.pool.get('idea.vote')
+        
+        vote_id = context and context.get('active_id', False) or False
+        vote_pool = self.pool.get('idea.vote')
+        comment_pool = self.pool.get('idea.comment')
+
+
         for do_vote_obj in self.read(cr, uid, ids):
             score = str(do_vote_obj['vote'])
-            comment = do_vote_obj['content']
-            for id in data:
-                dic = {'idea_id': id, 'user_id': uid, 'score': score, 'comment': comment}
-                vote = vote_obj.create(cr, uid, dic)
-            return {}
+            comment = do_vote_obj.get('note', False)
+            vote = {
+                'idea_id': vote_id, 
+                'user_id': uid, 
+                'score': score
+            }
+            if comment:
+                comment = {
+                    'user_id':uid,
+                    'idea_id':vote_id,
+                    'content': comment,
+                }
+                comment = comment_pool.create(cr, uid, comment)
+                
+            vote = vote_pool.create(cr, uid, vote)
+        return {}
         
 idea_post_vote()
 

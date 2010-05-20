@@ -38,6 +38,7 @@
         'account_report.xml',
         'account_wizard.xml',
         'wizard/account_report_print_indicators_view.xml',
+        'wizard/account_report_print_indicators_with_pdf_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

@@ -27,7 +27,7 @@ import time
 
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
-    _description="Purchase requisition"
+    _description="Purchase Requisition"
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
         'origin': fields.char('Origin', size=32),
@@ -110,7 +110,6 @@ purchase_requisition_line()
 
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
-    _description = "purchase order"
     _columns = {
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition')
     }

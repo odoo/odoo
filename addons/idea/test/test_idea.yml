@@ -86,6 +86,15 @@
     vote_avg: 75 
    
 - |
+  I put one comment "We can learn many things from technical presentation" for the idea.
+- 
+  !record {model: idea.idea, id: idea.idea_idea_0}:
+    comment_ids:
+      - content: "We can learn many things from technical presentation"
+        idea_id: idea.idea_idea_0
+        user_id: res_users_user1
+        
+- |
   I connect as Manager and  close this idea by click on "Close" button.
 -
   !workflow {model: idea.idea, action: idea_close, ref: idea_idea_0}

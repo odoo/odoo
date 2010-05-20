@@ -25,7 +25,7 @@ from tools.translate import _
 
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
-    _description = "Invoice rate"
+    _description = "Invoice Rate"
     _columns = {
         'name': fields.char('Internal name', size=128, required=True),
         'customer_name': fields.char('Name', size=128),

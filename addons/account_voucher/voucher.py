@@ -103,7 +103,7 @@ class account_voucher(osv.osv):
             ],'Type', readonly=True, select=True , size=128),
         'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','<>','view')]),
         'payment_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=False, states={'proforma':[('readonly',True)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'narration':fields.text('Narration', readonly=True, states={'draft':[('readonly',False)]}, required=True),
@@ -167,15 +167,14 @@ class account_voucher(osv.osv):
             return {'value':{'account_id':account_id.id}}
 
     def open_voucher(self, cr, uid, ids, context={}):
-        obj=self.pool.get('account.voucher').browse(cr,uid,ids)
-        total=0
+        obj = self.pool.get('account.voucher').browse(cr,uid,ids)
+        total = 0
         for i in obj[0].payment_ids:
-            total+=i.amount
-        if total!=0:
-            self.write(cr,uid,ids,{'amount':total})
-            self.write(cr, uid, ids, {'state':'proforma'})
+            total += i.amount
+        if total != 0:
+            self.write(cr, uid, ids, {'amount':total, 'state':'proforma'})
         else:
-            raise osv.except_osv('Invalid action !', 'You can not post to Pro-Forma a voucher with Total amount = 0')
+            raise osv.except_osv('Invalid action !', 'You cannot post to Pro-Forma a voucher with Total amount = 0 !')
         return True
 
     def proforma_voucher(self, cr, uid, ids, context={}):
@@ -302,9 +301,9 @@ class account_voucher(osv.osv):
                 name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
 
             move = {
-                'name': name,
+                'name' : name,
                 'journal_id': journal_id,
-                'voucher_type':inv.type,
+                'type' : inv.type,
                 'narration' : inv.narration
             }
             if inv.period_id:
@@ -487,7 +486,7 @@ class account_voucher_line(osv.osv):
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
         'name':fields.char('Description', size=256, required=True),
-        'account_id':fields.many2one('account.account','Account', required=True),
+        'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
         'partner_id': fields.many2one('res.partner', 'Partner', change_default=True),
         'amount':fields.float('Amount'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Type'),

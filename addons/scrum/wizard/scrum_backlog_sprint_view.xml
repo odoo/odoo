@@ -3,28 +3,29 @@
     <data>
 
 		<record id="view_scrum_backlog_to_sprint" model="ir.ui.view">
-            <field name="name">backlog.assign.sprint.form</field>
-            <field name="model">backlog.assign.sprint</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-			<form string="Assign Sprint">
-			    <group col="4" colspan="6">
-				    <field name="sprint_id" colspan="2"/>
-				    </group>
-				    <newline/>
-				    <separator colspan="2"/>
-				    <newline/>
-				    <group>
-				    <field name="state_open" colspan="1"/>
-				    <field name="convert_to_task" colspan="1"/>				</group>
-				<separator colspan="4"/>
-			    <group col="2" colspan="4">
-            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="assign_sprint" string="Assign Sprint" colspan="1" type="object" icon="gtk-execute"/>
-				</group>
-			</form>
-            </field>
-        </record>
+			<field name="name">backlog.assign.sprint.form</field>
+			<field name="model">backlog.assign.sprint</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Assign Sprint">
+					<group col="4" colspan="6">
+						<field name="sprint_id" colspan="2"/>
+						</group>
+						<newline/>
+						<separator colspan="2"/>
+						<newline/>
+					<group>
+						<field name="state_open" colspan="1"/>
+						<field name="convert_to_task" colspan="1"/>
+					</group>
+					<separator colspan="4"/>
+					<group col="2" colspan="4">
+						<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+						<button name="assign_sprint" string="Assign Sprint" colspan="1" type="object" icon="gtk-execute"/>
+					</group>
+				</form>
+			</field>
+		</record>
 
         <record id="action_scrum_backlog_to_sprint" model="ir.actions.act_window">
             <field name="name">Assign Sprint</field>

@@ -19,7 +19,6 @@
 #
 ##############################################################################
 import time
-import datetime
 
 from osv import fields, osv
 from tools.translate import _

@@ -25,7 +25,7 @@ import time
 
 class account_analytic_default(osv.osv):
     _name = 'account.analytic.default'
-    _description = 'Analytic Distributions'
+    _description = 'Analytic Distribution'
     _rec_name = 'analytic_id'
     _order = 'sequence'
     _columns = {
@@ -69,7 +69,7 @@ account_analytic_default()
 
 class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
-    _description = 'account invoice line'
+    _description = 'Invoice Line'
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition=False, price_unit=False, address_invoice_id=False, currency_id=False, context={}):
         res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition, price_unit, address_invoice_id, currency_id=currency_id, context=context)
@@ -103,6 +103,8 @@ class sale_order_line(osv.osv):
     # Method overridden to set the analytic account by default on criterion match
     def invoice_line_create(self, cr, uid, ids, context={}):
         create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
+        if not ids:
+            return create_ids
         sale_line_obj = self.browse(cr, uid, ids[0], context)
         pool_inv_line = self.pool.get('account.invoice.line')
 
