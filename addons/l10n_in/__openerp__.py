@@ -34,7 +34,7 @@
     "demo_xml" : [],
     "update_xml" : [
         "account_chart.xml",
-        "l10n_in_wizard.xml",
+        "account_wizard.xml",
     ],
     "active": False,
     "installable": True
