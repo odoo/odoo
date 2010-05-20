@@ -36,7 +36,7 @@ class project_issue(osv.osv, crm.crm_case):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, id desc"
-    _inherit = 'mailgate.thread'
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     def case_open(self, cr, uid, ids, *args):
         """
@@ -109,7 +109,10 @@ class project_issue(osv.osv, crm.crm_case):
         return res
 
     _columns = {
+        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'id': fields.integer('ID'),  
+        'name': fields.char('Name', size=128, required=True), 
+        'active': fields.boolean('Active', required=False), 
         'create_date': fields.datetime('Creation Date' , readonly=True), 
         'write_date': fields.datetime('Update Date' , readonly=True), 
         'date_deadline': fields.date('Deadline'), 
@@ -164,12 +167,25 @@ class project_issue(osv.osv, crm.crm_case):
                                 method=True, multi='day_close', type="integer", store=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to'),
     }
-
+    
     def _get_project(self, cr, uid, context):
        user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
        if user.context_project_id:
            return user.context_project_id.id
        return False
+
+    _defaults = {
+        'active': lambda *a: 1, 
+        'user_id': crm.crm_case._get_default_user, 
+        'partner_id': crm.crm_case._get_default_partner, 
+        'partner_address_id': crm.crm_case._get_default_partner_address, 
+        'email_from': crm.crm_case. _get_default_email, 
+        'state': lambda *a: 'draft',
+        'section_id': crm.crm_case. _get_section, 
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c), 
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
+        'project_id':_get_project,
+    }
 
     def convert_issue_task(self, cr, uid, ids, context=None):
         case_obj = self.pool.get('project.issue')
@@ -248,10 +264,6 @@ class project_issue(osv.osv, crm.crm_case):
         if not stage.on_change:
             return {'value':{}}
         return {'value':{}}
-
-    _defaults = {
-        'project_id':_get_project,
-    }
 
 project_issue()
 

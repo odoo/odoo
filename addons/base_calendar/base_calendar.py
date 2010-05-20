@@ -1002,7 +1002,7 @@ class calendar_event(osv.osv):
     _columns = {
         'id': fields.integer('ID'),
         'sequence': fields.integer('Sequence'),
-        'name': fields.char('Description', size=64, required=True),
+        'name': fields.char('Description', size=64, required=False),
         'date': fields.datetime('Date'),
         'date_deadline': fields.datetime('Deadline'),
         'create_date': fields.datetime('Created', readonly=True),
