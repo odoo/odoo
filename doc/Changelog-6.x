@@ -4,6 +4,7 @@
 Improvements (server)
 ---------------------
 
- * support of 'ref' attribute for importing 'reference' field values, as for many2one fields. 
+ * support of 'ref' attribute for importing 'reference' field values, as for many2one fields.
+ * experimental xml2yml script in /tools for conversion of XML data/test files to the new YAML format
 
 
