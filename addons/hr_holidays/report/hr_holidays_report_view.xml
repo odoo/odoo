@@ -61,12 +61,7 @@
 
                 <separator orientation="vertical"/>
                 <field name="employee_id"/>
-                <field name="user_id" widget="selection">
-                    <filter icon="terp-sale"
-                        string="My Leaves"
-                        default="1"
-                        domain="[('user_id','=',uid)]"/>
-                </field>
+                <field name="user_id" widget="selection"/>
                 <field name="date"/>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
@@ -86,7 +81,7 @@
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_employee': 1}</field>
+        <field name="context">{'search_default_employee': 1, "search_default_user_id":uid}</field>
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 

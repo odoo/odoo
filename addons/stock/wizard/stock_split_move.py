@@ -38,7 +38,7 @@ class stock_split_move_line(osv.osv_memory):
         res = super(stock_split_move_line, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
         pick_obj = self.pool.get('stock.picking')
-        pick = pick_obj.browse(cr, uid, record_id)
+        pick = pick_obj.browse(cr, uid, record_id, context=context)
         for m in [line for line in pick.move_lines]:
             res['move%s'%(m.id)] = m.product_qty
         return res
@@ -57,7 +57,7 @@ class stock_split_move_line(osv.osv_memory):
         if record_id:
             pick_obj = self.pool.get('stock.picking')
             try:
-                pick = pick_obj.browse(cr, uid, record_id)
+                pick = pick_obj.browse(cr, uid, record_id, context=context)
                 for m in [line for line in pick.move_lines]:
                     if 'move%s' % m.id not in self._columns:
                         self._columns['move%s' % m.id] = fields.float(string=m.product_id.name)
@@ -79,7 +79,7 @@ class stock_split_move_line(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         assert record_id,'Active ID not found'
         pick_obj = self.pool.get('stock.picking')
-        pick = pick_obj.browse(cr, uid, record_id)
+        pick = pick_obj.browse(cr, uid, record_id, context=context)
         arch_lst = ['<?xml version="1.0"?>', '<form string="Split lines">', '<label string="Indicate here the quantity of the new line. A quantity of zero will not split the line." colspan="4"/>']
         for m in [line for line in pick.move_lines]:
             quantity = m.product_qty
@@ -106,10 +106,10 @@ class stock_split_move_line(osv.osv_memory):
         move_obj = self.pool.get('stock.move')
         record_id = context and context.get('active_id', False) or False
         pick_obj = self.pool.get('stock.picking')
-        pick = pick_obj.browse(cr, uid, record_id)
+        pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0])
         move_ids = [m.id for m in [line for line in pick.move_lines]]
-        for move in move_obj.browse(cr, uid, move_ids):
+        for move in move_obj.browse(cr, uid, move_ids, context=context):
             quantity = data['move%s' % move.id]
             if 0 < quantity < move.product_qty:
                 new_qty = move.product_qty - quantity

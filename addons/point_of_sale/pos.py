@@ -31,11 +31,9 @@ import re
 import decimal_precision as dp
 
 class pos_config_journal(osv.osv):
-    
     """ Point of Sale journal configuration"""
-    
     _name = 'pos.config.journal'
-    _description = "Point of Sale journal configuration"
+    _description = "Journal Configuration"
     _columns = {
         'name': fields.char('Description', size=64),
         'code': fields.char('Code', size=64),

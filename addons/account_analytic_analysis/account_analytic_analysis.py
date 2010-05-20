@@ -393,7 +393,7 @@ account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):
     _name = "account_analytic_analysis.summary.user"
-    _description = "Hours summary by user"
+    _description = "Hours Summary by User"
     _order='user'
     _auto = False
     _rec_name = 'user'

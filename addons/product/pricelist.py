@@ -53,7 +53,7 @@ class price_type(osv.osv):
         return comp.currency_id.id
 
     _name = "product.price.type"
-    _description = "Price type"
+    _description = "Price Type"
     _columns = {
         "name" : fields.char("Price Name", size=32, required=True, translate=True, help="Name of this kind of price."),
         "active" : fields.boolean("Active"),
@@ -241,7 +241,7 @@ class product_pricelist(osv.osv):
                         price = currency_obj.compute(cr, uid,
                                 price_type.currency_id.id, res['currency_id'],
                                 product_obj.price_get(cr, uid, [prod_id],
-                                    price_type.field)[prod_id], round=False)
+                                    price_type.field)[prod_id], round=False, context=context)
 
                     if price:
                         price_limit = price
