@@ -65,11 +65,14 @@ class account_automatic_reconcile(osv.osv_memory):
         if context is None:
             context = {}
         def check2(value, move_list, power):
+            print "::::::check2::::::::::",value, move_list, power
             def check(value, move_list, power):
                 for i in range(len(move_list)):
                     move = move_list[i]
+                    print "::::::::::::::::::",value,max_amount,move,move[1]
                     if power == 1:
                         if abs(value - move[1]) <= max_amount + 0.00001:
+                            print "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^6"
                             return [move[0]]
                     else:
                         del move_list[i]
@@ -91,6 +94,7 @@ class account_automatic_reconcile(osv.osv_memory):
         # depending on the power. It starts with a power of one and goes up
         # to the max power allowed
         def check4(list1, list2, power):
+            print "::::::check4::::::::::",list1, list2, power
             def check3(value, list1, list2, list1power, power):
                 for i in range(len(list1)):
                     move = list1[i]
@@ -115,9 +119,12 @@ class account_automatic_reconcile(osv.osv_memory):
             return False
 
         def check5(list1, list2, max_power):
+            print "\n\n%%%%%%%%check5%%%%%%%%%%%%%%%%%%%",list1,list2,max_power
             for p in range(2, max_power+1):
                 res = check4(list1, list2, p)
+                print "RRRRRRRcheck5RRRRRRRR",res
                 if res:
+                    print "RRRRRRcheck5REtrunrn...",res
                     return res
 
         ok = True
@@ -125,10 +132,12 @@ class account_automatic_reconcile(osv.osv_memory):
         while credits and debits and ok:
             res = check5(credits, debits, power)
             if res:
+                print "Finallllllllllll RES",res
                 move_line_obj.reconcile(cr, uid, res[0] + res[1], 'auto', writeoff_acc_id, period_id, journal_id, context)
                 reconciled += len(res[0]) + len(res[1])
                 credits = [(id, credit) for (id, credit) in credits if id not in res[0]]
                 debits = [(id, debit) for (id, debit) in debits if id not in res[1]]
+                print "=================================",reconciled,credits,debits
             else:
                 ok = False
         return (reconciled, len(credits)+len(debits))
@@ -145,6 +154,7 @@ class account_automatic_reconcile(osv.osv_memory):
         reconciled = unreconciled = 0
         if not form['account_ids']:
             raise osv.except_osv(_('UserError'), _('You must select accounts to reconcile'))
+        print ">>>>START<<<<\n",form['account_ids']
         for account_id in form['account_ids']:
             # reconcile automatically all transactions from partners whose balance is 0
             cr.execute(
@@ -157,6 +167,7 @@ class account_automatic_reconcile(osv.osv_memory):
                 "HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0",
                 (account_id, max_amount or 0.0))
             partner_ids = [id for (id,) in cr.fetchall()]
+            print "partner_ids:::::::::::::::::::::::::>>>",partner_ids
             for partner_id in partner_ids:
                 cr.execute(
                     "SELECT id " \
@@ -167,6 +178,7 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND reconcile_id IS NULL",
                     (account_id, partner_id))
                 line_ids = [id for (id,) in cr.fetchall()]
+                print "LLLLLLLLLLLLLLLLLLLLline idsssss....",line_ids
                 if len(line_ids):
                     move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
                     reconciled += len(line_ids)
@@ -183,6 +195,7 @@ class account_automatic_reconcile(osv.osv_memory):
                 "HAVING count(*)>1",
                 (account_id,))
             partner_ids = [id for (id,) in cr.fetchall()]
+            print "second partner idssssssssssssss",partner_ids
             #filter?
             for partner_id in partner_ids:
                 # get the list of unreconciled 'debit transactions' for this partner
@@ -196,6 +209,7 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND debit > 0",
                     (account_id, partner_id))
                 debits = cr.fetchall()
+                print "UUUUUUUUUUUUUUUUUU Debitssssssss",debits
 
                 # get the list of unreconciled 'credit transactions' for this partner
                 cr.execute(
@@ -208,14 +222,17 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND credit > 0",
                     (account_id, partner_id))
                 credits = cr.fetchall()
+                print "CCCCCCCCCCCCCCCCCCcreditttt.....",credits
 
                 (rec, unrec) = self.do_reconcile(cr, uid, credits, debits, max_amount, power, form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
+                print "()(()(((rec, unrec))((()()()",(rec, unrec)
                 reconciled += rec
                 unreconciled += unrec
 
             # add the number of transactions for partners who have only one
             # unreconciled transactions to the unreconciled count
             partner_filter = partner_ids and 'AND partner_id not in (%s)' % ','.join(map(str, filter(None, partner_ids))) or ''
+            print "Partner fileterrrrrrrrrrrr",partner_filter
             cr.execute(
                 "SELECT count(*) " \
                 "FROM account_move_line " \
@@ -224,6 +241,7 @@ class account_automatic_reconcile(osv.osv_memory):
                 "AND state <> 'draft' " + partner_filter,
                 (account_id,))
             additional_unrec = cr.fetchone()[0]
+            print "^^^^^^^^^^^^^^^^^^^^^",additional_unrec
         context.update({'reconciled': reconciled, 'unreconciled': unreconciled + additional_unrec})
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','account_automatic_reconcile_view1')])
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
