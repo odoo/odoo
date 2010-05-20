@@ -31,7 +31,6 @@
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': [
-        'crm',
         'project',
         'hr_timesheet_sheet',
     ],
