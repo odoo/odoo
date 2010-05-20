@@ -62,10 +62,6 @@
 	                    <separator orientation="vertical"/>
 	  					<field name="user_id" widget="selection">
 	                        <filter icon="terp-hr"
-	                        		string="My timesheet lines"
-	                        		help = "My timesheet lines"
-	                        		domain="[('user_id','=',uid)]" />
-	                        <filter icon="terp-hr"
 	                        		string="Non Assigned timesheets to users"
 	                        		help="Non Assigned timesheets to users"
 	                        		domain="[('user_id','=',False)]"/>
@@ -100,7 +96,7 @@
             <field name="res_model">report.timesheet.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_line_search"/>
         </record>
         <menuitem action="action_timesheet_line_stat_all" id="menu_report_timesheet_line_all" parent="hr.menu_hr_reporting"/>
@@ -169,7 +165,6 @@
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
                     <group col="10" colspan="4">
-                        <filter icon="terp-hr" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheets"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Timesheet by user in this year"/>
                         <filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Timesheet by user in this month"/>
@@ -187,6 +182,7 @@
             <field name="res_model">report_timesheet.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_timesheet_user_search"/>
         </record>
         <!-- <menuitem action="action_timesheet_user_stat_all" id="menu_report_timesheet_user_all" parent="hr.menu_hr_reporting"/> -->
@@ -224,7 +220,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by invoice">
-                    <filter icon="terp-hr" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheets to invoice"/>
                     <separator orientation="vertical"/>
                     <field name="account_id" select="1"/>
                     <field name="manager_id" select="1"/>
@@ -253,6 +248,7 @@
             <field name="res_model">report_timesheet.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_timesheet_invoice_search"/>
         </record>
        <!--  <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="hr.menu_hr_reporting"/> -->
@@ -308,7 +304,6 @@
             <field name="arch" type="xml">
                 <search string="Daily timesheet by account">
                     <group col="10" colspan="4">
-                        <filter icon="terp-hr" string="My Daily Timesheets" domain="[('user_id','=',uid)]" help="My Daily Timesheets by account"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Daily Timesheets for this year"/>
                         <filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Daily Timesheets of this month"/>
@@ -327,6 +322,7 @@
             <field name="res_model">report_timesheet.account.date</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_timesheet_account_date_search"/>
         </record>
         <!--  <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="hr.menu_hr_reporting"/>-->
@@ -382,7 +378,6 @@
             <field name="arch" type="xml">
                 <form string="Timesheet by account">
                     <group col="10" colspan="4">
-                        <filter icon="terp-hr" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheets by account"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-hr" string="This Year" domain="[('name','=',time.strftime('%%Y'))]"/>
                         <filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]"/>

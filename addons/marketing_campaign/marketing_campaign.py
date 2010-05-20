@@ -47,10 +47,10 @@ class marketing_campaign(osv.osv): #{{{
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled'),],
-                                   'State',
-                                   readonly=True), 
+                                   'State',), 
         'activity_ids': fields.one2many('marketing.campaign.activity', 
                                        'campaign_id', 'Activities'),
+        'fixed_cost': fields.float('Fixed Cost'),                                       
         
     }
 
@@ -67,17 +67,16 @@ class marketing_campaign_segment(osv.osv): #{{{
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
                                       string='Object'),
-        'ir_filter_id':fields.many2one('ir.filters', 'Filter'),
+        'ir_filter_id': fields.many2one('ir.filters', 'Filter'),
         'sync_last_date': fields.datetime('Date'),
-        'sync_mode':fields.selection([('create', 'Create'),
+        'sync_mode': fields.selection([('create', 'Create'),
                                       ('write', 'Write')],
                                       'Mode'),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled')],
-                                   'State',
-                                   readonly=True), 
+                                   'State',), 
         'date_run': fields.datetime('Running'),
         'date_done': fields.datetime('Done'),
     }
@@ -96,7 +95,7 @@ class marketing_campaign_activity(osv.osv): #{{{
                                       string='Object'),
         'start': fields.boolean('Start'),
         'condition': fields.text('Condition'),
-        'type':fields.selection([('email', 'E-mail'),
+        'type': fields.selection([('email', 'E-mail'),
                                   ('paper', 'Paper'),
                                   ('action', 'Action'),
                                   ('subcampaign', 'Sub-Campaign')],
@@ -111,11 +110,13 @@ class marketing_campaign_activity(osv.osv): #{{{
         'from_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_from_id',
                                             'Previous Activities'), 
-        'subcampaign_id' :fields.many2one('marketing.campaign', 'Sub-Campaign'),
-        'subcampaign_segment_id' :fields.many2one('marketing.campaign.segment',
+        'subcampaign_id': fields.many2one('marketing.campaign', 'Sub-Campaign'),
+        'subcampaign_segment_id': fields.many2one('marketing.campaign.segment',
                                                    'Sub Campaign Segment'),
-
+        'variable_cost': fields.float('Variable Cost'),
+        'revenue': fields.float('Revenue')
         }
+   
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
                                         context=None, count=False):
         if context == None:
@@ -129,7 +130,7 @@ class marketing_campaign_activity(osv.osv): #{{{
             return act_ids
         return super(marketing_campaign_activity, self).search(cr, uid, args, 
                                            offset, limit, order, context, count)
-
+    
 marketing_campaign_activity()#}}}
 
 class marketing_campaign_transition(osv.osv): #{{{
@@ -146,6 +147,13 @@ class marketing_campaign_transition(osv.osv): #{{{
                                            ('months', 'Months'),
                                             ('years','Years')],'Interval Type')
         }
+
+    def default_get(self, cr, uid, fields, context={}):
+        value = super(marketing_campaign_transition, self).default_get(cr, uid,
+                                                                fields, context)
+        if context.has_key('type_id'):
+            value[context['type_id']] = context['activity_id']
+        return value
     
 marketing_campaign_transition() #}}}
 
@@ -165,8 +173,8 @@ class marketing_campaign_workitem(osv.osv): #{{{
         'date': fields.datetime('Execution Date'),
         'partner_id': fields.many2one('res.partner', 'Partner',required=True),
         'state': fields.selection([('todo', 'ToDo'), ('inprogress', 'In Progress'), 
-        ('exception', 'Exception'), ('done', 'Done'),
-        ('cancelled', 'Cancelled')], 'State')
+                                   ('exception', 'Exception'), ('done', 'Done'),
+                                   ('cancelled', 'Cancelled')], 'State')
         }
 
     def process_chain(self, cr, uid, workitem_id, context={}):

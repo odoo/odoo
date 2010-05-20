@@ -94,9 +94,7 @@
                         help="My company"/>
                         </field>
 
-                      	<field name="user_id"  select="1" widget="selection">
-	            			<filter icon="terp-crm" string="My Project Issue" help="My Project Issue Entries" domain="[('user_id','=',uid)]" />
-               			</field>
+                      	<field name="user_id"  select="1" widget="selection"/>
                    </group>
                    <newline/>
                    <group  expand="1" string="Extended options..." colspan="10" col="12">
@@ -182,7 +180,7 @@
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">graph,tree</field>
-  			<field name="context">{"search_default_This Month":1,"search_default_User":1,'group_by_no_leaf':1,'group_by':[]}</field>
+  			<field name="context">{"search_default_This Month":1,"search_default_User":1,"search_default_user_id":uid,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_project_issue_report_tree"/>
             <field name="search_view_id" ref="view_project_issue_report_filter"/>
         </record>
