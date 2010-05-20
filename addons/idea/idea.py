@@ -150,11 +150,10 @@ class idea_idea(osv.osv):
             if int(field_value) >= 0:
                 vote_obj.create(cr, uid, {'idea_id': id, 'user_id': uid, 'score': textual_value })
 
-
     _columns = {
         'user_id': fields.many2one('res.users', 'Creator', required=True, readonly=True),
         'title': fields.char('Idea Summary', size=64, required=True),
-        'description': fields.text('Description', required=True, help='Content of the idea'),
+        'description': fields.text('Description', help='Content of the idea'),
         'comment_ids': fields.one2many('idea.comment', 'idea_id', 'Comments'),
         'create_date': fields.datetime('Creation date', readonly=True),
         'vote_ids': fields.one2many('idea.vote', 'idea_id', 'Vote'),

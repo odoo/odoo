@@ -152,7 +152,12 @@
                     </field>
                 </page>
                 <page string="Vote" groups="base.group_extended">
-                    <field name="vote_ids" nolabel="1" colspan="4" readonly="True"/>
+                    <field name="vote_ids" nolabel="1" colspan="4" readonly="True">
+                        <tree string="Votes">
+                            <field name="user_id"/>
+                            <field name="score" />
+                        </tree>
+                    </field>
                 </page>
                 <page string="Statistics">
                     <group col="6" colspan="4">
