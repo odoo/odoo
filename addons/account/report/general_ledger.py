@@ -51,6 +51,7 @@ class general_ledger(rml_parse.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(general_ledger, self).__init__(cr, uid, name, context=context)
+        cr.sql_log=1
         self.date_borne = {}
         self.query = ""
         self.child_ids = ""
@@ -394,4 +395,6 @@ class general_ledger(rml_parse.rml_parse):
 
 
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header=False)
+report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger, header=False)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
