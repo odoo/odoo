@@ -29,7 +29,7 @@ DefaultVoteValue = '50'
 
 class idea_category(osv.osv):
     """ Category of Idea """
-
+    
     _name = "idea.category"
     _description = "Idea Category"
 
@@ -38,7 +38,7 @@ class idea_category(osv.osv):
         'summary': fields.text('Summary'),
         'parent_id': fields.many2one('idea.category', 'Parent Categories', ondelete='set null'),
         'child_ids': fields.one2many('idea.category', 'parent_id', 'Child Categories'),
-        'visibility':fields.boolean('Open Idea?', required=False),
+        'visibility':fields.boolean('Open Idea?', required=False, help="If True creator of the idea will be visible to others"),
     }
     _sql_constraints = [
         ('name', 'unique(parent_id,name)', 'The name of the category must be unique' )
@@ -152,8 +152,8 @@ class idea_idea(osv.osv):
 
     _columns = {
         'user_id': fields.many2one('res.users', 'Creator', required=True, readonly=True),
-        'title': fields.char('Idea Summary', size=64, required=True),
-        'description': fields.text('Description', help='Content of the idea'),
+        'title': fields.char('Idea Summary', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'description': fields.text('Description', help='Content of the idea', readonly=True, states={'draft':[('readonly',False)]}),
         'comment_ids': fields.one2many('idea.comment', 'idea_id', 'Comments'),
         'create_date': fields.datetime('Creation date', readonly=True),
         'vote_ids': fields.one2many('idea.vote', 'idea_id', 'Vote'),
@@ -161,7 +161,7 @@ class idea_idea(osv.osv):
         'vote_avg': fields.function(_vote_avg_compute, method=True, string="Average Score", type="float"),
         'count_votes': fields.function(_vote_count, method=True, string="Count of votes", type="integer"),
         'count_comments': fields.function(_comment_count, method=True, string="Count of comments", type="integer"),
-        'category_id': fields.many2one('idea.category', 'Category', required=True),
+        'category_id': fields.many2one('idea.category', 'Category', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Draft'), 
             ('open', 'Opened'),
             ('close', 'Accepted'), 
@@ -203,7 +203,29 @@ class idea_idea(osv.osv):
         vals.update({
             'visibility':visibility
         })
+
         res_id = super(idea_idea, self).create(cr, user, vals, context)
+        return res_id
+
+    def copy(self, cr, uid, id, default={}, context={}):
+        """
+        Create the new record in idea_idea model from existing one
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param id: list of record ids on which copy method executes
+        @param default: dict type contains the values to be overridden during copy of object
+        @param context: context arguments, like lang, time zone
+        
+        @return: Returns the id of the new record
+        """
+        
+        default.update({
+            'comment_ids':False,
+            'vote_ids':False,
+            'stat_vote_ids':False
+            
+        })
+        res_id = super(idea_idea, self).copy(cr, uid, id, default, context)
         return res_id
     
     def write(self, cr, user, ids, vals, context=None):
