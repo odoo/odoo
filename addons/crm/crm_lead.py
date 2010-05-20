@@ -103,7 +103,7 @@ class crm_lead(osv.osv, crm_case):
         'email_cc': fields.text('Watchers Emails', size=252 , help="These \
 people will receive a copy of the future communication between partner \
 and users by email"),
-        'description': fields.text('Note'),
+        'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True), 
 
         # Lead fields 
