@@ -39,7 +39,7 @@ except ImportError:
 
 class project_gtd_context(osv.osv):
     _name = "project.gtd.context"
-    _description = "Contexts"
+    _description = "Context"
     _columns = {
         'name': fields.char('Context', size=64, required=True, select=1),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of contexts."),

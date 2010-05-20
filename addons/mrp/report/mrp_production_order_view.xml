@@ -71,18 +71,18 @@
 	                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Orders in during last 7 days"/>
 	                    <separator orientation="vertical"/>
-	                    <filter string="Draft"
+	                    <filter string="Current"
 	                    		icon="terp-mrp"
-	                    		domain="[('state','=','draft')]"
-	                    		help = "Draft tasks"/>
+	                    		domain="[('state','in',('draft','open'))]"
+	                    		help = "Current Production Orders"/>
 		                <filter string="Waiting Goods"
 		                		icon="terp-mrp"
 		                		domain="[('state', '=' ,'confirmed')]"
-		                		help = "In progress tasks"/>
+		                		help = "In progress"/>
 	                   	<filter string="In Production"
 	                   			icon="terp-mrp"
 	                   			domain="[('state','=','in_production')]"
-	                   			help = "Pending tasks"/>
+	                   			help = "Pending"/>
 	  					<separator orientation="vertical"/>
 						<field name="origin"/>
 						<field name="product_id"/>
@@ -139,7 +139,12 @@
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_mrp_production_order_tree"/>
             <field name="search_view_id" ref="view_report_mrp_production_order_filter"/>
+<<<<<<< TREE
             <field name="context">{'search_default_month':1,'search_default_Product':1,'group_by_no_leaf':1,'group_by':[]}</field>
+=======
+          <field name="context">{'search_default_Product': 1,'search_default_this_year':1,'search_default_this_month':1}</field>
+            
+>>>>>>> MERGE-SOURCE
         </record>
 
        	<record model="ir.actions.act_window.view" id="action_report_mrp_production_order_tree">

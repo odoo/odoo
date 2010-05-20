@@ -84,16 +84,16 @@
 	  					<separator orientation="vertical"/>
 	                    <field name="user_id" widget="selection">
 	                        <filter icon="terp-project"
-	                        		string="My Task"
-	                        		help = "My tasks"
-	                        		domain="[('user_id','=',uid)]" />
-	                        <filter icon="terp-project"
 	                        		string="Non Assigned Tasks to users"
 	                        		help="Non Assigned Tasks to users"
 	                        		domain="[('user_id','=',False)]"/>
 	                    </field>
 	                    <field name="project_id" widget="selection">
+<<<<<<< TREE
 	                        <filter icon="terp-project"
+=======
+	                    	<filter icon="terp-project"
+>>>>>>> MERGE-SOURCE
 	                        		string="My Task"
 	                        		help="My Tasks"
 	                        		domain="[('project_id','=',context.get('project_id', False)]"/>
@@ -141,7 +141,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
-            <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
 
         </record>
         <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>

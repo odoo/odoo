@@ -60,6 +60,7 @@
 		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
 		                    help="Leaves during last 7 days"/>
 		                <separator orientation="vertical"/>
+<<<<<<< TREE
 						<field name="employee_id"/>
 		                <field name="user_id" widget="selection">
 		                    <filter icon="terp-hr"
@@ -71,6 +72,10 @@
 	                <group expand="0" string="Extended options..." colspan="10" col="12">
 	                    <field name="holiday_status_id" widget="selection"/>
 	                	<field name="department_id" widget="selection"/>
+=======
+		                <field name="employee_id"/>
+		                <field name="user_id" widget="selection"/>
+>>>>>>> MERGE-SOURCE
 	                </group>
 	                <newline/>
 	                <group expand="1" string="Group By..." colspan="10" col="12">

@@ -184,7 +184,6 @@ report_account_analytic_planning_line()
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _inherit = 'account.analytic.account'
-    _description = 'Analytic Accounts'
     _columns = {
         'planning_ids': fields.one2many('report_account_analytic.planning.line', 'account_id', 'Plannings'),
     }

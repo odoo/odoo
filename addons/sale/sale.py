@@ -52,6 +52,7 @@ def _incoterm_get(self, cr, uid, context=None):
 
 class sale_order(osv.osv):
     _name = "sale.order"
+    _log_create = True
     _description = "Sale Order"
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -106,17 +107,19 @@ class sale_order(osv.osv):
         for id in ids:
             res[id] = [0.0, 0.0]
         cr.execute('''SELECT
-                p.sale_id,sum(m.product_qty), m.state
+                p.sale_id,sum(m.product_qty), mp.state as mp_state
             FROM
                 stock_move m
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
+            LEFT JOIN
+                mrp_procurement mp on (mp.move_id=m.id)
             WHERE
-                p.sale_id = ANY(%s) GROUP BY m.state, p.sale_id''',(ids,))
-        for oid, nbr, state in cr.fetchall():
-            if state == 'cancel':
+                p.sale_id = ANY(%s) GROUP BY mp.state, p.sale_id''',(ids,))
+        for oid, nbr, mp_state in cr.fetchall():
+            if mp_state == 'cancel':
                 continue
-            if state == 'done':
+            if mp_state == 'done':
                 res[oid][0] += nbr or 0.0
                 res[oid][1] += nbr or 0.0
             else:
@@ -434,7 +437,7 @@ class sale_order(osv.osv):
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term': pay_term,
-            'fiscal_position': order.partner_id.property_account_position.id,
+            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice' : context.get('date_invoice',False),
             'company_id' : order.company_id.id,
         }
@@ -508,18 +511,14 @@ class sale_order(osv.osv):
     def action_invoice_end(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+            
         for order in self.browse(cr, uid, ids, context=context):
-            val = {'invoiced': True}
-            if order.state == 'invoice_except':
-                val['state'] = 'progress'
-
             for line in order.order_line:
-                towrite = []
                 if line.state == 'exception':
-                    towrite.append(line.id)
-                if towrite:
-                    self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'confirmed'}, context=context)
-            self.write(cr, uid, [order.id], val)
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'confirmed'}, context=context)
+            
+            if order.state == 'invoice_except':
+                self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
 
         return True
 
@@ -553,16 +552,10 @@ class sale_order(osv.osv):
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        event_p = self.pool.get('res.partner.event.type').check(cr, uid, 'sale_open')
-        event_obj = self.pool.get('res.partner.event')
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Quotation ') + " '" + name + "' "+ _("converted to sale order.")
+            self.log(cr, uid, id, message)
         for o in self.browse(cr, uid, ids):
-            if event_p:
-                event_obj.create(cr, uid, {'name': 'Sale Order: '+ o.name,\
-                        'partner_id': o.partner_id.id,\
-                        'date': time.strftime('%Y-%m-%d %H:%M:%S'),\
-                        'user_id': (o.user_id and o.user_id.id) or uid,\
-                        'partner_type': 'customer', 'probability': 1.0,\
-                        'planned_revenue': o.amount_untaxed})
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
             else:
@@ -813,7 +806,7 @@ class sale_order_line(osv.osv):
         return res
 
     _name = 'sale.order.line'
-    _description = 'Sale Order line'
+    _description = 'Sale Order Line'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'name': fields.char('Description', size=256, required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -1072,7 +1065,7 @@ class sale_order_line(osv.osv):
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
 
-        elif uos: # only happens if uom is False
+        elif uos and not uom: # only happens if uom is False
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
             result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
             result['th_weight'] = result['product_uom_qty'] * product_obj.weight
@@ -1117,7 +1110,7 @@ class sale_order_line(osv.osv):
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False):
         res = self.product_id_change(cursor, user, ids, pricelist, product,
-                qty=0, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
+                qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
                 date_order=date_order)
         if 'product_uom' in res['value']:

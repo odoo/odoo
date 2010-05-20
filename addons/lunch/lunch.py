@@ -91,7 +91,7 @@ class lunch_cashmove(osv.osv):
     """ Move cash """
 
     _name = 'lunch.cashmove'
-    _description = "Move cash"
+    _description = "Cash Move"
 
     _columns = {
         'name': fields.char('Name', size=128),

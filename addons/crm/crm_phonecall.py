@@ -29,7 +29,7 @@ class crm_phonecall(osv.osv, crm_case):
     """ Phonecall Cases """
 
     _name = "crm.phonecall"
-    _description = "Phonecall Cases"
+    _description = "Phonecall"
     _order = "id desc"
     _inherit = 'mailgate.thread'
 

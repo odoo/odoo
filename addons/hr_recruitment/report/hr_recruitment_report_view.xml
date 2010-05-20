@@ -74,7 +74,7 @@
                    		help = "Pending tasks"/>
   					<separator orientation="vertical"/>
 					<field name="department_id" widget="selection">
-                       <filter icon="terp-hr"
+						<filter icon="terp-hr"
                            string="My Recruitments "
                            help="My Department Recruitments"
                            domain="[('user_id','=',uid)]"/>
@@ -86,10 +86,6 @@
                 <separator orientation="vertical"/>
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 <field name="user_id" widget="selection">
-                    <filter icon="terp-hr"
-                        string="My Recruitments"
-                        help="My Recruitments"
-                        domain="[('user_id','=',uid)]"/>
                     <filter icon="terp-hr"
                         string="Recruitments non assigned"
                         help="Recruitments non assigned"
@@ -145,7 +141,11 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+<<<<<<< TREE
         <field name="context">{'search_default_month':1,'search_default_degree':1,'search_default_job':1,'group_by_no_leaf':1,'group_by':[]}</field>
+=======
+        <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
+>>>>>>> MERGE-SOURCE
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
 	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10"/>

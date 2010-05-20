@@ -31,7 +31,7 @@ import decimal_precision as dp
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
-    _description = 'Analytic Accounts'
+    _description = 'Analytic Account'
 
     def _compute_currency_for_level_tree(self, cr, uid, ids, ids2, res, acc_set, context={}):
         # Handle multi-currency on each level of analytic account
@@ -285,7 +285,7 @@ account_analytic_account()
 
 class account_analytic_line(osv.osv):
     _name = 'account.analytic.line'
-    _description = 'Analytic lines'
+    _description = 'Analytic Line'
     def _amount_currency(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
         for rec in self.browse(cr, uid, ids, context):
@@ -343,7 +343,7 @@ class account_analytic_line(osv.osv):
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', c),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
     }
     _order = 'date'
 account_analytic_line()
