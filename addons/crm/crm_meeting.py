@@ -43,7 +43,8 @@ class crm_meeting(osv.osv, crm_case):
     _name = 'crm.meeting'
     _description = "Meeting Cases"
     _order = "id desc"
-    _inherit = ["mailgate.thread", "calendar.event"]
+    _inherit = ["calendar.event"]
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     _columns = {
         # From crm.case
@@ -58,6 +59,7 @@ class crm_meeting(osv.osv, crm_case):
         'id': fields.integer('ID'),
 
         # Meeting fields
+        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
             ),
