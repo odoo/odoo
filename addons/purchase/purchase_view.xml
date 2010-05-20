@@ -200,7 +200,7 @@
             <field name="view_type">form</field>
             <field name="context">{'search_default_draft': 1,'search_create_uid':uid}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
-            <field name="search_view_id" ref="vview_purchase_order_filter"/>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management"
                 sequence="6"/>
@@ -211,7 +211,7 @@
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="context">{'search_default_approved': 1,'search_create_uid':uid}</field>
-            <field name="search_view_id" ref="vview_purchase_order_filter"/>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management"/>
 

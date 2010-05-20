@@ -22,10 +22,6 @@ from osv import fields, osv
 from service import web_services
 from tools.translate import _
 import ir
-import netsvc
-import pooler
-
-
 
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
@@ -95,7 +91,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                     'currency_id' :sale.pricelist_id.currency_id.id,
                     'comment': '',
                     'payment_term':sale.payment_term.id,
-                    'fiscal_position': sale.partner_id.property_account_position.id
+                    'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
                     }
                 
                 inv_id = inv_obj.create(cr, uid, inv)

@@ -31,7 +31,7 @@ from tools.translate import _
 
 class document_directory(osv.osv):
     _name = 'document.directory'
-    _description = 'Document directory'
+    _description = 'Directory'
     _order = 'name desc'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
@@ -286,7 +286,7 @@ class document_directory_dctx(osv.osv):
         appended to all children down the tree.
     """
     _name = 'document.directory.dctx'
-    _description = 'Directory dynamic context'
+    _description = 'Directory Dynamic Context'
     _columns = {
         'dir_id': fields.many2one('document.directory', 'Directory', required=True),
         'field': fields.char('Field', size=20, required=True, select=1, help="The name of the field. Note that the prefix \"dctx_\" will be prepended to what is typed here."),

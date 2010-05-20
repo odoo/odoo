@@ -128,7 +128,7 @@
             <field name="arch" type="xml">
                 <group name="logistic" position="inside">
                     <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id':id}"/>
+                    <field name="carrier_id" context="{'order_id':active_id}"/>
                 </group>
             </field>
         </record>
