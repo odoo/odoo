@@ -399,8 +399,17 @@ class orm_template(object):
     _inherits = {}
     _table = None
     _invalids = set()
+    _log_create = False
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
+    def log(self, cr, uid, id, message, secondary=False, context=None):
+        return self.pool.get('res.log').create(cr, uid, {
+            'name': message,
+            'res_model': self._name,
+            'secondary': secondary,
+            'res_id': id},
+                context=context
+        )
 
     def view_init(self, cr , uid , fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
@@ -1031,7 +1040,14 @@ class orm_template(object):
         for constraint in self._constraints:
             fun, msg, fields = constraint
             if not fun(self, cr, uid, ids):
-                translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+                # Check presence of __call__ directly instead of using
+                # callable() because it will be deprecated as of Python 3.0
+                if hasattr(msg, '__call__'):
+                    txt_msg, params = msg(self, cr, uid, ids)
+                    tmp_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=txt_msg) or txt_msg
+                    translated_msg = tmp_msg % params
+                else:
+                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
                 error_msgs.append(
                         _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
@@ -1832,6 +1848,12 @@ class orm_memory(orm_template):
         for field in upd_todo:
             self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
         self._validate(cr, user, [id_new], context)
+        if self._log_create and not (context and context.get('no_store_function', False)):
+            message = self._description + \
+                " '" + \
+                self.name_get(cr, user, [id_new], context=context)[0][1] + \
+                "' "+ _("created.")
+            self.log(cr, user, id_new, message, True, context=context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
         return id_new
@@ -1918,7 +1940,6 @@ class orm_memory(orm_template):
             e.parse(cr, user, self, context)
             res=e.__dict__['_expression__exp']
         return res or []
-
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -3478,6 +3499,12 @@ class orm(orm_template):
                     self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
                     done.append((object, ids, fields2))
 
+        if self._log_create and not (context and context.get('no_store_function', False)):
+            message = self._description + \
+                " '" + \
+                self.name_get(cr, user, [id_new], context=context)[0][1] + \
+                "' "+ _("created.")
+            self.log(cr, user, id_new, message, True, context=context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
         return id_new

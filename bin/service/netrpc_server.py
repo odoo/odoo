@@ -27,6 +27,7 @@ import netsvc
 import threading
 import tools
 import os
+import select
 import socket
 
 import tiny_socket
@@ -50,7 +51,6 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
             self.sock = None
 
     def run(self):
-        # import select
         self.running = True
         try:
             ts = tiny_socket.mysocket(self.sock)
@@ -103,10 +103,13 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
                          "starting NET-RPC service at %s port %d" % (interface or '0.0.0.0', port,))
 
     def run(self):
-        # import select
         try:
             self.running = True
             while self.running:
+                timeout = self.socket.gettimeout()
+                fd_sets = select.select([self.socket], [], [], timeout)
+                if not fd_sets[0]:
+                    continue
                 (clientsocket, address) = self.socket.accept()
                 ct = TinySocketClientThread(clientsocket, self.threads)
                 clientsocket = None
@@ -129,12 +132,7 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
         self.running = False
         for t in self.threads:
             t.stop()
-        try:
-            self.socket.shutdown(
-                getattr(socket, 'SHUT_RDWR', 2))
-            self.socket.close()
-        except:
-            return False
+        self._close_socket()
 
     def stats(self):
         res = "Net-RPC: " + ( (self.running and "running") or  "stopped")

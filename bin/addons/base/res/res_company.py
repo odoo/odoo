@@ -24,7 +24,6 @@ from osv import fields
 import os
 import tools
 from tools.translate import _
-import base64
 
 class multi_company_default(osv.osv):
     """
@@ -181,8 +180,9 @@ class res_company(osv.osv):
         return True
 
     def _get_logo(self, cr, uid, ids):
-        file_data = open('../pixmaps/openerp-header.png','rb').read()
-        return base64.encodestring(file_data)
+        return open(os.path.join(
+            tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
+                    'rb') .read().encode('base64')
 
 
     def _get_header2(self,cr,uid,ids):
