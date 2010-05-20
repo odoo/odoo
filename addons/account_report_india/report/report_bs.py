@@ -138,7 +138,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
                         
             self.result[typ] = accounts_temp
             cal_list[typ]=self.result[typ]
-        print 'XXXXXXXX : ', cal_list, len(cal_list)
+
         if cal_list:
             temp={}
             for i in range(0,max(len(cal_list['liability']),len(cal_list['asset']))):
