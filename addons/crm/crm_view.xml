@@ -18,7 +18,6 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
-                        <newline/>
                         <field name="resource_calendar_id" select="2"/>
                     </group>
                     <notebook colspan="4">
@@ -30,7 +29,6 @@
                             </group>
                             <group col="2" colspan="1">
                                 <separator string="Contact Information" colspan="2"/>
-                                <field name="server_id" select="2"/>
                                 <field name="reply_to" select="2"/>
                             </group>
                             <group col="2" colspan="1">
@@ -40,8 +38,8 @@
                             </group>
                             <separator string="Members List" colspan="4"/>
                             <field name="member_ids" nolabel="1" colspan="4"/>
-                            <separator string="Note" colspan="4"/>
-                            <field name="note" select="1" colspan="4" nolabel="1"/>
+                        </page><page string="Notes">
+                            <field name="note" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -436,9 +434,6 @@
             <field name="arch" type="xml">
                 <search string="Search Case">
                     <group col='6' colspan='4'>
-                        <filter icon="terp-partner" string="My Cases"
-                            domain="[('user_id','=',uid)]" separator="1"
-                            default="1" help="Cases Related to Current User" />
                         <field name="state" select="1">
                             <filter icon="gtk-new"
                                 domain="[('state','in',('draft', 'open'))]"
@@ -466,6 +461,7 @@
             <field name="res_model">mailgate.thread</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_tree-view"/>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
 
@@ -523,10 +519,6 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
                 <search string="Search Histories">
-                       <filter icon="terp-crm" string="My Histories"
-                           domain="[('user_id','=',uid)]"
-                           help="My Histories" />
-                       <separator orientation="vertical"/>
                      <group col="6" colspan="2">
                        <field name="date" select="1"/>
                     <field name="user_id" select="1" widget="selection"/>
@@ -546,6 +538,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="crm_case_history_tree-view"/>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="crm_case_history_search"/>
         </record>
 

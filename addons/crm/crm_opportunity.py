@@ -36,12 +36,10 @@ AVAILABLE_STATES = [
 
 class crm_opportunity(osv.osv):
     """ Opportunity Cases """
-
     _name = "crm.lead"
-    _description = "Opportunity Cases"
+    _description = "Opportunity"
     _order = "priority,date_action,id desc"
     _inherit = 'crm.lead'
-
     _columns = {
         # From crm.case
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
@@ -56,7 +54,6 @@ class crm_opportunity(osv.osv):
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action'),
          }
-    
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer

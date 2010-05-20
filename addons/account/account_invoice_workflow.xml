@@ -50,7 +50,7 @@ write({'state':'open'})</field>
             <field name="wkf_id" ref="wkf"/>
             <field name="name">paid</field>
             <!--<field name="flow_stop">True</field>-->
-            <field name="action">write({'state':'paid'})</field>
+            <field name="action">confirm_paid()</field>
             <field name="kind">function</field>
             <field name="signal_send">subflow.paid</field>
         </record>

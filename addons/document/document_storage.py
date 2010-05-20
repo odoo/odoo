@@ -95,7 +95,7 @@ class document_storage(osv.osv):
     the same tree of filesystem storage.
     """
     _name = 'document.storage'
-    _description = 'Document storage media'
+    _description = 'Storage Media'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),

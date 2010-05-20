@@ -33,10 +33,10 @@ _intervalTypes = {
 
 class marketing_campaign(osv.osv): #{{{
     _name = "marketing.campaign"
-    _description = "Marketing Campaigns"
+    _description = "Marketing Campaign"
     
     _columns = {
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Name', size=64, required=True),
         'object_id': fields.many2one('ir.model', 'Objects'),
         'mode':fields.selection([('test', 'Test'),
                                 ('test_realtime', 'Realtime Time'),
@@ -47,10 +47,10 @@ class marketing_campaign(osv.osv): #{{{
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled'),],
-                                   'State',
-                                   readonly=True), 
+                                   'State',), 
         'activity_ids': fields.one2many('marketing.campaign.activity', 
                                        'campaign_id', 'Activities'),
+        'fixed_cost': fields.float('Fixed Cost'),                                       
         
     }
 
@@ -58,25 +58,25 @@ marketing_campaign()#}}}
 
 class marketing_campaign_segment(osv.osv): #{{{
     _name = "marketing.campaign.segment"
-    _description = "Marketing Campaign Segments"
+    _description = "Campaign Segment"
 
     _columns = {
-        'name': fields.char('Name', size=64),
-        'campaign_id': fields.many2one('marketing.campaign', 'Campaign'),
+        'name': fields.char('Name', size=64,required=True),
+        'campaign_id': fields.many2one('marketing.campaign', 'Campaign', 
+                                                required=True),
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
                                       string='Object'),
-        'ir_filter_id':fields.many2one('ir.filters', 'Filter'),
+        'ir_filter_id': fields.many2one('ir.filters', 'Filter'),
         'sync_last_date': fields.datetime('Date'),
-        'sync_mode':fields.selection([('create', 'Create'),
+        'sync_mode': fields.selection([('create', 'Create'),
                                       ('write', 'Write')],
                                       'Mode'),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled')],
-                                   'State',
-                                   readonly=True), 
+                                   'State',), 
         'date_run': fields.datetime('Running'),
         'date_done': fields.datetime('Done'),
     }
@@ -85,7 +85,7 @@ marketing_campaign_segment()#}}}
 
 class marketing_campaign_activity(osv.osv): #{{{
     _name = "marketing.campaign.activity"
-    _description = "Marketing Campaign Activities"
+    _description = "Campaign Activity"
 
     _columns = {
         'name': fields.char('Name', size=64),
@@ -95,7 +95,7 @@ class marketing_campaign_activity(osv.osv): #{{{
                                       string='Object'),
         'start': fields.boolean('Start'),
         'condition': fields.text('Condition'),
-        'type':fields.selection([('email', 'E-mail'),
+        'type': fields.selection([('email', 'E-mail'),
                                   ('paper', 'Paper'),
                                   ('action', 'Action'),
                                   ('subcampaign', 'Sub-Campaign')],
@@ -110,17 +110,32 @@ class marketing_campaign_activity(osv.osv): #{{{
         'from_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_from_id',
                                             'Previous Activities'), 
-        'subcampaign_id' :fields.many2one('marketing.campaign', 'Sub-Campaign'),
-        'subcampaign_segment_id' :fields.many2one('marketing.campaign.segment',
+        'subcampaign_id': fields.many2one('marketing.campaign', 'Sub-Campaign'),
+        'subcampaign_segment_id': fields.many2one('marketing.campaign.segment',
                                                    'Sub Campaign Segment'),
-
+        'variable_cost': fields.float('Variable Cost'),
+        'revenue': fields.float('Revenue')
         }
-
+   
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, 
+                                        context=None, count=False):
+        if context == None:
+            context = {}
+        if 'segment_id' in context  and context['segment_id']:
+            segment_obj = self.pool.get('marketing.campaign.segment').browse(cr,
+                                                    uid, context['segment_id'])
+            act_ids = []
+            for activity in segment_obj.campaign_id.activity_ids:
+                act_ids.append(activity.id)
+            return act_ids
+        return super(marketing_campaign_activity, self).search(cr, uid, args, 
+                                           offset, limit, order, context, count)
+    
 marketing_campaign_activity()#}}}
 
 class marketing_campaign_transition(osv.osv): #{{{
     _name = "marketing.campaign.transition"
-    _description = "Campaign Transitions"
+    _description = "Campaign Transition"
 
     _columns = {
         'activity_from_id': fields.many2one('marketing.campaign.activity',
@@ -129,27 +144,37 @@ class marketing_campaign_transition(osv.osv): #{{{
                                                         'Destination Activity'),
         'interval_nbr': fields.integer('Interval No.'),
         'interval_type': fields.selection([('hours', 'Hours'), ('days', 'Days'), 
-        ('months', 'Months'), ('years','Years')], 'Interval Type')
+                                           ('months', 'Months'),
+                                            ('years','Years')],'Interval Type')
         }
 
+    def default_get(self, cr, uid, fields, context={}):
+        value = super(marketing_campaign_transition, self).default_get(cr, uid,
+                                                                fields, context)
+        if context.has_key('type_id'):
+            value[context['type_id']] = context['activity_id']
+        return value
+    
 marketing_campaign_transition() #}}}
 
 class marketing_campaign_workitem(osv.osv): #{{{
     _name = "marketing.campaign.workitem"
-    _description = "Campaign Workitems"
+    _description = "Campaign Workitem"
 
     _columns = {
-        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment'),
-        'activity_id': fields.many2one('marketing.campaign.activity', 'Activity'),
+        'segment_id': fields.many2one('marketing.campaign.segment', 'Segment',
+                                                        required=True),
+        'activity_id': fields.many2one('marketing.campaign.activity','Activity',
+                                                        required=True),
         'object_id': fields.related('segment_id', 'campaign_id', 'object_id', 
                                         type='many2one', relation='ir.model', 
                                         string='Object'),
         'res_id': fields.integer('Results'),
         'date': fields.datetime('Execution Date'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner',required=True),
         'state': fields.selection([('todo', 'ToDo'), ('inprogress', 'In Progress'), 
-        ('exception', 'Exception'), ('done', 'Done'),
-        ('cancelled', 'Cancelled')], 'State')
+                                   ('exception', 'Exception'), ('done', 'Done'),
+                                   ('cancelled', 'Cancelled')], 'State')
         }
 
     def process_chain(self, cr, uid, workitem_id, context={}):
@@ -171,7 +196,8 @@ class marketing_campaign_workitem(osv.osv): #{{{
             
     def process(self, cr, uid, workitem_ids, context={}):
         #for wi in self.browse(cr, uid, workitem_ids):
-        #    if wi.state == 'todo'# we searched the wi which are in todo state then y v keep this filter again 
+        #    if wi.state == 'todo'# we searched the wi which are in todo state 
+                    #then y v keep this filter again 
         return True
         
     def process_all(self, cr, uid, context={}):
@@ -179,7 +205,7 @@ class marketing_campaign_workitem(osv.osv): #{{{
                         ('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))])
         if workitem_ids:
             self.parocess(cr, uid, workitem_ids, context)
-            
+    
 marketing_campaign_workitem() #}}}  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

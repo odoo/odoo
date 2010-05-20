@@ -8,7 +8,7 @@
             <field name="pricelist_id" ref="list0"/>
             <field name="partner_id" search="[]" model="res.partner"/>
             <field name="partner_address_id" search="[]" model="res.partner.address"/>
-            <field name="location_id" search="[]" model="stock.location"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
         </record>
         <record model="purchase.order.line" id="test_purchase_1_line_1">
             <field name="order_id" ref="test_purchase_1"/>
@@ -63,10 +63,10 @@
         <function model="account.invoice" name="pay_and_reconcile">
             <value model="purchase.order" eval="[obj(ref('test_purchase_1')).invoice_id.id]" />
             <value eval="1164" />
-            <value search="[('type', '=', 'cash')]" model="account.account"/>
+            <value eval="ref('account.cash')"/>
             <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
             <value eval="ref('account.bank_journal')" />
-            <value search="[('type', '=', 'cash')]" model="account.account"/>
+            <value eval="ref('account.cash')"/>
             <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
             <value eval="ref('account.bank_journal')" />
         </function>

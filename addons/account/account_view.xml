@@ -284,7 +284,7 @@
                             <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="user_id" groups="base.group_extended"/>
-                            <field name="allow_date" />
+                            <field name="allow_date" groups="base.group_extended"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <newline/>
                             <field name="centralisation"/>
@@ -531,7 +531,10 @@
                         <field name="create_date" select="1"/>
                         <field name="type" select="1"/>
                     </group>
+                    <separator colspan="4" string="Reconcile Entries"/>
                     <field colspan="4" name="line_id" nolabel="1"/>
+                    <separator colspan="4" string="Partial Reconcile Entries"/>
+                    <field colspan="4" name="line_partial_ids" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -551,6 +554,7 @@
                     <field name="code"/>
                     <field name="sum"/>
                     <field name="sum_period"/>
+                    <field name="company_id"/>
                 </tree>
             </field>
         </record>
@@ -562,7 +566,7 @@
                 <form string="Account Tax Code">
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
-                    <field name="company_id" widget="selection"  groups="base.group_multi_company"/>
+                    <field name="company_id" select="1"/>
                     <field name="notprintable"/>
                     <field name="parent_id" select="1"/>
                     <field name="sign"/>
@@ -596,7 +600,6 @@
             <field name="arch" type="xml">
                 <tree string="Account Tax">
                     <field name="name"/>
-                    <field name="price_include"/>
                     <field name="description"/>
                 </tree>
             </field>
@@ -628,7 +631,6 @@
                             <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
                             <field groups="base.group_extended" name="child_depend"/>
                             <field groups="base.group_extended" name="sequence"/>
-                            <field groups="base.group_extended" name="price_include"/>
                             <field name="type_tax_use"/>
                             <newline/>
                             <field colspan="4" groups="base.group_extended" name="child_ids"/>
@@ -648,9 +650,9 @@
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
                             <separator colspan="4" string="Compute Code (if type=code)"/>
-                            <field colspan="4" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')]}"/>
+                            <field colspan="4" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
                             <separator colspan="4" string="Applicable Code (if type=code)"/>
-                            <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')]}"/>
+                            <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
                         </page>
                     </notebook>
                 </form>
@@ -1453,9 +1455,11 @@
 
         <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_move_line" name="Entry lines" res_model="account.move.line" src_model="account.journal"/>
 
-        <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]" id="act_account_partner_account_move_unreconciled" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
+        <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]" id="act_account_partner_account_move_unreconciled" name="Unreconciled Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 
-        <act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All account entries" res_model="account.move.line" src_model="res.partner"/>
+        <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
+		
+		<act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All Account Entries" res_model="account.move.line" src_model="res.partner"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Account Add wizard</field>

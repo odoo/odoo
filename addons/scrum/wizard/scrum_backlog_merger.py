@@ -25,7 +25,7 @@ class scrum_backlog_merge(osv.osv_memory):
     _name = 'scrum.backlog.merge'
     _description = 'Merge Product Backlogs'
     _columns = {
-        'project_id': fields.many2one('project.project', 'Project', help="Select project for new product backlog"),
+        'project_id': fields.many2one('project.project', 'Project', help="Select project for the new product backlog"),
                }
 
     def check_backlogs(self, cr, uid, ids, context=None):
@@ -36,12 +36,11 @@ class scrum_backlog_merge(osv.osv_memory):
             context = {}
         #If only one product backlog selected for merging then show an exception
         if len(context['active_ids']) < 2:
-            raise osv.except_osv(_('Warning'),_('Please select at least two Product Backlogs'))
+            raise osv.except_osv(_('Warning'),_('Please select at least two product Backlogs'))
         #If any of the backlog state is done then it will show an exception
         for backlogs in backlog_obj.browse(cr, uid, context['active_ids'], context=context):
-            if backlogs.state == "done":
-                raise osv.except_osv(_('Warning'),_('Merging is not allowed for Product Backlogs with Done state'))
             p_list.append(backlogs.project_id.id)
+
         #For checking whether project id's are different or same.
         if len(set(p_list)) != 1:
             context.update({'scrum_projects': True})
@@ -63,9 +62,6 @@ class scrum_backlog_merge(osv.osv_memory):
         task_obj = self.pool.get('project.task')
         task_lines = []
         new_exp_hour = []
-        new_note = 'Merged Features :'
-        new_description = 'Merged Descriptions :'
-        count = 0
         if context is None:
             context = {}
         #This will check product backlog's project id if different then will accept a new id provided by the user.
@@ -78,22 +74,29 @@ class scrum_backlog_merge(osv.osv_memory):
             p_id = backlog_obj.read(cr, uid, context['active_id'], ['project_id'])
             new_project_id = p_id['project_id'][0]
         #To merge note and description of backlogs
+
+        new_note = ''
+        new_description = ''
         for backlogs in backlog_obj.browse(cr, uid, context['active_ids'], context=context):
-            count += 1
-            new_note += '\n' + str(count)+') ' + backlogs.name
-            new_description += '\n' + str(count)+') ' + (backlogs.note or backlogs.name or '')
+            if new_note:
+                new_note += ' + '
+                new_description += '\n\n'+('-'*50)+'\n'
+            new_note += backlogs.name
+            new_description += (backlogs.name or '') + '\n' + (backlogs.note or '')
+
             new_exp_hour.append(backlogs.expected_hours)
             for line in backlogs.tasks_id:
                 task_lines.append(line.id)
-        id_b = backlog_obj.create(cr, uid, {'name': 'Merged Product Backlogs', 'note': new_note + '\n\n' + new_description, 'project_id': new_project_id,
-                                            'expected_hours': round(max(new_exp_hour))
-                                            }, context=context)
+        id_b = backlog_obj.create(cr, uid, {
+            'name': new_note,
+            'note': new_description,
+            'project_id': new_project_id,
+            'expected_hours': round(max(new_exp_hour))
+        }, context=context)
+
         #To assing a new product backlog to merged tasks
-        for tasks in task_obj.browse(cr, uid, task_lines, context=context):
-            task_obj.copy(cr, uid, tasks.id, {'product_backlog_id': id_b})
-        # This is to change the status of the old product backlogs to done state
-        for backlogs in backlog_obj.browse(cr, uid, context['active_ids'], context=context):
-            backlog_obj.write(cr, uid, context['active_ids'], {'state':'done'}, context=context)
+        task_obj.write(cr, uid, task_lines, {'product_backlog_id': id_b})
+        backlog_obj.write(cr, uid, context['active_ids'], {'state':'done'}, context=context)
         return {}
 
 scrum_backlog_merge()

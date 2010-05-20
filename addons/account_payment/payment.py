@@ -28,7 +28,7 @@ import pooler
 
 class payment_type(osv.osv):
     _name= 'payment.type'
-    _description= 'Payment type'
+    _description= 'Payment Type'
     _columns= {
         'name': fields.char('Name', size=64, required=True,help='Payment Type'),
         'code': fields.char('Code', size=64, required=True,help='Specifies the Code for Payment Type'),
@@ -43,7 +43,7 @@ payment_type()
 
 class payment_mode(osv.osv):
     _name= 'payment.mode'
-    _description= 'Payment mode'
+    _description= 'Payment Mode'
     _columns= {
         'name': fields.char('Name', size=64, required=True,help='Mode of Payment'),
         'bank_id': fields.many2one('res.partner.bank', "Bank account",

@@ -1,6 +1,40 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data noupdate="1">
+
+	    <record id="product_product_expense_0" model="product.product">
+            <field name="list_price">800.0</field>
+            <field name="standard_price">700.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="type">service</field>
+            <field name="name">Travel</field>
+            <field name="categ_id" ref="product.product_category_7"/>
+            <field name="hr_expense_ok" eval="True" />
+        </record>
+
+        <record id="product_product_expense_1" model="product.product">
+            <field name="list_price">50.25</field>
+            <field name="standard_price">35.5</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="type">service</field>
+            <field name="name">PC Expense</field>
+            <field name="categ_id" ref="product.product_category_7"/>
+            <field name="hr_expense_ok" eval="True" />
+        </record>
+
+        <record id="product_product_expense_2" model="product.product">
+            <field name="list_price">500.0</field>
+            <field name="standard_price">400.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="type">service</field>
+            <field name="name">Hotel</field>
+            <field name="categ_id" ref="product.product_category_7"/>
+            <field name="hr_expense_ok" eval="True" />
+        </record>
+
 		<record id="hr_expense_expense_septemberexpenses0" model="hr.expense.expense">
 			<field name="currency_id" ref="base.EUR"/>
 			<field name="employee_id" ref="hr.employee1"/>
@@ -10,20 +44,25 @@
 			<field name="date">2010-05-03</field>
 			<field name="state">draft</field>
 		</record>
+
 		<record id="hr_expense_line_travelbycarcustomerseagatedouble0" model="hr.expense.line">
 			<field name="name">Travel by Car - Customer Seagate 2 - Double</field>
 			<field name="date_value">2010-05-03</field>
 			<field name="analytic_account" ref="account.analytic_thymbra"/>
+			<field name="product_id" ref="product_product_expense_0"/>
 			<field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'September Expenses')]"/>
-			<field eval="200.0" name="unit_amount"/>
-			<field eval="130.0" name="unit_quantity"/>
+			<field eval="700.0" name="unit_amount"/>
+			<field name="uom_id" ref="product.product_uom_unit"/>
+			<field eval="200.0" name="unit_quantity"/>
 		</record>
 		<record id="hr_expense_line_basicpcserverforseagate0" model="hr.expense.line">
 			<field name="name">Basic PC - Server for Seagate</field>
 			<field name="date_value">2010-05-03</field>
 			<field name="analytic_account" ref="account.analytic_seagate_p2"/>
+			<field name="product_id" ref="product_product_expense_1"/>
 			<field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'September Expenses')]"/>
-			<field eval="500.0" name="unit_amount"/>
+			<field eval="35.5" name="unit_amount"/>
+			<field name="uom_id" ref="product.product_uom_unit"/>
 			<field eval="1.0" name="unit_quantity"/>
 		</record>
 	</data>
@@ -41,8 +80,10 @@
 			<field name="name">Hotel Expenses - Thymbra</field>
 			<field name="date_value">2010-05-03</field>
 			<field name="analytic_account" ref="account.analytic_thymbra"/>
+			<field name="product_id" ref="product_product_expense_2"/>
 			<field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'Hotel Expenses')]"/>
-			<field eval="2000.0" name="unit_amount"/>
+			<field eval="400.0" name="unit_amount"/>
+			<field name="uom_id" ref="product.product_uom_unit"/>
 			<field eval="5.0" name="unit_quantity"/>
 		</record>
 

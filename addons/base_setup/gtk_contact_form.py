@@ -74,23 +74,38 @@ class base_gtkcontactform(osv.osv_memory):
              'contact_me':fields.boolean('Contact Me'),
              }
     def execute(self, cr, uid, ids, context=None):
-        company_id = self.pool.get('base.setup.company').search(cr, uid, [])
-        company_data = self.pool.get('base.setup.company').read(cr, uid, company_id)
-        company_data = company_data and company_data[0] or False
-        country1 = ''
-        if company_data and company_data.get('country_id', False):
-            country = self.pool.get('res.country').read(cr, uid, company_data['country_id'],['name'])['name']
-        for res in self.read(cr, uid, ids):
+        if context is None:
+            context = {}
+
+        company_id = self.pool.get('base.setup.company').search(cr, uid, [], context=context)
+        company_data = self.pool.get('base.setup.company').read(cr, uid, company_id, context=context)
+        company_data = company_data and company_data[0] or {}
+        country = ''
+        
+        if company_data.get('country_id', False):
+            country = self.pool.get('res.country').read(cr, uid, company_data['country_id'],['name'], context=context)['name']
+        
+        for res in self.read(cr, uid, ids, context=context):
             email = res.get('email','')
-            result = "\ncompany: "+ str(company_data.get('name',''))
-            result += "\nname: " + str(res.get('name',''))
+            result = "\ncompany: "+ tools.ustr(company_data.get('name',''))
+            result += "\nname: " + tools.ustr(res.get('name',''))
+            result += "\njob: " + tools.ustr(res.get('job',''))
             result += "\nphone: " + str(res.get('phone',''))
-            result += "\ncity: " + str(company_data.get('city',''))
+            result += "\ncity: " + tools.ustr(company_data.get('city',''))
             result += "\ncountry: " + str(country)
-            result += "\nindustry: " + str(res.get('industry', ''))
+            result += "\nindustry: " + tools.ustr(res.get('industry', ''))
             result += "\ntotal_employees: " + str(res.get('total_employees', ''))
             result += "\nplan_use: " +  str(res.get('use_openerp', False))
+            result += "\nalready_using_openerp: " + str(res.get('already_using_openerp', False))
             result += "\nsell_openerp: " + str(res.get('sell_openerp', False))
+            result += "\nalready_selling__openerp: " + str(res.get('already_selling__openerp', False))
+            result += "\nfeatures: " +  str(res.get('features', False))
+            result += "\nsaas: " +  str(res.get('saas', False))
+            result += "\npartners_program: " +  str(res.get('partners_program', False))
+            result += "\nsupport: " +  str(res.get('support', False))
+            result += "\ntraining: " +  str(res.get('training', False))
+            result += "\nupdates: " +  str(res.get('updates', False))
+            result += "\ncontact_me: " +  str(res.get('contact_me', False))
             result += "\nebook: " + str(res.get('ebook',False))
             result += "\ngtk: " + str(True)
         misc.upload_data(email, result, type='SURVEY')

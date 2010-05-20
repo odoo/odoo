@@ -24,7 +24,7 @@
 {
     "name" : "Fetchmail Server",
     "version" : "1.0",
-    "depends" : ["base", "mail_gateway"],
+    "depends" : ["base"],
     "author" : "Tiny",
     "description": """Fetchail: 
     * Fetch email from Pop / IMAP server
@@ -38,7 +38,8 @@
     'init_xml': [],
     'update_xml': [
         "fetchmail_view.xml",
-        "fetchmail_data.xml"
+        "fetchmail_data.xml",
+        'security/ir.model.access.csv',
     ],
     'demo_xml': [
 

@@ -244,7 +244,6 @@ project_resource_allocation()
 
 class project(osv.osv):
     _inherit = "project.project"
-    _description = "Project"
     _columns = {
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
         'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
@@ -254,7 +253,6 @@ project()
 
 class task(osv.osv):
     _inherit = "project.task"
-    _description = "Task"
     _columns = {
         'phase_id': fields.many2one('project.phase', 'Project Phase'),
         'occupation_rate': fields.float('Occupation Rate', help='The occupation rate fields indicates how much of his time a user is working on a task. A 100% occupation rate means the user works full time on the tasks. The ending date of a task is computed like this: Starting Date + Duration / Occupation Rate.'),

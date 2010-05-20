@@ -11,6 +11,7 @@
             <field name="arch" type="xml">
                <tree string="Available Holidays">
                     <field name="employee_id"/>
+                    <field name="category_id"/>
                     <field name="holiday_status_id"/>
                     <field name="max_leave"/>
                     <field name="taken_leaves"/>
@@ -65,16 +66,12 @@
 		                    	help="Leaves of this month"/>
 		                <separator orientation="vertical"/>
 		                <field name="employee_id"/>
-		                <field name="user_id" widget="selection">
-		                    <filter icon="terp-sale"
-		                        	string="My Leaves"
-		                        	default="1"
-		                        	domain="[('user_id','=',uid)]"/>
-		                </field>
+		                <field name="user_id" widget="selection"/>
 	                </group>
 	                <newline/>
 	                <group expand="1" string="Group By..." colspan="10" col="12">
-	                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+	                    <filter string="Employee" icon="terp-hr" domain="[('category_id', '=', 'False')]" context="{'group_by':'employee_id'}"/>
+	                    <filter string="Category" icon="terp-hr" domain="[('employee_id', '=', 'False')]" context="{'group_by':'category_id'}"/>
 	                    <separator orientation="vertical"/>
 	                    <filter string="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
 	                    <filter string="Type" icon="terp-hr" context="{'group_by':'holiday_status_id'}"/>
@@ -93,6 +90,7 @@
             <field name="res_model">available.holidays.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="context">{"search_default_user_id": uid}</field>
             <field name="view_id" ref="view_hr_available_holidays_report_search"/>
 
         </record>

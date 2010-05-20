@@ -73,10 +73,6 @@
 	                <separator orientation="vertical"/>
 	                <field name="user_id" widget="selection">
 	                    <filter icon="terp-sale"
-	                    		string="My Sales"
-	                    		help = "My Sales"
-	                    		domain="[('user_id','=',uid)]" />
-	                    <filter icon="terp-sale"
 	                    		string="sale Non User"
 	                    		help="sale Non User"
 	                    		domain="[('user_id','=',False)]"/>
@@ -127,7 +123,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_order_product_search"/>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
     </record>
 
     <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="8"/>
