@@ -98,7 +98,7 @@ def init_db(cr):
                     values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (
                 id, info.get('author', ''),
                 info.get('website', ''), i, info.get('name', False),
-                info.get('description', ''), p_id, state, info.get('certificate')))
+                info.get('description', ''), p_id, state, info.get('certificate') or None))
             cr.execute('insert into ir_model_data \
                 (name,model,module, res_id, noupdate) values (%s,%s,%s,%s,%s)', (
                     'module_meta_information', 'ir.module.module', i, id, True))
