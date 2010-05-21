@@ -60,7 +60,7 @@ class campaign_analysis(osv.osv): #{{{
         'country_id': fields.related('partner_id','address', 'country_id',
                     type='many2one', relation='res.country',string='Country'),
         'total_cost' : fields.function(_total_cost, string='Cost', method=True, 
-                                    type="float", store=True),
+                                    type="float" ),
         'revenue': fields.float('Revenue',readonly=True),
 #        'case_id': fields.many2one('crm.lead', 'Opportunity', readonly=True),
 #        'count' : fields.integer('Count', readonly=True),
