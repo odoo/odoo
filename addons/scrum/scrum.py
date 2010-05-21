@@ -92,7 +92,6 @@ class scrum_sprint(osv.osv):
         return True
     _columns = {
         'name' : fields.char('Sprint Name', required=True, size=64),
-        'active' : fields.boolean('Active', help="If Active field is set to true, it will allow you to select sprint from task list view. "),
         'date_start': fields.date('Starting Date', required=True),
         'date_stop': fields.date('Ending Date', required=True),
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
@@ -111,7 +110,6 @@ class scrum_sprint(osv.osv):
     _defaults = {
         'state': 'draft',
         'date_start' : time.strftime('%Y-%m-%d'),
-        'active': 1,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):

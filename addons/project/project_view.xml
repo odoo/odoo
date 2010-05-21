@@ -408,7 +408,7 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Tasks" icon="terp-project" default="1"/>
+                        <filter name="current" string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Tasks" icon="terp-project" default="1"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
@@ -444,7 +444,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_project_id":project_id,'search_default_user_id':uid}</field>
+            <field name="context">{"search_default_project_id":project_id,'search_default_user_id':uid, 'search_default_current': 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
 
         </record>
