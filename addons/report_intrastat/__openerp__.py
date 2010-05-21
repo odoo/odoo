@@ -26,7 +26,7 @@
     'category': 'Generic Modules/Inventory Control',
     'description': """
     A module that adds intrastat reports.
-    This module gives the details of the goods traded between the countries of Europan Union """,
+    This module gives the details of the goods traded between the countries of European Union """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'product', 'stock', 'sale', 'purchase'],

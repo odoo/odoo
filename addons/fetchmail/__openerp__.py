@@ -26,7 +26,7 @@
     "version" : "1.0",
     "depends" : ["base"],
     "author" : "Tiny",
-    "description": """Fetchail: 
+    "description": """Fetchmail: 
     * Fetch email from Pop / IMAP server
     * Support SSL
     * Integrated with all Modules

@@ -24,8 +24,8 @@
     'name': 'Report Creator',
     'version': '1.0',
     'category': 'Generic Modules/Base',
-    'description': """This modules allows you to create any statistic
-report on several object. It's a SQL query builder and browser
+    'description': """This module allows you to create any statistic
+report on several objects. It's a SQL query builder and browser
 for and users.
 
 After installing the module, it adds a menu to define custom report in
