@@ -10,41 +10,6 @@
         <menuitem id="menu_base_config_contact" name="Contacts" parent="menu_base_config" sequence="20" />
 
         <!--
-          ================================
-          Function
-          ================================
-        -->
-        <record id="view_partner_function_form" model="ir.ui.view">
-            <field name="name">res.partner.function.form</field>
-            <field name="model">res.partner.function</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Contact Functions">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                </form>
-            </field>
-        </record>
-        <record id="view_partner_function_tree" model="ir.ui.view">
-            <field name="name">res.partner.function.tree</field>
-            <field name="model">res.partner.function</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Contact Functions">
-                    <field name="code"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_partner_function_form" model="ir.actions.act_window">
-            <field name="name">Contact Functions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.function</field>
-            <field name="view_type">form</field>
-        </record>
-        <menuitem action="action_partner_function_form" id="menu_partner_function_form" parent="base.menu_base_config_contact" sequence="20"/>
-
-        <!--
           =====================
           Partner Address
           =====================
