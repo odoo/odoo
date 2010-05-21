@@ -14,12 +14,12 @@
                    <filter string="Can be sold" icon="terp-stock" domain="[('sale_ok','=',1)]"/>
                    <filter string="Can be Purchased" icon="terp-stock" domain="[('purchase_ok', '=', 1)]" />
                    <separator orientation="vertical"/>
-                   <field name="default_code" select="1"/>
-                   <field name="name" select="1"/>
-                   <field name="categ_id" select="1" widget="selection" operator="child_of"/>
+                   <field name="default_code"/>
+                   <field name="name"/>
+                   <field name="categ_id" widget="selection" operator="child_of"/>
                    <newline/>
-                   <group col='8' colspan='14' expand="1" string="Extended options..." groups="base.group_extended">
-                       <field name="pricelist_id" select="1" widget="selection" context="{'pricelist': self}" />
+                   <group col='8' colspan='14' expand="1" string="Extended options...">
+                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
                    </group>
                    <newline/>
                    <group col='8' colspan='15' expand='1' string='Group by...'>
@@ -64,13 +64,12 @@
                 <form string="Product">
                    <group colspan="4" col="6">
                     <group colspan="4" col="2">
-                        <separator string="Product Description" colspan="4"/>
-                        <field name="name" select="1"  />
+                        <field name="name"/>
                         <field groups="product.group_product_variant" name="variants" />
                     </group>
                     <group colspan="1" col="2">
                         <separator string="Codes" colspan="2"/>
-                        <field name="default_code" select="1"/>
+                        <field name="default_code"/>
                         <field name="ean13" groups="base.group_extended"/>
                     </group>
                     <group colspan="1" col="2">
@@ -162,10 +161,10 @@
                         <page groups="base.group_extended" string="Packaging">
                             <field colspan="4" name="packaging" nolabel="1">
                                 <form string="Packaging">
-                                    <field name="ean" select="1"/>
+                                    <field name="ean"/>
                                     <field name="sequence" invisible="1"/>
                                     <newline/>
-                                    <field name="qty" select="1"/>
+                                    <field name="qty"/>
                                     <field name="ul"/>
                                     <field name="weight_ul"/>
                                     <separator colspan="4" string="Palletization"/>
@@ -177,7 +176,7 @@
                                     <field name="width"/>
                                     <field name="length"/>
                                     <separator colspan="4" string="Other Info"/>
-                                    <field colspan="4" name="name" select="1"/>
+                                    <field colspan="4" name="name"/>
                                 </form>
                             </field>
                         </page>
