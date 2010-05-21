@@ -102,19 +102,21 @@
 	                        		help ="Non assigned tasks to projects"
 	                        		domain="[('project_id','=',False"/>
 	                    </field>
+	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <newline/>
 	                <group expand="0" string="Extended options..." colspan="10" col="12">
-                    	<separator orientation="vertical"/>
 	                    <field name="type" widget="selection"/>
+	                    <separator orientation="vertical"/>
+                        <field name="date_start"/>
+                        <separator orientation="vertical"/>
+                        <field name="partner_id" />
+	                    <newline/>
 	                    <field name="priority"/>
-	                    <field name="partner_id" />
-                      <field name="company_id" groups="base.group_multi_company"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="date_end"/>
 	                    <separator orientation="vertical"/>
 	                    <field name="date_deadline"/>
-	                    <newline/>
-	                    <field name="date_start"/>
-	                    <field name="date_end"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="11">
