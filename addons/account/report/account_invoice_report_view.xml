@@ -17,7 +17,6 @@
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="product_qty" invisible="1"/>
-                <!--field name="delay" avg="Days to Close"/-->
                 <field name="nbr" sum="# of Lines"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
@@ -57,13 +56,13 @@
         <field name="arch" type="xml">
             <search string="Invoices">
               <group col="10" colspan="12">
-	            	<filter icon="terp-account" string="This Year"
+	            	<filter icon="terp-account" string="Last 365 Days"
 		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-		                    help="Invoices of the year"/>
-	                <filter icon="terp-account" string="This Month"
+		                    help="Invoices of last 365 days"/>
+	                <filter icon="terp-account" string="Last 30 Days"
 	                		name="month"
 	                		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                		help="Invoices of this month"/>
+	                		help="Invoices of last 30 days"/>
 	                <filter icon="gtk-media-rewind"
 	                        string="    7 Days    "
 	                        separator="1"
@@ -82,71 +81,59 @@
 	                		icon="terp-account"
 	                		domain="[('state', '=' ,'open')]"
 	                		help = "In progress tasks"/>
+	                <filter string="Done"
+                            icon="terp-account"
+                            domain="[('state','=','paid')]"
+                            help = "Done tasks"/>
   					<separator orientation="vertical"/>
-                <field name="user_id" widget="selection">
-
+  					<field name="partner_id"/>
+                    <field name="user_id" widget="selection">
                     <filter icon="terp-account"
                     		string="Invoices Non Users"
                     		help="Invoices Non Users"
                     		domain="[('user_id','=',False)]"/>
-                </field>
-                <field name="product_id"/>
-                <field name="partner_id"/>
-				<field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </field>
 				</group>
                 <newline/>
                 <group expand="0" string="Extended options..." colspan="10" col="12">
-                	<filter string="Done"
-                   			icon="terp-account"
-                   			domain="[('state','=','paid')]"
-                   			help = "Done tasks"/>
-                   	<filter string="Cancelled"
-                		icon="terp-account"
-                		domain="[('state', '=' ,'cancel')]"
-                		help = "Cancelled tasks"/>
-                	<separator orientation="vertical"/>
-            		<field name="type"/>
-                	<field name="payment_term" widget="selection"/>
-                	<separator orientation="vertical"/>
-                	<field name="currency_id" widget="selection"/>
-                	<field name="journal_id" widget="selection"/>
-                	<newline/>
-                	<field name="address_contact_id"/>
+                    <field name="type"/>
+                    <field name="currency_id" widget="selection"/>
+                    <field name="partner_bank" widget="selection"/>
+                    <field name="fiscal_position" widget="selection"/>
+                    <separator orientation="vertical"/>
+                    <field name="address_contact_id"/>
+                    <field name="account_id"/>
+                    <newline/>
+                    <field name="payment_term" widget="selection"/>
+                    <field name="journal_id" widget="selection"/>
+                    <field name="period_id" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <separator orientation="vertical"/>
                 	<field name="address_invoice_id"/>
-                	<separator orientation="vertical"/>
-                	<field name="account_id"/>
-                	<field name="partner_bank" widget="selection"/>
-                	<separator orientation="vertical"/>
-                	<field name="period_id" widget="selection"/>
-                	<field name="fiscal_position" widget="selection"/>
+                	<field name="product_id"/>
                 	<newline/>
 					<field name="date" string="Date Invoiced"/>
-					<separator orientation="vertical"/>
 					<field name="date_due"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Salesman" name='User' icon="terp-account" context="{'group_by':'user_id'}"/>
-                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
                     <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
-                    <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
                     <filter string="Type" icon="terp-account" context="{'group_by':'type'}"/>
-                    <filter string="Payment Term" icon="terp-account" context="{'group_by':'payment_term'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Currency" icon="terp-account" context="{'group_by':'currency_id'}"/>
                     <filter string="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Account" icon="terp-account" context="{'group_by':'account_id'}"/>
                     <filter string="Bank Account" icon="terp-account" context="{'group_by':'partner_bank'}"/>
-                    <newline/>
-                    <filter string="Contact Address Name" icon="terp-account" context="{'group_by':'address_contact_id'}"/>
-                    <filter string="Invoice Address Name" icon="terp-account" context="{'group_by':'address_invoice_id'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Currency" icon="terp-account" context="{'group_by':'currency_id'}"/>
+                    <filter string="Payment Term" icon="terp-account" context="{'group_by':'payment_term'}"/>
                     <filter string="Force Period" icon="terp-account" context="{'group_by':'period_id'}"/>
                     <filter string="Fiscal Position" icon="terp-account" context="{'group_by':'fiscal_position'}"/>
-                    <separator orientation="vertical"/>
+                    <newline/>
                     <filter string="Day" icon="terp-account" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
