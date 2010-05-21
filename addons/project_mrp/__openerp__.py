@@ -53,6 +53,7 @@ automatically created via sale orders.
                    #'process/project_mrp_process.xml',
                    ],
     'demo_xml': [],
+    'test': ['test/project_task_procurement.yml'],
     'installable': True,
     'active': False,
     'certificate': '0031976495453',
