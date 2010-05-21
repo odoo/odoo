@@ -7,14 +7,18 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Leaves Statistics">
-                <field name="date"/>
-                <field name="employee_id"/>
-                <field name="date_from"/>
-                <field name="date_to"/>
-                <field name="number_of_days_temp"/>
+                <field name="date" invisible="1"/>
+                <field name="employee_id" invisible="1"/>
+                <field name="user_id" invisible="1"/>
+                <field name="date_from" invisible="1"/>
+                <field name="date_to" invisible="1"/>
+                <field name="number_of_days_temp" sum="#Days"/>
+                <field name="holiday_status_id" invisible="1"/>
+                <field name="department_id" invisible="1"/>
                 <field name="year" invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
-                <field name="state"/>
+                <field name="state" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -27,6 +31,7 @@
              <graph string="Leaves Statistics" type="bar">
                  <field name="employee_id"/>
                  <field name="number_of_days_temp" operator="+"/>
+                 <field name="state" group = "True"/>
              </graph>
          </field>
     </record>
@@ -37,40 +42,71 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Leaves">
-                <filter icon="terp-hr"
-                    string="This Year"
-                    domain="[('year','=',time.strftime('%%Y'))]"
-                    help="Leaves of the year"/>
-                <filter icon="terp-hr"
-                    string="This Month"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    help="Leaves of this month"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-hr"
-                    string="Draft"
-                    domain="[('state','=','draft')]"/>
-                <filter icon="terp-hr"
-                    string="Validate"
-                    domain="[('state','=','validate')]"/>
-                <filter icon="terp-hr"
-                    string="Start Leaves"
-                    domain="[('date_from','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                <filter icon="terp-hr"
-                    string="End Leaves"
-                    domain="[('date_to','=',time.strftime('%%Y/%%m/%%d'))]"/>
-
-                <separator orientation="vertical"/>
-                <field name="employee_id"/>
-                <field name="user_id" widget="selection"/>
-                <field name="date"/>
+            	<group>
+	            	<filter icon="terp-hr" string="This Year"
+		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+		                    help="Leaves in this year"/>
+	                <filter icon="terp-hr" string="This Month"
+	                    name="month"
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Leaves in this month"/>
+		            <filter icon="gtk-media-rewind"
+	                    string="    7 Days    "
+	                    separator="1"
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Leaves during last 7 days"/>
+	                <separator orientation="vertical"/>
+	                <filter string="Draft"
+	                	icon="terp-hr"
+	                	domain="[('state','=','draft')]"
+	                	help = "Draft Leaves"/>
+	                <filter string="Waiting Validation"
+	                	icon="terp-hr"
+	                	domain="[('state', '=' ,'confirm')]"
+	                	help = "In progress Leaves"/>
+	               	<filter string="Validated"
+	               		icon="terp-hr"
+	               		domain="[('state','=','validate')]"
+	               		help = "Pending Leaves"/>
+					<separator orientation="vertical"/>
+					<field name="employee_id"/>
+	                <field name="user_id" widget="selection">
+	                    <filter icon="terp-hr"
+	                        string="My Leaves"
+	                        domain="[('user_id','=',uid)]"/>
+	                </field>
+	            </group>
+                <newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-hr"
+                    		string="Refused"
+                        name="done"
+                    		domain="[('state','=','refuse')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="date_from"/>
+                    <separator orientation="vertical"/>
+                    <field name="holiday_status_id" widget="selection"/>
+                    <newline/>
+                    <filter icon="terp-hr"
+                    		string="Cancelled"
+                    		domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
+                	<field name="date_to"/>
+                	<separator orientation="vertical"/>
+                	<field name="department_id" widget="selection"/>
+                </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Employee" name="employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Employee" name="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Type" icon="terp-hr" context="{'group_by':'holiday_status_id'}"/>
+                    <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-sale" context="{'group_by':'date'}"/>
-                    <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
+                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-hr" context="{'group_by':'date'}"/>
+                    <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>
@@ -81,7 +117,7 @@
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_employee': 1, "search_default_user_id":uid}</field>
+        <field name="context">{'search_default_month':1,'search_default_Employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 

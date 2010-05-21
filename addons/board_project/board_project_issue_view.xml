@@ -7,8 +7,48 @@
             <field name="res_model">project.issue</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('create_date', '&gt;=', time.strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
+            <field name="domain">[('user_id','=',uid),('state','in',['draft','open'])]</field>
            <field name="view_id" ref="project_issue.project_issue_tree_view"/>
+        </record>
+
+        <record id="action_view_pending_project_issue_tree" model="ir.actions.act_window">
+            <field name="name">Project issues</field>
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id','=',uid),('state','=','pending')]</field>
+           <field name="view_id" ref="project_issue.project_issue_tree_view"/>
+        </record>
+
+        <record id="action_project_issue_graph_state" model="ir.actions.act_window">
+            <field name="name">Project Issue</field>
+            <field name="res_model">project.issue.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="view_id" ref="project_issue.view_project_issue_report_graph"/>
+        </record>
+
+        <record id="view_project_issue_graph_stage" model="ir.ui.view">
+            <field name="name">project.issue.report.graph</field>
+            <field name="model">project.issue.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="vertical" string="Project Issue" type="bar">
+                    <field name="stage_id"/>
+                    <field name="nbr" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="action_project_issue_graph_stage" model="ir.actions.act_window">
+            <field name="name">Project Issue</field>
+            <field name="res_model">project.issue.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="view_id" ref="view_project_issue_graph_stage"/>
         </record>
 
         <record id="board_project_issue_form" model="ir.ui.view">
@@ -16,15 +56,23 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Project Issue Board">
-                    <vpaned>
+                <form string="My Board">
+                    <hpaned>
                         <child1>
-                   			<action colspan="4" height="220" name="%(action_view_current_project_issue_tree)d" string="Current Project Issues" width="510"/>
+                            <action colspan="4"  name="%(action_view_current_project_issue_tree)d" string="Current Issues" width="510"/>
+                            <action colspan="4"  name="%(action_view_pending_project_issue_tree)d" string="Pending Issues" width="510"/>
                         </child1>
                         <child2>
-                   			<action colspan="4" height="220" name="%(project.action_task_by_days_graph)d" string="Project Tasks By Days" width="510"/>
+                        <vpaned>
+                            <child1>
+                                <action colspan="4"  name="%(action_project_issue_graph_state)d" string="Issues By State" />
+                            </child1>
+                            <child2>
+                                <action colspan="4"  name="%(action_project_issue_graph_stage)d" string="Issues By Stage" />
+                            </child2>
+                        </vpaned>
                         </child2>
-                    </vpaned>
+                    </hpaned>
                 </form>
             </field>
         </record>
