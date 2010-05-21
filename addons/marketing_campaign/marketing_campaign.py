@@ -37,7 +37,7 @@ class marketing_campaign(osv.osv): #{{{
     
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'object_id': fields.many2one('ir.model', 'Objects'),
+        'object_id': fields.many2one('ir.model', 'Objects', required=True),
         'mode':fields.selection([('test', 'Test'),
                                 ('test_realtime', 'Realtime Time'),
                                 ('manual', 'Manual'),
@@ -121,11 +121,16 @@ class marketing_campaign_segment(osv.osv): #{{{
     
     def state_running_set(self, cr, uid, ids, *args):
         segment = self.browse(cr, uid, ids[0])
+        curr_date = time.strftime('%Y-%m-%d %H:%M:%S')
         if not segment.date_run:
-            raise osv.except_osv("Error", "Segment cant be start before giving running date")
+            raise osv.except_osv("Error", "Segment can't be start before giving running date")
         if segment.campaign_id.state != 'running' :
             raise osv.except_osv("Error", "You have to start campaign first")
-        self.write(cr, uid, ids, {'state': 'running'})
+        if (segment.date_run >= curr_date):
+                raise osv.except_osv("Error", "Segment cannot start before run date")
+        if not segment.sync_last_date:
+            self.write(cr, uid, ids, {'sync_last_date':curr_date})
+        self.write(cr, uid, ids, {'state': 'running','date_done': curr_date})
         return True
         
     def state_done_set(self, cr, uid, ids, *args):
@@ -195,7 +200,7 @@ class marketing_campaign_activity(osv.osv): #{{{
                                   ('paper', 'Paper'),
                                   ('action', 'Action'),
                                   ('subcampaign', 'Sub-Campaign')],
-                                   'Type'),
+                                  'Type', required=True),
         'email_template_id': fields.many2one('poweremail.templates','Email Template'),
         'report_id': fields.many2one('ir.actions.report.xml', 'Reports'),         
         'report_directory_id': fields.many2one('document.directory', 'Directory'),
