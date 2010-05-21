@@ -9,9 +9,8 @@
                 <form string="maligate message">
                     <field name="name" />
                     <field name="date" />
-                    <field name="model_id" />
-                    <field name="res_id" />
                     <field name="user_id" />
+                    <field name="history" />
                     <field name="message_id" />
                     <notebook colspan="4">
 	                    <page>
@@ -51,20 +50,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Mailgateway Thread">
-                    <field name="name" select="1"/>
-                    <separator string="Messages" colspan="4"/>
-                    <field name="message_ids" nolabel="1" colspan="4">
-                    	<tree string="Mailgateway Message">
+                    <field name="thread" select="1"/>
+                    <separator string="Logs" colspan="4"/>
+                    <field name="log_ids" nolabel="1" colspan="4" domain="[('history', '=', True)]">
+                    	<tree string="Mailgateway Logs">
 		                    <field name="name" select="1" />
 		                    <field name="date" />
 		                </tree>
-	                    <form string="Maligate Message">
+	                    <form string="Maligate Logs">
 		                    <field name="name" />
 		                    <field name="date" />
-		                    <field name="model_id" />
-		                    <field name="res_id" />
 		                    <field name="user_id" />
 		                    <field name="message_id" />
+		                    <field name="history" />
 		                    <notebook colspan="4">
 			                    <page string="Email Details">
 			                    	<group col="4" colspan="4">
@@ -82,6 +80,35 @@
 			                </notebook>
 		                </form>
                     </field>
+                    <separator string="Histories" colspan="4"/>
+                    <field name="message_ids" nolabel="1" colspan="4" domain="[('history', '=', True)]">
+                        <tree string="Mailgateway Histories">
+                            <field name="name" select="1" />
+                            <field name="date" />
+                        </tree>
+                        <form string="Maligate Histories">
+                            <field name="name" />
+                            <field name="date" />
+                            <field name="user_id" />
+                            <field name="message_id" />
+                            <field name="history" />
+                            <notebook colspan="4">
+                                <page string="Email Details">
+                                    <group col="4" colspan="4">
+                                        <separator string="Email Details" colspan="4"/>
+                                        <field name="email_from" />
+                                        <field name="email_to" />
+                                        <field name="email_cc" />
+                                        <field name="email_bcc" />
+                                   </group>
+                                </page>
+                                <page string="Attachments">
+                                    <separator string="Attachments" colspan="4"/>
+                                    <field name="attachment_ids" nolabel="1" colspan="4" />
+                                </page>
+                            </notebook>
+                        </form>
+                    </field>
                 </form>
             </field>
         </record>
@@ -92,7 +119,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Mailgateway Thread">
-                    <field name="name" select="1" />
+                    <field name="thread" select="1" />
                     <field name="message_ids" />
                 </tree>
             </field>
@@ -120,12 +147,12 @@
 	    </record>
 		
 		
-		 <menuitem id="base.menu_crm_configuration" name="Cases"
+		 <!-- <menuitem id="base.menu_crm_configuration" name="Cases"
             parent="base.menu_base_config" sequence="0"/>
 
         <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
         	parent="base.menu_crm_configuration"  sequence="20"/>
-        	
+        	-->
       	
     </data>
 </openerp>

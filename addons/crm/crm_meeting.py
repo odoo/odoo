@@ -43,7 +43,8 @@ class crm_meeting(osv.osv, crm_case):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ["mailgate.thread", "calendar.event"]
+    _inherit = ["calendar.event"]
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     _columns = {
         # From crm.case
@@ -58,6 +59,7 @@ class crm_meeting(osv.osv, crm_case):
         'id': fields.integer('ID'),
 
         # Meeting fields
+        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
             ),
@@ -156,6 +158,22 @@ class calendar_attendee(osv.osv):
     }
 
 calendar_attendee()
+
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
+
+    def create(self, cr, uid, data, context={}):
+        user_id = super(res_users, self).create(cr, uid, data, context)
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'ir_ui_view_sc_calendar0')
+        view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+        copy_id = self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                    'user_id': user_id}, context=context)
+        return user_id
+
+res_users()
+
 
 class res_partner(osv.osv):
     """ Inherits partner and adds meetings information in the partner form """
