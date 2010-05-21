@@ -93,21 +93,16 @@ class purchase_requisition_line(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
-        value = {}
-        
+        value = {'product_uom_id': ''}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
             value = {'product_uom_id': prod.uom_id.id}
-            if product_uom_id != prod.uom_id.id:
-                value = {'product_uom_id': prod.uom_id.id}            
         return {'value': value}
 
     _defaults = {
                  'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
                  }
-
 purchase_requisition_line()
-
 
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
