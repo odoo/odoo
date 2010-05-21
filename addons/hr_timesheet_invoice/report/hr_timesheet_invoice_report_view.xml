@@ -443,11 +443,11 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet Lines">
                    <group col='15' colspan='4'>
-                    	<field name="date"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-project" string="Current" default="1" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                        <separator orientation="vertical"/>
                     	<field name="user_id" widget="selection"/>
                     	<field name="product_id" widget="selection"/>
-                    	<field name="analytic_account_id" widget="selection"/>
-                    	<field name="general_account_id" widget="selection"/>
                    </group>
                    <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="20">
