@@ -65,7 +65,12 @@
             		</tree>
 		    	</field>    
             	<separator string="Status" colspan="4" />
-            	<field name="state" nolabel = "1" colspan="4" readonly="True"/>
+                <group col="10" colspan="4">
+                    <field name="state" readonly="1" select="2" nolabel="1"/>
+                    <button name="state_running_set" string="Run" states="draft" />
+                    <button name="state_done_set" string="Done" states="running" />
+                    <button name="state_cancel_set" string="Cancelled" states="running"/>
+                </group>
           	</form>
         </field>
     </record>
@@ -142,10 +147,15 @@
                 	<field name="date_done"/>
                 	<separator string="Synchronization" colspan="4" />
                		<field name="sync_last_date"/>
-               		<field name="sync_mode"/>
+               		<field name="sync_mode" required="True"/>
             	</group>
                 <separator string="Status" colspan="4" />
-                <field name="state" nolabel = "1" colspan="4" readonly="1"/>
+                <group col="10" colspan="4">
+                    <field name="state" readonly="1" select="2" nolabel="1"/>
+                    <button name="state_running_set" string="Run" states="draft" />
+                    <button name="state_done_set" string="Done" states="running" />
+                    <button name="state_cancel_set" string="Cancelled" states="running" />
+                </group>
             </form>
         </field>
     </record>

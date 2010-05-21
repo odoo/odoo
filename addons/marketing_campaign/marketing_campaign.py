@@ -53,7 +53,40 @@ class marketing_campaign(osv.osv): #{{{
         'fixed_cost': fields.float('Fixed Cost'),                                       
         
     }
-
+    
+    _defaults = {
+        'state': lambda *a: 'draft',
+    }
+    
+    def state_running_set(self, cr, uid, ids, *args):
+        campaign = self.browse(cr, uid, ids[0])
+        if not campaign.activity_ids :
+            raise osv.except_osv("Error", "There is no associate activitity for the campaign")
+        act_ids = [ act_id.id for act_id in campaign.activity_ids]
+        act_ids  = self.pool.get('marketing.campaign.activity').search(cr, uid,
+                                [('id', 'in', act_ids), ('start', '=', True)])
+        if not act_ids :
+            raise osv.except_osv("Error", "There is no associate activitity for the campaign")
+        segment_ids = self.pool.get('marketing.campaign.segment').search(cr, uid,
+                                            [('campaign_id', '=', campaign.id),
+                                            ('state', '=', 'draft')])
+        if not segment_ids :
+            raise osv.except_osv("Error", "There is no associate semgnet for the campaign")
+        self.write(cr, uid, ids, {'state': 'running'})
+        return True
+        
+    def state_done_set(self, cr, uid, ids, *args):
+        segment_ids = self.pool.get('marketing.campaign.segment').search(cr, uid,
+                                            [('campaign_id', 'in', ids),
+                                            ('state', '=', 'running')])
+        if segment_ids :
+            raise osv.except_osv("Error", "Camapign cannot be done before all segments are done")            
+        self.write(cr, uid, ids, {'state': 'done'})
+        return True
+        
+    def state_cancel_set(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'cancelled'})
+        return True
 marketing_campaign()#}}}
 
 class marketing_campaign_segment(osv.osv): #{{{
@@ -69,8 +102,8 @@ class marketing_campaign_segment(osv.osv): #{{{
                                       string='Object'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter'),
         'sync_last_date': fields.datetime('Date'),
-        'sync_mode': fields.selection([('create', 'Create'),
-                                      ('write', 'Write')],
+        'sync_mode': fields.selection([('create_date', 'Create'),
+                                      ('write_date', 'Write')],
                                       'Mode'),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
@@ -80,6 +113,69 @@ class marketing_campaign_segment(osv.osv): #{{{
         'date_run': fields.datetime('Running'),
         'date_done': fields.datetime('Done'),
     }
+    
+    _defaults = {
+        'state': lambda *a: 'draft',
+        'sync_mode': lambda *a: 'create_date',
+    }
+    
+    def state_running_set(self, cr, uid, ids, *args):
+        segment = self.browse(cr, uid, ids[0])
+        if not segment.date_run:
+            raise osv.except_osv("Error", "Segment cant be start before giving running date")
+        if segment.campaign_id.state != 'running' :
+            raise osv.except_osv("Error", "You have to start campaign first")
+        self.write(cr, uid, ids, {'state': 'running'})
+        return True
+        
+    def state_done_set(self, cr, uid, ids, *args):
+        date_done = self.browse(cr, uid, ids[0]).date_done 
+        if (date_done > time.strftime('%Y-%m-%d')):
+            raise osv.except_osv("Error", "Segment cannot be closed before end date")
+
+        wi_ids = self.pool.get("marketing.campaign.workitem").search(cr, uid,
+                                [('state', 'in', ['inprogress', 'todo']),
+                                 ('segment_id', '=', ids[0])])
+        if wi_ids :
+            raise osv.except_osv("Error", "Segment cannot be done before all workitems are processed")            
+        self.write(cr, uid, ids, {'state': 'done'})
+        return True
+        
+    def state_cancel_set(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'cancelled'})
+        return True
+        
+    def process_segment(self, cr, uid, context={}):
+        segment_ids = self.search(cr, uid, [('state', '=', 'running')])
+        action_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        last_action_date = (datetime.now() + _intervalTypes['days'](-1) \
+                                            ).strftime('%Y-%m-%d %H:%M:%S')
+        for segment in self.browse(cr, uid, segment_ids):
+            act_ids = self.pool.get('marketing.campaign.activity').search(cr, 
+                                  uid, [('start', '=', True),
+                                  ('campaign_id', '=', segment.campaign_id.id)])
+            if (segment.sync_last_date and \
+                segment.sync_last_date <= action_date )\
+                 or not segment.sync_last_date :
+                model_obj = self.pool.get(segment.object_id.model)
+                object_ids = model_obj.search(cr, uid, [
+                                        (segment.sync_mode, '<=', action_date),
+                                (segment.sync_mode, '>=', last_action_date)])
+                for o_ids in  model_obj.read(cr, uid, object_ids) :
+                    partner_id = 'partner_id' in o_ids and o_ids['partner_id'] \
+                                        or False
+                    for act_id in act_ids:
+                        wi_vals = {'segment_id': segment.id,
+                                   'activity_id': act_id,
+                                   'date': action_date,
+                                   'partner_id': 1,
+                                   'state': 'todo',
+                                    }
+                        print self.pool.get('marketing.campaign.workitem').create(cr,
+                                                             uid, wi_vals)
+                 
+                self.write(cr, uid, segment.id, {'sync_last_date':action_date}) 
+        return True
 
 marketing_campaign_segment()#}}}
 
@@ -116,6 +212,7 @@ class marketing_campaign_activity(osv.osv): #{{{
         'variable_cost': fields.float('Variable Cost'),
         'revenue': fields.float('Revenue')
         }
+
    
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
                                         context=None, count=False):
@@ -176,6 +273,9 @@ class marketing_campaign_workitem(osv.osv): #{{{
                                    ('exception', 'Exception'), ('done', 'Done'),
                                    ('cancelled', 'Cancelled')], 'State')
         }
+    _defaults = {
+        'state': lambda *a: 'draft',
+    }
 
     def process_chain(self, cr, uid, workitem_id, context={}):
         workitem = self.browse(cr, uid, workitem_id)
@@ -184,7 +284,7 @@ class marketing_campaign_workitem(osv.osv): #{{{
         process_to_id = mct_obj.search(cr,uid, [('id', 'in', to_ids),
                                        ('activity_from_id','=', 'activity_id')])
         for mct_id in mct_obj.browse(cr, uid, process_to_id):
-            launch_date = datetime.datetime.now() + _intervalTypes[ \
+            launch_date = datetime.now() + _intervalTypes[ \
                                     mct_id.interval_type](mct_id.interval_nbr)            
             workitem_vals = {'segment_id': workitem.segment_id.id,
                             'activity_id': mct_id.activity_to_id.id,
@@ -201,10 +301,10 @@ class marketing_campaign_workitem(osv.osv): #{{{
         return True
         
     def process_all(self, cr, uid, context={}):
-        workitem_ids = self.search(cr, uid, [('type', '=', 'todo'),
+        workitem_ids = self.search(cr, uid, [('state', '=', 'todo'),
                         ('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))])
         if workitem_ids:
-            self.parocess(cr, uid, workitem_ids, context)
+            self.process(cr, uid, workitem_ids, context)
     
 marketing_campaign_workitem() #}}}  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
