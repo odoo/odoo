@@ -33,8 +33,8 @@
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem name="Configuration" id="menu_event_config" parent="menu_marketing_event_main" sequence="30"/>
-        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="menu_event_config"/>
+        <menuitem name="Configuration" id="menu_event_config" parent="menu_marketing_event_main" sequence="30" groups="base.group_extended"/>
+        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="menu_event_config" groups="base.group_extended,crm.group_crm_manager"/>
 
         <!-- The base section for all events -->
 
@@ -221,23 +221,26 @@
                         <field name="ref2" colspan="4"/>
                     </page>
                     <page string="History">
-                        <field name="history_line" colspan="4" nolabel="1" mode="tree,form">
-                            <form string="Communication history">
-                                <field name="date"/>
-                                <field name="som"/>
-                                <newline/>
-                                <field name="canal_id"/>
-                                <field name="email"/>
-                                <newline/>
-                                <field name="description" colspan="4"/>
-                            </form>
-                            <tree string="Communication history">
-                                <field name="date"/>
-                                <field name="description"/>
-                                <field name="som"/>
-                                <field name="user_id"/>
-                                <field name="canal_id"/>
-                            </tree>
+                        <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+	                        <form string="Communication history">
+							    <group col="6" colspan="4">
+							        <field name="date"/>
+							        <field name="email_to"/>
+							        <field name="email_from"/>
+								</group>
+							   <newline/>
+							   <field name="description" colspan="4" nolabel="1"/>
+							   <button colspan="4"
+							       string="Reply to Last Email"
+							       name="%(crm.action_crm_send_mail)d"
+							       context="{'mail':'reply', 'model': 'crm.lead'}"
+							       icon="gtk-undo" type="action" />
+							</form>
+							<tree string="Communication history">
+							   <field name="description"/>
+							   <field name="email_to"/>
+							   <field name="date"/>
+							</tree>
                         </field>
                         <field name="log_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
                             <tree string="Actions">

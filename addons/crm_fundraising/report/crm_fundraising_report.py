@@ -21,14 +21,7 @@
 
 from osv import fields,osv
 import tools
-
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
-]
+import crm_report
 
 class crm_fundraising_report(osv.osv):
     """CRM Fundraising Report"""
@@ -36,7 +29,7 @@ class crm_fundraising_report(osv.osv):
     _name = "crm.fundraising.report"
     _auto = False
     _description = "CRM Fundraising Report"
-    
+
     def _get_data(self, cr, uid, ids, field_name, arg, context={}):
 
         """ @param cr: the current row, from the database cursor,
@@ -90,7 +83,7 @@ class crm_fundraising_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True), 
+        'day': fields.char('Day', size=128, readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                     domain="[('section_id','=',section_id),\
                     ('object_id.model', '=', 'crm.fundraising')]"),
@@ -100,6 +93,13 @@ class crm_fundraising_report(osv.osv):
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'canal_id': fields.many2one('res.partner.canal','Channel',domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]"),
+        'som': fields.many2one('res.partner.som', 'State of Mind'),
+        'type_id': fields.many2one('crm.case.resource.type', 'Fundraising Type', \
+                             domain="[('section_id','=',section_id),\
+                             ('object_id.model', '=', 'crm.fundraising')]"),
     }
 
     def init(self, cr):
@@ -126,6 +126,11 @@ class crm_fundraising_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    c.priority as priority,
+                    c.date_closed as date_closed,
+                    c.canal_id as canal_id,
+                    c.som as som,
+                    c.type_id as type_id,
                     date_trunc('day',c.create_date) as create_date,
                     sum(planned_revenue) as amount_revenue,
                     sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
@@ -135,7 +140,8 @@ class crm_fundraising_report(osv.osv):
                     crm_fundraising c
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
                      c.state, c.user_id,c.section_id,c.categ_id,c.partner_id,c.company_id,
-                     c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
+                     c.create_date,to_char(c.create_date, 'YYYY-MM-DD'),c.priority,c.date_closed
+                     ,c.canal_id,c.som,c.type_id
             )""")
 
 crm_fundraising_report()

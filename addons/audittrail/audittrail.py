@@ -36,7 +36,7 @@ class audittrail_rule(osv.osv):
         "name": fields.char("Rule Name", size=32, required=True), 
         "object_id": fields.many2one('ir.model', 'Object', required=True), 
         "user_id": fields.many2many('res.users', 'audittail_rules_users', 
-                                            'user_id', 'rule_id', 'Users', help="if  User is not added then it will applicable for all users"), 
+                                            'user_id', 'rule_id', 'Users'), 
         "log_read": fields.boolean("Log reads"), 
         "log_write": fields.boolean("Log writes"), 
         "log_unlink": fields.boolean("Log deletes"), 

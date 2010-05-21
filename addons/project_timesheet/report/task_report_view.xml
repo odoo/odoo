@@ -75,10 +75,6 @@
 	            		<filter icon="terp-project" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
 	            		<filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
 	            		<separator orientation="vertical"/>
-	            		<filter string="Start Date" icon="terp-project" domain="[('date_start','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                 		<filter string="End Date" icon="terp-project" domain="[('date_end','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                 	   <filter string="Deadline Date" icon="terp-project" domain="[('date_deadline','=',time.strftime('%%Y/%%m/%%d'))]"/>
-	            		<separator orientation="vertical"/>
 	            		<field name="project_id" select="1"/>
 	                    <field name="user_id" select="1" widget="selection"/>
                 		<newline/>

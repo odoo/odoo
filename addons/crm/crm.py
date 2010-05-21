@@ -202,7 +202,11 @@ class crm_case(object):
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email}}
-
+    
+    def _history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
+        mailgate_pool = self.pool.get('mailgate.thread')
+        return mailgate_pool._history(cr, uid, cases, keyword, history=history, email=email, details=details, email_from=email_from, message_id=message_id, context=context)
+    
     def case_open(self, cr, uid, ids, *args):
         """Opens Case
         @param self: The object pointer
@@ -311,6 +315,107 @@ class crm_case(object):
         self._action(cr, uid, cases, 'draft')
         return True
         
+    def remind_partner(self, cr, uid, ids, context={}, attach=False):
+
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Remind Partner's IDs
+        @param context: A standard dictionary for contextual values
+
+        """
+        return self.remind_user(cr, uid, ids, context, attach,
+                destination=False)
+
+    def remind_user(self, cr, uid, ids, context={}, attach=False,destination=True):
+
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Remind user's IDs
+        @param context: A standard dictionary for contextual values
+
+        """
+        for case in self.browse(cr, uid, ids):
+            if not case.section_id.reply_to:
+                raise osv.except_osv(_('Error!'), ("Reply To is not specified in the sales team"))
+            if not case.email_from:
+                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
+            if case.section_id.reply_to and case.email_from:
+                src = case.email_from
+                dest = case.section_id.reply_to
+                body = ""
+                body = case.email_last or case.description               
+                if not destination:
+                    src, dest = dest, src
+                    if body and case.user_id.signature:
+                        body += '\n\n%s' % (case.user_id.signature)
+
+                body = self.format_body(body)
+                dest = [dest]
+
+                attach_to_send = None
+
+                if attach:
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'mailgate.thread'), ('res_id', '=', case.id)])
+                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
+                    attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
+
+                # Send an email
+                flag = tools.email_send(
+                    src,
+                    dest,
+                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
+                    body,
+                    reply_to=case.section_id.reply_to,
+                    openobject_id=str(case.id),
+                    attach=attach_to_send
+                )
+                self._history(cr, uid, [case], _('Send'), history=True, email=dest, details=body, email_from=src)
+                #if flag:
+                #    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
+                #else:
+                #    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
+        return True    
+
+    def _check(self, cr, uid, ids=False, context={}):
+        """
+        Function called by the scheduler to process cases for date actions
+        Only works on not done and cancelled cases
+
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
+        """
+        cr.execute('select * from crm_case \
+                where (date_action_last<%s or date_action_last is null) \
+                and (date_action_next<=%s or date_action_next is null) \
+                and state not in (\'cancel\',\'done\')',
+                (time.strftime("%Y-%m-%d %H:%M:%S"),
+                    time.strftime('%Y-%m-%d %H:%M:%S')))
+
+        ids2 = map(lambda x: x[0], cr.fetchall() or [])
+        cases = self.browse(cr, uid, ids2, context)
+        return self._action(cr, uid, cases, False, context=context)
+
+    def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
+        if not context:
+            context = {}
+        context['state_to'] = state_to
+        rule_obj = self.pool.get('base.action.rule')
+        model_obj = self.pool.get('ir.model')
+        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
+        rule_ids = rule_obj.search(cr, uid, [('name','=',model_ids[0])])
+        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
+
+    def format_body(self, body):
+        return self.pool.get('base.action.rule').format_body(body)
+
+    def format_mail(self, obj, body):
+        return self.pool.get('base.action.rule').format_mail(obj, body)
 
 class crm_case_section(osv.osv):
     """Sales Team"""
@@ -506,61 +611,6 @@ def _links_get(self, cr, uid, context=None):
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
-
-class crm_case_log(osv.osv):
-    """ Case Communication History """
-    _name = "crm.case.log"
-    _description = "Case Communication History"
-
-    _order = "id desc"
-    _columns = {
-        'name': fields.char('Status', size=64), 
-        'date': fields.datetime('Date'), 
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
-        'model_id': fields.many2one('ir.model', "Model"), 
-        'res_id': fields.integer('Resource ID'), 
-    }
-
-    _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
-    }
-
-crm_case_log()
-
-class crm_case_history(osv.osv):
-    """Case history"""
-
-    _name = "crm.case.history"
-    _description = "Case history"
-    _order = "id desc"
-    _inherits = {'crm.case.log': "log_id"}
-
-    def _note_get(self, cursor, user, ids, name, arg, context=None):
-        """ Gives case History Description
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case History’s IDs
-        @param context: A standard dictionary for contextual values
-        """
-        res = {}
-        for hist in self.browse(cursor, user, ids, context or {}):
-            res[hist.id] = (hist.email_from or '/') + ' (' + str(hist.date) + ')\n'
-            res[hist.id] += (hist.description or '')
-        return res
-
-    _columns = {
-        'description': fields.text('Description'),
-        'note': fields.function(_note_get, method=True, string="Description", type="text"),
-        'email_to': fields.char('Email To', size=84),
-        'email_from' : fields.char('Email From', size=84),
-        'log_id': fields.many2one('crm.case.log','Log',ondelete='cascade'),
-        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True),
-    }
-
-crm_case_history()
-
 
 class users(osv.osv):
     _inherit = 'res.users'

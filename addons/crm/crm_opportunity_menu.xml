@@ -27,7 +27,7 @@
           <field name="res_model">crm.lead</field>
           <field name="view_mode">tree,form,graph</field>
           <field name="domain">[('type','=','opportunity')]</field>
-          <field name="context">{'search_default_current':1}</field>
+          <field name="context">{'search_default_current':1, 'default_type': 'opportunity'}</field>
           <field name="view_id" ref="crm_case_tree_view_oppor"/>
           <field name="context">{"search_default_user_id":uid}</field>
           <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>

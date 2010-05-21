@@ -16,9 +16,8 @@
                     <field name="log_write" />
                     <field name="log_unlink" />
                     <field name="log_create" />
-                    <separator string="Users (if User is not added then it will applicable for all users)"  colspan="4" />
-                    <field name="user_id" select="1" colspan="4" nolabel="1" />
-                    <field name="action_id" colspan="4" readonly="1" groups="base.group_extended"/>
+                    <field name="action_id" colspan="4" readonly="1"/>
+                    <field name="user_id" select="1" colspan="4"/>
                     <field name="state" select="1" readonly="1" />
                     <group colspan="2" col="2">
                         <button string="Subscribe" name="subscribe"
@@ -38,49 +37,16 @@
                 <tree string="AuditTrail Rules">
                     <field name="name" />
                     <field name="object_id"/>
-                    <field name="user_id"/>
+                    <field name="user_id" />
                     <field name="log_read" />
                     <field name="log_write" />
                     <field name="log_unlink" />
                     <field name="log_create" />
                     <field name="state" />
-                    <button string="Subscribe" name="subscribe"
-                            type="object" states="draft" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
-        
-        <!-- Audittrail rule  Search View -->
 
-	    <record id="view_audittrail_rule_filter" model="ir.ui.view">
-	        <field name="name">Audittrail-rule Search</field>
-	        <field name="model">audittrail.rule</field>
-	        <field name="type">search</field>
-	        <field name="arch" type="xml">
-	            <search string="Search rule">
-	            	<group>
-		                <filter icon="terp-project"
-		                    string="Draft"
-		                    domain="[('state','=','draft')]"/>
-		                <filter icon="terp-project"
-		                    name="subscribed"
-		                    string="Subscribed"
-		                    domain="[('state','=','subscribed')]"/>
-		                <separator orientation="vertical"/>
-		                <field name="name"/>
-		                <field name="object_id" widget="selection"/>
-		                <field name="user_id" widget="selection"/>
-		            </group>    
-	                <newline/>
-	                <group expand="1" string="Group By..." colspan="14">
-	                    <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
-	                    <filter string="Object" icon="terp-crm" domain="[]" context="{'group_by':'object_id'}"/>
-	                </group>
- 					<newline/>	                
-	            </search>
-	        </field>
-	    </record>
-	    
     <!-- Action for audittrail rule -->
 
         <record model="ir.actions.act_window" id="action_audittrail_rule_tree">
@@ -89,7 +55,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-           <field name="search_view_id" ref="view_audittrail_rule_filter"/>
+            <!--<field name="view_id" ref="view_audittrail_rule_form" />-->
         </record>
 
         <menuitem name="Audittrails" id="menu_action_audittrail"
@@ -123,16 +89,14 @@
                     <field name="res_id" readonly="1"/>
                     <field name="name" readonly="1" select="1"/>
                     <field name="line_ids" colspan="4" mode="tree,form"
-                        widget="one2many_list" readonly="1" nolabel="1">
+                        widget="one2many_list" readonly="1">
                         <form string="Log Lines">
-                            <group colspan="4" col="2">       
-                            <field name="field_id" 
-                                readonly="1" colspan="4"/>
+                            <field name="field_id" colspan="4"
+                                readonly="1" />
                             <newline />
-                            <field name="field_description" 
-                                readonly="1" colspan="4"/>
+                            <field name="field_description" colspan="4"
+                                readonly="1" />
                             <newline />
-                            </group>
                             <separator string="Old Value : "
                                 colspan="2" />
                             <separator string="New Value : "
@@ -178,31 +142,6 @@
                 </tree>
             </field>
         </record>
-        
-        <record id="view_audittrail_log_filter" model="ir.ui.view">
-	        <field name="name">Audittrail-log Search</field>
-	        <field name="model">audittrail.log</field>
-	        <field name="type">search</field>
-	        <field name="arch" type="xml">
-	            <search string="Search log">
-	            	<group>
-                    <field name="timestamp" />
-                    <field name="name" />
-                    <field name="object_id" widget="selection"/>
-                    <field name="method" />
-                    <field name="user_id" widget="selection"/>
-		            </group>    
-	                <newline/>
-	                 <group expand="1" string="Group By..." colspan="14">
-	              		<filter string="Log Date" icon="terp-crm" domain="[]" context="{'group_by':'timestamp'}"/>
-	              		<filter string="Log Method" icon="terp-crm" domain="[]" context="{'group_by':'method'}"/>	   
-	                    <filter string="Object" icon="terp-crm" domain="[]" context="{'group_by':'object_id'}"/>
-	                    <filter string="User" icon="terp-partner" name="user" domain="[]" context="{'group_by':'user_id'}"/>
-	                </group>
- 					<newline/>	                
-	            </search>
-	        </field>
-	    </record>
 
 <!--  Action for Audittrail Log  -->
 
@@ -210,12 +149,13 @@
             <field name="name">Logs</field>
             <field name="res_model">audittrail.log</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_audittrail_log_filter"/>
         </record>
-        
         <menuitem name="Logs" id="menu_action_audittrail_log_tree"
             action="action_audittrail_log_tree" parent="menu_action_audittrail" />
+
+        <!--  <wizard string="View log" menu="False" model="audittrail.log" name="audittrail.view.log" id="wizard_audittrail_log"/>-->
+        <menuitem name="View Logs" id="menu_action_log_tree2"
+            action="action_audittrail_view_log" parent="menu_action_audittrail" />
 
     </data>
 </openerp>

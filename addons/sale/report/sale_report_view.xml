@@ -24,6 +24,12 @@
                 <field name="state" invisible="1"/>
                 <field name="fiscal_position" invisible="1"/>
                 <field name="payment_term" invisible="1"/>
+                <field name="partner_invoice_id" invisible="1"/>
+                <field name="partner_order_id" invisible="1"/>
+                <field name="partner_shipping_id" invisible="1"/>
+                <field name="pricelist_id" invisible="1"/>
+                <field name="analytic_account_id" invisible="1"/>
+                <field name="date_confirm" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -93,8 +99,16 @@
                     <filter icon="terp-sale" string="Done" domain="[('state','=','done')]"/>
                     <filter icon="terp-sale" string="Cancelled" domain="[('state','=','cancel')]"/>
                     <separator orientation="vertical"/>
+                    <field name="partner_invoice_id"/>
+                    <field name="partner_order_id"/>
+                    <field name="partner_shipping_id"/>
+                    <separator orientation="vertical"/>
+                    <field name="pricelist_id" widget="selection"/>
+                    <field name="analytic_account_id"/>
+                    <newline/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="date"/>
+                    <field name="date_confirm"/>
                 </group>
                 <newline/>
                 <newline/>
@@ -109,8 +123,15 @@
                     <filter string="Payment Term" icon="terp-sale" context="{'group_by':'payment_term'}"/>
                     <filter string="State" icon="terp-sale" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Pricelist" icon="terp-sale" context="{'group_by':'pricelist_id'}"/>
+                    <filter string="Analytic Account" icon="terp-sale" context="{'group_by':'analytic_account_id'}"/>
+                    <newline/>
+                    <filter string="Invoice Address Name" icon="terp-sale" context="{'group_by':'partner_invoice_id'}"/>
+                    <filter string="Ordering Contact Name" icon="terp-sale" context="{'group_by':'partner_order_id'}"/>
+                    <filter string="Shipping Address Name" icon="terp-sale" context="{'group_by':'partner_shipping_id'}"/>
+                    <separator orientation="vertical"/>
 					<filter string="Day" icon="terp-sale" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-sale" context="{'group_by':'date'}"/>
+                    <filter string="Month" icon="terp-sale" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
                 </group>
             </search>
@@ -201,7 +222,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Product bought by sale order">
-                <field name="name"/>
+                <field name="product_id"/>
+                 <field name="month"/>
+                 <field name="year"/>
                 <field name="total_products"/>
             </tree>
         </field>
@@ -213,8 +236,9 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Product bought by sale order" type="bar">
-                 <field name="name"/>
-                 <field name="total_products" operator="+"/>
+                 <field name="product_id" select="1"/>
+                 <field name="total_products" select="1"/>
+                 <field name="month" group = "True"/>
              </graph>
          </field>
     </record>
@@ -223,7 +247,8 @@
         <field name="name">Product bought by sale order</field>
         <field name="res_model">product.bought.by.sale.order</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('year','=', time.strftime('%Y'))]</field>
         <field name="view_id" ref="view_product_bought_by_sale_order_tree"/>
     </record>
 

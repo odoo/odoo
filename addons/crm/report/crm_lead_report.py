@@ -21,6 +21,7 @@
 
 from osv import fields,osv
 import tools
+import crm_report
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -35,7 +36,7 @@ class crm_lead_report(osv.osv):
     _name = "crm.lead.report"
     _auto = False
     _description = "CRM Lead Report"
-    
+
     def _get_data(self, cr, uid, ids, field_name, arg, context={}):
 
         """ @param cr: the current row, from the database cursor,
@@ -89,7 +90,7 @@ class crm_lead_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True), 
+        'day': fields.char('Day', size=128, readonly=True),
         'delay_close': fields.float('Delay to close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
@@ -98,12 +99,17 @@ class crm_lead_report(osv.osv):
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True), 
-        'type':fields.selection([
-            ('lead','Lead'),
-            ('opportunity','Opportunity'),
-            
-        ],'Type', help="Type is used to separate Leads and Opportunities"),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
+        'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', \
+                         domain="[('section_id','=',section_id),\
+                        ('object_id.model', '=', 'crm.lead')]"),
+         'date_closed': fields.datetime('Closed', readonly=True),
+         'date_open': fields.datetime('Opened', readonly=True),
+         'date_deadline': fields.date('Deadline', readonly=True),
+         'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity',readonly=True),
+         'country_id': fields.many2one('res.country', 'Country' , readonly=True),
+         'state_id': fields.many2one('res.country.state', 'State' , readonly=True)
     }
     def init(self, cr):
 
@@ -132,6 +138,14 @@ class crm_lead_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    c.priority as priority,
+                    c.type_id as type_id,
+                    c.date_closed as date_closed,
+                    c.date_open as date_open,
+                    c.opportunity_id as opportunity_id,
+                    c.country_id as country_id,
+                    c.state_id as state_id,
+                    c.date_deadline as date_deadline,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
@@ -139,6 +153,8 @@ class crm_lead_report(osv.osv):
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
                      c.state, c.user_id,c.section_id,c.stage_id,categ_id,c.partner_id,c.company_id, c.type
                      ,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
+                     ,c.priority,c.type_id,c.date_closed,c.date_open
+                     ,c.opportunity_id,c.country_id,c.state_id,c.date_deadline
             )""")
 
 crm_lead_report()

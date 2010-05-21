@@ -10,9 +10,11 @@
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="job_id" invisible="1"/>
-                <field name="stage_id" invisible="1"  widget="selection"/>
+                <field name="stage_id" invisible="1" />
                 <field name="department_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="partner_address_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -96,29 +98,36 @@
                     		string="Hired"
                         name="done"
                     		domain="[('state','=','done')]"/>
-                    <filter icon="terp-hr"
-                    		string="Refused"
-                    		domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="date"/>
                     <separator orientation="vertical"/>
                     <field name="priority"/>
                     <field name="stage_id" widget="selection"/>
                   	<field name="job_id" widget="selection"/>
                   	<newline/>
-                  	<field name="type_id" widget="selection"/>
-                    <field name="date"/>
+                  	<filter icon="terp-hr"
+                    		string="Refused"
+                    		domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
                     <field name="date_closed"/>
+                    <separator orientation="vertical"/>
+                  	<field name="type_id" widget="selection"/>
+                  	<field name="partner_id"/>
+                  	<field name="partner_address_id"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By ..." colspan="10" col="12">
                    <filter string="User" name='User' icon="terp-hr" domain="[]" context="{'group_by':'user_id'}"/>
                    <filter string="Company" icon="terp-hr" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                   <filter string="Stage" name="Stage" icon="terp-hr" domain="[]" context="{'group_by':'stage_id'}" />
+                   <filter string="Partner" icon="terp-hr" domain="[]" context="{'group_by':'partner_id'}" />
+                   <filter string="Stage" icon="terp-hr" domain="[]" context="{'group_by':'stage_id'}" />
                    <separator orientation="vertical"/>
-                   <filter string="State" icon="terp-hr" domain="[]" context="{'group_by':'state'}"/>
-                   <filter string="Jobs" icon="terp-sale" domain="[]" context="{'group_by':'job_id'}"/>
-                   <filter string="Department" icon="terp-hr" domain="[]" context="{'group_by':'department_id'}"/>
-                   <filter string="Degree" icon="terp-hr" domain="[]" context="{'group_by':'type_id'}"/>
+                   <filter string="Partner Contact Name" icon="terp-hr" domain="[]" context="{'group_by':'partner_address_id'}" />
+                   <filter string="Jobs" name="job" icon="terp-sale" domain="[]" context="{'group_by':'job_id'}"/>
+                   <filter string="Department" name="department" icon="terp-hr" domain="[]" context="{'group_by':'department_id'}"/>
+                   <filter string="Degree" name="degree" icon="terp-hr" domain="[]" context="{'group_by':'type_id'}"/>
             	   <separator orientation="vertical"/>
+            	   <filter string="State" icon="terp-hr" domain="[]" context="{'group_by':'state'}"/>
             	   <filter string="Day" name = "day" icon="terp-hr" domain="[]" context="{'group_by':'day'}"/>
             	   <filter string="Month" icon="terp-hr" domain="[]" context="{'group_by':'month'}"/>
             	   <filter string="Year" icon="terp-hr" domain="[]" context="{'group_by':'year'}"/>
@@ -132,7 +141,11 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+<<<<<<< TREE
+        <field name="context">{'search_default_month':1,'search_default_degree':1,'search_default_job':1,'group_by_no_leaf':1,'group_by':[]}</field>
+=======
         <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
+>>>>>>> MERGE-SOURCE
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
 	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10"/>

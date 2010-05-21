@@ -7,10 +7,9 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Timesheet" type="bar">
-                    <field name="name" />
-                	<field name="total_att" operator = "+"/>
-                	<field name="total_ts" operator = "+"/>
-                	<field name="user_id" group = "True"/>
+                    <field name="user_id" />
+                	<field name="quantity" operator = "+"/>
+                	<field name="state" group = "True"/>
                 </graph>
             </field>
         </record>
@@ -25,12 +24,15 @@
                     <field name="user_id" invisible="1"/>
                     <field name="date_from" invisible="1"/>
                     <field name="date_to" invisible="1"/>
-					<field name="total_att" sum="Total Timesheet"/>
-					<field name="total_diff" sum="Total Attendance"/>
-                    <field name="total_ts" sum="Difference"/>
+					<field name="quantity" sum="#Quantity"/>
+					<field name="cost" sum="#Cost"/>
                     <field name="state" invisible="1"/>
                     <field name="department_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="to_invoice" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="account_id" invisible="1"/>
+                    <field name="general_account_id" invisible="1"/>
                     <field name="year" invisible="1"/>
                     <field name="day" invisible="1"/>
                     <field name="month" invisible="1"/>
@@ -43,7 +45,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
-                    <group col="10" colspan="4">
+                    <group col="10" colspan="12">
                         <filter icon="terp-hr" string="This Year"
 	                    	    domain="[('date_current','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_current','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Timesheet in this year"/>
@@ -63,10 +65,8 @@
 	                    <filter icon="terp-hr"
 	                    		string="Confirmed"
 	                    		domain="[('state','=','confirm')]"/>
-	                    <filter icon="terp-hr"
-	                    		string="Done"
-	                    		domain="[('state','=','done')]"/>
 	                    <separator orientation="vertical"/>
+	                    <field name="product_id"/>
 	  					<field name="user_id" widget="selection">
 	                        <filter icon="terp-hr"
 	                        		string="Non Assigned timesheets to users"
@@ -76,26 +76,40 @@
 	                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
-                	<filter icon="terp-hr"
-                    		string="New"
-                    		domain="[('state','=','new')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="department_id" widget="selection"/>
-                    <separator orientation="vertical"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
-                </group>
+	                <group expand="0" string="Extended options..." colspan="10" col="12">
+	                	<filter icon="terp-hr"
+	                    		string="New"
+	                    		domain="[('state','=','new')]"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="date_from"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="account_id"/>
+	                    <field name="department_id" widget="selection"/>
+	                    <newline/>
+	                    <filter icon="terp-hr"
+		                    		string="Done"
+		                    		domain="[('state','=','done')]"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="date_to"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="general_account_id"/>
+	                    <field name="to_invoice" widget="selection"/>
+	                </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="12">
 	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
-	                    <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+	                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
 	                    <separator orientation="vertical"/>
+	                    <filter string="Type of Invoicing" icon="terp-hr" context="{'group_by':'to_invoice'}"/>
+	                    <filter string="Analytic Account" icon="terp-hr" context="{'group_by':'account_id'}"/>
+	                    <filter string="General Account" icon="terp-hr" context="{'group_by':'general_account_id'}"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
 	                    <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
 	                    <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
 	                    <separator orientation="vertical"/>
 	                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
-	                    <filter string="Month" icon="terp-hr" context="{'group_by':'date_current'}"/>
+	                    <filter string="Month" icon="terp-hr" context="{'group_by':'month'}"/>
 	                    <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
                     </group>
                 </search>

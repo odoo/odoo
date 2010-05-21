@@ -41,7 +41,6 @@ class wiki_create_menu(osv.osv_memory):
         @param ids: List of create menu’s IDs
 
         """
-        data = context and context.get('active_id', False) or False
         mod_obj = self.pool.get('ir.model.data')
         action_id = mod_obj._get_id(cr, uid, 'wiki', 'action_view_wiki_wiki_page_open')
 
@@ -50,10 +49,10 @@ class wiki_create_menu(osv.osv_memory):
                             'name': menu.menu_name,
                             'parent_id':menu.menu_parent_id.id,
                             'icon': 'STOCK_DIALOG_QUESTION',
-                            'action': 'ir.actions.act_window,'+ str(action_id)[0]
+                            'action': 'ir.actions.act_window,'+ str(action_id)
                             }, context)
             home = menu.page.id
-            group_id = data
+            group_id = menu.id
             res = {
                     'home': home,
                     }
@@ -61,6 +60,7 @@ class wiki_create_menu(osv.osv_memory):
             self.pool.get('wiki.groups.link').create(cr, uid,
                                 {'group_id': group_id, 'action_id': menu_id})
         return {}
+
 
 wiki_create_menu()
 
