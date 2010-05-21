@@ -23,7 +23,6 @@
 import time
 import datetime
 
-import pooler
 import netsvc
 from osv import fields, osv
 from tools.translate import _
@@ -51,7 +50,7 @@ class hr_holidays_status(osv.osv):
 
     def get_days(self, cr, uid, ids, employee_id, return_false, context={}):
         res = {}
-        for record in self.browse(cr, uid, ids, context):
+        for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = {}
             max_leaves = leaves_taken = 0
             if not return_false:
