@@ -2,6 +2,8 @@
 <openerp>
     <data>
 
+	<menuitem id="menu_project_long_term" name="Long Term Planning" parent="base.menu_main_pm" sequence="1"/>
+
     # ------------------------------------------------------
     # Project Resource Allocation
     # ------------------------------------------------------
@@ -27,10 +29,40 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Project Resource Allocation">
                     <field name="resource_id"/>
+					<field name="phase_id"/>
                     <field name="useability"/>
                 </tree>
             </field>
         </record>
+
+       <record id="view_project_resource_allocation_search" model="ir.ui.view">
+            <field name="name">project.resource.allocation.search</field>
+            <field name="model">project.resource.allocation</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Resource Allocations">
+                    <group colspan="4" col="20">
+                        <field name="resource_id" widget="selection"/>
+                        <field name="phase_id" widget="selection"/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter name="resource" string="Resource" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
+                        <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+       <record id="act_resouce_allocation" model="ir.actions.act_window">
+            <field name="name">Resource Allocations</field>
+            <field name="res_model">project.resource.allocation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+ 			<field name="context">{'search_default_resource': 1} </field>
+            <!--<field name="search_view_id" ref="view_project_phase_search"/>-->
+        </record>
+
 
     # ------------------------------------------------------
     # Project Phase
@@ -47,18 +79,14 @@
                         <field name="project_id" on_change="onchange_project(project_id)"/>
                         <field name="responsible_id"/>
                     </group>
+                    <group colspan="6" col="6">
+                        <field name="duration" />
+                        <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                    </group>
                     <notebook colspan="4">
-                        <page string="Resource Allocation Detail">
-                            <group colspan="2" col="2">
-                                <separator colspan="2" string="Duration"/>
-                                <field name="duration" widget="float_time"/>
-                                <field name="product_uom"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator colspan="2" string="Dates"/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
-                            </group>
+                        <page string="Resource Allocation">
                             <field colspan="4" name="resource_ids" nolabel="1">
                                  <tree editable="bottom" string="Project Resource Allocation">
                                     <field name="resource_id" context="{'project_id':parent.project_id}"/>
@@ -69,6 +97,7 @@
                                     <field name="useability"/>
                                   </form>
                              </field>
+                            <separator string="" colspan="4"/>
                             <group col="12" colspan="4">
                                 <field name="state" select="1"/>
                                 <button string="Draft" name="set_draft" states="open" icon="gtk-indent"/>
@@ -98,15 +127,8 @@
                             <field colspan="4" name="task_ids" context="{'default_project_id' :project_id}" nolabel="1">
                                  <tree editable="bottom" string="Project's Tasks">
                                     <field name="name"/>
-                                    <field name="project_id"/>
                                     <field name="user_id"/>
-                                    <field name="date_start"/>
-                                      <field name="date_deadline"/>
-                                      <field name="planned_hours" widget="float_time" on_change="onchange_planned(project_id, user_id, planned_hours, effective_hours)"/>
-                                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours"/>
-                                    <field name="effective_hours" invisible="1"/>
-                                    <field name="state"/>
-                                    <field name="occupation_rate"/>
+                                    <field name="planned_hours" widget="float_time" on_change="onchange_planned(project_id, user_id, planned_hours, effective_hours)"/>
                                   </tree>
                                   <form string="Project's Tasks">
                                       <notebook colspan="4">
@@ -222,7 +244,7 @@
             <field name="name">Project Phases</field>
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,gantt</field>
+            <field name="view_mode">gantt,tree,form,calendar</field>
  			<field name="context">{'search_default_responsible_id':uid}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
@@ -296,11 +318,17 @@
 
         <menuitem action="act_project_phase"
             groups="base.group_extended"
-            id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
+            id="menu_project_phase" parent="menu_project_long_term" sequence="4"/>
+
+		<menuitem id="menu_resouce_allocation" action="act_resouce_allocation"
+            name="Resource Allocations" parent="menu_project_long_term" />
+
         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
         <menuitem id="menu_pm_resources_project1"
             groups="base.group_extended"
             name="Resources" parent="base.menu_main_pm" sequence="2"/>
+
+        <menuitem id="menu_phase_schedule" name="Scheduling" parent="menu_project_long_term"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves" parent="menu_pm_resources_project1" sequence="1"/>

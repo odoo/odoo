@@ -84,9 +84,9 @@ class project_phase(osv.osv):
          return True
 
     _columns = {
-        'name': fields.char("Phase Name", size=64, required=True),
-        'date_start': fields.datetime('Starting Date', help="Start date of the phase"),
-        'date_end': fields.datetime('End Date', help="End date of the phase"),
+        'name': fields.char("Name", size=64, required=True),
+        'date_start': fields.datetime('Start Date', help="Starting Date of the phase"),
+        'date_end': fields.datetime('End Date', help="Ending Date of the phase"),
         'constraint_date_start': fields.datetime('Start Date', help='force the phase to start after this date'),
         'constraint_date_end': fields.datetime('End Date', help='force the phase to finish before this date'),
         'project_id': fields.many2one('project.project', 'Project', required=True),
@@ -106,6 +106,7 @@ class project_phase(osv.osv):
         'responsible_id': lambda obj,cr,uid,context: uid,
         'state': 'draft',
         'sequence': 10,
+        'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', 'Day')], context=c)[0]
     }
     _order = "name"
     _constraints = [
