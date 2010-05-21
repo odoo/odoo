@@ -142,9 +142,6 @@ class project_issue(osv.osv, crm.crm_case):
         'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
  will receive a copy of the future" \
 " communication between partner and users by email"), 
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.phonecall')]"), 
         'date_open': fields.datetime('Opened', readonly=True),
         # Project Issue fields
         'date_closed': fields.datetime('Closed', readonly=True),
