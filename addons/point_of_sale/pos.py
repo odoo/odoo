@@ -237,7 +237,7 @@ class pos_order(osv.osv):
             'partner_id': False,
             'invoice_id': False,
             'account_move': False,
-            'last_out_picking': False,
+            'picking_id': False,
             'nb_print': 0,
             'pickings': []
         })
@@ -308,7 +308,7 @@ class pos_order(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
         'account_move': fields.many2one('account.move', 'Account Entry', readonly=True),
         'pickings': fields.one2many('stock.picking', 'pos_order', 'Picking', readonly=True),
-        'last_out_picking': fields.many2one('stock.picking', 'Last Output Picking', readonly=True),
+        'picking_id': fields.many2one('stock.picking', 'Last Output Picking', readonly=True),
         'first_name': fields.char('First Name', size=64),
         'state_2': fields.function(_get_v,type='selection',selection=[('to_verify', 'To Verify'), ('accepted', 'Accepted'),
             ('refused', 'Refused')], string='State', readonly=True, method=True, store=True),
@@ -349,6 +349,7 @@ class pos_order(osv.osv):
             return False
 
     _defaults = {
+        'user_salesman_id':lambda self, cr, uid, context: uid,                
         'user_id': lambda self, cr, uid, context: uid,
         'sale_manager': lambda self, cr, uid, context: uid,
         'state': lambda *a: 'draft',
@@ -467,7 +468,7 @@ class pos_order(osv.osv):
 
         orders = self.browse(cr, uid, ids, context)
         for order in orders:
-            if not order.last_out_picking:
+            if not order.picking_id:
                 new = True
                 picking_id = picking_obj.create(cr, uid, {
                     'origin': order.name,
@@ -479,9 +480,9 @@ class pos_order(osv.osv):
                     'auto_picking': True,
                     'pos_order': order.id,
                     })
-                self.write(cr, uid, [order.id], {'last_out_picking': picking_id})
+                self.write(cr, uid, [order.id], {'picking_id': picking_id})
             else:
-                picking_id = order.last_out_picking.id
+                picking_id = order.picking_id.id
                 picking_obj.write(cr, uid, [picking_id], {'auto_picking': True})
                 picking = picking_obj.browse(cr, uid, [picking_id], context)[0]
                 new = False
@@ -773,7 +774,8 @@ class pos_order(osv.osv):
             comp_id=comp_id and comp_id.id or False
             to_reconcile = []
             group_tax = {}
-            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
+            account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context).id
+            
             order_account = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def or curr_c.account_receivable.id
 
             # Create an entry for the sale
@@ -1088,13 +1090,14 @@ class pos_order_line(osv.osv):
                 'Please set one before choosing a product.'))
         p_obj = self.pool.get('product.product').browse(cr,uid,product_id).list_price
         price = self.pool.get('product.pricelist').price_get(cr, uid,
-            [pricelist], product_id, qty or 1.0, partner_id)[pricelist] 
-        if price is False:
-            raise osv.except_osv(_('No valid pricelist line found !'),
-                _("Couldn't find a pricelist line matching this product" \
-                " and quantity.\nYou have to change either the product," \
-                " the quantity or the pricelist."))
-        return price
+            [pricelist], product_id, qty or 1.0, partner_id)[pricelist]
+        # Todo need to check     
+#        if price is False:
+#            raise osv.except_osv(_('No valid pricelist line found !'),
+#                _("Couldn't find a pricelist line matching this product" \
+#                " and quantity.\nYou have to change either the product," \
+#                " the quantity or the pricelist."))
+        return price or p_obj
 
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
         price = self.price_by_product(cr, uid, ids, pricelist, product_id, qty, partner_id)

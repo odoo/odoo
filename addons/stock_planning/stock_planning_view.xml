@@ -137,9 +137,9 @@
                                         groups="base.group_multi_company" 
                                         widget="selection" 
                                         on_change="onchange_company(company_id)"/>
-                            <field name="warehouse_id" select="1" domain = "[('company_id','=',company_id)] "/>
-                            <field name="period_id" select="1" />
-                            <field name="product_id" select="1" on_change="product_id_change(product_id)" />
+                            <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
+                            <field name="period_id" />
+                            <field name="product_id" on_change="product_id_change(product_id)" />
 			    <field name="product_uom_categ"  invisible = "True"/>
 			    <field name="product_uos_categ"  invisible = "True"/>
                             <field name="product_uom"  
@@ -208,9 +208,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Stock and Sales Forecasts" editable="bottom">
-                    <field name="warehouse_id" select="1"/>
+                    <field name="warehouse_id"/>
                     <field name="user_id"/>
-                    <field name="period_id" select="1"/>
+                    <field name="period_id"/>
                     <field name="product_id" on_change="product_id_change(product_id)" />
                     <field name="product_qty"/>
                     <field name="product_uom" />
@@ -324,8 +324,8 @@
 
                             <field name="company_id" select = "1" widget= "selection" 
                                          on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
-                            <field name="warehouse_id" select="1" domain = "[('company_id','=',company_id)] " />
-                            <field name="period_id" select="1"  />
+                            <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
+                            <field name="period_id" />
                             <field name="product_id" on_change="product_id_change(product_id)"  />
 			    <field name="product_uom_categ"  invisible = "True"/>
 			    <field name="product_uos_categ"  invisible = "True"/>
@@ -386,10 +386,10 @@
                  <group col='10' colspan='4'>
 <!--  Doesn't work !       <filter icon="terp-purchase" string="Current" domain="[('line_time','=','Future')]" separator="1"/>  -->
                     <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" separator="1"/>
-                    <field name="company_id" select="1" widget="selection"/>
-                    <field name="warehouse_id" select="1" widget="selection"/>
-                    <field name="period_id" select="1" widget="selection"/>
-                    <field name="product_id" select="1" widget="selection"/>
+                    <field name="company_id" widget="selection"/>
+                    <field name="warehouse_id" widget="selection"/>
+                    <field name="period_id" widget="selection"/>
+                    <field name="product_id" widget="selection"/>
                  </group>
               </search>
             </field>

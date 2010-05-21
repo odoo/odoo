@@ -77,7 +77,11 @@
         'report/mrp_production_order_view.xml',
     ],
     'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
-#    'test': ['test/mrp_phantom_bom.yml','test/mrp_production_order.yml'],
+    'test': [
+             'test/mrp_phantom_bom.yml',
+             'test/mrp_production_order.yml',
+             'test/mrp_procurement.yml'
+    ],
     'installable': True,
     'active': False,
     'certificate': '0032052481373',

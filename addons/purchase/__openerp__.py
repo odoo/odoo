@@ -51,6 +51,11 @@
         'process/purchase_process.xml',
         'report/purchase_report_view.xml',
     ],
+    'test': [
+             'test/purchase_from_order.yml',
+             'test/purchase_from_manual.yml',
+#             'test/purchase_from_picking.yml',
+    ],
     'demo_xml': ['purchase_demo.xml','purchase_unit_test.xml'],
     'installable': True,
     'active': False,
