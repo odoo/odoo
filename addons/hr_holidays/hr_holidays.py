@@ -204,9 +204,11 @@ class hr_holidays(osv.osv):
                     self.unlink(cr, uid, list_ids)
 
     def _check_date(self, cr, uid, ids):
-        for rec in self.read(cr, uid, ids, ['number_of_days_temp','date_from','date_to']):
+        for rec in self.read(cr, uid, ids, ['number_of_days_temp','date_from','date_to', 'type']):
             if rec['number_of_days_temp'] < 0:
                 return False
+            if rec['type']=='add':
+                continue
             date_from = time.strptime(rec['date_from'], '%Y-%m-%d %H:%M:%S')
             date_to = time.strptime(rec['date_to'], '%Y-%m-%d %H:%M:%S')
             if date_from > date_to:
