@@ -1,0 +1,207 @@
+-
+ In order to test the auction module in the Open-ERP I start the process by creating a product
+- 
+ Creating a product.product record
+- 
+  !record {model: product.product, id: product_product_furniture0}:
+    categ_id: product.cat1
+    cost_method: standard
+    mes_type: fixed
+    name: Furniture
+    procure_method: make_to_stock
+    standard_price: 1.0
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    volume: 0.0
+    warranty: 0.0
+    weight: 0.0
+    weight_net: 0.0
+-
+ Creating a new artist    
+- 
+ Creating a auction.artists record
+-
+  !record {model: auction.artists, id: auction_artists_vincentvangogh0}:
+    birth_death_dates: 1853-1900
+    name: Vincent van Gogh
+-
+ Now I want to associate an object with the auction so for that I create an auction record
+-
+ I create a new auction record
+-
+  Creating a auction.dates record
+-    
+  !record {model: auction.dates, id: auction_dates_antiquefurnitureexhibition0}:
+    acc_expense: account.a_pay
+    acc_income: account.a_recv
+    account_analytic_id: account.analytic_root
+    auction1: '2010-05-20'
+    auction2: '2010-05-21'
+    expo1: '2010-05-18'
+    expo2: '2010-05-19'
+    journal_id: account.expenses_journal
+    journal_seller_id: account.sales_journal
+    name: Antique furniture exhibition  
+-
+ I create a seller's deposit record  
+-
+ Creating a auction.deposit record
+-
+  !record {model: auction.deposit, id: auction_deposit_ad0}:
+    date_dep: '2010-05-18'
+    method: keep
+    name: AD/006
+    partner_id: base.res_partner_4
+-
+ I create a bid record 
+-
+ Creating a auction.bid record
+-    
+  !record {model: auction.bid, id: auction_bid_bid0}:
+    auction_id: auction_dates_antiquefurnitureexhibition0
+    contact_tel: (+32)2 211 34 83
+    name: bid/004
+    partner_id: auction.partner_record1
+- 
+ Creating a auction.bid record
+-  
+  !record {model: auction.bid, id: auction_bid_bid1}:
+    auction_id: auction_dates_antiquefurnitureexhibition0
+    name: bid/005
+    partner_id: base.res_partner_2
+-
+ I create a new object record 
+-
+ Creating a auction.lots record
+-
+  !record {model: auction.lots, id: auction_lots_woodenchair0}:
+    ach_uid: base.res_partner_2
+    artist_id: auction_artists_vincentvangogh0
+    auction_id: auction_dates_antiquefurnitureexhibition0
+    bid_lines:
+      - bid_id: auction_bid_bid1
+        call: 1
+        price: 5000.0
+      - bid_id: auction_bid_bid0
+        price: 4500.0
+    bord_vnd_id: auction_deposit_ad0
+    lot_est1: 3000.0
+    lot_est2: 5000.0
+    lot_num: 1
+    name: wooden-chair
+    name2: antique wooden chair
+    obj_num: 1
+    obj_price: 4000.0
+    obj_ret: 5000.0
+    product_id: 'product_product_furniture0'
+    state: draft
+    vnd_lim: 5000.0
+-
+ I check that buyer price and seller price gets bind with the value
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    assert(auc_id.buyer_price,auc_id.seller_price), _('Buyer price and seller price are not available!')
+-
+ I check that a record gets created in the report.seller.auction object
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    auc_deposit_obj=self.pool.get('auction.deposit')
+    rep_sell_obj = self.pool.get('report.seller.auction')
+    ids =rep_sell_obj.search(cr, uid, [('auction', '=', auc_id.auction_id.id),('seller', '=',auc_id.bord_vnd_id.partner_id.id)])
+    assert ids, _('No record found!')
+-
+ I check that a record gets created in the report.seller.auction2 object
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    auc_deposit_obj=self.pool.get('auction.deposit')
+    rep_sell_obj = self.pool.get('report.seller.auction2')
+    ids =rep_sell_obj.search(cr, uid, [('auction', '=', auc_id.auction_id.id),('seller', '=',auc_id.bord_vnd_id.partner_id.id)])
+    assert ids, _('No record found!')
+-
+ I check that a record gets created in the report.buyer.auction object
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id1=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    rep_buy_obj1 = self.pool.get('report.buyer.auction')
+    ids1=rep_buy_obj1.search(cr, uid, [('auction', '=', auc_id1.auction_id.id),('buyer', '=',auc_id1.ach_uid.id)])
+    assert ids1, _('No record found!')
+-
+ I check that a record gets created in the report.buyer.auction2 object
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id1=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    rep_buy_obj1 = self.pool.get('report.buyer.auction2')
+    ids1=rep_buy_obj1.search(cr, uid, [('auction', '=', auc_id1.auction_id.id),('buyer', '=',auc_id1.ach_uid.id)])
+    assert ids1, _('No record found!')
+-
+ I check that a record gets created in the report.auction.view object
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id2=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    rep_auc_obj1 = self.pool.get('report.auction.view')
+    ids2=rep_auc_obj1.search(cr, uid, [('auction_id', '=', auc_id2.auction_id.id)])
+    assert ids2, _('No record found!')
+-
+ I check that a record gets created in the report.auction.view2 object
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id3=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    rep_auc_obj1 = self.pool.get('report.auction.view2')
+    ids3=rep_auc_obj1.search(cr, uid, [('auction', '=', auc_id3.auction_id.id)])
+    assert ids3, _('No record found!')
+-
+ Performing an osv_memory action button_bought on module auction.lots
+-
+  !python {model: auction.lots}: |
+    self.button_bought(cr, uid, [ref("auction_lots_woodenchair0")], {"lang": "en_US", "tz":
+      False, "active_model": "ir.ui.menu", "active_ids": [ref("auction.auction_lots_woodenchair0")],
+      "active_id": ref("auction.auction_lots_woodenchair0")})   
+-
+ I check that the order which was initially in the draft state has transit to sold state
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    assert(auc_id.state == 'sold'), _('State not changed!')
+-
+ Performing an osv_memory action button_taken_away on module auction.lots
+-
+  !python {model: auction.lots}: |
+    self.button_taken_away(cr, uid, [ref("auction_lots_woodenchair0")], {"lang":
+      "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("auction.auction_all_objects_menu")],
+      "active_id": ref("auction.auction_all_objects_menu")})
+-
+ I check that the order which was initially in the draft state has transit to taken away state.
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    assert(auc_id.state == 'taken_away'), _('State not changed!')
+-
+ I click on the "Close + Create all invoices" button
+-
+ Performing an osv_memory action close on module auction.dates
+-
+  !python {model: auction.dates}: |
+    self.close(cr, uid, [ref("auction.auction_dates_antiquefurnitureexhibition0")],
+      {"lang": "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids":
+      [ref("auction.menu_auction_dates_next1")], "active_id": ref("auction.menu_auction_dates_next1")})
+-
+ I check that a record gets created in the "Supplier Invoices"
+-
+ !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_woodenchair0"))
+    assert(auc_id.sel_inv_id), _('Seller Invoice has not been created!') 

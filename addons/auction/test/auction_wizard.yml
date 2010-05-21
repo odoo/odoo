@@ -1,0 +1,297 @@
+-
+ In order to test the wizards of auction module I create a new record
+-
+ I start the process by creating a new product
+- 
+ Creating a product.product record
+- 
+  !record {model: product.product, id: product_product_paintings0}:
+    categ_id: product.cat1
+    cost_method: standard
+    mes_type: fixed
+    name: Paintings
+    procure_method: make_to_stock
+    standard_price: 1.0
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    volume: 0.0
+    warranty: 0.0
+    weight: 0.0
+    weight_net: 0.0
+-
+ Creating a new artist    
+- 
+ Creating a auction.artists record
+-
+  !record {model: auction.artists, id: auction_artists_picasso0}:
+    birth_death_dates: 1881-1973
+    name: Picasso
+-
+ I create a new auction record
+-
+ Creating a auction.dates record
+-    
+  !record {model: auction.dates, id: auction_dates_picassospaintingexhibition0}:
+    acc_expense: account.a_pay
+    acc_income: account.a_recv
+    account_analytic_id: account.analytic_root
+    auction1: '2010-05-24'
+    auction2: '2010-05-25'
+    expo1: '2010-05-21'
+    expo2: '2010-05-22'
+    journal_id: account.expenses_journal
+    journal_seller_id: account.sales_journal
+    name: Picasso's painting exhibition
+-
+ I create a seller's deposit record 
+-
+ Creating a auction.deposit record
+-
+  !record {model: auction.deposit, id: auction_deposit_ad1}:
+    date_dep: '2010-05-18'
+    method: keep
+    name: AD/007
+    partner_id: base.res_partner_9
+-
+ I create a bid record 
+-
+ Creating a auction.bid record
+-
+  !record {model: auction.bid, id: auction_bid_bid0}:
+    auction_id: auction_dates_picassospaintingexhibition0
+    name: bid/003
+    partner_id: base.res_partner_agrolait
+-
+ Creating a auction.bid record
+-
+  !record {model: auction.bid, id: auction_bid_bid1}:
+    auction_id: auction_dates_picassospaintingexhibition0
+    name: bid/004
+    partner_id: base.res_partner_3
+-
+ I create a new object record 
+-
+ I create a new auction.lots record 
+-
+ Creating a auction.lots record 
+-
+  !record {model: auction.lots, id: auction_lots_painting0}:
+    ach_login: 'Mr.Chang'
+    artist_id: auction.auction_artists_picasso0
+    auction_id: auction_dates_picassospaintingexhibition0
+    bid_lines:
+      - bid_id: auction_bid_bid1
+        call: 1
+        price: 4000.0
+      - bid_id: auction_bid_bid0
+        price: 3500.0
+    bord_vnd_id: auction_deposit_ad1
+    lot_est1: 2000.0
+    lot_est2: 4000.0
+    lot_num: 2
+    name: painting
+    name2: picasso_painting
+    obj_num: 2
+    obj_price: 3500.0
+    obj_ret: 4000.0
+    product_id: auction.product_product_paintings0
+    state: draft
+    vnd_lim: 4000.0
+-
+ I assign the buyer through "Map buyer username to Partners" wizard
+-
+ Creating a auction.lots.buyer_map record
+- 
+  !record {model: auction.lots.buyer_map, id: auction_lots_buyer_map_0}:
+    ach_login: 'Mr.Chang'
+    ach_uid: base.res_partner_3
+- 
+ Performing an osv_memory action buyer_map_set on module auction.lots.buyer_map
+- 
+  !python {model: auction.lots.buyer_map}: |
+    auc_obj=self.pool.get('auction.lots')
+    ids=self.browse(cr, uid, ref("auction_lots_painting0"))
+    self.buyer_map_set(cr, uid, [ref("auction_lots_buyer_map_0")], {"lang": "en_US",
+      "tz": False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
+      "active_id": ref("auction_lots_painting0")})
+-
+ I check that the buyer field gets bind with the value
+-
+ !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
+    assert(auc_id.ach_uid), _('Buyer not assigned!')
+-
+ I mark that a seller has been paid by using the "Mark as paid for seller" wizard
+-
+ Creating a auction.payer.sel record
+-
+  !record {model: auction.payer.sel, id: auction_payer_sel_0}:
+    {}
+-
+ Performing an osv_memory action payer_sel on module auction.payer.sel
+- 
+  !python {model: auction.payer.sel}: |
+    self.payer_sel(cr, uid, [ref("auction_payer_sel_0")], {"lang": "en_US", "tz":
+      False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")], "active_id": ref("auction_lots_painting0")})
+-
+ I check that the Seller paid field is set to True
+-
+ !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
+    assert(auc_id.paid_vnd == True), _('Seller paid is not marked!') 
+-
+ I use the "Mark as taken away" wizard to indicate that an object is taken away
+- 
+  Creating a auction.lots.able record
+- 
+  !record {model: auction.lots.able, id: auction_lots_able_0}:
+    {}
+- 
+ Performing an osv_memory action confirm_able on module auction.lots.able
+- 
+  !python {model: auction.lots.able}: |
+    self.confirm_able(cr, uid, [ref("auction_lots_able_0")], {"lang":"en_US", "tz":
+      False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
+      "active_id": ref("auction_lots_painting0")})
+-
+ I check that Taken away field is set to True
+-
+ !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
+    assert(auc_id.ach_emp == True), _('Taken away is not marked!') 
+-
+ I use the "Unmark as taken away" wizard to unmark the Taken Away field
+-
+ Creating a auction.lots.enable record
+- 
+  !record {model: auction.lots.enable, id: auction_lots_enable_0}:
+    confirm_en: 0.0
+- 
+ Performing an osv_memory action confirm_enable on module auction.lots.enable
+- 
+  !python {model: auction.lots.enable}: |
+    self.confirm_enable(cr, uid, [ref("auction_lots_enable_0")], {"lang": "en_US",
+      "tz": False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
+      "active_id": ref("auction_lots_painting0"),})
+-
+ I check that Taken away field is set to False
+-
+ !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
+    assert(auc_id.ach_emp == False), _('Taken away is marked!') 
+-
+ 
+ I create statement lines for an object's payment by using the "Pay objects of the buyer" wizard
+-
+ Creating a account.bank.statement record
+-
+  !record {model: account.bank.statement, id: account_bank_statement_st0}:
+    balance_end_real: 0.0
+    date: '2010-05-19'
+    journal_id: account.bank_journal
+    name: St. 05/19
+    period_id: account.period_5
+    state: draft
+-
+ Creating a auction.pay.buy record
+-
+  !record {model: auction.pay.buy, id: auction_pay_buy_0}:
+    amount: 2000.0
+    amount2: 1000.0
+    amount3: 1000.0
+    buyer_id: base.res_partner_2
+    statement_id1: account_bank_statement_st0
+    statement_id2: account_bank_statement_st0
+    statement_id3: account_bank_statement_st0
+    total: 4000.0
+-
+ Performing an osv_memory action pay_and_reconcile on module auction.pay.buy
+-
+  !python {model: auction.pay.buy}: |
+    self.pay_and_reconcile(cr, uid, [ref("auction_pay_buy_0")], {"lang": "en_US", "tz":
+      False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
+      "active_id": ref("auction_lots_painting0"),})    
+-
+ I check that a record gets created in the 'auction_statement_line_rel' table 
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    cr.execute("select statement from auction_statement_line_rel,auction_lots where auction_lots.id=auction_statement_line_rel.auction_id AND auction_lots.name='painting'")
+    ans=cr.fetchall() 
+    assert ans, _('statement_id not found!') 
+-
+ I create the seller's invoice by using the "Invoice Seller objects" wizard
+-  
+ Creating a auction.lots.make.invoice record
+-
+  !record {model: auction.lots.make.invoice, id: auction_lots_make_invoice_0}:
+    amount: 3500.0
+    number: 2010/002
+    objects: 1
+-
+ Performing an osv_memory action makeInvoices on module auction.lots.make.invoice
+-
+  !python {model: auction.lots.make.invoice}: |
+    self.makeInvoices(cr, uid, [ref("auction_lots_make_invoice_0")], {"lang": "en_US",
+      "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
+      "tz": False, "active_id": ref("auction_lots_painting0"),})
+-
+ I check that a "Seller Invoice" field gets bind with the value
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
+    assert(auc_id.sel_inv_id), _('Seller Invoice has not been created!') 
+-
+ I create a buyer's invoice by using the "Invoice Buyer objects" wizard
+-
+ Creating a auction.lots.make.invoice.buyer record
+-
+  !record {model: auction.lots.make.invoice.buyer, id: auction_lots_make_invoice_buyer_0}:
+    amount: 3500.0
+    buyer_id: base.res_partner_3
+    number: 2010/003
+    objects: 1
+-
+ Performing an osv_memory action makeInvoices on module auction.lots.make.invoice.buyer
+-
+  !python {model: auction.lots.make.invoice.buyer}: |
+    self.makeInvoices(cr, uid, [ref("auction_lots_make_invoice_buyer_0")], {"lang":
+      "en_US", "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
+      "tz": False, "active_id": ref("auction_lots_painting0"), })
+-
+ I check that a "Buyer Invoice" field gets bind with the value
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
+    assert(auc_id.ach_inv_id), _('Seller Invoice has not been created!') 
+-
+ In order to change the auction for an object I use the "Change auction date" wizard
+-
+ Creating a auction.lots.auction.move record
+- 
+  !record {model: auction.lots.auction.move, id: auction_lots_auction_move_0}:
+    auction_id: auction.auction_date_2
+- 
+ Performing an osv_memory action auction_move_set on module auction.lots.auction.move
+- 
+  !python {model: auction.lots.auction.move}: |
+    self.auction_move_set(cr, uid, [ref("auction_lots_auction_move_0")], {"lang":
+      "en_US", "tz": False, "active_model": "auction.lots", "active_ids": [ref("auction_lots_painting0")],
+      "active_id": ref("auction_lots_painting0"), })
+-
+ I check that a record gets created in the auction.lot.history
+-
+  !python {model: auction.lots}: |
+    from tools.translate import _
+    auc_id=self.browse(cr, uid, ref("auction_lots_painting0"))
+    auc_lot_his=self.pool.get('auction.lot.history')
+    ids=auc_lot_his.search(cr, uid, [('lot_id', '=', auc_id.id)])
+    assert ids, _('Auction history does not exists!')     
