@@ -15,9 +15,7 @@
                		<field name="month" invisible="1"/>
                		<field name="day" invisible="1"/>
                		<field name="date" invisible="1"/>
-					<field name="reference" invisible="1"/>
 					<field name="partner_id" invisible="1"/>
-					<field name="origin" invisible="1"/>
 					<field name="type" invisible="1"/>
 					<field name="state" invisible="1"/>
 					<field name="product_qty" sum="# of Products" />
@@ -61,8 +59,6 @@
                         <filter string="Done" icon="terp-stock" domain="[('state','=','done')]"/>
 						<separator orientation="vertical"/>
 						<field name="partner_id"/>
-						<field name="reference" />
-						<field name="origin" />
 						<field name="type" groups="base.group_extended"/>
                    </group>
                    <newline/>
