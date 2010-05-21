@@ -22,6 +22,7 @@
 from osv import fields,osv
 from osv.orm import except_orm, browse_record
 import tools
+import operator
 import pytz
 import pooler
 from tools.translate import _
@@ -197,6 +198,21 @@ class users(osv.osv):
         extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
+    def _email_get(self, cr, uid, ids, name, arg, context=None):
+        return dict(map(operator.attrgetter('id', 'address_id.email'), self.browse(cr, uid, ids, context=context)))
+
+    def _email_set(self, cr, uid, ids, name, value, arg, context=None):
+        if not isinstance(ids,list):
+            ids = [ids]
+        address_obj = self.pool.get('res.partner.address')
+        for user in self.browse(cr, uid, ids, context=context):
+            if user.address_id:
+                address_obj.write(cr, uid, user.address_id.id, {'email': value or None}, context=context)
+            else:
+                address_id = address_obj.create(cr, uid, {'name': user.name, 'email': value or None}, context=context)
+                self.write(cr, uid, ids, {'address_id': address_id}, context)
+        return True
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
@@ -228,6 +244,7 @@ class users(osv.osv):
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="Choose between the simplified interface and the extended one"),
+        'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char"),
     }
 
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
