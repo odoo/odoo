@@ -96,7 +96,6 @@ class report_project_task_user(osv.osv):
                 group by
                     to_char(date_start, 'YYYY'),
                     to_char(date_start, 'MM'),
-                    to_char(date_start, 'YYYY-MM-DD'),
                     t.priority,
                     t.user_id,
                     t.state,
