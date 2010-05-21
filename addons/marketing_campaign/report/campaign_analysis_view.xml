@@ -6,19 +6,19 @@
         <field name="model">campaign.analysis</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-        	<tree string="Marketing Reports">
-				<field name="month"/>
-		        <field name="year"/>
-				<field name="date"/>
-		    	<field name="campaign_id"/>
-		    	<field name="activity_id"/>
-		        <field name="segment_id"/>
-		        <field name="partner_id"/>
-		        <field name="country_id" />
-		        <!--field name="case_id"/-->
-		        <!--field name="count"/-->
-		        <field name="total_cost"/>
-		        <field name="revenue"/>
+            <tree string="Marketing Reports">
+                <field name="year" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="date" invisible="1"/>
+                <field name="campaign_id" invisible="1"/>
+                <field name="activity_id" invisible="1"/>
+                <field name="segment_id" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="country_id" invisible="1"/>
+                <!--field name="case_id"/-->
+                <!--field name="count"/-->
+                <field name="total_cost" string="Cost" sum="Cost"/>
+                <field name="revenue"/>
             </tree>
         </field>
     </record>
@@ -46,8 +46,16 @@
 					<field name="segment_id"/>
 	                <field name="partner_id"/>
 					<field name="country_id"/>
-					<!--field name="case_id"/-->
                 </group>
+                <newline/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Campaign" name="Campaign" icon="terp-sale" context="{'group_by':'campaign_id'}" />
+                    <filter string="Segment" name ="Segment" icon="terp-sale" context="{'group_by':'segment_id'}" />
+                    <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Month" icon="terp-sale" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
+                </group>                
             </search>
         </field>
     </record>
@@ -57,7 +65,7 @@
         <field name="res_model">campaign.analysis</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree</field>
-        <field name="context">{'group_by': [], 'search_default_group_campaign': 1, 'search_default_group_segment': 1}</field>
+        <field name="context">{'group_by': [], 'search_default_Campaign': 1, 'search_default_Segment': 1}</field>
         <field name="search_view_id" ref="view_campaign_analysis_search"/>
     </record>
 
