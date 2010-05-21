@@ -89,6 +89,7 @@ class idea_post_vote(osv.osv_memory):
         
         vote_id = context and context.get('active_id', False) or False
         vote_pool = self.pool.get('idea.vote')
+        idea_pool = self.pool.get('idea.idea')
         comment_pool = self.pool.get('idea.comment')
 
         for do_vote_obj in self.read(cr, uid, ids):
@@ -106,8 +107,9 @@ class idea_post_vote(osv.osv_memory):
                     'content': comment,
                 }
                 comment = comment_pool.create(cr, uid, comment)
-                
-            vote = vote_pool.create(cr, uid, vote)
+
+            idea_pool._vote_save(cr, uid, vote_id, None, score, context)
+            #vote = vote_pool.create(cr, uid, vote)
             return {}
 
 idea_post_vote()

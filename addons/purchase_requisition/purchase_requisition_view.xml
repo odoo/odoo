@@ -33,53 +33,63 @@
         <field name="arch" type="xml">
             <form string="Purchase Requisition">
                 <group colspan="4" col="6">
-                    <field name="name" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="exclusive" select="1"/>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="exclusive"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="origin"/>
-					<field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+					<field name="company_id" groups="base.group_multi_company" widget="selection"/>                    
                 </group>
 
                 <notebook colspan="4">
                     <page string="Products">
                         <field name="line_ids" colspan="4" nolabel="1">
                             <tree string="Products" editable="bottom">
-                                <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                                <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id)"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom_id"/>
                             </tree>
                             <form string="Products" editable="bottom">
-                                <field name="product_id"/>
+                                <field name="product_id" />
 								<field name="product_qty"/>
-                                <field name="product_uom_id"/>
+                                <field name="product_uom_id" />
 								<field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </form>
 
                         </field>
-                    </page>
-                    <page string="Notes">
-                        <field name="description" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Quotations">
-                     	<group col="8" colspan="4">
-                    	<button name="%(action_purchase_requisition_partner)d" string="New RfQr" type="action" />
-                    	 <label colspan="6"  string=""/>
-                    	  </group>
-                    	<field name="purchase_ids" nolabel="1" colspan="4"/>
-                   </page>
-                </notebook>
-				<separator colspan="4"/>
+					<separator colspan="4"/>
 	                <group col="8" colspan="4">
 	                    <field name="state" select="1" readonly ="1"/>
 						<button name="tender_in_progress" states="draft" string="Confirm" type="object" icon="gtk-apply" />
 	                    <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
 						<button name="tender_done" states="in_progress" string="Done" type="object" icon="gtk-jump-to" />
 						<button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" icon="gtk-cancel" />
-	                </group>
-
-
+	                </group>                        
+                    </page>
+                    <page string="Quotations">
+						<field colspan="4" name="purchase_ids" nolabel="1" mode="tree,form">
+							<tree string="Purchase Order">
+			                    <field name="name" string="Reference"/>
+			                    <field name="date_order" string="Order Date"/>
+			                    <field name="partner_id"/>
+			                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+			                    <field name="location_id"/>
+			                    <field name="minimum_planned_date"/>
+			                    <field name="origin"/>
+			                    <field name="state"/>	
+			                    </tree>	
+                     	</field>
+						<separator colspan="4" string=""/>
+                     	<group col="8" colspan="4">
+                     	 <label colspan="6"  string=""/>
+						<button name="%(action_purchase_requisition_partner)d" string="Requests for Quotation" type="action" icon="gtk-execute" />
+                    	</group>
+                   </page>
+					<page string="Notes">
+                        <field name="description" colspan="4" nolabel="1"/>
+                    </page>
+                </notebook>
             </form>
         </field>
     </record>
@@ -91,6 +101,7 @@
             <tree string="Purchase Requisition">
                 <field name="name"/>
                 <field name="user_id"/>
+                <field name="purchase_ids"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
                 <field name="origin"/>
@@ -106,7 +117,8 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                  <group col='10' colspan='4'>
-                    <filter icon="terp-purchase" string=" Current" domain="[('state','=','draft,in_progress')]" separator="1" help="Current Purchaes Requisition"/>
+                    <filter icon="terp-purchase" string="Current" domain="[('state','=','draft,in_progress')]" separator="1" help="Current Purchaes Requisition"/>
+					<filter icon="terp-purchase" string="Done" domain="[('state','=','done')]" separator="1" help="Current Purchaes Requisition"/>                    
                     <separator orientation="vertical"/>
                     <field name="name" select="1" string="Requisition Reference"/>
                     <field name="purchase_ids" select="1"/>
@@ -117,8 +129,11 @@
                 <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="10">
                     <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
+  					<separator orientation="vertical"/>                    
                     <filter string="Date Start" icon="terp-purchase" domain="[]" context="{'group_by':'date_start'}"/>
                     <filter string="Date End" icon="terp-purchase" domain="[]" context="{'group_by':'date_end'}"/>
+                    <separator orientation="vertical"/>                    
+					<filter string="Origin" icon="terp-purchase" domain="[]" context="{'group_by':'origin'}"/>
                 </group>
               </search>
             </field>

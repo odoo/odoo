@@ -171,6 +171,19 @@ class account_account(osv.osv):
     _description = "Account"
     _parent_store = True
 
+    def _get_children_and_consol(self, cr, uid, ids, context={}):
+        ids2=[]
+        temp=[]
+        read_data= self.read(cr, uid, ids,['id','child_id'], context)
+        for data in read_data:
+            ids2.append(data['id'])
+            if data['child_id']:
+                temp=[]
+                for x in data['child_id']:
+                    temp.append(x)
+                ids2 += self._get_children_and_consol(cr, uid, temp, context)
+        return ids2
+        
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         if context is None:
@@ -297,6 +310,17 @@ class account_account(osv.osv):
 
         return result
 
+    def _get_level(self, cr, uid, ids, field_name, arg, context={}):
+        res={}
+        accounts = self.browse(cr, uid, ids)
+        for account in accounts:
+            level = 0
+            if account.parent_id :
+                obj = self.browse(cr, uid, account.parent_id.id)
+                level = obj.level + 1
+            res[account.id] = level
+        return res
+    
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
@@ -343,6 +367,7 @@ class account_account(osv.osv):
         'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
             "otherwise it will only print its balance."),
+        'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
     }
 
     def _default_company(self, cr, uid, context={}):
