@@ -1667,7 +1667,7 @@ class ir_model(osv.osv):
         if data:
             for val in data:
                 val['id'] = base_calendar_id2real_id(val['id'])
-        return data
+        return isinstance(ids, (str, int, long)) and data[0] or data
 
 ir_model()
 

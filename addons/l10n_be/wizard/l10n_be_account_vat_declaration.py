@@ -36,7 +36,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'file_save': fields.binary('Save File'),
         'ask_resitution': fields.boolean('Ask Restitution'),
         'ask_payment': fields.boolean('Ask Payment'),
-        'client_nihil': fields.boolean('Last Declaration of Entreprise',help='Thick this case only if it concerns only the last statement on the civil or cessation of activity'),
+        'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
     }
 
     _defaults = {
@@ -56,9 +56,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         user_cmpny = obj_company.name
         vat_no=obj_company.partner_id.vat
         if not vat_no:
-#            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
             osv.except_osv(_('Data Insufficient'), _('No VAT  Number Associated with Main Company!'))
-            
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
@@ -68,8 +66,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
         address = post_code = city = country_code = ''
         city, post_code, address, country_code =self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
-
-
         year_id = obj_fyear.find(cr, uid)
 
         account_period = obj_acc_period.browse(cr, uid, data['period_id'], context=context)
@@ -80,7 +76,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file +='\n\t<DECLARER>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<NAME>'+str(obj_company.name)+'</NAME>\n\t\t<ADDRESS>'+address+'</ADDRESS>'
         data_of_file +='\n\t\t<POSTCODE>'+post_code+'</POSTCODE>\n\t\t<CITY>'+city+'</CITY>\n\t\t<COUNTRY>'+country_code+'</COUNTRY>\n\t\t<SENDINGREFERENCE>'+send_ref+'</SENDINGREFERENCE>\n\t</DECLARER>'
         data_of_file +='\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>'+((vat_no and str(vat_no[2:])) or '')+'</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t'
- 
+
         starting_month = account_period.date_start[5:7]
         ending_month = account_period.date_stop[5:7]
         if starting_month != ending_month:
@@ -104,7 +100,6 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
         data['file_save'] = base64.encodestring(data_of_file)
         self.write(cr, uid, ids, {'file_save':data['file_save']}, context=context)
-
 
 l10n_be_vat_declaration()
 

@@ -204,10 +204,11 @@
             <field name="model">config.compute.remaining</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Remaining Hours">
+                <form string="Reevaluate Hours">
                     <separator colspan="4" string="Change Remaining Hours"/>
                     <newline/>
                     <field name="remaining_hours" widget="float_time"/>
+                    <separator string="" colspan="4"/>
                     <group col="4" colspan="4">
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <button icon="gtk-refresh" name="compute_hours" string="Update" type="object" default_focus="1"/>
@@ -337,7 +338,7 @@
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
                     <field name="planned_hours" widget="float_time" />
                     <field name="total_hours" widget="float_time"/>
-                    <field name="remaining_hours" widget="float_time" avg="Remaining Hours" invisible="context.get('set_visible',False)"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" invisible="context.get('set_visible',False)"/>
                     <field name="date_deadline" invisible="context.get('set_visible',False)"/>
                     <field name="type" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
                     <field name="date_start" invisible="1"/>
@@ -413,20 +414,19 @@
                         <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-project"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1" widget="selection" default="context.get('project_id', False)">
+                        <field name="project_id" select="1" widget="selection">
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
                         </field>
                         <field name="user_id" select="1" widget="selection">
-                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" default="1"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Users" name="user_id" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}" default = "1"/>
-                        <filter string="Stage" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
-                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Users" name="group_user_id" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="Project" name="group_project_id" icon="terp-project" domain="[]" context="{'group_by':'project_id'}" default = "1"/>
+                        <filter string="Stage" name="group_stage_id" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="State" name="group_state" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadline" icon="terp-project" domain="[]" context="{'group_by':'date_deadline'}"/>
                         <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
@@ -443,7 +443,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_project_id":context.get('project_id',False)}</field>
+            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
 
         </record>
@@ -611,7 +611,6 @@
 	                   <field name="subject"/>
 	                   <field name="project_id" select="1" widget="selection"/>
 	                   <field name="user_id" select="1" widget="selection">
-	                       <filter domain="[('user_id','=',uid)]" help="My Message" icon="gtk-execute" default="1"/>
 	                   </field>
                    </group>
                    <newline/>
@@ -630,7 +629,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_project_message_tree"/>
-            <field name="context">{"search_default_project_id":context.get('project_id',False), "search_default_my_msg":1}</field>
+            <field name="context">{"search_default_project_id":project_id, "search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_project_message_search"/>
        </record>
 

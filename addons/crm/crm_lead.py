@@ -28,11 +28,11 @@ import mx.DateTime
 from tools.translate import _
 from crm import crm_case
 
-class crm_lead(osv.osv, crm_case, ):
+class crm_lead(osv.osv, crm_case):
     """ CRM Lead Case """
 
     _name = "crm.lead"
-    _description = "Leads Cases"
+    _description = "Lead"
     _order = "priority, id desc"
     _inherit = ['res.partner.address']
     _inherits = {'mailgate.thread': 'thread_id'}
@@ -108,8 +108,8 @@ class crm_lead(osv.osv, crm_case, ):
         'email_cc': fields.text('Watchers Emails', size=252 , help="These \
 people will receive a copy of the future communication between partner \
 and users by email"),
-        'description': fields.text('Description'),
-        'write_date': fields.datetime('Update Date' , readonly=True),
+        'description': fields.text('Notes'),
+        'write_date': fields.datetime('Update Date' , readonly=True), 
 
         # Lead fields
         'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
@@ -142,8 +142,8 @@ and users by email"),
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        }
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+    }
 
     _defaults = {
         'active': lambda *a: 1,

@@ -30,17 +30,30 @@ class report_stock_picking(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'reference': fields.char('Reference', size=64, select=True),
         'nbr': fields.integer('# of Lines', readonly=True),
         'nbp': fields.integer('# of Picking', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_qty': fields.float('# of Products', readonly=True),
+        'product_uos_qty': fields.float('# of Products', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'date': fields.date('Date', readonly=True),
         'avg_days_to_deliver': fields.float('Avg Days to Deliver', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of  Avg Days to deliver"),
-        'origin': fields.char('Origin', size=64),
         'state': fields.selection([('draft', 'Draft'),('auto', 'Waiting'),('confirmed', 'Confirmed'),('assigned', 'Available'),('done', 'Done'),('cancel', 'Cancelled')], 'State'),
         'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'invoice_state': fields.selection([
+            ("invoiced", "Invoiced"),
+            ("2binvoiced", "To Be Invoiced"),
+            ("none", "Not from Picking")], "Invoice Status",readonly=True),
+        'min_date': fields.date('Expected Date',help="Expected date for Picking. Default it takes current date"),
+        'order_date': fields.date('Order Date', help="Date of Order"),
+        'date_done': fields.date('Date Done', help="Date of completion"),
+        'location_id': fields.many2one('stock.location', 'Source Location', help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', help="Location where the system will stock the finished products."),
+        'max_date': fields.date('Max.Expected Date'),
+        'product_uos': fields.many2one('product.uom', 'Product UOS'),
+        'product_uom': fields.many2one('product.uom', 'Product UOM'),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_picking')
@@ -48,6 +61,10 @@ class report_stock_picking(osv.osv):
             create or replace view report_stock_picking as (
                 select
                     min(sm.id) as id,
+                    date_trunc('day',sp.min_date) as min_date,
+                    date_trunc('day',sp.date) as order_date,
+                    date_trunc('day',sp.date_done) as date_done,
+                    date_trunc('day',sp.max_date) as max_date,
                     to_char(sp.create_date, 'YYYY') as year,
                     to_char(sp.create_date, 'MM') as month,
                     to_char(sp.create_date, 'YYYY-MM-DD') as day,
@@ -56,19 +73,37 @@ class report_stock_picking(osv.osv):
                     count(sm.id) as nbr,
                     count(distinct sp.id) as nbp,
                     sum(sm.product_qty) as product_qty,
+                    sum(sm.product_uos_qty) as product_uos_qty,
+                    sm.product_id as product_id,
+                    sm.location_dest_id as location_dest_id,
+                    sm.location_id as location_id,
                     sp.type,
-                    sp.name as reference,
-                    sp.origin,
+                    sm.product_uos,
+                    sm.product_uom,
+                    sp.invoice_state,
+                    sp.company_id as company_id,
                     avg(extract('epoch' from (sp.date_done-sp.create_date)))/(3600*24) as  avg_days_to_deliver,
                     sp.state
                 from stock_move as sm
                 left join stock_picking as sp ON (sm.picking_id=sp.id)
                 group by sp.type,
-                     sp.create_date,
-                     sp.address_id,
-                     sp.name,
-                     sp.origin,
-                     sp.state
+                         sp.create_date,
+                         sp.address_id,
+                         sm.product_id,
+                         to_char(sp.create_date, 'YYYY'),
+                         sm.location_dest_id,
+                         sm.location_id,
+                         to_char(sp.create_date, 'MM'),
+                         to_char(sp.create_date, 'YYYY-MM-DD'),
+                         sm.product_uos,
+                         sm.product_uom,
+                         date_trunc('day',sp.min_date),
+                         date_trunc('day',sp.date),
+                         date_trunc('day',sp.date_done),
+                         date_trunc('day',sp.max_date),
+                         sp.invoice_state,
+                         sp.company_id,
+                         sp.state
 
             )""")
 report_stock_picking()

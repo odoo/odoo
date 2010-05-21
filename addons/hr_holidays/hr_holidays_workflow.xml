@@ -37,6 +37,14 @@
         <field name="action">holidays_validate()</field>
     </record>
 
+    <record model="workflow.activity" id="act_validate1">
+        <field name="wkf_id" ref="wkf_holidays" />
+        <field name="name">second_validate</field>
+        <field name="kind">function</field>
+        <field name="action">holidays_validate2()</field>
+    </record>
+
+
     <record model="workflow.activity" id="act_refuse">
         <field name="wkf_id" ref="wkf_holidays" />
         <field name="name">refuse</field>
@@ -53,8 +61,8 @@
         <field name="action">holidays_cancel()</field>
         <field name="join_mode">XOR</field>
     </record>
-    
-    <!--     
+
+    <!--
         workflow transition
     -->
 
@@ -63,11 +71,12 @@
         <field name="act_to" ref="act_confirm" />
         <field name="signal">confirm</field>
     </record>
-    
+
     <record model="workflow.transition" id="t2">
         <field name="act_from" ref="act_confirm" />
         <field name="act_to" ref="act_validate" />
         <field name="signal">validate</field>
+        <field name="condition">(holiday_status_id.double_validation == False)</field>
         <field name="role_id" ref="HR_holidays"/>
     </record>
 
@@ -97,6 +106,32 @@
         <field name="act_to" ref="act_draft" />
         <field name="signal">set_to_draft</field>
     </record>
-    
+
+    <record model="workflow.transition" id="t8">
+        <field name="act_from" ref="act_validate1" />
+        <field name="act_to" ref="act_validate" />
+        <field name="signal">second_validate</field>
+    </record>
+
+    <!--<record model="workflow.transition" id="t9">
+        <field name="act_from" ref="act_validate" />
+        <field name="act_to" ref="act_refuse" />
+        <field name="signal">refuse</field>
+    </record>-->
+
+    <record model="workflow.transition" id="t10">
+        <field name="act_from" ref="act_validate1" />
+        <field name="act_to" ref="act_refuse" />
+        <field name="signal">refuse</field>
+    </record>
+
+    <record model="workflow.transition" id="t11">
+        <field name="act_from" ref="act_confirm" />
+        <field name="act_to" ref="act_validate1" />
+        <field name="condition">(holiday_status_id.double_validation == True)</field>
+        <field name="signal">validate</field>
+        <field name="role_id" ref="HR_holidays"/>
+    </record>
+
 </data>
 </openerp>

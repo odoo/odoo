@@ -48,7 +48,6 @@ class project_compute_phases(osv.osv_memory):
         return self.compute_date(cr, uid, ids, context=context)
 
     def _phase_schedule(self, cr, uid, phase, start_date, calendar_id=False, context=None):
-
        """Schedule phase with the start date till all the next phases are completed.
 
        Arguements: start_dsate -- start date for the phase

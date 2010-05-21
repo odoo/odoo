@@ -56,6 +56,7 @@
         'scrum_view.xml',
         'process/scrum_process.xml',
         'wizard/scrum_backlog_sprint_view.xml',
+        'wizard/scrum_backlog_merger_view.xml',
     ],
     'demo_xml': ['scrum_demo.xml'],
     'installable': True,

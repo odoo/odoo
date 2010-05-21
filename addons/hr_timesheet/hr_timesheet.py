@@ -39,7 +39,7 @@ hr_employee()
 class hr_analytic_timesheet(osv.osv):
     _name = "hr.analytic.timesheet"
     _table = 'hr_analytic_timesheet'
-    _description = "Timesheet line"
+    _description = "Timesheet Line"
     _inherits = {'account.analytic.line': 'line_id'}
     _order = "id desc"
     _columns = {
@@ -59,7 +59,7 @@ class hr_analytic_timesheet(osv.osv):
         res = {}
         if prod_id and unit_amount:
             # find company
-            company_id=self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context)
+            company_id=self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context)
             res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount,company_id,unit, context)
         return res
 

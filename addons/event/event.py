@@ -200,10 +200,12 @@ class event_registration(osv.osv):
         return super(event_registration, self).write(cr, uid, *args, **argv)
 
     def mail_user_confirm(self, cr, uid, ids):
-        reg_ids=self.browse(cr, uid, ids)
+        reg_ids = self.browse(cr,uid,ids)
         for reg_id in reg_ids:
             src = reg_id.event_id.reply_to or False
-            dest = [reg_id.email_from]
+            dest = []
+            if reg_id.email_from:
+                dest += [reg_id.email_from]
             if reg_id.email_cc:
                 dest += [reg_id.email_cc]
             if dest and src:
@@ -213,10 +215,12 @@ class event_registration(osv.osv):
         return False
 
     def mail_user(self, cr, uid, ids):
-        reg_ids=self.browse(cr, uid, ids)
+        reg_ids = self.browse(cr, uid, ids)
         for reg_id in reg_ids:
             src = reg_id.event_id.reply_to or False
-            dest = [reg_id.email_from]
+            dest = []
+            if reg_id.email_from:
+                dest += [reg_id.email_from]
             if reg_id.email_cc:
                 dest += [reg_id.email_cc]
             if reg_id.event_id.mail_auto_confirm or reg_id.event_id.mail_auto_registr:

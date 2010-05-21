@@ -79,9 +79,9 @@ class mailgate_thread(osv.osv):
             data = {
                 'name': keyword,
                 'user_id': uid,
+                'model_id' : model_ids and model_ids[0] or False,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'thread_id': case.id,
-                'section_id': case.section_id.id,
+                'thread_id': case.thread_id.id,                
                 'message_id': message_id
             }
 
@@ -89,11 +89,9 @@ class mailgate_thread(osv.osv):
                 data['history'] = True
                 data['description'] = details or case.description
                 data['email_to'] = email or \
-                        (case.section_id and case.section_id.reply_to) or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or tools.config.get('email_from', False)
                 data['email_from'] = email_from or \
-                        (case.section_id and case.section_id.reply_to) or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or tools.config.get('email_from', False)
             res = obj.create(cr, uid, data, context)
@@ -115,6 +113,7 @@ class mailgate_message(osv.osv):
 
     _columns = {
         'name':fields.char('Message', size=64),
+        'model_id': fields.many2one('ir.model', 'Model'),
         'thread_id':fields.many2one('mailgate.thread', 'Thread'),
         'date': fields.datetime('Date'),
         'history': fields.boolean('Is History?', required=False), 

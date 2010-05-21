@@ -47,6 +47,7 @@
     'update_xml': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
+        'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
         'company_view.xml',
@@ -60,6 +61,12 @@
 #        'process/sale_process.xml',
     ],
     'demo_xml': ['sale_demo.xml'],
+    'test': [
+             'test/shipping_manual_sale_order.yml',
+             'test/prepaid_sale_order.yml',
+             'test/advance_invoice.yml',
+             'test/sale_procurement.yml',
+            ],
     'installable': True,
     'active': False,
     'certificate': '0058103601429',

@@ -24,6 +24,7 @@
             <field name="state">open</field>
             <field name="tot_comp_survey">1</field>
             <field name="tot_start_survey">1</field>
+            <field name="response_user">5</field>
            </record>
 
         <record id="survey_page_who_are_you" model="survey.page">
@@ -498,6 +499,7 @@
             <field name="state">open</field>
             <field name="tot_comp_survey">1</field>
             <field name="tot_start_survey">1</field>
+            <field name="response_user">5</field>
            </record>
 
         <record id="survey_page_odoo_who_are_you" model="survey.page">
@@ -1286,6 +1288,7 @@
             <field name="responsible_id" ref="base.user_demo"/>
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type2"/>
+            <field name="response_user">5</field>
         </record>
     </data>
     <data>
@@ -2163,6 +2166,8 @@
             <field eval="1" name="send_response"/>
             <field eval="[(6,0,[])]" name="users"/>
             <field name="type" ref="survey_type3"/>
+            <field name="response_user">5</field>
+            <field name="max_response_limit">20</field>
         </record>
     </data>
     <data>

@@ -54,7 +54,7 @@ class one2many_mod2(fields.one2many):
 
 class account_analytic_plan(osv.osv):
     _name = "account.analytic.plan"
-    _description = "Analytic Plans"
+    _description = "Analytic Plan"
     _columns = {
         'name': fields.char('Analytic Plan', size=64, required=True, select=True,),
         'plan_ids': fields.one2many('account.analytic.plan.line','plan_id','Analytic Plans'),
@@ -63,7 +63,7 @@ account_analytic_plan()
 
 class account_analytic_plan_line(osv.osv):
     _name = "account.analytic.plan.line"
-    _description = "Analytic Plan Lines"
+    _description = "Analytic Plan Line"
     _columns = {
         'plan_id':fields.many2one('account.analytic.plan','Analytic Plan'),
         'name': fields.char('Plan Name', size=64, required=True, select=True),
@@ -297,14 +297,15 @@ class account_move_line(osv.osv):
 
     def create_analytic_lines(self, cr, uid, ids, context={}):
         super(account_move_line, self).create_analytic_lines(cr, uid, ids, context)
+        analytic_line_obj = self.pool.get('account.analytic.line')
         for line in self.browse(cr, uid, ids, context):
            if line.analytics_id:
                if not line.journal_id.analytic_journal_id:
                    raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (line.journal_id.name,))
 
-               toremove = self.pool.get('account.analytic.line').search(cr, uid, [('move_id','=',line.id)], context=context)
+               toremove = analytic_line_obj.search(cr, uid, [('move_id','=',line.id)], context=context)
                if toremove:
-                    line.unlink(cr, uid, toremove, context=context)
+                    analytic_line_obj.unlink(cr, uid, toremove, context=context)
                for line2 in line.analytics_id.account_ids:
                    val = (line.credit or  0.0) - (line.debit or 0.0)
                    amt=val * (line2.rate/100)
@@ -321,7 +322,7 @@ class account_move_line(osv.osv):
                        'journal_id': line.journal_id.analytic_journal_id.id,
                        'ref': line.ref,
                    }
-                   ali_id=self.pool.get('account.analytic.line').create(cr,uid,al_vals)
+                   ali_id=analytic_line_obj.create(cr, uid, al_vals, context=context)
         return True
 
 account_move_line()

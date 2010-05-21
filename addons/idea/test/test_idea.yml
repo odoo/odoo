@@ -44,13 +44,16 @@
   !record {model: res.users, id: res_users_user1}:
     company_id: base.main_company
     context_lang: en_US
+    groups_id:
+      - base.group_system
+      - base.group_user
     login: user2
     name: user2
     password: user2
  
 - |
   In order to post vote I connect as user1 and open the idea page
-  I click on  "Give Vote" wizard  button and vote the idea as "Normal"
+  I click on  "Submit Vote" wizard  button and vote the idea as "Normal"
 -
   !record {model: idea.post.vote, id: idea_post_vote_0}: 
     vote: 50
@@ -63,15 +66,16 @@
     self.do_vote(cr, uid, [ref("idea_post_vote_0")], {'active_ids': [ref('idea_idea_0')]})  
     
 - |
-  To add other vote I connect as user2 and open the idea page
-  I click on "Give Vote" wizard and vote the idea as "Very Good" and put comment "We can learn many things from technical presentation".
+  To add other vote I connect as user2 and open the idea page.
+  
+  I click on "Submit Vote" wizard button and vote the idea as "Very Good".
+   
+  and put comment "We can learn many things from technical presentation".
   
 - 
   !record {model: idea.post.vote, id: idea_post_vote_1}: 
     vote: 100
-    content: We can learn many things from technical presentation
-    
-    
+    note: 'We can learn many things from technical presentation'
 - |
   I click on "Post" button of this wizard.    
 -
@@ -84,7 +88,7 @@
 -
   !record {model: idea.idea, id: idea_idea_0}: 
     vote_avg: 75 
-   
+        
 - |
   I connect as Manager and  close this idea by click on "Close" button.
 -

@@ -246,8 +246,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <filter icon="gtk-new" string="Current"
-                       domain="[('state','in',('draft', 'open'))]" name="current"
+                   <filter icon="gtk-new" string="Current" name="current"
+                       domain="[('state','in',('draft', 'open'))]"
                        separator="1" help="Current Claims" default="1"
                    />
                    <filter icon="gtk-execute"
@@ -265,19 +265,11 @@
                    <field name="partner_id" select="1"/>
                    <field name="user_id" select="1" widget="selection">
                            <filter icon="terp-partner"
-                               domain="[('user_id','=',uid)]" help="My Claims"
-                               default="1" />
-                           <filter icon="terp-partner"
                                domain="[('user_id','=', False)]"
                                help="Unassigned Claims" />
                    </field>
                    <field name="section_id" select="1"
-                       widget="selection"
-                       default="context.get('section_id', False)">
-                       <filter icon="terp-crm"
-                           domain="[('section_id','=',context.get('section_id',False))]"
-                           help="My section" />
-                   </field>
+                       widget="selection"/>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="10" col="20">
                        <filter string="Deadline" icon="terp-crm"
