@@ -423,10 +423,10 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Users" name="user_id" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}" default = "1"/>
-                        <filter string="Stage" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
-                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Users" name="group_user_id" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="Project" name="group_project_id" icon="terp-project" domain="[]" context="{'group_by':'project_id'}" default = "1"/>
+                        <filter string="Stage" name="group_stage_id" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="State" name="group_state" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadline" icon="terp-project" domain="[]" context="{'group_by':'date_deadline'}"/>
                         <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
