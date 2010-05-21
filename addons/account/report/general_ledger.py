@@ -30,8 +30,6 @@ import xml
 import rml_parse
 import pooler
 
-from mx.DateTime import *
-
 class general_ledger(rml_parse.rml_parse):
     _name = 'report.account.general.ledger'
 
@@ -41,7 +39,8 @@ class general_ledger(rml_parse.rml_parse):
         ##
         new_ids = []
         if (data['model'] == 'account.account'):
-            new_ids = ids
+            new_ids = 'active_ids' in data['form']['context'] and data['form']['context']['active_ids'] or []
+            #new_ids = ids
         else:
             new_ids.append(data['form']['Account_list'])
 
@@ -51,7 +50,6 @@ class general_ledger(rml_parse.rml_parse):
 
     def __init__(self, cr, uid, name, context):
         super(general_ledger, self).__init__(cr, uid, name, context=context)
-        cr.sql_log=1
         self.date_borne = {}
         self.query = ""
         self.child_ids = ""
