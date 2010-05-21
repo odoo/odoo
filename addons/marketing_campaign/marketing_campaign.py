@@ -33,7 +33,7 @@ _intervalTypes = {
 
 class marketing_campaign(osv.osv): #{{{
     _name = "marketing.campaign"
-    _description = "Marketing Campaigns"
+    _description = "Marketing Campaign"
     
     _columns = {
         'name': fields.char('Name', size=64, required=True),
@@ -58,7 +58,7 @@ marketing_campaign()#}}}
 
 class marketing_campaign_segment(osv.osv): #{{{
     _name = "marketing.campaign.segment"
-    _description = "Marketing Campaign Segments"
+    _description = "Campaign Segment"
 
     _columns = {
         'name': fields.char('Name', size=64,required=True),
@@ -85,7 +85,7 @@ marketing_campaign_segment()#}}}
 
 class marketing_campaign_activity(osv.osv): #{{{
     _name = "marketing.campaign.activity"
-    _description = "Marketing Campaign Activities"
+    _description = "Campaign Activity"
 
     _columns = {
         'name': fields.char('Name', size=64),
@@ -135,7 +135,7 @@ marketing_campaign_activity()#}}}
 
 class marketing_campaign_transition(osv.osv): #{{{
     _name = "marketing.campaign.transition"
-    _description = "Campaign Transitions"
+    _description = "Campaign Transition"
 
     _columns = {
         'activity_from_id': fields.many2one('marketing.campaign.activity',
@@ -159,7 +159,7 @@ marketing_campaign_transition() #}}}
 
 class marketing_campaign_workitem(osv.osv): #{{{
     _name = "marketing.campaign.workitem"
-    _description = "Campaign Workitems"
+    _description = "Campaign Workitem"
 
     _columns = {
         'segment_id': fields.many2one('marketing.campaign.segment', 'Segment',

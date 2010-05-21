@@ -76,9 +76,7 @@
 	            		<filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
 	            		<separator orientation="vertical"/>
 	            		<field name="project_id" select="1"/>
-	                    <field name="user_id" select="1" widget="selection">
-	            			<filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]" default="1"/>
-                		</field>
+	                    <field name="user_id" select="1" widget="selection"/>
                 		<newline/>
                 		<group expand="1" string="Extended options..." colspan="10" col="12">
                     		<filter icon="terp-project"
@@ -120,6 +118,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="domain">[]</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_report_task_search"/>
         </record>
         <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
@@ -152,9 +151,7 @@
 	            		<filter icon="terp-project" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" />
 	            		<filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" />
 	            		<separator orientation="vertical"/>
-	                    <field name="user_id" select="1" widget="selection">
-	            			<filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]" />
-                		</field>
+	                    <field name="user_id" select="1" widget="selection"/>
                 	</group>
                 	<newline/>
                 	<group expand="1" string="Group By..." colspan="4" col="3">
@@ -170,6 +167,7 @@
             <field name="res_model">report.timesheet.task.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_report_timesheet_task_user_search"/>
         </record>
         <menuitem id="menu_timesheet_task_user" parent="hr.menu_hr_reporting" action="action_report_timesheet_task_user"/>

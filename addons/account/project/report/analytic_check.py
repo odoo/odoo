@@ -54,12 +54,12 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
 
             self.cr.execute("SELECT abs(sum(amount)) AS balance \
                     FROM account_analytic_line \
-                    WHERE date>=%s AND date<=%s AND amount>0 AND general_account_id = %s", (date1, date2, a['id']))
+                    WHERE date>=%s AND date<=%s AND amount<0 AND general_account_id = %s", (date1, date2, a['id']))
             (ad,) = self.cr.fetchone()
             ad = ad or 0.0
             self.cr.execute("SELECT abs(sum(amount)) AS balance \
                     FROM account_analytic_line \
-                    WHERE date>=%s AND date<=%s AND amount<0 AND general_account_id = %s", (date1, date2, a['id']))
+                    WHERE date>=%s AND date<=%s AND amount>0 AND general_account_id = %s", (date1, date2, a['id']))
             (ac,) = self.cr.fetchone()
             ac = ac or 0.0
 

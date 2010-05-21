@@ -104,7 +104,7 @@ class payment_order_create(osv.osv_memory):
 
         # Search for move line to pay:
         domain = [('reconcile_id', '=', False),('account_id.type', '=', 'payable'),('amount_to_pay', '>', 0)]
-        domain = domain + ['|',('date_maturity','<',search_due_date),('date_maturity','=',False)]
+        domain = domain + ['|',('date_maturity','<=',search_due_date),('date_maturity','=',False)]
         line_ids = line_obj.search(cr, uid, domain, context=context)
         context.update({'line_ids': line_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_create_payment_order_lines')], context=context)

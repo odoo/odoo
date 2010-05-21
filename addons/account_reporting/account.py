@@ -30,7 +30,7 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 class color_rml(osv.osv):
     _name = "color.rml"
-    _description = "Rml Colors"
+    _description = "Rml Color"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('code',size=64,required=True),

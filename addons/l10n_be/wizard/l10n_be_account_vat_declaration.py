@@ -36,7 +36,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'file_save': fields.binary('Save File'),
         'ask_resitution': fields.boolean('Ask Restitution'),
         'ask_payment': fields.boolean('Ask Payment'),
-        'client_nihil': fields.boolean('Last Declaration of Entreprise',help='Thick this case only if it concerns only the last statement on the civil or cessation of activity'),
+        'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
     }
 
     _defaults = {

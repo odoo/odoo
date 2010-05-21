@@ -31,7 +31,7 @@ class idea_category(osv.osv):
     """ Category of Idea """
 
     _name = "idea.category"
-    _description = "Category for an idea"
+    _description = "Idea Category"
 
     _columns = {
         'name': fields.char('Category', size=64, required=True),
@@ -251,7 +251,7 @@ class idea_comment(osv.osv):
     """ Apply Idea for Comment """
 
     _name = 'idea.comment'
-    _description = 'Comments'
+    _description = 'Comment'
     _rec_name = 'content'
 
     _columns = {
@@ -274,7 +274,7 @@ class idea_vote(osv.osv):
     """ Apply Idea for Vote """
 
     _name = 'idea.vote'
-    _description = 'Vote for Idea'
+    _description = 'Idea Vote'
     _rec_name = 'score'
 
     _columns = {

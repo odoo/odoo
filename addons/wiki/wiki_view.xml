@@ -155,12 +155,12 @@
             <field name="arch" type="xml">
                 <search string="Wiki">
                     <group col='8' colspan='4'>
-                        <filter icon="gtk-execute" string="My" domain="[('create_uid','=',uid)]" help="My Pages"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="group_id" select="1"/>
                         <field name="text_area" select="1"/>
                         <field name="review" select="1"/>
+                        <field name="create_uid" widget="selection" select="1"/>
                     </group>
                 </search>
             </field>
@@ -174,7 +174,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
-            <field name="context">{'section':'1'}</field>
+            <field name="context">{'section':'1','search_default_create_uid':uid}</field>
             <field name="search_view_id" ref="view_wiki_filter"/>
         </record>
 
