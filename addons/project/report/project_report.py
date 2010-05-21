@@ -31,7 +31,7 @@ class report_project_task_user(osv.osv):
         'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'Assigned To', readonly=True),
-        'date_start': fields.datetime('Starting Date',readonly=True),
+        'date_start': fields.date('Starting Date',readonly=True),
         'no_of_days': fields.integer('#Days', size=128, readonly=True),
         'description': fields.text('Description',readonly=True),
         'date_end': fields.date('Ending Date',readonly=True),
@@ -96,6 +96,7 @@ class report_project_task_user(osv.osv):
                 group by
                     to_char(date_start, 'YYYY'),
                     to_char(date_start, 'MM'),
+                    to_char(date_start, 'YYYY-MM-DD'),
                     t.priority,
                     t.user_id,
                     t.state,
