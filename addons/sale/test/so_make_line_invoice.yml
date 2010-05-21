@@ -211,6 +211,41 @@
   !record {model: product.category, id: product_category_services0}:
     name: Mobile Services
 - 
+  I define LG Viewty Smart product template.
+- 
+  !record {model: product.template, id: product_template_lgviewtysmart0}:
+    categ_id: product_category_allproductssellable0
+    cost_method: standard
+    list_price: 170.0
+    mes_type: fixed
+    name: LG Viewty Smart
+    procure_method: make_to_order
+    standard_price: 160.0
+    supply_method: produce
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+-    
+  I define LG Viewty Smart product.
+- 
+  !record {model: product.product, id: product_product_lgviewtysmart0}:
+    categ_id: product_category_allproductssellable0
+    cost_method: standard
+    list_price: 170.0
+    mes_type: fixed
+    name: LG Viewty Smart
+    pricelist_purchase: 'Default Purchase Pricelist (0.00) : 160.00\n'
+    pricelist_sale: 'Public Pricelist (0.00) : 170.00\n'
+    procure_method: make_to_order
+    property_account_expense: sale.account_account_payable1
+    property_account_income: sale.account_account_receivable0
+    seller_delay: '1'
+    standard_price: 160.0
+    supply_method: produce
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+-
   I define New Chocolate Slider Mobile template.
 - 
   !record {model: product.template, id: product_template_newchocolateslidermobile0}:
@@ -248,10 +283,10 @@
 - 
   I create a Sale Order for LG Viewty Smart for qty 500 having order_policy manual.
 -
-  !record {model: sale.order, id: sale_order_so0}:
+  !record {model: sale.order, id: sale_order_so3}:
     date_order: '2010-05-12'
     invoice_quantity: order
-    name: Test_SO002
+    name: Test_SO003
     order_line:
       - name: New Chocolate Slider Mobile
         price_unit: 200.0
@@ -262,6 +297,16 @@
         product_id: sale.product_product_newchocolateslidermobile0
         product_uos_qty: 500.0
         type: make_to_order
+      - name: LG Viewty Smart
+        price_unit: 170.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 500.0
+        state: draft
+        delay: 7.0
+        product_id: sale.product_product_lgviewtysmart0
+        product_uos_qty: 500.0
+        th_weight: 0.0
+        type: make_to_order      
     order_policy: manual
     partner_id: sale.res_partner_cleartrail0
     partner_invoice_id: sale.res_partner_address_2
@@ -273,112 +318,25 @@
 - 
   I confirm the Sale Order.
 - 
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so3}
 -
-  I click on Create Invoice button to create the invoice.
+  I create an invoice on sale order line. 
 - 
-  !workflow {model: sale.order, action: manual_invoice, ref: sale_order_so0}
+  !record {model: sale.order.line.make.invoice, id: sale_order_line_make_invoice_0}:
+    {}
+- 
+  invoice is created for specific sale order line.
+- 
+  !python {model: sale.order.line.make.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
+    sol = so.order_line[0]    
+    self.make_invoices(cr, uid, [ref("sale_order_line_make_invoice_0")], {"lang":
+      'en_US', "active_model": "sale.order.line", "active_ids": [ref(sol.id)], "tz":
+      False, "active_id": ref(sol.id), })
 -
-  I verify whether the invoice has been generated for SO
+  I verify that invoice regarding sale order line has been created.
 -
   !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
+    so = self.browse(cr, uid, ref("sale_order_so3"))
     assert so.invoice_ids, "Invoices has not been generated for sale_order_so0"
-- 
-  I open the Invoice for the SO.
-- 
-  !python {model: account.invoice}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")  
-    invoice_ids = so.invoice_ids
-    for invoice in invoice_ids:
-      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr) 
--
-  Creating a account invoice pay entry.
-- 
-  !record {model: account.invoice.pay, id: account_invoice_pay_tst0}:
-    amount: 100000.0
-    date: '2010-05-10'
-    journal_id: sale.account_journal_bankjournal0
-    name: test
-    period_id: account.period_5
-- 
-  I pay the invoice.
-- 
-  !python {model: account.invoice.pay}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))  
-    self.wo_check(cr, uid, [ref("account_invoice_pay_tst0")], {"lang": "en_US", "tz":
-      False, "active_model": 'account.invoice', "active_ids": [so.invoice_ids[0].id], "type":
-      "out_invoice", "active_id": so.invoice_ids[0].id})
-    
-    
-- 
-  Creating an account invoice pay writeoff entry.
-- 
-  !record {model: account.invoice.pay.writeoff, id: account_invoice_pay_writeoff_0}:
-    analytic_id: account.analytic_customers
-    comment: Write-Off
-    writeoff_acc_id: account.a_sale
-    writeoff_journal_id: sale.account_journal_bankjournal0
-    
-    
-- 
-  Pay and Reconcile the Invoice.
-- 
-  !python {model: account.invoice.pay.writeoff}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))   
-    self.pay_and_reconcile_writeoff(cr, uid, [ref("account_invoice_pay_writeoff_0")],
-      {"lang": 'en_US', "tz": False, "active_model": 'account.invoice', "active_ids":
-      [so.invoice_ids[0].id], "type": "out_invoice", "active_id": so.invoice_ids[0].id, })
--
-  I verify the invoice are in paid state or not. 
--
-  !python {model: account.invoice}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    invoice_ids = so.invoice_ids
-    for invoice in invoice_ids:
-        assert (invoice.state) =='paid', "Invoice for SO is not in done state."
-- 
-  I verify the picking associated with the sale order sale_order_so0.
-- 
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
-    assert so.picking_ids,"Picking has not been generated for sale_order_so0"
--
-  Products are delivered to the Cleartrail Customer.
-- 
-  !python {model: stock.picking }: |
-   import time
-   sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
-   if picking_id:
-      pick=self.browse(cr,uid,picking_id[0])
-      pick.force_assign(cr, uid)
-      partial_datas = {
-           'partner_id':pick.address_id.partner_id.id,
-            'address_id': pick.address_id.id,
-            'delivery_date' : time.strftime('%Y-%m-%d'),
-           }
-      move = pick.move_lines[0]
-      partial_datas['move%s'%(move.id)]= {
-          'product_id': move.product_id.id,
-          'product_qty': move.product_qty,
-          'product_uom': move.product_uom.id,
-      } 
-      self.do_partial(cr, uid, [pick.id],partial_datas)
--
-  I verify that picking order is in done state.
--
-  !python {model: stock.picking }: |
-   sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
-   if picking_id:
-     pick = self.browse(cr,uid,picking_id[0])
-     assert (pick.state) =='done', "Picking for SO is not in done state." 
