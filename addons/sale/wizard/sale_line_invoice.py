@@ -25,13 +25,6 @@ from tools.translate import _
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
     _description = "Sale OrderLine Make_invoice"
-    _columns = {
-        'grouped': fields.boolean('Group the invoices'),
-    }
-    _default = {
-        'grouped' : lambda *a: False
-    }
-
     def make_invoices(self, cr, uid, ids, context):
         """ 
              To make invoices.

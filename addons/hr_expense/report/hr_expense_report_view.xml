@@ -51,7 +51,7 @@
         <field name="arch" type="xml">
             <search string="Expenses">
             	<group>
-            		<filter icon="terp-hr" string="This Year"
+            		<filter icon="terp-hr" string="Last 365 Days"
 	                  	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                   	    help="Expenses during last 7 year"/>
 	                <filter icon="terp-hr" string="This Month"

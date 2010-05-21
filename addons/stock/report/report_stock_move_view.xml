@@ -7,14 +7,20 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Stock Orders Statistics">
-                <field name="date"/>
+                <field name="date_planned"/>
+                <field name="day_diff"/>
                 <field name="year" invisible="1" />
                 <field name="month" invisible="1"/>
                 <field name="day" invisible="1"/>
+                <field name="location_id" invisible="1"/>
+                <field name="location_dest_id" invisible="1"/>
                 <field name="product_id"/>
+                <field name="partner_id"/>
                 <field name="product_qty"/>
-                <field name="location_id"/>
+                <field name="product_uom"/>
                 <field name="state"/>
+                <field name="value"/>
+                
            </tree>
         </field>
     </record>
@@ -43,13 +49,14 @@
                     domain="[('year','=',time.strftime('%%Y'))]"
                     help="Stock Moves of the year"/>
                 <filter icon="terp-stock"
+                 	name="month"
                     string="This Month"
                     domain="[('month','=',time.strftime('%%m'))]"
                     help="Stock Moves of this month"/>
 	            <filter icon="terp-stock"
-                    string="Current Stock"
+                    string="Today"
                     separator="1"
-                    domain="[('date', '=', time.strftime('%%Y-%%m-%%d')]"
+                    domain="[('date_planned','&gt;=', time.strftime('%%Y-%%m-%%d')), ('date_planned','&lt;',(datetime.date.today()-datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d'))]"
                     help="Stock Moves of today"/>
                 <separator orientation="vertical"/>
 
@@ -64,22 +71,35 @@
                     	help = "Available Stock-Moves"/>
 
                 <filter string="Done"
+                		name="done"
                     	icon="terp-stock"
                     	domain="[('state','=','done')]"
                     	help = "Completed Stock-Moves"/>
+                    	
+                <separator orientation="vertical"/>
+                <filter icon="terp-stock" string="Internal Locations" domain="[('location_id.usage','=','internal')]"/>
+                <filter icon="terp-stock" string="Scrap Locations" domain="[('location_id.scrap_location','=',1)]"/>
+                <separator orientation="vertical"/>
+                <field name="product_id"/>
+                </group>
+                <newline/>
                 
-                <separator orientation="vertical"/>                                        
-                <field name="product_id" select="1" widget="selection"/>
-                <field name="location_id" select="1" widget="selection"/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                <field name="location_id" widget = "selection"/>
+                <field name="location_dest_id"  widget = "selection"/>
+                <field name="date_planned"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." >
-                    <filter string="Product" icon="terp-stock" context="{'group_by':'product_id'}"/>
-                    <filter string="Location" icon="terp-stock" context="{'group_by':'location_id'}"/>
+             		<filter string="Partner" name="Partner" icon="terp-stock" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter name="product" string="Product" icon="terp-stock" context="{'group_by':'product_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter name="src_location" string="Source Location" icon="terp-stock" context="{'group_by':'location_id'}"/>
+                    <filter string="Dest. Location" icon="terp-stock"  context="{'group_by':'location_dest_id'}"/>
                     <filter string="State" icon="terp-stock" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-stock" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-stock" context="{'group_by':'date'}"/>
+                    <filter string="Month" icon="terp-stock" context="{'group_by':'date_planned'}"/>
                     <filter string="Year" icon="terp-stock" context="{'group_by':'year'}"/>
                 </group>
             </search>
@@ -92,7 +112,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
  		<field name="search_view_id"  ref="view_stock_search"/>
- 	
+ 		<field name="context">{'search_default_product':1, 'search_default_src_location':1,'search_default_done':1,'group_by':[]}</field>
     </record>
 
 	<menuitem

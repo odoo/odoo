@@ -15,26 +15,16 @@
                		<field name="month" invisible="1"/>
                		<field name="day" invisible="1"/>
                		<field name="date" invisible="1"/>
-               		<field name="location_id" invisible="1"/>
-               		<field name="location_dest_id" invisible="1"/>
-               		<field name="date" invisible="1"/>
-                  <field name="company_id" invisible="1"/>
-                  <field name="partner_id" invisible="1"/>
-                  <field name="product_id" invisible="1"/>
-                  <field name="min_date" invisible="1"/>
-                  <field name="order_date" invisible="1"/>
-                  <field name="date_done" invisible="1"/>
-                  <field name="max_date" invisible="1"/>
-                  <field name="type" invisible="1"/>
-                  <field name="state" invisible="1"/>
-                  <field name="product_uos" invisible="1"/>
-                  <field name="product_uom" invisible="1"/>
-                  <field name="product_qty" sum="# of Products"/>
-                  <field name="product_uos_qty" sum="# of Products UOS"/>
-                  <field name="nbp" sum="# of Pickings"/>
-                  <field name="nbr" sum="# of Lines"/>
-                  <field name="avg_days_to_deliver" avg='Avg Days to Deliver'/>
-              </tree>
+					<field name="reference" invisible="1"/>
+					<field name="partner_id" invisible="1"/>
+					<field name="origin" invisible="1"/>
+					<field name="type" invisible="1"/>
+					<field name="state" invisible="1"/>
+					<field name="product_qty" sum="# of Products" />
+					<field name="nbp" sum="# of Pickings" />
+					<field name="nbr" sum="# of Lines" />
+			        <field name="avg_days_to_deliver" sum='Avg Days to Deliver'/>
+				</tree>
             </field>
         </record>
 
@@ -58,59 +48,34 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="4" colspan="5">
-                   		<filter string="365 Days"
-                            icon="gtk-media-rewind" 
+                  <group col="16" colspan="6">
+                   		<filter icon="terp-stock" string="This Year"
 	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-	                    	    help="Picking of last 365 Days"/>
-	                	<filter 
-                    icon="gtk-media-rewind" 
-                    string="30 Days"
+	                    	    help="Picking in this year"/>
+	                	<filter icon="terp-stock" string="This Month"
 	                			name="month"
 	                			domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                			help="Picking of last 30 days"/>
-		                <filter icon="gtk-media-rewind"
-	                      string="    7 Days    "
-	                      separator="1"
-	                      domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-	                      help="Pickings of last 7 days"/>
-                        
+	                			help="Picking in this month"/>
                         <separator orientation="vertical"/>
-                        <filter string="Todo" icon="terp-stock" domain="[('state','in',('draft','auto'))]"/>
-                        <filter string="Confirmed" icon="terp-stock" domain="[('state','in',('confirmed'))]"/>
-                        <filter string="Assigned" icon="terp-stock" domain="[('state','in',('assigned'))]"/>
+                        <filter string="Todo" icon="terp-stock" domain="[('state','in',('draft','auto','confirmed','assigned'))]"/>
                         <filter string="Done" icon="terp-stock" domain="[('state','=','done')]"/>
 						<separator orientation="vertical"/>
 						<field name="partner_id"/>
+						<field name="reference" />
+						<field name="origin" />
 						<field name="type" groups="base.group_extended"/>
                    </group>
                    <newline/>
-                	<group expand="0" string="Extended options..." colspan="10" col="12">
-                		<field name="company_id" groups="base.group_multi_company"/>
-                		<field name="location_id"/>
-                		<field name="location_dest_id"/>
-                		<field name="product_uos"/>
-                		<field name="product_uom"/>
-                   <newline/>
-	                    <field name="order_date"/>
-	                    <field name="date_done"/>
-                      <field name="min_date"/>
-                      <field name="max_date"/>
-                	</group>
-                   <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="5">
                         <filter string="Partner" name="Partner" icon="terp-stock" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Product" name="product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Shipping Type" icon="terp-stock" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
-                      <separator orientation="vertical"/>
-                        <filter string="Source Location" icon="terp-stock" domain="[]" context="{'group_by':'location_id'}"/>
-                        <filter string="Dest. Location" icon="terp-stock" domain="[]" context="{'group_by':'location_dest_id'}"/>
-                        <filter string="Company" icon="terp-stock" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                      <separator orientation="vertical"/>
+                    	<separator orientation="vertical"/>
+                    	<filter string="Shipping Type" icon="terp-stock" domain="[]" context="{'group_by':'type'}"/>
+                    	<filter string="Origin" icon="terp-stock" domain="[]" context="{'group_by':'origin'}"/>
+                    	<separator orientation="vertical"/>
                         <filter string="Day" icon="terp-stock" domain="[]" context="{'group_by':'day'}"/>
-                        <filter string="Month" icon="terp-stock" domain="[]" context="{'group_by':'month'}"/>
-                        <filter string="Year" icon="terp-stock" domain="[]" context="{'group_by':'year'}"/>
+                    	<filter string="Month" icon="terp-stock" domain="[]" context="{'group_by':'month'}"/>
+                    	<filter string="Year" icon="terp-stock" domain="[]" context="{'group_by':'year'}"/>
                     </group>
                </search>
             </field>
@@ -122,7 +87,7 @@
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_report_stock_picking_tree"/>
             <field name="search_view_id" ref="view_report_report_stock_picking_filter"/>
-            <field name="context">{'search_default_Partner':1,'search_default_product':1,'search_default_month':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_Partner':1,'search_default_month':1,'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
        	<record model="ir.actions.act_window.view" id="action_report_report_stock_picking_tree">

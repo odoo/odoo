@@ -8,18 +8,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Order POS">
-                    <notebook >
-                        <page string="Order lines">
-                            <group colspan="4" col="6">
-                                <field name="user_salesman_id" />
-                                <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
-                                <field name="contract_number" select="1" groups="base.group_extended"/>
-                            </group>
+                    <group col="6" colspan="4">
+						<field name="user_salesman_id" />
+						<field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
+						<field name="contract_number" groups="base.group_extended"/>
+                    
+                	</group>
+                     <notebook colspan="4">
+                      <page string="Sale Order ">                    
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275" />
                                     <field name="qty" />
-                                    <field name="qty_rfd" />
+                                    <field name="qty_rfd" groups="base.group_extended"/> 
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" />
                                     <field name="price_unit" readonly="1"/>
@@ -31,7 +32,7 @@
                                 <form string="Order lines" >
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
                                     <field name="qty" />
-                                    <field name="qty_rfd" />
+                                    <field name="qty_rfd" groups="base.group_extended"/>
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" />
                                     <field name="price_unit"/>
@@ -60,7 +61,7 @@
                               </group>
                             <separator colspan="4" string="Actions"/>
                             <group colspan="4" col="6">
-                                <field name="state" select="1"/>
+                                <field name="state"/>
                                 <button name="%(action_pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance" />
                                 <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
@@ -69,21 +70,21 @@
                             </group>
                         </page>
 
-                        <page string="Payment">
+                        <page string="Order and Payment">
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Order Information" colspan="4"/>
                                 <field name="company_id"/>
                                 <field name="shop_id" widget="selection"  />
-                                <field name="name" select="1"/>
+                                <field name="name"/>
                                 <field name="user_id" />
                                 <field name="sale_manager" />
                                 <field name="price_type" />
                             </group>
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Dates" colspan="4"/>
-                                <field name="date_order" select="1" />
-                                <field name="date_validation" select="1"  />
-                                <field name="date_payment" select="1"  groups="base.group_extended"/>
+                                <field name="date_order"/>
+                                <field name="date_validation" />
+                                <field name="date_payment" groups="base.group_extended"/>
                             </group>
                             <group colspan="4">
                                 <separator string="Invoicing" colspan="4"/>
@@ -135,12 +136,12 @@
             <field name="arch" type="xml">
                 <tree string="POS Orders">
                     <field name="name"/>
-                    <field name="date_order" select="1"/>
+                    <field name="date_order"/>
                     <field name="date_validation"/>
                     <field name="date_payment"/>
                     <field name="user_id"/>
                     <field name="invoice_id"/>
-                    <field name="state" select="1"/>
+                    <field name="state" />
                     <field name="amount_total" sum="Amount total"/>
                     <field name="company_id"/>
                 </tree>

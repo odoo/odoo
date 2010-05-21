@@ -104,9 +104,17 @@
                   			<field name="project_id" widget="selection" />
                     		<field name="priority" />
                     		<separator orientation="vertical"/>
+<<<<<<< TREE
+=======
+                    		<field name="type_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+>>>>>>> MERGE-SOURCE
                     		<separator orientation="vertical"/>
                     		<newline/>
                     		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+<<<<<<< TREE
+=======
+                    		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
+>>>>>>> MERGE-SOURCE
                     		<separator orientation="vertical"/>
                     		<field name="assigned_to" widget="selection">
                     			<filter icon="terp-crm"  help = "Project Issue Assigned To Me" domain="[('assigned_to','=',uid)]" />
@@ -121,10 +129,18 @@
                         </group>
 				</xpath>
 				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Category"]' position='after'>
+<<<<<<< TREE
+=======
+            		<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
+>>>>>>> MERGE-SOURCE
             		<separator orientation="vertical"/>
             		<filter string="Project"  icon="terp-sale" domain="[]" context="{'group_by':'project_id'}" />
             		<filter string="Priority"  icon="terp-sale" domain="[]" context="{'group_by':'priority'}" />
             		<separator orientation="vertical"/>
+<<<<<<< TREE
+=======
+            		<filter string="Type"  icon="terp-sale" domain="[]" context="{'group_by':'type_id'}"/>
+>>>>>>> MERGE-SOURCE
             		<separator orientation="vertical"/>
             		<filter string="Assigned To"  icon="terp-sale" domain="[]" context="{'group_by':'assigned_to'}"/>
             		<separator orientation="vertical"/>

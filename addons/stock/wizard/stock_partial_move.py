@@ -186,6 +186,12 @@ class stock_partial_move(osv.osv_memory):
         return res   
 
     def do_partial(self, cr, uid, ids, context):    
+        rec_id = context and context.get('active_id', False)
+        tracking_lot = context.get('tracking_lot', False)
+        if tracking_lot:
+            tracking = self.pool.get('stock.tracking')
+            tracking_lot = tracking.get_create_tracking_lot(cr, uid,[rec_id], tracking_lot)        
+            context ['tracking_lot'] = tracking_lot 
         move_obj = self.pool.get('stock.move')    
         move_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context)
@@ -208,7 +214,6 @@ class stock_partial_move(osv.osv_memory):
                     'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
                     'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id
                 })  
-        
         res = move_obj.do_partial(cr, uid, move_ids, partial_datas, context=context)
         return {}
  

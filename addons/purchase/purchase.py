@@ -700,7 +700,7 @@ purchase_order_line()
 class mrp_procurement(osv.osv):
     _inherit = 'mrp.procurement'
     _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
+        'purchase_id': fields.many2one('purchase.order', 'Latest Requisition'),
     }
     
     def action_po_assign(self, cr, uid, ids, context={}):
