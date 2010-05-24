@@ -5,6 +5,7 @@
 		<!-- Casual leave -->
 		<record model="hr.holidays.status" id="holiday_status_cl">
 			<field name="name">Casual Leave</field>
+			<field name="double_validation">True</field>
 			<field name="color_name">black</field>
 		</record>
 
@@ -19,15 +20,16 @@
 		<record model="hr.holidays" id="hr_holidays_employee1_cl">
 			<field name="name">Trip with Family</field>
 			<field name="holiday_status_id" ref="holiday_status_cl"/>
-			<field name="date_from">2010-01-01 08:00</field>
-			<field name="date_to">2010-01-03 18:00</field>
-			<field name="number_of_days_temp">1</field>
+			<field name="date_from">2010-01-04 08:00</field>
+			<field name="date_to">2010-01-06 18:00</field>
+			<field name="number_of_days_temp">3</field>
 			<field name="employee_id" ref="hr.employee1"/>
 		</record>
 
 		<!-- Sick leave -->
 		<record model="hr.holidays.status" id="holiday_status_sl">
 			<field name="name">Sick Leave</field>
+			<field name="limit">True</field>
 			<field name="color_name">red</field>
 		</record>
 
