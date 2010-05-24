@@ -18,8 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 {
     'name': 'Base VAT - To check VAT number validity',
     'version': '1.0',
@@ -31,8 +29,9 @@
     checking the validity of VAT Number assinged to partners in European countries.
     """,
     'author': 'Tiny',
-    'depends': ['base', 'account'],
-    'update_xml': ['base_vat_data.xml'],
+    'depends': ['account'],
+    'website': 'http://www.openerp.com',
+    'update_xml': ['base_vat_view.xml'],
     'installable': True,
     'active': False,
     'certificate': '0084849360989',

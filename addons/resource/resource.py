@@ -30,7 +30,7 @@ class resource_calendar(osv.osv):
     _description = "Resource Calendar"
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
-        'company_id' : fields.many2one('res.company', 'Company', required=True),
+        'company_id' : fields.many2one('res.company', 'Company', required=False),
         'week_id' : fields.one2many('resource.calendar.week', 'calendar_id', 'Working Time'),
         'manager' : fields.many2one('res.users', 'Workgroup manager'),
     }
@@ -148,20 +148,20 @@ class resource_resource(osv.osv):
     _name = "resource.resource"
     _description = "Resource Detail"
     _columns = {
-        'name' : fields.char("Name", size=64, required=True ),
+        'name' : fields.char("Name", size=64, required=True),
         'code': fields.char('Code', size=16),
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the resource record without removing it."),
-        'company_id' : fields.many2one('res.company', 'Company', required=True),
+        'company_id' : fields.many2one('res.company', 'Company'),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
         'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
         'time_efficiency' : fields.float('Efficiency factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
         'calendar_id' : fields.many2one("resource.calendar", "Working time", help="Define the schedule of resource"),
     }
     _defaults = {
-        'resource_type' : lambda *a: 'user',
-        'time_efficiency' : lambda *a: 1,
-        'active' : lambda *a: True,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', c)
+        'resource_type' : 'user',
+        'time_efficiency' : 1,
+        'active' : True,
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', context=context)
     }
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):

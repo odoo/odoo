@@ -47,7 +47,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
         </record>
-        <menuitem action="action_account_receivable_graph" id="menu_account_receivable_graph" parent="account.menu_finance_reporting"/>
+       <!--  <menuitem action="action_account_receivable_graph" id="menu_account_receivable_graph" parent="account.menu_finance_reporting"/> -->
 
         <!-- Report for Aged Receivable -->
 
@@ -116,7 +116,7 @@
 	    </record>
 
 <!--	    <menuitem id="menu_report_this_month" name="This Month" parent="account.menu_finance_reporting"/>-->
-	    <menuitem id="menu_report_all_months" name="Sales by Account" parent="account.menu_finance_reporting"/>
+	    <!-- <menuitem id="menu_report_all_months" name="Sales by Account" parent="account.menu_finance_reporting"/> -->
 	    <!-- Report of the sales by product and account -->
 	    <record id="view_report_account_sales_tree" model="ir.ui.view">
             <field name="name">report.account.sales.tree</field>
@@ -169,7 +169,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_report_account_sales_search"/>
         </record>
-        <menuitem action="action_report_account_sales_tree_all" id="menu_report_account_sales_all" parent="menu_report_all_months"/>
+        <!-- <menuitem action="action_report_account_sales_tree_all" id="menu_report_account_sales_all" parent="menu_report_all_months"/> -->
 
         <!-- Report of the sales by product and account type -->
 	    <record id="view_report_account_type_sales_tree" model="ir.ui.view">
@@ -237,7 +237,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_report_account_type_sales_search"/>
         </record>
-        <menuitem action="action_report_account_type_sales_tree_all" id="menu_report_account_type_sales_all" parent="menu_report_all_months"/>
+        <!-- <menuitem action="action_report_account_type_sales_tree_all" id="menu_report_account_type_sales_all" parent="menu_report_all_months"/> -->
 
     </data>
 </openerp>
