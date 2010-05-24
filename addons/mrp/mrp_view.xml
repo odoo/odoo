@@ -254,30 +254,32 @@
                         <field name="product_uos" groups="product.group_uos"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <newline/>
-                        <field name="multi_level_bom" />
+                        <field name="multi_level_bom" on_change="onchange_multi_level_bom(multi_level_bom)"/>
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
-                    <notebook colspan="4" >
-                        <page string="General Information" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
-                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list" />
-                        </page>
-                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
-                            <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
-                        </page>
-                        <page string="Properties" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
-                            <field name="position"/>
-                            <field name="active"/>
-                            <field name="sequence"/>
-                            <field name="bom_id"/>
-
-                            <field name="date_start"/>
-                            <field name="date_stop"/>
-                            <field name="product_rounding"/>
-                            <field name="product_efficiency"/>
-                            <field colspan="4" name="property_ids" nolabel="2" groups="base.group_extended"/>
-                        </page>
-                    </notebook>
+                    <group attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}" colspan="4">
+	                    <notebook colspan="4" >
+	                        <page string="General Information">
+	                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list" />
+	                        </page>
+	                        <page string="Revisions" groups="base.group_extended">
+	                            <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
+	                        </page>
+	                        <page string="Properties" groups="base.group_extended">
+	                            <field name="position"/>
+	                            <field name="active"/>
+	                            <field name="sequence"/>
+	                            <field name="bom_id"/>
+	
+	                            <field name="date_start"/>
+	                            <field name="date_stop"/>
+	                            <field name="product_rounding"/>
+	                            <field name="product_efficiency"/>
+	                            <field colspan="4" name="property_ids" nolabel="2" groups="base.group_extended"/>
+	                        </page>
+	                    </notebook>
+	                </group>
                 </form>
             </field>
         </record>
