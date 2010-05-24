@@ -73,7 +73,7 @@ class available_holidays_report(osv.osv):
                 and s.active <> 'f'
                 group by h.holiday_status_id, h.employee_id,
                          date_trunc('day',h.create_date),to_char(s.create_date, 'YYYY'),
-                         to_char(s.create_date, 'MM'),h.user_id,h.state, h.category_id, h.department_id
+                         to_char(s.create_date, 'MM'), to_char(s.create_date, 'YYYY-MM-DD'), h.user_id,h.state, h.category_id, h.department_id
 
             )""")
 available_holidays_report()
