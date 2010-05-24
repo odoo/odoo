@@ -63,7 +63,7 @@
         </record>
 
 <!-- Leads by user and section Search View -->
-		
+
 		<record id="view_report_crm_lead_filter" model="ir.ui.view">
             <field name="name">crm.lead.report.select</field>
             <field name="model">crm.lead.report</field>
@@ -118,8 +118,41 @@
 	            			<filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
                			</field>
                    </group>
+                   <group  expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="User" name="User" icon="terp-sale"
+                            domain="[]" context="{'group_by':'user_id'}" />
+
+                        <filter string="Company" icon="terp-sale"
+                            domain="[]"
+                            context="{'group_by':'company_id'}" />
+
+                        <filter string="Section" icon="terp-sale"
+                            domain="[]"
+                            context="{'group_by':'section_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="State" icon="terp-sale"
+                            domain="[]" context="{'group_by':'state'}" />
+
+                        <filter string="Stage" icon="terp-sale" domain="[]"
+                            context="{'group_by':'stage_id'}" />
+
+                        <filter string="Category" icon="terp-sale"
+                            domain="[]" context="{'group_by':'categ_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="Day" icon="terp-sale"
+                            domain="[]" context="{'group_by':'day'}"/>
+
+                        <filter string="Month" icon="terp-sale"
+                            domain="[]" context="{'group_by':'month'}" />
+
+                        <filter string="Year" icon="terp-sale"
+                            domain="[]" context="{'group_by':'name'}" />
+
+                  </group>
                    <newline/>
-                   <group  expand="1" string="Extended options..." colspan="10" col="12">
+                   <group  expand="0" string="Extended options..." colspan="10" col="12">
                          <filter icon="terp-sale"
                     		string="Done"
                     		domain="[('state','=','done')]"/>
@@ -132,40 +165,6 @@
 			                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
 			            </group>
                    </group>
-                   <newline/>
-                   <group  expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="User" name="User" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'user_id'}" />
-
-                        <filter string="Company" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'company_id'}" />
-
-                        <filter string="Section" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'section_id'}" />
-                        	
-                        <separator orientation="vertical" />
-                        <filter string="State" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'state'}" />
-
-						<filter string="Stage" icon="terp-sale" domain="[]"
-							context="{'group_by':'stage_id'}" />
-					
-                        <filter string="Category" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'categ_id'}" />
-
-                        <separator orientation="vertical" />
-                        <filter string="Day" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'day'}"/>
-
-                        <filter string="Month" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'month'}" />
-
-                        <filter string="Year" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'name'}" />
-
-                  </group>
                </search>
             </field>
         </record>
@@ -220,7 +219,7 @@
             <field name="view_id" ref="view_report_crm_lead_graph"/>
             <field name="act_window_id" ref="action_report_crm_lead"/>
        </record>
-	
+
 	<record id="action_report_crm_opportunity" model="ir.actions.act_window">
             <field name="name">Opportunities</field>
             <field name="res_model">crm.lead.report</field>
@@ -244,7 +243,7 @@
             <field name="view_id" ref="view_report_crm_lead_graph"/>
             <field name="act_window_id" ref="action_report_crm_opportunity"/>
        </record>
-	
+
        <menuitem name="Leads" id="menu_report_crm_leads_tree"
            groups="base.group_extended"
            parent="base.next_id_64" action="action_report_crm_lead" />

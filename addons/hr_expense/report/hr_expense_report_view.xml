@@ -80,6 +80,20 @@
 	                        		domain="[('user_id','=',False)]"/>
                     </field>
 				</group>
+				<group expand="1" string="Group By...">
+                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
+                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
+                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
+                    <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
+                    <filter string="Force Journal" icon="terp-hr" context="{'group_by':'journal_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-hr" context="{'group_by':'date'}"/>
+                    <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
+                </group>
 				<newline/>
 				<group expand="0" string="Extended options..." colspan="10" col="12">
 					<filter string="Invoiced"
@@ -104,21 +118,6 @@
   				    <separator orientation="vertical"/>
                     <field name="date_confirm"/>
                     <field name="date_valid"/>
-                </group>
-                <newline/>
-                <group expand="1" string="Group By...">
-                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
-                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
-                    <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
-                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
-                    <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
-                    <filter string="Force Journal" icon="terp-hr" context="{'group_by':'journal_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-hr" context="{'group_by':'date'}"/>
-                    <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>

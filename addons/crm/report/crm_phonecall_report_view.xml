@@ -63,7 +63,7 @@
         </record>
 
 <!-- Phone calls by user and section Search View -->
-	
+
 	<record id="view_report_crm_phonecall_filter" model="ir.ui.view">
             <field name="name">crm.phonecall.report.select</field>
             <field name="model">crm.phonecall.report</field>
@@ -118,8 +118,39 @@
 	            			<filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
                			</field>
                    </group>
+
+                   <group  expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="User" name="User" icon="terp-sale"
+                            domain="[]" context="{'group_by':'user_id'}" />
+
+                        <filter string="Company" icon="terp-sale"
+                            domain="[]"
+                            context="{'group_by':'company_id'}" />
+
+                        <filter string="Section" icon="terp-sale"
+                            domain="[]"
+                            context="{'group_by':'section_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="State" icon="terp-sale"
+                            domain="[]" context="{'group_by':'state'}" />
+
+                        <filter string="Category" icon="terp-sale"
+                            domain="[]" context="{'group_by':'categ_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="Day" icon="terp-sale"
+                            domain="[]" context="{'group_by':'day'}"/>
+
+                        <filter string="Month" icon="terp-sale"
+                            domain="[]" context="{'group_by':'month'}" />
+
+                        <filter string="Year" icon="terp-sale"
+                            domain="[]" context="{'group_by':'name'}" />
+                  </group>
+
                    <newline/>
-                   <group  expand="1" string="Extended options..." colspan="10" col="12">
+                   <group  expand="0" string="Extended options..." colspan="10" col="12">
                          <filter icon="terp-sale"
                     		string="Done"
                     		domain="[('state','=','done')]"/>
@@ -131,39 +162,8 @@
 		            	    <separator orientation="vertical"/>
 			                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
 			             </group>
-	             
                    </group>
                    <newline/>
-                   <group  expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="User" name="User" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'user_id'}" />
-
-                        <filter string="Company" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'company_id'}" />
-
-                        <filter string="Section" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'section_id'}" />
-
-                        <separator orientation="vertical" />
-                        <filter string="State" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'state'}" />
-
-                        <filter string="Category" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'categ_id'}" />
-
-                        <separator orientation="vertical" />
-                        <filter string="Day" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'day'}"/>
-
-                        <filter string="Month" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'month'}" />
-
-                        <filter string="Year" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'name'}" />
-
-                  </group>
                </search>
             </field>
         </record>

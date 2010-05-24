@@ -47,7 +47,7 @@
                          name="convert_opportunity"
                          string="Convert"
                          help="Convert to Opportunity"
-                         icon="gtk-index"   
+                         icon="gtk-index"
                          type="object"
                          attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                     <newline />
@@ -176,7 +176,7 @@
                             <field name="email_to"/>
                             <field name="description"/>
                         </tree>
-                    </field> 
+                    </field>
                     <button colspan="2" string="Send New Email"
                         name="%(action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
@@ -307,7 +307,7 @@
                         help="Show Sales Team"/>
                 </field>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="14">
+                <group expand="1" string="Group By..." colspan="14">
                     <filter string="Stage" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Source" icon="terp-crm" domain="[]" context="{'group_by':'categ_id'}"/>

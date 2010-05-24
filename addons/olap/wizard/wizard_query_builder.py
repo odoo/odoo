@@ -53,7 +53,7 @@ def get_cube(self, cr, uid, context):
         pool = pooler.get_pool(cr.dbname).get('olap.cube')
         ids = pool.search(cr, uid, [])
         res = pool.read(cr, uid, ids, ['schema_id','name'], context)
-        res=[(r['schema_id'], r['name']) for r in res]
+        res=[(r['schema_id'][0], r['name']) for r in res]
 
         return res
 
@@ -63,7 +63,7 @@ def get_details(self, cr, uid,data, context):
          """
          pool = pooler.get_pool(cr.dbname).get('olap.cube')
 
-         search_id=data['form']['cube_schema'][0]
+         search_id=data['form']['cube_schema']
 
          ids=pool.search(cr,uid,[('schema_id','=',search_id)])
 
@@ -162,7 +162,7 @@ def _execute_mdx(self, cr, uid, data, context):
     log=Log()
 
     pool = pooler.get_pool(cr.dbname).get('olap.schema')
-    ids = pool.search(cr, uid, [('database_id','=',data['form']['cube_schema'][0])])
+    ids = pool.search(cr, uid, [('database_id','=',data['form']['cube_schema'])])
     res1 = pool.read(cr, uid, ids,['name'], context)
 
     """

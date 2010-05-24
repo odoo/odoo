@@ -95,6 +95,20 @@
 	                        		domain="[('project_id','=',False"/>
 	                    </field>
                     </group>
+                    <group expand="1" string="Group By..." colspan="10" col="11">
+                        <filter string="User" name="User" icon="terp-project" context="{'group_by':'user_id'}" />
+                        <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}"/>
+                        <filter string="Partner" icon="terp-project" context="{'group_by':'partner_id'}" />
+                        <filter string="Task" icon="terp-project" context="{'group_by':'name'}" />
+                        <separator orientation="vertical"/>
+                        <filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
+                        <filter string="Company" icon="terp-project" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
+                        <filter string="Stage" icon="terp-project" context="{'group_by':'type'}" />
+                        <separator orientation="vertical"/>
+                        <filter string="Day" icon="terp-project" context="{'group_by':'day'}"/>
+                        <filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
+                        <filter string="Year" icon="terp-project" context="{'group_by':'year'}"/>
+                    </group>
                     <newline/>
 	                <group expand="0" string="Extended options..." colspan="10" col="12">
                       	<filter string="Done"
@@ -113,21 +127,6 @@
 	                    <newline/>
 	                    <field name="date_start"/>
 	                    <field name="date_end"/>
-                    </group>
-                    <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="11">
-                        <filter string="User" name="User" icon="terp-project" context="{'group_by':'user_id'}" />
-                        <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}"/>
-                        <filter string="Partner" icon="terp-project" context="{'group_by':'partner_id'}" />
-                        <filter string="Task" icon="terp-project" context="{'group_by':'name'}" />
-                        <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
-                        <filter string="Company" icon="terp-project" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
-                        <filter string="Stage" icon="terp-project" context="{'group_by':'type'}" />
-                        <separator orientation="vertical"/>
-                        <filter string="Day" icon="terp-project" context="{'group_by':'day'}"/>
-                        <filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
-                        <filter string="Year" icon="terp-project" context="{'group_by':'year'}"/>
                     </group>
                 </search>
             </field>
