@@ -470,7 +470,8 @@ class stock_picking(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'stock.picking')
+            seq_obj_name =  'stock.picking.' + vals['type']
+            vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         type_list = {
             'out':_('Packing List'),
             'in':_('Reception'),
