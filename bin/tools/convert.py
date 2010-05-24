@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,11 +26,9 @@ import os.path
 import pickle
 import re
 import sys
-import time
 
 from datetime import datetime
 from lxml import etree
-
 import ir
 import misc
 import netsvc
@@ -79,6 +77,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                 return f_val
             a_eval = node.get('eval','')
             if a_eval:
+                import time
                 idref2 = idref.copy()
                 idref2['time'] = time
                 idref2['DateTime'] = datetime
@@ -253,6 +252,14 @@ form: module.record_id""" % (xml_id,)
             self.pool.get(d_model).unlink(cr, self.uid, ids)
             self.pool.get('ir.model.data')._unlink(cr, self.uid, d_model, ids)
 
+    def _remove_ir_values(self, cr, name, value, model):
+        ir_value_ids = self.pool.get('ir.values').search(cr, self.uid, [('name','=',name),('value','=',value),('model','=',model)])
+        if ir_value_ids:
+            self.pool.get('ir.values').unlink(cr, self.uid, ir_value_ids)
+            self.pool.get('ir.model.data')._unlink(cr, self.uid, 'ir.values', ir_value_ids)
+
+        return True
+
     def _tag_report(self, cr, rec, data_node=None):
         res = {}
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
@@ -262,16 +269,17 @@ form: module.record_id""" % (xml_id,)
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
-            res['auto'] = eval(rec.get('auto'))
+            res['auto'] = eval(rec.get('auto','False'))
         if rec.get('sxw'):
             sxw_content = misc.file_open(rec.get('sxw')).read()
             res['report_sxw_content'] = sxw_content
         if rec.get('header'):
-            res['header'] = eval(rec.get('header'))
+            res['header'] = eval(rec.get('header','False'))
         if rec.get('report_type'):
             res['report_type'] = rec.get('report_type')
 
-        res['multi'] = rec.get('multi') and eval(rec.get('multi'))
+        res['multi'] = rec.get('multi') and eval(rec.get('multi','False'))
+
         xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
 
@@ -291,12 +299,16 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
-        if not rec.get('menu') or eval(rec.get('menu','')):
+        if not rec.get('menu') or eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
             keys = [('action',keyword),('res_model',res['model'])]
             value = 'ir.actions.report.xml,'+str(id)
             replace = rec.get('replace', True)
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
+        elif self.mode=='update' and eval(rec.get('menu','False'))==False:
+            # Special check for report having attribute menu=False on update
+            value = 'ir.actions.report.xml,'+str(id)
+            self._remove_ir_values(cr, res['name'], value, res['model'])
         return False
 
     def _tag_function(self, cr, rec, data_node=None):
@@ -313,7 +325,7 @@ form: module.record_id""" % (xml_id,)
         name = rec.get("name",'').encode('utf8')
         xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
-        multi = rec.get('multi','') and eval(rec.get('multi',''))
+        multi = rec.get('multi','') and eval(rec.get('multi','False'))
         res = {'name': string, 'wiz_name': name, 'multi': multi, 'model': model}
 
         if rec.get('groups'):
@@ -332,12 +344,16 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         # ir_set
-        if (not rec.get('menu') or eval(rec.get('menu',''))) and id:
+        if (not rec.get('menu') or eval(rec.get('menu','False'))) and id:
             keyword = str(rec.get('keyword','') or 'client_action_multi')
             keys = [('action',keyword),('res_model',model)]
             value = 'ir.actions.wizard,'+str(id)
             replace = rec.get("replace",'') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
+        elif self.mode=='update' and (rec.get('menu') and eval(rec.get('menu','False'))==False):
+            # Special check for wizard having attribute menu=False on update
+            value = 'ir.actions.wizard,'+str(id)
+            self._remove_ir_values(cr, string, value, model)
 
     def _tag_url(self, cr, rec, data_node=None):
         url = rec.get("string",'').encode('utf8')
@@ -351,12 +367,16 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         # ir_set
-        if (not rec.get('menu') or eval(rec.get('menu',''))) and id:
+        if (not rec.get('menu') or eval(rec.get('menu','False'))) and id:
             keyword = str(rec.get('keyword','') or 'client_action_multi')
             keys = [('action',keyword)]
             value = 'ir.actions.url,'+str(id)
             replace = rec.get("replace",'') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, url, ["ir.actions.url"], value, replace=replace, isobject=True, xml_id=xml_id)
+        elif self.mode=='update' and (rec.get('menu') and eval(rec.get('menu','False'))==False):
+            # Special check for URL having attribute menu=False on update
+            value = 'ir.actions.url,'+str(id)
+            self._remove_ir_values(cr, url, value, "ir.actions.url")
 
     def _tag_act_window(self, cr, rec, data_node=None):
         name = rec.get('name','').encode('utf-8')
@@ -369,21 +389,22 @@ form: module.record_id""" % (xml_id,)
         domain = rec.get('domain','').encode('utf-8') or '{}'
         context = rec.get('context','').encode('utf-8') or '{}'
         res_model = rec.get('res_model','').encode('utf-8')
-        src_model = rec.get('src_model','').encode('utf-8')        
+        src_model = rec.get('src_model','').encode('utf-8')
         view_type = rec.get('view_type','').encode('utf-8') or 'form'
         view_mode = rec.get('view_mode','').encode('utf-8') or 'tree,form'
-        
+
         usage = rec.get('usage','').encode('utf-8')
         limit = rec.get('limit','').encode('utf-8')
         auto_refresh = rec.get('auto_refresh','').encode('utf-8')
         uid = self.uid
         # def ref() added because , if context has ref('id') eval wil use this ref
 
-        active_id=str("active_id") # for further reference in client/bin/tools/__init__.py
+        active_id = str("active_id") # for further reference in client/bin/tools/__init__.py
 
         def ref(str_id):
             return self.id_get(cr, None, str_id)
-        context=eval(context)
+        context = eval(context)
+#        domain = eval(domain) # XXX need to test this line -> uid, active_id, active_ids, ...
 
         res = {
             'name': name,
@@ -720,7 +741,12 @@ form: module.record_id""" % (xml_id,)
                 if f_ref=="null":
                     f_val = False
                 else:
-                    f_val = self.id_get(cr, f_model, f_ref)
+                    if f_name in model._columns \
+                              and model._columns[f_name]._type == 'reference':
+                        val = self.model_id_get(cr, f_model, f_ref)
+                        f_val = val[0] + ',' + str(val[1])
+                    else:
+                        f_val = self.id_get(cr, f_model, f_ref)
             else:
                 f_val = _eval_xml(self,field, self.pool, cr, self.uid, self.idref)
                 if model._columns.has_key(f_name):
@@ -738,13 +764,17 @@ form: module.record_id""" % (xml_id,)
     def id_get(self, cr, model, id_str):
         if id_str in self.idref:
             return self.idref[id_str]
+        return self.model_id_get(cr, model, id_str)[1]
+
+    def model_id_get(self, cr, model, id_str):
+        model_data_obj = self.pool.get('ir.model.data')
         mod = self.module
         if '.' in id_str:
             mod,id_str = id_str.split('.')
-        result = self.pool.get('ir.model.data')._get_id(cr, self.uid, mod, id_str)
-        res = self.pool.get('ir.model.data').read(cr, self.uid, [result], ['res_id'])
+        result = model_data_obj._get_id(cr, self.uid, mod, id_str)
+        res = model_data_obj.read(cr, self.uid, [result], ['model', 'res_id'])
         if res and res[0] and res[0]['res_id']:
-            return int(res[0]['res_id'])
+            return res[0]['model'], int(res[0]['res_id'])
         return False
 
     def parse(self, de):

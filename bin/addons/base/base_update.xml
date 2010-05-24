@@ -87,6 +87,7 @@
                             <label colspan="4" string="Please note that you will have to logout and relog if you change your password."/>
                             <field name="context_lang" completion="1" readonly="0"/>
                             <field name="context_tz" completion="1" readonly="0" colspan="4"/>
+                            <field name="view" colspan="4" readonly="0" />
                             <newline/>
                             <field colspan="4" name="signature" readonly="0"/>
                           </page>
@@ -108,16 +109,18 @@
                     <notebook colspan="4">
                         <page string="User">
                             <field name="address_id" select="1"/>
+                            <field name="user_email" widget="email"/>
                             <field name="company_id" required="1"/>
                             <field name="action_id" required="True"/>
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field name="context_lang"/>
                             <field name="context_tz"/>
+                            <field name="view" readonly="0" />
                             <group colspan="2" col="2">
                                 <separator string="Signature" colspan="2"/>
                                 <field colspan="2" name="signature" nolabel="1"/>
                             </group>
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" expand="1">
                                 <separator string="Access Rights (groups)" colspan="2"/>
                                 <field colspan="2" nolabel="1" name="groups_id"/>
                             </group>
@@ -284,14 +287,14 @@
                 </form>
 				<xpath expr="//label[@string='description']"
 	                 position="attributes">
-	            <attribute name="string">Choose between the simplified interface and the extended one. If you are testing OpenERP or using it for the first time, We suggest you use the simplified interface. It has less options and fields but is easier to understand. You will be able to switch to the extended interface later.</attribute>
+	            <attribute name="string">Choose between the simplified interface and the extended one. We suggest you use the simplified interface. It has less options and fields but is easier to understand. You will be able to switch to the extended interface later.</attribute>
 	          </xpath>
 	          <xpath expr='//separator[@string="title"]' position='attributes'>
 	          	  <attribute name='string'>Choose Your Interface</attribute>
 	          </xpath>
 	          <xpath expr='//separator[@string="vsep"]' position='attributes'>
 	          	  <attribute name='string'></attribute>
-	          	  <attribute name='rowspan'>14</attribute>
+	          	  <attribute name='rowspan'>12</attribute>
 		      </xpath>
                <group string="res_config_contents" position="replace">
 	              	<group colspan="4">

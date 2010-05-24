@@ -49,6 +49,7 @@ import string
 import sys
 import time
 import traceback
+import datetime
 import types
 
 import fields
@@ -58,6 +59,7 @@ from tools.translate import _
 
 import copy
 import sys
+import operator
 
 try:
     from lxml import etree
@@ -85,7 +87,6 @@ def last_day_of_current_month():
 
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
-
 
 class except_orm(Exception):
     def __init__(self, name, value):
@@ -276,7 +277,7 @@ class browse_record(object):
                     else:
                         new_data[n] = data[n]
                 self._data[data['id']].update(new_data)
-        
+
         if not name in self._data[self._id]:
             #how did this happen?
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
@@ -398,8 +399,17 @@ class orm_template(object):
     _inherits = {}
     _table = None
     _invalids = set()
+    _log_create = False
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
+    def log(self, cr, uid, id, message, secondary=False, context=None):
+        return self.pool.get('res.log').create(cr, uid, {
+            'name': message,
+            'res_model': self._name,
+            'secondary': secondary,
+            'res_id': id},
+                context=context
+        )
 
     def view_init(self, cr , uid , fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
@@ -438,7 +448,7 @@ class orm_template(object):
                 'name': k,
                 'field_description': f.string.replace("'", " "),
                 'ttype': f._type,
-                'relation': f._obj or 'NULL',
+                'relation': f._obj or '',
                 'view_load': (f.view_load and 1) or 0,
                 'select_level': tools.ustr(f.select or 0),
                 'readonly':(f.readonly and 1) or 0,
@@ -535,6 +545,8 @@ class orm_template(object):
             return browse_null()
 
     def __export_row(self, cr, uid, row, fields, context=None):
+        if context is None:
+            context = {}
 
         def check_type(field_type):
             if field_type == 'float':
@@ -588,9 +600,9 @@ class orm_template(object):
                                 cols = selection_field(self._inherits)
                             if cols and cols._type == 'selection':
                                 sel_list = cols.selection
-                                if type(sel_list) == type([]):
-                                    r = [x[1] for x in sel_list if r==x[0]][0]
-
+                                if r and type(sel_list) == type([]):
+                                    r = [x[1] for x in sel_list if r==x[0]]
+                                    r = r and r[0] or False
                     if not r:
                         if f[i] in self._columns:
                             r = check_type(self._columns[f[i]]._type)
@@ -617,7 +629,7 @@ class orm_template(object):
                                     for rr in r :
                                         if isinstance(rr.name, browse_record):
                                             rr = rr.name
-                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id])
+                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
                                         rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
                                         dt += tools.ustr(rr_name or '') + ','
                                     data[fpos] = dt[:-1]
@@ -630,7 +642,7 @@ class orm_template(object):
                     i += 1
                 if i == len(f):
                     if isinstance(r, browse_record):
-                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id])
+                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id], context=context)
                         r = r and r[0] and r[0][1] or ''
                     data[fpos] = tools.ustr(r or '')
         return [data] + lines
@@ -786,12 +798,12 @@ class orm_template(object):
                                 module, xml_id = line[i].rsplit('.', 1)
                             else:
                                 module, xml_id = current_module, line[i]
-                            id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
-
-                            res_res_id = ir_model_data_obj.read(cr, uid, [id],
-                                                ['res_id'])
-                            if res_res_id:
-                                res_id = res_res_id[0]['res_id']
+                            record_id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
+                            ir_model_data = ir_model_data_obj.read(cr, uid, [record_id], ['res_id'])
+                            if ir_model_data:
+                                res_id = ir_model_data[0]['res_id']
+                            else:
+                                raise ValueError('No references to %s.%s' % (module, xml_id))
                     row[field[-1][:-3]] = res_id or False
                     continue
                 if (len(field) == len(prefix)+1) and \
@@ -985,7 +997,8 @@ class orm_template(object):
                     msg = _('Insertion Failed! ' + e[1])
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
                 #Raising Uncaught exception
-                raise
+                return (-1, res, 'Line ' + str(counter) +' : ' + str(e), '' )
+            
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
@@ -994,6 +1007,8 @@ class orm_template(object):
                 data = pickle.load(file(config.get('import_partial')))
                 data[filename] = initial_size - len(datas) + original_value
                 pickle.dump(data, file(config.get('import_partial'),'wb'))
+                if context.get('defer_parent_store_computation'):
+                    self._parent_store_compute(cr)
                 cr.commit()
 
             #except Exception, e:
@@ -1007,6 +1022,8 @@ class orm_template(object):
         #
         # TODO: Send a request with the result and multi-thread !
         #
+        if context.get('defer_parent_store_computation'):
+            self._parent_store_compute(cr)
         return (done, 0, 0, 0)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
@@ -1023,7 +1040,14 @@ class orm_template(object):
         for constraint in self._constraints:
             fun, msg, fields = constraint
             if not fun(self, cr, uid, ids):
-                translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+                # Check presence of __call__ directly instead of using
+                # callable() because it will be deprecated as of Python 3.0
+                if hasattr(msg, '__call__'):
+                    txt_msg, params = msg(self, cr, uid, ids)
+                    tmp_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=txt_msg) or txt_msg
+                    translated_msg = tmp_msg % params
+                else:
+                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
                 error_msgs.append(
                         _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
@@ -1092,8 +1116,7 @@ class orm_template(object):
                     if getattr(self._columns[f], arg, None):
                         res[f][arg] = getattr(self._columns[f], arg)
 
-                #TODO: optimize
-                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US', self._columns[f].string)
                 if res_trans:
                     res[f]['string'] = res_trans
                 help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
@@ -1708,7 +1731,8 @@ class orm_template(object):
         for lang in langs:
             for field in vals:
                 if field in self._columns:
-                    self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field])
+                    src = self._columns[field].string
+                    self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field], src)
         for table in self._inherits:
             cols = intersect(self._inherit_fields.keys(), vals)
             if cols:
@@ -1824,6 +1848,12 @@ class orm_memory(orm_template):
         for field in upd_todo:
             self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
         self._validate(cr, user, [id_new], context)
+        if self._log_create and not (context and context.get('no_store_function', False)):
+            message = self._description + \
+                " '" + \
+                self.name_get(cr, user, [id_new], context=context)[0][1] + \
+                "' "+ _("created.")
+            self.log(cr, user, id_new, message, True, context=context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
         return id_new
@@ -1910,7 +1940,6 @@ class orm_memory(orm_template):
             e.parse(cr, user, self, context)
             res=e.__dict__['_expression__exp']
         return res or []
-
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -2116,6 +2145,8 @@ class orm(orm_template):
         return (tables, where_clause)
 
     def _parent_store_compute(self, cr):
+        if not self._parent_store:
+            return
         logger = netsvc.Logger()
         logger.notifyChannel('orm', netsvc.LOG_INFO, 'Computing parent left and right for table %s...' % (self._table, ))
         def browse_rec(root, pos=0):
@@ -2204,8 +2235,8 @@ class orm(orm_template):
                         logger.notifyChannel('orm', netsvc.LOG_ERROR, 'create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)' % (self._table, ))
                     if 'parent_right' not in self._columns:
                         logger.notifyChannel('orm', netsvc.LOG_ERROR, 'create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)' % (self._table, ))
-                    if self._columns[self._parent_name].ondelete<>'cascade':
-                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "the columns %s on object must be set as ondelete='cascasde'" % (self._name, self._parent_name))
+                    if self._columns[self._parent_name].ondelete != 'cascade':
+                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "The column %s on object %s must be set as ondelete='cascade'" % (self._parent_name, self._name))
                     cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
                     cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
                     cr.commit()
@@ -2451,6 +2482,8 @@ class orm(orm_template):
             cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (self._table,))
             create = not bool(cr.fetchone())
 
+        cr.commit()     # start a new transaction
+
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
             cr.execute("SELECT conname FROM pg_constraint where conname=%s", (conname,))
@@ -2460,6 +2493,7 @@ class orm(orm_template):
                     cr.commit()
                 except:
                     logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\nALTER table %s ADD CONSTRAINT %s_%s %s' % (con, self._table, self._table, self._table, key, con,))
+                    cr.rollback()
 
         if create:
             if hasattr(self, "_sql"):
@@ -2470,6 +2504,7 @@ class orm(orm_template):
                         cr.commit()
         if store_compute:
             self._parent_store_compute(cr)
+            cr.commit()
         return todo_end
 
     def __init__(self, cr):
@@ -2625,8 +2660,13 @@ class orm(orm_template):
                     for i in range(len(field_value)):
                         field_value2.append({})
                         for field2 in field_value[i]:
-                            if obj._columns[field2]._type in ('many2one', 'one2one'):
+                            if field2 in obj._columns.keys() and obj._columns[field2]._type in ('many2one', 'one2one'):
                                 obj2 = self.pool.get(obj._columns[field2]._obj)
+                                if not obj2.search(cr, uid,
+                                        [('id', '=', field_value[i][field2])]):
+                                    continue
+                            elif field2 in obj._inherit_fields.keys() and obj._inherit_fields[field2][2]._type in ('many2one', 'one2one'):
+                                obj2 = self.pool.get(obj._inherit_fields[field2][2]._obj)
                                 if not obj2.search(cr, uid,
                                         [('id', '=', field_value[i][field2])]):
                                     continue
@@ -3086,6 +3126,24 @@ class orm(orm_template):
 
         self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
 
+        # No direct update of parent_left/right
+        vals.pop('parent_left', None)
+        vals.pop('parent_right', None)
+
+        parents_changed = []
+        if self._parent_store and (self._parent_name in vals):
+            # The parent_left/right computation may take up to
+            # 5 seconds. No need to recompute the values if the
+            # parent is the same. Get the current value of the parent
+            base_query = 'SELECT id FROM %s WHERE id IN %%s AND %s' % \
+                            (self._table, self._parent_name)
+            params = (tuple(ids),)
+            parent_val = vals[self._parent_name]
+            if parent_val:
+                cr.execute(base_query + " != %s", params + (parent_val,))
+            else:
+                cr.execute(base_query + " IS NULL", params)
+            parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
         upd0 = []
         upd1 = []
@@ -3175,41 +3233,48 @@ class orm(orm_template):
             self.pool.get(table).write(cr, user, nids, v, context)
 
         self._validate(cr, user, ids, context)
-# TODO: use _order to set dest at the right position and not first node of parent
-        if self._parent_store and (self._parent_name in vals):
+
+        # TODO: use _order to set dest at the right position and not first node of parent
+        # We can't defer parent_store computation because the stored function
+        # fields that are computer may refer (directly or indirectly) to
+        # parent_left/right (via a child_of domain)
+        if parents_changed:
             if self.pool._init:
                 self.pool._init_parent[self._name]=True
             else:
-                for id in ids:
-                    # Find Position of the element
-                    if vals[self._parent_name]:
-                        cr.execute('select parent_left,parent_right,id from '+self._table+' where '+self._parent_name+'=%s order by '+(self._parent_order or self._order), (vals[self._parent_name],))
-                    else:
-                        cr.execute('select parent_left,parent_right,id from '+self._table+' where '+self._parent_name+' is null order by '+(self._parent_order or self._order))
-                    result_p = cr.fetchall()
-                    position = None
-                    for (pleft,pright,pid) in result_p:
-                        if pid == id:
-                            break
-                        position = pright+1
+                order = self._parent_order or self._order
+                parent_val = vals[self._parent_name]
+                if parent_val:
+                    clause, params = '%s=%%s' % (self._parent_name,), (parent_val,)
+                else:
+                    clause, params = '%s IS NULL' % (self._parent_name,), ()
+                cr.execute('SELECT parent_right, id FROM %s WHERE %s ORDER BY %s' % (self._table, clause, order), params)
+                parents = cr.fetchall()
 
-                    # It's the first node of the parent: position = parent_left+1
-                    if not position:
-                        if not vals[self._parent_name]:
-                            position = 1
-                        else:
-                            cr.execute('select parent_left from '+self._table+' where id=%s', (vals[self._parent_name],))
-                            position = cr.fetchone()[0]+1
-
-                    # We have the new position !
-                    cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (id,))
-                    pleft,pright = cr.fetchone()
+                for id in parents_changed:
+                    cr.execute('SELECT parent_left, parent_right FROM %s WHERE id=%%s' % (self._table,), (id,))
+                    pleft, pright = cr.fetchone()
                     distance = pright - pleft + 1
 
-                    if position>pleft and position<=pright:
+                    # Find Position of the element
+                    position = None
+                    for (parent_pright, parent_id) in parents:
+                        if parent_id == id:
+                            break
+                        position = parent_pright+1
+
+                    # It's the first node of the parent
+                    if not position:
+                        if not parent_val:
+                            position = 1
+                        else:
+                            cr.execute('select parent_left from '+self._table+' where id=%s', (parent_val,))
+                            position = cr.fetchone()[0]+1
+
+                    if pleft < position <= pright:
                         raise except_orm(_('UserError'), _('Recursivity Detected.'))
 
-                    if pleft<position:
+                    if pleft < position:
                         cr.execute('update '+self._table+' set parent_left=parent_left+%s where parent_left>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_left=parent_left+%s, parent_right=parent_right+%s where parent_left>=%s and parent_left<%s', (position-pleft,position-pleft, pleft, pright))
@@ -3390,7 +3455,7 @@ class orm(orm_template):
         self.check_access_rule(cr, user, [id_new], 'create', context=context)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
-        if self._parent_store:
+        if self._parent_store and not context.get('defer_parent_store_computation'):
             if self.pool._init:
                 self.pool._init_parent[self._name]=True
             else:
@@ -3434,6 +3499,12 @@ class orm(orm_template):
                     self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
                     done.append((object, ids, fields2))
 
+        if self._log_create and not (context and context.get('no_store_function', False)):
+            message = self._description + \
+                " '" + \
+                self.name_get(cr, user, [id_new], context=context)[0][1] + \
+                "' "+ _("created.")
+            self.log(cr, user, id_new, message, True, context=context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
         return id_new
@@ -3612,8 +3683,9 @@ class orm(orm_template):
             * '&' (default), '|', '!'
 
         """
-        if not context:
+        if context is None:
             context = {}
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
         dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
@@ -3723,9 +3795,9 @@ class orm(orm_template):
         :return: dictionary containing all the field values
         """
 
-        if not context:
+        if context is None:
             context = {}
-        if not default:
+        if default is None:
             default = {}
         if 'state' not in default:
             if 'state' in self._defaults:
@@ -3734,7 +3806,11 @@ class orm(orm_template):
                 else:
                     default['state'] = self._defaults['state']
 
-        data = self.read(cr, uid, [id], context=context)[0]
+        context_wo_lang = context
+        if 'lang' in context:
+            del context_wo_lang['lang']
+        data = self.read(cr, uid, [id], context=context_wo_lang)[0]
+
         fields = self.fields_get(cr, uid, context=context)
         trans_data=[]
         for f in fields:
@@ -3769,17 +3845,14 @@ class orm(orm_template):
 
         trans_obj = self.pool.get('ir.translation')
         #TODO: optimize translations
-        trans_name=''
         for f in fields:
-            trans_flag=True
+            trans_name = ''
             if f in self._columns and self._columns[f].translate:
-                trans_name=self._name+","+f
+                trans_name = self._name+","+f
             elif f in self._inherit_fields and self._inherit_fields[f][2].translate:
-                trans_name=self._inherit_fields[f][0]+","+f
-            else:
-                trans_flag=False
+                trans_name = self._inherit_fields[f][0] + "," + f
 
-            if trans_flag:
+            if trans_name:
                 trans_ids = trans_obj.search(cr, uid, [
                         ('name', '=', trans_name),
                         ('res_id','=',data['id'])

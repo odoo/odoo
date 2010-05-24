@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,21 +26,6 @@ import tools
 import ir
 import pooler
 from tools.translate import _
-
-class res_partner_function(osv.osv):
-    _name = 'res.partner.function'
-    _description = 'Function of the contact'
-    _columns = {
-        'name': fields.char('Function Name', size=64, required=True),
-        'code': fields.char('Code', size=8, required=True),
-        'ref':fields.char('Notes', size=32,),
-    }
-    _order = 'name'
-    _sql_constraints = [
-        ('code_uniq', 'unique (code)', 'The Code of the Partner Function must be unique !')
-    ]
-res_partner_function()
-
 
 class res_payterm(osv.osv):
     _description = 'Payment term'
@@ -149,12 +134,12 @@ class res_partner(osv.osv):
         'active': fields.boolean('Active'),
         'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
-        'city': fields.related('address', 'city', type='char', string='City'), 
-        'phone': fields.related('address', 'phone', type='char', string='Phone'), 
+        'city': fields.related('address', 'city', type='char', string='City'),
+        'phone': fields.related('address', 'phone', type='char', string='Phone'),
         'country': fields.related('address', 'country_id', type='many2one', relation='res.country', string='Country'),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
         'email': fields.related('address', 'email', type='char', size=240, string='E-mail'),
-        'company_id': fields.many2one('res.company', 'Company', select=1), 
+        'company_id': fields.many2one('res.company', 'Company', select=1),
     }
 
     def _default_category(self, cr, uid, context={}):
@@ -291,7 +276,7 @@ class res_partner_address(osv.osv):
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
-        'function': fields.many2one('res.partner.function', 'Function'),
+        'function': fields.char('Function', size=64),
         'title': fields.selection(_contact_title_get, 'Title', size=32),
         'name': fields.char('Contact Name', size=64, select=1),
         'street': fields.char('Street', size=128),
@@ -469,7 +454,7 @@ class res_partner_category(osv.osv):
     _columns = {
         'partner_ids': fields.many2many('res.partner', 'res_partner_category_rel', 'category_id', 'partner_id', 'Partners'),
     }
-   
+
 res_partner_category()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

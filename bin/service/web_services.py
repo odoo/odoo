@@ -283,8 +283,8 @@ class db(netsvc.ExportService):
         ## Not True: in fact, check if connection to database is possible. The database may exists
         return bool(sql_db.db_connect(db_name))
 
-    def exp_list(self):
-        if not tools.config['list_db']:
+    def exp_list(self, document=False):
+        if not tools.config['list_db'] and not document:
             raise Exception('AccessDenied')
 
         db = sql_db.db_connect('template1')
