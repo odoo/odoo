@@ -505,7 +505,7 @@ class pos_order(osv.osv):
                     if line.qty < 0:
                         location_id, stock_dest_id = stock_dest_id, location_id
 
-                        self.pool.get('stock.move').create(cr, uid, {
+                    self.pool.get('stock.move').create(cr, uid, {
                             'name': 'Stock move (POS %d)' % (order.id, ),
                             'product_uom': line.product_id.uom_id.id,
                             'product_uos': line.product_id.uom_id.id,
