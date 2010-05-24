@@ -1086,17 +1086,18 @@ class pos_order_line(osv.osv):
             raise osv.except_osv(_('No Pricelist !'),
                 _('You have to select a pricelist in the sale form !\n' \
                 'Please set one before choosing a product.'))
-        p_obj = self.pool.get('product.product').browse(cr,uid,product_id).list_price
+        p_obj = self.pool.get('product.product').browse(cr,uid,[product_id])[0]
+        uom_id=p_obj.uom_po_id.id 
         price = self.pool.get('product.pricelist').price_get(cr, uid,
-            [pricelist], product_id, qty or 1.0, partner_id)[pricelist]
-        # Todo need to check     
-#        if price is False:
-#            raise osv.except_osv(_('No valid pricelist line found !'),
-#                _("Couldn't find a pricelist line matching this product" \
-#                " and quantity.\nYou have to change either the product," \
-#                " the quantity or the pricelist."))
-        return price or p_obj
-
+            [pricelist], product_id, qty or 1.0, partner_id,{'uom': uom_id})[pricelist]
+          
+        if price is False:
+            raise osv.except_osv(_('No valid pricelist line found !'),
+                _("Couldn't find a pricelist line matching this product" \
+                " and quantity.\nYou have to change either the product," \
+                " the quantity or the pricelist."))
+        return price 
+    
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
         price = self.price_by_product(cr, uid, ids, pricelist, product_id, qty, partner_id)
         self.write(cr,uid,ids,{'price_unit':price})
