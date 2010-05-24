@@ -249,8 +249,7 @@
             </field>
         </record>
 
-<!-- Fund Raising Search View -->
-
+        <!-- Fund Raising Search View -->
         <record id="view_crm_case_fund_filter" model="ir.ui.view">
                 <field name="name">CRM - Funds Search</field>
                 <field name="model">crm.fundraising</field>
@@ -268,12 +267,6 @@
                                 string="Pending"
                                 domain="[('state','=','pending')]"
                                 help="Pending Funds" />
-                            <separator orientation="vertical" />
-                            <filter icon="terp-partner" string="My Funds"
-                                default="1" domain="[('user_id','=',uid)]"
-                                separator="1"
-                                help="Funds Related to Current User"
-                                />
                             <separator orientation="vertical" />
                             <field name="state" select="1" />
                             <field name="name" select='1'
@@ -306,6 +299,5 @@
                     </search>
                 </field>
             </record>
-
     </data>
 </openerp>

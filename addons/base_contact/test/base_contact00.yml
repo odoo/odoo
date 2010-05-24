@@ -23,7 +23,7 @@
         first_name: Laura
         job_ids:
             - email: lwilliams@mydomain.com
-              function_id: base_contact.res_partner_function_privateaddress0
+              function: PA
               phone: (+32).10.45.18.77
               sequence_contact: 1
               state: current
@@ -44,7 +44,7 @@
               zip: '2324324'
               job_ids:
                 - address_id: res_partner_address_1
-                  function_id: base.function_director
+                  function: CEO
                   contact_id: res_partner_contact_williams0
                   sequence_partner: 2
                   state: current
@@ -66,10 +66,10 @@
         first_name: Nicolas
         job_ids:
           - address_id: base.main_address
-            function_id: base.function_it
+            function: CTO
             state: current
           - address_id: base.res_partner_address_3000
-            function_id: base.function_director
+            function: CEO
             state: current
         lang_id: res_lang_french0
         mobile: (+32).23.44.32.12
@@ -84,10 +84,10 @@
     first_name: Christina
     job_ids:
       - address_id: base.res_partner_address_1
-        function_id: base.function_director
+        function: CEO
         state: past
       - address_id: base.res_partner_address_1
-        function_id: base.function_it
+        function: CTO
         state: current
     lang_id: base_contact.res_lang_french0
     mobile: (+32).10.45.18.77

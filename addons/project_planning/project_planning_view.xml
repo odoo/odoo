@@ -111,8 +111,12 @@
                                                         <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute"/>
                                                         <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert"/>
                                                         <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
-                                                        <button groups="base.group_extended" name="%(project.wizard_delegate_task)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
-                                                        <button name="%(project.wizard_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
+                                                        <button groups="base.group_extended" name="%(project.action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
+<<<<<<< TREE
+                                                        <button name="do_close" states="pending,open" string="Done" type="object" icon="gtk-jump-to"/>
+=======
+                                                        <button name="%(project.action_project_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
+>>>>>>> MERGE-SOURCE
                                                         <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
 
                                                     </group>
@@ -162,12 +166,11 @@
             <field name="arch" type="xml">
                 <search string="Planning by Account">
                     <group col="8" colspan="4">
-                        <filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Plannings"/>
                         <filter icon="terp-project" string="Current Plannings" domain="[('date_from','&lt;=',time.strftime('%%Y-%%m-%%d')),('date_to','&gt;=',time.strftime('%%Y-%%m-%%d'))]" help="Current Plannings"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="user_id" select="1"/>
+                        <field name="user_id" widget="selection" select="1"/>
                         <field name="state" select="1"/>
                     </group>
                 </search>
@@ -215,6 +218,7 @@
             <field name="res_model">report_account_analytic.planning</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="account_analytic_planning_view_search"/>
         </record>
         <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main_pm" sequence="5"/>

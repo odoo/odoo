@@ -27,7 +27,7 @@ from tools.translate import _
 
 class hr_action_reason(osv.osv):
     _name = "hr.action.reason"
-    _description = "Action reason"
+    _description = "Action Reason"
     _columns = {
         'name' : fields.char('Reason', size=64, required=True, help='Specifies the reason for Signing In/Signing Out.'),
         'action_type' : fields.selection([('sign_in', 'Sign in'), ('sign_out', 'Sign out')], "Action's type"),

@@ -239,7 +239,7 @@ class crossovered_budget_lines(osv.osv):
                 res[line.id]=0.00
         return res
     _name="crossovered.budget.lines"
-    _description = "Budget Lines"
+    _description = "Budget Line"
     _columns = {
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account',required=True),

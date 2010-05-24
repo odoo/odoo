@@ -119,7 +119,7 @@
                			</field>
                    </group>
                    <newline/>
-                   <group  expand="1" string="Extended options..." colspan="10" col="12">
+                   <group  expand="1" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
                          <filter icon="terp-sale"
                     		string="Done"
                     		domain="[('state','=','done')]"/>
@@ -180,9 +180,9 @@
             <tree string="Opportunities">
 				<field name="name" invisible="1"/>
 				<field name="month" invisible="1"/>
-				<field name="section_id" invisible="1"/>
+				<field name="section_id" invisible="1" groups="base.group_extended"/>
 				<field name="user_id" invisible="1"/>
-    			<field name="company_id" invisible="1"/>
+    			<field name="company_id" invisible="1" groups="base.group_extended"/>
 				<field name="partner_id" invisible="1"/>
 				<field name="day" invisible="1"/>
 				<field name="nbr" string="#Opportunities" sum="#Opportunities"/>

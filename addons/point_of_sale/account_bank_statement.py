@@ -49,7 +49,7 @@ class singer_statement(osv.osv):
     """ Singer Statements """
     
     _name = 'singer.statement'
-    _description = 'Statements'
+    _description = 'Statement'
 
     def _sub_total(self, cr, uid, ids, name, arg, context=None):
        

@@ -42,7 +42,6 @@
             <field name="arch" type="xml">
                 <search string="All users files">
                 	<group col="12" colspan="4">
-                		<filter icon="terp-stock" string="My" domain="[('user','=',uid)]" help="My Files"/>
                         <separator orientation="vertical"/>
 						<filter icon="terp-stock" string="This Year" domain="[('name','=',time.localtime()[0])]" help="All Months Files"/>
 						<filter icon="terp-stock" string="This Month" domain="[('month','=',time.localtime()[1])]" help="This Months Files"/>
@@ -65,6 +64,7 @@
             <field name="res_model">report.document.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
+            <field name="context">{"search_default_user":uid}</field>
             <field name="search_view_id" ref="view_report_document_user_search"/>
         </record>
 

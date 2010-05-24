@@ -27,24 +27,20 @@
     'description': """
     This module allows Just In Time computation of procurement orders.
 
-    If you install this module, you will not have to run the procurement scheduler
-    manually anymore, or wait for it to execute.
-    Each procurement order (resulting from a sale order, for instance) will be computed 
-    when confirmed, without waiting for the procurement scheduler to run.
-    
-    Warning: this does not take into account minimum stock rules (order points), which still 
-    require to run the appropriate scheduler, or wait for it to run nightly.
-     
-    Note that the procurement computation can be resource-intensive, so you may 
-    want to be careful with this, depending on your mrp configuration and system 
-    usage.
+    If you install this module, you will not have to run the regular procurement 
+    scheduler anymore (but you still need to run the minimum order point rule 
+    scheduler, or for example let it run daily.)
+    All procurement orders will be processed immediately, which could in some
+    cases entail a small performance impact.
+
     It may also increase your stock size because products are reserved as soon
-    as possible. In that case, you can not use priorities any more.
+    as possible and the scheduler time range is not taken into account anymore. 
+    In that case, you can not use priorities any more on the different picking.
     
     
     """,
     'author': 'Tiny',
-    'depends': ['mrp', 'sale'],
+    'depends': ['mrp_procurement'],
     'update_xml': ['mrp_jit.xml'],
     'demo_xml': [],
     'installable': True,
