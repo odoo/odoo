@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <tree string="Leaves Statistics">
                 <field name="date" invisible="1"/>
-                <field name="employee_id" invisible="1"/>
-                <field name="category_id" invisible="1"/>
+                <field name="employee_id"/>
+                <field name="category_id"/>
                 <field name="user_id" invisible="1"/>
                 <field name="date_from" invisible="1"/>
                 <field name="date_to" invisible="1"/>
@@ -78,25 +78,6 @@
 	                </field>
 	            </group>
                 <newline/>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
-                    <filter icon="terp-hr"
-                    		string="Refused"
-                        name="done"
-                    		domain="[('state','=','refuse')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="date_from"/>
-                    <separator orientation="vertical"/>
-                    <field name="holiday_status_id" widget="selection"/>
-                    <newline/>
-                    <filter icon="terp-hr"
-                    		string="Cancelled"
-                    		domain="[('state','=','cancel')]"/>
-                    <separator orientation="vertical"/>
-                	<field name="date_to"/>
-                	<separator orientation="vertical"/>
-                	<field name="department_id" widget="selection"/>
-                </group>
-                <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Employee" name="Employee" domain="[('category_id', '=', False)]" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <filter string="Category" name="category" domain="[('employee_id', '=', False)]" icon="terp-hr" context="{'group_by':'category_id'}"/>
@@ -109,6 +90,25 @@
                     <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-hr" context="{'group_by':'date'}"/>
                     <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-hr"
+                            string="Refused"
+                        name="done"
+                            domain="[('state','=','refuse')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="date_from"/>
+                    <separator orientation="vertical"/>
+                    <field name="holiday_status_id" widget="selection"/>
+                    <newline/>
+                    <filter icon="terp-hr"
+                            string="Cancelled"
+                            domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="date_to"/>
+                    <separator orientation="vertical"/>
+                    <field name="department_id" widget="selection"/>
                 </group>
             </search>
         </field>
