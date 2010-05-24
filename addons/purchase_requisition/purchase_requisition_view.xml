@@ -120,13 +120,11 @@
                     <filter icon="terp-purchase" string="Current" domain="[('state','=','draft,in_progress')]" separator="1" help="Current Purchaes Requisition"/>
 					<filter icon="terp-purchase" string="Done" domain="[('state','=','done')]" separator="1" help="Current Purchaes Requisition"/>                    
                     <separator orientation="vertical"/>
-                    <field name="name" string="Requisition Reference"/>
-                    <field name="purchase_ids"/>
-                    <field name="user_id" widget="selection">
-                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Requisition "/>
-                    </field>
-                    <field name="exclusive"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="name" select="1" string="Requisition Reference"/>
+                    <field name="purchase_ids" select="1"/>
+                    <field name="user_id" select="1" widget="selection"/>
+                    <field name="exclusive" select="1" />
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="10">
@@ -148,6 +146,7 @@
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
+		<field name="context">{"search_default_user_id":uid}</field>
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
     </record>
 

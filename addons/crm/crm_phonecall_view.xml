@@ -264,9 +264,6 @@
                <field name="partner_id"/>
                <field name="user_id" widget="selection">
                    <filter icon="terp-partner"
-                       domain="[('user_id','=',uid)]" help="My Phonecalls"
-                       default="1" />
-                   <filter icon="terp-partner"
                        domain="[('user_id','=',False)]"
                        help="Unassigned Phonecalls" />
                </field>
@@ -274,7 +271,7 @@
                    select="1" widget="selection" string="Sales Team">
                    <filter icon="terp-crm"
                        domain="[('section_id','=',context.get('section_id',False))]"
-                       help="My section" />
+                       help="My Sale Team" />
                </field>
                <newline/>
                <group expand="0" string="Group By..." colspan="4">

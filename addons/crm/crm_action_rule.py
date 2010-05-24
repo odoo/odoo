@@ -34,138 +34,24 @@ from osv.orm import except_orm
 
 import crm
 
-class case(osv.osv):
-    """ Case """
-
-    _inherit = 'mailgate.thread'
-    _description = 'case'
-
-    _columns = {
-        'date_action_last': fields.datetime('Last Action', readonly=1),
-        'date_action_next': fields.datetime('Next Action', readonly=1),
-    }
-
-    def remind_partner(self, cr, uid, ids, context={}, attach=False):
-
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Remind Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        """
-        return self.remind_user(cr, uid, ids, context, attach,
-                destination=False)
-
-    def remind_user(self, cr, uid, ids, context={}, attach=False,destination=True):
-
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Remind user's IDs
-        @param context: A standard dictionary for contextual values
-
-        """
-        for case in self.browse(cr, uid, ids):
-            if not case.section_id.reply_to:
-                raise osv.except_osv(_('Error!'), ("Reply To is not specified in the sales team"))
-            if not case.email_from:
-                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
-            if case.section_id.reply_to and case.email_from:
-                src = case.email_from
-                dest = case.section_id.reply_to
-                body = ""
-                body = case.email_last or case.description               
-                if not destination:
-                    src, dest = dest, src
-                    if body and case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature)
-
-                body = self.format_body(body)
-                dest = [dest]
-
-                attach_to_send = None
-
-                if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'mailgate.thread'), ('res_id', '=', case.id)])
-                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
-                    attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
-
-                # Send an email
-                flag = tools.email_send(
-                    src,
-                    dest,
-                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
-                    body,
-                    reply_to=case.section_id.reply_to,
-                    openobject_id=str(case.id),
-                    attach=attach_to_send
-                )
-                self._history(cr, uid, [case], _('Send'), history=True, email=dest, details=body, email_from=src)
-                #if flag:
-                #    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
-                #else:
-                #    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
-        return True    
-
-    def _check(self, cr, uid, ids=False, context={}):
-        """
-        Function called by the scheduler to process cases for date actions
-        Only works on not done and cancelled cases
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
-        cr.execute('select * from crm_case \
-                where (date_action_last<%s or date_action_last is null) \
-                and (date_action_next<=%s or date_action_next is null) \
-                and state not in (\'cancel\',\'done\')',
-                (time.strftime("%Y-%m-%d %H:%M:%S"),
-                    time.strftime('%Y-%m-%d %H:%M:%S')))
-
-        ids2 = map(lambda x: x[0], cr.fetchall() or [])
-        cases = self.browse(cr, uid, ids2, context)
-        return self._action(cr, uid, cases, False, context=context)
-
-    def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
-        if not context:
-            context = {}
-        context['state_to'] = state_to
-        rule_obj = self.pool.get('base.action.rule')
-        model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('name','=',model_ids[0])])
-        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
-
-    def format_body(self, body):
-        return self.pool.get('base.action.rule').format_body(body)
-
-    def format_mail(self, obj, body):
-        return self.pool.get('base.action.rule').format_mail(obj, body)
-case()
-
 class base_action_rule(osv.osv):
     """ Base Action Rule """
     _inherit = 'base.action.rule'
     _description = 'Action Rules'
     
     _columns = {
-        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'trg_max_history': fields.integer('Maximum Communication History'),
-        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),
-        'regex_history' : fields.char('Regular Expression on Case History', size=128),
-        'act_section_id': fields.many2one('crm.case.section', 'Set Team to'),
-        'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
-        'act_mail_to_partner': fields.boolean('Mail to partner',help="Check \
-this if you want the rule to send an email to the partner."),
+        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'), 
+        'trg_max_history': fields.integer('Maximum Communication History'), 
+        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'), 
+        'regex_history' : fields.char('Regular Expression on Case History', size=128), 
+        'act_section_id': fields.many2one('crm.case.section', 'Set Team to'), 
+        'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'), 
+        'act_mail_to_partner': fields.boolean('Mail to Partner', help="Check \
+this if you want the rule to send an email to the partner."), 
     }
     
 
-    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from',False), context={}):
+    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context={}):
         body = self.format_mail(obj, body)
         if not emailfrom:
             if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and obj.user_id.address_id.email:
@@ -178,7 +64,7 @@ this if you want the rule to send an email to the partner."),
         else:
             reply_to = emailfrom
         if not emailfrom:
-            raise osv.except_osv(_('Error!'),
+            raise osv.except_osv(_('Error!'), 
                     _("No E-Mail ID Found for your Company address!"))
         return tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, openobject_id=str(obj.id))
     
@@ -253,7 +139,7 @@ this if you want the rule to send an email to the partner."),
         @param context: A standard dictionary for contextual values """
 
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
-        return res + [('escalate','Escalate')] + crm.AVAILABLE_STATES
+        return res + [('escalate', 'Escalate')] + crm.AVAILABLE_STATES
 
     def priority_get(self, cr, uid, context={}):
 

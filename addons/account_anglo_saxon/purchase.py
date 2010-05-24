@@ -24,7 +24,7 @@ from osv import fields, osv
 class purchase_order(osv.osv):
     _name = "purchase.order"
     _inherit = "purchase.order"
-    _description = "Purchase order"
+    _description = "Purchase Order"
 
     def inv_line_create(self, cr, uid, a, ol):
         line = super(purchase_order, self).inv_line_create(cr, uid, a, ol)
@@ -37,5 +37,4 @@ class purchase_order(osv.osv):
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
                 line[2].update({'account_id': a})
         return line
-purchase_order()        
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:        
+purchase_order()

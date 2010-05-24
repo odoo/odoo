@@ -221,13 +221,14 @@
     
     
 - 
- I create partner delivery address.
+  I create partner delivery address.
 - 
   !record {model: res.partner.address, id: res_partner_address_3}:
     partner_id: res_partner_cleartrail0
     street: sangam house 15 B palasia, A B Road
     type: delivery
 -
+  I create product category.    
 - 
   !record {model: product.category, id: product_category_allproductssellable0}:
     name: Mobile Products Sellable
@@ -319,7 +320,7 @@
     property_account_income: account_account_receivable0
  
 -  
-  I create New Order with adding the details of Salesman and  "Product" as LG Viewty Smart Quantity as 10.
+  I create New Order by adding the details of Salesman and  "Product" as LG Viewty Smart Quantity as 10.
 -
 
   !record {model: pos.order, id: pos_order_pos0}:
@@ -341,13 +342,13 @@
     shop_id: sale.shop
     user_salesman_id: base.user_root
 - 
-  I have add discount 
+  I add discount. 
 - 
   !record {model: pos.discount, id: pos_discount_0}:
     discount: 5.0
     discount_notes: More then 5 product
 - 
-   Apply the discount 
+  I Apply the discount. 
 - 
   !python {model: pos.discount}: |
     self.apply_discount(cr, uid, [ref("pos_discount_0")], {"lang": "en_US", "active_model":
@@ -355,13 +356,13 @@
       ref("pos_order_pos0"), })
     
 - 
-  I Open the registered .
+  I open the register.
 - 
   !record {model: pos.open.statement, id: pos_open_statement_0}:
     {}
     
 - 
-  I Open the statement.
+  I open the statement.
 - 
   !python {model: pos.open.statement}: |
     self.open_statement(cr, uid, [ref("pos_open_statement_0")], {"lang": "en_US", "active_model":
@@ -369,7 +370,7 @@
       False, "active_id": ref("point_of_sale.menu_open_statement"), })
      
 -
-  I click on  the wizard "Make Payment" 
+  I click on the "Make Payment" wizard.  
 - 
   !record {model: pos.make.payment, id: pos_make_payment_0}:
     amount: 1615.0
@@ -386,20 +387,20 @@
       "pos.order", "active_ids": [ref("point_of_sale.pos_order_pos0")], "tz":
       False, "active_id": ref("point_of_sale.pos_order_pos0"), })
 -
-  I have check the Statement lines are created automatically when payment are done.
+  I check the Statement lines are created automatically when payment is done.
 -
   !python {model: pos.order}: |
    order=self.browse(cr,uid,ref("pos_order_pos0"))
    assert(order.statement_ids!=[]), "Statement lines not created"    
                                             
 -
-  When i click on Return picking button , i get three option.
+  When I click on Return picking button , I get three option.
 -
   1. Cancel 2.Return Goods and Exchange 3.Return without Refund
 -
-  When i click on  Return Goods and Exchange .  
+  When I click on  Return Goods and Exchange.  
 -  
-  Then allows me to define the quantity of products, which will return to the stock. 
+  Then it allows me to define the quantity of products, which will return to the stock. 
 - 
   I click on Return Picking button.
 - 
@@ -415,15 +416,15 @@
     
     
 - 
-  Then allows me to define the quantity of products, which will return to the stock.
+  Then it allows me to define the quantity of products, which will return to the stock.
 -
-  I have select the  HP Pavilion Desktop PCs for exchange.   
+  I select the  HP Pavilion Desktop PCs for exchange.   
 - 
   !record {model: pos.add.product, id: pos_add_product_0}:
     product_id: product_product_hppaviliondesktoppcs0
     quantity: 5.0
 -    
-  I click on close on button.
+  I click on close button.
 - 
   !python {model: pos.add.product}: |
     self.close_action(cr, uid, [ref("pos_add_product_0")], {"lang": "en_US", "active_model":
@@ -441,7 +442,7 @@
     product_id: product_product_hppaviliondesktoppcs0
 
 - 
-   For payment  I click on  Make Payment. 
+  For payment, I click on  Make Payment. 
 - 
   !python {model: pos.make.payment}: |
     self.check(cr, uid, [ref("pos_make_payment_1")], {"lang": "en_US", "active_model":
@@ -454,19 +455,19 @@
   !record {model: pos.return, id: pos_return_0}:
    {}
 -
-  The quantity which are selected in Return lines wizard are refunded..
+  The quantity which is selected in Return lines wizard is refunded.
 - 
   !python {model: pos.return}: |
     self.create_returns2(cr, uid, [ref("pos_return_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz":
       False, "active_id": ref("pos_order_pos0"), })
 - 
-  To Close order   I use the wizard "Sale Confirm".
+  To Close order, I use the wizard "Sale Confirm".
 - 
   !record {model: pos.confirm, id: pos_confirm_0}:
     {}
 - 
-  I have close this order.
+  I close this order.
 - 
   !python {model: pos.confirm}: |
     self.action_confirm(cr, uid, [ref("pos_confirm_0")], {"lang": "en_US", "active_model":

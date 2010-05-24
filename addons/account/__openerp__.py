@@ -107,8 +107,11 @@ module named account_voucherss
         'company_view.xml',
         'account_installer.xml',
         'report/account_invoice_report_view.xml',
+        'report/account_entries_report_view.xml',
         'report/account_report_view.xml',
         'report/account_analytic_report_view.xml',
+        'report/account_account_report_view.xml',
+        'report/account_analytic_entries_report_view.xml'
     ],
     'demo_xml': [
         #'demo/price_accuracy00.yml',

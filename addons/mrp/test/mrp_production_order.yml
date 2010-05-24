@@ -18,7 +18,7 @@
     product_uom: product.product_uom_unit
     product_uos_qty: 0.0
 - 
-  Creating a mrp.production.workcenter.line record
+  I create a record for Workcenter line.
 - 
   !record {model: mrp.production.workcenter.line, id: mrp_production_workcenter_line_assemblyline0}:
     cycle: 5.0
@@ -28,7 +28,7 @@
     sequence: 0.0
     workcenter_id: mrp.mrp_workcenter_0
 - 
-  Creating a mrp.production.product.line record
+  I create second record for Workcenter line.
 - 
   !record {model: mrp.production.product.line, id: mrp_production_product_line_regularprocessorconfig0}:
     name: Regular processor config
@@ -38,7 +38,7 @@
     product_uos_qty: 0.0
     production_id: mrp_production_mo0
 - 
-  Creating a mrp.production.product.line record
+  I create third record for Workcenter line.
 - 
   !record {model: mrp.production.product.line, id: mrp_production_product_line_hddseagategb0}:
     name: HDD Seagate 7200.8 80GB
@@ -48,7 +48,7 @@
     product_uos_qty: 0.0
     production_id: mrp_production_mo0
 - 
-  Creating a mrp.production.product.line record
+  I create fourth record for Workcenter line.
 - 
   !record {model: mrp.production.product.line, id: mrp_production_product_line_atxmidsizetower0}:
     name: ATX Mid-size Tower
@@ -58,7 +58,7 @@
     product_uos_qty: 0.0
     production_id: mrp_production_mo0
 - 
-  Creating a mrp.production.product.line record
+  I create a record for production line.
 - 
   !record {model: mrp.production.product.line, id: mrp_production_product_line_mouse0}:
     name: Mouse
@@ -68,7 +68,7 @@
     product_uos_qty: 0.0
     production_id: mrp_production_mo0
 - 
-  Creating a mrp.production.product.line record
+  I create second record for production line.
 - 
   !record {model: mrp.production.product.line, id: mrp_production_product_line_keyboard0}:
     name: Keyboard
@@ -102,7 +102,7 @@
     pick_ids = self.search(cr, uid, [('state','!=','done'),('type','=','internal')])
     assert pick_ids, _('No Internal Pickings!')
 -
-  I see that there is a manufacturing order for the subproduct of PC1 with ready state.
+  I see that there is a manufacturing order for the sub product of PC1 with ready state.
 -
   !python {model: mrp.production}: |
     from tools.translate import _
@@ -111,16 +111,20 @@
 -
   I start producing that product first. So I marked it as started.
 -
+  I create record for producing products with quantity 5.00.
+-
   !record {model: mrp.product.produce, id: mrp_product_produce0}:
     product_qty: 5.00
     mode: 'consume_produce'
+-
+  I produce the product.
 -
   !python {model: mrp.product.produce}: |
     prod_obj = self.pool.get('mrp.production')
     prod_ids = prod_obj.search(cr, uid, [('state','=','confirmed')])
     self.do_produce(cr, uid, [1], context={'active_ids': prod_ids})
 -
-  Now the manufacturing order for subproduct CPU_GEN is done. And manufacturing
+  Now the manufacturing order for subproduct CPU_GEN is done and manufacturing
   order for PC1 is in ready state.
 -
   !python {model: mrp.production}: |
@@ -131,6 +135,8 @@
   I start producing the product PC1.
 -
   !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
+-
+  Finally my production order is done.
 -
   !python {model: mrp.product.produce}: |
     from tools.translate import _

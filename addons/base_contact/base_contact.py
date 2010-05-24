@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields, osv
 
 class res_partner_contact(osv.osv):
     """ Partner Contact """
 
     _name = "res.partner.contact"
-    _description = "res.partner.contact"
+    _description = "Contact"
 
     def _title_get(self,cr, user, context={}):
         """
@@ -116,22 +115,6 @@ res_partner_contact()
 
 class res_partner_address(osv.osv):
 
-    def search(self, cr, user, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        """ search parnter address
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param user: the current user
-            @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
-            @param offset: The Number of Results to Pass
-            @param limit: The Number of Results to Return
-            @param context: A standard dictionary for contextual values
-        """
-
-        if context and context.has_key('address_partner_id' ) and context['address_partner_id']:
-            args.append(('partner_id', '=', context['address_partner_id']))
-        return super(res_partner_address, self).search(cr, user, args, offset, limit, order, context, count)
-
     #overriding of the name_get defined in base in order to remove the old contact name
     def name_get(self, cr, user, ids, context={}):
         """
@@ -208,6 +191,8 @@ class res_partner_job(osv.osv):
                 if arg[2] and not count:
                     search_arg = ['|', ('first_name', 'ilike', arg[2]), ('name', 'ilike', arg[2])]
                     contact_ids = contact_obj.search(cr, user, search_arg, offset=offset, limit=limit, order=order, context=context, count=count)
+                    if not contact_ids:
+                         continue
                     contacts = contact_obj.browse(cr, user, contact_ids, context=context)
                     for contact in contacts:
                         job_ids.extend([item.id for item in contact.job_ids])
@@ -224,11 +209,11 @@ class res_partner_job(osv.osv):
     _order = 'sequence_contact'
 
     _columns = {
-        'name': fields.related('address_id','partner_id', type='many2one',\
+        'name': fields.related('address_id', 'partner_id', type='many2one',\
                      relation='res.partner', string='Partner', help="You may\
                      enter Address first,Partner will be linked automatically if any."),
-        'address_id': fields.many2one('res.partner.address','Address', \
-                        help='Address which is linked to the Partner'),
+        'address_id': fields.many2one('res.partner.address', 'Address', \
+                        help='Address which is linked to the Partner'), # TO Correct: domain=[('partner_id', '=', name)]
         'contact_id': fields.many2one('res.partner.contact','Contact', required=True, ondelete='cascade'),
         'function_id': fields.many2one('res.partner.function','Partner Function', \
                             help="Function of this contact with this partner"),
@@ -251,7 +236,34 @@ class res_partner_job(osv.osv):
         'sequence_contact' : lambda *a: 0,
         'state': lambda *a: 'current',
     }
+    
+    def onchange_partner(self, cr, uid, _, partner_id, context=None):
+        """
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user,
+            @param _: List of IDs,
+            @partner_id : ID of the Partner selected,
+            @param context: A standard dictionary for contextual values
+        """
+        return {'value': {'address_id': False}}
 
+    def onchange_address(self, cr, uid, _, address_id, context=None):
+        """
+            @@param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user,
+            @param _: List of IDs,
+            @address_id : ID of the Address selected,
+            @param context: A standard dictionary for contextual values
+        """
+        partner_id = False
+        if address_id:
+            address = self.pool.get('res.partner.address')\
+                        .browse(cr, uid, address_id, context)
+            partner_id = address.partner_id.id
+        return {'value': {'name': partner_id}}
+    
 res_partner_job()
 
 

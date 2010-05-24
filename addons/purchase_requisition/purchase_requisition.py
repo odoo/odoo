@@ -27,7 +27,7 @@ import time
 
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
-    _description="Purchase requisition"
+    _description="Purchase Requisition"
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
         'origin': fields.char('Origin', size=32),
@@ -93,25 +93,19 @@ class purchase_requisition_line(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
-        value = {}
-        
+        value = {'product_uom_id': ''}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
             value = {'product_uom_id': prod.uom_id.id}
-            if product_uom_id != prod.uom_id.id:
-                value = {'product_uom_id': prod.uom_id.id}            
         return {'value': value}
 
     _defaults = {
                  'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
                  }
-
 purchase_requisition_line()
-
 
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
-    _description = "purchase order"
     _columns = {
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition')
     }
