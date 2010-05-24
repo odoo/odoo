@@ -180,6 +180,17 @@
             <field name="search_view_id" ref="view_wiki_filter"/>
         </record>
 
+        <record model="ir.actions.act_window" id="action_wiki_test">
+            <field name="name">Wiki Pages</field>
+            <field name="res_model">wiki.wiki</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wiki_tree"/>
+            <field name="context">{'section':'1'}</field>
+            <field name="search_view_id" ref="view_wiki_filter"/>
+            <field name="domain">[('group_id', '=', 'Internal FAQ')]</field>
+        </record>
+
         <menuitem parent="base.menu_document2"
             id="menu_action_wiki_wiki" name="Wiki Pages"
             action="action_wiki" />

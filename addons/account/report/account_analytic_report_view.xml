@@ -53,7 +53,20 @@
 	                <field name="partner_id"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Extended options..." colspan="10" col="12">
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
+                    <filter string="User" name='User' icon="terp-account" context="{'group_by':'user_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
+                    <filter string="Analytic Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
+                    <filter string="Analytic Account" icon="terp-account" context="{'group_by':'parent_id'}"/>
+                    <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
+                </group>
+
+                <group expand="0" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-account"
                     		string="Draft"
                     		domain="[('state','=','draft')]"/>
@@ -78,18 +91,6 @@
                     <field name="date_end"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
-                    <filter string="User" name='User' icon="terp-account" context="{'group_by':'user_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
-                    <filter string="Analytic Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
-                    <filter string="Analytic Account" icon="terp-account" context="{'group_by':'parent_id'}"/>
-                    <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
-                </group>
             </search>
         </field>
     </record>

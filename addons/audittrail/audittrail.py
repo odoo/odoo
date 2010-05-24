@@ -533,6 +533,34 @@ class audittrail_objects_proxy(osv_pool):
 
         cr.close()
 
+        def exec_action(self, db, uid, object, action, *args, **argv):
+            print "actionnnnnnnnnnn"
+            pool = pooler.get_pool(db)
+            cr = pooler.get_db(db).cursor()
+            cr.autocommit(True)
+            logged_uids = []
+            fct_src = super(audittrail_objects_proxy, self).exec_action
+            field = method
+            rule = False
+            obj_ids = pool.get('ir.model').search(cr, uid, [('model', '=', object)])
+            for obj_name in pool.obj_list():
+                if obj_name == 'audittrail.rule':
+                    rule = True
+            rule_ids = pool.get('audittrail.rule').search(cr, uid, [('object_id', '=', obj_ids[0]), ('state', '=', 'subscribed')])
+            if not rule_ids:
+                 return super(audittrail_objects_proxy, self).exec_action(db, uid, object, action, *args, **argv)
+
+            for thisrule in pool.get('audittrail.rule').browse(cr, uid, rule_ids):
+                for user in thisrule.user_id:
+                    logged_uids.append(user.id)
+                if not logged_uids or uid in logged_uids:
+                     if thisrule.log_workflow:
+                   #      return self.workflow_log(db, uid, object, method, *args,**argv)
+                            return super(audittrail_objects_proxy, self).exec_action(db, uid, object, action, *args, **argv)
+
+            cr.close()
+
+
 audittrail_objects_proxy()
 
 

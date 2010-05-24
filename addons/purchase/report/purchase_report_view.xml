@@ -86,6 +86,22 @@
 
 				</group>
 				<newline/>
+				<group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
+                    <filter string="Location" icon="terp-purchase" context="{'group_by':'location_id'}"/>
+                    <filter string="Responsible" name="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
+                    <filter string="Partner" name="partner_id" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
+                    <filter string="State" icon="terp-purchase" context="{'group_by':'state'}"/>
+                    <filter string="Fiscal Position" icon="terp-purchase" context="{'group_by':'fiscal_position'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-purchase" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-purchase" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-purchase" context="{'group_by':'name'}"/>
+                </group>
+                <newline/>
                 <group expand="0" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-purchase" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
                     <filter icon="terp-purchase" string="Done" domain="[('state','=','done')]"/>
@@ -100,22 +116,6 @@
                     <field name="fiscal_position" widget="selection"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="date"/>
-                </group>
-                <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
-                    <filter string="Location" icon="terp-purchase" context="{'group_by':'location_id'}"/>
-                    <filter string="Responsible" name="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
-                    <filter string="Partner" name="partner_id" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
-                    <filter string="State" icon="terp-purchase" context="{'group_by':'state'}"/>
-                    <filter string="Fiscal Position" icon="terp-purchase" context="{'group_by':'fiscal_position'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Day" icon="terp-purchase" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-purchase" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-purchase" context="{'group_by':'name'}"/>
                 </group>
             </search>
         </field>

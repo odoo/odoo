@@ -43,12 +43,12 @@ class recording_objects_proxy(osv_pool):
         res = super(recording_objects_proxy, self).execute(*args, **argv)
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
-        
+
         if mod and mod.recording:
             if args[3] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink'):
                 if _old_args is not None:
                     if args[3] != 'write' and args[3] != 'create' and len(args) > 5 and isinstance(args[5], dict):
-                       args=list(args) 
+                       args=list(args)
                        args[5]=_old_args
                        args=tuple(args)
                        mod.recording_data.append(('osv_memory_action', args, argv ,None))
@@ -69,7 +69,7 @@ class recording_objects_proxy(osv_pool):
         return res
 
 recording_objects_proxy()
-      
+
 class xElement(minidom.Element):
     """dom.Element with compact print
     The Element in minidom has a problem: if printed, adds whitespace
@@ -88,7 +88,7 @@ def doc_createXElement(xdoc, tagName):
         return e
 
 import yaml
-            
+
 class record(yaml.YAMLObject):
     yaml_tag = u'!record'
     def __init__(self, model, id=None, attrs={}):
@@ -106,7 +106,7 @@ class workflow(yaml.YAMLObject):
         self.action=action
     def __repr__(self):
         return '!workflow {model: %s, action: %s, ref: %s}' % (str(self.model,), str(self.action,), str(self.ref,))
-        
+
 class ref(yaml.YAMLObject):
     yaml_tag = u'!ref'
     def __init__(self, expr="False"):
@@ -129,7 +129,7 @@ class function(yaml.YAMLObject):
         self.attrs=attrs
     def __repr__(self):
         return '!python {model: %s}: |' % (str(self.model), )
-    
+
 class base_module_record(osv.osv):
     _name = "ir.module.record"
     _columns = {
@@ -169,16 +169,16 @@ class base_module_record(osv.osv):
         obj = dt.browse(cr, uid, dtids[0])
         self.depends[obj.module] = True
         return obj.module+'.'+obj.name, obj.noupdate
-    
+
     def _create_record(self, cr, uid, doc, model, data, record_id, noupdate=False):
         data_pool = self.pool.get('ir.model.data')
         model_pool = self.pool.get(model)
-        
+
         record = doc.createElement('record')
         record.setAttribute("id", record_id)
         record.setAttribute("model", model)
         record_list = [record]
-        
+
         lids  = data_pool.search(cr, uid, [('model','=',model)])
         res = data_pool.read(cr, uid, lids[:1], ['module'])
         if res:
@@ -207,7 +207,7 @@ class base_module_record(osv.osv):
                     noupdate = noupdate or update
                 if not id:
                     relation_pool = self.pool.get(fields[key]['relation'])
-                    
+
                     field.setAttribute("model", fields[key]['relation'])
                     fld_nm = relation_pool._rec_name
                     name = relation_pool.read(cr, uid, val,[fld_nm])[fld_nm] or False
@@ -231,7 +231,7 @@ class base_module_record(osv.osv):
                                 newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
                                 valitem[1]=newid
                         self.ids[(fields[key]['relation'], valitem[1])] = newid
-                        
+
                         childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
                         noupdate = noupdate or update
                         record_list += childrecord
@@ -260,11 +260,11 @@ class base_module_record(osv.osv):
 
     def _create_yaml_record(self, cr, uid, model, data, record_id):
         record={'model': model, 'id': str(record_id)}
-        
+
         model_pool = self.pool.get(model)
         data_pool = self.pool.get('ir.model.data')
         lids  = data_pool.search(cr, uid, [('model','=',model)])
-        
+
         res = data_pool.read(cr, uid, lids[:1], ['module'])
         attrs={}
         if res:
@@ -275,7 +275,7 @@ class base_module_record(osv.osv):
             defaults[model] = model_pool.default_get(cr, uid, data)
         except:
             defaults[model]={}
-        for key,val in data.items():  
+        for key,val in data.items():
             if ((key in defaults[model]) and (val ==  defaults[model][key])) and not(fields[key].get('required',False)):
                 continue
             if fields[key]['type'] in ('integer','float'):
@@ -303,7 +303,7 @@ class base_module_record(osv.osv):
                         else:
                             fname = model_pool._inherit_fields[key][2]._fields_id
                         del valitem[2][fname] #delete parent_field from child's fields list
-                        
+
                         childrecord = self._create_yaml_record(cr, uid, fields[key]['relation'],valitem[2], None)
                         items[0].append(childrecord['attrs'])
                 attrs[key] = items
@@ -343,7 +343,7 @@ class base_module_record(osv.osv):
         for f in filter(lambda a: isinstance(obj._columns[a], fields.function)\
                     and (not obj._columns[a].store),obj._columns):
             del data[f]
-            
+
         for key,val in data.items():
             if result.has_key(key):
                 continue
@@ -378,6 +378,7 @@ class base_module_record(osv.osv):
         return result
 
     def _create_function(self, cr, uid, doc, model, name, record_id):
+        print "creareeeeeeeeeeeeeeeeee"
         record = doc.createElement('function')
         record.setAttribute("name", name)
         record.setAttribute("model", model)
@@ -402,7 +403,7 @@ class base_module_record(osv.osv):
                 record,update = self._create_record(cr, uid, doc, rec[2], rec[5], id)
                 noupdate = noupdate or update
                 record_list += record
-                
+
         elif rec[4] in ('menu_create',):
             for id in rec[5]:
                 id,update = self._get_id(cr, uid, rec[3], id)
@@ -460,6 +461,7 @@ class base_module_record(osv.osv):
         return record
 
     def _generate_function_yaml(self, cr, uid, args):
+        print "geberareeeeeeeeeeeeeeee",args
         db, uid, model, action, ids, context = args
         temp_context = context.copy()
         active_id = temp_context['active_id']
@@ -484,7 +486,7 @@ class base_module_record(osv.osv):
         attrs=str(attrs)+'})'
         function['attrs'] = attrs
         return function
-            
+
     def _generate_assert_xml(self, rec, doc):
         pass
 
@@ -526,7 +528,7 @@ class base_module_record(osv.osv):
         self.ids = {}
         if len(self.recording_data):
             yaml_file='''\n'''
-    
+
             for rec in self.recording_data:
                 if rec[1][3] == 'create':
                     self.mode="create"
@@ -565,21 +567,21 @@ class base_module_record(osv.osv):
                     yaml_file += str(object) + '''\n'''
                     attrs=yaml.dump(object.attrs, default_flow_style=False)
                     yaml_file += attrs + '''\n\n'''
-                    
+
         yaml_result=''''''
         for line in yaml_file.split('\n'):
             line=line.replace("''","'")
             if (line.find('!record') == 0) or (line.find('!workflow') == 0) or (line.find('!python') == 0):
                 line = "- \n" + "  " + line
             elif line.find('!comment') == 0:
-                line=line.replace('!comment','- \n ')   
+                line=line.replace('!comment','- \n ')
             elif line.find('- -') != -1:
                 line=line.replace('- -','  -')
                 line = "    " + line
             else:
                 line = "    " + line
             yaml_result += line + '''\n'''
-            
+
         return yaml_result
 
 base_module_record()

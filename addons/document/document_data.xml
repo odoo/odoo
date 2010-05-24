@@ -7,7 +7,7 @@
         <field name="name">PDF Report</field>
         <field name="mimetype">application/pdf</field>
     </record>
-    
+
     <record model="document.storage" id="storage_default">
 	<field name="name">Default File storage</field>
 	<field name="user_id" ref="base.user_admin"/>
@@ -33,7 +33,7 @@
         <field name="user_id" ref="base.user_admin"/>
 	<field name="storage_id" ref="storage_default"/>
         <field name="ressource_id">0</field>
- 
+
     </record>
 
     <record model="document.directory" id="dir_partner_category">
@@ -106,7 +106,13 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="parent_id" ref="dir_root"/>
         <field name="ressource_id">0</field>
+    </record>
 
+    <record model="document.directory" id="dir_sale">
+        <field name="name">Sales Document</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="parent_id" ref="dir_root"/>
+        <field name="ressource_id">0</field>
     </record>
 
 </data>

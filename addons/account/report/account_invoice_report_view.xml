@@ -92,26 +92,7 @@
 				<field name="company_id" groups="base.group_multi_company" widget="selection"/>
 				</group>
                 <newline/>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
-                	<filter string="Done"
-                   			icon="terp-account"
-                   			domain="[('state','=','paid')]"
-                   			help = "Done tasks"/>
-                   	<filter string="Cancelled"
-                		icon="terp-account"
-                		domain="[('state', '=' ,'cancel')]"
-                		help = "Cancelled tasks"/>
-                	<separator orientation="vertical"/>
-                	<field name="payment_term" widget="selection"/>
-                	<field name="currency_id" widget="selection"/>
-                	<field name="journal_id" widget="selection"/>
-                	<newline/>
-            		<field name="type"/>
-                	<field name="period_id" widget="selection"/>
-                	<field name="fiscal_position" widget="selection"/>
-					<field name="date"/>
-                </group>
-                <newline/>
+
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="Salesman" name='User' icon="terp-account" context="{'group_by':'user_id'}"/>
@@ -132,6 +113,28 @@
                     <filter string="Month" icon="terp-account" context="{'group_by':'date'}"/>
                     <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
                 </group>
+                <newline/>
+
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                	<filter string="Done"
+                   			icon="terp-account"
+                   			domain="[('state','=','paid')]"
+                   			help = "Done tasks"/>
+                   	<filter string="Cancelled"
+                		icon="terp-account"
+                		domain="[('state', '=' ,'cancel')]"
+                		help = "Cancelled tasks"/>
+                	<separator orientation="vertical"/>
+                	<field name="payment_term" widget="selection"/>
+                	<field name="currency_id" widget="selection"/>
+                	<field name="journal_id" widget="selection"/>
+                	<newline/>
+            		<field name="type"/>
+                	<field name="period_id" widget="selection"/>
+                	<field name="fiscal_position" widget="selection"/>
+					<field name="date"/>
+                </group>
+
             </search>
         </field>
     </record>

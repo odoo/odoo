@@ -114,36 +114,13 @@
                          <field name="user_id" widget="selection"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Extended options..." colspan="4" col="5">
-                        <filter icon="terp-sale"
-                            string="Lowest"
-                            domain="[('priority','=','5')]"/>
 
-                        <filter icon="terp-sale"
-                            string="Low"
-                            domain="[('priority','=','4')]"/>
-
-                        <filter icon="terp-sale"
-                            string="Normal"
-                            domain="[('priority','=','3')]"/>
-
-                        <filter icon="terp-sale"
-                            string="High"
-                            domain="[('priority','=','2')]"/>
-
-                        <filter icon="terp-sale"
-                            string="Highest"
-                            domain="[('priority','=','1')]"/>
-
-                   </group>
-                   <newline/>
-
-<!-- Helpdesk report after Sales Services Apply Group -->
+                   <!-- Helpdesk report after Sales Services Apply Group -->
 
                   <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="User" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'user_id'}"
-                        	default="1" />
+                            domain="[]" context="{'group_by':'user_id'}"
+                            default="1" />
 
                         <filter string="Company" icon="terp-sale"
                             domain="[]"
@@ -169,6 +146,31 @@
                             domain="[]" context="{'group_by':'name'}" />
 
                   </group>
+
+                   <group expand="0" string="Extended options..." colspan="4" col="5">
+                        <filter icon="terp-sale"
+                            string="Lowest"
+                            domain="[('priority','=','5')]"/>
+
+                        <filter icon="terp-sale"
+                            string="Low"
+                            domain="[('priority','=','4')]"/>
+
+                        <filter icon="terp-sale"
+                            string="Normal"
+                            domain="[('priority','=','3')]"/>
+
+                        <filter icon="terp-sale"
+                            string="High"
+                            domain="[('priority','=','2')]"/>
+
+                        <filter icon="terp-sale"
+                            string="Highest"
+                            domain="[('priority','=','1')]"/>
+
+                   </group>
+                   <newline/>
+
                </search>
             </field>
         </record>
