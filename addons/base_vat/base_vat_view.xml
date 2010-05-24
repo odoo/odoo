@@ -7,10 +7,11 @@
       <field name="model">res.partner</field>
       <field name="inherit_id" ref="account.view_partner_property_form"/>
       <field name="arch" type="xml">
-        <field name="property_account_payable" position="after">
+        <field name="property_payment_term" position="after">
             <group colspan="2" col="6">
-              <field name="vat" on_change="vat_change(vat)" colspan="4" />
-              <field name="vat_subjected" colspan="1"/>
+              <separator string="Text Accounting Properties" colspan="6"/>
+              <field name="vat" on_change="vat_change(vat)"/>
+              <field name="vat_subjected"/>
             </group>
         </field>
       </field>

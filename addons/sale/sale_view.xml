@@ -107,9 +107,9 @@
                     <notebook colspan="4">
                         <page string="Sale Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
+                            <field name="partner_order_id" widget="selection"/>
+                            <field name="partner_invoice_id" widget="selection"/>
+                            <field name="partner_shipping_id" widget="selection"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" widget="selection"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
@@ -451,7 +451,7 @@
                         name="unshipped"
                         separator="1" />
                     <filter icon="terp-purchase" string="Uninvoiced" name="uninvoiced"
-                        domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]" 
+                        domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"
                         separator="1" />
                     <separator orientation="vertical"/>
                     <field name="order_id"/>
