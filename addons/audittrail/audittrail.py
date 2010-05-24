@@ -48,6 +48,7 @@ class audittrail_rule(osv.osv):
                                    ("subscribed", "Subscribed")),
                                    "State", required=True),
         "action_id": fields.many2one('ir.actions.act_window', "Action ID"),
+
     }
 
     _defaults = {

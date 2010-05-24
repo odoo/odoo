@@ -66,7 +66,6 @@
             <field name="arch" type="xml">
                 <form string="Expenses Sheet">
                     <group colspan="4" col="6">
-                        <field name="employee_id" select="1"/>
                         <field name="name" select="1"/>
                         <field name="ref" groups="base.group_extended"/>
                         <field name="date" select="1"/>
@@ -98,7 +97,7 @@
                                 <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
                                 <button name="cancel" states="cancel" string="Cancel" type="workflow" icon="gtk-cancel"/>
                                 <button name="validate" states="confirm" string="Accept" type="workflow" icon="gtk-ok"/>
-                                <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-print"/>
+                                <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-execute"/>
                                 <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert"/>
                                 <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no"/>
                             </group>
@@ -132,11 +131,6 @@
                         domain="[('state','=','draft')]"
                         string="Draft"
                         help="Draft Expense"/>
-                	  <filter
-                        icon="terp-hr"
-                        string="My Expenses"
-                        default="1"
-                        domain="[('user_id','=',uid)]"/>
                       <separator orientation="vertical"/>
                       <filter
                         icon="terp-hr"
@@ -152,7 +146,7 @@
                       <field name="name" select='1'/>
                       <field name="date" select='1'/>
                       <field name="user_id" select="1" widget="selection" string="User">
-                        <filter icon="terp-hr"
+                      		<filter icon="terp-hr"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
@@ -173,6 +167,7 @@
             <field name="name">Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
 

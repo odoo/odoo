@@ -166,7 +166,7 @@
             <field name="arch" type="xml">
                 <tree string="Routing Work Centers">
                     <field name="sequence"/>
-                    <field name="workcenter_id" select="1"/>
+                    <field name="workcenter_id"/>
                     <field name="cycle_nbr"/>
                     <field name="hour_nbr"/>
                 </tree>
@@ -249,7 +249,7 @@
                         <newline/>
                         <field name="product_uom"/>
                         <field name="product_qty"/>
-                        <field name="routing_id" groups="base.group_extended"/>
+                        <field name="routing_id" groups="base.group_extended" select="1"/>
                         <newline/>
                         <field name="product_uos" groups="product.group_uos"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
@@ -471,10 +471,10 @@
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
                     <group colspan="4" col="6">
-                        <field name="name" select="1" string="Reference"/>
-                        <field name="date_planned" select="1"/>
-                        <field name="origin" select="1"/>
-                        <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
+                        <field name="name" string="Reference"/>
+                        <field name="date_planned"/>
+                        <field name="origin"/>
+                        <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
                         <field name="product_uom"/>
@@ -493,7 +493,7 @@
                     <notebook colspan="4">
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
-                            <field name="routing_id" groups="base.group_extended" select="1"/>
+                            <field name="routing_id" groups="base.group_extended"/>
                             <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <separator string="" colspan="4"/>
@@ -592,8 +592,8 @@
                         <page string="Work Orders" groups="base.group_extended">
                             <field colspan="4" name="workcenter_lines" nolabel="1">
                                 <form string="Production Work Centers">
-                                    <field colspan="4" name="name" select="1"/>
-                                    <field colspan="4" name="workcenter_id" select="1"/>
+                                    <field colspan="4" name="name"/>
+                                    <field colspan="4" name="workcenter_id"/>
                                     <field name="sequence"/>
                                     <field name="cycle"/>
                                     <field name="hour"/>
@@ -611,7 +611,7 @@
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
-                            <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="priority" groups="base.group_extended"/>
                             <newline/>
                             <field name="date_start"/>
@@ -636,8 +636,7 @@
                        <filter icon="terp-mrp" string="Draft"
                            domain="[('state','=','draft')]"
                            help="Non confirmed manufacturing orders"/>
-                       <filter icon="terp-mrp" string="Current"
-                           default="1"
+                       <filter icon="terp-mrp" name="current" string="Current"
                            domain="[('state','in',('confirmed','ready'))]"
                            help="Manufacturing Orders which are waiting for raw materials"/>
                        <filter icon="terp-mrp" string="Ready"
@@ -674,6 +673,7 @@
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
+             <field name="context">{'search_default_current':1}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
@@ -799,6 +799,7 @@
         		</xpath>
         	</field>
         </record>
+
         <act_window
             id="action_product_bom_structure"
             name="Product BoM Structure"

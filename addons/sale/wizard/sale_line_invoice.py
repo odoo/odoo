@@ -20,22 +20,11 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-import wizard
-import netsvc
-import ir
-import pooler
+from tools.translate import _
 
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
     _description = "Sale OrderLine Make_invoice"
-    _columns = {
-        'grouped': fields.boolean('Group the invoices'),
-    }
-    _default = {
-        'grouped' : lambda *a: False
-    }
-
     def make_invoices(self, cr, uid, ids, context):
         """ 
              To make invoices.
@@ -82,7 +71,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'currency_id' : order.pricelist_id.currency_id.id,
                 'comment': order.note,
                 'payment_term': pay_term,
-                'fiscal_position': order.partner_id.property_account_position.id
+                'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
             return inv_id
@@ -110,6 +99,8 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
                 sales_order_obj.write(cr,uid,[line.order_id.id],{'state' : 'progress'})
 
+        if not invoices:
+            raise osv.except_osv(_('Warning'),_('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
         for result in invoices.values():
             order = result[0][0].order_id
             il = map(lambda x: x[1], result)

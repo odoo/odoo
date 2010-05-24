@@ -28,11 +28,15 @@ class crm_fundraising(osv.osv, crm.crm_case):
     _name = "crm.fundraising"
     _description = "Fund Raising Cases"
     _order = "id desc"
-    _inherit ='mailgate.thread'
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     _columns = {
+            'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
             'id': fields.integer('ID'), 
-            'name': fields.char('Name', size=128, required=True), 
+            'name': fields.char('Name', size=128, required=True),
+            'active': fields.boolean('Active', required=False), 
+            'date_action_last': fields.datetime('Last Action', readonly=1),
+            'date_action_next': fields.datetime('Next Action', readonly=1), 
             'description': fields.text('Description'), 
             'create_date': fields.datetime('Creation Date' , readonly=True), 
             'write_date': fields.datetime('Update Date' , readonly=True), 

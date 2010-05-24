@@ -8,6 +8,15 @@
             name="Purchase"
             parent="base.dashboard"/>
 
+		<record id="purchase_draft" model="ir.actions.act_window">
+            <field name="name">Draft Purchases</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','=','draft')]</field> 
+            <field name="search_view_id" ref="purchase.purchase_order_tree"/>
+        </record>
 		<record id="purchase_waiting" model="ir.actions.act_window">
             <field name="name">Quotation Request</field>
             <field name="type">ir.actions.act_window</field>
@@ -26,7 +35,7 @@
                 <form string="My Board">
                     <hpaned>
                         <child1>
-                            <action colspan="4" height="220" name="%(purchase.purchase_rfq)d" string="Draft Purchase Order"  width="510"/>
+                            <action colspan="4" height="220" name="%(purchase_draft)d" string="Draft Purchase Order"  width="510"/>
                             <action colspan="4" height="220" name="%(purchase_waiting)d" string="Purchase Order in Waiting"  width="510"/>
                         </child1>
                         <child2>

@@ -100,7 +100,7 @@ class hr_analytic_timesheet(osv.osv):
                                 'for this product: "%s" (id:%d)') % \
                                 (r.product_id.name, r.product_id.id,))
             # Compute based on pricetype
-            amount_unit=self.on_change_unit_amount(cr, uid, ids, 
+            amount_unit = self.on_change_unit_amount(cr, uid, ids, 
                 r.product_id.id, unit_amount, r.product_id.uom_id.id)['value']['amount']
                 
             amount = unit_amount *  amount_unit
@@ -136,7 +136,7 @@ class hr_analytic_timesheet(osv.osv):
                                     'for this product: "%s" (id:%d)') % \
                                     (r.product_id.name, r.product_id.id,))
                 # Compute based on pricetype
-                amount_unit=self.on_change_unit_amount(cr, uid, ids, 
+                amount_unit = self.on_change_unit_amount(cr, uid, ids, 
                     r.product_id.id, unit_amount, r.product_id.uom_id.id)['value']['amount']
                         
                 amount = unit_amount * amount_unit

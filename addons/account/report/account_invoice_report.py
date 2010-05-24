@@ -61,6 +61,13 @@ class account_invoice_report(osv.osv):
             ('paid','Done'),
             ('cancel','Cancelled')
             ], 'Order State', readonly=True),
+        'date_due': fields.date('Due Date', readonly=True),
+        'address_contact_id': fields.many2one('res.partner.address', 'Contact Address Name', readonly=True),
+        'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
+        'account_id': fields.many2one('account.account', 'Account',readonly=True),
+        'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
+        'residual':fields.float('Total Residual', readonly=True),
+        'delay_to_pay':fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -87,12 +94,24 @@ class account_invoice_report(osv.osv):
                      (sum(l.quantity*l.price_unit)/sum(l.quantity * u.factor))::decimal(16,2) as price_average,
                      count(*) as nbr,
                      s.type as type,
-                     s.state
-                     from
+                     s.state,
+                     s.date_due as date_due,
+                     s.address_contact_id as address_contact_id,
+                     s.address_invoice_id as address_invoice_id,
+                     s.account_id as account_id,
+                     s.partner_bank as partner_bank,
+                     s.residual as residual,
+                     case when s.state != 'paid' then null else
+                            extract(epoch from avg(am.date_created-l.create_date))/(24*60*60)::decimal(16,2)
+                     end as delay_to_pay
+                 from
                  account_invoice_line l
                  left join
                      account_invoice s on (s.id=l.invoice_id)
-                     left join product_uom u on (u.id=l.uos_id)
+                     left join product_uom u on (u.id=l.uos_id),
+                 account_move_line am left join account_invoice i on (i.move_id=am.move_id)
+                 where
+                        am.account_id=i.account_id
                  group by
                      s.type,
                      s.date_invoice,
@@ -101,12 +120,18 @@ class account_invoice_report(osv.osv):
                      l.uos_id,
                      s.user_id,
                      s.state,
+                     s.residual,
                      s.company_id,
                      s.payment_term,
                      s.period_id,
                      s.fiscal_position,
                      s.currency_id,
-                     s.journal_id
+                     s.journal_id,
+                     s.date_due,
+                     s.address_contact_id,
+                     s.address_invoice_id,
+                     s.account_id,
+                     s.partner_bank
             )
         """)
 account_invoice_report()

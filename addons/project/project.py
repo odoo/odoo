@@ -250,7 +250,8 @@ project()
 
 class task(osv.osv):
     _name = "project.task"
-    _description = "Tasks"
+    _description = "Task"
+    _log_create = True
     _date_name = "date_start"
 
     def _str_get(self, task, level=0, border='***', context={}):
@@ -259,16 +260,17 @@ class task(osv.osv):
             (task.description or '')+'\n\n'
 
     # Compute: effective_hours, total_hours, progress
-    def _hours_get(self, cr, uid, ids, field_names, args, context):
+    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
+        res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id =ANY(%s) GROUP BY task_id",(ids,))
         hours = dict(cr.fetchall())
-        res = {}
         for task in self.browse(cr, uid, ids, context=context):
-            res[task.id] = {}
-            res[task.id]['effective_hours'] = hours.get(task.id, 0.0)
-            res[task.id]['total_hours'] = task.remaining_hours + hours.get(task.id, 0.0)
+            res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
             if (task.remaining_hours + hours.get(task.id, 0.0)):
-                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 100),2)
+                if task.state =='done':
+                    res[task.id]['progress'] = 100.0
+                else:
+                    res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
             else:
                 res[task.id]['progress'] = 0.0
             if task.state in ('done','cancel'):
@@ -549,12 +551,12 @@ class config_compute_remaining(osv.osv_memory):
         return False
 
     _columns = {
-        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
-            }
+        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Put here the remaining hours required to close the task."),
+    }
 
     _defaults = {
         'remaining_hours': _get_remaining
-        }
+    }
 
     def compute_hours(self, cr, uid, ids, context=None):
         task_obj = self.pool.get('project.task')

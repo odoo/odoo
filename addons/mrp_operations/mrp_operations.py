@@ -185,7 +185,7 @@ class mrp_production(osv.osv):
     def action_production_end(self, cr, uid, ids):
         obj=self.browse(cr,uid,ids)[0]
         for workcenter_line in obj.workcenter_lines:
-            tmp=self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,[workcenter_line.id])
+            tmp = self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,[workcenter_line.id])
         return super(mrp_production,self).action_production_end(cr,uid,ids)
     
     def action_in_production(self, cr, uid, ids):

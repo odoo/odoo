@@ -39,6 +39,7 @@
         'security/account_payment_security.xml',
         'security/ir.model.access.csv',
         'wizard/account_payment_pay_view.xml',
+        'wizard/account_payment_populate_statement_view.xml',
         'wizard/account_payment_create_order_view.xml',
         'payment_view.xml',
         'payment_workflow.xml',
