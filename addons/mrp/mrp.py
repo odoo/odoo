@@ -249,9 +249,8 @@ class mrp_bom(osv.osv):
         return {}
     
     def onchange_multi_level_bom(self, cr, uid, ids, multi_level_bom, context={}):
-        """ Changes UoM and name if product_id changes.
-        @param name: Name of the field
-        @param product_id: Changed product_id
+        """ Changes multi_level_bom.
+        @param multi_level_bom: Changed multi_level_bom
         @return:  Dictionary of changed values
         """
         bom_ids = ids and ids[0]
