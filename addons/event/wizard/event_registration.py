@@ -36,10 +36,8 @@ class event_registration_list(osv.osv_memory):
             'type': 'ir.actions.act_window'
             }
 
-        cr.execute('SELECT section_id FROM event_event WHERE id = %s', (context['active_id'],))
-        res = cr.fetchone()
         return {
-            'domain': [('section_id', '=', res[0])],
+            'domain': [('section_id', '=', context['active_id'])],
             'name': 'Event Registrations',
             'view_type': 'form',
             'view_mode': 'tree,form',
