@@ -942,7 +942,7 @@ class stock_move(osv.osv):
 
     def _check_product_lot(self, cr, uid, ids):
         for move in self.browse(cr, uid, ids):
-            if move.prodlot_id and (move.prodlot_id.product_id.id != move.product_id.id):
+            if move.prodlot_id and move.state == 'done' and (move.prodlot_id.product_id.id != move.product_id.id):
                 return False
         return True
 
