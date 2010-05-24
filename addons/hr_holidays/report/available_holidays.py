@@ -25,8 +25,9 @@ class available_holidays_report(osv.osv):
     _name = "available.holidays.report"
     _auto = False
     _columns = {
-        'date': fields.datetime('Date', readonly=True),
+        'date': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
+        'day': fields.char('Day', size=15, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
@@ -36,6 +37,7 @@ class available_holidays_report(osv.osv):
         'max_leave': fields.float('Allocated Leaves', readonly=True),
         'taken_leaves': fields.float('Taken Leaves', readonly=True),
         'remaining_leave': fields.float('Remaining Leaves',readonly=True),
+        'department_id':fields.many2one('hr.department','Department',readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
     }
     def init(self, cr):
@@ -47,9 +49,11 @@ class available_holidays_report(osv.osv):
                     date_trunc('day',h.create_date) as date,
                     to_char(s.create_date, 'YYYY') as year,
                     to_char(s.create_date, 'MM') as month,
+                    to_char(s.create_date, 'YYYY-MM-DD') as day,
                     h.employee_id as employee_id,
                     h.category_id as category_id,
                     h.user_id as user_id,
+                    h.department_id,
                     h.state as state,
                     h.holiday_status_id as holiday_status_id,
                     sum(number_of_days) as remaining_leave,
@@ -69,7 +73,7 @@ class available_holidays_report(osv.osv):
                 and s.active <> 'f'
                 group by h.holiday_status_id, h.employee_id,
                          date_trunc('day',h.create_date),to_char(s.create_date, 'YYYY'),
-                         to_char(s.create_date, 'MM'),h.user_id,h.state, h.category_id
+                         to_char(s.create_date, 'MM'),h.user_id,h.state, h.category_id, h.department_id
 
             )""")
 available_holidays_report()

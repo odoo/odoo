@@ -31,10 +31,13 @@ class crm_phonecall(osv.osv, crm_case):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
-    _inherit = 'mailgate.thread'
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     _columns = {
         # From crm.case
+        'name': fields.char('Name', size=64),
+        'active': fields.boolean('Active', required=False), 
+        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'), 

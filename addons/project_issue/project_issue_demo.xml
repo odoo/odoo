@@ -22,7 +22,7 @@
 		<field eval="&quot;Bug in Accounts module&quot;" name="name"/>
 		<field eval="&quot;agr@agrolait.com&quot;" name="email_from"/>
 	</record>
-	<record id="crm_case_log_takecorrectiveactions0" model="crm.case.log">
+	<record id="crm_case_log_takecorrectiveactions0" model="mailgate.message">
 		<field eval="time.strftime('%Y-%m-08')" name="date"/>
 		<field name="case_id" ref="crm_case_buginaccountsmodule0"/>
 		<field name="som" ref="base.som_normal"/>

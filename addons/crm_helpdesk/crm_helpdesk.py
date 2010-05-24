@@ -28,11 +28,15 @@ class crm_helpdesk(osv.osv, crm.crm_case):
     _name = "crm.helpdesk"
     _description = "Helpdesk Cases"
     _order = "id desc"
-    _inherit = 'mailgate.thread'
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     _columns = {
+            'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
             'id': fields.integer('ID', readonly=True), 
             'name': fields.char('Name', size=128, required=True), 
+            'active': fields.boolean('Active', required=False), 
+            'date_action_last': fields.datetime('Last Action', readonly=1), 
+            'date_action_next': fields.datetime('Next Action', readonly=1), 
             'description': fields.text('Description'), 
             'create_date': fields.datetime('Creation Date' , readonly=True), 
             'write_date': fields.datetime('Update Date' , readonly=True), 

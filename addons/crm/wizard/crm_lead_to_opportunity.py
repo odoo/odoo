@@ -57,7 +57,6 @@ class crm_lead2opportunity(osv.osv_memory):
 
         lead_obj = self.pool.get('crm.lead')
         data_obj = self.pool.get('ir.model.data')
-        history_obj = self.pool.get('crm.case.history')
         model_obj = self.pool.get('ir.model')
 
         # Get Opportunity views
