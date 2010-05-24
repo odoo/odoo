@@ -102,7 +102,7 @@
     pick_ids = self.search(cr, uid, [('state','!=','done'),('type','=','internal')])
     assert pick_ids, _('No Internal Pickings!')
 -
-  I see that there is a manufacturing order for the subproduct of PC1 with ready state.
+  I see that there is a manufacturing order for the sub product of PC1 with ready state.
 -
   !python {model: mrp.production}: |
     from tools.translate import _
@@ -124,7 +124,7 @@
     prod_ids = prod_obj.search(cr, uid, [('state','=','confirmed')])
     self.do_produce(cr, uid, [1], context={'active_ids': prod_ids})
 -
-  Now the manufacturing order for subproduct CPU_GEN is done. And manufacturing
+  Now the manufacturing order for subproduct CPU_GEN is done and manufacturing
   order for PC1 is in ready state.
 -
   !python {model: mrp.production}: |

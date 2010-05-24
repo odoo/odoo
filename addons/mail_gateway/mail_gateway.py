@@ -22,60 +22,38 @@
 from osv import osv, fields
 import time
 
+class one2many_domain(fields.one2many):
+    def set(self, cr, obj, id, field, values, user=None, context=None):
+        if not values:
+            return
+        return super(one2many_domain, self).set(cr, obj, id, field, values, 
+                                            user=user, context=context)
 
+    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+        if not context:
+            context = {}
+        res = {}
+        msg_obj = obj.pool.get('mailgate.message')
+        for thread in obj.browse(cr, user, ids, context=context):
+            final = msg_obj.search(cr, user, self._domain + [('thread_id', '=', thread.id)], context=context)
+            res[thread.id] = final
+        return res
+        
+        
 class mailgate_thread(osv.osv):
     '''
     Mailgateway Thread
     '''
     _name = 'mailgate.thread'
     _description = 'Mailgateway Thread'
-    
-    def _get_log_ids(self, cr, uid, ids, field_names, arg, context=None):
-        """Gets id for case log from history of particular case
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Case IDs
-        @param context: A standard dictionary for contextual values
-        @return:Dictionary of History Ids
-        """
-        if not context:
-            context = {}
-
-        result = {}
-        domain = []
-        history_obj = False
-        model_obj = self.pool.get('ir.model')
-        history_obj = self.pool.get('mailgate.message')
-
-        if 'message_ids' in field_names:
-            name = 'message_ids'
-            domain += [('email_to', '!=', False)]
-            
-        if 'log_ids' in field_names:
-            name = 'log_ids'
-            domain += [('email_to', '=', False)]
-        
-        model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
-        domain +=  [('model_id', '=', model_ids[0])]
-        for case in self.browse(cr, uid, ids, context):
-            domain1 = domain + [('res_id', '=', case.id)]
-            history_ids = history_obj.search(cr, uid, domain1, context=context)
-            if history_ids:
-                result[case.id] = {name: history_ids}
-            else:
-                result[case.id] = {name: []}
-        return result
+    _rec_name = 'thread' 
 
     _columns = {
-        'name':fields.char('Name', size=64), 
-        'active': fields.boolean('Active'), 
-        'message_ids': fields.function(_get_log_ids, method=True, type='one2many', \
-                         multi="message_ids", relation="mailgate.message", string="Messages"), 
-        'log_ids': fields.function(_get_log_ids, method=True, type='one2many', \
-                         multi="log_ids", relation="mailgate.message", string="Logs"),
-    }
-    
+        'thread': fields.char('Thread', size=32, required=False),  
+        'message_ids': one2many_domain('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
+        'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False),
+        }
+        
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
         """
         @param self: The object pointer
@@ -89,7 +67,6 @@ class mailgate_thread(osv.osv):
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
-
         # The mailgate sends the ids of the cases and not the object list
         if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
             cases = self.pool.get(context['model']).browse(cr, uid, cases, context=context)
@@ -102,21 +79,19 @@ class mailgate_thread(osv.osv):
             data = {
                 'name': keyword,
                 'user_id': uid,
-                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'model_id' : model_ids and model_ids[0] or False,
-                'res_id': case.id,
-                'section_id': case.section_id.id,
-                'message_id':message_id
+                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'thread_id': case.thread_id.id,                
+                'message_id': message_id
             }
 
             if history:
+                data['history'] = True
                 data['description'] = details or case.description
                 data['email_to'] = email or \
-                        (case.section_id and case.section_id.reply_to) or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or tools.config.get('email_from', False)
                 data['email_from'] = email_from or \
-                        (case.section_id and case.section_id.reply_to) or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or tools.config.get('email_from', False)
             res = obj.create(cr, uid, data, context)
@@ -138,10 +113,10 @@ class mailgate_message(osv.osv):
 
     _columns = {
         'name':fields.char('Message', size=64),
+        'model_id': fields.many2one('ir.model', 'Model'),
         'thread_id':fields.many2one('mailgate.thread', 'Thread'),
         'date': fields.datetime('Date'),
-        'model_id': fields.many2one('ir.model', "Model"),
-        'res_id': fields.integer('Resource ID'),
+        'history': fields.boolean('Is History?', required=False), 
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
         'message': fields.text('Description'),
         'email_from': fields.char('Email From', size=84),

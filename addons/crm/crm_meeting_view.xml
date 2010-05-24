@@ -24,18 +24,18 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Meetings">
-               	<group col="6" colspan="4">
+                <group col="6" colspan="4">
                     <field name="name" select="1" string="Summary"
-                        colspan="2" />
+                    	required="1" colspan="2" />
                     <field name="categ_id" widget="selection"
                         string="Meeting Type"
                         groups="base.group_extended"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
-					<field name="allday" colspan="2" on_change="onchange_allday(allday)" />
-					<field name="date" string="Start Date" required="1"
-                        on_change="onchange_dates(date,duration,False)" />
+                    <field name="allday" colspan="2" on_change="onchange_allday(allday)" />
+                    <field name="date" string="Start Date" required="1"
+                        on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="duration" widget="float_time"
-                        on_change="onchange_dates(date,duration,False)" />
+                        on_change="onchange_dates(date,duration,False,allday)" />
                     <field name="date_deadline" string="End Date"
                         required="1"
                         on_change="onchange_dates(date,False,date_deadline)" />
@@ -50,6 +50,10 @@
                                attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                                name="open_meeting" icon="gtk-edit"
                                type="object" />
+                           <button string="ExRule"
+       		name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
+       		context="{'model' : 'crm.meeting'}"
+       		attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
                     </group>
                 </group>
                 <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
@@ -213,7 +217,6 @@
                 <field name="partner_id" string="Partner" />
                 <field name="date" string="Meeting Date" />
                 <field name="duration" />
-                <field name="user_id" />
                 <field name="state"/>
             </tree>
         </field>
@@ -320,7 +323,7 @@
                     </field>
                 </field>
         </record>
-        
+
         <!--  Partners inherited form -->
 
 		<record id="view_meeting_partner_info_form" model="ir.ui.view">

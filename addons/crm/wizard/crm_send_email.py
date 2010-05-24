@@ -98,7 +98,9 @@ class crm_send_new_email(osv.osv_memory):
                 message_id = hist.message_id
                 model = hist.model_id.model
                 model_pool = self.pool.get(model)
-                case = model_pool.browse(cr, uid, hist.res_id)
+                res_ids = model_pool.search(cr, uid, [('thread_id','=', hist.thread_id.id)])
+                res_id = res_ids and res_ids[0] or False        
+                case = model_pool.browse(cr, uid, res_id)
             emails = [obj.email_to] + (obj.email_cc or '').split(',')
             emails = filter(None, emails)
             body = obj.text
@@ -197,7 +199,9 @@ class crm_send_new_email(osv.osv_memory):
                 return {}
 
             model_pool = self.pool.get(model)
-            case = model_pool.browse(cr, uid, hist.res_id)
+            res_ids = model_pool.search(cr, uid, [('thread_id','=', hist.thread_id.id)])
+            res_id = res_ids and res_ids[0] or False            
+            case = model_pool.browse(cr, uid, res_id)
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from or hist.email_from or False})
             if 'email_from' in fields:

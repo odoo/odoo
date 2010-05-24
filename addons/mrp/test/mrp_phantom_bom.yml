@@ -62,7 +62,7 @@
     uom_id: product_uom_litre0
     uom_po_id: product_uom_litre0
 -
-  I define the BoM to produce an orange juice
+  I define the BoM to produce an orange juice.
 - 
   !record {model: mrp.bom, id: mrp_bom_orangejuice0}:
     company_id: base.main_company
@@ -102,7 +102,7 @@
         product_uom: product_uom_litre0
         type: normal
 -
-  I define Minimum stock rules for my stockable products Orange.
+  I define Minimum stock rules for my stockable product "Orange".
 - 
   !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
     company_id: base.main_company
@@ -116,7 +116,7 @@
     qty_multiple: 1
     warehouse_id: stock.warehouse0
 -
-  I define Minimum stock rules for my stockable products Sugar.
+  I define Minimum stock rules for my stockable product "Sugar".
 - 
   !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op1}:
     company_id: base.main_company
