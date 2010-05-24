@@ -254,14 +254,12 @@ class mrp_bom(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
-        value = {}
         bom_ids = ids and ids[0]
         bom = self.browse(cr, uid, bom_ids)
         line_ids = bom and map(lambda x:x.id, bom.bom_lines)
-        value['bom_lines'] = line_ids
         if multi_level_bom:
             self.write(cr, uid, line_ids, {'multi_level_bom': multi_level_bom})
-            return {'value': value}
+            return {'value': {'bom_lines': line_ids}}
         else:
             self.write(cr, uid, line_ids, {'multi_level_bom': multi_level_bom})
             return {'value': {}}
