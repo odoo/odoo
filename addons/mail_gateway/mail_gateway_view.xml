@@ -1,28 +1,34 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_maligate_message_form">
-            <field name="name">maligate.message.form</field>
-            <field name="model">maligate.message</field>
+        <record model="ir.ui.view" id="view_mailgate_message_form">
+            <field name="name">mailgate.message.form</field>
+            <field name="model">mailgate.message</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="maligate message">
-                    <field name="name" />
-                    <field name="date" />
-                    <field name="user_id" />
-                    <field name="history" />
-                    <field name="message_id" />
+                <form string="mailgate message">
+                    <group colspan="4" col="6">
+	                    <field name="name" required="1" select="1"/>
+	                    <field name="date" required="1" select="1"/>
+	                    <field name="user_id" string="Responsible" select="1"/>
+	                </group>
+	                <group colspan="4" col="4">
+                    <field name="history" select="1" />
+                    </group>
                     <notebook colspan="4">
-	                    <page>
+	                    <page string="Details">
 	                    	<group col="4" colspan="4">
 	                    		<separator string="Email Details" colspan="4"/>
 			                    <field name="email_from" />
 			                    <field name="email_to" />
 			                    <field name="email_cc" />
 			                    <field name="email_bcc" />
+			                    <field name="message_id" />
 			               </group>
+			               <separator string="Description" colspan="4"/>
+                            <field name="description" nolabel="1" colspan="4" />
 		                </page>
-		                <page>
+		                <page string="Attachments">
 		                	<separator string="Attachments" colspan="4"/>
 		                    <field name="attachment_ids" nolabel="1" colspan="4" />
                  		</page>
@@ -32,18 +38,35 @@
         </record>
         
         <record model="ir.ui.view" id="view_mailgate_message_tree">
-            <field name="name">maligate.message.tree</field>
-            <field name="model">maligate.message</field>
+            <field name="name">mailgate.message.tree</field>
+            <field name="model">mailgate.message</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Mailgateway Message">
                     <field name="name" select="1" />
                     <field name="date" />
+                    <field name="user_id" />
+                    <field name="history" readonly="1"/>
                 </tree>
             </field>
         </record>
         
+        <record model="ir.ui.view" id="view_mailgate_message_search">
+            <field name="name">mailgate.message.search</field>
+            <field name="model">mailgate.message</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Mailgateway Message Search">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="user_id" />
+                    <field name="message_id" />
+                    <field name="history" readonly="1"/>
+                </search>
+            </field>
+        </record>
         
+
         <record model="ir.ui.view" id="view_mailgate_thread_form">
             <field name="name">mailgate.thread.form</field>
             <field name="model">mailgate.thread</field>
@@ -57,12 +80,12 @@
 		                    <field name="name" select="1" />
 		                    <field name="date" />
 		                </tree>
-	                    <form string="Maligate Logs">
+	                    <form string="Mailgate Logs">
 		                    <field name="name" />
 		                    <field name="date" />
 		                    <field name="user_id" />
 		                    <field name="message_id" />
-		                    <field name="history" />
+		                    <field name="history" readonly="1"/>
 		                    <notebook colspan="4">
 			                    <page string="Email Details">
 			                    	<group col="4" colspan="4">
@@ -72,6 +95,8 @@
 					                    <field name="email_cc" />
 					                    <field name="email_bcc" />
 					               </group>
+					               <separator string="Description" colspan="4"/>
+                                    <field name="description" nolabel="1" colspan="4" />
 				                </page>
 				                <page string="Attachments">
 				                	<separator string="Attachments" colspan="4"/>
@@ -86,7 +111,7 @@
                             <field name="name" select="1" />
                             <field name="date" />
                         </tree>
-                        <form string="Maligate Histories">
+                        <form string="Mailgate Histories">
                             <field name="name" />
                             <field name="date" />
                             <field name="user_id" />
@@ -153,6 +178,13 @@
         <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
         	parent="base.menu_crm_configuration"  sequence="20"/>
         	-->
-      	
+        <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
+            id="act_res_partner_emails" name="Emails"
+            res_model="mailgate.message"
+            src_model="res.partner"
+            view_id="view_mailgate_message_tree"
+            groups="base.group_extended"
+            />
+
     </data>
 </openerp>

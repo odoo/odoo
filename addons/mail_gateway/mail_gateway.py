@@ -49,9 +49,9 @@ class mailgate_thread(osv.osv):
     _rec_name = 'thread' 
 
     _columns = {
-        'thread': fields.char('Thread', size=32, required=False),  
+        'thread': fields.char('Thread', size=32, required=False), 
         'message_ids': one2many_domain('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
-        'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False),
+        'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
         }
         
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
@@ -77,23 +77,32 @@ class mailgate_thread(osv.osv):
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
             data = {
-                'name': keyword,
-                'user_id': uid,
-                'model_id' : model_ids and model_ids[0] or False,
-                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'thread_id': case.thread_id.id,                
-                'message_id': message_id
+                'name': keyword, 
+                'user_id': uid, 
+                'model_id' : model_ids and model_ids[0] or False, 
+                'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
+                'thread_id': case.thread_id.id, 
+                'message_id': message_id, 
             }
 
             if history:
-                data['history'] = True
-                data['description'] = details or case.description
-                data['email_to'] = email or \
-                        (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from', False)
-                data['email_from'] = email_from or \
-                        (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from', False)
+                data = {
+                        'name': keyword, 
+                        'history': True, 
+                        'user_id': uid, 
+                        'model_id' : model_ids and model_ids[0] or False, 
+                        'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
+                        'description': details or case.description, 
+                        'email_to': email or \
+                                (case.user_id and case.user_id.address_id and \
+                                    case.user_id.address_id.email) or tools.config.get('email_from', False), 
+                        'email_from': email_from or \
+                                (case.user_id and case.user_id.address_id and \
+                                    case.user_id.address_id.email) or tools.config.get('email_from', False), 
+                        'partner_id': case.partner_id.id, 
+                        'thread_id': case.thread_id.id, 
+                        'message_id': message_id, 
+                        }
             res = obj.create(cr, uid, data, context)
         return True
     
@@ -112,20 +121,21 @@ class mailgate_message(osv.osv):
     _order = 'date desc'
 
     _columns = {
-        'name':fields.char('Message', size=64),
-        'model_id': fields.many2one('ir.model', 'Model'),
-        'thread_id':fields.many2one('mailgate.thread', 'Thread'),
-        'date': fields.datetime('Date'),
+        'name':fields.char('Message', size=64), 
+        'model_id': fields.many2one('ir.model', 'Model'), 
+        'thread_id':fields.many2one('mailgate.thread', 'Thread'), 
+        'date': fields.datetime('Date'), 
         'history': fields.boolean('Is History?', required=False), 
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'message': fields.text('Description'),
-        'email_from': fields.char('Email From', size=84),
-        'email_to': fields.char('Email To', size=84),
-        'email_cc': fields.char('Email From', size=84),
-        'email_bcc': fields.char('Email From', size=84),
-        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True),
+        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
+        'message': fields.text('Description'), 
+        'email_from': fields.char('Email From', size=84), 
+        'email_to': fields.char('Email To', size=84), 
+        'email_cc': fields.char('Email CC', size=84), 
+        'email_bcc': fields.char('Email BCC', size=84), 
+        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True), 
         'description': fields.text('Description'), 
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'partner_id': fields.many2one('res.partner', 'Partner', required=False), 
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'), 
     }
 
 mailgate_message()
