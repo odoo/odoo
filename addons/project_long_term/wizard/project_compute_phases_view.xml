@@ -8,7 +8,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               	<form string="Compute Scheduling of Phases">
-		              <field name="target_project" />
+	                  <group colspan="4" col="4">
+	                  <label colspan="4" string="This wizard will schedule phases for all or specified project" />
+	                  <newline />
+		              <field name="target_project" colspan="4"/>
+		              </group>
 		              <newline />
 		              <group colspan="4" col="6" attrs="{'invisible':[('target_project','=','all')]}">
 		              		<field name="project_id"/>
@@ -34,7 +38,7 @@
     	</record>
 
  		<menuitem id="menu_compute_phase" name="Compute Phase Scheduling"
-        	parent="base.menu_pm_planning" action="action_project_compute_phases"/>
+        	parent="menu_phase_schedule" action="action_project_compute_phases"/>
 
     </data>
 </openerp>

@@ -60,7 +60,7 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
-                        <field domain="[('project_id','=',project_id)]" name="sprint_id" select="1"/>
+                        <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>
                            <field name="date"/>
@@ -129,6 +129,7 @@
                         <filter default="1"
                             icon="terp-project"
                             string="Current"
+                            name="current"
                             domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open'])]"
                             help="Current Backlogs"/>
                         <separator orientation="vertical"/>
@@ -165,7 +166,7 @@
             <field name="name">Product Backlogs</field>
             <field name="res_model">scrum.product.backlog</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="context">{"search_default_user_id":uid, 'search_default_current': 1}</field>
             <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
         </record>
         <menuitem
@@ -210,7 +211,6 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="project_id" on_change="onchange_project_id(project_id)"/>
-                        <field name="active"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sprint Info">
@@ -287,9 +287,8 @@
             <field name="res_model">scrum.sprint</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_filter_current': 1}</field>
             <field name="view_id" ref="view_scrum_sprint_tree"/>
-            <field name="context">{"search_default_scrum_master_id":uid}</field>
+            <field name="context">{"search_default_filter_current": 1, "search_default_scrum_master_id":uid}</field>
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
         </record>
         <menuitem
@@ -456,7 +455,7 @@
             <field name="inherit_id" ref="project.view_task_tree2"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="sprint_id" invisible="context.get('sprint_invisible',True)"/>
+                    <field name="sprint_id" domain="[('state', 'in', ['draft', 'open'])]" invisible="context.get('sprint_invisible',True)"/>
                     <field name="product_backlog_id" invisible="1"/>
                 </field>
             </field>
@@ -481,7 +480,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page[@string='Extra Info']/group/field[@name='sequence']" position="after">
-                    <field name="sprint_id" />
+                    <field name="sprint_id" domain="[('state', 'in', ['draft', 'open'])]" />
                 </xpath>
             </field>
         </record>
@@ -493,7 +492,7 @@
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
                 <field name="project_id" position="after">
-                    <field name="sprint_id" widget="selection" context="{'sprint_invisible':False}">
+                    <field name="sprint_id" context="{'sprint_invisible':False}">
                         <filter icon="terp-project" string="Current" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                     </field>
                 </field>

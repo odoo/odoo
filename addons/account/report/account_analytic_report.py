@@ -35,7 +35,7 @@ class analytic_report(osv.osv):
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', readonly=True),
         'user_id' : fields.many2one('res.users', 'Account Manager',readonly=True),
         'product_id' : fields.many2one('product.product', 'Product',readonly=True),
-        'quantity': fields.float('Quantity',readonly=True),
+        'total_quantity': fields.float('# Total Quantity',readonly=True),
         'debit' : fields.float('Debit',readonly=True),
         'credit' : fields.float('Credit',readonly=True),
         'balance' : fields.float('Balance',readonly=True),
@@ -43,6 +43,11 @@ class analytic_report(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
+        'nbr':fields.integer('# of Lines', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type'),
+
         'state': fields.selection([('draft','Draft'),
                                    ('open','Open'),
                                    ('pending','Pending'),
@@ -50,6 +55,7 @@ class analytic_report(osv.osv):
                                    ('close','Close'),
                                    ('template', 'Template')],
                 'State', readonly=True),
+
     }
     _order = 'date_start desc'
     def init(self, cr):
@@ -60,15 +66,18 @@ class analytic_report(osv.osv):
                       min(s.id) as id,
                       to_char(s.create_date, 'YYYY') as year,
                       to_char(s.create_date, 'MM') as month,
+                      to_char(s.create_date, 'YYYY-MM-DD') as day,
                       l.journal_id,
                       l.product_id,
                       s.parent_id,
                       s.date_start,
                       s.date as date_end,
                       s.user_id,
+                      s.company_id,
+                      s.type,
                       s.name,
                       s.partner_id,
-                      s.quantity,
+                      sum(s.quantity) as total_quantity,
                       s.debit,
                       s.credit,
                       s.balance,
@@ -77,7 +86,8 @@ class analytic_report(osv.osv):
                 from account_analytic_account s
                 left join account_analytic_line l on (s.id=l.account_id)
                 GROUP BY s.create_date,s.state,l.journal_id,s.name,
-                      s.partner_id,s.date_start,s.date,s.user_id,s.quantity,
+                      s.partner_id,s.date_start,s.date,s.user_id,
+                      s.company_id,s.type,
                       s.debit,s.credit,s.balance,s.parent_id,l.product_id
             )
         """)

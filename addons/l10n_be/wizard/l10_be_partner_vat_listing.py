@@ -216,8 +216,7 @@ class partner_vat_list(osv.osv_memory):
         sum_tax = 0.00
         sum_turnover = 0.00
         if len(error_message):
-            msg ='Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
-            return msg
+            return 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
         for line in datas:
             if not line:
                 continue

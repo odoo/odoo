@@ -36,7 +36,7 @@ class campaign_analysis(osv.osv): #{{{
         result = {}
         for ca_obj in self.browse(cr, uid, ids, context):
             wi_ids = self.pool.get('marketing.campaign.workitem').search(cr, uid,
-                                    [('segment_id.campaign_id', '=', ca_obj.campaign_id.id)])
+                        [('segment_id.campaign_id', '=', ca_obj.campaign_id.id)])
             total_cost = ca_obj.activity_id.variable_cost + \
                                 (ca_obj.campaign_id.fixed_cost / len(wi_ids))
             result[ca_obj.id] = total_cost
@@ -58,14 +58,12 @@ class campaign_analysis(osv.osv): #{{{
                                                                 readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'country_id': fields.related('partner_id','address', 'country_id',
-        							 type='many2one', relation='res.country',
-        							 				  string='Country'),
-#        'case_id': fields.many2one('crm.lead', 'Opportunity', readonly=True),
-#       'count' : fields.integer('Count', readonly=True),
-        'total_cost': fields.function(_total_cost, string='Cost', method=True, 
-                                                                type="float"),
+                    type='many2one', relation='res.country',string='Country'),
+        'total_cost' : fields.function(_total_cost, string='Cost', method=True, 
+                                    type="float" ),
         'revenue': fields.float('Revenue',readonly=True),
-
+#        'case_id': fields.many2one('crm.lead', 'Opportunity', readonly=True),
+#        'count' : fields.integer('Count', readonly=True),
     }
     
     def init(self, cr):
@@ -87,7 +85,7 @@ class campaign_analysis(osv.osv): #{{{
                     marketing_campaign_workitem wi
                     left join res_partner p on (p.id=wi.partner_id)
                     left join marketing_campaign_segment s on (s.id=wi.segment_id)
-                    left join marketing_campaign_activity act on (act.id= wi.activity_id),
+                    left join marketing_campaign_activity act on (act.id= wi.activity_id)
                 group by
                     to_char(wi.date, 'YYYY'),to_char(wi.date, 'MM'),
                     s.campaign_id,wi.activity_id,wi.segment_id,wi.partner_id,revenue,
