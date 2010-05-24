@@ -463,12 +463,13 @@ class pos_order(osv.osv):
         """Create a picking for each order and validate it."""
         
         picking_obj = self.pool.get('stock.picking')
-
+        pick_name=self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         orders = self.browse(cr, uid, ids, context)
         for order in orders:
             if not order.picking_id:
                 new = True
                 picking_id = picking_obj.create(cr, uid, {
+                    'name':pick_name,                                                          
                     'origin': order.name,
                     'type': 'out',
                     'state': 'draft',
