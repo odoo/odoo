@@ -254,7 +254,7 @@
                         <field name="product_uos" groups="product.group_uos"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <newline/>
-                        <field name="multi_level_bom" />
+                        <field name="multi_level_bom" on_change="onchange_multi_level_bom(multi_level_bom)"/>
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
