@@ -52,13 +52,13 @@
             <field name="arch" type="xml">
                 <search string="Tasks">
                 	<group>
-	                    <filter icon="terp-project" string="This Year"
+	                    <filter icon="terp-project" string="Last 365 Days"
 	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-	                    	    help="Tasks performed in this year"/>
-	                    <filter icon="terp-project" string="This Month"
+	                    	    help="Tasks performed in last 365 Days"/>
+	                    <filter icon="terp-project" string="Last 30 Days"
 	                    		name="month"
 	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                    		help="Tasks performed in this month"/>
+	                    		help="Tasks performed in last 30 days"/>
 		                <filter icon="gtk-media-rewind"
 	                            string="    7 Days    "
 	                            separator="1"
@@ -77,6 +77,10 @@
 	                   			icon="terp-project"
 	                   			domain="[('state','=','pending')]"
 	                   			help = "Pending tasks"/>
+                      	<filter string="Done"
+                    			icon="terp-project"
+                    			name="done"
+                    			domain="[('state','=','done')]"/>
 	  					<separator orientation="vertical"/>
 	                    <field name="user_id" widget="selection">
 	                        <filter icon="terp-project"
@@ -88,7 +92,7 @@
 	                        		help="Non Assigned Tasks to users"
 	                        		domain="[('user_id','=',False)]"/>
 	                    </field>
-	                    <field name="project_id">
+	                    <field name="project_id" widget="selection">
 	                        <filter icon="terp-project"
 	                        		string="My Task"
 	                        		help="My Tasks"
@@ -98,25 +102,21 @@
 	                        		help ="Non assigned tasks to projects"
 	                        		domain="[('project_id','=',False"/>
 	                    </field>
+	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <newline/>
 	                <group expand="0" string="Extended options..." colspan="10" col="12">
-                      	<filter string="Done"
-                    			icon="terp-project"
-                    			name="done"
-                    			domain="[('state','=','done')]"/>
-                    	<filter string="Cancelled"
-                    			icon="terp-project"
-                    			domain="[('state','=','cancelled')]"/>
-                    	<separator orientation="vertical"/>
 	                    <field name="type" widget="selection"/>
-	                    <field name="priority"/>
-	                    <field name="partner_id" widget="selection"/>
 	                    <separator orientation="vertical"/>
+                        <field name="date_start"/>
+                        <separator orientation="vertical"/>
 	                    <field name="date_deadline"/>
 	                    <newline/>
-	                    <field name="date_start"/>
+	                    <field name="priority"/>
+	                    <separator orientation="vertical"/>
 	                    <field name="date_end"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="partner_id" />
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="11">
