@@ -19,10 +19,12 @@
 #
 ##############################################################################
 import time
+import base64
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv
+import netsvc
 
 _intervalTypes = {
     'hours': lambda interval: relativedelta(hours=interval),
@@ -37,7 +39,7 @@ class marketing_campaign(osv.osv): #{{{
     
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'object_id': fields.many2one('ir.model', 'Objects'),
+        'object_id': fields.many2one('ir.model', 'Objects', required=True),
         'mode':fields.selection([('test', 'Test'),
                                 ('test_realtime', 'Realtime Time'),
                                 ('manual', 'Manual'),
@@ -53,7 +55,40 @@ class marketing_campaign(osv.osv): #{{{
         'fixed_cost': fields.float('Fixed Cost'),                                       
         
     }
-
+    
+    _defaults = {
+        'state': lambda *a: 'draft',
+    }
+    
+    def state_running_set(self, cr, uid, ids, *args):
+        campaign = self.browse(cr, uid, ids[0])
+        if not campaign.activity_ids :
+            raise osv.except_osv("Error", "There is no associate activitity for the campaign")
+        act_ids = [ act_id.id for act_id in campaign.activity_ids]
+        act_ids  = self.pool.get('marketing.campaign.activity').search(cr, uid,
+                                [('id', 'in', act_ids), ('start', '=', True)])
+        if not act_ids :
+            raise osv.except_osv("Error", "There is no associate activitity for the campaign")
+        segment_ids = self.pool.get('marketing.campaign.segment').search(cr, uid,
+                                            [('campaign_id', '=', campaign.id),
+                                            ('state', '=', 'draft')])
+        if not segment_ids :
+            raise osv.except_osv("Error", "There is no associate semgnet for the campaign")
+        self.write(cr, uid, ids, {'state': 'running'})
+        return True
+        
+    def state_done_set(self, cr, uid, ids, *args):
+        segment_ids = self.pool.get('marketing.campaign.segment').search(cr, uid,
+                                            [('campaign_id', 'in', ids),
+                                            ('state', '=', 'running')])
+        if segment_ids :
+            raise osv.except_osv("Error", "Camapign cannot be done before all segments are done")            
+        self.write(cr, uid, ids, {'state': 'done'})
+        return True
+        
+    def state_cancel_set(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'cancelled'})
+        return True
 marketing_campaign()#}}}
 
 class marketing_campaign_segment(osv.osv): #{{{
@@ -69,8 +104,8 @@ class marketing_campaign_segment(osv.osv): #{{{
                                       string='Object'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter'),
         'sync_last_date': fields.datetime('Date'),
-        'sync_mode': fields.selection([('create', 'Create'),
-                                      ('write', 'Write')],
+        'sync_mode': fields.selection([('create_date', 'Create'),
+                                      ('write_date', 'Write')],
                                       'Mode'),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
@@ -80,6 +115,74 @@ class marketing_campaign_segment(osv.osv): #{{{
         'date_run': fields.datetime('Running'),
         'date_done': fields.datetime('Done'),
     }
+    
+    _defaults = {
+        'state': lambda *a: 'draft',
+        'sync_mode': lambda *a: 'create_date',
+    }
+    
+    def state_running_set(self, cr, uid, ids, *args):
+        segment = self.browse(cr, uid, ids[0])
+        curr_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        if not segment.date_run:
+            raise osv.except_osv("Error", "Segment can't be start before giving running date")
+        if segment.campaign_id.state != 'running' :
+            raise osv.except_osv("Error", "You have to start campaign first")
+        if (segment.date_run >= curr_date):
+                raise osv.except_osv("Error", "Segment cannot start before run date")
+        if not segment.sync_last_date:
+            self.write(cr, uid, ids, {'sync_last_date':curr_date})
+        self.write(cr, uid, ids, {'state': 'running','date_done': curr_date})
+        return True
+        
+    def state_done_set(self, cr, uid, ids, *args):
+        date_done = self.browse(cr, uid, ids[0]).date_done 
+        if (date_done > time.strftime('%Y-%m-%d')):
+            raise osv.except_osv("Error", "Segment cannot be closed before end date")
+
+        wi_ids = self.pool.get("marketing.campaign.workitem").search(cr, uid,
+                                [('state', 'in', ['inprogress', 'todo']),
+                                 ('segment_id', '=', ids[0])])
+        if wi_ids :
+            raise osv.except_osv("Error", "Segment cannot be done before all workitems are processed")            
+        self.write(cr, uid, ids, {'state': 'done'})
+        return True
+        
+    def state_cancel_set(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'cancelled'})
+        return True
+        
+    def process_segment(self, cr, uid, context={}):
+        segment_ids = self.search(cr, uid, [('state', '=', 'running')])
+        action_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        last_action_date = (datetime.now() + _intervalTypes['days'](-1) \
+                                            ).strftime('%Y-%m-%d %H:%M:%S')
+        for segment in self.browse(cr, uid, segment_ids):
+            act_ids = self.pool.get('marketing.campaign.activity').search(cr, 
+                                  uid, [('start', '=', True),
+                                  ('campaign_id', '=', segment.campaign_id.id)])
+            if (segment.sync_last_date and \
+                segment.sync_last_date <= action_date )\
+                 or not segment.sync_last_date :
+                model_obj = self.pool.get(segment.object_id.model)
+                object_ids = model_obj.search(cr, uid, [
+                                        (segment.sync_mode, '<=', action_date),
+                                (segment.sync_mode, '>=', last_action_date)])
+                for o_ids in  model_obj.read(cr, uid, object_ids) :
+                    partner_id = 'partner_id' in o_ids and o_ids['partner_id'] \
+                                        or False
+                    if partner_id:
+                        for act_id in act_ids:
+                            wi_vals = {'segment_id': segment.id,
+                                       'activity_id': act_id,
+                                       'date': action_date,
+                                       'partner_id': partner_id[0],
+                                       'state': 'todo',
+                                        }
+                            self.pool.get('marketing.campaign.workitem').create(
+                                                    cr, uid, wi_vals)
+                self.write(cr, uid, segment.id, {'sync_last_date':action_date}) 
+        return True
 
 marketing_campaign_segment()#}}}
 
@@ -99,7 +202,7 @@ class marketing_campaign_activity(osv.osv): #{{{
                                   ('paper', 'Paper'),
                                   ('action', 'Action'),
                                   ('subcampaign', 'Sub-Campaign')],
-                                   'Type'),
+                                  'Type', required=True),
         'email_template_id': fields.many2one('poweremail.templates','Email Template'),
         'report_id': fields.many2one('ir.actions.report.xml', 'Reports'),         
         'report_directory_id': fields.many2one('document.directory', 'Directory'),
@@ -116,6 +219,7 @@ class marketing_campaign_activity(osv.osv): #{{{
         'variable_cost': fields.float('Variable Cost'),
         'revenue': fields.float('Revenue')
         }
+
    
     def search(self, cr, uid, args, offset=0, limit=None, order=None, 
                                         context=None, count=False):
@@ -130,7 +234,26 @@ class marketing_campaign_activity(osv.osv): #{{{
             return act_ids
         return super(marketing_campaign_activity, self).search(cr, uid, args, 
                                            offset, limit, order, context, count)
-    
+
+    def process(self, cr, uid, act_id, wi_id, context={}):
+        activity = self.browse(cr, uid, act_id)
+        workitem = self.pool.get('marketing.campaign.workitem').browse(cr, uid, wi_id)
+        if activity.type == 'paper' :
+            service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
+            (report_data, format) = service.create(cr, uid, [activity.report_id.id], {}, {})
+            attach_vals = {
+                    'name': '%s_%s_%s'%(activity.report_id.report_name,
+                                        activity.name,workitem.partner_id.name),
+                    'datas_fname': '%s.%s'%(activity.report_id.report_name,
+                                                activity.report_id.report_type),
+                    'parent_id': activity.report_directory_id.id,
+                    'datas': base64.encodestring(report_data),
+                    'file_type': format
+                    }
+            self.pool.get('ir.attachment').create(cr, uid, attach_vals)
+#        elif activity.type == 'email' :
+
+        return True    
 marketing_campaign_activity()#}}}
 
 class marketing_campaign_transition(osv.osv): #{{{
@@ -176,16 +299,21 @@ class marketing_campaign_workitem(osv.osv): #{{{
                                    ('exception', 'Exception'), ('done', 'Done'),
                                    ('cancelled', 'Cancelled')], 'State')
         }
+    _defaults = {
+        'state': lambda *a: 'draft',
+    }
 
     def process_chain(self, cr, uid, workitem_id, context={}):
         workitem = self.browse(cr, uid, workitem_id)
-        to_ids = [to_ids.id for to_ids in workitem.activity_id.to_ids]
         mct_obj = self.pool.get('marketing.campaign.transition')
-        process_to_id = mct_obj.search(cr,uid, [('id', 'in', to_ids),
-                                       ('activity_from_id','=', 'activity_id')])
+        process_to_id = mct_obj.search(cr,uid, [
+                           ('activity_from_id','=', workitem.activity_id.id)])
         for mct_id in mct_obj.browse(cr, uid, process_to_id):
-            launch_date = datetime.datetime.now() + _intervalTypes[ \
-                                    mct_id.interval_type](mct_id.interval_nbr)            
+            if mct_id.interval_type and mct_id.interval_nbr :
+                launch_date = (datetime.now() + _intervalTypes[ \
+                                mct_id.interval_type](mct_id.interval_nbr) \
+                                ).strftime('%Y-%m-%d %H:%M:%S')
+            launch_date = time.strftime('%Y-%m-%d %H:%M:%S')
             workitem_vals = {'segment_id': workitem.segment_id.id,
                             'activity_id': mct_id.activity_to_id.id,
                             'date': launch_date,
@@ -195,16 +323,38 @@ class marketing_campaign_workitem(osv.osv): #{{{
             self.create(cr, uid, workitem_vals)
             
     def process(self, cr, uid, workitem_ids, context={}):
-        #for wi in self.browse(cr, uid, workitem_ids):
-        #    if wi.state == 'todo'# we searched the wi which are in todo state 
+        for wi in self.browse(cr, uid, workitem_ids):
+            if wi.state == 'todo' :# we searched the wi which are in todo state 
                     #then y v keep this filter again 
+                eval_context = {
+                    'pool': self.pool,
+                    'cr': cr,
+                    'uid': uid,
+                    'wi': wi,
+                    'object': wi.activity_id,
+                    'transition' : wi.activity_id.to_ids
+                }
+                val = {}                    
+                exec wi.activity_id.condition.replace('\r','') in \
+                                                 eval_context, val
+                if 'action' in val and val['action']:
+                    try :
+                        self.pool.get('marketing.campaign.activity').process(cr, 
+                                        uid, wi.activity_id.id, wi.id, context)
+                        self.write(cr, uid, wi.id, {'state':'done'})
+                        self.process_chain(cr, uid, wi.id, context)
+                    except Exception,e:
+                        self.write(cr, uid, wi.id, {'state':'exception'})
+                else :
+                    self.write(cr, uid, wi.id, {'state':'cancelled'})
+                    
         return True
         
     def process_all(self, cr, uid, context={}):
-        workitem_ids = self.search(cr, uid, [('type', '=', 'todo'),
+        workitem_ids = self.search(cr, uid, [('state', '=', 'todo'),
                         ('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))])
         if workitem_ids:
-            self.parocess(cr, uid, workitem_ids, context)
+            self.process(cr, uid, workitem_ids, context)
     
 marketing_campaign_workitem() #}}}  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

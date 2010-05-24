@@ -212,8 +212,8 @@ class res_partner_job(osv.osv):
         'name': fields.related('address_id', 'partner_id', type='many2one',\
                      relation='res.partner', string='Partner', help="You may\
                      enter Address first,Partner will be linked automatically if any."),
-        'address_id': fields.many2one('res.partner.address', 'Address', domain=[('partner_id', '=', name)], \
-                        help='Address which is linked to the Partner'),
+        'address_id': fields.many2one('res.partner.address', 'Address', \
+                        help='Address which is linked to the Partner'), # TO Correct: domain=[('partner_id', '=', name)]
         'contact_id': fields.many2one('res.partner.contact','Contact', required=True, ondelete='cascade'),
         'function_id': fields.many2one('res.partner.function','Partner Function', \
                             help="Function of this contact with this partner"),

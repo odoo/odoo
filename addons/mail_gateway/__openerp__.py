@@ -32,7 +32,7 @@
     * Easy Integration with any Module""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base','fetchmail'],
+    'depends': ['base'],
     'init_xml': [],
     'update_xml': [
         "mail_gateway_view.xml"
