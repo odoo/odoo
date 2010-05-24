@@ -60,11 +60,11 @@ class lang(osv.osv):
         ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique (code)', 'The code of the language must be unique !'),
     ]
-    
+
     @tools.cache(skiparg=3)
     def _lang_data_get(self, cr, uid, lang_id, monetary=False):
         conv = localeconv()
-        lang_obj=self.browse(cr,uid,lang_id)
+        lang_obj = self.browse(cr, uid, lang_id)
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
         decimal_point = lang_obj.decimal_point
         grouping = lang_obj.grouping
@@ -80,6 +80,7 @@ class lang(osv.osv):
         
         if not grouping:
             return (s, 0)
+
         result = ""
         seps = 0
         spaces = ""
@@ -129,7 +130,7 @@ class lang(osv.osv):
             parts = formatted.split('.')
 
             if grouping:
-                 parts[0], seps = self._group(cr,uid,ids,parts[0], monetary=monetary, grouping=lang_grouping, thousands_sep=thousands_sep)
+                parts[0], seps = self._group(cr,uid,ids,parts[0], monetary=monetary, grouping=lang_grouping, thousands_sep=thousands_sep)
 
             formatted = decimal_point.join(parts)
             while seps:

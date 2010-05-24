@@ -44,7 +44,7 @@ sys.path.append(join(os.path.abspath(os.path.dirname(__file__)), "bin"))
 
 execfile(join('bin', 'release.py'))
 
-if sys.argv[1] == 'bdist_rpm':
+if 'bdist_rpm' in sys.argv:
     version = version.split('-')[0]
 
 # get python short version
@@ -60,6 +60,7 @@ required_modules = [
     ('pytz', 'Timezone handling library for Python'),
     ('reportlab', 'reportlab module'),
     ('yaml', 'YAML parser and emitter for Python'),
+    ('pywebdav', 'PyWebDAV is a standards compliant WebDAV server and library written in Python'),
 ]
 
 def check_modules():
@@ -176,11 +177,14 @@ options = {
         "compressed": 1,
         "optimize": 2,
         "dist_dir": 'dist',
-        "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-                     "lxml.objectify", "decimal", "xml", "encodings",
-                     "dateutil", "wizard", "pychart", "PIL", "pyparsing",
-                     "pydot", "asyncore","asynchat", "reportlab", "vobject",
-                     "HTMLParser", "select", "yaml"],
+        "packages": [
+                 "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
+                 "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
+                 "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
+                 "pydot", "asyncore","asynchat", "reportlab", "vobject",
+                 "HTMLParser", "select", "mako", "poplib",
+                 "imaplib", "smtplib", "email", "yaml","pywebdav",
+                 ],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }

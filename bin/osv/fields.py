@@ -39,7 +39,7 @@ from psycopg2 import Binary
 import warnings
 
 import tools
-
+from tools.translate import _
 
 def _symbol_set(symb):
     if symb == None or symb == False:
@@ -748,7 +748,7 @@ class related(function):
                 ids=[ids]
             objlst = obj.browse(cr, uid, ids)
             for data in objlst:
-                t_id=None
+                t_id = None
                 t_data = data
                 relation = obj._name
                 for i in range(len(self.arg)):

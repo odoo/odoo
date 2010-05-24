@@ -10,41 +10,6 @@
         <menuitem id="menu_base_config_contact" name="Contacts" parent="menu_base_config" sequence="20" />
 
         <!--
-          ================================
-          Function
-          ================================
-        -->
-        <record id="view_partner_function_form" model="ir.ui.view">
-            <field name="name">res.partner.function.form</field>
-            <field name="model">res.partner.function</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Contact Functions">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                </form>
-            </field>
-        </record>
-        <record id="view_partner_function_tree" model="ir.ui.view">
-            <field name="name">res.partner.function.tree</field>
-            <field name="model">res.partner.function</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Contact Functions">
-                    <field name="code"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_partner_function_form" model="ir.actions.act_window">
-            <field name="name">Contact Functions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.function</field>
-            <field name="view_type">form</field>
-        </record>
-        <menuitem action="action_partner_function_form" id="menu_partner_function_form" parent="base.menu_base_config_contact" sequence="20"/>
-
-        <!--
           =====================
           Partner Address
           =====================
@@ -347,24 +312,27 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
-                        <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
-                        <separator orientation="vertical"/>
                         <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
                         <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-                         <filter string="Employees" icon="terp-partner" domain="[('employee','=',1)]" help="Employee Partners"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address" select="1"/>
                         <field name="country" select="1"/>
                         <field name="category_id" select="1"/>
-                        <field name="user_id" select="1"/>
+                        <field name="user_id" select="1">
+                            <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
+                        </field>
+                   </group>
+                   <newline />
+                   <group expand="0" string="Group By..." colspan="16">
+                       <filter string="Salesman" icon="terp-crm" domain="[]" context="{'group_by' : 'user_id'}" />
                    </group>
                </search>
             </field>
         </record>
 
         <record id="action_partner_form" model="ir.actions.act_window">
-            <field name="name">Partners</field>
+            <field name="name">Customers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
@@ -639,7 +607,7 @@
             />
 
         <record id="ir_ui_view_sc_partner0" model="ir.ui.view_sc">
-            <field name="name">Partner</field>
+            <field name="name">Address Book</field>
             <field name="resource">ir.ui.menu</field>
             <field name="user_id" ref="base.user_root"/>
              <field name="res_id" ref="menu_partner_form"/>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -52,13 +52,20 @@ class _rml_styles(object,):
     def __init__(self, nodes, localcontext):
         self.localcontext = localcontext
         self.styles = {}
+        self.styles_obj = {}
         self.names = {}
         self.table_styles = {}
+        self.default_style = reportlab.lib.styles.getSampleStyleSheet()
+
         for node in nodes:
             for style in node.findall('blockTableStyle'):
                 self.table_styles[style.get('id')] = self._table_style_get(style)
             for style in node.findall('paraStyle'):
-                self.styles[style.get('name')] = self._para_style_update(style)
+                sname = style.get('name')
+                self.styles[sname] = self._para_style_update(style)
+            
+                self.styles_obj[sname] = reportlab.lib.styles.ParagraphStyle(sname, self.default_style["Normal"], **self.styles[sname])
+
             for variable in node.findall('initialize'):
                 for name in variable.findall('name'):
                     self.names[ name.get('id')] = name.get('value')
@@ -126,17 +133,19 @@ class _rml_styles(object,):
 
     def para_style_get(self, node):
         style = False
-        if node.get('style'):
-            if node.get('style') in self.styles:
-                styles = reportlab.lib.styles.getSampleStyleSheet()
-                sname = node.get('style')
-                style = reportlab.lib.styles.ParagraphStyle(sname, styles["Normal"], **self.styles[sname])
+        sname = node.get('style')
+        if sname:
+            if sname in self.styles_obj:
+                style = self.styles_obj[sname]
             else:
                 sys.stderr.write('Warning: style not found, %s - setting default!\n' % (node.get('style'),) )
         if not style:
-            styles = reportlab.lib.styles.getSampleStyleSheet()
-            style = styles['Normal']
-        style.__dict__.update(self._para_style_update(node))
+            style = self.default_style['Normal']
+        para_update = self._para_style_update(node)
+        if para_update:
+            # update style only is necessary
+            style = copy.deepcopy(style)
+            style.__dict__.update(para_update)
         return style
 
 class _rml_doc(object):
@@ -167,7 +176,7 @@ class _rml_doc(object):
         from reportlab.lib.fonts import addMapping
         from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
-    
+
         pdfmetrics.registerFont(TTFont(fontname, filename ))
         if (mode == 'all'):
             addMapping(face, 0, 0, fontname)    #normal
@@ -417,11 +426,11 @@ class _rml_canvas(object):
         self.canvas.drawPath(self.path, **utils.attr_get(node, [], {'fill':'bool','stroke':'bool'}))
 
     def setFont(self, node):
-        from reportlab.pdfbase import pdfmetrics 
+        from reportlab.pdfbase import pdfmetrics
         fname = node.get('name')
-        #TODO : other fonts should be supported      
+        #TODO : other fonts should be supported
         if fname not in pdfmetrics.standardFonts:
-           fname = self.canvas._fontname          
+           fname = self.canvas._fontname
         return self.canvas.setFont(fname, utils.unit_get(node.get('size')))
 
     def render(self, node):
@@ -565,7 +574,7 @@ class _rml_flowable(object):
     def _illustration(self, node):
         class Illustration(platypus.flowables.Flowable):
             def __init__(self, node, localcontext, styles, self2):
-                self.localcontext = localcontext
+                self.localcontext = localcontext.copy()
                 self.node = node
                 self.styles = styles
                 self.width = utils.unit_get(node.get('width'))

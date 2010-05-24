@@ -682,7 +682,7 @@ class YamlInterpreter(object):
                 self.logger.exception(e)
             except Exception, e:
                 self.logger.exception(e)
-                raise e
+                raise
     
     def _process_node(self, node):
         if is_comment(node):
