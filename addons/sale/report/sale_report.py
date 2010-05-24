@@ -57,6 +57,12 @@ class sale_report(osv.osv):
             ('done', 'Done'),
             ('cancel', 'Cancelled')
             ], 'Order State', readonly=True),
+        'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
+        'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact Name', readonly=True),
+        'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address Name', readonly=True),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'date_confirm': fields.date('Confirmation Date', readonly=True)
     }
     _order = 'date desc'
     def init(self, cr):
@@ -81,7 +87,13 @@ class sale_report(osv.osv):
                      sum(l.product_uom_qty*l.price_unit) as price_total,
                      (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty * u.factor))::decimal(16,2) as price_average,
                      count(*) as nbr,
-                     s.state
+                     s.state,
+                     s.partner_invoice_id as partner_invoice_id,
+                     s.partner_order_id as partner_order_id,
+                     s.partner_shipping_id as partner_shipping_id,
+                     s.pricelist_id as pricelist_id,
+                     s.project_id as analytic_account_id,
+                     s.date_confirm as date_confirm
                      from
                  sale_order_line l
                  left join
@@ -97,7 +109,13 @@ class sale_report(osv.osv):
                      s.shop_id,
                      s.company_id,
                      s.fiscal_position,
-                     s.payment_term
+                     s.payment_term,
+                     s.partner_invoice_id,
+                     s.partner_order_id,
+                     s.partner_shipping_id,
+                     s.pricelist_id,
+                     s.project_id,
+                     s.date_confirm
             )
         """)
 sale_report()
@@ -167,10 +185,14 @@ class product_bought_by_sale_order(osv.osv):
     _name = "product.bought.by.sale.order"
     _description = "Product bought by sale order"
     _auto = False
-    _rec_name = 'partner'
+    _rec_name = 'month'
     _columns = {
         'total_products': fields.integer('Total Products', readonly=True),
-        'name': fields.char('Sale order', size=64, readonly=True)
+        'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
+            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+        'year': fields.char('Year', size=64, readonly=True)
     }
     _order = 'total_products desc'
     def init(self, cr):
@@ -179,8 +201,10 @@ class product_bought_by_sale_order(osv.osv):
             create or replace view product_bought_by_sale_order as (
                 select
                     min(s.id) as id,
-                    count(*) as total_products,
-                    s.name as name
+                    l.product_id as product_id,
+                    to_char(l.create_date, 'MM') as month,
+                    to_char(l.create_date, 'YYYY') as year,
+                    count(*) as total_products
                 from
                     sale_order_line l
                 left join
@@ -188,7 +212,7 @@ class product_bought_by_sale_order(osv.osv):
                 where
                     s.state='manual' or s.state='progress'
                 group by
-                    s.name
+                    l.product_id,  to_char(l.create_date, 'MM'), to_char(l.create_date, 'YYYY') 
             )
         """)
 product_bought_by_sale_order()

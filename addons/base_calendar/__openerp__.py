@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,23 +26,24 @@
     'description': """Full featured calendar system that supports:
     - Alerts (create requests)
     - Recurring events (*)
-    - Invitations to others people""", 
-    "author" : "Tiny", 
-    'category': 'Generic Modules/Others', 
-    'website': 'http://www.openerp.com', 
+    - Invitations to others people""",
+    "author" : "Tiny",
+    'category': 'Generic Modules/Others',
+    'website': 'http://www.openerp.com',
     "init_xml" : [
         'base_calendar_data.xml'
-    ], 
-    "demo_xml" : [], 
+    ],
+    "demo_xml" : [],
     "update_xml" : [
         'security/ir.model.access.csv',
-        'wizard/calendar_event_edit_all_view.xml', 
-        'wizard/base_calendar_invite_attendee_view.xml', 
+        'wizard/calendar_event_edit_all_view.xml',
+        'wizard/base_calendar_invite_attendee_view.xml',
+        'wizard/base_calendar_set_exrule_view.xml',
         'base_calendar_view.xml'
-    ], 
-    "test" : ['test/base_calendar_test.yml'], 
-    "installable" : True, 
-    "active" : False, 
+    ],
+   # "test" : ['test/base_calendar_test.yml'],
+    "installable" : True,
+    "active" : False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

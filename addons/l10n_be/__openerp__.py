@@ -45,7 +45,8 @@
                 'account_report',
                 'base_vat',
                 'base_iban',
-                'account_chart'
+                'account_chart',
+                'account_coda',
                 ],
     'init_xml': [],
     'update_xml': [

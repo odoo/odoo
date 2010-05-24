@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<!-- Opportunity Categories Form View -->
+	<!-- Opportunity Categories Form View -->
 
     <record id="crm_opportunity_categ_action" model="ir.actions.act_window">
         <field name="name">Opportunity Categories</field>
@@ -17,7 +17,7 @@
         id="menu_crm_case_opportunity-act"
         parent="crm.menu_crm_case_categ" />
 
-<!-- Opportunity Stages Form View-->
+		<!-- Opportunity Stages Form View-->
 
         <record id="crm_opportunity_stage_act" model="ir.actions.act_window">
             <field name="name">Opportunity Stages</field>
@@ -32,7 +32,7 @@
             id="menu_crm_opportunity_stage_act"
             parent="crm.menu_crm_case_stage" />
 
-<!-- Opportunity Resource Type Form View -->
+		<!-- Opportunity Resource Type Form View -->
 
         <record id="crm_opportunity_resource_act" model="ir.actions.act_window">
             <field name="name">Opportunity Resource Type</field>
@@ -47,7 +47,7 @@
             id="menu_crm_opportunity_resource_act"
             parent="crm.menu_crm_case_resource_type" />
 
-<!-- Opportunities Form View -->
+	<!-- Opportunities Form View -->
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">Opportunities</field>
@@ -56,7 +56,7 @@
         <field name="arch" type="xml">
             <form string="Opportunities">
                 <group colspan="4" col="7">
-                    <field name="name" string="Opportunity"/>
+                    <field name="name"  required="1" string="Opportunity"/>
                     <label string="Stage:" align="1.0"/>
                     <group colspan="1" col="4">
                         <field name="stage_id" nolabel="1"
@@ -204,7 +204,7 @@
         </field>
     </record>
 
-<!-- Opportunities Tree View -->
+	<!-- Opportunities Tree View -->
 
     <record model="ir.ui.view" id="crm_case_tree_view_oppor">
         <field name="name">Opportunities Tree</field>
@@ -216,7 +216,7 @@
                 <field name="name" string="Opportunity"/>
                 <field name="partner_id"/>
                 <field name="stage_id"/>
-                <field name="categ_id" invisible="1"/>
+                <field name="categ_id" invisible="1" groups="base.group_extended"/>
                 <button name="stage_previous" string="Previous"
                     states="open,pending" type="object" icon="gtk-go-back" />
                 <button name="stage_next" string="Next"
@@ -245,7 +245,7 @@
         </field>
     </record>
 
-<!-- Opportunities Graph View -->
+	<!-- Opportunities Graph View -->
 
     <record model="ir.ui.view" id="crm_case_graph_view_opportunity">
         <field name="name">CRM - Opportunity Graph</field>
@@ -260,7 +260,7 @@
         </field>
     </record>
 
-<!-- Opportunities Search View -->
+	<!-- Opportunities Search View -->
 
     <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
         <field name="name">CRM - Opportunities Search</field>
@@ -292,44 +292,41 @@
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
                         domain="[('user_id','=',uid)]"
-                        help="My Opportunities" default="1"
-                    />
+                        help="My Opportunities" default="1"/>
                     <filter icon="terp-partner"
-                        domain="[('user_id','=', False)]"
-                        help="Unassigned Opportunities" />
+                        domain="[('user_id','=', uid)]"
+                        help="Unassigned Opportunities"/>
                 </field>
                 <field name="section_id"
                     default="context.get('section_id', False)" select="1"
                     widget="selection">
                     <filter icon="terp-crm"
                         domain="[('section_id','=',context.get('section_id',False))]"
-                        help="My section" />
+                        help="My section"/>
                 </field>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="16">
                     <filter string="Stage" icon="terp-crm" domain="[]"
-                        context="{'group_by':'stage_id'}" />
+                        context="{'group_by':'stage_id'}"/>
                     <filter string="Priority" icon="terp-crm" domain="[]"
-                        context="{'group_by':'priority'}" />
+                        context="{'group_by':'priority'}"/>
                     <filter string="Category" icon="terp-crm"
-                        domain="[]" context="{'group_by':'categ_id'}" />
+                        domain="[]" context="{'group_by':'categ_id'}"/>
 
-                    <separator orientation="vertical" />
-                    <filter string="Partner" icon="terp-crm" domain="[]"
-                        context="{'group_by':'partner_id'}" />
+                    <separator orientation="vertical"/>
                     <filter string="Salesman" icon="terp-crm"
-                        domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}" />
-                    <separator orientation="vertical" />
+                        domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}"/>
+                    <separator orientation="vertical"/>
                     <filter string="Creation" icon="terp-project"
-                        domain="[]" context="{'group_by':'create_date'}" />
+                        domain="[]" context="{'group_by':'create_date'}"/>
                     <filter string="Exp.Closing" icon="terp-project"
-                        domain="[]" context="{'group_by':'date_deadline'}" />
+                        domain="[]" context="{'group_by':'date_deadline'}"/>
                 </group>
            </search>
         </field>
     </record>
     
-    <!--  Partners inherited form -->
+    	<!--  Partners inherited form -->
 
 		<record id="view_opp_partner_info_form" model="ir.ui.view">
             <field name="name">res.partner.opportunity.info.inherit</field>
@@ -381,7 +378,6 @@
                		</field>
             </field>
         </record>
-
 
 </data>
 </openerp>
