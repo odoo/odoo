@@ -87,6 +87,29 @@
 	                <field name="product_id"/>
 				</group>
 				<newline/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Company" icon="terp-sale" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="Shop" icon="terp-sale" context="{'group_by':'shop_id'}"/>
+                    <filter string="Salesman" icon="terp-sale" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Fiscal Position" icon="terp-sale" context="{'group_by':'fiscal_position'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Product" icon="terp-sale" context="{'group_by':'product_id'}"/>
+                    <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
+                    <filter string="Payment Term" icon="terp-sale" context="{'group_by':'payment_term'}"/>
+                    <filter string="State" icon="terp-sale" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Pricelist" icon="terp-sale" context="{'group_by':'pricelist_id'}"/>
+                    <filter string="Analytic Account" icon="terp-sale" context="{'group_by':'analytic_account_id'}"/>
+                    <newline/>
+                    <filter string="Invoice Address Name" icon="terp-sale" context="{'group_by':'partner_invoice_id'}"/>
+                    <filter string="Ordering Contact Name" icon="terp-sale" context="{'group_by':'partner_order_id'}"/>
+                    <filter string="Shipping Address Name" icon="terp-sale" context="{'group_by':'partner_shipping_id'}"/>
+                    <separator orientation="vertical"/>
+					<filter string="Day" icon="terp-sale" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-sale" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
+                </group>
+				<newline/>
                 <group expand="0" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
                     <filter icon="terp-sale" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
                     <filter icon="terp-sale" string="       Invoice Exception      " domain="[('state','=','invoice_except')]"/>
@@ -109,30 +132,6 @@
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="date"/>
                     <field name="date_confirm"/>
-                </group>
-                <newline/>
-                <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Company" icon="terp-sale" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
-                    <filter string="Shop" icon="terp-sale" context="{'group_by':'shop_id'}"/>
-                    <filter string="Salesman" icon="terp-sale" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Fiscal Position" icon="terp-sale" context="{'group_by':'fiscal_position'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-sale" context="{'group_by':'product_id'}"/>
-                    <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
-                    <filter string="Payment Term" icon="terp-sale" context="{'group_by':'payment_term'}"/>
-                    <filter string="State" icon="terp-sale" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Pricelist" icon="terp-sale" context="{'group_by':'pricelist_id'}"/>
-                    <filter string="Analytic Account" icon="terp-sale" context="{'group_by':'analytic_account_id'}"/>
-                    <newline/>
-                    <filter string="Invoice Address Name" icon="terp-sale" context="{'group_by':'partner_invoice_id'}"/>
-                    <filter string="Ordering Contact Name" icon="terp-sale" context="{'group_by':'partner_order_id'}"/>
-                    <filter string="Shipping Address Name" icon="terp-sale" context="{'group_by':'partner_shipping_id'}"/>
-                    <separator orientation="vertical"/>
-					<filter string="Day" icon="terp-sale" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-sale" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>

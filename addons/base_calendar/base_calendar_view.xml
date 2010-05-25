@@ -124,8 +124,6 @@
                </search>
             </field>
         </record>
-        
-        <!--		Action for attendee view-->
 
 		<record id="action_view_attendee_form" model="ir.actions.act_window">
 	         <field name="name">Event Invitations</field>
@@ -136,12 +134,12 @@
 	         <field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view" />
 	         <field name="context">{'default_sent_by_uid': uid}</field>
 	     </record>
-		
+
 		<!-- Calenadar's menu -->
 		
         <menuitem id="base.menu_calendar_configuration" name="Calendar"
             parent="base.menu_base_config" sequence="10" />
-		
+
 		<!-- Invitation menu -->
 		
 		<menuitem id="menu_attendee_invitations"
@@ -183,8 +181,6 @@
                 </tree>
             </field>
         </record>
-            
-		<!--		Action for alarms view-->
 
         <record id="action_res_alarm_view" model="ir.actions.act_window">
             <field name="name">Available Alarms</field>
@@ -201,8 +197,8 @@
             action="base_calendar.action_res_alarm_view"
             parent="base.menu_calendar_configuration" />
 
-        <!-- Event Form View-->	
-	
+        <!-- Event Form View-->
+
 		<record model="ir.ui.view" id="event_form_view">
 	        <field name="name">Event Form</field>
 	        <field name="model">calendar.event</field>
@@ -363,7 +359,7 @@
 	            </tree>
 	        </field>
 	    </record>
-	    
+
 		<!-- Event Calendar View  -->
 
 		<record model="ir.ui.view" id="event_calendar_view">
@@ -379,9 +375,9 @@
 	            </calendar>
 	        </field>
 	    </record>
-	    
+
 		<!--	 Event Search View-->
-	    
+
 	    <record id="view_calendar_event_filter" model="ir.ui.view">
 	        <field name="name">Calendar Events Search</field>
 	        <field name="model">calendar.event</field>
@@ -402,7 +398,7 @@
                            <field name="class" select="1"/>
                        </group>
                        <newline/>
-						<group expand="0" string="Group By..." colspan="16">
+						<group expand="1" string="Group By..." colspan="16">
 							<filter string="Date" icon="terp-project"
 						        domain="[]" context="{'group_by':'date'}" />
 						    <filter string="Availability" icon="terp-project"
@@ -419,7 +415,7 @@
 
 
 	    <!-- Event action  -->
-	    
+
 		<record id="action_view_event" model="ir.actions.act_window">
 	            <field name="name">Events</field>
 	            <field name="type">ir.actions.act_window</field>
@@ -428,12 +424,12 @@
 	            <field name="view_mode">tree,form,calendar</field>
 	            <field name="search_view_id" ref="view_calendar_event_filter"/>
 	        </record>
-		
+
 		<!-- Event menu  -->
 
 		<menuitem id="menu_events"
 				name="Events" parent="base.menu_calendar_configuration"
 				sequence="5" action="action_view_event" />
-		
+
      </data>
  </openerp>

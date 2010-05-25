@@ -96,38 +96,6 @@
                       	<field name="user_id"  select="1" widget="selection"/>
                    </group>
                    <newline/>
-                   <group  expand="1" string="Extended options..." colspan="10" col="12">
-                         <filter icon="terp-sale"
-                    		string="Done"
-                    		domain="[('state','=','done')]"/>
-
-                    	<filter icon="terp-sale"
-                    		string="Cancel"
-                    		domain="[('state','=','cancel')]"/>
-                    	<group>
-                    		<separator orientation="vertical"/>
-                  			<field name="project_id" widget="selection" />
-                    		<field name="priority" />
-                    		<separator orientation="vertical"/>
-                    		<field name="type_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                    		<field name="task_id"/>
-                    		<separator orientation="vertical"/>
-                    		<field name="assigned_to" widget="selection">
-                    			<filter icon="terp-crm"  help = "Project Issue Assigned To Me" domain="[('assigned_to','=',uid)]" />
- 						    	<filter icon="terp-crm"  help="Non Assigned Project Issue"  domain="[('assigned_to','=',False)]"/>
-                    		</field>
-                    		<newline/>
-                    		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                    		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
-                    		<separator orientation="vertical"/>
-                    		<field name="partner_id"  />
-                    		<field name="canal_id" widget="selection"/>
-                            <separator orientation="vertical"/>
-                            <field name="date_closed" string="Date Closed"/>
-                        </group>
-
-                   </group>
-                   <newline/>
                    <group  expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="User" name="User" icon="terp-sale"
                         	domain="[]" context="{'group_by':'user_id'}" />
@@ -170,6 +138,38 @@
                         	domain="[]" context="{'group_by':'name'}" />
 
                   </group>
+                   <newline/>
+                   <group  expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
+                         <filter icon="terp-sale"
+                    		string="Done"
+                    		domain="[('state','=','done')]"/>
+
+                    	<filter icon="terp-sale"
+                    		string="Cancel"
+                    		domain="[('state','=','cancel')]"/>
+                    	<group>
+                    		<separator orientation="vertical"/>
+                  			<field name="project_id" widget="selection" />
+                    		<field name="priority" />
+                    		<separator orientation="vertical"/>
+                    		<field name="type_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                    		<field name="task_id"/>
+                    		<separator orientation="vertical"/>
+                    		<field name="assigned_to" widget="selection">
+                    			<filter icon="terp-crm"  help = "Project Issue Assigned To Me" domain="[('assigned_to','=',uid)]" />
+ 						    	<filter icon="terp-crm"  help="Non Assigned Project Issue"  domain="[('assigned_to','=',False)]"/>
+                    		</field>
+                    		<newline/>
+                    		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                    		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
+                    		<separator orientation="vertical"/>
+                    		<field name="partner_id"  />
+                    		<field name="canal_id" widget="selection"/>
+                            <separator orientation="vertical"/>
+                            <field name="date_closed" string="Date Closed"/>
+                        </group>
+
+                   </group>
                </search>
             </field>
         </record>
