@@ -118,10 +118,27 @@
                             <field name="acc_number"/>
                         </tree>
                     </field>
+                    <field name="invoice_ids" colspan="4" nolabel="1" context="{'group_by':'product_id'}"/>
                 </page>
                 </notebook>
             </field>
         </record>
+        
+        <!--  Partners info tab view-->
 
+        <record id="view_account_partner_info_form" model="ir.ui.view">
+            <field name="name">res.partner.account.info.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Project">
+                        <field name="contract_ids" colspan="4" nolabel="1" />
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        
     </data>
 </openerp>
