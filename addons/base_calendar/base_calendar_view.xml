@@ -108,7 +108,14 @@
                    <field name="cutype" string="Invitation type" select="1"/>
                    <field name="event_date" select="1"/>
                    <newline/>
-					<group expand="0" string="Group By...">
+					<group expand="1" string="Group By..." colspan="16">
+						<filter string="Type" icon="terp-project" help="Invitation Type"
+					        domain="[]" context="{'group_by':'cutype'}" />
+					    <filter string="Role" icon="terp-project"
+					        domain="[]" context="{'group_by':'role'}" />
+					    <filter string="Required Reply" icon="terp-crm"
+					        domain="[]" context="{'group_by':'rsvp'}" />
+					    <separator orientation="vertical" />
 					    <filter string="User" icon="terp-partner" domain="[]"
 					        context="{'group_by':'user_id'}" />
 					    <filter string="Contact" icon="terp-partner" domain="[]"
