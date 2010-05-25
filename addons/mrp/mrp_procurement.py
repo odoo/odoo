@@ -34,6 +34,9 @@ class mrp_procurement(osv.osv):
     }
     
     def check_produce_product(self, cr, uid, procurement, context=[]):
+        """ Finds the bill of material for the product from procurement order.
+        @return: True or False
+        """
         properties = [x.id for x in procurement.property_ids]
         bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
         if not bom_id:
