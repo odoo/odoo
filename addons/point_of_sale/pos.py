@@ -463,12 +463,13 @@ class pos_order(osv.osv):
         """Create a picking for each order and validate it."""
         
         picking_obj = self.pool.get('stock.picking')
-
+        pick_name=self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         orders = self.browse(cr, uid, ids, context)
         for order in orders:
             if not order.picking_id:
                 new = True
                 picking_id = picking_obj.create(cr, uid, {
+                    'name':pick_name,                                                          
                     'origin': order.name,
                     'type': 'out',
                     'state': 'draft',
@@ -504,7 +505,7 @@ class pos_order(osv.osv):
                     if line.qty < 0:
                         location_id, stock_dest_id = stock_dest_id, location_id
 
-                        self.pool.get('stock.move').create(cr, uid, {
+                    self.pool.get('stock.move').create(cr, uid, {
                             'name': 'Stock move (POS %d)' % (order.id, ),
                             'product_uom': line.product_id.uom_id.id,
                             'product_uos': line.product_id.uom_id.id,
@@ -1086,17 +1087,18 @@ class pos_order_line(osv.osv):
             raise osv.except_osv(_('No Pricelist !'),
                 _('You have to select a pricelist in the sale form !\n' \
                 'Please set one before choosing a product.'))
-        p_obj = self.pool.get('product.product').browse(cr,uid,product_id).list_price
+        p_obj = self.pool.get('product.product').browse(cr,uid,[product_id])[0]
+        uom_id=p_obj.uom_po_id.id 
         price = self.pool.get('product.pricelist').price_get(cr, uid,
-            [pricelist], product_id, qty or 1.0, partner_id)[pricelist]
-        # Todo need to check     
-#        if price is False:
-#            raise osv.except_osv(_('No valid pricelist line found !'),
-#                _("Couldn't find a pricelist line matching this product" \
-#                " and quantity.\nYou have to change either the product," \
-#                " the quantity or the pricelist."))
-        return price or p_obj
-
+            [pricelist], product_id, qty or 1.0, partner_id,{'uom': uom_id})[pricelist]
+        unit_price=price or p_obj.list_price
+        if unit_price is False:
+            raise osv.except_osv(_('No valid pricelist line found !'),
+                _("Couldn't find a pricelist line matching this product" \
+                " and quantity.\nYou have to change either the product," \
+                " the quantity or the pricelist."))
+        return unit_price 
+    
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
         price = self.price_by_product(cr, uid, ids, pricelist, product_id, qty, partner_id)
         self.write(cr,uid,ids,{'price_unit':price})

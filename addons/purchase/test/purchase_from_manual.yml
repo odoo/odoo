@@ -1,5 +1,5 @@
 -
- In order to test the purchase flow,I start by creating a new product 'iPod'
+  In order to test the purchase flow,I start by creating a new product 'iPod'
 -
  !record {model: product.product, id: product_product_ipod0}:
     categ_id: 'product.product_category_3'
@@ -22,9 +22,9 @@
     weight: 0.0
     weight_net: 0.0
 - 
- In order to test the purchase flow,I create a new record where "invoice_method" is From Manual
+  In order to test the purchase flow,I create a new record where "invoice_method" is From Manual
 -
- Creating an purchase.order record
+  I create purchase order for iPod.
 - 
   !record {model: purchase.order, id: purchase_order_po1}:
     company_id: base.main_company
@@ -44,26 +44,21 @@
     partner_id: base.res_partner_4
     pricelist_id: purchase.list0
 -
- Initially purchase order is in the draft state
+  Initially purchase order is in the draft state
 -
   !assert {model: purchase.order, id: purchase_order_po1}:
     - state == 'draft'  
 -
- Then an order is confirmed by clicking on the "Confirm Purchase Order" button
--
-  !python {model: purchase.order}: |
-    self.wkf_confirm_order(cr, uid, [ref("purchase_order_po1")])  
--
- Performing a workflow action purchase_confirm on module purchase.order
+  I confirm the purchase order.
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_po1}
 -  
- I check that the order which was initially in the draft state has transit to confirm state.
+  I check that the order which was initially in the draft state has transit to confirm state.
 -
   !assert {model: purchase.order, id: purchase_order_po1}:
     - state == 'confirmed'  
 -
- I check that an entry gets created in the "Lines to Invoice" of Invoice Control on the basis of purchase order line
+  I check that an entry gets created in the "Lines to Invoice" of Invoice Control on the basis of purchase order line
 -
   !python {model: purchase.order}: |
     from tools.translate import _
@@ -72,14 +67,14 @@
     search_ids=pur_line.search(cr, uid, [('order_id', '=', pur_order_obj.name) ])
     assert search_ids, _('Purchase order line is not created!')
 -
- To check that wizard "Create Invoices" gets opened
+  To check that wizard "Create Invoices" gets opened
 - 
- Creating a purchase.order.line_invoice record
+  I create purchase order line invoice entry.
 -
   !record {model: purchase.order.line_invoice, id: purchase_order_line_invoice_0}:
     {}
 -
- Performing an osv_memory action makeInvoices on module purchase.order.line_invoice
+  I create invoice for products in the purchase order.
 -
   !python {model: purchase.order.line_invoice}: |
     pur_obj=self.pool.get('purchase.order')  
@@ -89,7 +84,7 @@
         ids.append(line.id)
     self.makeInvoices(cr, uid, [1], context={'active_ids': ids})
 -
- I check that invoice gets created
+  I check that invoice gets created.
 -
   !python {model: purchase.order}: |
     from tools.translate import _
@@ -98,7 +93,7 @@
     search_ids=pur_line.search(cr, uid, [('order_id', '=', pur_order_obj.name),('invoiced', '=', '1') ])
     assert search_ids, _('Invoice is not created!')
 -
- I check that a record gets created in the Pending Invoices
+  I check that a record gets created in the Pending Invoices.
 -
   !python {model: purchase.order}: |
     from tools.translate import _
@@ -107,33 +102,28 @@
     ids = account_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
     assert ids, _('Pending Invoice is not created!')
 -
- Then an order is approved by clicking on the "Approved by Supplier" button
--
-  !python {model: purchase.order}: |
-    self.wkf_approve_order(cr, uid, [ref("purchase_order_po1")]) 
--
- Performing a workflow action purchase_approve on module purchase.order
+  Supplier approve the purchase order.
 -
   !workflow {model: purchase.order, action: purchase_approve, ref: purchase_order_po1}
 -
- I check that the order which was initially in the confirmed state has transit to approved state.
+  I check that the order which was initially in the confirmed state has transit to approved state.
 -
   !assert {model: purchase.order, id: purchase_order_po1}:
     - state == 'approved' 
 -
- I check that date_approve field of Delivery&Invoices gets bind with the date on which it has been approved 
+  I check that date_approve field of Delivery&Invoices gets bind with the date on which it has been approved.
 -
   !python {model: purchase.order}: |
     pur_id=self.browse(cr, uid, ref("purchase_order_po1"))
     assert(pur_id.date_approve)
 -
- I check that an entry gets created in the stock.picking 
+  I check that an entry gets created in the stock pickings.
 -
   !python {model: purchase.order}: |
     pur_id=self.browse(cr, uid, ref("purchase_order_po1"))
     assert(pur_id.picking_ids)
 -
- I check that an entry gets created in the stock.move
+  I check that an entry gets created in the stock moves.
 -
   !python {model: purchase.order}: |
     from tools.translate import _
@@ -145,4 +135,4 @@
     search_id = move_obj.search(cr, uid, [('picking_id', '=', pick_id.name)])
     assert search_id, _('No Incoming Product!')
 -
- I check that Traceability moves are created
+  I check that Traceability moves are created.
