@@ -14,8 +14,8 @@
         <page string="Sales &amp; Purchases" position="inside">
           <group colspan="4" col="4" groups="base.group_extended">
             <separator string="Stock Properties" colspan="4"/>
-            <field name="property_stock_customer" widget="selection" domain="[('usage','=','customer')]" />
-            <field name="property_stock_supplier" widget="selection" domain="[('usage','=','supplier')]"/>
+            <field name="property_stock_customer" widget="selection" domain="[('usage','=','customer')]" groups="base.group_extended" />
+            <field name="property_stock_supplier" widget="selection" domain="[('usage','=','supplier')]" groups="base.group_extended"/>
           </group>
         </page>
       </field>

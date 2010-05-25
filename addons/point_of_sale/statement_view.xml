@@ -46,7 +46,7 @@
                 <form string="Statement">
                     <field name="name" select="1"/>
                     <field name="user_id" select="1"/>
-                    <field name="company_id" select="1"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company"/>
                     <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash'),('auto_cash','=',False)]" select="1" />
                     <newline/>
                     <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -123,7 +123,7 @@
                 <form string="Statement">
                     <field name="name" select="1"/>
                     <field name="user_id" select="1"/>
-                    <field name="company_id" select="1"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company"/>
                     <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" readonly="1"/>
                     <newline/>
                     <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -236,7 +236,7 @@
                 <form string="Statement">
                     <field name="name" select="1"/>
                     <field name="user_id" select="1"/>
-                    <field name="company_id" select="1"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company"/>
                     <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" readonly="1"/>
                     <newline/>
                     <field name="date" select="1" attrs="{'readonly':[('state','!=','draft')]}"/>
@@ -417,7 +417,7 @@
 		<menuitem name="Cashboxes to Close" parent="menu_pos_bank_statment_tree"
 		 		action="action_cashboxes_to_close" id="menu_cashboxes_to_close_tree" groups="base.group_extended"/>
 
-	
+
 		<menuitem
             name="Open Registers" parent="point_of_sale.menu_point_config"
             string="Open Register"
@@ -434,11 +434,11 @@
             string="Close Register"
             action="action_pos_close_statement"
             id="menu_close_statement" sequence="2" />
-       
+
        <menuitem icon="STOCK_PRINT"
        			 action="action_report_all_closed_cashbox_of_the_day"
 				 id="menu_all_closed_cashbox_of_the_day"
 				 parent="menu_point_report_register"/>
-            
+
 	</data>
 </openerp>
