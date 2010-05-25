@@ -72,8 +72,8 @@ class res_partner_contact(osv.osv):
                  it will allow you to hide the partner contact without removing it."),
         'partner_id': fields.related('job_ids','address_id','partner_id',type='many2one',\
                          relation='res.partner', string='Main Employer'),
-        'function_id': fields.related('job_ids','function_id',type='many2one', \
-                            relation='res.partner.function', string='Main Function'),
+        'function': fields.related('job_ids', 'function', type='char', \
+                                 string='Main Function'),
         'job_id': fields.function(_main_job, method=True, type='many2one',\
                                  relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
@@ -164,7 +164,7 @@ class res_partner_job(osv.osv):
             return []
         res = []
         for r in self.browse(cr, uid, ids):
-            funct = r.function_id and (", " + r.function_id.name) or ""
+            funct = r.function and (", " + r.function) or ""
             res.append((r.id, self.pool.get('res.partner.contact').name_get(cr, uid, \
                                     [r.contact_id.id])[0][1] + funct))
         return res
@@ -215,8 +215,7 @@ class res_partner_job(osv.osv):
         'address_id': fields.many2one('res.partner.address', 'Address', \
                         help='Address which is linked to the Partner'), # TO Correct: domain=[('partner_id', '=', name)]
         'contact_id': fields.many2one('res.partner.contact','Contact', required=True, ondelete='cascade'),
-        'function_id': fields.many2one('res.partner.function','Partner Function', \
-                            help="Function of this contact with this partner"),
+        'function': fields.char('Partner Function', size=34, help="Function of this contact with this partner"),
         'sequence_contact': fields.integer('Contact Seq.',help='Order of\
                      importance of this address in the list of addresses of the linked contact'),
         'sequence_partner': fields.integer('Partner Seq.',help='Order of importance\

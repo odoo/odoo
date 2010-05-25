@@ -21,7 +21,7 @@
 					<field name="routing_id" invisible="1"/>
 					<field name="picking_id" invisible="1"/>
                     <field name="priority" invisible="1"/>
-                    <field name="name" invisible="1" />
+                    <field name="year" invisible="1" />
 					<field name="month" invisible="1"/>
 					<field name="location_src_id" invisible="1"/>
 					<field name="location_dest_id" invisible="1"/>
@@ -48,7 +48,7 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="6">
-                   		<filter string="This Year" icon="terp-mrp" domain="[('name','=',time.localtime()[0])]" default="1" />
+                   		<filter string="This Year" icon="terp-mrp" domain="[('year','=',time.localtime()[0])]" default="1" />
 						<filter string="This Month" icon="terp-mrp" domain="[('month','=',time.strftime('%%m'))]" default="1"/>
                         <separator orientation="vertical"/>
 						<filter string="Current" icon="terp-mrp" domain="[('state','in',('open','draft'))]"/>
@@ -89,7 +89,7 @@
                     	<separator orientation="vertical"/>
                     	<filter string="BOM" icon="terp-mrp" context="{'group_by':'bom_id'}"/>
                     	<filter string="Month" icon="terp-mrp" context="{'group_by':'month'}"/>
-                    	<filter string="Year" icon="terp-mrp" context="{'group_by':'name'}"/>
+                    	<filter string="Year" icon="terp-mrp" context="{'group_by':'year'}"/>
                    </group>
                </search>
             </field>
@@ -102,7 +102,7 @@
             <field name="view_id" ref="view_report_mrp_production_order_tree"/>
             <field name="search_view_id" ref="view_report_mrp_production_order_filter"/>
           <field name="context">{'search_default_Product': 1}</field>
-            
+
         </record>
 
        	<record model="ir.actions.act_window.view" id="action_report_mrp_production_order_tree">

@@ -22,14 +22,7 @@
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="categ_id" invisible="1"/>
-                <field name="priority" invisible="1"/>
-                <field name="type_id" invisible="1"/>
-                <field name="date_closed" invisible="1"/>
-                <field name="date_open" invisible="1"/>
-                <field name="opportunity_id" invisible="1"/>
-                <field name="country_id" invisible="1"/>
-                <field name="state_id" invisible="1" string="State of Country"/>
-                <field name="date_deadline" invisible="1"/>
+                <field name="type" invisible="1"/>
              </tree>
             </field>
         </record>
@@ -76,55 +69,129 @@
             <field name="model">crm.lead.report</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-            <data>
-                <xpath expr='//search[@string="Search"]/group[@string="Extended options..."]/filter[@string="Cancel"]' position='after'>
-                <group>
-            	    <separator orientation="vertical"/>
-            	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-	                <separator orientation="vertical"/>
-            	    <field name="priority" />
-	                <field name="type_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-	                <newline/>
-            	    <field name="opportunity_id" />
-            	    <field name="partner_id" />
-            	    <separator orientation="vertical"/>
-            	    <field name="country_id" />
-            	    <field name="state_id" string="State of Country"/>
-            	    <separator orientation="vertical"/>
-            	    <field name="date_deadline" />
-	                <newline/>
-	                <field name="date_closed" />
-	                <separator orientation="vertical"/>
-	                <field name="date_open" />
-	            </group>
-            	</xpath>
-			<xpath
-				expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
-				position='after'>
-				<filter string="Stage" icon="terp-sale" domain="[]"
-					context="{'group_by':'stage_id'}" />
-			</xpath>
-			<xpath
-                 expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Category"]'
-                 position='after'>
-                 <separator orientation="vertical"/>
-                 <filter string="Priority" icon="terp-sale" domain="[]"
-                     context="{'group_by':'priority'}" />
-                 <filter string="Type" icon="terp-sale" domain="[]"
-                     context="{'group_by':'type_id'}" />
-                 <separator orientation="vertical"/>
-                 <filter string="Opportunity" icon="terp-sale" domain="[]"
-                     context="{'group_by':'opportunity_id'}" />
-                 <filter string="Partner" icon="terp-sale" domain="[]"
-                     context="{'group_by':'partner_id'}" />
-                 <newline/>
-                 <filter string="Country" icon="terp-sale" domain="[]"
-                     context="{'group_by':'country_id'}" />
-                 <filter string="State of Country" icon="terp-sale" domain="[]"
-                     context="{'group_by':'state_id'}" />
-             </xpath>
-			</data>
+                <search string="Search">
+                  <group col="16" colspan="8">
+                   		<!--  <filter string="This Year" name="This Year" icon="terp-hr"
+                   			domain="[('name','=',time.localtime()[0])]"/>-->
+                   		<filter string="This Year" icon="terp-hr"
+                   			domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+
+                   		<!-- <filter string="This Month" name="This Year" icon="terp-hr"
+                   			domain="[('month','=',time.strftime('%%m'))]" />-->
+                       <filter string="This Month" icon="terp-hr" name="This Month"
+                    	   domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+
+                       <filter icon="gtk-media-rewind" string="7 Days" separator="1"
+                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+
+                   		<separator orientation="vertical" />
+                        <filter icon="terp-hr"
+                    		string="Draft"
+                    		domain="[('state','=','draft')]"/>
+					   <filter icon="terp-hr"
+                    		string="Open"
+                    		domain="[('state','=','open')]"/>
+					   <filter icon="terp-hr"
+                    		string="Pending"
+                    		domain="[('state','=','pending')]"/>
+
+                   		<separator orientation="vertical" />
+                   		<field name="section_id"
+                   			default="context.get('section_id', False)"
+                   			widget="selection"
+                   			context="{'invisible_section': False}">
+
+                   			<filter icon="terp-crm"
+                   				context="{'invisible_section': False}"
+                   				domain="[('section_id.user_id','=',uid)]"
+                   				help="My section" />
+
+                   		</field>
+                   		<field name="company_id" widget="selection">
+                           <filter icon="terp-crm"
+                        context="{'invisible_section': False}"
+                        domain="[('section_id.user_id.company_id','=',uid)]"
+                        help="My company"/>
+                        </field>
+
+                      	<field name="user_id" select="1" widget="selection">
+	            			<filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
+               			</field>
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
+                         <filter icon="terp-sale"
+                    		string="Done"
+                    		domain="[('state','=','done')]"/>
+                    	<filter icon="terp-sale"
+                    		string="Cancel"
+                    		domain="[('state','=','cancel')]"/>
+                   		<group>
+		            	    <separator orientation="vertical"/>
+		            	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+			                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+			            </group>
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="User" name="User" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'user_id'}" />
+
+                        <filter string="Company" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'company_id'}" />
+
+                        <filter string="Section" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'section_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="State" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'state'}" />
+
+						<filter string="Stage" icon="terp-sale" domain="[]"
+							context="{'group_by':'stage_id'}" />
+
+                        <filter string="Category" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'categ_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="Day" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'day'}"/>
+
+                        <filter string="Month" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'month'}" />
+
+                        <filter string="Year" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'name'}" />
+
+                  </group>
+               </search>
+            </field>
+        </record>
+
+<!--	 Opportunity tree view  -->
+
+	<record id="view_report_crm_opportunity_tree" model="ir.ui.view">
+            <field name="name">crm.lead.report.tree</field>
+            <field name="model">crm.lead.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            <tree string="Opportunities">
+				<field name="name" invisible="1"/>
+				<field name="month" invisible="1"/>
+				<field name="section_id" invisible="1" groups="base.group_extended"/>
+				<field name="user_id" invisible="1"/>
+    			<field name="company_id" invisible="1" groups="base.group_extended"/>
+				<field name="partner_id" invisible="1"/>
+				<field name="day" invisible="1"/>
+				<field name="nbr" string="#Opportunities" sum="#Opportunities"/>
+                <field name="delay_close" sum='Avg Closing Delay'/>
+                <field name="state"  invisible="1"/>
+                <field name="stage_id"  invisible="1"/>
+                <field name="categ_id" invisible="1"/>
+                <field name="type" invisible="1"/>
+             </tree>
             </field>
         </record>
 
