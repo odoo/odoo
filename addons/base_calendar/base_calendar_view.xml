@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		
+
 		<!--		Attendee form view-->
 
         <record id="base_calendar_attendee_form_view" model="ir.ui.view">
@@ -67,7 +67,7 @@
                 </form>
             </field>
         </record>
-		
+
 		<!--		Attendee tree view-->
 
         <record id="base_calendar_attendee_tree_view" model="ir.ui.view">
@@ -86,9 +86,9 @@
                 </tree>
             </field>
         </record>
-		
+
 		<!--		Attendee search view-->
-		
+
         <record id="base_calendar_attendee_search_view" model="ir.ui.view">
             <field name="name">calendar.attendee.search</field>
             <field name="model">calendar.attendee</field>
@@ -108,7 +108,7 @@
                    <field name="cutype" string="Invitation type" select="1"/>
                    <field name="event_date" select="1"/>
                    <newline/>
-					<group expand="0" string="Group By..." colspan="16">
+					<group expand="1" string="Group By..." colspan="16">
 						<filter string="Type" icon="terp-project" help="Invitation Type"
 					        domain="[]" context="{'group_by':'cutype'}" />
 					    <filter string="Role" icon="terp-project"
@@ -136,12 +136,12 @@
 	     </record>
 
 		<!-- Calenadar's menu -->
-		
+
         <menuitem id="base.menu_calendar_configuration" name="Calendar"
             parent="base.menu_base_config" sequence="10" />
 
 		<!-- Invitation menu -->
-		
+
 		<menuitem id="menu_attendee_invitations"
 			name="Event Invitations" parent="base.menu_calendar_configuration"
 			sequence="10" action="action_view_attendee_form" />
@@ -189,7 +189,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-		
+
 		<!--		Menu for Alarms-->
 
         <menuitem id="menu_crm_meeting_avail_alarm"
