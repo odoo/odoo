@@ -11,7 +11,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
-        <field name="domain">[('parent_id','=',ref('dir_sale'))]</field>
+        <field name="domain" eval="[('parent_id','=',ref('dir_sale'))]"></field>
     </record>
 
          <record model="ir.actions.act_window" id="action_wiki_test">
@@ -19,7 +19,7 @@
             <field name="res_model">wiki.wiki</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('group_id','=',ref('wiki_groups_sale_faq'))]</field>
+            <field name="domain" eval="[('group_id','=',ref('wiki_groups_sale_faq'))]"/>
             <field name="search_view_id" ref="wiki.view_wiki_filter"/>
         </record>
 
