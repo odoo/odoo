@@ -31,7 +31,7 @@ class available_holidays_report(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'employee_id': fields.many2one ('hr.employee', 'Employee', readonly=True),
+        'employee_id': fields.many2one ('hr.employee', "Employee's Name", readonly=True),
         'category_id' : fields.many2one('hr.employee.category', "Category's Name", readonly=True),
         'holiday_status_id': fields.many2one('hr.holidays.status', 'Leave Type', readonly=True),
         'max_leave': fields.float('Allocated Leaves', readonly=True),
