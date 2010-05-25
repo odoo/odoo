@@ -19,9 +19,7 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
 from tools.translate import _
-import ir
 import netsvc
 
 class sale_make_invoice(osv.osv_memory):
@@ -37,13 +35,13 @@ class sale_make_invoice(osv.osv_memory):
     def view_init(self, cr, uid, fields_list, context=None):
         record_id = context and context.get('active_id', False)     
         order = self.pool.get('sale.order').browse(cr, uid, record_id)
-        if order.state=='draft':
+        if order.state == 'draft':
             raise osv.except_osv(_('Warning !'),'You can not create invoice when sale order is not confirmed.')
         return False
     def make_invoices(self, cr, uid, ids, context={}):
         order_obj = self.pool.get('sale.order')
         newinv = []
-        data=self.read(cr,uid,ids)[0]
+        data = self.read(cr,uid,ids)[0]
         order_obj.action_invoice_create(cr, uid, context.get(('active_ids'),[]), data['grouped'],date_inv = data['invoice_date'])
         wf_service = netsvc.LocalService("workflow")
         for id in context.get(('active_ids'),[]):
