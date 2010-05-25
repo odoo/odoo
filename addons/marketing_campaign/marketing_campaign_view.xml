@@ -42,14 +42,34 @@
 	                        <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
 	                    	<field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
 	                	</group>                
-	                	<field name="to_ids" nolabel="1" colspan="4" mode="tree"  		default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
-	                    	<tree string="All Transitions" editable="bottom">
-	                        	<field name="activity_from_id"/>
-	                        	<field name="activity_to_id"/>
-	                        	<field name="interval_nbr"/>
-	                        	<field name="interval_type"/>
-	                    	</tree>
-                		</field>
+                        <field name="to_ids" nolabel="1" colspan="4" mode="tree"                  default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
+                             <form string="Out Transitions" >
+                                 <field name="activity_from_id" readonly="True"/>
+                                 <field name="activity_to_id"/>
+                                 <field name="interval_nbr"/>
+                                 <field name="interval_type"/>
+                             </form>
+                             <tree string="Out Transitions" editable="bottom">
+                                 <field name="activity_from_id"/>
+                                 <field name="activity_to_id"/>
+                                 <field name="interval_nbr"/>
+                                 <field name="interval_type"/>
+                             </tree>
+                         </field> 
+                         <field name="from_ids" nolabel="1" colspan="4" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
+                             <form string="In Transitions" >
+                                 <field name="activity_from_id"/>
+                                 <field name="activity_to_id" readonly="True"/>
+                                 <field name="interval_nbr"/>
+                                 <field name="interval_type"/>
+                             </form>
+                             <tree string="In Transitions" editable="bottom">
+                                 <field name="activity_from_id"/>
+                                 <field name="activity_to_id"/>
+                                 <field name="interval_nbr"/>
+                                 <field name="interval_type"/>
+                             </tree>
+                         </field>
             		</form>
 		    		<tree string="All Activities">
                 		<field name="name" select="1"/>
@@ -143,7 +163,7 @@
                 	<newline/>
                 	<field name="ir_filter_id" select="1"/>
                 	<newline/>
-                	<field name="date_run" attrs="{'readonly':[('date_run','!=',False)]}"/>
+                	<field name="date_run" attrs="{'readonly':[('date_run','!=',False),('state','=','running')]}"/>
                 	<field name="date_done"/>
                 	<separator string="Synchronization" colspan="4" />
                		<field name="sync_last_date"/>
@@ -204,8 +224,7 @@
                 <field name="name" select="1" />
                 <field name="start"/>
                 <field name="campaign_id" select="1"/>
-                <field name="object_id" readonly="True"/>                
-                <field name="condition" colspan="4"/>
+                <field name="object_id" readonly="True"/>
                 <newline/>
                 <field name="type"/>
                 <group colspan="4" attrs="{'invisible':[('type','!=','email')]}" >                
@@ -222,14 +241,34 @@
                     <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
                     <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
                 </group>                
-                <field name="to_ids" nolabel="1" colspan="4" mode="tree,form">
-                    <tree string="All Transitions" editable="bottom">
-                        <field name="activity_from_id" />
-                        <field name="activity_to_id" />
-                        <field name="interval_nbr" />
-                        <field name="interval_type"/>
-                    </tree>
-                </field>
+                <field name="to_ids" nolabel="1" colspan="4" mode="tree"                  default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
+                     <form string="Out Transitions" >
+                         <field name="activity_from_id" readonly="True"/>
+                         <field name="activity_to_id"/>
+                         <field name="interval_nbr"/>
+                         <field name="interval_type"/>
+                     </form>
+                     <tree string="Out Transitions" editable="bottom">
+                         <field name="activity_from_id"/>
+                         <field name="activity_to_id"/>
+                         <field name="interval_nbr"/>
+                         <field name="interval_type"/>
+                     </tree>
+                 </field> 
+                 <field name="from_ids" nolabel="1" colspan="4" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
+                     <form string="In Transitions" >
+                         <field name="activity_from_id"/>
+                         <field name="activity_to_id" readonly="True"/>
+                         <field name="interval_nbr"/>
+                         <field name="interval_type"/>
+                     </form>
+                     <tree string="In Transitions" editable="bottom">
+                         <field name="activity_from_id"/>
+                         <field name="activity_to_id"/>
+                         <field name="interval_nbr"/>
+                         <field name="interval_type"/>
+                     </tree>
+                 </field>
             </form>
         </field>
     </record>
@@ -263,7 +302,7 @@
         <field name="view_id" ref="view_marketing_campaign_activity_tree"/>
     </record>
     
-   	<!--menuitem id="menu_marketing_campaign_activity_form" parent="menu_marketing" action="action_marketing_campaign_activity_form" sequence="3" /-->
+   	<menuitem id="menu_marketing_campaign_activity_form" parent="menu_marketing" action="action_marketing_campaign_activity_form" sequence="3" />
     
     <!--
     ======================
