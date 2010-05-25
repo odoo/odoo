@@ -55,7 +55,7 @@ class mailgate_thread(osv.osv):
         'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
         }
         
-    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
+    def __history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -93,7 +93,7 @@ class mailgate_thread(osv.osv):
                     attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
                 
                 data = {
-                        'name': keyword, 
+                        'name': subject or 'History', 
                         'history': True, 
                         'user_id': uid, 
                         'model_id' : model_ids and model_ids[0] or False, 

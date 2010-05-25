@@ -110,8 +110,8 @@ class crm_send_new_email(osv.osv_memory):
 
             case_pool._history(cr, uid, [case], _('Send'), history=True, \
                                 email=obj.email_to, details=body, \
-                                email_from=email_from, message_id=message_id, \
-                                attach=attach)
+                                subject=obj.subject, email_from=email_from, \
+                                message_id=message_id, attach=attach)
 
             x_headers = dict()
             #x_headers = {
