@@ -56,7 +56,7 @@
         <field name="arch" type="xml">
             <form string="Opportunities">
                 <group colspan="4" col="7">
-                    <field name="name" string="Opportunity"/>
+                    <field name="name"  required="1" string="Opportunity"/>
                     <label string="Stage:" align="1.0"/>
                     <group colspan="1" col="4">
                         <field name="stage_id" nolabel="1"
@@ -217,7 +217,7 @@
                 <field name="name" string="Opportunity"/>
                 <field name="partner_id"/>
                 <field name="stage_id"/>
-                <field name="categ_id" invisible="1"/>
+                <field name="categ_id" invisible="1" groups="base.group_extended"/>
                 <button name="stage_previous" string="Previous"
                     states="open,pending" type="object" icon="gtk-go-back" />
                 <button name="stage_next" string="Next"
@@ -292,7 +292,11 @@
                 <field name="name" string="Opportunity"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
-                        domain="[('user_id','=', False)]"
+                        domain="[('user_id','=',uid)]"
+                        help="My Opportunities" default="1"
+                    />
+                    <filter icon="terp-partner"
+                        domain="[('user_id','=', uid)]"
                         help="Unassigned Opportunities" />
                 </field>
                 <field name="section_id"
@@ -312,8 +316,6 @@
                         domain="[]" context="{'group_by':'categ_id'}" />
 
                     <separator orientation="vertical" />
-                    <filter string="Partner" icon="terp-crm" domain="[]"
-                        context="{'group_by':'partner_id'}" />
                     <filter string="Salesman" icon="terp-crm"
                         domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}" />
                     <separator orientation="vertical" />

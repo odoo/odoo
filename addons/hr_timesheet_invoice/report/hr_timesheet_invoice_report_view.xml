@@ -81,7 +81,7 @@
                         <filter string="Year" icon="terp-hr" context="{'group_by':'name'}"/>
                     </group>
                     <newline/>
-	                <group expand="0" string="Extended options..." colspan="10" col="12">
+	                <group expand="0" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
 	                    <field name="date"/>
 	                    <separator orientation="vertical"/>
 	                    <field name="invoice_id" widget="selection"/>
@@ -99,7 +99,7 @@
             <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_line_search"/>
         </record>
-        <menuitem action="action_timesheet_line_stat_all" id="menu_report_timesheet_line_all" parent="hr.menu_hr_reporting"/>
+        <!--menuitem action="action_timesheet_line_stat_all" id="menu_report_timesheet_line_all" parent="hr.menu_hr_reporting"/-->
 
 
         <!-- Statistics report on timesheet by user -->

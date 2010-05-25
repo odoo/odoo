@@ -57,11 +57,13 @@ class hr_applicant(osv.osv, crm.crm_case):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
-    _inherit ='mailgate.thread'
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     _columns = {
-        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
-        'description': fields.text('Description'),
+        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False),
+        'name': fields.char('Name', size=128, required=True), 
+        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."), 
+        'description': fields.text('Description'), 
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
@@ -102,6 +104,16 @@ class hr_applicant(osv.osv, crm.crm_case):
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response' : fields.integer("Response"),
+    }
+    
+    _defaults = {
+        'active': lambda *a: 1, 
+        'user_id': crm.crm_case._get_default_user, 
+        'email_from': crm.crm_case. _get_default_email, 
+        'state': lambda *a: 'draft',
+        'section_id': crm.crm_case. _get_section, 
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c), 
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
     }
 
     def onchange_job(self,cr, uid, ids, job, context={}):

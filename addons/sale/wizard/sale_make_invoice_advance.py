@@ -23,7 +23,6 @@ from service import web_services
 from tools.translate import _
 import ir
 
-
 class sale_advance_payment_inv(osv.osv_memory):
     _name = "sale.advance.payment.inv"
     _description = "Sale Advance Payment Invoice"

@@ -114,9 +114,6 @@
                          <field name="user_id" widget="selection"/>
                    </group>
                    <newline/>
-
-                   <!-- Helpdesk report after Sales Services Apply Group -->
-
                   <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="User" icon="terp-sale"
                             domain="[]" context="{'group_by':'user_id'}"
@@ -146,8 +143,8 @@
                             domain="[]" context="{'group_by':'name'}" />
 
                   </group>
-
-                   <group expand="0" string="Extended options..." colspan="4" col="5">
+                    <newline/>
+                   <group expand="0" string="Extended options..." colspan="4" col="5" groups="base.group_extended">
                         <filter icon="terp-sale"
                             string="Lowest"
                             domain="[('priority','=','5')]"/>
@@ -169,7 +166,7 @@
                             domain="[('priority','=','1')]"/>
 
                    </group>
-                   <newline/>
+                   
 
                </search>
             </field>

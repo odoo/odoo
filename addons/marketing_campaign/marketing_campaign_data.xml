@@ -6,13 +6,25 @@
 
         <record model="ir.cron" id="ir_cron_marketing_campaign_every_hour">
             <field name="name">Check Workitem</field>
-            <field name="interval_number">60</field>
-            <field name="interval_type">minutes</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
             <field name="model" eval="'marketing.campaign.workitem'"/>
             <field name="function" eval="'process_all'"/>
             <field name="args" eval="'()'"/>
         </record>
+        
+        <record model="ir.cron" id="ir_cron_marketing_campaign_every_day">
+            <field name="name">Check Segment</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field><!-- it s every day -->
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'marketing.campaign.segment'"/>
+            <field name="function" eval="'process_segment'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+                
     </data>
 </openerp>

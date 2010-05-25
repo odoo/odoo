@@ -71,7 +71,6 @@
 	                <field name="employee_id" widget="selection"/>
                 </group>
                 <newline/>
-
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Employee" name="employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <filter string="Rating" icon="terp-hr" context="{'group_by':'rating'}"/>
@@ -84,7 +83,7 @@
                     <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
                 </group>
                  <newline/>
-				<group expand="0" string="Extended options..." colspan="10" col="12">
+				<group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
                 	<filter icon="terp-hr"
                     		string="Done"
                     		domain="[('state','=','done')]"/>
