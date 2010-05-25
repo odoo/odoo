@@ -107,7 +107,7 @@
                    				help="My section" />
 
                    		</field>
-                   		<field name="company_id" widget="selection">
+                   		<field name="company_id" widget="selection" groups="base.group_multi_company">
                            <filter icon="terp-crm"
                         context="{'invisible_section': False}"
                         domain="[('section_id.user_id.company_id','=',uid)]"
