@@ -33,11 +33,11 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['location'], context).name
         return res
 
-    def get_product_available(self,cr,uid,ids,context=None):
-        if not context:
+    def get_product_available(self, cr, uid, ids, context=None):
+        if context is None:
             context = {}
-        states=context.get('states',[])
-        what=context.get('what',())
+        states = context.get('states',[])
+        what = context.get('what',())
         if not ids:
             ids = self.search(cr, uid, [])
         res = {}.fromkeys(ids, 0.0)
@@ -70,9 +70,9 @@ class product_product(osv.osv):
         # build the list of ids of children of the location given by id
         if context.get('compute_child',True):
             child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
-            location_ids= len(child_location_ids) and child_location_ids or location_ids
+            location_ids = child_location_ids or location_ids
         else:
-            location_ids= location_ids
+            location_ids = location_ids
 
         states_str = ','.join(map(lambda s: "'%s'" % s, states))
 
@@ -181,34 +181,34 @@ class product_product(osv.osv):
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Receptions')
+                        res['fields']['virtual_available']['string'] = _('Future Receptions')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Received Qty')
 
                 if location_info.usage == 'internal':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Stock')
+                        res['fields']['virtual_available']['string'] = _('Future Stock')
 
                 if location_info.usage == 'customer':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Deliveries')
+                        res['fields']['virtual_available']['string'] = _('Future Deliveries')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Delivered Qty')
 
                 if location_info.usage == 'inventory':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur P&L')
+                        res['fields']['virtual_available']['string'] = _('Future P&L')
                     res['fields']['qty_available']['string'] = _('P&L Qty')
 
                 if location_info.usage == 'procurement':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Qty')
+                        res['fields']['virtual_available']['string'] = _('Future Qty')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Unplanned Qty')
 
                 if location_info.usage == 'production':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Productions')
+                        res['fields']['virtual_available']['string'] = _('Future Productions')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
 

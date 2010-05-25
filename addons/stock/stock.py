@@ -251,13 +251,14 @@ class stock_location(osv.osv):
 
     def _product_get(self, cr, uid, id, product_ids=False, context={}, states=['done']):
         ids = id and [id] or []
+        context.update({'compute_child':False})
         return self._product_get_multi_location(cr, uid, ids, product_ids, context, states)
 
     def _product_all_get(self, cr, uid, id, product_ids=False, context={}, states=['done']):
         # build the list of ids of children of the location given by id
         ids = id and [id] or []
-        location_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
-        return self._product_get_multi_location(cr, uid, location_ids, product_ids, context, states)
+#        location_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
+        return self._product_get_multi_location(cr, uid, ids, product_ids, context, states)
 
     def _product_virtual_get(self, cr, uid, id, product_ids=False, context={}, states=['done']):
         return self._product_all_get(cr, uid, id, product_ids, context, ['confirmed', 'waiting', 'assigned', 'done'])
