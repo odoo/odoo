@@ -15,7 +15,7 @@
     product_uom: product.product_uom_unit
     product_uos_qty: 0.0
 - 
-  I am performing an osv_memory action action_compute on module mrp.production
+  I am computing the data.
 - 
   !python {model: mrp.production}: |
     self.action_compute(cr, uid, [ref("mrp_production_mo0")], {"lang": "en_US", "tz":
@@ -85,7 +85,7 @@
     mode: consume_produce
     product_qty: 5.0
 - 
-  I am performing an osv_memory action do_produce on module mrp.product.produce
+  I produce the product CPU_GEN.
 -
   !python {model: mrp.product.produce}: |
     prod_obj = self.pool.get('mrp.production')
@@ -128,13 +128,13 @@
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','startworking')])
     assert order_id, _('Work order not started yet!')
 -
-  I am creating a mrp.product.produce record
+  I am creating a mrp.product.produce record.
 -
   !record {model: mrp.product.produce, id: mrp_product_produce_0}:
     mode: consume_produce
     product_qty: 5.0
 - 
-  I am performing an osv_memory action do_produce on module mrp.product.produce
+  I produce the product PC1.
 -
   !python {model: mrp.product.produce}: |
     prod_obj = self.pool.get('mrp.production')

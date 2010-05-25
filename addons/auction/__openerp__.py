@@ -60,6 +60,7 @@
         'auction_wizard.xml'
     ],
     'demo_xml': ['auction_demo.xml'],
+#    'test' : ['test/auction.yml','test/auction_wizard.yml'],  
     'installable': True,
     'active': False,
     'certificate': '0039333102717',
