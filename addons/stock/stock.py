@@ -470,7 +470,8 @@ class stock_picking(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'stock.picking')
+            seq_obj_name =  'stock.picking.' + vals['type']
+            vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         type_list = {
             'out':_('Packing List'),
             'in':_('Reception'),
@@ -1205,7 +1206,7 @@ class stock_move(osv.osv):
 
     def _check_product_lot(self, cr, uid, ids):
         for move in self.browse(cr, uid, ids):
-            if move.prodlot_id and (move.prodlot_id.product_id.id != move.product_id.id):
+            if move.prodlot_id and move.state == 'done' and (move.prodlot_id.product_id.id != move.product_id.id):
                 return False
         return True
 
