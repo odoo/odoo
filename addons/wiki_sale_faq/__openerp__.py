@@ -30,7 +30,7 @@
     'depends': ['wiki','document','crm'],
     'init_xml': [],
     'update_xml': ['wiki_sale_faq.xml'],
-    'demo_xml': [],
+    'demo_xml': ['wiki_sale_demo.xml'],
     'installable': True,
     'active': False,
 }

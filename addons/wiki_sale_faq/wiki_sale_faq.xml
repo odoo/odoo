@@ -1,100 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-    <data noupdate="1">
-        <menuitem name="Sales Management" icon="terp-stock"
-           id="base.menu_document" sequence="4" />
+    <data>
+        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
-         <record id="wiki_groups_faq" model="wiki.groups">
-            <field name="name">Internal FAQ</field>
-            <field name="method">list</field>
-            <field eval="2" name="section"/>
-            <field name="template">== Question ==
+        <menuitem name="Documents"
+           id="menu_sales" sequence="6"
+           parent="base.menu_base_partner"/>
 
-== Answer ==
+       <record model="ir.actions.act_window" id="action_document_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('parent_id','=','Sales Document')]</field>
+    </record>
 
-== External Links ==
-
-            </field>
-        </record>
-        <record id="wiki_wiki_dms" model="wiki.wiki">
-            <field name="name">Document Management System ?</field>
-            <field name="tags">dms, document</field>
-            <field name="group_id" ref="wiki_groups_faq"/>
-            <field name="minor_edit">0</field>
-            <field name="toc">1</field>
-            <field name="section">1</field>
-            <field name="summary">Initial Page</field>
-            <field name="text_area">== Question ==
-
-What's the Document Management System ?
-
-== Answer ==
-
-The document management system allows you to store, classify, and search your
-enterprise's documents. This module (called '''document''') provides an FTP access to all your ERP's
-ressources.  For a dynamic and efficient classification, the folders structure
-is provided by others objects.  It is very usefull to track documents related
-to projects, products, sales, contracts, etc.
-
-Keypoints:
-
-* FTP Access
-* Indexation of PDF, DOC, ODT.
-* Virtual files and folders
-
-Integration Benefits:
-
-* Stores automatically ERP reports
-* Automatic classification of ressources
-* Shared access rights for DMS and ERP
-* Store emails with outlook Plugin
-
-== External Links ==
-
-* The Open ERP Website : [http://openerp.com]
-* The DMS Documentation : [http://openerp.com]
-
-            </field>
+         <record model="ir.actions.act_window" id="action_wiki_test">
+            <field name="name">Wiki Pages</field>
+            <field name="res_model">wiki.wiki</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('group_id','=','Sales FAQ')]</field>
+            <field name="search_view_id" ref="wiki.view_wiki_filter"/>
         </record>
 
-        <record id="wiki_wiki_crm" model="wiki.wiki">
-            <field name="name">Customer Relationship Management ?</field>
-            <field name="tags">crm</field>
-            <field name="group_id" ref="wiki_groups_faq"/>
-            <field name="minor_edit">0</field>
-            <field name="toc">1</field>
-            <field name="section">1</field>
-            <field name="summary">Initial Page</field>
-            <field name="text_area">== Question ==
+        <menuitem
+        name="Documents"
+        action="action_document_form"
+        id="menu_document_files"
+        parent="menu_sales"/>
 
-What's the Customer Relationship Management ?
-
-== Answer ==
-
-Customer Relationship Management system enables a group of people to intelligently
-and efficiently manage leads, opportunities, meeting, phonecall etc.
-It manages key tasks such as communication, identification, prioritization,
-assignment, resolution and notification.
-
-Keypoints:
-
-* Automatic incoming and outgoing email processing using the mail gateway
-* A generic and fully customizable system
-* A configuration wizard to help you setup it as per your requirements.
-
-Integration Benefits:
-
-* Integrated with the enterprise calendars,
-* Integrated with sales, purchases and after-sales services,
-* Get your enterprise processes running through workflows.
+        <menuitem parent="menu_sales"
+            id="menu_action_wiki_wiki" name="FAQ"
+            action="action_wiki_test" />
 
 
-== External Links ==
-
-* The Open ERP Website : [http://openerp.com]
-* The DMS Documentation : [http://openerp.com]
-
-            </field>
-        </record>
       </data>
 </openerp>
