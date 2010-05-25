@@ -54,13 +54,18 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="6">
-                   		<filter icon="terp-stock" string="Last 365 Days"
+                   		<filter icon="gtk-media-rewind" string="Last 365 Days"
 	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Picking in last 365 days"/>
-	                	<filter icon="terp-stock" string="Last 30 Days"
+	                	<filter icon="gtk-media-rewind" string="Last 30 Days"
 	                			name="month"
 	                			domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                			help="Picking in last 30 days"/>
+	                	<filter icon="gtk-media-rewind"
+                                string="    7 Days    "
+                                separator="1"
+                                domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                                help="Picking during last 7 days"/>
                         <separator orientation="vertical"/>
                         <filter string="Todo" icon="terp-stock" domain="[('state','in',('draft','auto','confirmed','assigned'))]"/>
                         <filter string="Done" icon="terp-stock" domain="[('state','=','done')]"/>
