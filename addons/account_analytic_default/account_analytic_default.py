@@ -48,7 +48,7 @@ class account_analytic_default(osv.osv):
             domain += ['|',('partner_id','=',partner_id)]
         domain += [('partner_id','=',False)]
         if user_id:
-            domain += ['|',('user_id','=',uid)]
+            domain += ['|',('user_id','=',user_id)]
         domain += [('user_id','=',False)]
         if date:
             domain += ['|',('date_start','<=',date),('date_start','=',False)]
