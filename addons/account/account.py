@@ -124,10 +124,10 @@ class account_account_type(osv.osv):
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
         'report_type':fields.selection([
             ('none','/'),
-            ('income','Profilt & Loss (Income Accounts)'),
-            ('expanse','Profilt & Loss (Expanse Accounts)'),
+            ('income','Profit & Loss (Income Accounts)'),
+            ('expense','Profit & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
-            ('liabilities','Balance Sheet (Liabilities Accounts)')
+            ('liability','Balance Sheet (Liability Accounts)')
         ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
         'parent_id':fields.many2one('account.account.type', 'Parent Type', required=False),
         'child_ids':fields.one2many('account.account.type', 'parent_id', 'Child Types', required=False),
@@ -171,6 +171,19 @@ class account_account(osv.osv):
     _description = "Account"
     _parent_store = True
 
+    def _get_children_and_consol(self, cr, uid, ids, context={}):
+        ids2=[]
+        temp=[]
+        read_data= self.read(cr, uid, ids,['id','child_id'], context)
+        for data in read_data:
+            ids2.append(data['id'])
+            if data['child_id']:
+                temp=[]
+                for x in data['child_id']:
+                    temp.append(x)
+                ids2 += self._get_children_and_consol(cr, uid, temp, context)
+        return ids2
+        
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         if context is None:
@@ -231,9 +244,9 @@ class account_account(osv.osv):
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
             wheres = [""]
-            if query:
+            if query.strip():
                 wheres.append(query.strip())
-            if aml_query:
+            if aml_query.strip():
                 wheres.append(aml_query.strip())
             query = " AND ".join(wheres)
 
@@ -251,6 +264,7 @@ class account_account(osv.osv):
 
 
         # consolidate accounts with direct children
+        ids2.reverse()
         brs = list(self.browse(cr, uid, ids2, context=context))
         sums = {}
         while brs:
@@ -270,8 +284,9 @@ class account_account(osv.osv):
                     if current.child_id:
                         sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
         res = {}
+        null_result = dict((fn, 0.0) for fn in field_names)
         for id in ids:
-            res[id] = sums[id]
+            res[id] = sums.get(id, null_result)
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
@@ -295,6 +310,17 @@ class account_account(osv.osv):
 
         return result
 
+    def _get_level(self, cr, uid, ids, field_name, arg, context={}):
+        res={}
+        accounts = self.browse(cr, uid, ids)
+        for account in accounts:
+            level = 0
+            if account.parent_id :
+                obj = self.browse(cr, uid, account.parent_id.id)
+                level = obj.level + 1
+            res[account.id] = level
+        return res
+    
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
@@ -313,7 +339,7 @@ class account_account(osv.osv):
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
             help="These types are defined according to your country. The type contains more information "\
             "about the account and its specificities."),
-        'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade'),
+        'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
         'child_id': fields.function(_get_child_ids, method=True, type='many2many', relation="account.account", string="Child Accounts"),
@@ -341,6 +367,7 @@ class account_account(osv.osv):
         'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
             "otherwise it will only print its balance."),
+        'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -450,18 +477,42 @@ class account_account(osv.osv):
     def _check_moves(self, cr, uid, ids, method, context):
         line_obj = self.pool.get('account.move.line')
         account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
+        
         if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
             if method == 'write':
                 raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
             elif method == 'unlink':
                 raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
+        #Checking whether the account is set as a property to any Partner or not
+        value = 'account.account,' + str(ids[0])
+        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
+        if partner_prop_acc:
+            raise osv.except_osv(_('Warning !'), _('You cannot remove/deactivate an account which is set as a property to any Partner.'))
+        return True
+
+    def _check_allow_type_change(self, cr, uid, ids, new_type, context):
+        group1 = ['payable', 'receivable', 'other']
+        group2 = ['consolidation','view']
+        line_obj = self.pool.get('account.move.line')
+        for account in self.browse(cr, uid, ids, context=context):
+            old_type = account.type
+            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])])
+            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+                #Check for 'Closed' type
+                if old_type == 'closed' and new_type !='closed':
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type which contains account entries!"))
+                #Check for change From group1 to group2 and vice versa
+                if (old_type in group1 and new_type in group2) or (old_type in group2 and new_type in group1):
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from '%s' to '%s' type as it contains account entries!") % (old_type,new_type,))
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
+        if context is None:
             context = {}
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context)
+        if 'type' in vals.keys(): 
+            self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context={}):
@@ -557,15 +608,16 @@ class account_journal(osv.osv):
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
-        if not context:
-            context={}
+            args = []
+        if context is None:
+            context = {}
         ids = []
         if name:
-            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
+
 account_journal()
 
 class account_fiscalyear(osv.osv):
@@ -631,6 +683,19 @@ class account_fiscalyear(osv.osv):
             else:
                 return False
         return ids[0]
+    
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if args is None:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
+    
 account_fiscalyear()
 
 class account_period(osv.osv):
@@ -706,12 +771,24 @@ class account_period(osv.osv):
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
+    
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if args is None:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
 
 account_period()
 
 class account_journal_period(osv.osv):
     _name = "account.journal.period"
-    _description = "Journal - Period"
+    _description = "Journal Period"
 
     def _icon_get(self, cr, uid, ids, field_name, arg=None, context={}):
         result = {}.fromkeys(ids, 'STOCK_NEW')
@@ -950,7 +1027,6 @@ class account_move(osv.osv):
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
 
-        accnt_journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'])
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True
@@ -1248,7 +1324,7 @@ class account_tax_code(osv.osv):
     _description = 'Tax Code'
     _rec_name = 'code'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True),
+        'name': fields.char('Tax Case Name', size=64, required=True, translate=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'sum': fields.function(_sum_year, method=True, string="Year Sum"),
@@ -1260,6 +1336,15 @@ class account_tax_code(osv.osv):
         'sign': fields.float('Sign for parent', required=True),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
+
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = self.search(cr, user, ['|',('name',operator,name),('code',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
 
 
     def name_get(self, cr, uid, ids, context=None):
@@ -1290,7 +1375,15 @@ class account_tax_code(osv.osv):
                 return False
             level -= 1
         return True
+    
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.update({'line_ids': []})
+        return super(account_tax_code, self).copy(cr, uid, id, default, context)
+    
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
@@ -1348,7 +1441,6 @@ class account_tax(osv.osv):
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code',size=32),
-        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
@@ -1381,7 +1473,6 @@ class account_tax(osv.osv):
         'applicable_type': lambda *a: 'true',
         'type': lambda *a: 'percent',
         'amount': lambda *a: 0,
-        'price_include': lambda *a: 0,
         'active': lambda *a: 1,
         'type_tax_use': lambda *a: 'all',
         'sequence': lambda *a: 1,

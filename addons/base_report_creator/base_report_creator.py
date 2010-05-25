@@ -35,7 +35,7 @@ class report_creator(osv.osv):
     #
     def export_data(self, cr, uid, ids, fields_to_export, context=None):
         
-        if not context:
+        if context is None:
             context = {}
         data_l = self.read(cr, uid, ids, ['sql_query'], context)
         final_datas = []
@@ -61,7 +61,7 @@ class report_creator(osv.osv):
         @param Fields: List of field of customer reports form.
         @return: Dictionary of Fields
         """
-        if not context:
+        if context is None:
             context = {}
             
         data = context and context.get('report_id', False) or False
@@ -95,7 +95,7 @@ class report_creator(osv.osv):
         @param user: the current user’s ID for security checks,
         @return: Dictionary of Fields, arch and toolbar.
         """
-        if not context:
+        if context is None:
             context = {}
           
         data = context and context.get('report_id', False) or False    
@@ -116,9 +116,11 @@ class report_creator(osv.osv):
             
         arch = '<?xml version="1.0" encoding="utf-8"?>\n'
         if view_type == 'graph':
-            arch  += '<graph string="%s" type="%s" orientation="%s">' % (report.name, report.view_graph_type, report.view_graph_orientation)
+            orientation_eval = {'horz':'horizontal','vert' :'vertical'}
+            orientation = eval(report.view_graph_orientation,orientation_eval)
+            arch +='<graph string="%s" type="%s" orientation="%s">' % (report.name, report.view_graph_type, orientation)
+            i = 0
             for val in ('x','y'):
-                i = 0
                 for f in report.field_ids:
                     if f.graph_mode == val:
                         if f.field_id.model:
@@ -191,7 +193,9 @@ class report_creator(osv.osv):
         @param fields: List of fields.
         @return: List of Dictionary of form [{‘name_of_the_field’: value, ...}, ...]
         """
-        data = context and context.get('report_id', False) or False
+        if context is None:
+            context = {}
+        data = context.get('report_id', False)
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).read(cr, user, ids, fields, context, load)
         ctx = context or {}
@@ -225,8 +229,9 @@ class report_creator(osv.osv):
         @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
         @return: List of id 
         """
-
-        context_id = context and context.get('report_id', False) or False
+        if context is None:
+            context = {}
+        context_id = context.get('report_id', False)
         
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).search(cr, user, args, offset, limit, order, context, count)
@@ -372,9 +377,10 @@ class report_creator(osv.osv):
                 t = self.pool.get(f.field_id.model_id.model)._table
                 if f.group_method == 'group':
                     fields.append('\t'+t+'.'+f.field_id.name+' as field'+str(i))
+                    groupby.append(t+'.'+f.field_id.name)
                 else:
                     fields.append('\t'+f.group_method+'('+t+'.'+f.field_id.name+')'+' as field'+str(i))
-                groupby.append(t+'.'+f.field_id.name)
+                    
                 i += 1
             models = self._path_get(cr, uid, obj.model_ids, obj.filter_ids)
             check = self._id_get(cr, uid, ids[0], context)

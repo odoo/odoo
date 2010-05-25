@@ -51,7 +51,6 @@
                 <search string="Timesheet">
                     <group col='8' colspan='4'>
                         <filter icon="terp-hr" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
-                        <filter icon="terp-hr" domain="[('user_id','=',uid)]" string="My Work" help="My Work"/>
                         <separator orientation="vertical"/>
                         <field name="user_id" select="1" widget="selection"/>
                         <field name="account_id" select="1" widget="selection"/>
@@ -72,6 +71,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
             <field name="filter" eval="True"/>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
         </record>
 

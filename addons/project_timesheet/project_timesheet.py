@@ -28,7 +28,6 @@ from tools.translate import _
 
 class project_work(osv.osv):
     _inherit = "project.task.work"
-    _description = "Task Work"
 
     def get_user_related_details(self, cr, uid, user_id):
         res = {}
@@ -144,7 +143,6 @@ project_work()
 
 class task(osv.osv):
     _inherit = "project.task"
-    _description = "Tasks"
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for task_obj in self.browse(cr, uid, ids, *args, **kwargs):

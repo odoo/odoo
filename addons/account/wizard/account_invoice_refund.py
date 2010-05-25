@@ -21,6 +21,7 @@
 from osv import fields, osv
 from tools.translate import _
 import netsvc
+import time
 
 class account_invoice_refund(osv.osv_memory):
 
@@ -29,10 +30,14 @@ class account_invoice_refund(osv.osv_memory):
     _name = "account.invoice.refund"
     _description = "Invoice Refund"
     _columns = {
-       'date': fields.date('Operation date', required=False),
+       'date': fields.date('Operation date', required=False, help='This date will be used as the invoice date for Refund Invoice and Period will be chosen accordingly!'),
        'period': fields.many2one('account.period', 'Force period', required=False),
        'description': fields.char('Description', size=150, required=True),
-                }
+    }
+    
+    _defaults = {
+        'date': time.strftime('%Y-%m-%d'),
+    }
 
     def compute_refund(self, cr, uid, ids, mode, context=None):
         """
@@ -46,6 +51,7 @@ class account_invoice_refund(osv.osv_memory):
         account_m_line_obj = self.pool.get('account.move.line')
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
+        wf_service = netsvc.LocalService('workflow')
 
         if context is None:
             context = {}
@@ -111,7 +117,6 @@ class account_invoice_refund(osv.osv_memory):
                             to_reconcile_ids[line.account_id.id] = [line.id]
                         if type(line.reconcile_id) != osv.orm.browse_null :
                             reconcile_obj.unlink(cr, uid, line.reconcile_id.id)
-                    wf_service = netsvc.LocalService('workflow')
                     wf_service.trg_validate(uid, 'account.invoice', \
                                         refund.id, 'invoice_open', cr)
                     refund = inv_obj.browse(cr, uid, refund_id[0],context=context)
@@ -167,7 +172,7 @@ class account_invoice_refund(osv.osv_memory):
                 xml_id = 'action_invoice_tree1'
             elif inv.type == 'in_invoice':
                 xml_id = 'action_invoice_tree2'
-            elif type == 'out_refund':
+            elif inv.type == 'out_refund':
                 xml_id = 'action_invoice_tree3'
             else:
                 xml_id = 'action_invoice_tree4'

@@ -176,7 +176,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         this = self.browse(cr, uid, ids[0], context=context)
 
-        hist_obj = self.pool.get('crm.case.history')
         smtp_pool = self.pool.get('email.smtpclient')
         case_pool = self.pool.get(model)
         case = case_pool.browse(cr, uid, res_id, context=context)

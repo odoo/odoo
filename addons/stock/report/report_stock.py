@@ -22,6 +22,7 @@
 from osv import osv, fields
 from tools.translate import _
 import tools
+from tools.sql import drop_view_if_exists
 
 #
 # Check if it works with UoM ???
@@ -38,7 +39,7 @@ class stock_report_prodlots(osv.osv):
     }
     
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'stock_report_prodlots')
+        drop_view_if_exists(cr, 'stock_report_prodlots')
         cr.execute("""
             create or replace view stock_report_prodlots as (
                 select max(id) as id,
@@ -94,7 +95,7 @@ class stock_report_tracklots(osv.osv):
     }
     
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'stock_report_tracklots')
+        drop_view_if_exists(cr, 'stock_report_prodlots')
         cr.execute("""
            create or replace view stock_report_tracklots as (
                 
@@ -149,7 +150,7 @@ class report_stock_lines_date(osv.osv):
         'date': fields.datetime('Latest Inventory Date'),
     }
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_stock_lines_date')
+        drop_view_if_exists(cr, 'stock_report_prodlots')
         cr.execute("""
             create or replace view report_stock_lines_date as (
                 select

@@ -97,20 +97,20 @@
             <field name="arch" type="xml">
                 <form string="Sales order">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="client_order_ref"/>
                         <field name="shipped"/>
-                        <field name="date_order" select="1"/>
+                        <field name="date_order"/>
                         <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
                         <field name="invoiced"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sale Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1" select="1"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" widget="selection"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
                                 groups="base.group_extended"/>
@@ -123,14 +123,15 @@
                                                 context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
                                                 name="product_id"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, parent.date_order, product_packaging, parent.fiscal_position)"
-                                                select="1"/>
+                                                />
                                             <field
                                                 context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
                                                 name="product_uom_qty"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position, True)"
-                                                select="1"/>
+                                                />
                                             <field name="product_uom"
-                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
+                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"
+                                                widget="selection"/>
                                             <field
                                                 name="product_packaging"
                                                 context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
@@ -159,8 +160,6 @@
                                             </group>
                                         </page>
                                         <page groups="base.group_extended" string="Extra Info">
-                                            <field groups="product.group_uos" name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
-                                            <field groups="product.group_uos" name="product_uos"/>
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id"/>
 <!--                                            <separator colspan="4" string="Properties"/>-->
@@ -191,7 +190,7 @@
                             <group col="8" colspan="5">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
-                                <field name="amount_total" sum="Total amount"/>
+                                <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                             </group>
                             <group col="13" colspan="4">
@@ -238,7 +237,7 @@
                         </page>
                         <page string="History" groups="base.group_extended">
                             <separator colspan="4" string="Related invoices"/>
-                            <field colspan="4" name="invoice_ids" nolabel="1"/>
+                            <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
                     </notebook>
@@ -258,16 +257,15 @@
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
-                    <field name="user_id" select="1" widget="selection">
-                        <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Sale Orders" default="1"/>
-                    </field>
+                    <field name="user_id" select="1" widget="selection"/>
                     <field name="date_order" select="1" string="Order date" />
                     <newline/>
                     <group expand="1" string="Group By..." colspan="11" col="11">
                         <filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
                         <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                </search>
             </field>
@@ -279,6 +277,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
@@ -366,11 +365,11 @@
                     <notebook>
                         <page string="Order Lines">
                             <separator colspan="4" string="General Information"/>
-                            <field name="order_id" select="1"/>
-                            <field name="order_partner_id" readonly="1" select="1" invisible="1"/>
+                            <field name="order_id"/>
+                            <field name="order_partner_id" readonly="1" invisible="1"/>
                             <field name="product_uom_qty" readonly="1"/>
                             <field name="product_uom"/>
-                            <field name="product_id" readonly="1" select="1"/>
+                            <field name="product_id" readonly="1"/>
                             <field name="invoiced"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <separator colspan="4" string="Manual Designation"/>
@@ -417,16 +416,16 @@
                 <search string="Search Sales Order">
                     <filter icon="terp-purchase" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1"/>
                     <separator orientation="vertical"/>
-                    <field name="order_id" select="1"/>
-                    <field name="order_partner_id" select="1"/>
-                    <field name="product_id" select="1"/>
-                    <field name="salesman_id" select="1" widget="selection">
+                    <field name="order_id"/>
+                    <field name="order_partner_id"/>
+                    <field name="product_id"/>
+                    <field name="salesman_id" widget="selection">
                         <filter icon="terp-sale" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
                         <filter icon="terp-sale" domain="[('salesman_id','child_of',[uid])]" help="My Departments Sale Order Lines"/>
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
-                        <filter string="Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Product" icon="terp-sale" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
                         <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'salesman_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
@@ -445,14 +444,14 @@
                         domain="[('state','=','done')]"
                         name="unshipped"
                         separator="1" />
-                    <filter icon="terp-purchase" string="Uninvoiced"
-                        domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"  default="1"
+                    <filter icon="terp-purchase" string="Uninvoiced" name="uninvoiced"
+                        domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]" 
                         separator="1" />
                     <separator orientation="vertical"/>
-                    <field name="order_id" select="1"/>
-                    <field name="order_partner_id" select="1"/>
-                    <field name="product_id" select="1"/>
-                    <field name="state" select="1"/>
+                    <field name="order_id"/>
+                    <field name="order_partner_id"/>
+                    <field name="product_id"/>
+                    <field name="state"/>
                     <newline />
                     <group expand="1" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-sale" domain="[]" context="{'group_by':'product_id'}"/>
