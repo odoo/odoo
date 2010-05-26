@@ -30,16 +30,13 @@ class stock_location_product(osv.osv_memory):
     }
 
     def action_open_window(self, cr, uid, ids, context):
-        """ 
-         To open location wise product information specific to given duration
-        
+        """ To open location wise product information specific to given duration
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param ids: the ID or list of IDs if we want more than one 
+         @param ids: An ID or list of IDs if we want more than one 
          @param context: A standard dictionary 
-         
-         @return: invoice type
+         @return: Invoice type
         """
         mod_obj = self.pool.get('ir.model.data')
         for location_obj in self.read(cr, uid, ids, ['from_date', 'to_date']):

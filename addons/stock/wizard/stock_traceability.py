@@ -34,18 +34,15 @@ class action_traceability(osv.osv_memory):
     _description = "Action traceability "
      
     def action_traceability(self, cr, uid, ids, context={}):
-        """ 
-             It traces the information of a product
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary of values
-        
+        """ It traces the information of a product
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
+        @return: A dictionary of values
         """
+
         type1 = context['type'] or 'move_history_ids'
         field = context['field'] or 'tracking_id'
         obj = self.pool.get('stock.move')
