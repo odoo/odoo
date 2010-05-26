@@ -46,10 +46,9 @@
     "update_xml" : [
         "security/ir.model.access.csv",
         "voucher_sequence.xml",
-        "account_report.xml",
+        "voucher_report.xml",
         "voucher_view.xml",
         "voucher_wizard.xml",
-        "account_view.xml",
         "wizard/account_voucher_open_view.xml",
     ],
     'certificate': '0037580727101',

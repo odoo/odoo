@@ -23,7 +23,6 @@
 import time
 import datetime
 
-import pooler
 import netsvc
 from osv import fields, osv
 from tools.translate import _
@@ -51,7 +50,7 @@ class hr_holidays_status(osv.osv):
 
     def get_days(self, cr, uid, ids, employee_id, return_false, context={}):
         res = {}
-        for record in self.browse(cr, uid, ids, context):
+        for record in self.browse(cr, uid, ids, context=context):
             res[record.id] = {}
             max_leaves = leaves_taken = 0
             if not return_false:
@@ -123,7 +122,7 @@ class hr_holidays(osv.osv):
         'date_from' : fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)]}),
         'user_id':fields.many2one('res.users', 'User', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'date_to' : fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)]}),
-        'holiday_status_id' : fields.many2one("hr.holidays.status", "Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)]}),
+        'holiday_status_id' : fields.many2one("hr.holidays.status", " Leave  Type", required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'employee_id' : fields.many2one('hr.employee', "Employee", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
         'manager_id' : fields.many2one('hr.employee', 'Leave Manager', invisible=False, readonly=True, help='This area is automaticly filled by the user who validate the leave'),
         'notes' : fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
@@ -135,7 +134,7 @@ class hr_holidays(osv.osv):
         'parent_id': fields.many2one('hr.holidays', 'Parent'),
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
-        'category_id': fields.many2one('hr.employee.category', "Employee Category", help='Category Of employee'),
+        'category_id': fields.many2one('hr.employee.category', "Category", help='Category Of employee'),
         'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Holiday Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category'),
         'manager_id2': fields.many2one('hr.employee', 'Second Validator', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
             }
@@ -205,9 +204,11 @@ class hr_holidays(osv.osv):
                     self.unlink(cr, uid, list_ids)
 
     def _check_date(self, cr, uid, ids):
-        for rec in self.read(cr, uid, ids, ['number_of_days_temp','date_from','date_to']):
+        for rec in self.read(cr, uid, ids, ['number_of_days_temp','date_from','date_to', 'type']):
             if rec['number_of_days_temp'] < 0:
                 return False
+            if rec['type']=='add':
+                continue
             date_from = time.strptime(rec['date_from'], '%Y-%m-%d %H:%M:%S')
             date_to = time.strptime(rec['date_to'], '%Y-%m-%d %H:%M:%S')
             if date_from > date_to:

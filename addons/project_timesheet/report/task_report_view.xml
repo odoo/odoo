@@ -75,14 +75,10 @@
 	            		<filter icon="terp-project" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
 	            		<filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
 	            		<separator orientation="vertical"/>
-	            		<filter string="Start Date" icon="terp-project" domain="[('date_start','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                 		<filter string="End Date" icon="terp-project" domain="[('date_end','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                 	   <filter string="Deadline Date" icon="terp-project" domain="[('date_deadline','=',time.strftime('%%Y/%%m/%%d'))]"/>
-	            		<separator orientation="vertical"/>
 	            		<field name="project_id" select="1"/>
 	                    <field name="user_id" select="1" widget="selection"/>
                 		<newline/>
-                		<group expand="1" string="Extended options..." colspan="10" col="12">
+                		<group expand="1" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
                     		<filter icon="terp-project"
                     		string="Very urgent"
                     		domain="[('priority','=','0')]"/>
@@ -100,7 +96,7 @@
                     		domain="[('priority','=','4')]"/>
                 		</group>
 	                    <newline/>
-                		<group expand="1" string="Group By..." colspan="10" col="11">
+                		<group expand="1" string="Group By..." colspan="10" col="11" groups="base.group_extended">
                     		<filter string="User" icon="terp-project" context="{'group_by':'user_id'}" />
                     		<filter string="Project" icon="terp-project" context="{'group_by':'project_id'}" />
                     		<filter string="Company" icon="terp-project" context="{'group_by':'company_id'}" />

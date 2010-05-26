@@ -8,24 +8,29 @@
         parent="account.menu_finance_legal_statement"/>
 
     	<record id="view_vat_declaration" model="ir.ui.view">
-            <field name="name">Select Period</field>
+            <field name="name">Vat Declaraion</field>
             <field name="model">l1on_be.vat.declaration</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Select Period">
-               	<group  colspan="4" >
-					<field name="period_id" select="1"/>
-					<field name="ask_resitution"/>
-					<field name="ask_payment"/>
-					<field name="client_nihil"/>
-              		<button colspan="1" name="create_xml" string="Create XML" type="object" default_focus="1"/>
-              	 </group>
+               	<group colspan="3" col="6">
+						<field name="period_id" select="1"/>
+						<newline/>
+						<field name="ask_resitution"/>
+						<field name="ask_payment"/>
+						<newline/>
+						<field name="client_nihil"/>
+						<newline/>
+				</group>
+				<newline/>
+	            <button  icon="gtk-execute" colspan="1" name="create_xml" string="Create XML" type="object" default_focus="1"/>
               	 <separator string="XML Flie has been Created." colspan="4"/>
               	 <group colspan="4" >
 					<field name="msg" nolabel="1" colspan="4"/>
+					<field name="name"/>
 			    	<field name="file_save" readonly="True"/>
 			     </group>
-              		<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+              		<button special="cancel" string="Close" icon="gtk-cancel"/>
 			</form>
             </field>
 		</record>

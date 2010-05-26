@@ -2,11 +2,11 @@
 <openerp>
 	<data>
 		<record id="menu_event_config" model="ir.ui.menu">
-			<field name="groups_id" eval="[(6,0,[ref('crm.group_crm_manager')])]"/>
+			<field name="groups_id" eval="[(6,0,[ref('crm.group_crm_manager'), ref('base.group_extended')])]"/>
 		</record>
 
 		<record id="menu_report_event" model="ir.ui.menu">
-			<field name="groups_id" eval="[(6,0,[ref('crm.group_crm_manager')])]"/>
+			<field name="groups_id" eval="[(6,0,[ref('crm.group_crm_manager'), ref('base.group_extended')])]"/>
 		</record>
 	</data>
 </openerp>
