@@ -91,8 +91,14 @@ class document_file(osv.osv):
         'store_fname': fields.char('Stored Filename', size=200),
         'res_model': fields.char('Attached Model', size=64), #res_model
         'res_id': fields.integer('Attached ID'), #res_id
+ #       'res_name': fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
         'title': fields.char('Resource Title', size=64),
+        'type':fields.selection([
+            ('url','URL'),
+            ('binary','Binary'),
+
+        ],'Type', help="Type is used to separate URL and binary File"),
     }
 
     def __get_def_directory(self, cr, uid, context=None):
