@@ -24,7 +24,7 @@
                                 <field name="user_id" string="Invited User"/>
                                 <newline/>
                                 <field name="partner_address_id"
-                                    string="Partner Contact" />
+                                    string="Contact" />
                                 <field name="partner_id"
                                     string="Partner" readonly="1" />
                             </group>
@@ -108,7 +108,7 @@
                    <field name="cutype" string="Invitation type" select="1"/>
                    <field name="event_date" select="1"/>
                    <newline/>
-					<group expand="0" string="Group By..." colspan="16">
+				    <group expand="1" string="Group By...">
 						<filter string="Type" icon="terp-project" help="Invitation Type"
 					        domain="[]" context="{'group_by':'cutype'}" />
 					    <filter string="Role" icon="terp-project"
@@ -119,15 +119,13 @@
 					    <filter string="User" icon="terp-partner" domain="[]"
 					        context="{'group_by':'user_id'}" />
 					    <filter string="Contact" icon="terp-partner" domain="[]"
-					        context="{'group_by':'partner_address_id'}" />
+					        context="{'group_by':'partner_address_id'}" />						
+					    <filter string="State" icon="terp-project" help="Invitation Type"
+                            domain="[]" context="{'group_by':' state'}" />
 					</group>
                </search>
             </field>
         </record>
-
-
-        <!--		Action for attendee view-->
-
 		<record id="action_view_attendee_form" model="ir.actions.act_window">
 	         <field name="name">Event Invitations</field>
 	         <field name="type">ir.actions.act_window</field>
@@ -184,9 +182,6 @@
                 </tree>
             </field>
         </record>
-
-		<!--		Action for alarms view-->
-
         <record id="action_res_alarm_view" model="ir.actions.act_window">
             <field name="name">Available Alarms</field>
             <field name="type">ir.actions.act_window</field>
@@ -301,7 +296,7 @@
 	                            nolabel="1" widget="one2many" mode="tree,form">
 	                            <tree string="Invitation details" editable="top">
 	                                <field name="email" />
-	                                <field name="role" select="1" />
+	                                <field name="role" width="200" select="1" />
 	                                <field name="state" />
 	                            </tree>
 	                            <form string="Invitation details">
@@ -403,7 +398,7 @@
                            <field name="class" select="1"/>
                        </group>
                        <newline/>
-						<group expand="1" string="Group By..." colspan="16">
+						<group expand="1" string="Group By...">
 							<filter string="Date" icon="terp-project"
 						        domain="[]" context="{'group_by':'date'}" />
 						    <filter string="Availability" icon="terp-project"

@@ -20,17 +20,22 @@
 ##############################################################################
 
 {
-    'name': 'Document Management - Wiki -Sale - FAQ',
+    'name': 'Wiki -Sale - FAQ',
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """This module provides a wiki FAQ Template
     """,
     'author': 'Tiny',
     'website': 'http://openerp.com',
-    'depends': ['wiki','document','crm'],
-    'init_xml': [],
-    'update_xml': ['wiki_sale_faq.xml'],
-    'demo_xml': ['wiki_sale_demo.xml'],
+    'depends': ['wiki_faq','document','crm'],
+    'init_xml': [
+            'wiki_sale_faq_data.xml'
+    ],
+    'update_xml': [
+            'wiki_sale_faq_view.xml'
+    ],
+    'demo_xml': [            
+    ],
     'installable': True,
     'active': False,
 }

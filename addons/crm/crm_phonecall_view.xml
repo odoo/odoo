@@ -137,7 +137,7 @@
             </form>
         </field>
     </record>
-
+	
 	<!--Inbound Phonecalls Form View -->
 
 	<record model="ir.ui.view" id="crm_case_inbound_phone_form_view">
@@ -197,9 +197,9 @@
             </form>
         </field>
     </record>
-
+    
     <!--Inbound Phonecalls Tree View -->
-
+    
     <record model="ir.ui.view" id="crm_case_inbound_phone_tree_view">
         <field name="name">CRM - Inbound Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
@@ -274,7 +274,7 @@
                        help="My Sale Team" />
                </field>
                <newline/>
-               <group expand="1" string="Group By..." colspan="4">
+               <group expand="0" string="Group By..." colspan="4">
                    <filter string="Partner" icon="terp-crm" domain="[]"
                        context="{'group_by':'partner_id'}" />
                    <filter string="Responsible" icon="terp-crm"
@@ -288,20 +288,6 @@
            </search>
         </field>
     </record>
-
-        <!--  Partners inherited form -->
-
-    <record id="view_phonecall_partner_info_form" model="ir.ui.view">
-            <field name="name">res.partner.phonecall.info.inherit</field>
-            <field name="model">res.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-               		<field name="meeting_ids" position="after">
-               			<field name="phonecall_ids" colspan="4" nolabel="1" />
-               		</field>
-            </field>
-        </record>
-
+    
     </data>
 </openerp>

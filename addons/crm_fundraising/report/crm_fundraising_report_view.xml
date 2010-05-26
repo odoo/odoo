@@ -121,7 +121,7 @@
 	            			<filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
                			</field>
                    </group>
-                   <group  expand="1" string="Group By..." colspan="4" col="8">
+                   <group  expand="1" string="Group By...">
                         <filter string="User" name="User" icon="terp-sale"
                             domain="[]" context="{'group_by':'user_id'}" />
 
@@ -152,7 +152,7 @@
 
                   </group>
                    <newline/>
-                   <group  expand="0" string="Extended options..." colspan="10" col="12">
+                   <group  expand="0" string="Extended options..." groups="base.group_extended">
                          <filter icon="terp-sale"
                     		string="Done"
                     		domain="[('state','=','done')]"/>

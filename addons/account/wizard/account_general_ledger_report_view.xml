@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Select Date-Period">
-			    <field name="company_id" colspan="4"/>
+			    <field name="company_id" colspan="4" groups="base.group_multi_company"/>
 			    <newline/>
 			    <field name="fiscalyear"/>
 			    <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>

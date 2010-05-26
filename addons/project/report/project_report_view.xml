@@ -8,8 +8,8 @@
             <field name="model">report.project.task.user</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Tasks">
-                	<field name="name" />
+                <tree string="Tasks Analysis">
+                	<field name="name" invisible="1"/>
                     <field name="project_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
@@ -22,12 +22,15 @@
                     <field name="day" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="year" invisible="1"/>
-                    <field name="nbr" sum='#Number of tasks'/>
-                    <field name="no_of_days" sum="#Days"/>
+                    <field name="nbr" sum='# of tasks'/>
+                    <field name="no_of_days" sum="# of Days"/>
+                    <field name="total_hours" sum='Total Hours'/>
                     <field name="hours_planned" sum='Planned Hours'/>
+                    <field name="remaining_hours" sum='Remaining Hours'/>
                     <field name="hours_effective" sum='Effective Hours'/>
                     <field name="hours_delay" sum='Avg. Plan.-Eff.'/>
-                    <field name="closing_days" sum='Avg Closing Delay'/>
+                    <field name="opening_days" sum='Days to Open'/>
+                    <field name="closing_days" sum='Days to Close'/>
                 </tree>
             </field>
         </record>
@@ -37,7 +40,7 @@
             <field name="model">report.project.task.user</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-            <graph string="Tasks" type="bar">
+            <graph string="Tasks Analysis" type="bar">
                  <field name="name"/>
                  <field name="state" group="True"/>
                  <field name="no_of_days" operator="+"/>
@@ -50,12 +53,12 @@
             <field name="model">report.project.task.user</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Tasks">
+                <search string="Tasks Analysis">
                 	<group>
-	                    <filter icon="terp-project" string="Last 365 Days"
+	                    <filter icon="gtk-media-rewind" string="Last 365 Days"
 	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Tasks performed in last 365 Days"/>
-	                    <filter icon="terp-project" string="Last 30 Days"
+	                    <filter icon="gtk-media-rewind" string="Last 30 Days"
 	                    		name="month"
 	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                    		help="Tasks performed in last 30 days"/>
@@ -82,6 +85,7 @@
                     			name="done"
                     			domain="[('state','=','done')]"/>
 	  					<separator orientation="vertical"/>
+	  					<field name="partner_id" />
 	                    <field name="user_id" widget="selection">
 	                        <filter icon="terp-project"
 	                        		string="My Task"
@@ -94,21 +98,15 @@
 	                    </field>
 	                    <field name="project_id" widget="selection">
 	                        <filter icon="terp-project"
-	                        		string="My Task"
-	                        		help="My Tasks"
+	                        		string="My Projects"
+	                        		help="My Projects"
 	                        		domain="[('project_id','=',context.get('project_id', False)]"/>
-	                        <filter icon="terp-project"
-	                        		string="Non assigned tasks to projects"
-	                        		help ="Non assigned tasks to projects"
-	                        		domain="[('project_id','=',False"/>
 	                    </field>
-	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
-                    <newline/>
-
                     <group expand="1" string="Group By..." colspan="10" col="11">
                         <filter string="User" name="User" icon="terp-project" context="{'group_by':'user_id'}" />
                         <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Partner" icon="terp-project" context="{'group_by':'partner_id'}" />
                         <filter string="Task" icon="terp-project" context="{'group_by':'name'}" />
                         <separator orientation="vertical"/>
@@ -121,25 +119,21 @@
                         <filter string="Year" icon="terp-project" context="{'group_by':'year'}"/>
                     </group>
                     <newline/>
-	                <group expand="0" string="Extended options..." colspan="10" col="12">
+	                <group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
 	                    <field name="type" widget="selection"/>
 	                    <separator orientation="vertical"/>
                         <field name="date_start"/>
-                        <separator orientation="vertical"/>
-	                    <field name="date_deadline"/>
-	                    <newline/>
+                        <field name="date_deadline"/>
+	                    <separator orientation="vertical"/>
 	                    <field name="priority"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="date_end"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="partner_id" />
+	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </search>
             </field>
         </record>
 
        <record id="action_project_task_user_tree" model="ir.actions.act_window">
-            <field name="name">Tasks</field>
+            <field name="name">Tasks Analysis</field>
             <field name="res_model">report.project.task.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>

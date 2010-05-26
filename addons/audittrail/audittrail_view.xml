@@ -12,15 +12,12 @@
                 <form string="AuditTrail Rule">
                     <field name="name" select="1" required="1"/>
                     <field name="object_id" select="1"/>
-                    <field name="log_read"/>
-                    <field name="log_write"/>
-                    <field name="log_unlink"/>
-                    <field name="log_create"/>
-                    <field name="log_action"/>
-                    <field name="log_workflow"/>
-                    <separator string="Users (if User is not added then it will applicable for all users)"  colspan="4" />
-                    <field name="user_id" select="1" colspan="4" nolabel="1" />
-                    <field name="action_id" colspan="4" readonly="1" groups="base.group_extended"/>
+                    <field name="log_read" />
+                    <field name="log_write" />
+                    <field name="log_unlink" />
+                    <field name="log_create" />
+                    <field name="action_id" colspan="4" readonly="1"/>
+                    <field name="user_id" select="1" colspan="4"/>
                     <field name="state" select="1" readonly="1" />
                     <group colspan="2" col="2">
                         <button string="Subscribe" name="subscribe"
@@ -45,45 +42,11 @@
                     <field name="log_write" />
                     <field name="log_unlink" />
                     <field name="log_create" />
-                     <field name="log_action"/>
-                    <field name="log_workflow"/>
                     <field name="state" />
                 </tree>
             </field>
         </record>
 
-        <!-- Audittrail rule  Search View -->
-	    <record id="view_audittrail_rule_filter" model="ir.ui.view">
-	        <field name="name">Audittrail-rule Search</field>
-	        <field name="model">audittrail.rule</field>
-	        <field name="type">search</field>
-	        <field name="arch" type="xml">
-	            <search string="Search rule">
-	            	<group>
-		                <filter icon="terp-project"
-		                    string="Draft"
-		                    domain="[('state','=','draft')]"/>
-		                <filter icon="terp-project"
-		                    name="subscribed"
-		                    string="Subscribed"
-		                    domain="[('state','=','subscribed')]"/>
-		                <separator orientation="vertical"/>
-		                <field name="name"/>
-		                <field name="object_id" widget="selection"/>
-		                <field name="user_id" widget="selection"/>
-		            </group>
-	                <newline/>
-	                <group expand="1" string="Group By..." colspan="14">
-	                    <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
-	                    <filter string="Object" icon="terp-crm" domain="[]" context="{'group_by':'object_id'}"/>
-	                </group>
- 					<newline/>
-	            </search>
-	        </field>
-	    </record>
-
-=======
->>>>>>> MERGE-SOURCE
     <!-- Action for audittrail rule -->
 
         <record model="ir.actions.act_window" id="action_audittrail_rule_tree">
@@ -120,23 +83,20 @@
             <field name="arch" type="xml">
                 <form string="AuditTrail Logs">
                     <field name="timestamp" select="1" required="1" readonly="1"/>
-                    <field name="user_id" select="1" readonly="1"/>
-                    <field name="method" select="1" readonly="1"/>
-                    <field name="name" readonly="1" select="1"/>
-                    <field name="res_id" readonly="1"/>
                     <field name="object_id" select="1" readonly="1"/>
+                    <field name="method" select="1" readonly="1"/>
+                    <field name="user_id" select="1" readonly="1"/>
+                    <field name="res_id" readonly="1"/>
+                    <field name="name" readonly="1" select="1"/>
                     <field name="line_ids" colspan="4" mode="tree,form"
                         widget="one2many_list" readonly="1">
                         <form string="Log Lines">
-                            <group colspan="4" col="2">
-                            <field name="field_id"
-                                readonly="1" colspan="4"/>
+                            <field name="field_id" colspan="4"
+                                readonly="1" />
                             <newline />
-                            <field name="field_description"
-                                readonly="1" colspan="4"/>
+                            <field name="field_description" colspan="4"
+                                readonly="1" />
                             <newline />
-                            </group>
-
                             <separator string="Old Value : "
                                 colspan="2" />
                             <separator string="New Value : "
@@ -182,31 +142,6 @@
                 </tree>
             </field>
         </record>
-
-        <record id="view_audittrail_log_filter" model="ir.ui.view">
-	        <field name="name">Audittrail-log Search</field>
-	        <field name="model">audittrail.log</field>
-	        <field name="type">search</field>
-	        <field name="arch" type="xml">
-	            <search string="Search log">
-	            	<group>
-                    <field name="timestamp" />
-                    <field name="name" />
-                    <field name="object_id" widget="selection"/>
-                    <field name="method" />
-                    <field name="user_id" widget="selection"/>
-		            </group>
-	                <newline/>
-	                 <group expand="1" string="Group By..." colspan="14">
-	              		<filter string="Log Date" icon="terp-crm" domain="[]" context="{'group_by':'timestamp'}"/>
-	              		<filter string="Log Method" icon="terp-crm" domain="[]" context="{'group_by':'method'}"/>
-	                    <filter string="Object" icon="terp-crm" domain="[]" context="{'group_by':'object_id'}"/>
-	                    <filter string="User" icon="terp-partner" name="user" domain="[]" context="{'group_by':'user_id'}"/>
-	                </group>
- 					<newline/>
-	            </search>
-	        </field>
-	    </record>
 
 <!--  Action for Audittrail Log  -->
 
