@@ -17,6 +17,7 @@
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
+                <field name="uom_id" invisible="not context.get('set_visible',False)"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_qty" sum="# of Qty"/>
@@ -86,7 +87,7 @@
                     <filter string="Shop" icon="terp-sale" context="{'group_by':'shop_id'}"/>
                     <filter string="Company" icon="terp-sale" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-sale" context="{'group_by':'product_id'}"/>
+                    <filter string="Product" icon="terp-sale" context="{'group_by':'product_id','set_visible':True}"/>
                     <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-sale" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
@@ -99,28 +100,12 @@
                     <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
                 </group>
 				<newline/>
-                <group expand="0" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
-                    <filter icon="terp-sale" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
-                    <filter icon="terp-sale" string="       Invoice Exception      " domain="[('state','=','invoice_except')]"/>
+                <group expand="0" string="Extended options..." groups="base.group_extended">
+                    <field name="date"/>
                     <separator orientation="vertical"/>
                     <field name="shop_id" widget="selection"/>
-                    <field name="payment_term" widget="selection"/>
-                    <field name="fiscal_position" widget="selection"/>
-                    <newline/>
-                    <filter icon="terp-sale" string="Manual In Progress" domain="[('state','=','manual')]"/>
-                    <filter icon="terp-sale" string="Done" domain="[('state','=','done')]"/>
-                    <filter icon="terp-sale" string="Cancelled" domain="[('state','=','cancel')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="partner_invoice_id"/>
-                    <field name="partner_order_id"/>
-                    <field name="partner_shipping_id"/>
-                    <separator orientation="vertical"/>
-                    <field name="pricelist_id" widget="selection"/>
-                    <field name="analytic_account_id"/>
-                    <newline/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="date"/>
-                    <field name="date_confirm"/>
+                    <field name="state"/>
+                    <field name="categ_id" widget="selection"/>
                 </group>
             </search>
         </field>
