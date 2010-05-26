@@ -66,10 +66,12 @@ class view(osv.osv):
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade'),
         'field_parent': fields.char('Child Field',size=64),
+        'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="XML ID",
+                                  method=True),
     }
     _defaults = {
-        'arch': lambda *a: '<?xml version="1.0"?>\n<tree string="Unknwown">\n\t<field name="name"/>\n</tree>',
-        'priority': lambda *a: 16
+        'arch': '<?xml version="1.0"?>\n<tree string="Unknwown">\n\t<field name="name"/>\n</tree>',
+        'priority': 16
     }
     _order = "priority"
     _constraints = [

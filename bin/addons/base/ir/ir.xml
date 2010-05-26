@@ -609,13 +609,21 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Views">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
-                    <field name="model" select="1"/>
-                    <field name="field_parent"/>
-                    <field name="priority"/>
-                    <field name="inherit_id" select="1"/>
-                    <field colspan="4" name="arch"/>
+                    <group colspan="2" col="2">
+                        <separator string="General" colspan="2"/>
+                        <field name="name" select="1"/>
+                        <field name="type" select="1"/>
+                        <field name="model" select="1"/>
+                        <field name="priority"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Advanced" colspan="2"/>
+                        <field name="field_parent"/>
+                        <field name="inherit_id" select="1"/>
+                        <field name="xml_id" select="1"/>
+                    </group>
+                    <separator string="View architecture" colspan="4"/>
+                    <field colspan="4" nolabel="1" name="arch"/>
                 </form>
             </field>
         </record>
@@ -628,9 +636,10 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
+                    <field name="xml_id"/>
                     <field name="inherit_id"/>
-                    <field name="priority"/>
                     <field name="field_parent"/>
+                    <field name="priority"/>
                 </tree>
             </field>
         </record>
@@ -961,7 +970,7 @@
                     <field name="module" select="1" />
                     <field name="name" select="1" />
                     <field name="model" select="1" />
-                    <field name="res_id" select="2" />
+                    <field name="res_id" select="1" />
                     <field name="noupdate" select="2" />
                     <field name="date_update" />
                     <field name="date_init" />

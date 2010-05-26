@@ -3923,5 +3923,26 @@ class orm(orm_template):
                     return False
         return True
 
+    def get_xml_id(self, cr, uid, ids, *args, **kwargs):
+        """Find out the XML ID of any database record, if there
+        is one. This method works as a possible implementation
+        for a function field, to be able to add it to any
+        model object easily, referencing it as 'osv.osv.get_xml_id'.
+
+        get_xml_id(cr, uid, ids) -> { 'id': 'module.xml_id' }
+
+        :return: the fully qualified XML ID of the given object,
+                 defaulting to an empty string when there's none.
+        """
+        result = dict.fromkeys(ids, '')
+        model_data_obj = self.pool.get('ir.model.data')
+        data_ids = model_data_obj.search(cr,uid,
+                [('model','=',self._name),('res_id','in',ids)])
+        data_results = model_data_obj.read(cr,uid,data_ids,
+                ['name','module','res_id'])
+        for record in data_results:
+            result[record['res_id']] = '%(module)s.%(name)s' % record
+        return result
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
