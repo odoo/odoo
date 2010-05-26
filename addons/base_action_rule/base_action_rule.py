@@ -19,14 +19,16 @@
 #
 ##############################################################################
 
-import time
-import mx.DateTime
-import re
-
-import tools
+from datetime import datetime
 from osv import fields, osv, orm
 from osv.orm import except_orm
+from osv.osv import osv_pool
 from tools.translate import _
+import mx.DateTime
+import pooler 
+import re
+import time
+import tools
 
 class base_action_rule(osv.osv):
     """ Base Action Rules """
@@ -132,6 +134,74 @@ the rule to mark CC(mail to any other person defined in actions)."),
     
     _order = 'sequence'
     
+    def pre_action(self, cr, uid, ids, model, context=None):
+        # Searching for action rules
+        cr.execute("SELECT m.model, r.id  from base_action_rule r left join ir_model m on (m.id = r.name)")
+        res = cr.fetchall()
+        # Check if any rule matching with current object
+        for obj_name, rule_id in res:
+            if not (model == obj_name):
+                continue
+            else:
+                obj = self.pool.get(obj_name)
+                self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context))
+        return True
+
+    def new_create(self, old_create, model, context=None):
+        if not context:
+            context  = {}
+        def make_call_old(cr, uid, vals, context=context):
+            new_id = old_create(cr, uid, vals, context=context)
+            if not context.get('action'):
+                self.pre_action(cr, uid, [new_id], model, context=context)
+            return new_id
+        return make_call_old
+    
+    def new_write(self, old_write, model, context=None):
+        if not context:
+            context  = {}
+        def make_call_old(cr, uid, ids, vals, context=context):
+            if isinstance(ids, (str, int, long)):
+                ids = [ids]
+            if not context.get('action'):
+                self.pre_action(cr, uid, ids, model, context=context)
+            return old_write(cr, uid, ids, vals, context=context)
+        return make_call_old
+
+    def create(self, cr, uid, vals, context=None):
+        if not context:
+            context = {}
+        res_id = super(base_action_rule, self).create(cr, uid, vals, context)
+        model_pool = self.pool.get('ir.model')
+        model = model_pool.browse(cr, uid, vals.get('name'), context=context).model
+        obj_pool = self.pool.get(model)
+        obj_pool.__setattr__('old_create', obj_pool.create)
+        obj_pool.__setattr__('old_write', obj_pool.write)
+        obj_pool.__setattr__('create', self.new_create(obj_pool.create, model, context=context))
+        obj_pool.__setattr__('write', self.new_write(obj_pool.write, model, context=context))
+        return res_id
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(base_action_rule, self).write(cr, uid, ids, vals, context)
+        model_pool = self.pool.get('ir.model')
+        if not context:
+            context = {}
+        for rule in self.browse(cr, uid, ids, context=context):
+            model = model_pool.browse(cr, uid, rule.name.id, context=context).model
+            obj_pool = self.pool.get(model)
+            obj_pool.__setattr__('old_create', obj_pool.create)
+            obj_pool.__setattr__('old_write', obj_pool.write)
+            obj_pool.__setattr__('create', self.new_create(obj_pool.create, model, context=context))
+            obj_pool.__setattr__('write', self.new_write(obj_pool.write, model, context=context))
+        return res
+
+    def _check(self, cr, uid, automatic=False, use_new_cursor=False, \
+                       context=None):
+        rule_pool= self.pool.get('base.action.rule')
+        rule_ids = rule_pool.search(cr, uid, [], context=context)
+        return rule_pool.write(cr, uid, rule_ids, {}, context=context)
+        
+
     def format_body(self, body):
         """ Foramat Action rule's body
             @param self: The object pointer """
@@ -235,6 +305,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             context.update({'active_id':obj.id, 'active_ids':[obj.id]})
             self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
         write = {}
+
         if hasattr(obj, 'user_id') and action.act_user_id:
             obj.user_id = action.act_user_id
             write['user_id'] = action.act_user_id.id
@@ -279,12 +350,10 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param ids: List of Basic Action Rule’s IDs,
             @param objects: pass objects
             @param context: A standard dictionary for contextual values """
-
+        context.update({'action': True})
         if not scrit:
             scrit = []
-        cr.execute("select id from base_action_rule order by sequence")
-        rule_ids = map(lambda x: x[0], cr.fetchall())
-        for action in self.browse(cr, uid, rule_ids):
+        for action in self.browse(cr, uid, ids):
             level = action.max_level
             if not level:
                 break
@@ -333,6 +402,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                     self.do_action(cr, uid, action, model_obj, obj, context)
                     break
             level -= 1
+        context.update({'action': False})
         return True
 
     def _check_mail(self, cr, uid, ids, context=None):
@@ -358,5 +428,29 @@ the rule to mark CC(mail to any other person defined in actions)."),
     ]
 
 base_action_rule()
+
+
+class ir_cron(osv.osv):
+    _inherit = 'ir.cron' 
+    
+    def _poolJobs(self, db_name, check=False):
+        
+        try:
+            db, pool = pooler.get_db_and_pool(db_name)
+        except:
+            return False
+        cr = db.cursor()
+        try:
+            next = datetime.now().strftime('%Y-%m-%d %H:00:00')
+            # Putting nextcall always less than current time in order to call it every time
+            cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
+            cr.commit()
+            res = super(ir_cron, self)._poolJobs(db_name, check=check)
+        finally:
+            cr.commit()
+            cr.close()
+
+ir_cron()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
