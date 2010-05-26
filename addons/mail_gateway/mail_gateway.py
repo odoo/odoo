@@ -97,15 +97,16 @@ class mailgate_thread(osv.osv):
                         'history': True, 
                         'user_id': uid, 
                         'model_id' : model_ids and model_ids[0] or False, 
+                        'res_id': case.id,
                         'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
-                        'description': details or case.description, 
+                        'description': details or (hasattr(case, 'description') and case.description or False), 
                         'email_to': email or \
-                                (case.user_id and case.user_id.address_id and \
+                                (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
                                     case.user_id.address_id.email) or tools.config.get('email_from', False), 
                         'email_from': email_from or \
-                                (case.user_id and case.user_id.address_id and \
+                                (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
                                     case.user_id.address_id.email) or tools.config.get('email_from', False), 
-                        'partner_id': case.partner_id.id, 
+                        'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False, 
                         'thread_id': case.thread_id.id, 
                         'message_id': message_id, 
                         'attachment_ids': [(6, 0, attachments)]
@@ -130,6 +131,7 @@ class mailgate_message(osv.osv):
     _columns = {
         'name':fields.char('Message', size=64), 
         'model_id': fields.many2one('ir.model', 'Model'), 
+        'res_id': fields.integer('Resource ID'),
         'thread_id':fields.many2one('mailgate.thread', 'Thread'), 
         'date': fields.datetime('Date'), 
         'history': fields.boolean('Is History?', required=False), 

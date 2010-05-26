@@ -74,25 +74,6 @@
                         <field name="partner_id" />
 					</group>
                 <newline/>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
-                	<filter string="Posted"
-                   			icon="terp-account"
-                   			domain="[('state','=','posted')]"
-                   			help = "Posted tasks"/>
-                		<field name="state_2"/>
-                	<separator orientation="vertical"/>
-                		<field name="period_id" widget="selection"/>
-                		<field name="period_id2" widget="selection"/>
-                		<field name="type"/>
-                    <field name="product_id" />
-                    <field name="analytic_account_id"/>
-                    <newline/>
-                	<separator orientation="vertical"/>
-                    <field name="date_created"/>
-                		<field name="date"/>
-                    <field name="date_maturity"/>
-                </group>
-                <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Journal" name="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
                     <filter string="Account" name="Account" icon="terp-account" context="{'group_by':'account_id'}"/>
@@ -111,6 +92,25 @@
                     <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
                  </group>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                	<filter string="Posted"
+                   			icon="terp-account"
+                   			domain="[('state','=','posted')]"
+                   			help = "Posted tasks"/>
+                		<field name="state_2"/>
+                	<separator orientation="vertical"/>
+                		<field name="period_id" widget="selection"/>
+                		<field name="period_id2" widget="selection"/>
+                		<field name="type"/>
+                    <field name="product_id" />
+                    <field name="analytic_account_id"/>
+                    <newline/>
+                	<separator orientation="vertical"/>
+                    <field name="date_created"/>
+                		<field name="date"/>
+                    <field name="date_maturity"/>
+                </group>
+
             </search>
         </field>
     </record>

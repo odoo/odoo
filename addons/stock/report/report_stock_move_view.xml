@@ -20,7 +20,7 @@
                 <field name="product_uom"/>
                 <field name="state"/>
                 <field name="value"/>
-                
+
            </tree>
         </field>
     </record>
@@ -75,7 +75,7 @@
                     	icon="terp-stock"
                     	domain="[('state','=','done')]"
                     	help = "Completed Stock-Moves"/>
-                    	
+
                 <separator orientation="vertical"/>
                 <filter icon="terp-stock" string="Internal Locations" domain="[('location_id.usage','=','internal')]"/>
                 <filter icon="terp-stock" string="Scrap Locations" domain="[('location_id.scrap_location','=',1)]"/>
@@ -83,15 +83,8 @@
                 <field name="product_id"/>
                 </group>
                 <newline/>
-                
-                <group expand="0" string="Extended options..." colspan="10" col="12">
-                <field name="location_id" widget = "selection"/>
-                <field name="location_dest_id"  widget = "selection"/>
-                <field name="date_planned"/>
-                </group>
-                <newline/>
                 <group expand="1" string="Group By..." >
-             		<filter string="Partner" name="Partner" icon="terp-stock" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Partner" name="Partner" icon="terp-stock" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter name="product" string="Product" icon="terp-stock" context="{'group_by':'product_id'}"/>
                     <separator orientation="vertical"/>
                     <filter name="src_location" string="Source Location" icon="terp-stock" context="{'group_by':'location_id'}"/>
@@ -102,6 +95,13 @@
                     <filter string="Month" icon="terp-stock" context="{'group_by':'date_planned'}"/>
                     <filter string="Year" icon="terp-stock" context="{'group_by':'year'}"/>
                 </group>
+                <newline/>
+                <group expand="0" string="Extended options..."  groups="base.group_extended">
+                <field name="location_id" widget = "selection"/>
+                <field name="location_dest_id"  widget = "selection"/>
+                <field name="date_planned"/>
+                </group>
+
             </search>
         </field>
     </record>
@@ -118,9 +118,9 @@
 	<menuitem
         id="stock.next_id_61"
         name="Reporting"
-        parent="stock.menu_stock_root" groups="base.group_user"/>    
+        parent="stock.menu_stock_root" groups="base.group_user"/>
 
 	<menuitem action="action_stock_move_report" id="menu_action_stock_move_report" parent="next_id_61" sequence="5"/>
-	
+
 </data>
 </openerp>
