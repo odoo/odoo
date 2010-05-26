@@ -264,9 +264,7 @@ class purchase_order(osv.osv):
     def wkf_confirm_order(self, cr, uid, ids, context={}):
         todo = []
         for po in self.browse(cr, uid, ids):
-            
-            if self.pool.get('res.partner.event.type').check(cr, uid, 'purchase_open'):
-                self.pool.get('res.partner.event').create(cr, uid, {'name':'Purchase Order: '+po.name, 'partner_id':po.partner_id.id, 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id':uid, 'partner_type':'retailer', 'probability': 1.0, 'planned_cost':po.amount_untaxed})
+            self.pool.get('res.partner.event').create(cr, uid, {'name':'Purchase Order: '+po.name, 'partner_id':po.partner_id.id, 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id':uid})
             if not po.order_line:
                 raise osv.except_osv(_('Error !'),_('You can not confirm purchase order without Purchase Order Lines.'))
             for line in po.order_line:            
