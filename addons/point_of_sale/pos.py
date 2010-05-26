@@ -1331,4 +1331,13 @@ class product_product(osv.osv):
         'disc_controle': lambda *a: True,
 }
 product_product()
+
+class stock_picking(osv.osv):
+
+    _inherit = 'stock.picking'
+    _columns = {
+        'pos_order': fields.many2one('pos.order', 'Pos order'),
+    }
+stock_picking()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
