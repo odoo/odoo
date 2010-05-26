@@ -29,7 +29,7 @@
 
         Long Term Project management module that track planning, scheduling, resources allocation.
         Mainly used with Big project management.
-            - Project Phases will be maintain by Manager of the project
+            - Project Phases will be maintained by Manager of the project
             - Compute Phase Scheduling: Compute start date and end date of the phases which are in draft,open and pending state of the project given.
                                         If no project given then all the draft,open and pending states phases will be taken
             - Compute Task Scheduling: This works same as the scheduler button on project.phase. It takes the project as arguement and computes all the open,draft and pending tasks
