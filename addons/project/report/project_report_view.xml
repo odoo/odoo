@@ -55,10 +55,10 @@
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
                 	<group>
-	                    <filter icon="terp-project" string="Last 365 Days"
+	                    <filter icon="gtk-media-rewind" string="Last 365 Days"
 	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Tasks performed in last 365 Days"/>
-	                    <filter icon="terp-project" string="Last 30 Days"
+	                    <filter icon="gtk-media-rewind" string="Last 30 Days"
 	                    		name="month"
 	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                    		help="Tasks performed in last 30 days"/>
@@ -98,26 +98,11 @@
 	                    </field>
 	                    <field name="project_id" widget="selection">
 	                        <filter icon="terp-project"
-	                        		string="My Task"
-	                        		help="My Tasks"
+	                        		string="My Projects"
+	                        		help="My Projects"
 	                        		domain="[('project_id','=',context.get('project_id', False)]"/>
-	                        <filter icon="terp-project"
-	                        		string="Non assigned tasks to projects"
-	                        		help ="Non assigned tasks to projects"
-	                        		domain="[('project_id','=',False"/>
 	                    </field>
                     </group>
-                    <newline/>
-	                <group expand="0" string="Extended options..." colspan="10" col="12">
-	                    <field name="type" widget="selection"/>
-	                    <separator orientation="vertical"/>
-                        <field name="date_start"/>
-                        <field name="date_deadline"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="priority"/>
-	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="11">
                         <filter string="User" name="User" icon="terp-project" context="{'group_by':'user_id'}" />
                         <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}"/>
@@ -132,6 +117,16 @@
                         <filter string="Day" icon="terp-project" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
                         <filter string="Year" icon="terp-project" context="{'group_by':'year'}"/>
+                    </group>
+                    <newline/>
+	                <group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
+	                    <field name="type" widget="selection"/>
+	                    <separator orientation="vertical"/>
+                        <field name="date_start"/>
+                        <field name="date_deadline"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="priority"/>
+	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </search>
             </field>

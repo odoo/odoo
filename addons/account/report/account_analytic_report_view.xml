@@ -69,7 +69,34 @@
 	                <field name="partner_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                	<filter string="User" name="User" icon="terp-account" context="{'group_by':'user_id'}"/>
+                    <filter string="Associated Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
+					<filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Analytic Account" icon="terp-account" context="{'group_by':'parent_id'}"/>
+                    <filter string="Analytic Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
+                    <filter string="Account Type" icon="terp-account" context="{'group_by':'type'}"/>
+                    <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-account" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
+                </group>
+
+                <newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
+                    <filter icon="terp-account"
+                    		string="Draft"
+                    		domain="[('state','=','draft')]"/>
+                    <filter icon="terp-account"
+                    		string="Open"
+                    		domain="[('state','=','open')]"/>
+                    <filter icon="terp-account"
+                    		string="Pending"
+                    		domain="[('state','=','pending')]"/>
                     <filter icon="terp-account"
                     		string="Close"
                     		domain="[('state','=','close')]"/>
@@ -87,24 +114,7 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                 </group>
-                <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                	<filter string="User" name="User" icon="terp-account" context="{'group_by':'user_id'}"/>
-                    <filter string="Associated Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
-					<filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Analytic Account" icon="terp-account" context="{'group_by':'parent_id'}"/>
-                    <filter string="Analytic Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
-                    <filter string="Account Type" icon="terp-account" context="{'group_by':'type'}"/>
-                    <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Day" icon="terp-account" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
-                </group>
-            </search>
+                </search>
         </field>
     </record>
     <record id="view_account_analytic_report_search" model="ir.ui.view">

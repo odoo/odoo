@@ -167,7 +167,7 @@ class res_partner(osv.osv):
     
     _columns = {
                 'contract_ids': fields.one2many('account.analytic.account', \
-                                                    'partner_id', 'Contracts'), 
+                                                    'partner_id', 'Contracts', readonly=True), 
                 }
 
 res_partner()

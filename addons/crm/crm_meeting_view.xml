@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-<!-- CRM Meetings Categories Form View -->
+	<!-- CRM Meetings Categories Form View -->
 
     <record id="crm_meeting_categ_action" model="ir.actions.act_window">
         <field name="name">Meeting Categories</field>
@@ -16,7 +16,7 @@
     <menuitem action="crm_meeting_categ_action"
         id="menu_crm_case_meeting-act" parent="crm.menu_crm_case_categ" />
 
-<!-- CRM Meetings Form View -->
+	<!-- CRM Meetings Form View -->
 
     <record model="ir.ui.view" id="crm_case_form_view_meet">
         <field name="name">CRM - Meetings Form</field>
@@ -204,7 +204,7 @@
         </field>
     </record>
 
-<!-- CRM Meeting Tree View  -->
+	<!-- CRM Meeting Tree View  -->
 
     <record model="ir.ui.view" id="crm_case_tree_view_meet">
         <field name="name">CRM - Meetings Tree</field>
@@ -222,7 +222,7 @@
         </field>
     </record>
 
-<!-- CRM Meeting Calendar -->
+	<!-- CRM Meeting Calendar -->
 
     <record model="ir.ui.view" id="crm_case_calendar_view_meet">
         <field name="name">CRM - Meetings Calendar</field>
@@ -238,7 +238,7 @@
         </field>
     </record>
 
-<!-- CRM Meeting Gantt  -->
+	<!-- CRM Meeting Gantt  -->
 
     <record id="crm_case_gantt_view_meet" model="ir.ui.view">
         <field name="name">CRM - Meetings Gantt</field>
@@ -254,7 +254,7 @@
         </field>
     </record>
 
-<!-- CRM Meeting Search View  -->
+	<!-- CRM Meeting Search View  -->
 
     <record id="view_crm_case_meetings_filter" model="ir.ui.view">
         <field name="name">CRM - Meetings Search</field>
@@ -281,7 +281,7 @@
                            <field name="user_id" select="1" widget="selection"/>
                        </group>
                        <newline/>
-						<group expand="0" string="Group By..." colspan="16">
+					   	<group expand="1" string="Group By...">
 							<filter string="Date" icon="terp-project"
 						        domain="[]" context="{'group_by':'date'}" />
 						    <filter string="Privacy" icon="terp-crm"
@@ -300,7 +300,7 @@
             </field>
         </record>
 
-<!-- Calendar Attendee Form View -->
+		<!-- Calendar Attendee Form View -->
 
         <record id="attendee_form_view_inherit" model="ir.ui.view">
                 <field name="name">calendar.attendee.form.inherit</field>
@@ -314,7 +314,7 @@
                 </field>
         </record>
 
-<!-- Calendar Attendee Tree View -->
+		<!-- Calendar Attendee Tree View -->
 
         <record id="attendee_tree_view_inherit" model="ir.ui.view">
                 <field name="name">calendar.attendee.tree.inherit</field>
@@ -326,22 +326,6 @@
                         <field name="categ_id" string="Event Type"/>
                     </field>
                 </field>
-        </record>
-
-        <!--  Partners inherited form -->
-
-		<record id="view_meeting_partner_info_form" model="ir.ui.view">
-            <field name="name">res.partner.meeting.info.inherit</field>
-            <field name="model">res.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <notebook position="inside">
-               		<page string="CRM Info">
-						<field name="meeting_ids" colspan="4" nolabel="1" />
-					</page>
-                </notebook>
-            </field>
         </record>
 
     </data>

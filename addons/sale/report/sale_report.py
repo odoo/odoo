@@ -36,16 +36,15 @@ class sale_report(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
-        'product_qty':fields.float('Qty', readonly=True),
+        'product_qty':fields.float('# of Qty', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'shop_id':fields.many2one('sale.shop', 'Shop', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
-        'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position',readonly=True),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
-        'delay':fields.float('Avg Closing Days', digits=(16,2), readonly=True),
+        'delay':fields.float('Days to Close', digits=(16,2), readonly=True),
         'price_average':fields.float('Average Price', readonly=True),
+        'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
             ('draft', 'Quotation'),
@@ -57,12 +56,8 @@ class sale_report(osv.osv):
             ('done', 'Done'),
             ('cancel', 'Cancelled')
             ], 'Order State', readonly=True),
-        'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
-        'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact Name', readonly=True),
-        'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address Name', readonly=True),
-        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', readonly=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-        'date_confirm': fields.date('Confirmation Date', readonly=True)
     }
     _order = 'date desc'
     def init(self, cr):
@@ -80,42 +75,32 @@ class sale_report(osv.osv):
                      s.partner_id as partner_id,
                      s.user_id as user_id,
                      s.shop_id as shop_id,
-                     s.fiscal_position as fiscal_position,
-                     s.payment_term as payment_term,
                      s.company_id as company_id,
                      extract(epoch from avg(s.date_confirm-s.create_date))/(24*60*60)::decimal(16,2) as delay,
                      sum(l.product_uom_qty*l.price_unit) as price_total,
                      (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty * u.factor))::decimal(16,2) as price_average,
                      count(*) as nbr,
                      s.state,
-                     s.partner_invoice_id as partner_invoice_id,
-                     s.partner_order_id as partner_order_id,
-                     s.partner_shipping_id as partner_shipping_id,
+                     pt.categ_id,
                      s.pricelist_id as pricelist_id,
-                     s.project_id as analytic_account_id,
-                     s.date_confirm as date_confirm
+                     s.project_id as analytic_account_id
                      from
                  sale_order_line l
-                 left join
-                     sale_order s on (s.id=l.order_id)
-                     left join product_uom u on (u.id=l.product_uom)
+                 left join sale_order s on (s.id=l.order_id)
+                 left join product_uom u on (u.id=l.product_uom)
+                 left join product_template pt on (pt.id=l.product_id)
                  group by
                      s.date_order,
                      s.partner_id,
                      l.product_id,
                      l.product_uom,
                      s.user_id,
+                     pt.categ_id,
                      s.state,
                      s.shop_id,
                      s.company_id,
-                     s.fiscal_position,
-                     s.payment_term,
-                     s.partner_invoice_id,
-                     s.partner_order_id,
-                     s.partner_shipping_id,
                      s.pricelist_id,
-                     s.project_id,
-                     s.date_confirm
+                     s.project_id
             )
         """)
 sale_report()
@@ -212,7 +197,7 @@ class product_bought_by_sale_order(osv.osv):
                 where
                     s.state='manual' or s.state='progress'
                 group by
-                    l.product_id,  to_char(l.create_date, 'MM'), to_char(l.create_date, 'YYYY') 
+                    l.product_id,  to_char(l.create_date, 'MM'), to_char(l.create_date, 'YYYY')
             )
         """)
 product_bought_by_sale_order()

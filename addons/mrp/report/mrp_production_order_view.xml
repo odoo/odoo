@@ -57,7 +57,22 @@
 						<field name="date_planned"/>
                    </group>
                    <newline/>
-	                <group expand="1" string="Extended options..." colspan="10" col="12">
+
+                   <group expand="1" string="Group By...">
+                    	<filter string="Source Location" icon="terp-mrp" context="{'group_by':'location_src_id'}"/>
+                    	<filter string="Destination Location" icon="terp-mrp" context="{'group_by':'location_dest_id'}"/>
+                    	<filter string="Picking" icon="terp-mrp" context="{'group_by':'picking_id'}"/>
+                    	<separator orientation="vertical"/>
+                        <filter string="Routing" icon="terp-mrp" context="{'group_by':'routing_id'}"/>
+                        <filter string="Product" name="Product" icon="terp-mrp" context="{'group_by':'product_id'}" />
+                        <filter string="State" icon="terp-mrp" context="{'group_by':'state'}"/>
+                    	<separator orientation="vertical"/>
+                    	<filter string="BOM" icon="terp-mrp" context="{'group_by':'bom_id'}"/>
+                    	<filter string="Month" icon="terp-mrp" context="{'group_by':'month'}"/>
+                    	<filter string="Year" icon="terp-mrp" context="{'group_by':'year'}"/>
+                   </group>
+                    <newline/>
+	                <group expand="0" string="Extended options..." groups="base.group_extended">
 	                    <filter icon="terp-mrp" string="Draft" domain="[('state','=','draft')]"/>
 	                    <filter icon="terp-mrp" string="Picking Exception" domain="[('state','=','picking_except')]"/>
 	                    <separator orientation="vertical"/>
@@ -76,22 +91,8 @@
 	                    <separator orientation="vertical"/>
 	                    <field name="date_start"/>
 						<field name="date_finnished"/>
-	                </group>
-                   <newline/>
-                  <group expand="1" string="Group By..." colspan="4" col="6">
-                    	<filter string="Source Location" icon="terp-mrp" context="{'group_by':'location_src_id'}"/>
-                    	<filter string="Destination Location" icon="terp-mrp" context="{'group_by':'location_dest_id'}"/>
-                    	<filter string="Picking" icon="terp-mrp" context="{'group_by':'picking_id'}"/>
-                    	<separator orientation="vertical"/>
-                        <filter string="Routing" icon="terp-mrp" context="{'group_by':'routing_id'}"/>
-                        <filter string="Product" name="Product" icon="terp-mrp" context="{'group_by':'product_id'}" />
-                        <filter string="State" icon="terp-mrp" context="{'group_by':'state'}"/>
-                    	<separator orientation="vertical"/>
-                    	<filter string="BOM" icon="terp-mrp" context="{'group_by':'bom_id'}"/>
-                    	<filter string="Month" icon="terp-mrp" context="{'group_by':'month'}"/>
-                    	<filter string="Year" icon="terp-mrp" context="{'group_by':'year'}"/>
-                   </group>
-               </search>
+	                </group>                   
+                  </search>
             </field>
         </record>
         <record id="action_report_mrp_production_order" model="ir.actions.act_window">
