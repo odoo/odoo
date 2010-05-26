@@ -581,7 +581,7 @@ hr_attendance()
 
 class hr_timesheet_sheet_sheet_day(osv.osv):
     _name = "hr_timesheet_sheet.sheet.day"
-    _description = "Timesheets by period"
+    _description = "Timesheets by Period"
     _auto = False
     _order='name'
     _columns = {
@@ -662,7 +662,7 @@ hr_timesheet_sheet_sheet_day()
 
 class hr_timesheet_sheet_sheet_account(osv.osv):
     _name = "hr_timesheet_sheet.sheet.account"
-    _description = "Timesheets by period"
+    _description = "Timesheets by Period"
     _auto = False
     _order='name'
     _columns = {

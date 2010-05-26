@@ -41,7 +41,7 @@ class crm_meeting(osv.osv, crm_case):
     """ CRM Meeting Cases """
 
     _name = 'crm.meeting'
-    _description = "Meeting Cases"
+    _description = "Meeting"
     _order = "id desc"
     _inherit = ["calendar.event"]
     _inherits = {'mailgate.thread': 'thread_id'}

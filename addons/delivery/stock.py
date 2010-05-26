@@ -29,7 +29,7 @@ import decimal_precision as dp
 # Overloaded stock_picking to manage carriers :
 class stock_picking(osv.osv):
     _name = "stock.picking"
-    _description = "Picking list"
+    _description = "Packing List"
     _inherit = 'stock.picking'
 
     def _cal_weight(self, cr, uid, ids, name, args, context=None):

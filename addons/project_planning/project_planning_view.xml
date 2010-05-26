@@ -166,12 +166,11 @@
             <field name="arch" type="xml">
                 <search string="Planning by Account">
                     <group col="8" colspan="4">
-                        <filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Plannings"/>
                         <filter icon="terp-project" string="Current Plannings" domain="[('date_from','&lt;=',time.strftime('%%Y-%%m-%%d')),('date_to','&gt;=',time.strftime('%%Y-%%m-%%d'))]" help="Current Plannings"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="user_id" select="1"/>
+                        <field name="user_id" widget="selection" select="1"/>
                         <field name="state" select="1"/>
                     </group>
                 </search>
@@ -219,6 +218,7 @@
             <field name="res_model">report_account_analytic.planning</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="account_analytic_planning_view_search"/>
         </record>
         <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main_pm" sequence="5"/>

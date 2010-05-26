@@ -25,7 +25,7 @@ class res_partner_contact(osv.osv):
     """ Partner Contact """
 
     _name = "res.partner.contact"
-    _description = "res.partner.contact"
+    _description = "Contact"
 
     def _title_get(self,cr, user, context={}):
         """

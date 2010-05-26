@@ -763,7 +763,7 @@ account_period()
 
 class account_journal_period(osv.osv):
     _name = "account.journal.period"
-    _description = "Journal - Period"
+    _description = "Journal Period"
 
     def _icon_get(self, cr, uid, ids, field_name, arg=None, context={}):
         result = {}.fromkeys(ids, 'STOCK_NEW')

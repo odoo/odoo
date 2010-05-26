@@ -126,7 +126,6 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group col="10" colspan="4">
-                        <filter icon="gtk-execute" string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-calendar" string="Draft" domain="[('state','=','draft')]" help="Draft Events"/>
                         <filter icon="terp-calendar" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed Events"/>
@@ -147,6 +146,7 @@
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
            <field name="view_mode">tree,form</field>
+           <field name="context">{"search_default_user_id":uid}</field>
            <field name="search_view_id" ref="view_event_search"/>
        </record>
 
@@ -274,7 +274,6 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group col="12" colspan="4">
-                        <filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Registrations"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-calendar" string="Draft" domain="[('state','=','draft')]" help="Draft Registrations"/>
                         <filter icon="terp-calendar" string="Confirmed" domain="[('state','in',('open','done'))]" help="Confirmed Registrations"/>
@@ -295,6 +294,7 @@
           <field name="view_type">form</field>
           <field name="domain"></field>
           <field name="view_mode">tree,form</field>
+          <field name="context">{"search_default_user_id":uid}</field>
           <field name="search_view_id" ref="view_registration_search"/>
         </record>
         <menuitem

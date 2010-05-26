@@ -79,10 +79,6 @@
 	  				<separator orientation="vertical"/>
 	                <field name="user_id" widget="selection">
                         <filter icon="terp-hr"
-                        		string="My Expenses"
-                        		help = "My Expenses"
-                        		domain="[('user_id','=',uid)]" />
-                        <filter icon="terp-hr"
 	                        		string="Expenses Non Assigned User"
 	                        		help="Expenses Non Assigned User"
 	                        		domain="[('user_id','=',False)]"/>
@@ -140,7 +136,7 @@
         <field name="res_model">hr.expense.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 

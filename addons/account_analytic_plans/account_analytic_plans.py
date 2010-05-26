@@ -54,7 +54,7 @@ class one2many_mod2(fields.one2many):
 
 class account_analytic_plan(osv.osv):
     _name = "account.analytic.plan"
-    _description = "Analytic Plans"
+    _description = "Analytic Plan"
     _columns = {
         'name': fields.char('Analytic Plan', size=64, required=True, select=True,),
         'plan_ids': fields.one2many('account.analytic.plan.line','plan_id','Analytic Plans'),
@@ -63,7 +63,7 @@ account_analytic_plan()
 
 class account_analytic_plan_line(osv.osv):
     _name = "account.analytic.plan.line"
-    _description = "Analytic Plan Lines"
+    _description = "Analytic Plan Line"
     _columns = {
         'plan_id':fields.many2one('account.analytic.plan','Analytic Plan'),
         'name': fields.char('Plan Name', size=64, required=True, select=True),

@@ -30,7 +30,7 @@ import decimal_precision as dp
 
 class mrp_repair(osv.osv):
     _name = 'mrp.repair'
-    _description = 'Repairs Order'
+    _description = 'Repair Order'
 
     def _amount_untaxed(self, cr, uid, ids, field_name, arg, context):
         """ Calculates untaxed amount.
@@ -590,7 +590,7 @@ class ProductChangeMixin(object):
 
 class mrp_repair_line(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.line'
-    _description = 'Repair Operations Lines'
+    _description = 'Repair Line'
 
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default: default = {}
@@ -678,7 +678,7 @@ mrp_repair_line()
 
 class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.fee'
-    _description = 'Repair Fees line'
+    _description = 'Repair Fees Line'
     
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default: default = {}
