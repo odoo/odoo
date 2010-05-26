@@ -36,6 +36,13 @@ class ir_sequence_type(osv.osv):
     }
 ir_sequence_type()
 
+class account_journal(osv.osv):
+    _inherit = "account.journal"
+    _columns = {
+        'max_amount': fields.float('Verify Transection Above', digits=(16, int(config['price_accuracy']))),
+    }
+account_journal()
+
 class account_voucher(osv.osv):
     def _get_period(self, cr, uid, context):
         periods = self.pool.get('account.period').find(cr, uid)
@@ -110,16 +117,17 @@ class account_voucher(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state':fields.selection(
-                    [('draft','Draft'),
-                     ('proforma','Pro-forma'),
-                     ('posted','Posted'),
-                     ('cancel','Cancel')
-                    ], 'State',
-                    readonly=True,
-                    help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Voucher. \
+            [('draft','Draft'),
+             ('proforma','Pro-forma'),
+             ('posted','Posted'),
+             ('recheck','Waiting for Re-checking'),
+             ('cancel','Cancel'),
+             ('audit','Audit Complete')
+            ], 'State', readonly=True, size=32,
+            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Voucher. \
                         \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
-                        \n* The \'Cancelled\' state is used when user cancel voucher.'),
+                        \n* The \'Cancelled\' state is used when user cancel voucher.'),                    
         'amount':fields.float('Amount', readonly=True),
         'number':fields.char('Number', size=32, readonly=True),
         'reference': fields.char('Voucher Reference', size=64),

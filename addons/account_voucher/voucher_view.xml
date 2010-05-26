@@ -37,7 +37,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Entry Lines">
-                            <field name="payment_ids" colspan="4" nolabel="1" height="275">
+                            <field name="payment_ids" colspan="4" nolabel="1" height="150">
                                 <tree string="Voucher Lines" editable="top">
                                     <field name="account_analytic_id"/>
                                     <field name="partner_id" on_change="onchange_partner(partner_id,type,parent.type)"/>
@@ -49,13 +49,14 @@
                                 </tree>
                             </field>
                             <separator string="Narration" colspan="4"/>
-                            <field name="narration" colspan="4" nolabel="1"/>
+                            <field name="narration" colspan="4" nolabel="1" height="50"/>
                             <group col="6" colspan="6">
                                 <field name="state"/>
-                                <button name="open_voucher" string="Pro-forma" states="draft" type="object" icon="gtk-open"/>
-                                <button name="proforma_voucher" string="Create" states="proforma" type="object"  icon="gtk-go-forward"/>
-                                <button name="cancel_voucher" string="Cancel" states="draft,proforma,posted" type="object" icon="gtk-cancel"/>
-                                <button name="action_cancel_draft" states="cancel" type="object" string="Set to Draft" icon="gtk-convert"/>
+                                <button name="open_voucher" string="Pro-forma" states="draft"/>
+                                <button name="proforma_voucher" string="Create" states="proforma"/>
+                                <button name="recheck_voucher" string="Validate" states="recheck"/>
+                                <button name="cancel_voucher" string="Cancel" states="draft,proforma,recheck"  type="object"/>
+                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                             </group>
                         </page>
                         <page string="Other Info">
