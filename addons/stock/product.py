@@ -148,10 +148,10 @@ class product_product(osv.osv):
         return res
 
     def get_product_available(self,cr,uid,ids,context=None):
-        if not context:
+        if context is None:
             context = {}
-        states=context.get('states',[])
-        what=context.get('what',())
+        states = context.get('states',[])
+        what = context.get('what',())
         if not ids:
             ids = self.search(cr, uid, [])
         res = {}.fromkeys(ids, 0.0)
@@ -184,9 +184,9 @@ class product_product(osv.osv):
         # build the list of ids of children of the location given by id
         if context.get('compute_child',True):
             child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
-            location_ids= len(child_location_ids) and child_location_ids or location_ids
+            location_ids = child_location_ids or location_ids
         else:
-            location_ids= location_ids
+            location_ids = location_ids
 
         uoms_o = {}
         product2uom = {}
