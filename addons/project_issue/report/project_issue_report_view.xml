@@ -96,7 +96,50 @@
                       	<field name="user_id"  select="1" widget="selection"/>
                    </group>
                    <newline/>
-                   <group  expand="1" string="Extended options..." colspan="10" col="12">
+                   <group  expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="User" name="User" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'user_id'}" />
+
+                        <filter string="Company" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'company_id'}" />
+
+                        <filter string="Section" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'section_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="State" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'state'}" />
+
+                        <filter string="Category" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'categ_id'}" />
+
+						<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
+	            		<separator orientation="vertical"/>
+	            		<filter string="Project"  icon="terp-sale" domain="[]" context="{'group_by':'project_id'}" />
+	            		<filter string="Priority"  icon="terp-sale" domain="[]" context="{'group_by':'priority'}" />
+	            		<separator orientation="vertical"/>
+	            		<filter string="Type"  icon="terp-sale" domain="[]" context="{'group_by':'type_id'}"/>
+	            		<filter string="Task"  icon="terp-sale" domain="[]" context="{'group_by':'task_id'}"/>
+	            		<newline/>
+	            		<filter string="Assigned To"  icon="terp-sale" domain="[]" context="{'group_by':'assigned_to'}"/>
+	            		<filter string="Partner"  icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
+	            		<filter string="Channel"  icon="terp-sale" domain="[]" context="{'group_by':'canal_id'}"/>
+
+                        <separator orientation="vertical" />
+                        <filter string="Day" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'day'}"/>
+
+                        <filter string="Month" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'month'}" />
+
+                        <filter string="Year" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'name'}" />
+
+                  </group>
+                   <newline/>
+                   <group  expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
                          <filter icon="terp-sale"
                     		string="Done"
                     		domain="[('state','=','done')]"/>
@@ -127,49 +170,6 @@
                         </group>
 
                    </group>
-                   <newline/>
-                   <group  expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="User" name="User" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'user_id'}" />
-
-                        <filter string="Company" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'company_id'}" />
-
-                        <filter string="Section" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'section_id'}" />
-
-                        <separator orientation="vertical" />
-                        <filter string="State" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'state'}" />
-
-                        <filter string="Category" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'categ_id'}" />
-						
-						<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
-	            		<separator orientation="vertical"/>
-	            		<filter string="Project"  icon="terp-sale" domain="[]" context="{'group_by':'project_id'}" />
-	            		<filter string="Priority"  icon="terp-sale" domain="[]" context="{'group_by':'priority'}" />
-	            		<separator orientation="vertical"/>
-	            		<filter string="Type"  icon="terp-sale" domain="[]" context="{'group_by':'type_id'}"/>
-	            		<filter string="Task"  icon="terp-sale" domain="[]" context="{'group_by':'task_id'}"/>
-	            		<newline/>
-	            		<filter string="Assigned To"  icon="terp-sale" domain="[]" context="{'group_by':'assigned_to'}"/>
-	            		<filter string="Partner"  icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
-	            		<filter string="Channel"  icon="terp-sale" domain="[]" context="{'group_by':'canal_id'}"/>
-            		
-                        <separator orientation="vertical" />
-                        <filter string="Day" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'day'}"/>
-
-                        <filter string="Month" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'month'}" />
-
-                        <filter string="Year" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'name'}" />
-
-                  </group>
                </search>
             </field>
         </record>

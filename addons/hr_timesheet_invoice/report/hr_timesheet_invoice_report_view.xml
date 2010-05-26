@@ -69,24 +69,24 @@
 	                    <field name="account_id"/>
                         <field name="product_id"/>
                     </group>
+                    <group expand="1" string="Group By...">
+                        <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Account" icon="terp-hr" context="{'group_by':'account_id'}"/>
+                        <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
+                        <filter string="Invoice" icon="terp-hr" context="{'group_by':'invoice_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
+                        <filter string="Month" icon="terp-hr" context="{'group_by':'month'}"/>
+                        <filter string="Year" icon="terp-hr" context="{'group_by':'name'}"/>
+                    </group>
                     <newline/>
-	                <group expand="0" string="Extended options..." colspan="10" col="12">
+	                <group expand="0" string="Extended filters..." groups="base.group_extended">
 	                    <field name="date"/>
 	                    <separator orientation="vertical"/>
 	                    <field name="invoice_id" widget="selection"/>
                     </group>
-                    <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="12">
-	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
-	                    <separator orientation="vertical"/>
-	                    <filter string="Account" icon="terp-hr" context="{'group_by':'account_id'}"/>
-	                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
-	                    <filter string="Invoice" icon="terp-hr" context="{'group_by':'invoice_id'}"/>
-	                    <separator orientation="vertical"/>
-	                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
-	                    <filter string="Month" icon="terp-hr" context="{'group_by':'month'}"/>
-	                    <filter string="Year" icon="terp-hr" context="{'group_by':'name'}"/>
-                    </group>
+
                 </search>
             </field>
         </record>
@@ -450,7 +450,7 @@
                     	<field name="general_account_id" widget="selection"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="20">
+                   <group expand="1" string="Group By...">
                         <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Product" icon="terp-project" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Analytic Account" icon="terp-project" domain="[]" context="{'group_by':'analytic_account_id'}"/>

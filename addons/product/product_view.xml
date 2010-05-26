@@ -18,16 +18,16 @@
                    <field name="name"/>
                    <field name="categ_id" widget="selection" operator="child_of"/>
                    <newline/>
-                   <group col='8' colspan='14' expand="1" string="Extended options...">
-                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
-                   </group>
-                   <newline/>
-                   <group col='8' colspan='15' expand='1' string='Group by...'>
+                   <group  expand='1' string='Group by...' groups="base.group_extended">
                        <filter string='Category' icon="terp-stock" domain="[]" context="{'group_by' : 'categ_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Default UOM' icon="terp-stock" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Type' icon="terp-stock" domain="[]" context="{'group_by' : 'type'}" />
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Extended options..." groups="base.group_extended">
+                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
                    </group>
                 </search>
             </field>
@@ -104,7 +104,7 @@
                             </group>
 
                             <group colspan="2" col="2" name="uom">
-                                <separator string="UOM" colspan="2"/>
+                                <separator string="Unit of Measure" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" widget="selection"/>
                                 <field name="uom_po_id" widget="selection"/>
                             </group>
@@ -175,8 +175,8 @@
                                     <field name="height"/>
                                     <field name="width"/>
                                     <field name="length"/>
-                                    <separator colspan="4" string="Other Info"/>
-                                    <field colspan="4" name="name"/>
+                                    <separator colspan="4" string="Description"/>
+                                    <field colspan="4" name="name" nolabel="1"/>
                                 </form>
                             </field>
                         </page>

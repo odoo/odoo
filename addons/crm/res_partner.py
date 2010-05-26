@@ -19,23 +19,21 @@
 #
 ##############################################################################
 
-import crm
-import crm_mailgate
-import crm_action_rule
-import crm_segmentation
-import crm_meeting
-import crm_lead
-import crm_opportunity
+from osv import fields,osv
 
-import crm_phonecall
+class res_partner(osv.osv):
+    """ Inherits partner and adds CRM information in the partner form """
+    _inherit = 'res.partner'
+    
+    _columns = {
+                'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
+                                                     'Opportunities', domain=[('type', '=', 'opportunity')]), 
+                'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+                                                     'Meetings'), 
+                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
+                }
 
-import crm_installer
-import report
-import wizard
-
-import res_partner
-
+res_partner()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
