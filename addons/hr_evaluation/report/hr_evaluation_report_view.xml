@@ -75,9 +75,6 @@
 	                <field name="plan_id" widget="selection"/>
                 </group>
                 <newline/>
-<<<<<<< TREE
-				<group expand="0" string="Extended options..." colspan="10" col="12">
-=======
                 <group expand="1" string="Group By...">
                     <filter string="Employee" name="employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <filter string="Rating" icon="terp-hr" context="{'group_by':'rating'}"/>
@@ -91,14 +88,6 @@
                 </group>
                  <newline/>
 				<group expand="0" string="Extended options..." groups="base.group_extended">
-                	<filter icon="terp-hr"
-                    		string="Done"
-                    		domain="[('state','=','done')]"/>
-                    <filter icon="terp-hr"
-                    		string="Cancelled"
-                    		domain="[('state','=','cancel')]"/>
-                    <separator orientation="vertical"/>
->>>>>>> MERGE-SOURCE
                     <field name="rating"/>
                     <separator orientation="vertical"/>
                     <field name="deadline"/>
