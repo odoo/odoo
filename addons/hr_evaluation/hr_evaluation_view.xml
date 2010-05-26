@@ -10,10 +10,10 @@
                 <search string="Search Evaluation Plan">
                    <group col='15' colspan='4'>
                        <field name="name"/>
-                       <field name="company_id" widget="selection"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="20">
+                   <group expand="1" string="Group By..." groups="base.group_multi_company">
                         <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
                </search>
@@ -28,7 +28,7 @@
                 <form string="Evaluation Plan">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="company_id" select="1" widget="selection"/>
+                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                         <field name="active"/>
                         <field name="month_first"/>
                         <field name="month_next"/>
@@ -51,7 +51,7 @@
                     <field name="name"/>
                     <field name="month_first"/>
                     <field name="month_next"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>

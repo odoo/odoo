@@ -34,13 +34,11 @@ from tools.translate import _
 
 class project_issue(osv.osv):
     _inherit = 'project.issue'
-
     _columns = {
         'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
-        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
-                                                domain="[('partner_id', '=', partner_id)]",
-                                                required=True),
+        'analytic_account_id': fields.related('project_id','category_id',string='Analytic Account')
     }
+project_issue()
 
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
@@ -53,10 +51,8 @@ account_analytic_line()
 
 class hr_analytic_issue(osv.osv):
     _inherit = 'hr.analytic.timesheet'
-
     _columns = {
         'issue_id' : fields.many2one('project.issue', 'Issue'),
     }
-
 hr_analytic_issue()
 
