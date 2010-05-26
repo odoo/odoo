@@ -1660,9 +1660,10 @@ class ir_model(osv.osv):
         @param ids: List of IR Model’s IDs.
         @param context: A standard dictionary for contextual values
         """
+        new_ids = isinstance(ids, (str, int, long)) and [ids] or ids
         if not context:
             context = {}
-        data = super(ir_model, self).read(cr, uid, ids, fields=fields, \
+        data = super(ir_model, self).read(cr, uid, new_ids, fields=fields, \
                         context=context, load=load)
         if data:
             for val in data:
