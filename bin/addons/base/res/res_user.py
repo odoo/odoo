@@ -200,7 +200,12 @@ class users(osv.osv):
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
     def _email_get(self, cr, uid, ids, name, arg, context=None):
-        return dict(map(operator.attrgetter('id', 'address_id.email'), self.browse(cr, uid, ids, context=context)))
+        adrs_detail =  dict(map(operator.attrgetter('id', 'address_id'), self.browse(cr, uid, ids, context=context)))
+
+        for id,adrs in adrs_detail.items():
+            adrs_detail[id] = adrs.email
+        
+        return adrs_detail
 
     def _email_set(self, cr, uid, ids, name, value, arg, context=None):
         if not isinstance(ids,list):
