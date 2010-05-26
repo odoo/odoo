@@ -186,6 +186,7 @@ class pos_return(osv.osv_memory):
                         line_obj.copy(cr,uid,line.id,{'qty':-qty  ,
                                                     'order_id': new_order,
                         })
+                order_obj.write(cr,uid, active_id, {'state':'done'})
                 order_obj.write(cr,uid, new_order, {'state':'done'})
                 wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
@@ -334,8 +335,9 @@ class add_product(osv.osv_memory):
                     })
             wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
             picking_obj.force_assign(cr, uid, [new_picking], context)
-        obj=order_obj.browse(cr,uid, active_ids[0])    
-
+        obj=order_obj.browse(cr,uid, active_ids[0]) 
+        context.update({'return':'return'})   
+        
         if obj.amount_total != obj.amount_paid:
             return {
             'name': _('Make Payment'),
