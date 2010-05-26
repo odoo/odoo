@@ -163,7 +163,7 @@
                     <field name="create_uid" select="1" widget="selection"/>
                 </group>
                 <newline/>
-                  <group expand="1" string="Group By..." colspan="4" col="10">
+                  <group expand="1" string="Group By..." colspan="4" col="10" groups="base.group_extended">
                     <filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
