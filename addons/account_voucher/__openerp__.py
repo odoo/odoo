@@ -49,7 +49,7 @@
     "update_xml" : [
         "security/ir.model.access.csv",
         "voucher_sequence.xml",
-        "voucher_workflow.xml"
+        "voucher_workflow.xml",
         "voucher_report.xml",
         "voucher_view.xml",
         "voucher_wizard.xml",

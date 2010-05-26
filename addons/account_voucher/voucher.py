@@ -28,6 +28,17 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime
 from tools import config
 
+type2journal = {
+    'rec_voucher': 'cash',
+    'bank_rec_voucher': 'cash',
+    'pay_voucher': 'cash',
+    'bank_pay_voucher': 'cash',
+    'cont_voucher': 'cash',
+    'journal_sale_vou': 'sale',
+    'journal_pur_voucher': 'purchase',
+    'journal_voucher':'expanse'
+}
+
 class ir_sequence_type(osv.osv):
     _inherit = "ir.sequence.type"
     _columns = {
@@ -39,11 +50,12 @@ ir_sequence_type()
 class account_journal(osv.osv):
     _inherit = "account.journal"
     _columns = {
-        'max_amount': fields.float('Verify Transection Above', digits=(16, int(config['price_accuracy']))),
+        'max_amount': fields.float('Verify Transection', digits=(16, int(config['price_accuracy'])), help="Validate voucher entry twice before posting it, if transection amount more then entered here"),
     }
 account_journal()
 
 class account_voucher(osv.osv):
+
     def _get_period(self, cr, uid, context):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
@@ -52,34 +64,22 @@ class account_voucher(osv.osv):
             return False
 
     def _get_type(self, cr, uid, context={}):
-        type = context.get('type', 'rec_voucher')
+        type = context.get('type', 'bank_rec_voucher')
         return type
 
     def _get_reference_type(self, cursor, user, context=None):
         return [('none', 'Free Reference')]
 
-    def _get_journal(self, cr, uid, context):
-        type_inv = 'rec_voucher'
-
-        if type(context) == type(''):
-            type_inv = context
-        elif type(context) == type({}):
-            type_inv = context.get('type', 'rec_voucher')
-
-        type2journal = {
-            'rec_voucher': 'cash',
-            'bank_rec_voucher': 'cash',
-            'pay_voucher': 'cash',
-            'bank_pay_voucher': 'cash',
-            'cont_voucher': 'cash',
-            'journal_sale_vou': 'sale',
-            'journal_pur_voucher': 'purchase',
-            'journal_voucher':'expanse'
-        }
-
-        journal_obj = self.pool.get('account.journal')
-        ttype = type2journal.get(type_inv, 'cash')
-        res = journal_obj.search(cr, uid, [('type', '=', ttype)], limit=1)
+    def _get_journal(self, cr, uid, context={}):
+        journal_pool = self.pool.get('account.journal')
+        
+        if context.get('journal_id', False):
+            return context.get('journal_id')
+        
+        type_inv = context.get('type', 'rec_voucher')
+        
+        ttype = type2journal.get(type_inv, type_inv)
+        res = journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
 
         if res:
             return res[0]
@@ -87,7 +87,7 @@ class account_voucher(osv.osv):
             return False
 
     def _get_currency(self, cr, uid, context):
-        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
+        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid)
         if user.company_id:
             return user.company_id.currency_id.id
         else:
@@ -441,14 +441,14 @@ class account_voucher(osv.osv):
         if not len(ids):
             return []
         types = {
-                'pay_voucher': 'CPV: ',
-                'rec_voucher': 'CRV: ',
-                'cont_voucher': 'CV: ',
-                'bank_pay_voucher': 'BPV: ',
-                'bank_rec_voucher': 'BRV: ',
-                'journal_sale_vou': 'JSV: ',
-                'journal_pur_voucher': 'JPV: ',
-                'journal_voucher':'JV'
+            'pay_voucher': 'CPV: ',
+            'rec_voucher': 'CRV: ',
+            'cont_voucher': 'CV: ',
+            'bank_pay_voucher': 'BPV: ',
+            'bank_rec_voucher': 'BRV: ',
+            'journal_sale_vou': 'JSV: ',
+            'journal_pur_voucher': 'JPV: ',
+            'journal_voucher':'JV'
         }
         return [(r['id'], types[r['type']]+(r['number'] or '')+' '+(r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
 
