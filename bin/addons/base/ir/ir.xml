@@ -951,6 +951,39 @@
             </field>
         </record>
 
+
+        <record model="ir.ui.view" id="view_model_data_form">
+            <field name="name">ir.model.data.form</field>
+            <field name="model">ir.model.data</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Module data">
+                    <field name="module" select="1" />
+                    <field name="name" select="1" />
+                    <field name="model" select="1" />
+                    <field name="res_id" select="2" />
+                    <field name="noupdate" select="2" />
+                    <field name="date_update" />
+                    <field name="date_init" />
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_data_list" model="ir.ui.view">
+            <field name="name">ir.model.data.list</field>
+            <field name="model">ir.model.data</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Module Data">
+                    <field name="module"/>
+                    <field name="name"/>
+                    <field name="model" select="1" />
+                    <field name="res_id"/>
+                    <field name="noupdate"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="action_model_model" model="ir.actions.act_window">
             <field name="name">Objects</field>
             <field name="res_model">ir.model</field>
@@ -969,6 +1002,15 @@
             <field name="view_id" ref="view_model_fields_tree"/>
         </record>
         <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
+
+        <record id="action_model_data" model="ir.actions.act_window">
+            <field name="name">Module data</field>
+            <field name="res_model">ir.model.data</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_model_data_list"/>
+        </record>
+        <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_9"
+                  groups="base.group_extended"/>
 
         <!-- Translations -->
 
