@@ -148,6 +148,17 @@ class hr_holidays(osv.osv):
         'holiday_type': 'employee'
     }
 
+    def _create_resource_leave(self, cr, uid, vals, context=None):
+        # This method will create entry in resource calendar leave object at the time of holidays validated
+        obj_res_leave = self.pool.get('resource.calendar.leaves')
+        return obj_res_leave.create(cr, uid, vals)
+
+    def _remove_resouce_leave(self, cr, uid, ids, context=None):
+        #This method will create entry in resource calendar leave object at the time of holidays cancel/removed
+        obj_res_leave = self.pool.get('resource.calendar.leaves')
+        leave_ids = obj_res_leave.search(cr, uid, [('holiday_id', 'in', ids)])
+        return obj_res_leave.unlink(cr, uid, leave_ids)
+
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
@@ -217,11 +228,9 @@ class hr_holidays(osv.osv):
 
     _constraints = [(_check_date, 'Start date should not be larger than end date!\nNumber of Days should be greater than 1!', ['number_of_days_temp'])]
 
-    def unlink(self, cr, uid, ids, context={}):
-        leave_obj = self.pool.get('resource.calendar.leaves')
+    def unlink(self, cr, uid, ids, context=None):
         self._update_user_holidays(cr, uid, ids)
-        leave_ids = leave_obj.search(cr, uid, [('holiday_id', 'in', ids)])
-        leave_obj.unlink(cr, uid, leave_ids)
+        self._remove_resouce_leave(cr, uid, ids, context=context)
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
 
@@ -275,7 +284,6 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_validate(self, cr, uid, ids, *args):
-        obj_res_leave = self.pool.get('resource.calendar.leaves')
         obj_emp = self.pool.get('hr.employee')
         data_holiday = self.browse(cr, uid, ids)
         self.check_holidays(cr, uid, ids)
@@ -300,7 +308,7 @@ class hr_holidays(osv.osv):
                    'resource_id': record.employee_id.resource_id.id,
                    'holiday_id': record.id
                      }
-                obj_res_leave.create(cr, uid, vals)
+                self._create_resource_leave(cr, uid, vals)
             elif record.holiday_type=='category' and record.type=='remove':
                 emp_ids = obj_emp.search(cr, uid, [('category_id', '=', record.category_id.id)])
                 for emp in obj_emp.browse(cr, uid, emp_ids):
@@ -313,7 +321,7 @@ class hr_holidays(osv.osv):
                        'resource_id': emp.resource_id.id,
                        'holiday_id':record.id
                          }
-                    obj_res_leave.create(cr, uid, vals)
+                    self._create_resource_leave(cr, uid, vals)
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
@@ -356,20 +364,17 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_cancel(self, cr, uid, ids, *args):
-        leave_obj = self.pool.get('resource.calendar.leaves')
         self._update_user_holidays(cr, uid, ids)
         self.write(cr, uid, ids, {
             'state':'cancel'
             })
-        leave_ids = leave_obj.search(cr, uid, [('holiday_id', 'in', ids)])
-        leave_obj.unlink(cr, uid, leave_ids)
+        self._remove_resouce_leave(cr, uid, ids)
         return True
 
     def holidays_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state':'draft'
         })
-        self.pool.get('resource.calendar.leaves')
         return True
 
     def check_holidays(self, cr, uid, ids):
@@ -449,7 +454,7 @@ class resource_calendar_leaves(osv.osv):
     _description = "Leave Detail"
     _columns = {
         'holiday_id': fields.many2one("hr.holidays", "Holiday"),
-    }
+                }
 
 resource_calendar_leaves()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
