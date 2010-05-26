@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Board/Manufacturing',
     'description': """
-    This module creates a dashboards for Manufaturing that includes:
+    This module creates a dashboard for Manufaturing that includes:
     * List of next production orders
     * List of deliveries (out picking)
     * Graph of work center load

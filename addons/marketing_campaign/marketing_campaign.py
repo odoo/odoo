@@ -40,9 +40,11 @@ class marketing_campaign(osv.osv): #{{{
     
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'object_id': fields.many2one('ir.model', 'Objects', required=True),
+        'object_id': fields.many2one('ir.model', 'Objects', required=True,
+                                      help="Choose the Object on which you want \
+                                                      this campaign to be run"),
         'mode':fields.selection([('test', 'Test'),
-                                ('test_realtime', 'Realtime Time'),
+                                ('test_realtime', 'Realtime'),
                                 ('manual', 'Manual'),
                                 ('active', 'Active')],
                                  'Mode', required=True),
@@ -53,7 +55,8 @@ class marketing_campaign(osv.osv): #{{{
                                    'State',), 
         'activity_ids': fields.one2many('marketing.campaign.activity', 
                                        'campaign_id', 'Activities'),
-        'fixed_cost': fields.float('Fixed Cost'),                                       
+        'fixed_cost': fields.float('Fixed Cost', help="The fixed cost is cost\
+                                                you required for the campaign"),                                       
         
     }
     
@@ -102,7 +105,7 @@ class marketing_campaign_segment(osv.osv): #{{{
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
                                       string='Object'),
-        'ir_filter_id': fields.many2one('ir.filters', 'Filter'),
+        'ir_filter_id': fields.many2one('ir.filters', 'Filter', help=""),
         'sync_last_date': fields.datetime('Date'),
         'sync_mode': fields.selection([('create_date', 'Create'),
                                       ('write_date', 'Write')],
@@ -199,8 +202,11 @@ class marketing_campaign_activity(osv.osv): #{{{
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
                                       string='Object'),
-        'start': fields.boolean('Start'),
-        'condition': fields.char('Condition', size=256, required=True, help="Condition that is to be tested before action is executed"), 
+        'start': fields.boolean('Start',help= "Its necessary to start activity \
+                                                        before running campaign"),
+        'condition': fields.char('Condition', size=256, required=True, 
+                                 help="Condition that is to be tested before \
+                                                           action is executed"), 
         'type': fields.selection([('email', 'E-mail'),
                                   ('paper', 'Paper'),
                                   ('action', 'Action'),
@@ -208,10 +214,11 @@ class marketing_campaign_activity(osv.osv): #{{{
                                   'Type', required=True),
         'email_template_id': fields.many2one('poweremail.templates','Email Template'),
         'report_id': fields.many2one('ir.actions.report.xml', 'Reports', ),         
-        'report_directory_id': fields.many2one('document.directory',
-                             'Directory to Store Reports',
-                             help="Folder is used to store the genreated reports"),
-        'server_action_id': fields.many2one('ir.actions.server', string='Action'),
+        'report_directory_id': fields.many2one('document.directory','Directory',
+                                help="Folder is used to store the generated reports"),
+        'server_action_id': fields.many2one('ir.actions.server', string='Action',
+                                help= "Describes the action name.\n"
+                                "eg:On which object which action to be taken on basis of which condition"),
         'to_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_from_id',
                                             'Next Activities'),
@@ -251,7 +258,7 @@ class marketing_campaign_activity(osv.osv): #{{{
         workitem = workitem_obj.browse(cr, uid, wi_id)
         if activity.type == 'paper' :
             service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
-            (report_data, format) = service.create(cr, uid, [activity.report_id.id], {}, {})
+            (report_data, format) = service.create(cr, uid, [], {}, {})
             attach_vals = {
                     'name': '%s_%s_%s'%(activity.report_id.report_name,
                                         activity.name,workitem.partner_id.name),
@@ -367,7 +374,7 @@ class marketing_campaign_workitem(osv.osv): #{{{
             
     def process(self, cr, uid, workitem_ids, context={}):
         for wi in self.browse(cr, uid, workitem_ids):
-            if wi.state == 'todo' :# we searched the wi which are in todo state 
+            if wi.state == 'todo':# we searched the wi which are in todo state 
                     #then y v keep this filter again 
                 eval_context = {
                     'pool': self.pool,
@@ -375,23 +382,23 @@ class marketing_campaign_workitem(osv.osv): #{{{
                     'uid': uid,
                     'wi': wi,
                     'object': wi.activity_id,
-                    'transition' : wi.activity_id.to_ids
+                    'transition': wi.activity_id.to_ids
                 }
-                expr = eval(str(wi.activity_id.condition), cxt)
+                expr = eval(str(wi.activity_id.condition), eval_context)
                 if expr:
                     try :
                         res = self.pool.get('marketing.campaign.activity').process(
                                       cr, uid, wi.activity_id.id, wi.id, context)
                         if res :
-                            self.write(cr, uid, wi.id, {'state':'done'})
+                            self.write(cr, uid, wi.id, {'state': 'done'})
                             self.process_chain(cr, uid, wi.id, context)
                         else : 
-                            self.write(cr, uid, wi.id, {'state':'exception',
-                                                'error_msg' : res['error_msg']})
+                            self.write(cr, uid, wi.id, {'state': 'exception',
+                                                'error_msg': res['error_msg']})
                     except Exception,e:
-                        self.write(cr, uid, wi.id, {'state':'exception'})
+                        self.write(cr, uid, wi.id, {'state': 'exception'})
                 else :
-                    self.write(cr, uid, wi.id, {'state':'cancelled'})
+                    self.write(cr, uid, wi.id, {'state': 'cancelled'})
                     
         return True
         
@@ -407,7 +414,7 @@ class poweremail_templates(osv.osv):
     _inherit = "poweremail.templates"
     
     _defaults = {
-        'object_name' : lambda obj, cr, uid, context  : context.get('object_id',False),
+        'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
     }
 poweremail_templates() 
 
@@ -416,12 +423,12 @@ class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
     
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if not context :
+        if not context:
             context = {}
         if context and 'object_id' in context and context['object_id']:
             model = self.pool.get('ir.model').browse(cr, uid, 
                                                     context['object_id']).model
-            args.append(('model','=',model))
+            args.append(('model', '=', model))
         return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
     
 report_xml()    

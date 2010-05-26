@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<!-- Opportunity Categories Form View -->
+	<!-- Opportunity Categories Form View -->
 
     <record id="crm_opportunity_categ_action" model="ir.actions.act_window">
         <field name="name">Opportunity Categories</field>
@@ -17,7 +17,7 @@
         id="menu_crm_case_opportunity-act"
         parent="crm.menu_crm_case_categ" />
 
-<!-- Opportunity Stages Form View-->
+		<!-- Opportunity Stages Form View-->
 
         <record id="crm_opportunity_stage_act" model="ir.actions.act_window">
             <field name="name">Opportunity Stages</field>
@@ -32,7 +32,7 @@
             id="menu_crm_opportunity_stage_act"
             parent="crm.menu_crm_case_stage" />
 
-<!-- Opportunity Resource Type Form View -->
+		<!-- Opportunity Resource Type Form View -->
 
         <record id="crm_opportunity_resource_act" model="ir.actions.act_window">
             <field name="name">Opportunity Resource Type</field>
@@ -47,7 +47,7 @@
             id="menu_crm_opportunity_resource_act"
             parent="crm.menu_crm_case_resource_type" />
 
-<!-- Opportunities Form View -->
+	<!-- Opportunities Form View -->
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">Opportunities</field>
@@ -204,7 +204,7 @@
         </field>
     </record>
 
-<!-- Opportunities Tree View -->
+	<!-- Opportunities Tree View -->
 
     <record model="ir.ui.view" id="crm_case_tree_view_oppor">
         <field name="name">Opportunities Tree</field>
@@ -246,7 +246,7 @@
         </field>
     </record>
 
-<!-- Opportunities Graph View -->
+	<!-- Opportunities Graph View -->
 
     <record model="ir.ui.view" id="crm_case_graph_view_opportunity">
         <field name="name">CRM - Opportunity Graph</field>
@@ -261,7 +261,7 @@
         </field>
     </record>
 
-<!-- Opportunities Search View -->
+	<!-- Opportunities Search View -->
 
     <record id="view_crm_case_opportunities_filter" model="ir.ui.view">
         <field name="name">CRM - Opportunities Search</field>
@@ -293,11 +293,10 @@
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
                         domain="[('user_id','=',uid)]"
-                        help="My Opportunities" default="1"
-                    />
+                        help="My Opportunities" default="1"/>
                     <filter icon="terp-partner"
                         domain="[('user_id','=', uid)]"
-                        help="Unassigned Opportunities" />
+                        help="Unassigned Opportunities"/>
                 </field>
                 <field name="section_id"
                     default="context.get('section_id', False)" select="1"
@@ -309,23 +308,24 @@
                 <newline/>
                 <group expand="1" string="Group By...">
                     <filter string="Stage" icon="terp-crm" domain="[]"
-                        context="{'group_by':'stage_id'}" />
+                        context="{'group_by':'stage_id'}"/>
                     <filter string="Priority" icon="terp-crm" domain="[]"
-                        context="{'group_by':'priority'}" />
+                        context="{'group_by':'priority'}"/>
                     <filter string="Category" icon="terp-crm"
-                        domain="[]" context="{'group_by':'categ_id'}" />
+                        domain="[]" context="{'group_by':'categ_id'}"/>
 
-                    <separator orientation="vertical" />
+                    <separator orientation="vertical"/>
                     <filter string="Salesman" icon="terp-crm"
-                        domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}" />
-                    <separator orientation="vertical" />
+                        domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}"/>
+                    <separator orientation="vertical"/>
                     <filter string="Creation" icon="terp-project"
-                        domain="[]" context="{'group_by':'create_date'}" />
+                        domain="[]" context="{'group_by':'create_date'}"/>
                     <filter string="Exp.Closing" icon="terp-project"
-                        domain="[]" context="{'group_by':'date_deadline'}" />
+                        domain="[]" context="{'group_by':'date_deadline'}"/>
                 </group>
            </search>
         </field>
     </record>
+
 </data>
 </openerp>
