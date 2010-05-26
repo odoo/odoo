@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+	
+<!-- Document directory -->
+        <record id="document_directory_marketingcampaign" model="document.directory">
+            <field eval="0" name="ressource_tree"/>
+            <field eval="[(6,0,[])]" name="group_ids"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;&quot;&quot;Marketing Campaign&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;[]&quot;&quot;&quot;" name="domain"/>
+            <field eval="&quot;&quot;&quot;directory&quot;&quot;&quot;" name="type"/>
+        </record>
+        <record id="document_directory_campaign1" model="document.directory">
+            <field eval="0" name="ressource_tree"/>
+            <field eval="[(6,0,[])]" name="group_ids"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field eval="&quot;&quot;&quot;OpenERP OnDemand Free Trial 2010&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;[]&quot;&quot;&quot;" name="domain"/>
+            <field name="parent_id" ref="document_directory_marketingcampaign"/>
+            <field eval="&quot;&quot;&quot;ressource&quot;&quot;&quot;" name="type"/>
+            <field name="ressource_type_id" ref="model_marketing_campaign"/>
+        </record>	
+<!-- Power email tempalte -->	
+		<record id="poweremail_templates_foropenerpondemandfreetrial0" model="poweremail.templates">
+			<field name="def_subject">Thanks for showing interest in OpenERP</field>
+			<field name="def_to">info@tinyerp.com</field>
+			<field eval="[(6,0,[])]" name="allowed_groups"/>
+			<field eval="0" name="auto_email"/>
+			<field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
+			<field eval="[(6,0,[])]" name="table_required_fields"/>
+			<field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
+			<field name="object_name" ref="crm.model_crm_lead"/>
+			<field eval="0" name="use_sign"/>
+			<field name="def_body_text">Hello, 
+Thanks for generous interest you have shown in the open ERP.
+Regards,
+OpenERP Team,</field>
+			<field name="template_language">mako</field>
+			<field eval="0" name="send_on_create"/>
+			<field name="name">For OpenERP OnDemand Free Trial 2010</field>
+			<field name="model_int_name">crm.lead</field>
+			<field eval="0" name="send_on_write"/>
+		</record>	
+<!-- Report -->	
+		<record id="mc_crm_lead_demo_report" model="ir.actions.report.xml">
+			<field name="name">Marketing campaign demo report</field>
+			<field name="type">ir.actions.report.xml</field>
+			<field name="model">crm.lead</field>
+			<field name="report_name">crm.lead.demo</field>
+			<field name="report_rml">marketing_campaign/report/crm_lead_mc_demo_report.rml</field>
+			<field name="report_type">pdf</field>
+		</record>
+<!-- Campaign -->			
+		<record id="marketing_campaign_openerpondemandfreetrial0" model="marketing.campaign">
+			<field name="name">OpenERP OnDemand Free Trial 2010</field>
+			<field name="object_id" ref="crm.model_crm_lead"/>
+		</record>
+<!-- Activity -->			
+		<record id="marketing_campaign_activity_0" model="marketing.campaign.activity">
+			<field name="name">Propose a 1 month free trial for an OnDemand offer</field>
+			<field name="server_action_id" ref="base.action_start_configurator"/>
+			<field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+			<field name="report_directory_id" ref="document_directory_campaign1"/>
+			<field name="type">paper</field>
+			<field eval="1" name="start"/>
+			<field name="report_id" ref="mc_crm_lead_demo_report"/>
+		</record>
+		<record id="marketing_campaign_activity_1" model="marketing.campaign.activity">
+			<field name="name">Thanks for showing interest</field>
+			<field name="server_action_id" ref="base.action_start_configurator"/>
+			<field model="marketing.campaign" name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+		</record>
+<!-- Tranisition -->							
+		<record id="marketing_campaign_transition_0" model="marketing.campaign.transition">
+			<field model="marketing.campaign.activity" name="activity_from_id" ref = "marketing_campaign_activity_0"/>
+			<field model="marketing.campaign.activity" name="activity_to_id" ref = "marketing_campaign_activity_1"/>
+		</record>
+<!-- Segment -->					
+		<record id="marketing_campaign_segment_bosslistusassociationslist0" model="marketing.campaign.segment">
+			<field eval="time.strftime('%Y-%m-%d %H:%M:%S')" name="date_run"/>
+			<field name="name">BossList US Associations List-0/90</field>
+			<field name="sync_mode">create_date</field>
+			<field name="campaign_id" ref="marketing_campaign_openerpondemandfreetrial0"/>
+			<field name="state">draft</field>
+		</record>
+		
+	</data>
+</openerp>
