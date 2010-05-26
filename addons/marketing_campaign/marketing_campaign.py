@@ -251,7 +251,7 @@ class marketing_campaign_activity(osv.osv): #{{{
         workitem = workitem_obj.browse(cr, uid, wi_id)
         if activity.type == 'paper' :
             service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
-            (report_data, format) = service.create(cr, uid, [activity.report_id.id], {}, {})
+            (report_data, format) = service.create(cr, uid, [], {}, {})
             attach_vals = {
                     'name': '%s_%s_%s'%(activity.report_id.report_name,
                                         activity.name,workitem.partner_id.name),
@@ -377,7 +377,7 @@ class marketing_campaign_workitem(osv.osv): #{{{
                     'object': wi.activity_id,
                     'transition' : wi.activity_id.to_ids
                 }
-                expr = eval(str(wi.activity_id.condition), cxt)
+                expr = eval(str(wi.activity_id.condition), eval_context)
                 if expr:
                     try :
                         res = self.pool.get('marketing.campaign.activity').process(
