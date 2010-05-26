@@ -31,6 +31,8 @@ import logging.handlers
 import os
 import signal
 import socket
+import select
+import errno
 import sys
 import threading
 import time
@@ -303,6 +305,24 @@ class SecureThreadedXMLRPCServer(SimpleThreadedXMLRPCServer):
         self.server_bind()
         self.server_activate()
 
+
+def _close_socket(sock):
+    if os.name != 'nt':     # XXX if someone know why, please leave a comment.
+        try:
+            sock.shutdown(getattr(socket, 'SHUT_RDWR', 2))
+        except socket.error, e:
+            if e.errno != errno.ENOTCONN: raise
+            # OSX, socket shutdowns both sides if any side closes it
+            # causing an error 57 'Socket is not connected' on shutdown
+            # of the other side (or something), see
+            # http://bugs.python.org/issue4397
+            Logger().notifyChannel(
+                'server', LOG_DEBUG,
+                '"%s" when shutting down server socket, '
+                'this is normal under OS X'%e)
+    sock.close()
+
+
 class HttpDaemon(threading.Thread):
     def __init__(self, interface, port, secure=False):
         threading.Thread.__init__(self)
@@ -331,28 +351,18 @@ class HttpDaemon(threading.Thread):
 
     def stop(self):
         self.running = False
-        if os.name != 'nt':
-            try:
-                self.server.socket.shutdown(
-                    hasattr(socket, 'SHUT_RDWR') and socket.SHUT_RDWR or 2)
-            except socket.error, e:
-                if e.errno != 57: raise
-                # OSX, socket shutdowns both sides if any side closes it
-                # causing an error 57 'Socket is not connected' on shutdown
-                # of the other side (or something), see
-                # http://bugs.python.org/issue4397
-                Logger().notifyChannel(
-                    'server', LOG_DEBUG,
-                    '"%s" when shutting down server socket, '
-                    'this is normal under OS X'%e)
-        self.server.socket.close()
+        _close_socket(self.server.socket)
 
     def run(self):
         self.server.register_introspection_functions()
 
         self.running = True
         while self.running:
-            self.server.handle_request()
+            try:
+                self.server.handle_request()
+            except (socket.error, select.error), e:
+                if self.running or e.args[0] != errno.EBADF:
+                    raise
         return True
 
         # If the server need to be run recursively
@@ -371,7 +381,6 @@ class TinySocketClientThread(threading.Thread, OpenERPDispatcher):
         self.threads = threads
 
     def run(self):
-        import select
         self.running = True
         try:
             ts = tiny_socket.mysocket(self.sock)
@@ -418,10 +427,13 @@ class TinySocketServerThread(threading.Thread):
         self.threads = []
 
     def run(self):
-        import select
         try:
             self.running = True
             while self.running:
+                timeout = self.socket.gettimeout()
+                fd_sets = select.select([self.socket], [], [], timeout)
+                if not fd_sets[0]:
+                    continue
                 (clientsocket, address) = self.socket.accept()
                 ct = TinySocketClientThread(clientsocket, self.threads)
                 self.threads.append(ct)
@@ -435,13 +447,6 @@ class TinySocketServerThread(threading.Thread):
         self.running = False
         for t in self.threads:
             t.stop()
-        try:
-            if hasattr(socket, 'SHUT_RDWR'):
-                self.socket.shutdown(socket.SHUT_RDWR)
-            else:
-                self.socket.shutdown(2)
-            self.socket.close()
-        except:
-            return False
+        _close_socket(self.socket)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
