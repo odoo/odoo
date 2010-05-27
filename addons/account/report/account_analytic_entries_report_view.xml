@@ -13,7 +13,7 @@
                 <field name="month" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="name" invisible="1"/>
-                <field name="company_id" invisible="1" groups="base.multi_company"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="currency_id" invisible="1"/>
                 <field name="account_id" invisible="1"/>
                 <field name="general_account_id" invisible="1"/>
@@ -57,7 +57,7 @@
                 <group expand="1" string="Group By...">
                     <filter string="User" name="User" icon="terp-account" context="{'group_by':'user_id'}"/>
                     <filter string="Currency" icon="terp-account" context="{'group_by':'currency_id'}"/>
-                    <filter string="Company"  icon="terp-account" context="{'group_by':'company_id'}" groups="base.multi_company"/>
+                    <filter string="Company"  icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
                     <filter string="Account"  icon="terp-account" context="{'group_by':'account_id'}"/>
                     <filter string="General Account" icon="terp-account" context="{'group_by':'general_account_id'}"/>
@@ -76,10 +76,10 @@
 					<field name="general_account_id" widget="selection"/>
 					<field name="product_uom_id" widget="selection"/>
 					<field name="journal_id" widget="selection"/>
-					<field name="company_id" widget="selection" groups="base.multi_company"/>
 					<separator orientation="vertical"/>
                     <field name="name"/>
 					<field name="account_id"/>
+					<field name="company_id" widget="selection" groups="base.group_multi_company"/>
         		</group>
             </search>
         </field>

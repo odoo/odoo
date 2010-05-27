@@ -17,10 +17,10 @@
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
-                <field name="uom_name" invisible="not context.get('set_visible',False)"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_qty" sum="# of Qty"/>
+                <field name="uom_name" invisible="not context.get('set_visible',False)"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay" avg="Days to Close"/>
