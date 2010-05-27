@@ -47,6 +47,8 @@ class project(osv.osv):
     _inherits = {'account.analytic.account':"category_id"}
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
         if user == 1:
                 return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
         if context and context.has_key('user_prefence') and context['user_prefence']:
@@ -266,13 +268,11 @@ class task(osv.osv):
         hours = dict(cr.fetchall())
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
+            res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
-                if task.state =='done':
-                    res[task.id]['progress'] = 100.0
-                else:
+                if task.state != 'done':
                     res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
-            else:
-                res[task.id]['progress'] = 0.0
+
             if task.state in ('done','cancel'):
                 res[task.id]['progress'] = 100.0
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
@@ -559,6 +559,8 @@ class config_compute_remaining(osv.osv_memory):
     }
 
     def compute_hours(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         task_obj = self.pool.get('project.task')
         request = self.pool.get('res.request')
         if 'active_id' in context:

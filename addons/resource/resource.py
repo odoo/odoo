@@ -35,7 +35,7 @@ class resource_calendar(osv.osv):
         'manager' : fields.many2one('res.users', 'Workgroup manager'),
     }
     _defaults = {
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', context=c)
     }
 
     def interval_min_get(self, cr, uid, id, dt_from, hours, resource=False):
