@@ -21,7 +21,8 @@
 
 import time
 import netsvc
-from osv import fields, osv
+from osv import fields
+from osv import osv
 import ir
 import pooler
 import mx.DateTime
@@ -30,13 +31,13 @@ from tools import config
 
 type2journal = {
     'rec_voucher': 'cash',
-    'bank_rec_voucher': 'cash',
+    'bank_rec_voucher': 'bank',
     'pay_voucher': 'cash',
-    'bank_pay_voucher': 'cash',
+    'bank_pay_voucher': 'bank',
     'cont_voucher': 'cash',
     'journal_sale_vou': 'sale',
     'journal_pur_voucher': 'purchase',
-    'journal_voucher':'expanse'
+    'journal_voucher':'general'
 }
 
 class ir_sequence_type(osv.osv):
@@ -56,7 +57,10 @@ account_journal()
 
 class account_voucher(osv.osv):
 
-    def _get_period(self, cr, uid, context):
+    def _get_period(self, cr, uid, context={}):
+        if context.get('period_id', False):
+            return context.get('period_id')
+            
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
@@ -107,7 +111,7 @@ class account_voucher(osv.osv):
             ('journal_sale_vou','Journal Sale'),
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
-            ],'Type', readonly=True, select=True , size=128),
+            ],'Entry Type', select=True , size=128, readonly=True, states={'draft':[('readonly',False)]}),
         'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','<>','view')]),
@@ -139,43 +143,60 @@ class account_voucher(osv.osv):
     }
 
     _defaults = {
-        'state': lambda *a: 'draft',
-        'date' : lambda *a: time.strftime('%Y-%m-%d'),
         'period_id': _get_period,
         'type': _get_type,
-        'reference_type': lambda *a: 'none',
         'journal_id':_get_journal,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher', context=c),
         'currency_id': _get_currency,
+        
+        'state': lambda *a: 'draft',
+        'date' : lambda *a: time.strftime('%Y-%m-%d'),
+        'reference_type': lambda *a: "none",
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.voucher',context=c),
     }
 
-    def _get_analityc_lines(self, cr, uid, id):
-        inv = self.browse(cr, uid, [id])[0]
-        cur_obj = self.pool.get('res.currency')
+#    def _get_analityc_lines(self, cr, uid, id):
+#        inv = self.browse(cr, uid, [id])[0]
+#        cur_obj = self.pool.get('res.currency')
 
     def onchange_account(self, cr, uid, ids, account_id):
+        
         if not account_id:
-            return {'value':{'amount':False}}
-        account = self.pool.get('account.account').browse(cr,uid,account_id)
+            return {
+                'value':{'amount':False}
+            }
+
+        account = self.pool.get('account.account').browse(cr, uid, account_id)
         balance=account.balance
-        return {'value':{'amount':balance}}
+        return {
+            'value':{'amount':balance}
+        }
 
     def onchange_journal(self, cr, uid, ids, journal_id, type):
         if not journal_id:
-            return {'value':{'account_id':False}}
+            return {
+                'value':{'account_id':False}
+            }
+            
         journal = self.pool.get('account.journal')
+        
         if journal_id and (type in ('rec_voucher','bank_rec_voucher','journal_pur_voucher','journal_voucher')):
             account_id = journal.browse(cr, uid, journal_id).default_debit_account_id
-            return {'value':{'account_id':account_id.id}}
+            return {
+                'value':{'account_id':account_id.id}
+            }
         elif journal_id and (type in ('pay_voucher','bank_pay_voucher','journal_sale_vou')) :
                 account_id = journal.browse(cr, uid, journal_id).default_credit_account_id
-                return {'value':{'account_id':account_id.id}}
+                return {
+                    'value':{'account_id':account_id.id}
+                }
         else:
             account_id = journal.browse(cr, uid, journal_id).default_credit_account_id
-            return {'value':{'account_id':account_id.id}}
+            return {
+                'value':{'account_id':account_id.id}
+            }
 
     def open_voucher(self, cr, uid, ids, context={}):
-        obj = self.pool.get('account.voucher').browse(cr,uid,ids)
+        obj = self.pool.get('account.voucher').browse(cr, uid, ids)
         total = 0
         for i in obj[0].payment_ids:
             total += i.amount
@@ -208,8 +229,7 @@ class account_voucher(osv.osv):
                 unlink_ids.append(t['id'])
             else:
                 raise osv.except_osv('Invalid action !', 'Cannot delete Voucher(s) which are already opened or paid !')
-        osv.osv.unlink(self, cr, uid, unlink_ids)
-        return True
+        return super(account_voucher, self).unlink(self, cr, uid, unlink_ids)
 
     def _get_analytic_lines(self, cr, uid, id):
         inv = self.browse(cr, uid, [id])[0]
@@ -242,9 +262,12 @@ class account_voucher(osv.osv):
         return iml
 
     def action_move_line_create(self, cr, uid, ids, *args):
+    
         for inv in self.browse(cr, uid, ids):
+        
             if inv.move_id:
                 continue
+                
             company_currency = inv.company_id.currency_id.id
 
             line_ids = self.read(cr, uid, [inv.id], ['payment_ids'])[0]['payment_ids']
@@ -312,7 +335,8 @@ class account_voucher(osv.osv):
                 'name' : name,
                 'journal_id': journal_id,
                 'type' : inv.type,
-                'narration' : inv.narration
+                'narration' : inv.narration,
+                'date':inv.date
             }
             if inv.period_id:
                 move['period_id'] = inv.period_id.id
@@ -362,13 +386,14 @@ class account_voucher(osv.osv):
                 elif line.type == 'cr':
                     move_line['credit'] = line.amount or False
                     amount=line.amount * (-1)
-
+                
+                move_line['analytic_account_id'] = line.account_analytic_id.id or False
                 ml_id=self.pool.get('account.move.line').create(cr, uid, move_line)
 
                 if inv.narration:
-                    line.name=inv.narration
+                    line.name = inv.narration
                 else:
-                    line.name=line.name
+                    line.name = line.name
 
                 if line.account_analytic_id:
                     an_line = {
@@ -393,7 +418,6 @@ class account_voucher(osv.osv):
 
 
     def line_get_convert(self, cr, uid, x, date, context={}):
-
         return {
             'date':date,
             'date_maturity': x.get('date_maturity', False),
@@ -409,6 +433,7 @@ class account_voucher(osv.osv):
             'tax_amount': x.get('tax_amount', False),
             'ref':x.get('ref',False)
         }
+        
     def _convert_ref(self, cr, uid, ref):
         return (ref or '').replace('/','')
 
@@ -547,7 +572,6 @@ class account_voucher_line(osv.osv):
         if not amount:
             return {'value' : {}}
         if partner_id:
-
             obj = self.pool.get('res.partner')
             if type1 in ('rec_voucher', 'bank_rec_voucher', 'journal_voucher'):
                 if amount < 0 :
@@ -583,34 +607,23 @@ class account_voucher_line(osv.osv):
         else:
             if type1 in ('rec_voucher', 'bank_rec_voucher', 'journal_voucher'):
                 if amount < 0 :
-
                     type = 'dr'
                 else:
-
                     type = 'cr'
-
             elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') :
                 if amount < 0 :
-
                     type = 'cr'
                 else:
-
                     type = 'dr'
-
             elif type1 in ('journal_sale_vou') :
                 if amount < 0 :
-
                     type = 'cr'
                 else:
-
                     type = 'dr'
-
             elif type1 in ('journal_pur_voucher') :
                 if amount< 0 :
-
                     type = 'dr'
                 else:
-
                     type = 'cr'
 
         return {
@@ -619,9 +632,7 @@ class account_voucher_line(osv.osv):
 
     def onchange_type(self, cr, uid, ids,partner_id,amount,type,type1):
         if partner_id:
-
             obj = self.pool.get('res.partner')
-
             if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):
                 if type == 'dr' :
                     account_id = obj.browse(cr, uid, partner_id).property_account_payable
@@ -645,7 +656,6 @@ class account_voucher_line(osv.osv):
                 else:
                     account_id = obj.browse(cr, uid, partner_id).property_account_receivable
                     total=amount*(-1)
-
             elif type1 in ('journal_pur_voucher') :
                 if type == 'dr' :
                     account_id = obj.browse(cr, uid, partner_id).property_account_receivable
@@ -656,34 +666,25 @@ class account_voucher_line(osv.osv):
         else:
             if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):
                 if type == 'dr' :
-
                     total=amount*(-1)
                 else:
-
                     total=amount*(-1)
 
             elif type1 in ('pay_voucher','bank_pay_voucher','cont_voucher') :
                 if type == 'cr' :
-
                     total=amount*(-1)
                 else:
-
                     total=amount*(-1)
 
             elif type1 in ('journal_sale_vou') :
                 if type == 'cr' :
-
                     total=amount*(-1)
                 else:
-
                     total=amount*(-1)
-
             elif type1 in ('journal_pur_voucher') :
                 if type == 'dr' :
-
                     total=amount*(-1)
                 else:
-
                     total=amount*(-1)
 
         return {
@@ -702,9 +703,3 @@ class account_voucher_line(osv.osv):
         }
 
 account_voucher_line()
-
-
-
-
-
-
