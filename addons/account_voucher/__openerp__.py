@@ -24,8 +24,8 @@
     "version" : "1.0",
     "author" : 'Tiny & Axelor',
     "description": """
-    India Accounting module includes all the basic requirenment of
-    Basic Accounting, plus new things which available are
+    Indian Accounting module includes all the basic requirenments of
+    Basic Accounting, plus new things which are available :
     * Indian Account Chart
     * New Invoice - (Local, Retail)
     * Invoice Report

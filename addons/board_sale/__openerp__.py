@@ -26,7 +26,7 @@
     'category': 'Board/Sales & Purchase',
     'description': """
 This module implements a dashboard for salesman that includes:
-    * You open quotations
+    * Your open quotations
     * Top 10 sales of the month
     * Cases statistics
     * Graph of sales by product

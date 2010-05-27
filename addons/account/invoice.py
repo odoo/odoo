@@ -23,7 +23,6 @@ import time
 import decimal_precision as dp
 
 import netsvc
-
 from osv import fields, osv, orm
 import pooler
 from tools import config

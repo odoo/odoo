@@ -30,7 +30,7 @@
     You can define your multiple levels of recall through the menu:
         Financial Management/Configuration/Payment Terms/Follow-Ups
 
-    Once it's defined, you can automatically prints recall every days
+    Once it's defined, you can automatically print recalls every day
     through simply clicking on the menu:
         Financial_Management/Periodical_Processing/Print_Follow-Ups
 

@@ -28,7 +28,7 @@
     The sale journal modules allows you to categorise your
     sales and deliveries (picking lists) between different journals.
     This module is very helpful for bigger companies that
-    works by departments.
+    work by departments.
 
     You can use journal for different purposes, some examples:
     * isolate sales of different departments
