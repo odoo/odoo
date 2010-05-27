@@ -88,12 +88,11 @@ class document_file(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'store_method': fields.selection([('db', 'Database'), ('fs', 'Filesystem'), ('link', 'Link')], "Storing Method"),
         'datas': fields.function(_data_get, method=True, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
+        'url': fields.char('File URL',size=64),
         'store_fname': fields.char('Stored Filename', size=200),
         'res_model': fields.char('Attached Model', size=64), #res_model
         'res_id': fields.integer('Attached ID'), #res_id
- #       'res_name': fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
-        'title': fields.char('Resource Title', size=64),
         'type':fields.selection([
             ('url','URL'),
             ('binary','Binary'),
@@ -161,7 +160,6 @@ class document_file(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if not context:
             context = {}
-        vals['title'] = vals['name']
         vals['parent_id'] = context.get('parent_id', False) or vals.get('parent_id', False)
         if not vals['parent_id']:
             vals['parent_id'] = self.pool.get('document.directory')._get_root_directory(cr,uid, context)
@@ -174,8 +172,6 @@ class document_file(osv.osv):
             result = obj_model.read(cr, uid, [vals['res_id']], ['name', 'partner_id', 'address_id'], context=context)
             if len(result):
                 obj = result[0]
-                if obj.get('name', False):
-                    vals['title'] = (obj.get('name', ''))[:60]
                 if obj_model._name == 'res.partner':
                     vals['partner_id'] = obj['id']
                 elif obj.get('address_id', False):
