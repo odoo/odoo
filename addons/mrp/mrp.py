@@ -474,18 +474,6 @@ class mrp_production(osv.osv):
             result[prod.id] = prod.date_planned[:10]
         return result
 
-    def _ref_calc(self, cr, uid, ids, field_names=None, arg=False, context={}):
-        """ Finds reference sale order for production order.
-        @param field_names: Names of fields.
-        @param arg: User defined arguments
-        @return: Dictionary of values.
-        """
-        res = {}
-        for f in field_names:
-            for order_id in ids:
-                res[order_id] = {f:False}
-        return res
-
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request."),
@@ -526,8 +514,6 @@ class mrp_production(osv.osv):
         'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
-        'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sale order.'),
-        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_ref', type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
