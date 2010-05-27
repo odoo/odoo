@@ -135,6 +135,7 @@ class project(osv.osv):
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
+        'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.'),
      }
     _order = "sequence"
     _defaults = {
@@ -149,11 +150,18 @@ class project(osv.osv):
              if leave['date_start'] > leave['date']:
                  return False
          return True
-
+    
+    def _check_escalation(self, cr, uid, ids):
+         project_obj = self.browse(cr, uid, ids[0])
+         if project_obj.project_escalation_id:
+             if project_obj.project_escalation_id.id == project_obj.id:
+                 return False
+         return True 
+     
     _constraints = [
-        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
+        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date']),
+        (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
-
     def set_template(self, cr, uid, ids, context={}):
         res = self.setActive(cr, uid, ids, value=False, context=context)
         return res
