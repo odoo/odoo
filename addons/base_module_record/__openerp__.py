@@ -39,7 +39,7 @@ for custom configurations and demo/testing data.
 
 How to use it:
 Run Administration/Customization/Module Creation/Export Customizations As a Module wizard.
-Select datetime critearea of recording and objects to be recorded and Record module.
+Select datetime critearia of recording and objects to be recorded and Record module.
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
