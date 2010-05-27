@@ -50,41 +50,39 @@
 	        <field name="type">form</field>
 	        <field name="arch" type="xml">
 	            <form string="Sales Journals">
-	                <notebook>
-	                <page string="Journal">
-	                    <separator string="Journal Information" colspan="4"/>
+					<group colspan="4"	col="6">
 	                    <field name="name" select="1"/>
 	                    <field name="code" select="1"/>
 	                    <field name="user_id" select="1"/>
 	                    <field name="date" select="1"/>
 	                    <field name="date_created" select="1"/>
 	                    <field name="date_validation" select="1"/>
-	                    <separator string="States" colspan="4"/>
-	                    <field name="state"/>
-	                    <group col="3" colspan="2">
+	                </group>    
+					<notebook colspan="4">
+		                <page string="Sales">
+		                    <field name="sale_stats_ids" colspan="4" nolabel="1">
+		                        <tree string="Sales">
+		                            <field name="name"/>
+		                            <field name="quantity"/>
+		                            <field name="price_total"/>
+		                            <field name="price_average"/>
+		                            <field name="count"/>
+		                            <field name="state"/>
+		                        </tree>
+		                    </field>
+		                </page>
+		                <page string="Notes">
+		                    <field name="note" colspan="4" nolabel="1"/>
+		                </page>
+	                </notebook>
+	                <field name="state"/>
+	                    <group col="6" colspan="2">
 	                        <button name="button_open" string="Open Journal" states="draft" type="object" icon="gtk-open"/>
 	                        <button name="button_close" string="Close Journal" states="open" type="object" icon="gtk-close"/>
 	                        <button name="button_draft" string="Set to Draft" states="close,open" type="object" icon="gtk-convert"/>
+	                        <button string="Confirm Sales" name="button_sale_confirm" states="draft,open" type="object" icon="gtk-execute"/>
+	                    	<button string="Cancel Sales" name="button_sale_cancel" states="draft,open" type="object" icon="gtk-cancel"/>
 	                    </group>
-	                </page>
-	                <page string="Sales">
-	                    <button string="Confirm Sales" name="button_sale_confirm" states="draft,open" type="object" icon="gtk-execute"/>
-	                    <button string="Cancel Sales" name="button_sale_cancel" states="draft,open" type="object" icon="gtk-cancel"/>
-	                    <newline/>
-	                    <field name="sale_stats_ids" colspan="4" nolabel="1">
-	                        <tree string="Sales">
-	                            <field name="name"/>
-	                            <field name="quantity"/>
-	                            <field name="price_total"/>
-	                            <field name="price_average"/>
-	                            <field name="count"/>
-	                            <field name="state"/>
-	                        </tree>
-	                    </field>
-	                </page><page string="Notes">
-	                    <field name="note" colspan="4" nolabel="1"/>
-	                </page>
-	                </notebook>
 	            </form>
 	        </field>
 	    </record>
@@ -367,31 +365,30 @@
 	        <field name="type">form</field>
 	        <field name="arch" type="xml">
 	            <form string="Picking Journal">
-	                <notebook>
-	                <page string="Journal">
-	                    <separator string="Journal Information" colspan="4"/>
+					<group colspan="4" col="6">
 	                    <field name="name" select="1"/>
 	                    <field name="code" select="1"/>
 	                    <field name="user_id" select="1"/>
+	                    <newline/>
 	                    <field name="date" select="1"/>
 	                    <field name="date_created" select="1"/>
 	                    <field name="date_validation" select="1"/>
-	                    <separator string="States" colspan="4"/>
-	                    <field name="state"/>
-	                    <group col="3" colspan="2">
+	                </group>    
+					<notebook colspan="4">
+		                <page string="Picking">
+		                    <field name="picking_stats_ids" colspan="4" nolabel="1"/>
+		                </page>
+		                <page string="Notes">
+		                    <field name="note" colspan="4" nolabel="1"/>
+		                </page>
+	                </notebook>
+	                <field name="state"/>
+	                    <group col="6" colspan="2">
 	                        <button name="button_open" string="Open Journal" states="draft" type="object" icon="gtk-open"/>
 	                        <button name="button_close" string="Close Journal" states="open" type="object" icon="gtk-close"/>
 	                        <button name="button_draft" string="Set to Draft" states="close,open" type="object" icon="gtk-convert"/>
+	                        <button string="Cancel Picking" name="button_picking_cancel" states="draft,open" type="object" icon="gtk-cancel"/>
 	                    </group>
-	                </page>
-	                <page string="Picking">
-	                    <button string="Cancel Picking" name="button_picking_cancel" states="draft,open" type="object" icon="gtk-cancel"/>
-	                    <newline/>
-	                    <field name="picking_stats_ids" colspan="4" nolabel="1"/>
-	                </page><page string="Notes">
-	                    <field name="note" colspan="4" nolabel="1"/>
-	                </page>
-	                </notebook>
 	            </form>
 	        </field>
 	    </record>
