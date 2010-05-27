@@ -416,7 +416,7 @@ class orm_template(object):
         pass
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
-        raise _('The read_group method is not implemented on this object !')
+        raise NotImplementedError(_('The read_group method is not implemented on this object !'))
 
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
@@ -1027,7 +1027,7 @@ class orm_template(object):
         return (done, 0, 0, 0)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        raise _('The read method is not implemented on this object !')
+        raise NotImplementedError(_('The read method is not implemented on this object !'))
 
     def get_invalid_fields(self,cr,uid):
         return list(self._invalids)
@@ -1070,16 +1070,16 @@ class orm_template(object):
         return {}
 
     def perm_read(self, cr, user, ids, context=None, details=True):
-        raise _('The perm_read method is not implemented on this object !')
+        raise NotImplementedError(_('The perm_read method is not implemented on this object !'))
 
     def unlink(self, cr, uid, ids, context=None):
-        raise _('The unlink method is not implemented on this object !')
+        raise NotImplementedError(_('The unlink method is not implemented on this object !'))
 
     def write(self, cr, user, ids, vals, context=None):
-        raise _('The write method is not implemented on this object !')
+        raise NotImplementedError(_('The write method is not implemented on this object !'))
 
     def create(self, cr, user, vals, context=None):
-        raise _('The create method is not implemented on this object !')
+        raise NotImplementedError(_('The create method is not implemented on this object !'))
 
     # returns the definition of each field in the object
     # the optional fields parameter can limit the result to some fields
@@ -3623,7 +3623,7 @@ class orm(orm_template):
     # TODO: Validate
     #
     def perm_write(self, cr, user, ids, fields, context=None):
-        raise _('This method does not exist anymore')
+        raise NotImplementedError(_('This method does not exist anymore'))
 
     # TODO: ameliorer avec NULL
     def _where_calc(self, cr, user, args, active_test=True, context=None):
