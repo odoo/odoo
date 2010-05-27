@@ -113,7 +113,6 @@ class project_issue(osv.osv, crm.crm_case):
         'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'id': fields.integer('ID'),  
         'name': fields.char('Name', size=128, required=True), 
-        'active': fields.boolean('Active', required=False), 
         'create_date': fields.datetime('Creation Date' , readonly=True), 
         'write_date': fields.datetime('Update Date' , readonly=True), 
         'date_deadline': fields.date('Deadline'), 
@@ -173,7 +172,6 @@ class project_issue(osv.osv, crm.crm_case):
        return False
 
     _defaults = {
-        'active': lambda *a: 1, 
         'user_id': crm.crm_case._get_default_user, 
         'partner_id': crm.crm_case._get_default_partner, 
         'partner_address_id': crm.crm_case._get_default_partner_address, 
