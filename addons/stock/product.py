@@ -26,6 +26,30 @@ from tools.translate import _
 class product_product(osv.osv):
     _inherit = "product.product"    
 
+    def get_product_accounts(self, cr, uid, product_id, context={}):
+        """ To get the stock input account, stock output account and stock journal related to product.
+        @param product_id: product id            
+        @return: dictionary which contains information regarding stock input account, stock output account and stock journal
+        """           
+        product_obj = self.pool.get('product.product').browse(cr, uid, product_id, False)
+        
+        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False 
+        if not stock_input_acc:
+            stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
+        
+        stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
+        if not stock_output_acc:
+            stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
+
+        journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
+        
+        res = {}
+        res.update({'stock_account_input': stock_input_acc})
+        res.update({'stock_account_output': stock_output_acc})
+        res.update({'stock_journal': journal_id})  
+        
+        return res
+
     def do_change_standard_price(self, cr, uid, ids, datas, context={}):
         """ 
              Changes the Standard Price of Product and creates an account move accordingly.
@@ -44,10 +68,11 @@ class product_product(osv.osv):
         stock_output_acc = datas.get('stock_output_account', False)
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
-
+        property_obj=self.pool.get('ir.property')
+        account_variation = property_obj.get(cr, uid, 'property_stock_variation', 'product.category', context=context)
         move_ids = []        
         for rec_id in ids:
-            loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
+            loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
             for location in location_obj.browse(cr, uid, loc_ids):
                 c = context.copy()
                 c.update({
@@ -60,7 +85,7 @@ class product_product(osv.osv):
                 diff = product.standard_price - new_price 
                 assert diff, _("Could not find any difference between standard price and new price!")
                 if qty:
-                    location_account = location.account_id and location.account_id.id or False
+                    location_account = account_variation and account_variation.id or False
                     company_id = location.company_id and location.company_id.id or False                    
                     assert location_account, _('Inventory Account is not specified for Location: %s' % (location.name))
                     assert company_id, _('Company is not specified in Location')
