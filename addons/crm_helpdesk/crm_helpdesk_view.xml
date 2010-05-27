@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+       <!-- Helpdesk Support Categories Configuration Menu-->
+       <menuitem id="menu_config_helpdesk" name="Helpdesk"
+        groups="base.group_extended"
+        parent="base.menu_base_config" sequence="8" />
 
         <!-- Helpdesk Support Categories Form View -->
 
@@ -13,8 +17,8 @@
             <field name="context">{'object_id':'crm.helpdesk'}</field>
         </record>
 
-        <menuitem action="crm_helpdesk_categ_action"
-            id="menu_crm_case_helpdesk-act" parent="crm.menu_crm_case_categ" />
+        <menuitem action="crm_helpdesk_categ_action" name="Categories"
+            id="menu_crm_case_helpdesk-act" parent="menu_config_helpdesk" />
 
         <!--  Helpdesk Support Form View -->
 

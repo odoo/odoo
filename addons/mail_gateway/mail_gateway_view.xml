@@ -30,7 +30,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_mailgate_message_tree">
             <field name="name">maligate.message.tree</field>
             <field name="model">maligate.message</field>
@@ -42,8 +42,8 @@
                 </tree>
             </field>
         </record>
-        
-        
+
+
         <record model="ir.ui.view" id="view_mailgate_thread_form">
             <field name="name">mailgate.thread.form</field>
             <field name="model">mailgate.thread</field>
@@ -112,7 +112,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_mailgate_thread_tree">
             <field name="name">mailgate.thread.tree</field>
             <field name="model">mailgate.thread</field>
@@ -124,7 +124,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_view_mailgate_thread">
 	        <field name="name">Mailgateway Threads</field>
 	        <field name="res_model">mailgate.thread</field>
@@ -132,7 +132,7 @@
 	        <field name="view_type">form</field>
 	        <field name="view_id" ref="view_mailgate_thread_tree"/>
 	    </record>
-		
+
 		<record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view1">
 	        <field name="sequence" eval="1"/>
 	        <field name="view_mode">tree</field>
@@ -145,14 +145,10 @@
 	        <field name="view_id" ref="view_mailgate_thread_form"/>
 	        <field name="act_window_id" ref="action_view_mailgate_thread"/>
 	    </record>
-		
-		
-		 <!-- <menuitem id="base.menu_crm_configuration" name="Cases"
-            parent="base.menu_base_config" sequence="0"/>
 
-        <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
-        	parent="base.menu_crm_configuration"  sequence="20"/>
+		<menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
+        	parent="base.menu_base_config"  sequence="100"/>
         	-->
-      	
+
     </data>
 </openerp>

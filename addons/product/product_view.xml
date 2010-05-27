@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="50"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="40"/>
+
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
             <field name="model">product.product</field>
@@ -260,7 +261,7 @@
         <menuitem action="product_category_action_form"
             groups="base.group_extended"
             id="menu_product_category_action_form"
-            parent="prod_config_main" sequence="60"/>
+            parent="prod_config_main" sequence="2"/>
 
 
         <record id="product_normal_action_tree" model="ir.actions.act_window">
@@ -374,7 +375,7 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem
-            action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="65"/>
+            action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>

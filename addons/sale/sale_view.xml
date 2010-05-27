@@ -43,8 +43,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
         </record>
+
         <menuitem action="action_shop_form" id="menu_action_shop_form"
-            parent="base.menu_base_config" sequence="70"
+            parent="product.prod_config_main" sequence="0"
             groups="base.group_extended"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
