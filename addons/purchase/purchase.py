@@ -39,6 +39,9 @@ from osv.orm import browse_record, browse_null
 # Model definition
 #
 class purchase_order(osv.osv):
+    """
+    For specifying the purchase order.
+    """
     def _calc_amount(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         for order in self.browse(cr, uid, ids):
@@ -48,6 +51,16 @@ class purchase_order(osv.osv):
         return res
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context):
+        """ Gets amount.
+        @param self: The object pointer
+        @param cr: The current row, from the database cursor
+        @param uid: The current user ID for security checks
+        @param ids: List of selected IDs
+        @param field_name: List of field names
+        @param arg: User defined argument
+        @param context: A standard dictionary for contextual values
+        @return:  Dictionary of values
+        """
         res = {}
         cur_obj=self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids):
@@ -68,6 +81,11 @@ class purchase_order(osv.osv):
         return res
 
     def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context):
+        """ Sets Expected Date.
+        @param name: Name of the field
+        @param value: It gives date
+        @return: True
+        """
         if not value: return False
         if type(ids)!=type([]):
             ids=[ids]
@@ -80,6 +98,10 @@ class purchase_order(osv.osv):
         return True
 
     def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context):
+        """ Binds the Expected Date field with date.
+        @param field_name: Name of the field
+        @return: Dictionary of values
+        """
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
@@ -93,6 +115,10 @@ class purchase_order(osv.osv):
         return res
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
+        """ Invoice Rate.
+        @param name: Name of the field
+        @return: Dictionary of values
+        """
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
             tot = 0.0
@@ -105,6 +131,9 @@ class purchase_order(osv.osv):
         return res
 
     def _shipped_rate(self, cr, uid, ids, name, arg, context=None):
+        """ Shipped Rate.
+        @return: Dictionary of values
+        """
         if not ids: return {}
         res = {}
         for id in ids:
@@ -133,12 +162,18 @@ class purchase_order(osv.osv):
         return res
 
     def _get_order(self, cr, uid, ids, context={}):
+        """ It calls the _amount_all function
+        @return:Dictionary of values 
+        """
         result = {}
         for line in self.pool.get('purchase.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
         return result.keys()
 
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
+        """ Purchase order is invoiced or not.
+        @return: Dictionary of values
+        """
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
             if purchase.invoice_id.reconciled:
@@ -235,6 +270,10 @@ class purchase_order(osv.osv):
         return True
 
     def onchange_dest_address_id(self, cr, uid, ids, adr_id):
+        """ It removes the warehouse link and set the customer location if destination address changes.
+        @param adr_id: Changed address id
+        @return:  Dictionary of changed values
+        """
         if not adr_id:
             return {}
         part_id = self.pool.get('res.partner.address').read(cr, uid, [adr_id], ['partner_id'])[0]['partner_id'][0]
@@ -242,13 +281,20 @@ class purchase_order(osv.osv):
         return {'value':{'location_id': loc_id, 'warehouse_id': False}}
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id):
+        """ Sets location_id and dest_address_id to False if warehouse_id changes.
+        @param warehouse_id: Changed warehouse_id
+        @return:  Dictionary of changed values
+        """
         if not warehouse_id:
             return {}
         res = self.pool.get('stock.warehouse').read(cr, uid, [warehouse_id], ['lot_input_id'])[0]['lot_input_id'][0]
         return {'value':{'location_id': res, 'dest_address_id': False}}
 
     def onchange_partner_id(self, cr, uid, ids, part):
-        
+        """ Sets partner_address_id ,pricelist_id and fiscal_position if partner_id changes.
+        @param part: Changed partner_id
+        @return:  Dictionary of changed values
+        """
         if not part:
             return {'value':{'partner_address_id': False, 'fiscal_position': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
@@ -256,12 +302,18 @@ class purchase_order(osv.osv):
         pricelist = part.property_product_pricelist_purchase.id
         fiscal_position = part.property_account_position and part.property_account_position.id or False
         return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
-
+        
     def wkf_approve_order(self, cr, uid, ids, context={}):
+        """ Workflow action for purchase order approval
+        @return: True 
+        """
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
         return True
 
     def wkf_confirm_order(self, cr, uid, ids, context={}):
+        """ Workflow action for purchase order confirmation.
+        @return: True
+        """
         todo = []
         for po in self.browse(cr, uid, ids):
             
@@ -309,6 +361,10 @@ class purchase_order(osv.osv):
         })
 
     def action_cancel_draft(self, cr, uid, ids, *args):
+        """ Sets purchase order in the draft state.
+        @param *args: Arguments
+        @return: True 
+        """
         if not len(ids):
             return False
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
@@ -320,6 +376,10 @@ class purchase_order(osv.osv):
         return True
 
     def action_invoice_create(self, cr, uid, ids, *args):
+        """ Creates invoice.
+        @param *args: Arguments
+        @return: Invoice id 
+        """
         res = False
        
         journal_obj = self.pool.get('account.journal')
@@ -369,6 +429,10 @@ class purchase_order(osv.osv):
         return res
 
     def has_stockable_product(self,cr, uid, ids, *args):
+        """ This action gets called from workflow to check the product type
+        @param *args: Arguments
+        @return: True or False 
+        """
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -376,6 +440,9 @@ class purchase_order(osv.osv):
         return False
 
     def action_cancel(self, cr, uid, ids, context={}):
+        """ Cancels purchase order after it has been approved.
+        @return: True 
+        """
         ok = True
         purchase_order_line_obj = self.pool.get('purchase.order.line')
         for purchase in self.browse(cr, uid, ids):
@@ -399,6 +466,10 @@ class purchase_order(osv.osv):
         return True
 
     def action_picking_create(self,cr, uid, ids, *args):
+        """ Creates picking.
+        @param *args: Arguments
+        @return: Picking id 
+        """
         picking_id = False
         for order in self.browse(cr, uid, ids):
             loc_id = order.partner_id.property_stock_supplier.id
@@ -571,7 +642,16 @@ class purchase_order(osv.osv):
 purchase_order()
 
 class purchase_order_line(osv.osv):
+    """
+    For specifying the purchase order lines.
+    """
     def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):
+        """ It gives the subtotal for purchase order line.
+        @param prop: Name of the field
+        @param unknow_none: None
+        @param unknow_dict: Contextual dictionary
+        @return: Dictionary of values
+        """
         res = {}
         cur_obj=self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
@@ -613,6 +693,7 @@ class purchase_order_line(osv.osv):
     _table = 'purchase_order_line'
     _name = 'purchase.order.line'
     _description = 'Purchase Order Line'
+
     def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
@@ -622,6 +703,20 @@ class purchase_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False):
+        """ Changes purchase order line when product_id changes .
+        @param pricelist: Pricelist id
+        @param product: Changed product_id
+        @param qty: Quantity of a product
+        @param uom: Unit of measure of a product
+        @param partner_id: Partner id
+        @param date_order: Order date
+        @param fiscal_position: Fiscal Position
+        @param date_planned: Scheduled date
+        @param name: Product name
+        @param price_unit: Price per unit
+        @param notes: Notes mentioned
+        @return: Dictionary of values. 
+        """
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
         if not  partner_id:
@@ -679,12 +774,21 @@ class purchase_order_line(osv.osv):
         domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
         if res2[0]['category_id'][0] != res3:
             raise osv.except_osv(_('Wrong Product UOM !'), _('You have to select a product UOM in the same category than the purchase UOM of the product'))
-
         res['domain'] = domain
         return res
 
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False,fiscal_position=False):
+        """ Changes product_uom.
+        @param pricelist: Pricelist id
+        @param product: Product id
+        @param qty: Quantity of a product
+        @param uom: changed product_uom
+        @param partner_id: Partner id
+        @param date_order: Order date
+        @param fiscal_position: Fiscal Position
+        @return: Dictionary of values. 
+        """
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
                 partner_id, date_order=date_order,fiscal_position=fiscal_position)
         if 'product_uom' in res['value']:
@@ -692,7 +796,11 @@ class purchase_order_line(osv.osv):
         if not uom:
             res['value']['price_unit'] = 0.0
         return res
+
     def action_confirm(self, cr, uid, ids, context={}):
+        """ Confirms purchase order.
+        @return: True 
+        """
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
         return True    
 purchase_order_line()
