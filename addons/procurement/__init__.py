@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import mrp_procurement
+import procurement
 import wizard
 import schedulers
 import company

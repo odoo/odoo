@@ -23,7 +23,7 @@ import threading
 
 from osv import osv, fields
 
-class procurement_compute(osv.osv_memory):
+class procurement_compute_all(osv.osv_memory):
     _name = 'mrp.procurement.compute.all'
     _description = 'Compute all schedulers'
     
@@ -61,7 +61,7 @@ class procurement_compute(osv.osv_memory):
         threaded_calculation.start()
         return {}
     
-procurement_compute()
+procurement_compute_all()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
