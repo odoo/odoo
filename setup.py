@@ -32,6 +32,7 @@ import glob
 
 from distutils.core import setup
 from distutils.command.install import install
+from distutils.sysconfig import get_python_lib
 
 sys.path.append(os.path.join(os.path.abspath(os.path.dirname(__file__)), "bin"))
 
@@ -94,7 +95,7 @@ def data_files():
         files.append((opj(doc_directory, 'migrate', '3.3.0-3.4.0'), [f for f in glob.glob('doc/migrate/3.3.0-3.4.0/*') if os.path.isfile(f)]))
         files.append((opj(doc_directory, 'migrate', '3.4.0-4.0.0'), [f for f in glob.glob('doc/migrate/3.4.0-4.0.0/*') if os.path.isfile(f)]))
 
-        openerp_site_packages = opj('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
+        openerp_site_packages = opj(get_python_lib(prefix=''), 'openerp-server')
 
         files.append((openerp_site_packages, [opj('bin', 'import_xml.rng'),
                                               opj('bin', 'server.pkey'),
@@ -103,8 +104,7 @@ def data_files():
         for addon in find_addons():
             addonname = addon.split('.')[-1]
             add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin', 1)
-            addon_path = opj('lib', 'python%s' % py_short_version,
-                             'site-packages',
+            addon_path = opj(get_python_lib(prefix=''),
                              add_path.replace('bin', 'openerp-server', 1))
             pathfiles = []
             for root, dirs, innerfiles in os.walk(add_path):
