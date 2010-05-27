@@ -25,7 +25,7 @@
     'version': '0.1',
     'category': 'Generic Modules/Projects & Services',
     'description': """
-        - If deadline date of project is changed will
+        - If deadline date of project is changed 
           then the deadline date for all the tasks will change to the same  """,
     'author': 'Tiny',
     'depends': ['base', 'project'],

@@ -25,6 +25,7 @@ from tools.translate import _
 
 class product_product(osv.osv):
     _inherit = "product.product"    
+    
 
     def get_product_accounts(self, cr, uid, product_id, context={}):
         """ To get the stock input account, stock output account and stock journal related to product.
@@ -41,14 +42,14 @@ class product_product(osv.osv):
         if not stock_output_acc:
             stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
 
+
         journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
         
         res = {}
         res.update({'stock_account_input': stock_input_acc})
         res.update({'stock_account_output': stock_output_acc})
         res.update({'stock_journal': journal_id})  
-        
-        return res
+        return res    
 
     def do_change_standard_price(self, cr, uid, ids, datas, context={}):
         """ 

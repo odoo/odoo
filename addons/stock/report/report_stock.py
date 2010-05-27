@@ -95,7 +95,7 @@ class stock_report_tracklots(osv.osv):
     }
     
     def init(self, cr):
-        drop_view_if_exists(cr, 'stock_report_prodlots')
+        drop_view_if_exists(cr, 'stock_report_tracklots')
         cr.execute("""
            create or replace view stock_report_tracklots as (
                 
@@ -150,7 +150,7 @@ class report_stock_lines_date(osv.osv):
         'date': fields.datetime('Latest Inventory Date'),
     }
     def init(self, cr):
-        drop_view_if_exists(cr, 'stock_report_prodlots')
+        drop_view_if_exists(cr, 'report_stock_lines_date')
         cr.execute("""
             create or replace view report_stock_lines_date as (
                 select

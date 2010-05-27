@@ -139,18 +139,18 @@
        <field name="type">search</field>
        <field name="arch" type="xml">
            <search string="Campaigns">
-               <filter icon="terp-project" string="Draft" name = "draft" domain="[('state','=','draft')]"/>
-               <filter icon="terp-project" string="Running" domain="[('state','=','running')]"/>
+               <filter icon="terp-marketing" string="Draft" name = "draft" domain="[('state','=','draft')]"/>
+               <filter icon="terp-marketing" string="Running" domain="[('state','=','running')]"/>
                <separator orientation="vertical"/>
-               <filter icon="terp-project" string="Test Mode" name = "test" domain="[('mode','=','test')]"/>
-               <filter icon="terp-project" string="Manual Mode" domain="[('mode','=','manual')]"/>
+               <filter icon="terp-marketing" string="Test Mode" name = "test" domain="[('mode','=','test')]"/>
+               <filter icon="terp-marketing" string="Manual Mode" domain="[('mode','=','manual')]"/>
                <separator orientation="vertical"/>
                <field name="name" select="1"/>
                <field name="object_id" select="1"/>
                <newline/>
                <group expand="1" string="Group By..." colspan="10" col="12">
-                   <filter string="Object" name="Object" icon="terp-project" context="{'group_by':'object_id'}" />
-                   <filter string="State" name="State" icon="terp-project" context="{'group_by':'state'}" />
+                   <filter string="Object" name="Object" icon="terp-marketing" context="{'group_by':'object_id'}" />
+                   <filter string="State" name="State" icon="terp-marketing" context="{'group_by':'state'}" />
                </group>   
            </search>
        </field>
@@ -231,11 +231,11 @@
        <field name="type">search</field>
        <field name="arch" type="xml">
            <search string="Segments">
-               <filter icon="terp-project" string="Draft" name="draft" domain="[('state','=','draft')]"/>
-               <filter icon="terp-project" string="Running" domain="[('state','=','running')]"/>
+               <filter icon="terp-marketing" string="Draft" name="draft" domain="[('state','=','draft')]"/>
+               <filter icon="terp-marketing" string="Running" domain="[('state','=','running')]"/>
                <separator orientation="vertical"/>
-               <filter icon="terp-project" string="Create Date" name="create_date" domain="[('sync_mode','=','create_date')]"/>
-               <filter icon="terp-project" string="Write Date" domain="[('sync_mode','=','write_date')]"/>
+               <filter icon="terp-marketing" string="Create Date" name="create_date" domain="[('sync_mode','=','create_date')]"/>
+               <filter icon="terp-marketing" string="Write Date" domain="[('sync_mode','=','write_date')]"/>
                <separator orientation="vertical"/>
                <field name="name" select="1"/>
                <field name="object_id" select="1"/>
@@ -243,9 +243,9 @@
                <field name="date_run" select="1"/>
                <newline/>
                <group expand="1" string="Group By..." colspan="10" col="12">
-                   <filter string="Campaign" name="Campaign" icon="terp-project" context="{'group_by':'campaign_id'}" />
-                   <filter string="Date Run" name="Date Run" icon="terp-project" context="{'group_by':'date_run'}" />
-                   <filter string="State" name="State" icon="terp-project" context="{'group_by':'state'}" />
+                   <filter string="Campaign" name="Campaign" icon="terp-marketing" context="{'group_by':'campaign_id'}" />
+                   <filter string="Date Run" name="Date Run" icon="terp-marketing" context="{'group_by':'date_run'}" />
+                   <filter string="State" name="State" icon="terp-marketing" context="{'group_by':'state'}" />
                </group> 
            </search>
        </field>
