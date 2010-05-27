@@ -79,7 +79,7 @@
                     <group colspan="3" col="6">
 	                  	<field name="partner_name"/>
 	                   	<field name="job_id" on_change="onchange_job(job_id)"/>
-	                   	<button string="Schedule a Phone Call" name="223" icon="gtk-redo" type="action"/>
+	                   	<button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
                      </group>
                     <newline/>
                     <group colspan="3" col="6">
@@ -232,7 +232,7 @@
                        help="My Department"/>
                </field>
                <newline/>
-                <group expand="1" string="Group By...">
+                <group expand="0" string="Group By..." colspan="11" col="20">
                     <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Responsible" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
