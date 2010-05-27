@@ -132,7 +132,7 @@
 		</record>
 
 		<record id="ir_modelsmrp_pdt0" model="ir.model.access">
-			<field name="model_id" ref="procurement.model_mrp_procurement"/>
+			<field name="model_id" ref="procurement.model_procurement_order"/>
 			<field eval="1" name="perm_read"/>
 			<field eval="&quot;&quot;&quot;MRP - Procurement&quot;&quot;&quot;" name="name"/>
 			<field eval="0" name="perm_unlink"/>
@@ -474,12 +474,12 @@
 			<field name="group_id" ref="res_groups_posuser0"/>
 		</record>
         <record id="ir_model_access_procurement0" model="ir.model.access">
-            <field name="model_id" ref="procurement.model_mrp_procurement" />
+            <field name="model_id" ref="procurement.model_procurement_order" />
             <field eval="1" name="perm_read" />
             <field eval="1" name="perm_write" />
             <field eval="1" name="perm_create" />
             <field eval="0" name="perm_unlink" />
-            <field name="name" eval="&quot;&quot;&quot;mrp.procurement&quot;&quot;&quot;" />
+            <field name="name" eval="&quot;&quot;&quot;procurement.order&quot;&quot;&quot;" />
 			<field name="group_id" ref="res_groups_posuser0"/>
         </record>
         <record id="ir_model_access_tax0" model="ir.model.access">

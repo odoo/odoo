@@ -64,11 +64,11 @@
 
         <record id="process_node_saleprocurement0" model="process.node">
             <field name="menu_id" ref="procurement.menu_mrp_procurement_action"/>
-            <field name="model_id" ref="procurement.model_mrp_procurement"/>
+            <field name="model_id" ref="procurement.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Procurement Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;One Procurement order for each sale order line and for each of the components.&quot;&quot;&quot;" name="note"/>
-            <field name="subflow_id" ref="mrp_procurement.process_process_procurementprocess0"/>
+            <field name="subflow_id" ref="procurement.process_process_procurementprocess0"/>
             <field name="process_id" ref="process_process_salesprocess0"/>
             <field eval="&quot;&quot;&quot;object.state=='confirmed'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>

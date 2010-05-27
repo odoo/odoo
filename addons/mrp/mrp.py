@@ -837,7 +837,7 @@ class mrp_production(osv.osv):
         seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
-        proc_obj = self.pool.get('mrp.procurement')
+        proc_obj = self.pool.get('procurement.order')
         wf_service = netsvc.LocalService("workflow")
         for production in self.browse(cr, uid, ids):
             if not production.product_lines:
@@ -931,7 +931,7 @@ class mrp_production(osv.osv):
                     'move_id': move_id,
                     'company_id': production.company_id.id,
                 })
-                wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 proc_ids.append(proc_id)
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})

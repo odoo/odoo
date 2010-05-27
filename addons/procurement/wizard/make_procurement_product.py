@@ -64,7 +64,7 @@ class make_procurement(osv.osv_memory):
         """
         user = self.pool.get('res.users').browse(cr, uid, uid, context).login
         wh_obj = self.pool.get('stock.warehouse')
-        procurement_obj = self.pool.get('mrp.procurement') 
+        procurement_obj = self.pool.get('procurement.order') 
         wf_service = netsvc.LocalService("workflow")
         data_obj = self.pool.get('ir.model.data')
         
@@ -80,11 +80,11 @@ class make_procurement(osv.osv_memory):
                 'procure_method':'make_to_order',
             })
             
-            wf_service.trg_validate(uid, 'mrp.procurement', procure_id, 'button_confirm', cr)
+            wf_service.trg_validate(uid, 'procurement.order', procure_id, 'button_confirm', cr)
         
         
-        id2 = data_obj._get_id(cr, uid, 'procurement', 'mrp_procurement_tree_view')
-        id3 = data_obj._get_id(cr, uid, 'procurement', 'mrp_procurement_form_view')
+        id2 = data_obj._get_id(cr, uid, 'procurement', 'procurement_tree_view')
+        id3 = data_obj._get_id(cr, uid, 'procurement', 'procurement_form_view')
         
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
@@ -94,7 +94,7 @@ class make_procurement(osv.osv_memory):
         return {
                 'view_type': 'form',
                 'view_mode': 'tree,form',
-                'res_model': 'mrp.procurement',
+                'res_model': 'procurement.order',
                 'res_id' : procure_id,
                 'views': [(id3,'form'),(id2,'tree')],
                 'type': 'ir.actions.act_window',

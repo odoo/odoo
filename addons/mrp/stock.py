@@ -51,7 +51,7 @@ class stock_warehouse_orderpoint(osv.osv):
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Latest procurement', ondelete="set null"),
+        'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -103,7 +103,7 @@ class StockMove(osv.osv):
     
     _columns = {
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
-        'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
+        'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
     
     def copy(self, cr, uid, id, default=None, context=None):
@@ -118,7 +118,7 @@ class StockMove(osv.osv):
         """
         bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
-        procurement_obj = self.pool.get('mrp.procurement')
+        procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         wf_service = netsvc.LocalService("workflow")
         if move.product_id.supply_method == 'produce' and move.product_id.procure_method == 'make_to_order':
@@ -166,7 +166,7 @@ class StockMove(osv.osv):
                         'move_id': mid,
                         'company_id': line['company_id'],
                     })
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 move_obj.write(cr, uid, [move.id], {
                     'location_id': move.location_dest_id.id,
                     'auto_validate': True,
@@ -175,7 +175,7 @@ class StockMove(osv.osv):
                     'state': 'waiting'
                 })
                 for m in procurement_obj.search(cr, uid, [('move_id','=',move.id)], context):
-                    wf_service.trg_validate(uid, 'mrp.procurement', m, 'button_wait_done', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', m, 'button_wait_done', cr)
         return True
     
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None): 
@@ -231,7 +231,7 @@ class StockPicking(osv.osv):
             for move in picking.move_lines:
                 if move.state == 'done' and move.procurements:
                     for procurement in move.procurements:
-                        wf_service.trg_validate(user, 'mrp.procurement',
+                        wf_service.trg_validate(user, 'procurement.order',
                                 procurement.id, 'button_check', cursor)
         return res
 

@@ -23,12 +23,12 @@ import threading
 from osv import osv, fields
 
 class procurement_compute(osv.osv_memory):
-    _name = 'mrp.procurement.compute'
+    _name = 'procurement.order.compute'
     _description = 'Compute Procurement'
     
     def _procure_calculation_procure(self, cr, uid, ids, context):
         try:
-            proc_obj = self.pool.get('mrp.procurement')
+            proc_obj = self.pool.get('procurement.order')
             proc_obj._procure_confirm(cr, uid, use_new_cursor=cr.dbname, context=context)
         finally:
             cr.close()

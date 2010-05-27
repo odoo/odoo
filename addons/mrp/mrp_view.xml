@@ -406,9 +406,9 @@
         Procurement
         -->
 
-		<menuitem action="procurement.mrp_procurement_action" id="menu_mrp_procurement_action"
+		<menuitem action="procurement.procurement_action" id="menu_mrp_procurement_action"
         		  parent="mrp.menu_mrp_manufacturing" sequence="2" />
-<!--        <menuitem action="procurement.mrp_procurement_action5" id="menu_mrp_procurement_exception_action"-->
+<!--        <menuitem action="procurement.procurement_action5" id="menu_mrp_procurement_exception_action"-->
 <!--        		  parent="mrp.menu_mrp_control" sequence="1" />-->
 
      	<menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="4"/>
@@ -813,9 +813,9 @@
         -->
 
         <record id="view_procurement_form_inherit" model="ir.ui.view">
-        	<field name="name">mrp.procurement.form.inherit</field>
-        	<field name="model">mrp.procurement</field>
-        	<field name="inherit_id" ref="procurement.mrp_procurement_form_view"/>
+        	<field name="name">procurement.order.form.inherit</field>
+        	<field name="model">procurement.order</field>
+        	<field name="inherit_id" ref="procurement.procurement_form_view"/>
         	<field name="type">form</field>
         	<field name="arch" type="xml">
         		<xpath expr="/form/notebook/page/field[@name='move_id']" position="before">

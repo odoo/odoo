@@ -24,7 +24,7 @@ import threading
 from osv import osv, fields
 
 class procurement_compute_all(osv.osv_memory):
-    _name = 'mrp.procurement.compute.all'
+    _name = 'procurement.order.compute.all'
     _description = 'Compute all schedulers'
     
     _columns = {
@@ -43,7 +43,7 @@ class procurement_compute_all(osv.osv_memory):
         @param ids: List of IDs selected 
         @param context: A standard dictionary 
         """
-        proc_obj = self.pool.get('mrp.procurement')
+        proc_obj = self.pool.get('procurement.order')
         for proc in self.browse(cr, uid, ids):
             proc_obj.run_scheduler(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname,\
                     context=context)

@@ -28,7 +28,7 @@ import threading
 from osv import fields,osv
 
 class procurement_compute(osv.osv_memory):
-    _name = 'mrp.procurement.orderpoint.compute'
+    _name = 'procurement.orderpoint.compute'
     _description = 'Automatic Order Point'
     
     _columns = {
@@ -47,7 +47,7 @@ class procurement_compute(osv.osv_memory):
         @param ids: List of IDs selected 
         @param context: A standard dictionary 
         """        
-        proc_obj = self.pool.get('mrp.procurement')
+        proc_obj = self.pool.get('procurement.order')
         for proc in self.browse(cr, uid, ids):
             proc_obj._procure_orderpoint_confirm(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname, context=context)
         

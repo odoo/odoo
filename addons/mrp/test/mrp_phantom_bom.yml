@@ -180,15 +180,15 @@
 -
   I am checking Procurement orders. There are 3 orders generated for Oranges, Sugar and Water.
 -
-  !python {model: mrp.procurement}: |
+  !python {model: procurement.order}: |
     from tools.translate import _
     proc_ids = self.search(cr, uid, [('state','!=','cofirmed')])
     assert proc_ids, _('No Procurements!')
 -
   The scheduler runs.
 -
-  !function {model: mrp.procurement, name: run_scheduler}:
-    - model: mrp.procurement
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
       search: "[('state','!=','cofirmed')]"
 -
   I am checking Internal picking. I see one picking for Orange juice and its 
