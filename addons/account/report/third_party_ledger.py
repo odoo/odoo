@@ -167,9 +167,9 @@ class third_party_ledger(rml_parse.rml_parse):
 		#
 		#new_ids = [id for (id,) in self.cr.fetchall()]
 		if data['form']['result_selection'] == 'supplier':
-			self.ACCOUNT_TYPE = "('receivable')"
-		elif data['form']['result_selection'] == 'customer':
 			self.ACCOUNT_TYPE = "('payable')"
+		elif data['form']['result_selection'] == 'customer':
+			self.ACCOUNT_TYPE = "('receivable')"
 		elif data['form']['result_selection'] == 'all':
 			self.ACCOUNT_TYPE = "('payable','receivable')"
 
