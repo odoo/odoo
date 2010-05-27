@@ -6,7 +6,7 @@
         <field name="model">account.invoice.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Invoices Statistics">
+            <tree string="Invoices Analysis">
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -42,7 +42,7 @@
          <field name="model">account.invoice.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Invoices Statistics" type="bar">
+             <graph string="Invoices Analysis" type="bar">
                  <field name="product_id"/>
                  <field name="price_total"/>
              </graph>
@@ -54,7 +54,7 @@
         <field name="model">account.invoice.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Invoices">
+            <search string="Invoices Analysis">
               <group col="10" colspan="12">
 	            	<filter icon="gtk-media-rewind" string="Last 365 Days"
 		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
@@ -72,27 +72,28 @@
                     <filter string="Draft"
                     		icon="terp-account"
                     		domain="[('state','=','draft')]"
-                    		help = "Draft tasks"/>
+                    		help = "Draft Invoices"/>
                    	<filter string="Pro-forma"
                    			icon="terp-account"
                    			domain="[('state','=','proforma'),('state','=','proforma2')]"
-                   			help = "Pro-forma tasks"/>
+                   			help = "Pro-forma Invoices"/>
                    	<filter string="Current"
 	                		icon="terp-account"
 	                		domain="[('state', '=' ,'open')]"
-	                		help = "In progress tasks"/>
+	                		help = "open Invoices"/>
 	                <filter string="Done"
                             icon="terp-account"
                             domain="[('state','=','paid')]"
-                            help = "Done tasks"/>
+                            help = "Done Invoices"/>
   					<separator orientation="vertical"/>
   					<field name="partner_id"/>
                     <field name="user_id" widget="selection">
                     <filter icon="terp-account"
-                    		string="Invoices Non Users"
-                    		help="Invoices Non Users"
-                    		domain="[('user_id','=',False)]"/>
+                    		string="My Invoices"
+                    		help="My Invoices"
+                    		domain="[('user_id','=',uid)]"/>
                     </field>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 				</group>
 				<newline/>
                 <group expand="1" string="Group By...">
@@ -119,6 +120,9 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Extended options..." groups="base.group_extended">
+
+                    <field name="date" string="Date Invoiced"/>
+                    <separator orientation="vertical"/>
                     <field name="type"/>
                     <field name="currency_id" widget="selection"/>
                     <field name="partner_bank" widget="selection"/>
@@ -127,27 +131,26 @@
                     <field name="address_contact_id"/>
                     <field name="account_id"/>
                     <newline/>
+                    <field name="date_due"/>
+                    <separator orientation="vertical"/>
                     <field name="payment_term" widget="selection"/>
                     <field name="journal_id" widget="selection"/>
                     <field name="period_id" widget="selection"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="state"/>
                     <separator orientation="vertical"/>
                 	<field name="address_invoice_id"/>
                 	<field name="product_id"/>
-                	<newline/>
-					<field name="date" string="Date Invoiced"/>
-					<field name="date_due"/>
                 </group>
             </search>
         </field>
     </record>
 
     <record id="action_account_invoice_report_all" model="ir.actions.act_window">
-        <field name="name">Invoices</field>
+        <field name="name">Invoices Analysis</field>
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[],'search_default_user_id':uid}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
     </record>
 
