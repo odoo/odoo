@@ -410,7 +410,10 @@ property or property parameter."),
             event.add('location').value = event_obj.location
         if event_obj.rrule:
             event.add('rrule').value = event_obj.rrule
-
+        if event_obj.user_id:
+            event_org = event.add('organizer')
+            event_org.params['CN'] = [event_obj.user_id.name]
+            event_org.value = 'MAILTO:' + (event_obj.user_id.user_email or event_obj.user_id.name)
         if event_obj.alarm_id:
             # computes alarm data
             valarm = event.add('valarm')
@@ -440,7 +443,7 @@ property or property parameter."),
             attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
             attendee_add.params['ROLE'] = [str(attendee.role)]
             attendee_add.params['RSVP'] = [str(attendee.rsvp)]
-            attendee_add.value = 'MAILTO:' + attendee.email
+            attendee_add.value = 'MAILTO:' + (attendee.email or '')
         res = cal.serialize()
         return res
     
@@ -480,8 +483,8 @@ property or property parameter."),
                         'company': company
             }
             body = html_invitation % body_vals
-            attach = self.get_ics_file(cr, uid, res_obj, context=context)
             if mail_to and email_from:
+                attach = self.get_ics_file(cr, uid, res_obj, context=context)
                 tools.email_send(
                     email_from, 
                     mail_to, 
@@ -1660,9 +1663,10 @@ class ir_model(osv.osv):
         @param ids: List of IR Model’s IDs.
         @param context: A standard dictionary for contextual values
         """
+        new_ids = isinstance(ids, (str, int, long)) and [ids] or ids
         if not context:
             context = {}
-        data = super(ir_model, self).read(cr, uid, ids, fields=fields, \
+        data = super(ir_model, self).read(cr, uid, new_ids, fields=fields, \
                         context=context, load=load)
         if data:
             for val in data:

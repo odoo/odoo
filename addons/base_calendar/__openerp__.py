@@ -20,10 +20,11 @@
 ##############################################################################
 
 {
-    "name" : "Basic Calendar Functionality",
-    "version" : "1.0",
-    "depends" : ["base"],
-    'description': """Full featured calendar system that support:
+    "name" : "Basic Calendar Functionality", 
+    "version" : "1.0", 
+    "depends" : ["base"], 
+    'description': """Full featured calendar system that supports:
+
     - Alerts (create requests)
     - Recurring events (*)
     - Invitations to others people""",

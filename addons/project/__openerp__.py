@@ -28,7 +28,7 @@
     "category" : "Generic Modules/Projects & Services",
     "depends" : ["product", "analytic", "process", "mail_gateway"],
     "description": """Project management module that track multi-level projects, tasks,
-works done on tasks, eso. It is able to render planning, order tasks, eso.
+work done on tasks, eso. It is able to render planning, order tasks, eso.
     """,
     "init_xml" : [],
     "update_xml": [

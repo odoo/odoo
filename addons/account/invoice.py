@@ -23,7 +23,6 @@ import time
 import decimal_precision as dp
 
 import netsvc
-
 from osv import fields, osv, orm
 import pooler
 from tools import config
@@ -952,23 +951,8 @@ class account_invoice(osv.osv):
         return taxes.values()
 
     def _log_event(self, cr, uid, ids, factor=1.0, name='Open Invoice'):
-        invs = self.read(cr, uid, ids, ['type','partner_id','amount_untaxed'])
-        for inv in invs:
-            part=inv['partner_id'] and inv['partner_id'][0]
-            pc = pr = 0.0
-            cr.execute('select sum(quantity*price_unit) from account_invoice_line where invoice_id=%s', (inv['id'],))
-            total = inv['amount_untaxed']
-            if inv['type'] in ('in_invoice','in_refund'):
-                partnertype='supplier'
-                eventtype = 'purchase'
-                pc = total*factor
-            else:
-                partnertype = 'customer'
-                eventtype = 'sale'
-                pr = total*factor
-            if self.pool.get('res.partner.event.type').check(cr, uid, 'invoice_open'):
-                self.pool.get('res.partner.event').create(cr, uid, {'name':'Invoice: '+name, 'som':False, 'description':name+' '+str(inv['id']), 'document':name, 'partner_id':part, 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'canal_id':False, 'user_id':uid, 'partner_type':partnertype, 'probability':1.0, 'planned_revenue':pr, 'planned_cost':pc, 'type':eventtype})
-        return len(invs)
+        #TODO: implement messages system
+        return True
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):

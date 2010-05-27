@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<!--Lead Stage Form view -->
+	<!--Lead Stage Form view -->
 
     <record id="crm_lead_stage_act" model="ir.actions.act_window">
         <field name="name">Lead Stages</field>
@@ -16,7 +16,7 @@
         groups="base.group_extended"
         parent="crm.menu_crm_case_stage" />
 
-    <!--  Resource Type Form View -->
+    	<!--  Resource Type Form View -->
 
         <record id="crm_lead_resource_act" model="ir.actions.act_window">
             <field name="name">Lead Resource Type</field>
@@ -31,7 +31,7 @@
             groups="base.group_extended"
             parent="crm.menu_crm_case_resource_type" />
 
-<!-- CRM Lead Form View  -->
+		<!-- CRM Lead Form View  -->
 
         <record model="ir.ui.view" id="crm_case_form_view_leads">
         <field name="name">CRM - Leads Form</field>
@@ -48,8 +48,7 @@
                          string="Convert"
                          help="Convert to Opportunity"
                          icon="gtk-index"   
-                         type="object"
-                         attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                         type="object"/>
                     <newline />
                     <field name="section_id" colspan="1"
                         widget="selection" />
@@ -72,7 +71,7 @@
                         <field name="partner_name" string="Partner Name" colspan="4"/>
                         <newline/>
                         <field domain="[('domain', '=', 'contact')]" name="title"/>
-                        <field name="function_name" />
+                        <field name="function" />
                         <field name="street" colspan="4"/>
                         <field name="street2" colspan="4"/>
                         <field name="zip"/>
@@ -161,16 +160,21 @@
                                 <field name="email_to"/>
                                 <field name="email_from"/>
                             </group>
-                            <newline/>
-                            <field name="description" colspan="4" nolabel="1"/>
+                            <notebook colspan="4">
+                                <page string="Details">
+                                    <field name="description" colspan="4" nolabel="1"/>
+                                </page>
+                                <page string="Attachments">
+                                    <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                </page>
+                            </notebook>
                             <button colspan="4"
-                                string="Reply to Last Email"
-                                name="%(action_crm_send_mail)d"
-                                context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
-                                icon="gtk-undo" type="action" />
+                            string="Reply to Last Email"
+                            name="%(crm.action_crm_send_mail)d"
+                            context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                            icon="gtk-undo" type="action" />
                         </form>
                         <tree string="Communication history">
-                            <field name="name" />
                             <field name="date"/>
                             <field name="email_from" />
                             <field name="email_to"/>
@@ -178,7 +182,7 @@
                         </tree>
                     </field>
                     <button colspan="2" string="Send New Email"
-                        name="%(action_crm_send_mail)d"
+                        name="%(crm.action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
                         icon="gtk-go-forward" type="action" />
                     <button colspan="2" string="Forward to Partner"
@@ -191,7 +195,7 @@
         </field>
     </record>
 
-<!-- CRM Lead Tree View -->
+	<!-- CRM Lead Tree View -->
 
     <record model="ir.ui.view" id="crm_case_tree_view_leads">
         <field name="name">CRM - Leads Tree</field>
@@ -240,7 +244,7 @@
         </field>
     </record>
 
-<!-- CRM Lead Calendar View -->
+	<!-- CRM Lead Calendar View -->
 
     <record model="ir.ui.view" id="crm_case_calendar_view_leads">
         <field name="name">CRM - Leads Calendar</field>
@@ -258,7 +262,7 @@
         </field>
     </record>
 
-<!-- CRM Lead Search View -->
+	<!-- CRM Lead Search View -->
 
     <record id="view_crm_case_leads_filter" model="ir.ui.view">
         <field name="name">CRM - Leads Search</field>
@@ -322,7 +326,6 @@
            </search>
         </field>
     </record>
-
 
 </data>
 </openerp>

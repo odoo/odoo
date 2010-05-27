@@ -75,7 +75,7 @@ class document_file(osv.osv):
         'user_id': fields.many2one('res.users', 'Owner', select=1),
         'group_ids': fields.many2many('res.groups', 'document_group_rel', 'item_id', 'group_id', 'Groups'),
         # the directory id now is mandatory. It can still be computed automatically.
-        'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True),
+        'parent_id': fields.many2one('document.directory', 'Directory', select=1),
         'file_size': fields.integer('File Size', required=True),
         'file_type': fields.char('Content Type', size=128),
         # If ir.attachment contained any data before document is installed, preserve
@@ -108,6 +108,7 @@ class document_file(osv.osv):
         'user_id': lambda self, cr, uid, ctx:uid,
         'file_size': lambda self, cr, uid, ctx:0,
         'store_method': lambda *args: 'db',
+        'type': 'binary',
         'parent_id': __get_def_directory
     }
     _sql_constraints = [

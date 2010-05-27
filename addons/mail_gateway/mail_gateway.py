@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import time
+import  base64
 
 class one2many_domain(fields.one2many):
     def set(self, cr, obj, id, field, values, user=None, context=None):
@@ -54,7 +55,7 @@ class mailgate_thread(osv.osv):
         'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
         }
         
-    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
+    def __history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -64,6 +65,7 @@ class mailgate_thread(osv.osv):
         @param history: Value True/False, If True it makes entry in case History otherwise in Case Log
         @param email: Email address if any
         @param details: Details of case history if any 
+        @param atach: Attachment sent in email
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
@@ -72,8 +74,9 @@ class mailgate_thread(osv.osv):
             cases = self.pool.get(context['model']).browse(cr, uid, cases, context=context)
 
         model_obj = self.pool.get('ir.model')
-        
+        att_obj = self.pool.get('ir.attachment')
         obj = self.pool.get('mailgate.message')
+
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
             data = {
@@ -84,10 +87,13 @@ class mailgate_thread(osv.osv):
                 'thread_id': case.thread_id.id, 
                 'message_id': message_id, 
             }
-
+            attachments = []
             if history:
+                for att in attach:
+                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
+                
                 data = {
-                        'name': keyword, 
+                        'name': subject or 'History', 
                         'history': True, 
                         'user_id': uid, 
                         'model_id' : model_ids and model_ids[0] or False, 
@@ -103,6 +109,7 @@ class mailgate_thread(osv.osv):
                         'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False, 
                         'thread_id': case.thread_id.id, 
                         'message_id': message_id, 
+                        'attachment_ids': [(6, 0, attachments)]
                         }
             res = obj.create(cr, uid, data, context)
         return True

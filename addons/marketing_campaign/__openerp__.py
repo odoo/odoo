@@ -37,10 +37,12 @@
     'update_xml': [
         'marketing_campaign_view.xml',
         'marketing_campaign_data.xml',    
-         'marketing_campaign_workflow.xml',    
+        'marketing_campaign_workflow.xml',    
         'report/campaign_analysis_view.xml',
     ],
-    'demo_xml': [],
+    'demo_xml': [
+        'marketing_campaign_demo.xml',
+            ],
     'installable': True,
     'active': False,
 }
