@@ -416,7 +416,7 @@ class orm_template(object):
         pass
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
-        raise _('The read_group method is not implemented on this object !')
+        raise NotImplementedError(_('The read_group method is not implemented on this object !'))
 
     def _field_create(self, cr, context={}):
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
@@ -1027,7 +1027,7 @@ class orm_template(object):
         return (done, 0, 0, 0)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        raise _('The read method is not implemented on this object !')
+        raise NotImplementedError(_('The read method is not implemented on this object !'))
 
     def get_invalid_fields(self,cr,uid):
         return list(self._invalids)
@@ -1070,16 +1070,16 @@ class orm_template(object):
         return {}
 
     def perm_read(self, cr, user, ids, context=None, details=True):
-        raise _('The perm_read method is not implemented on this object !')
+        raise NotImplementedError(_('The perm_read method is not implemented on this object !'))
 
     def unlink(self, cr, uid, ids, context=None):
-        raise _('The unlink method is not implemented on this object !')
+        raise NotImplementedError(_('The unlink method is not implemented on this object !'))
 
     def write(self, cr, user, ids, vals, context=None):
-        raise _('The write method is not implemented on this object !')
+        raise NotImplementedError(_('The write method is not implemented on this object !'))
 
     def create(self, cr, user, vals, context=None):
-        raise _('The create method is not implemented on this object !')
+        raise NotImplementedError(_('The create method is not implemented on this object !'))
 
     # returns the definition of each field in the object
     # the optional fields parameter can limit the result to some fields
@@ -1685,19 +1685,19 @@ class orm_template(object):
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        raise _('The search method is not implemented on this object !')
+        raise NotImplementedError(_('The search method is not implemented on this object !'))
 
     def name_get(self, cr, user, ids, context=None):
-        raise _('The name_get method is not implemented on this object !')
+        raise NotImplementedError(_('The name_get method is not implemented on this object !'))
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        raise _('The name_search method is not implemented on this object !')
+        raise NotImplementedError(_('The name_search method is not implemented on this object !'))
 
     def copy(self, cr, uid, id, default=None, context=None):
-        raise _('The copy method is not implemented on this object !')
+        raise NotImplementedError(_('The copy method is not implemented on this object !'))
 
     def exists(self, cr, uid, id, context=None):
-        raise _('The exists method is not implemented on this object !')
+        raise NotImplementedError(_('The exists method is not implemented on this object !'))
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
@@ -3623,7 +3623,7 @@ class orm(orm_template):
     # TODO: Validate
     #
     def perm_write(self, cr, user, ids, fields, context=None):
-        raise _('This method does not exist anymore')
+        raise NotImplementedError(_('This method does not exist anymore'))
 
     # TODO: ameliorer avec NULL
     def _where_calc(self, cr, user, args, active_test=True, context=None):
@@ -3922,6 +3922,27 @@ class orm(orm_template):
                 if i in ids:
                     return False
         return True
+
+    def get_xml_id(self, cr, uid, ids, *args, **kwargs):
+        """Find out the XML ID of any database record, if there
+        is one. This method works as a possible implementation
+        for a function field, to be able to add it to any
+        model object easily, referencing it as 'osv.osv.get_xml_id'.
+
+        get_xml_id(cr, uid, ids) -> { 'id': 'module.xml_id' }
+
+        :return: the fully qualified XML ID of the given object,
+                 defaulting to an empty string when there's none.
+        """
+        result = dict.fromkeys(ids, '')
+        model_data_obj = self.pool.get('ir.model.data')
+        data_ids = model_data_obj.search(cr,uid,
+                [('model','=',self._name),('res_id','in',ids)])
+        data_results = model_data_obj.read(cr,uid,data_ids,
+                ['name','module','res_id'])
+        for record in data_results:
+            result[record['res_id']] = '%(module)s.%(name)s' % record
+        return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
