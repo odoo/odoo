@@ -62,6 +62,7 @@
         #'process/hr_holidays_process.xml'
     ],
     'demo_xml': ['hr_holidays_demo.xml',],
+    'test': ['test/test_hr_holiday.yml'],
     'installable': True,
     'active': False,
     'certificate': '0086579209325',
