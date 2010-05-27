@@ -6,7 +6,7 @@
         <field name="model">account.account.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Account Report">
+            <tree string="Accounts Analysis">
                 <field name="name" invisible="1" string="Account"/>
                 <field name="code" invisible="1"/>
                 <field name="type" invisible="1"/>
@@ -29,7 +29,7 @@
          <field name="model">account.account.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Accounts" type="bar">
+             <graph string="Accounts Analysis" type="bar">
              	<field name="name"/>
                 <field name="credit" operator="+"/>
                 <field name="debit" operator="+"/>
@@ -43,7 +43,7 @@
         <field name="model">account.account.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Accounts">
+            <search string="Accounts Analysis">
                <group>
                <filter icon="terp-account"
 	                    	string="At Date"
@@ -54,7 +54,6 @@
 	            <separator orientation="vertical"/>
             	<field name="name" string="Account"/>
             	<field name="code"/>
-                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
@@ -69,9 +68,11 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Extended options..." groups="base.group_extended">
+                    <field name="parent_account_id" />
+                    <separator orientation="vertical"/>
                     <field name="type" />
                     <field name="user_type" widget="selection"/>
-                    <field name="parent_account_id" />
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </group>
 
             </search>
@@ -79,7 +80,7 @@
     </record>
 
     <record id="action_account_account_report" model="ir.actions.act_window">
-        <field name="name">Accounts</field>
+        <field name="name">Accounts Analysis</field>
         <field name="res_model">account.account.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>

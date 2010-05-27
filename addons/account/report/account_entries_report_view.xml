@@ -76,7 +76,6 @@
                     <field name="partner_id" />
                     <field name="account_id"/>
                     <field name="analytic_account_id"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
 					</group>
                 <newline/>
                 <group expand="1" string="Group By...">
@@ -105,6 +104,7 @@
                 	<field name="period_id2" widget="selection"/>
                 	<field name="type"/>
                     <field name="journal_id" widget="selection"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="date_created"/>
                 	<field name="date"/>

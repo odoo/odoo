@@ -79,7 +79,6 @@
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
 	                </field>
-	                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 				</group>
 				<newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
@@ -107,6 +106,7 @@
                     <field name="shop_id" widget="selection"/>
                     <field name="state"/>
                     <field name="categ_id" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
             </search>
         </field>
