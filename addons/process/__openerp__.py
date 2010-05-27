@@ -26,7 +26,7 @@
     'category': 'Generic Modules/Base',
     'description': """
      This module shows the basic processes involved
-     in the selected modules and in the sequence these
+     in the selected modules and in the sequence they
      occur
 
      Note: This applies to the modules containing modulename_process_xml

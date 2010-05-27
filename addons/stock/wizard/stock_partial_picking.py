@@ -163,7 +163,7 @@ class stock_partial_picking(osv.osv_memory):
             res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
             if 'partner_id' in fields:
-                res.update({'partner_id': pick.address_id.partner_id.id})                
+                res.update({'partner_id': pick.address_id.partner_id and pick.address_id.partner_id.id or False })                
             if 'address_id' in fields:
                 res.update({'address_id': pick.address_id.id})            
             for m in pick.move_lines:

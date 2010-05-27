@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Board/Projects & Services',
     'description': """
-This module implements a dashboard for project member that includes:
+This module implements a dashboard for project members that includes:
     * List of my open tasks
     * List of messages
     * Members list of project
