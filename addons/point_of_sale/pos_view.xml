@@ -85,6 +85,7 @@
                                 <field name="date_order"/>
                                 <field name="date_validation" />
                                 <field name="date_payment" groups="base.group_extended"/>
+                                <field name="type_rec"  colspan="4"/>
                             </group>
                             <group colspan="4">
                                 <separator string="Invoicing" colspan="4"/>
@@ -109,13 +110,10 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Notes" >
-                            <separator string="Notes" colspan="4" />
-                            <group colspan="4">
-                                <field name="type_rec"  colspan="4"/>
-                                <field name="note"  colspan="4"/>
-                            </group>
-                        </page>
+
+     					<page string="Notes">
+                            <field colspan="4" name="note" nolabel="1"/>
+                        </page>                            
                     </notebook>
 
                 </form>
