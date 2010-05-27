@@ -25,21 +25,21 @@
     'version': '1.0',
     'category': 'Generic Modules/Human Resources',
     'description': """
-This module help you easily encode and validate timesheet and attendances
+This module helps you to easily encode and validate timesheet and attendances
 within the same view. The upper part of the view is for attendances and
 track (sign in/sign out) events. The lower part is for timesheet.
 
-Others tabs contains statistics views to help you analyse your
+Other tabs contains statistics views to help you analyse your
 time or the time of your team:
 * Time spent by day (with attendances)
 * Time spent by project
 
-This module also implement a complete timesheet validation process:
+This module also implements a complete timesheet validation process:
 * Draft sheet
 * Confirmation at the end of the period by the employee
 * Validation by the project manager
 
-The validation can be configured in te company:
+The validation can be configured in the company:
 * Period size (day, week, month, year)
 * Maximal difference between timesheet and attendances
     """,
