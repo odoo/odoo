@@ -239,7 +239,7 @@
             <field name="arch" type="xml">
                 <form string="Journal View">
                     <field colspan="4" name="name" select="1"/>
-                    <field colspan="4" name="columns_id" widget="one2many_list"/>
+                    <field colspan="4" name="columns_id" nolabel="1" widget="one2many_list"/>
                 </form>
             </field>
         </record>
@@ -277,20 +277,41 @@
 
                     <notebook colspan="4">
                         <page string="General Information">
-                            <field name="view_id"/>
-                            <field name="currency"/>
-                            <field name="sequence_id"/>
-                            <field name="invoice_sequence_id"/>
-                            <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="user_id" groups="base.group_extended"/>
-                            <field name="allow_date" groups="base.group_extended"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <newline/>
-                            <field name="centralisation"/>
-                            <field name="group_invoice_lines"/>
-                            <field name="update_posted"/>
-                            <field name="entry_posted"/>
+                            <group colspan="2" col="2">
+                                <separator string="Journal View" colspan="4"/>
+                                <field name="view_id"/>
+                            </group>
+                            
+                            <group colspan="2" col="2">
+                                <separator string="Sequence" colspan="4"/>
+                                <field name="sequence_id"/>
+                                <field name="invoice_sequence_id"/>
+                            </group>
+                            
+                            <group colspan="2" col="2">
+                                <separator string="Accounts" colspan="4"/>
+                                <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            </group>
+                            
+                            <group colspan="2" col="2">
+                                <separator string="Validations" colspan="4"/>  
+                                <field name="allow_date" groups="base.group_extended"/>
+                            </group>
+                            
+                            <group colspan="2" col="2">
+                                <separator string="Company" colspan="4"/> 
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="user_id" groups="base.group_extended"/>
+                                <field name="currency"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Other Configuration" colspan="4"/> 
+                                <field name="centralisation"/>
+                                <field name="group_invoice_lines"/>
+                                <field name="update_posted"/>
+                                <field name="entry_posted"/>
+                            </group>
                         </page>
                         <page string="Entry Controls">
                             <separator colspan="4" string="Accounts Type Allowed (empty for no control)"/>
@@ -342,7 +363,7 @@
                     <group colspan="2" col="3">
 <!--                        <button name="%(action_view_account_statement_from_invoice)d"-->
 <!--                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}" icon="gtk-open"/>-->
-                    	<button name="button_import_invoice" string="Import Invoice" attrs="{'invisible':[('state','=','confirm')]}" type="object" icon="gtk-apply"/>
+                        <button name="button_import_invoice" string="Import Invoice" attrs="{'invisible':[('state','=','confirm')]}" type="object" icon="gtk-apply"/>
                     </group>
                     <newline/>
                     <field name="balance_start"/>

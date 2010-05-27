@@ -25,7 +25,7 @@
     'category': 'Generic Modules/Human Resources',
     'description': """
 Manages job positions and the recruitement process. It's integrated with the
-survey module to allows you to define interview for different jobs.
+survey module to allow you to define interview for different jobs.
 
 This module is integrated with the mail gateway to automatically tracks email
 sent to jobs@YOURCOMPANY.com. It's also integrated with the document management

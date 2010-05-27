@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Board/Purchase',
     'description': """
-This module implements a dashboard for purcgase management that includes:
+This module implements a dashboard for purchase management that includes:
     * Current Purchase Orders
     * Draft Purchase Orders
     * Graph for quantity and amount per month
