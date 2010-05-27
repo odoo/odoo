@@ -34,7 +34,7 @@ class account_invoice_refund(osv.osv_memory):
        'period': fields.many2one('account.period', 'Force period', required=False),
        'description': fields.char('Description', size=150, required=True),
     }
-    
+
     _defaults = {
         'date': time.strftime('%Y-%m-%d'),
     }
@@ -78,21 +78,20 @@ class account_invoice_refund(osv.osv_memory):
                             result_query = cr.fetchone()
                             if result_query:
                                 cr.execute("""SELECT id
-                                          from account_period where date('%s')
+                                          from account_period where date(%s)
                                           between date_start AND  date_stop \
                                           and company_id = %s limit 1 """,
-                                          (form['date'], self.pool.get('res.users').browse(cr, uid, uid,context=context).company_id.id,))
+                                          (date, self.pool.get('res.users').browse(cr, uid, uid,context=context).company_id.id,))
                             else:
                                 cr.execute("""SELECT id
-                                        from account_period where date('%s')
+                                        from account_period where date(%s)
                                         between date_start AND  date_stop  \
-                                        limit 1 """, (form['date'],))
+                                        limit 1 """, (date,))
                             res = cr.fetchone()
                             if res:
                                 period = res[0]
                 else:
                     date = inv.date_invoice
-
                 if form['description'] :
                     description = form['description']
                 else:
