@@ -26,7 +26,7 @@
     'category': 'Custom',
     'description': """
 Adds a reporting menu in products that computes sales, purchases, margins
-and others interesting indicators based on invoices. The wizard to launch
+and other interesting indicators based on invoices. The wizard to launch
 the report has several options to help you get the data you need.
 """,
     'author': 'Tiny',

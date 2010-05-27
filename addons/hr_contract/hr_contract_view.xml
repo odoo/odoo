@@ -142,13 +142,12 @@
                    <group col='15' colspan='4'>
                    		<field name="name"/>
                       	<field name="employee_id"/>
-                      	<field name="department_id"/>
                        	<field name="date_start"/>
                        	<field name="date_end"/>
                    </group>
                    <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Wage Type" icon="terp-project" domain="[]" context="{'group_by':'wage_type_id'}"/>
                     </group>
                </search>
             </field>

@@ -51,9 +51,8 @@ class account_change_currency(osv.osv_memory):
         invoice = obj_inv.browse(cr, uid, context['active_id'], context=context)
         if invoice.currency_id.id == new_currency:
             return {}
-
+        rate = obj_currency.browse(cr, uid, new_currency).rate
         for line in invoice.invoice_line:
-            rate = obj_currency.browse(cr, uid, new_currency).rate
             new_price = 0
             if invoice.company_id.currency_id.id == invoice.currency_id.id:
                 new_price = line.price_unit * rate
@@ -65,9 +64,8 @@ class account_change_currency(osv.osv_memory):
             if invoice.company_id.currency_id.id != invoice.currency_id.id and invoice.company_id.currency_id.id != new_currency:
                 old_rate = invoice.currency_id.rate
                 new_price = (line.price_unit / old_rate ) * rate
-
             obj_inv_line.write(cr, uid, [line.id], {'price_unit' : new_price})
-        obj_inv.write(cr, uid, invoice.id, {'currency_id' : new_currency}, context=context)
+        obj_inv.write(cr, uid, [invoice.id], {'currency_id' : new_currency}, context=context)
         return {}
 
 account_change_currency()

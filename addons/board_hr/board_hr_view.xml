@@ -11,7 +11,7 @@
             <field name="name">My Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
+            <field name="domain">[('state','in',('draft', 'confirm')),('user_id','=',uid)]</field>
             <field name="view_id" ref="hr_expense.view_editable_expenses_tree"/>
         </record>
 

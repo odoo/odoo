@@ -2,13 +2,9 @@
 <openerp>
 <data>
 
-	# -----------------------------------------------------------
-	# 	Procurements - Automatic schedule
-	# -----------------------------------------------------------
-
-		<record model="workflow.transition" id="mrp.trans_confirm_confirm_wait">
-			<field name="signal" eval="False"/>
-		</record>
+    <record model="workflow.transition" id="mrp_procurement.trans_confirm_confirm_wait">
+        <field name="signal" eval="False"/>
+    </record>
 
 </data>
 </openerp>

@@ -30,7 +30,7 @@ import tools
 
 class account_move_line(osv.osv):
     _name = "account.move.line"
-    _description = "Entry lines"
+    _description = "Entry Lines"
 
     def _query_get(self, cr, uid, obj='l', context={}):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
@@ -577,11 +577,12 @@ class account_move_line(osv.osv):
         merges_rec = []
         for line in self.browse(cr, uid, ids, context):
             if line.reconcile_id:
-                raise osv.except_osv(_('Already Reconciled'), _('Already Reconciled'))
+                raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:
-                        merges.append(line2.id)
+                        if line2.id not in merges:
+                            merges.append(line2.id)
                         total += (line2.debit or 0.0) - (line2.credit or 0.0)
                 merges_rec.append(line.reconcile_partial_id.id)
             else:
@@ -774,6 +775,17 @@ class account_move_line(osv.osv):
             result['fields'] = self.fields_get(cr, uid, fields, context)
         return result
 
+    def _check_moves(self, cr, uid, context):
+        # use the first move ever created for this journal and period
+        cr.execute('select id, state, name from account_move where journal_id=%s and period_id=%s order by id limit 1', (context['journal_id'],context['period_id']))
+        res = cr.fetchone()
+        if res:
+            if res[1] != 'draft':
+                raise osv.except_osv(_('UserError'),
+                       _('The account move (%s) for centralisation ' \
+                                'has been confirmed!') % res[2])
+        return res
+
     def unlink(self, cr, uid, ids, context={}, check=True):
         self._update_check(cr, uid, ids, context)
         result = False
@@ -809,7 +821,7 @@ class account_move_line(osv.osv):
             return True
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
-        if not context:
+        if context is None:
             context={}
         if vals.get('account_tax_id', False):
             raise osv.except_osv(_('Unable to change tax !'), _('You can not change the tax, you should remove and recreate lines !'))
@@ -825,6 +837,24 @@ class account_move_line(osv.osv):
         if vals.get('date', False):
             todo_date = vals['date']
             del vals['date']
+            
+        for line in self.browse(cr, uid, ids,context=context):
+            ctx = context.copy()
+            if ('journal_id' not in ctx):
+                if line.move_id:
+                   ctx['journal_id'] = line.move_id.journal_id.id
+                else:
+                    ctx['journal_id'] = line.journal_id.id
+            if ('period_id' not in ctx):
+                if line.move_id:
+                    ctx['period_id'] = line.move_id.period_id.id
+                else:
+                    ctx['period_id'] = line.period_id.id  
+            #Check for centralisation  
+            journal = self.pool.get('account.journal').browse(cr, uid, ctx['journal_id'], context=ctx)
+            if journal.centralisation:
+                self._check_moves(cr, uid, context=ctx)
+
         result = super(account_move_line, self).write(cr, uid, ids, vals, context)
 
         if check:
@@ -891,14 +921,9 @@ class account_move_line(osv.osv):
         is_new_move = False
         if not move_id:
             if journal.centralisation:
-                # use the first move ever created for this journal and period
-                cr.execute('select id, state, name from account_move where journal_id=%s and period_id=%s order by id limit 1', (context['journal_id'],context['period_id']))
-                res = cr.fetchone()
+                #Check for centralisation
+                res = self._check_moves(cr, uid, context)
                 if res:
-                    if res[1] != 'draft':
-                        raise osv.except_osv(_('UserError'),
-                                _('The Ledger Posting (%s) for centralisation ' \
-                                        'has been confirmed!') % res[2])
                     vals['move_id'] = res[0]
 
             if not vals.get('move_id', False):
@@ -926,7 +951,7 @@ class account_move_line(osv.osv):
                         break
             if journal.account_control_ids and not ok:
                 for a in journal.account_control_ids:
-                    if a.id==vals['account_id']:
+                    if a.id == vals['account_id']:
                         ok = True
                         break
             if (account.currency_id) and 'amount_currency' not in vals and account.currency_id.id <> company_currency:
@@ -941,7 +966,7 @@ class account_move_line(osv.osv):
         if not ok:
             raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
 
-        if 'analytic_account_id' in vals and vals['analytic_account_id']:
+        if vals.get('analytic_account_id',False):
             if journal.analytic_journal_id:
                 vals['analytic_lines'] = [(0,0, {
                         'name': vals['name'],
@@ -961,8 +986,8 @@ class account_move_line(osv.osv):
 
         result = super(osv.osv, self).create(cr, uid, vals, context)
         # CREATE Taxes
-        if 'account_tax_id' in vals and vals['account_tax_id']:
-            tax_id=tax_obj.browse(cr,uid,vals['account_tax_id'])
+        if vals.get('account_tax_id',False):
+            tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
             total = vals['debit'] - vals['credit']
             if journal.refund_journal:
                 base_code = 'ref_base_code_id'
@@ -978,7 +1003,7 @@ class account_move_line(osv.osv):
                 tax_sign = 'tax_sign'
 
             tmp_cnt = 0
-            for tax in tax_obj.compute(cr,uid,[tax_id],total,1.00):
+            for tax in tax_obj.compute(cr, uid, [tax_id], total, 1.00):
                 #create the base movement
                 if tmp_cnt == 0:
                     if tax[base_code]:
@@ -1031,7 +1056,7 @@ class account_move_line(osv.osv):
         #    if context and ('__last_update' in context):
         #        del context['__last_update']
         #    self.pool.get('account.move').write(cr, uid, [move_id], {'date':vals['date']}, context=context)
-        if check and not context.get('no_store_function'):
+        if check and ((not context.get('no_store_function')) or journal.entry_posted):
             tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 self.pool.get('account.move').button_validate(cr,uid, [vals['move_id']],context)

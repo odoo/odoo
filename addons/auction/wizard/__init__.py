@@ -31,8 +31,10 @@ import auction_lots_sms_send
 import auction_catalog_flagey_report
 #import auction_lots_cancel
 #import auction_transfer_unsold_object
+#import auction_aie_send
 #import auction_aie_send_result
 import auction_lots_buyer_map
+#import auction_lots_numerotate
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

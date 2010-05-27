@@ -33,6 +33,7 @@ import crm_installer
 import report
 import wizard
 
+import res_partner
 
 
 
