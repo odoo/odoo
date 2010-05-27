@@ -58,7 +58,7 @@
                     <filter icon="terp-account"
                     		string="Pending"
                     		domain="[('state','=','pending')]"/>
-                     <separator orientation="vertical"/>
+                    <separator orientation="vertical"/>
 	                <field name="name"/>
 	                <field name="user_id" widget="selection">
 	                    <filter icon="terp-account"
@@ -67,25 +67,6 @@
 	                        	domain="[('user_id','=',uid)]"/>
 	                </field>
 	                <field name="partner_id"/>
-                </group>
-                <newline/>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
-                    <filter icon="terp-account"
-                    		string="Close"
-                    		domain="[('state','=','close')]"/>
-                    <filter icon="terp-account"
-                    		string="Template"
-                    		domain="[('state','=','template')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="parent_id"/>
-                    <field name="journal_id" widget="selection"/>
-                    <newline/>
-                    <field name="product_id" />
-                    <field name="type"/>
-                    <separator orientation="vertical"/>
-                    <field name="date_start"/>
-                    <field name="date_end"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
@@ -104,7 +85,36 @@
                     <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
                 </group>
-            </search>
+
+                <newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
+                    <filter icon="terp-account"
+                    		string="Draft"
+                    		domain="[('state','=','draft')]"/>
+                    <filter icon="terp-account"
+                    		string="Open"
+                    		domain="[('state','=','open')]"/>
+                    <filter icon="terp-account"
+                    		string="Pending"
+                    		domain="[('state','=','pending')]"/>
+                    <filter icon="terp-account"
+                    		string="Close"
+                    		domain="[('state','=','close')]"/>
+                    <filter icon="terp-account"
+                    		string="Template"
+                    		domain="[('state','=','template')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="parent_id"/>
+                    <field name="journal_id" widget="selection"/>
+                    <newline/>
+                    <field name="product_id" />
+                    <field name="type"/>
+                    <separator orientation="vertical"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                </group>
+                </search>
         </field>
     </record>
     <record id="view_account_analytic_report_search" model="ir.ui.view">

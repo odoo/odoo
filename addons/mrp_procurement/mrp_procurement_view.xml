@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>		
+	<data>
 		<!--
         Procurement
         -->
-        
+
         <record id="mrp_procurement_tree_view" model="ir.ui.view">
             <field name="name">mrp.procurement.tree</field>
             <field name="model">mrp.procurement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines" colors="red:state=='draft';black:state=='running';green:state=='confirmed';gray:state in ['done','cancel']">
+                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';green:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
                     <field name="date_planned" widget="date"/>
                     <field name="origin"/>
                     <field name="product_id"/>
@@ -18,6 +18,7 @@
                     <field name="product_uom" string="UOM"/>
                     <field name="procure_method"/>
                     <field name="state"/>
+                    <field name="message"/>
                 </tree>
             </field>
         </record>
@@ -45,10 +46,10 @@
                         <field name="product_id" on_change="onchange_product_id(product_id)"/>
                         <field name="location_id" domain="[('usage','=','internal')]"/>
                         <field name="product_qty"/>
-                        <field name="product_uom"/>
+                        <field name="product_uom" widget="selection"/>
 
-                        <field name="product_uos_qty" groups="product.group_uos"/>
-                        <field name="product_uos" groups="product.group_uos"/>
+                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
+                        <field name="product_uos" widget="selection" groups="product.group_uos,base.group_extended"/>
 
                         <separator colspan="4" string="Status"/>
                         <field colspan="4" name="message" readonly="1"/>
@@ -90,6 +91,7 @@
                        <filter icon="terp-mrp" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
                            help="Procurement started late" />
+                       <filter icon="terp-mrp" string="To Fix" domain="[('state', '=', 'exception'),('message','=','')]" help="Procurement Orders with exceptions and without message"/>
                        <separator orientation="vertical"/>
                        <field name="name"/>
                        <field name="origin"/>
@@ -98,10 +100,11 @@
                        <field name="state" />
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By" colspan="4" col="8">
+                    <group expand="1" string="Group By" colspan="4" col="8" groups="base.group_extended">
                         <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-mrp" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+                    	<filter string="State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -114,6 +117,7 @@
             <field name="view_id" eval="False"/>
             <field name="context">{'search_default_current':1}</field>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
+            <field name="context">{'search_default_Current':1}</field>
         </record>
 
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
@@ -154,7 +158,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
         </record>
-        
+
         <!-- Order Point -->
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.tree</field>
@@ -183,7 +187,7 @@
                         <field name="name"/>
                         <field name="warehouse_id" widget="selection"/>
                         <field name="location_id"/>
-                        <field name="company_id" widget="selection"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="product_id"/>
                     </group>
                     <newline/>
@@ -247,6 +251,21 @@
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"
             src_model="product.product"/>
-            
+
+        <act_window
+            context="{'product_uom': locals().has_key('uom_id') and uom_id}"
+            domain="[('product_id', '=', active_id)]"
+            id="act_mrp_procurement_2_stock_warehouse_orderpoint"
+            name="Minimum Stock Rules"
+            res_model="stock.warehouse.orderpoint"
+            src_model="mrp.procurement"/>
+
+        <act_window
+            domain="[('id', '=', product_id)]"
+            id="act_product_product_2_stock_warehouse_orderpoint"
+            name="Product"
+            res_model="product.product"
+            src_model="mrp.procurement"/>
+
     </data>
 </openerp>

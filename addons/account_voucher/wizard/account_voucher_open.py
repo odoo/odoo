@@ -31,11 +31,11 @@ _types = {
         'journal_pur_voucher':'Journal Purchase Voucher'
         }
 _states = {
-        'draft':'Draft',
-        'proforma':'Pro-forma',
-        'posted':'Posted',
-        'cancel':'Cancel'
-        }
+    'draft':'Draft',
+    'proforma':'Pro-forma',
+    'posted':'Posted',
+    'cancel':'Cancel'
+}
 
 class account_open_voucher(osv.osv_memory):
     _name = "account.open.voucher"
@@ -43,18 +43,18 @@ class account_open_voucher(osv.osv_memory):
 
     _columns = {
         'type': fields.selection([('pay_voucher','Cash Payment Voucher'),
-                             ('bank_pay_voucher','Bank Payment Voucher'),
-                             ('rec_voucher','Cash Receipt Voucher'),
-                             ('bank_rec_voucher','Bank Receipt Voucher'),
-                             ('cont_voucher','Contra Voucher'),
-                             ('journal_sale_vou','Journal Sale Voucher'),
-                             ('journal_pur_voucher','Journal Purchase Voucher')],'Voucher Type', required=True),
+             ('bank_pay_voucher','Bank Payment Voucher'),
+             ('rec_voucher','Cash Receipt Voucher'),
+             ('bank_rec_voucher','Bank Receipt Voucher'),
+             ('cont_voucher','Contra Voucher'),
+             ('journal_sale_vou','Journal Sale Voucher'),
+             ('journal_pur_voucher','Journal Purchase Voucher')],'Voucher Type', required=True),
         'state': fields.selection([('draft','Draft'),
-                                   ('proforma','Pro-forma'),
-                                   ('posted','Posted'),
-                                   ('cancel','Cancel')], 'State', required=True),
+           ('proforma','Pro-forma'),
+           ('posted','Posted'),
+           ('cancel','Cancel')], 'State', required=True),
         'period_ids': fields.many2many('account.period', 'voucher_period_rel', 'voucher_id', 'period_id', 'Periods'),
-        }
+    }
 
     def action_open_window(self, cr, uid, ids, context=None):
         obj_period = self.pool.get('account.period')

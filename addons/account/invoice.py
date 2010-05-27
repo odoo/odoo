@@ -23,7 +23,6 @@ import time
 import decimal_precision as dp
 
 import netsvc
-
 from osv import fields, osv, orm
 import pooler
 from tools import config
@@ -1525,7 +1524,7 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     _columns = {
-                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'),
+                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
                 }
 
 res_partner()
