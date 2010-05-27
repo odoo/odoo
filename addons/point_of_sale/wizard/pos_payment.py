@@ -124,6 +124,7 @@ class pos_make_payment(osv.osv_memory):
         return result
 
     def check(self, cr, uid, ids, context):
+        
         """Check the order:
         if the order is not paid: continue payment,
         if the order is paid print invoice (if wanted) or ticket.
@@ -168,6 +169,10 @@ class pos_make_payment(osv.osv_memory):
 
     
     def create_invoice(self, cr, uid, ids, context):
+        
+        """
+          Create  a invoice 
+        """        
         wf_service = netsvc.LocalService("workflow")
         active_ids = [context and context.get('active_id',False)]      
         for i in active_ids:
@@ -180,8 +185,6 @@ class pos_make_payment(osv.osv_memory):
         }            
                     
     def print_report(self, cr, uid, ids, context=None):
-        if not context:
-            context={}
         """ 
          @summary: To get the date and print the report           
          @param self: The object pointer.
@@ -189,7 +192,9 @@ class pos_make_payment(osv.osv_memory):
          @param uid: ID of the user currently logged in
          @param context: A standard dictionary 
          @return : retrun report
-        """        
+        """          
+        if not context:
+            context={}
         active_id=context.get('active_id',[])        
         datas = {'ids' : [active_id]}
         res =  {}        
