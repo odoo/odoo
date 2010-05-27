@@ -1685,19 +1685,19 @@ class orm_template(object):
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        raise _('The search method is not implemented on this object !')
+        raise NotImplementedError(_('The search method is not implemented on this object !'))
 
     def name_get(self, cr, user, ids, context=None):
-        raise _('The name_get method is not implemented on this object !')
+        raise NotImplementedError(_('The name_get method is not implemented on this object !'))
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        raise _('The name_search method is not implemented on this object !')
+        raise NotImplementedError(_('The name_search method is not implemented on this object !'))
 
     def copy(self, cr, uid, id, default=None, context=None):
-        raise _('The copy method is not implemented on this object !')
+        raise NotImplementedError(_('The copy method is not implemented on this object !'))
 
     def exists(self, cr, uid, id, context=None):
-        raise _('The exists method is not implemented on this object !')
+        raise NotImplementedError(_('The exists method is not implemented on this object !'))
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
