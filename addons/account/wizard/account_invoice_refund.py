@@ -18,10 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
+
 from osv import fields, osv
 from tools.translate import _
 import netsvc
-import time
 
 class account_invoice_refund(osv.osv_memory):
 
@@ -30,16 +31,15 @@ class account_invoice_refund(osv.osv_memory):
     _name = "account.invoice.refund"
     _description = "Invoice Refund"
     _columns = {
-       'date': fields.date('Operation date', required=False, help='This date will be used as the invoice date for Refund Invoice and Period will be chosen accordingly!'),
-       'period': fields.many2one('account.period', 'Force period', required=False),
-       'description': fields.char('Description', size=150, required=True),
+       'date': fields.date('Operation date', help='This date will be used as the invoice date for Refund Invoice and Period will be chosen accordingly!'),
+       'period': fields.many2one('account.period', 'Force period'),
+       'description': fields.char('Description', size=128, required=True),
     }
-
     _defaults = {
         'date': time.strftime('%Y-%m-%d'),
-    }
+                }
 
-    def compute_refund(self, cr, uid, ids, mode, context=None):
+    def compute_refund(self, cr, uid, ids, mode='refund', context=None):
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -128,7 +128,7 @@ class account_invoice_refund(osv.osv_memory):
                                         writeoff_journal_id=inv.journal_id.id,
                                         writeoff_acc_id=inv.account_id.id
                                         )
-                    if mode == 'modify' :
+                    if mode == 'modify':
                         invoice = inv_obj.read(cr, uid, [inv.id],
                                     ['name', 'type', 'number', 'reference',
                                     'comment', 'date_due', 'partner_id',
