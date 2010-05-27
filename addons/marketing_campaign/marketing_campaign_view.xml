@@ -20,19 +20,20 @@
 		            <field name="mode"/>
 		            <field name="fixed_cost"/>
                 </group>
-                <field name="activity_ids" nolabel = "1" colspan="4">
+                <field name="activity_ids" nolabel = "1" colspan="4" default_get="{'object_id':object_id}">
                		<form string="Activities">
 			            <field name="name" select="1" />
-			            <field name="object_id" readonly="True"/>  
-			            <field name="start"/>              
+			            <field name="object_id" readonly="True"/>
+		                <field name="variable_cost" select="1"/>
+			            <field name="start"/>
 			            <field name="condition" colspan="4"/>
-		                <field name="variable_cost" select="1"/>	                
-			            <field name="type"/>
+			            <newline/>
+			            <field name="type" colspan="4"/>
 	                	<group colspan="4" attrs="{'invisible':[('type','!=','email')]}" >                
 	                    	<field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
 	                	</group>
 	                	<group colspan="4" attrs="{'invisible':[('type','!=','paper')]}" >
-	                    	<field name="report_id" attrs="{'required':[('type','=','paper')]}" />
+	                    	<field name="report_id" attrs="{'required':[('type','=','paper')]}"/>
 	                    	<field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
 	                	</group>
 	                	<group colspan="4" attrs="{'invisible':[('type','!=','action')]}" >                
@@ -42,14 +43,34 @@
 	                        <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
 	                    	<field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
 	                	</group>                
-	                	<field name="to_ids" nolabel="1" colspan="4" mode="tree"  		default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
-	                    	<tree string="All Transitions" editable="bottom">
-	                        	<field name="activity_from_id"/>
-	                        	<field name="activity_to_id"/>
-	                        	<field name="interval_nbr"/>
-	                        	<field name="interval_type"/>
-	                    	</tree>
-                		</field>
+                        <field name="to_ids" nolabel="1" colspan="4" mode="tree"                  default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
+                             <form string="Out Transitions" >
+                                 <field name="activity_from_id" readonly="True"/>
+                                 <field name="activity_to_id"/>
+                                 <field name="interval_nbr"/>
+                                 <field name="interval_type"/>
+                             </form>
+                             <tree string="Out Transitions" editable="bottom">
+                                 <field name="activity_from_id"/>
+                                 <field name="activity_to_id"/>
+                                 <field name="interval_nbr"/>
+                                 <field name="interval_type"/>
+                             </tree>
+                         </field> 
+                         <field name="from_ids" nolabel="1" colspan="4" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
+                             <form string="In Transitions" >
+                                 <field name="activity_from_id"/>
+                                 <field name="activity_to_id" readonly="True"/>
+                                 <field name="interval_nbr"/>
+                                 <field name="interval_type"/>
+                             </form>
+                             <tree string="In Transitions" editable="bottom">
+                                 <field name="activity_from_id"/>
+                                 <field name="activity_to_id"/>
+                                 <field name="interval_nbr"/>
+                                 <field name="interval_type"/>
+                             </tree>
+                         </field>
             		</form>
 		    		<tree string="All Activities">
                 		<field name="name" select="1"/>
@@ -67,9 +88,9 @@
             	<separator string="Status" colspan="4" />
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
-                    <button name="state_running_set" string="Run" states="draft" />
-                    <button name="state_done_set" string="Done" states="running" />
-                    <button name="state_cancel_set" string="Cancelled" states="running"/>
+                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
+                    <button name="state_done_set" string="Done" states="running" icon="gtk-ok"/>
+                    <button name="state_cancel_set" string="Cancelled" states="running" icon="gtk-cancel"/>
                 </group>
           	</form>
         </field>
@@ -96,13 +117,13 @@
         <field name="type">diagram</field>
         <field name="arch" type="xml">
         	<diagram string="Campaign Editor">
-				<node object="marketing.campaign.activity" shape="rectangle:type!='subcampaign'" bgcolor="gray:start==True">
+				<node object="marketing.campaign.activity" shape="rectangle:type=='subcampaign'" bgcolor="gray:start==True">
 			    	<field name="name"/>
 			    	<field name="type"/>
                 	<field name="start" invisible="1"/>
                 	<field name="condition"/> 
 			  	</node>
-			  	<arrow object="marketing.campaign.transition" source="activity_from_id" destination="activity_to_id">
+			  	<arrow object="marketing.campaign.transition" source="activity_from_id" destination="activity_to_id" label="['interval_type']">
 			    	<field name="activity_from_id"/>
 			    	<field name="activity_to_id"/>
 			    	<field name="interval_nbr"/>
@@ -112,6 +133,29 @@
         </field>
     </record>
 
+   <record id="view_marketing_campaign_search" model="ir.ui.view">
+       <field name="name">marketing.campaign.search</field>
+       <field name="model">marketing.campaign</field>
+       <field name="type">search</field>
+       <field name="arch" type="xml">
+           <search string="Campaigns">
+               <filter icon="terp-marketing" string="Draft" name = "draft" domain="[('state','=','draft')]"/>
+               <filter icon="terp-marketing" string="Running" domain="[('state','=','running')]"/>
+               <separator orientation="vertical"/>
+               <filter icon="terp-marketing" string="Test Mode" name = "test" domain="[('mode','=','test')]"/>
+               <filter icon="terp-marketing" string="Manual Mode" domain="[('mode','=','manual')]"/>
+               <separator orientation="vertical"/>
+               <field name="name" select="1"/>
+               <field name="object_id" select="1"/>
+               <newline/>
+               <group expand="1" string="Group By..." colspan="10" col="12">
+                   <filter string="Object" name="Object" icon="terp-marketing" context="{'group_by':'object_id'}" />
+                   <filter string="State" name="State" icon="terp-marketing" context="{'group_by':'state'}" />
+               </group>   
+           </search>
+       </field>
+   </record>
+
     <record model="ir.actions.act_window" id="action_marketing_campaign_form">
         <field name="name">All Campaigns</field>
         <field name="type">ir.actions.act_window</field>
@@ -119,9 +163,12 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,diagram</field>
         <field name="view_id" ref="view_marketing_campaign_tree"/>
+       <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_test': 1}</field>
+       <field name="search_view_id" ref="view_marketing_campaign_search"/>
+        
     </record>
 
-    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing" action="action_marketing_campaign_form" sequence="20" />
+    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing" action="action_marketing_campaign_form" sequence="10" />
 		
 	<!--
     ======================
@@ -143,7 +190,7 @@
                 	<newline/>
                 	<field name="ir_filter_id" select="1"/>
                 	<newline/>
-                	<field name="date_run" attrs="{'readonly':[('date_run','!=',False)]}"/>
+                	<field name="date_run" attrs="{'readonly':[('date_run','!=',False),('state','=','running')]}"/>
                 	<field name="date_done"/>
                 	<separator string="Synchronization" colspan="4" />
                		<field name="sync_last_date"/>
@@ -152,9 +199,9 @@
                 <separator string="Status" colspan="4" />
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
-                    <button name="state_running_set" string="Run" states="draft" />
-                    <button name="state_done_set" string="Done" states="running" />
-                    <button name="state_cancel_set" string="Cancelled" states="running" />
+                    <button name="state_running_set" string="Run" states="draft" icon="gtk-apply"/>
+                    <button name="state_done_set" string="Done" states="running" icon="gtk-ok"/>
+                    <button name="state_cancel_set" string="Cancelled" states="running" icon="gtk-cancel"/>
                 </group>
             </form>
         </field>
@@ -178,6 +225,32 @@
         </field>
     </record>
 
+   <record id="view_marketing_campaign_segment_search" model="ir.ui.view">
+       <field name="name">marketing.campaign.segment.search</field>
+       <field name="model">marketing.campaign.segment</field>
+       <field name="type">search</field>
+       <field name="arch" type="xml">
+           <search string="Segments">
+               <filter icon="terp-marketing" string="Draft" name="draft" domain="[('state','=','draft')]"/>
+               <filter icon="terp-marketing" string="Running" domain="[('state','=','running')]"/>
+               <separator orientation="vertical"/>
+               <filter icon="terp-marketing" string="Create Date" name="create_date" domain="[('sync_mode','=','create_date')]"/>
+               <filter icon="terp-marketing" string="Write Date" domain="[('sync_mode','=','write_date')]"/>
+               <separator orientation="vertical"/>
+               <field name="name" select="1"/>
+               <field name="object_id" select="1"/>
+               <field name="campaign_id" select="1"/>
+               <field name="date_run" select="1"/>
+               <newline/>
+               <group expand="1" string="Group By..." colspan="10" col="12">
+                   <filter string="Campaign" name="Campaign" icon="terp-marketing" context="{'group_by':'campaign_id'}" />
+                   <filter string="Date Run" name="Date Run" icon="terp-marketing" context="{'group_by':'date_run'}" />
+                   <filter string="State" name="State" icon="terp-marketing" context="{'group_by':'state'}" />
+               </group> 
+           </search>
+       </field>
+   </record>
++
     <record model="ir.actions.act_window" id="action_marketing_campaign_segment_form">
         <field name="name">All Segments</field>
         <field name="type">ir.actions.act_window</field>
@@ -185,9 +258,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_marketing_campaign_segment_tree"/>
+       <field name="search_view_id" ref="view_marketing_campaign_segment_search"/>
+       <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_create_date': 1}</field>
     </record>
 
-    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing" action="action_marketing_campaign_segment_form" sequence="10" />
+    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing" action="action_marketing_campaign_segment_form" sequence="20" />
 		
 	<!--
     ======================
@@ -204,8 +279,7 @@
                 <field name="name" select="1" />
                 <field name="start"/>
                 <field name="campaign_id" select="1"/>
-                <field name="object_id" readonly="True"/>                
-                <field name="condition" colspan="4"/>
+                <field name="object_id" readonly="True"/>
                 <newline/>
                 <field name="type"/>
                 <group colspan="4" attrs="{'invisible':[('type','!=','email')]}" >                
@@ -222,14 +296,34 @@
                     <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
                     <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
                 </group>                
-                <field name="to_ids" nolabel="1" colspan="4" mode="tree,form">
-                    <tree string="All Transitions" editable="bottom">
-                        <field name="activity_from_id" />
-                        <field name="activity_to_id" />
-                        <field name="interval_nbr" />
-                        <field name="interval_type"/>
-                    </tree>
-                </field>
+                <field name="to_ids" nolabel="1" colspan="4" mode="tree"                  default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
+                     <form string="Out Transitions" >
+                         <field name="activity_from_id" readonly="True"/>
+                         <field name="activity_to_id"/>
+                         <field name="interval_nbr"/>
+                         <field name="interval_type"/>
+                     </form>
+                     <tree string="Out Transitions" editable="bottom">
+                         <field name="activity_from_id"/>
+                         <field name="activity_to_id"/>
+                         <field name="interval_nbr"/>
+                         <field name="interval_type"/>
+                     </tree>
+                 </field> 
+                 <field name="from_ids" nolabel="1" colspan="4" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
+                     <form string="In Transitions" >
+                         <field name="activity_from_id"/>
+                         <field name="activity_to_id" readonly="True"/>
+                         <field name="interval_nbr"/>
+                         <field name="interval_type"/>
+                     </form>
+                     <tree string="In Transitions" editable="bottom">
+                         <field name="activity_from_id"/>
+                         <field name="activity_to_id"/>
+                         <field name="interval_nbr"/>
+                         <field name="interval_type"/>
+                     </tree>
+                 </field>
             </form>
         </field>
     </record>
@@ -306,6 +400,32 @@
         </field>
     </record>
 
+   <record id="view_marketing_campaign_workitem_search" model="ir.ui.view">
+       <field name="name">marketing.campaign.workitem.search</field>
+       <field name="model">marketing.campaign.workitem</field>
+       <field name="type">search</field>
+       <field name="arch" type="xml">
+           <search string="Workitems">
+               <filter icon="terp-marketing" string="To Do" name = "todo" domain="[('state','=','todo')]"/>
+               <filter icon="terp-marketing" string="In Progress" domain="[('state','=','inprogress')]"/>
+               <filter icon="terp-marketing" string="Exception" domain="[('state','=','exception')]"/>
+               <separator orientation="vertical"/>
+               <field name="segment_id" select="1"/>
+               <field name="object_id" select="1"/>
+               <field name="partner_id" select="1"/>
+               <field name="date" select="1"/>
+               <newline/>
+               <group expand="1" string="Group By..." colspan="10" col="12">
+                   <filter string="Segment" name="Segment" icon="terp-marketing" context="{'group_by':'segment_id'}" />
+                   <filter string="Activity" name="Activity" icon="terp-marketing" context="{'group_by':'activity_id'}" />
+                   <separator orientation="vertical"/>
+                   <filter string="Date" name="Date" icon="terp-marketing" context="{'group_by':'date'}" />
+                   <filter string="State" name="State" icon="terp-marketing" context="{'group_by':'state'}" />
+               </group> 
+           </search>
+       </field>
+   </record>
+
     <record model="ir.actions.act_window" id="action_marketing_campaign_workitem">
         <field name="name">All Workitems</field>
         <field name="type">ir.actions.act_window</field>
@@ -313,6 +433,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_marketing_campaign_workitem_tree"/>
+        <field name="search_view_id" ref="view_marketing_campaign_workitem_search"/>
+        <field name="context">{'group_by': [], 'search_default_todo': 1}</field>        
     </record>
 
     <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing" action="action_marketing_campaign_workitem" sequence="30" groups="base.group_extended"/>

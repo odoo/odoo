@@ -55,10 +55,10 @@
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
                 	<group>
-	                    <filter icon="terp-project" string="Last 365 Days"
+	                    <filter icon="gtk-media-rewind" string="Last 365 Days"
 	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Tasks performed in last 365 Days"/>
-	                    <filter icon="terp-project" string="Last 30 Days"
+	                    <filter icon="gtk-media-rewind" string="Last 30 Days"
 	                    		name="month"
 	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                    		help="Tasks performed in last 30 days"/>
@@ -98,13 +98,9 @@
 	                    </field>
 	                    <field name="project_id" widget="selection">
 	                        <filter icon="terp-project"
-	                        		string="My Task"
-	                        		help="My Tasks"
+	                        		string="My Projects"
+	                        		help="My Projects"
 	                        		domain="[('project_id','=',context.get('project_id', False)]"/>
-	                        <filter icon="terp-project"
-	                        		string="Non assigned tasks to projects"
-	                        		help ="Non assigned tasks to projects"
-	                        		domain="[('project_id','=',False"/>
 	                    </field>
                     </group>
                     <group expand="1" string="Group By..." colspan="10" col="11">
@@ -220,7 +216,7 @@
     </record>
 
     <!-- Views and action for project  dashboard -->
-       <record id="view_task_by_days_vs_planned_hours_tree" model="ir.ui.view">
+    <record id="view_task_by_days_vs_planned_hours_tree" model="ir.ui.view">
         <field name="name">task.by.days.vs.planned.hours.tree</field>
         <field name="model">task.by.days.vs.planned.hours</field>
         <field name="type">tree</field>
@@ -252,5 +248,6 @@
         <field name="view_mode">graph,tree</field>
         <field name="view_id" ref="view_task_by_days_vs_planned_hours_graph"/>
     </record>
+    
     </data>
 </openerp>

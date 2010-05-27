@@ -27,6 +27,8 @@ import pooler
 from osv import osv
 from tools.translate import _
 
+
+
 class report_creator_open(wizard.interface):
     def _open_report(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)

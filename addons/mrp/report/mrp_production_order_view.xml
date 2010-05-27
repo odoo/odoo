@@ -58,7 +58,7 @@
                    </group>
                    <newline/>
 
-                   <group expand="1" string="Group By..." colspan="4" col="6">
+                   <group expand="1" string="Group By...">
                     	<filter string="Source Location" icon="terp-mrp" context="{'group_by':'location_src_id'}"/>
                     	<filter string="Destination Location" icon="terp-mrp" context="{'group_by':'location_dest_id'}"/>
                     	<filter string="Picking" icon="terp-mrp" context="{'group_by':'picking_id'}"/>
@@ -72,7 +72,7 @@
                     	<filter string="Year" icon="terp-mrp" context="{'group_by':'year'}"/>
                    </group>
                     <newline/>
-	                <group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
+	                <group expand="0" string="Extended options..." groups="base.group_extended">
 	                    <filter icon="terp-mrp" string="Draft" domain="[('state','=','draft')]"/>
 	                    <filter icon="terp-mrp" string="Picking Exception" domain="[('state','=','picking_except')]"/>
 	                    <separator orientation="vertical"/>

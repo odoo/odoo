@@ -108,7 +108,7 @@
                    <field name="cutype" string="Invitation type" select="1"/>
                    <field name="event_date" select="1"/>
                    <newline/>
-					<group expand="1" string="Group By..." colspan="16">
+				    <group expand="1" string="Group By...">
 						<filter string="Type" icon="terp-project" help="Invitation Type"
 					        domain="[]" context="{'group_by':'cutype'}" />
 					    <filter string="Role" icon="terp-project"
@@ -119,9 +119,7 @@
 					    <filter string="User" icon="terp-partner" domain="[]"
 					        context="{'group_by':'user_id'}" />
 					    <filter string="Contact" icon="terp-partner" domain="[]"
-					        context="{'group_by':'partner_address_id'}" />
-						<filter string="Type" icon="terp-project" help="Invitation Type"
-					        domain="[]" context="{'group_by':'cutype'}" />
+					        context="{'group_by':'partner_address_id'}" />						
 					    <filter string="State" icon="terp-project" help="Invitation Type"
                             domain="[]" context="{'group_by':' state'}" />
 					</group>
@@ -400,7 +398,7 @@
                            <field name="class" select="1"/>
                        </group>
                        <newline/>
-						<group expand="1" string="Group By..." colspan="16">
+						<group expand="1" string="Group By...">
 							<filter string="Date" icon="terp-project"
 						        domain="[]" context="{'group_by':'date'}" />
 						    <filter string="Availability" icon="terp-project"

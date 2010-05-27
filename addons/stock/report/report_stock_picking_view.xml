@@ -54,22 +54,27 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="6">
-                   		<filter icon="terp-stock" string="Last 365 Days"
+                   		<filter icon="gtk-media-rewind" string="Last 365 Days"
 	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Picking in last 365 days"/>
-	                	<filter icon="terp-stock" string="Last 30 Days"
+	                	<filter icon="gtk-media-rewind" string="Last 30 Days"
 	                			name="month"
 	                			domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                			help="Picking in last 30 days"/>
+	                	<filter icon="gtk-media-rewind"
+                                string="    7 Days    "
+                                separator="1"
+                                domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                                help="Picking during last 7 days"/>
                         <separator orientation="vertical"/>
                         <filter string="Todo" icon="terp-stock" domain="[('state','in',('draft','auto','confirmed','assigned'))]"/>
                         <filter string="Done" icon="terp-stock" domain="[('state','=','done')]"/>
 						<separator orientation="vertical"/>
 						<field name="partner_id"/>
-						<field name="company_id" groups="base.group_extended" widget="selection"/>
+						<field name="company_id" groups="base.group_multi_company" widget="selection"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="5">
+                   <group expand="1" string="Group By...">
                         <filter string="Partner" name="Partner" icon="terp-stock" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Company" icon="terp-stock" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Shipping Type" icon="terp-stock" domain="[]" context="{'group_by':'type'}"/>
@@ -82,7 +87,8 @@
                         <filter string="Month" icon="terp-stock" domain="[]" context="{'group_by':'month'}"/>
                         <filter string="Year" icon="terp-stock" domain="[]" context="{'group_by':'year'}"/>
                     </group>
-                	<group expand="0" string="Extended options..." colspan="10" col="12">
+                    <newline/>
+                	<group expand="0" string="Extended options..." groups="base.group_extended">
                 		<field name="type"/>
                 		<separator orientation="vertical"/>
                 		<field name="min_date"/>

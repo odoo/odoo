@@ -256,7 +256,7 @@
                 <field name="type">search</field>
                 <field name="arch" type="xml">
                     <search string="Search Funds">
-                        <group col='6' colspan='4'>
+                        <group>
                             <filter icon="gtk-new" string="Current"
                                 domain="[('state','in',('draft', 'open'))]" name="current"
                                 help="Current Funds" />
@@ -284,7 +284,7 @@
                             </field>
                         </group>
                         <newline/>
-                        <group expand="1" string="Group By..." colspan="10" col="20">
+                        <group expand="1" string="Group By...">
                             <filter string="Partner" icon="terp-partner"
                                 domain="[]"
                                 context="{'group_by':'partner_id'}" />

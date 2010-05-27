@@ -95,7 +95,8 @@
                     <filter string="Month" icon="terp-stock" context="{'group_by':'date_planned'}"/>
                     <filter string="Year" icon="terp-stock" context="{'group_by':'year'}"/>
                 </group>
-                <group expand="0" string="Extended options..." colspan="10" col="12">
+                <newline/>
+                <group expand="0" string="Extended options..."  groups="base.group_extended">
                 <field name="location_id" widget = "selection"/>
                 <field name="location_dest_id"  widget = "selection"/>
                 <field name="date_planned"/>

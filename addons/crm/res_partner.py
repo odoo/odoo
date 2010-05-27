@@ -19,30 +19,21 @@
 #
 ##############################################################################
 
+from osv import fields,osv
 
-{
-    'name': 'Integrated FTP Server with Document Management System',
-    'version': '1.99',
-    'category': 'Generic Modules/Others',
-    'description': """This is a support FTP Interface with document management system.
-    With this module you would not only be able to access documents through open erp
-    but you would also be able to connect with them through the file system using the FTP protocol.
-""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['base', 'document'],
-    'init_xml': [],
-    'update_xml': [
-        'document_ftp_view.xml',
-        'security/ir.model.access.csv'
-    ],
-    'demo_xml': [],
-    'test': [
-        'test/document_ftp_test.yml',
-    ],
-    'installable': True,
-    'active': False,
-    'certificate': None,
-}
+class res_partner(osv.osv):
+    """ Inherits partner and adds CRM information in the partner form """
+    _inherit = 'res.partner'
+    
+    _columns = {
+                'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
+                                                     'Opportunities', domain=[('type', '=', 'opportunity')]), 
+                'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+                                                     'Meetings'), 
+                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
+                }
+
+res_partner()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

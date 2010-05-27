@@ -34,7 +34,7 @@
     "name" : "Switzerland localisation corrected by Camptocamp",
     "description" : """
 Swiss localisation :
- - DTA generation for a lot of paiment types
+ - DTA generation for a lot of payment types
  - BVR management (number generation, report, etc..)
  - Import account move from the bank file (like v11 etc..)
  - Simplify the way you handle the bank statement for reconciliation

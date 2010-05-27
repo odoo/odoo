@@ -10,10 +10,10 @@
                 <search string="Search Evaluation Plan">
                    <group col='15' colspan='4'>
                        <field name="name"/>
-                       <field name="company_id" widget="selection"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                   <group expand="1" string="Group By..." groups="base.group_multi_company">
                         <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
                </search>
@@ -261,7 +261,7 @@
                         <field name="plan_id" widget="selection" select="1"/>
                         </group>
                         <newline/>
-                        <group expand='1' string='Group by...' groups="base.group_extended">
+                        <group expand='1' string='Group by...'>
                         <filter string='Employee' icon="terp-stock" domain="[]" context="{'group_by' : 'employee_id'}" />
                         <filter string='Plan' icon="terp-stock" domain="[]" context="{'group_by' : 'plan_id'}" />
                         <filter string='State' icon="terp-stock" domain="[]" context="{'group_by' : 'state'}" />

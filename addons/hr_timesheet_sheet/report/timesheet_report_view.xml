@@ -74,8 +74,9 @@
 	                        		domain="[('user_id','=',False)]"/>
 	                    </field>
 	                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    </group>                              
-                    <group expand="1" string="Group By..." colspan="10" col="12">
+                    </group>      
+                    <newline/>                        
+                    <group expand="1" string="Group By...">
 	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
 	                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
 	                    <separator orientation="vertical"/>
@@ -92,7 +93,7 @@
 	                    <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
+                    <group expand="0" string="Extended options..." groups="base.group_extended">
 	                	<filter icon="terp-hr"
 	                    		string="New"
 	                    		domain="[('state','=','new')]"/>
