@@ -203,9 +203,13 @@ class crm_case(object):
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email}}
     
-    def _history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool._history(cr, uid, cases, keyword, history=history, email=email, details=details, email_from=email_from, message_id=message_id, context=context)
+        return mailgate_pool._history(cr, uid, cases, keyword, history=history,\
+                                       subject=subject, email=email, \
+                                       details=details, email_from=email_from,\
+                                       message_id=message_id, attach=attach, \
+                                       context=context)
     
     def case_open(self, cr, uid, ids, *args):
         """Opens Case

@@ -69,7 +69,7 @@ class event_make_invoice(osv.osv_memory):
                 inv_rej_reason += "ID "+str(reg.id)+": Registration doesn't have any partner to invoice. \n"
                 continue
             else:
-                val_invoice = pool_obj.get('account.invoice').onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
+                val_invoice = inv_obj.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
                 val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
                 partner_address_id = val_invoice['value']['address_invoice_id']
                 

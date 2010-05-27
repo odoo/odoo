@@ -24,11 +24,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Mail Service',
     'description': """The generic email gateway system allows to send and receive emails
-    * IMAP / IMAP with SSL
-    * POP / POP with SSL
-    * SMTP / SMTP with TLS
-    * ACL basd access polocy
-    * Queing and History for Emails
+    * History for Emails
     * Easy Integration with any Module""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
