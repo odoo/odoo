@@ -34,6 +34,7 @@ import glob
 
 from distutils.core import setup, Command
 from distutils.command.install import install
+from distutils.sysconfig import get_python_lib
 
 has_py2exe = False
 if os.name == 'nt':
@@ -122,7 +123,7 @@ def data_files():
         files.append((join(doc_directory, 'migrate', '3.4.0-4.0.0'),
                       filter(isfile, glob.glob('doc/migrate/3.4.0-4.0.0/*'))))
 
-        openerp_site_packages = join('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
+        openerp_site_packages = join(get_python_lib(prefix=''), 'openerp-server')
 
         files.append((openerp_site_packages, [join('bin', 'import_xml.rng'),
                                               join('bin', 'server.pkey'),
@@ -134,7 +135,7 @@ def data_files():
                                                    join('python25-compat','SocketServer.py')]))
 
         for addonname, add_path in find_addons():
-            addon_path = join('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server','addons', addonname)
+            addon_path = join(get_python_lib(prefix=''), 'openerp-server','addons', addonname)
             for root, dirs, innerfiles in os.walk(add_path):
                 innerfiles = filter(lambda fil: os.path.splitext(fil)[1] not in ('.pyc', '.pyd', '.pyo'), innerfiles)
                 if innerfiles:
