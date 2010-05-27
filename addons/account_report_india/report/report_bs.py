@@ -104,22 +104,22 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
         else:
             self.res_pl['type'] = 'Net Loss'
         pl_dict  = {
-                    'code' : False,
-                    'name' : self.res_pl['type'],
-                    'level': False,
-                    'balance':self.res_pl['balance'],
-                    }
+            'code' : False,
+            'name' : self.res_pl['type'],
+            'level': False,
+            'balance':self.res_pl['balance'],
+        }
         for typ in types:
             accounts_temp = []
             for account in accounts:
                 if (account.user_type.report_type) and (account.user_type.report_type == typ):
                     account_dict = {
-                                    'id'   : account.id,
-                                    'code' : account.code,
-                                    'name' : account.name,
-                                    'level': account.level,
-                                    'balance':account.balance,
-                                    }
+                        'id'   : account.id,
+                        'code' : account.code,
+                        'name' : account.name,
+                        'level': account.level,
+                        'balance':account.balance,
+                    }
                     if typ == 'liability' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += abs(account.debit - account.credit)
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
@@ -138,6 +138,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
                         
             self.result[typ] = accounts_temp
             cal_list[typ]=self.result[typ]
+
         if cal_list:
             temp={}
             for i in range(0,max(len(cal_list['liability']),len(cal_list['asset']))):
@@ -164,7 +165,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
                               'name1' : cal_list['asset'][i]['name'],
                               'level1': cal_list['asset'][i]['level'],
                               'balance1':cal_list['asset'][i]['balance'],
-                              }
+                          }
                         self.result_temp.append(temp)
                     if  i < len(cal_list['liability']): 
                         temp={
@@ -176,7 +177,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
                               'name1' : '',
                               'level1': False,
                               'balance1':False,
-                              }
+                          }
                         self.result_temp.append(temp)
         return None
     

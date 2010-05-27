@@ -11,11 +11,11 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Picking by invoice method">
-				<field name="name" select="1"/>
-				<field name="month" select="1"/>
-				<field name="invoice_state" select="1"/>
-				<field name="state" select="1"/>
-				<field name="invoice_type_id" select="1"/>
+				<field name="name"/>
+				<field name="month"/>
+				<field name="invoice_state"/>
+				<field name="state"/>
+				<field name="invoice_type_id"/>
 				<field name="quantity"/>
 				<field name="count"/>
 				<field name="price_total"/>
@@ -51,10 +51,10 @@
 					<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Picking by invoice method in this year"/>
 	               	<filter icon="terp-sale" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Picking by invoice method in this month"/>
 	               	<separator orientation="vertical"/>
-					<field name="name" select="1"/>
-					<field name="month" select="1"/>
-					<field name="invoice_state" select="1"/>
-					<field name="state" select="1"/>
+					<field name="name"/>
+					<field name="month"/>
+					<field name="invoice_state"/>
+					<field name="state"/>
 				</group>
 			</search>
 		</field>
@@ -91,10 +91,10 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Picking by journals">
-				<field name="name" select="1"/>
-				<field name="month" select="1"/>
-				<field name="state" select="1"/>
-				<field name="journal_id" select="1"/>
+				<field name="name"/>
+				<field name="month"/>
+				<field name="state"/>
+				<field name="journal_id"/>
 				<field name="quantity"/>
 				<field name="count"/>
 				<field name="price_total"/>
@@ -128,9 +128,9 @@
 					<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Picking by journals in this year"/>
 	               	<filter icon="terp-sale" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Picking by journals in this month"/>
 	               	<separator orientation="vertical"/>
-					<field name="name" select="1"/>
-					<field name="month" select="1"/>
-					<field name="state" select="1"/>
+					<field name="name"/>
+					<field name="month"/>
+					<field name="state"/>
 				</group>
 			</search>
 		</field>

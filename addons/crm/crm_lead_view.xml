@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<!--Lead Stage Form view -->
+	<!--Lead Stage Form view -->
 
     <record id="crm_lead_stage_act" model="ir.actions.act_window">
         <field name="name">Lead Stages</field>
@@ -16,7 +16,7 @@
         groups="base.group_extended"
         parent="crm.menu_crm_case_stage" />
 
-    <!--  Resource Type Form View -->
+    	<!--  Resource Type Form View -->
 
         <record id="crm_lead_resource_act" model="ir.actions.act_window">
             <field name="name">Lead Resource Type</field>
@@ -31,7 +31,7 @@
             groups="base.group_extended"
             parent="crm.menu_crm_case_resource_type" />
 
-<!-- CRM Lead Form View  -->
+		<!-- CRM Lead Form View  -->
 
         <record model="ir.ui.view" id="crm_case_form_view_leads">
         <field name="name">CRM - Leads Form</field>
@@ -47,9 +47,8 @@
                          name="convert_opportunity"
                          string="Convert"
                          help="Convert to Opportunity"
-                         icon="gtk-index"   
-                         type="object"
-                         attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                         icon="gtk-index"
+                         type="object"/>
                     <newline />
                     <field name="section_id" colspan="1"
                         widget="selection" />
@@ -176,7 +175,7 @@
                             <field name="email_to"/>
                             <field name="description"/>
                         </tree>
-                    </field> 
+                    </field>
                     <button colspan="2" string="Send New Email"
                         name="%(action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
@@ -191,7 +190,7 @@
         </field>
     </record>
 
-<!-- CRM Lead Tree View -->
+	<!-- CRM Lead Tree View -->
 
     <record model="ir.ui.view" id="crm_case_tree_view_leads">
         <field name="name">CRM - Leads Tree</field>
@@ -240,7 +239,7 @@
         </field>
     </record>
 
-<!-- CRM Lead Calendar View -->
+	<!-- CRM Lead Calendar View -->
 
     <record model="ir.ui.view" id="crm_case_calendar_view_leads">
         <field name="name">CRM - Leads Calendar</field>
@@ -258,7 +257,7 @@
         </field>
     </record>
 
-<!-- CRM Lead Search View -->
+	<!-- CRM Lead Search View -->
 
     <record id="view_crm_case_leads_filter" model="ir.ui.view">
         <field name="name">CRM - Leads Search</field>
@@ -307,7 +306,7 @@
                         help="Show Sales Team"/>
                 </field>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="14">
+                <group expand="1" string="Group By...">
                     <filter string="Stage" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Source" icon="terp-crm" domain="[]" context="{'group_by':'categ_id'}"/>
@@ -322,7 +321,6 @@
            </search>
         </field>
     </record>
-
 
 </data>
 </openerp>
