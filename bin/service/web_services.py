@@ -261,6 +261,7 @@ class db(netsvc.Service):
 
         db = sql_db.db_connect('template1')
         cr = db.cursor()
+        cr.autocommit(True) # avoid transaction block
         try:
             try:
                 cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
