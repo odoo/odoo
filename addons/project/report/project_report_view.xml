@@ -103,7 +103,8 @@
 	                        		domain="[('project_id','=',context.get('project_id', False)]"/>
 	                    </field>
                     </group>
-                    <group expand="1" string="Group By..." colspan="10" col="11">
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="10" col="11">
                         <filter string="User" name="User" icon="terp-project" context="{'group_by':'user_id'}" />
                         <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}"/>
                         <separator orientation="vertical"/>
@@ -248,6 +249,6 @@
         <field name="view_mode">graph,tree</field>
         <field name="view_id" ref="view_task_by_days_vs_planned_hours_graph"/>
     </record>
-    
+
     </data>
 </openerp>

@@ -162,12 +162,12 @@
             <field name="arch" type="xml">
                 <form string="Resource">
                     <field name="name" />
-                    <field name="active"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="calendar_id" widget="selection"/>
-                    <field name="resource_type" />
                     <field name="user_id" attrs="{'required':[('resource_type','=','user')]}"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="resource_type" />
+                    <field name="calendar_id" widget="selection"/>
                     <field name="time_efficiency" groups="base.group_extended"/>
+                    <field name="active"/>
                 </form>
             </field>
         </record>
