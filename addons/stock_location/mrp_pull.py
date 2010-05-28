@@ -27,22 +27,22 @@ from mx import DateTime
 import time
 from tools.translate import _
 
-class mrp_procurement(osv.osv):
-    _inherit = 'mrp.procurement'
+class procurement_order(osv.osv):
+    _inherit = 'procurement.order'
     def check_buy(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids):
             for line in procurement.product_id.flow_pull_ids:
                 print line.location_src_id.name, line.location_id.name, line.type_proc
                 if line.location_id==procurement.location_id:
                     return line.type_proc=='buy'
-        return super(mrp_procurement, self).check_buy(cr, uid, ids)
+        return super(procurement_order, self).check_buy(cr, uid, ids)
 
     def check_produce(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids):
             for line in procurement.product_id.flow_pull_ids:
                 if line.location_id==procurement.location_id:
                     return line.type_proc=='produce'
-        return super(mrp_procurement, self).check_produce(cr, uid, ids)
+        return super(procurement_order, self).check_produce(cr, uid, ids)
 
     def check_move(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids):
@@ -54,7 +54,7 @@ class mrp_procurement(osv.osv):
         return False
 
     def action_move_create(self, cr, uid, ids,context=None):
-        proc_obj = self.pool.get('mrp.procurement')
+        proc_obj = self.pool.get('procurement.order')
         move_obj = self.pool.get('stock.move')
         location_obj = self.pool.get('stock.location')
         wf_service = netsvc.LocalService("workflow")
@@ -100,7 +100,7 @@ class mrp_procurement(osv.osv):
                 self.pool.get('stock.move').write(cr,uid, [proc.move_id.id],  {
                     'state':'waiting'
                 }, context=context)
-            proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+            proc_id = self.pool.get('procurement.order').create(cr, uid, {
                 'name': line.name,
                 'origin': origin,
                 'company_id': line.company_id and line.company_id.id or False,
@@ -118,7 +118,7 @@ class mrp_procurement(osv.osv):
             })
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-            wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
             if proc.move_id:
                 self.pool.get('stock.move').write(cr, uid, [proc.move_id.id],
                     {'location_id':proc.location_id.id})
@@ -128,4 +128,4 @@ class mrp_procurement(osv.osv):
         return False
 
 
-mrp_procurement()
+procurement_order()

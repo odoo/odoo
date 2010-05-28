@@ -37,7 +37,7 @@ This module may be useful for different purposes:
 * Manage products to be rent.
     """,
     'author': 'Tiny',
-    'depends': ['mrp','stock'],
+    'depends': ['procurement','stock'],
     'init_xml': [],
     'update_xml': ['stock_view.xml', 'security/ir.model.access.csv', 'mrp_pull_workflow.xml'],
     'demo_xml': [],
