@@ -559,7 +559,7 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=16),
-        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('cash', 'Cash'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('expanse', 'Expanse'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
@@ -927,7 +927,7 @@ class account_move(osv.osv):
             ('journal_sale_vou','Journal Sale'),
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
-        ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
+            ],'Entry Type', select=True , size=128, readonly=True, states={'draft':[('readonly',False)]}),
         'narration':fields.text('Narration', readonly=True, select=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }

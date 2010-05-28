@@ -135,8 +135,10 @@
                             <field name="check_history"/>
                             <field name="type" select="1"/>
                             <newline/>
-                            <field colspan="4" name="tax_ids" domain="[('parent_id','=',False)]"/>
-                            <field name="child_consol_ids" colspan="4" attrs="{'readonly':[('type','!=','consolidation')]}"/>
+                            <separator string="Default Taxes" colspan="4"/>
+                            <field colspan="4" name="tax_ids" nolabel="1" domain="[('parent_id','=',False)]"/>
+                            <separator string="Consolidated Children" colspan="4"/>
+                            <field name="child_consol_ids" colspan="4" nolabel="1" attrs="{'readonly':[('type','!=','consolidation')]}"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -146,7 +148,7 @@
             </field>
         </record>
 
-		<record id="view_account_search" model="ir.ui.view">
+        <record id="view_account_search" model="ir.ui.view">
             <field name="name">account.account.search</field>
             <field name="model">account.account</field>
             <field name="type">search</field>
@@ -1116,8 +1118,8 @@
 
 <!--  bank reconsilation  -->
         <menuitem action="action_account_bank_reconcile_tree"
-        	id="menu_action_account_bank_reconcile_check_tree"
-        	parent="account.next_id_30" />
+            id="menu_action_account_bank_reconcile_check_tree"
+            parent="account.next_id_30" />
 
 
         <act_window
