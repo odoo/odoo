@@ -36,8 +36,13 @@ class sale_report(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
+<<<<<<< TREE
+        'uom_id': fields.many2one('product.uom', 'Default Unit Of Measure', readonly=True),
+        'product_qty':fields.float('# of Qty', readonly=True),
+=======
         'uom_name': fields.char('Default UoM', size=128, readonly=True),
         'product_uom_qty':fields.float('# of Qty', readonly=True),
+>>>>>>> MERGE-SOURCE
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'shop_id':fields.many2one('sale.shop', 'Shop', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
@@ -94,6 +99,7 @@ class sale_report(osv.osv):
                  group by
                      s.date_order,
                      s.partner_id,
+                     pt.uom_id,
                      l.product_id,
                      l.product_uom,
                      s.user_id,
