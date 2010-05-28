@@ -82,8 +82,10 @@
                         		<separator string="Statistics" colspan="2" col="2"/>
                         		<field name="day_open"/>
                         		<field name="day_close"/>
-                    		</group>
-                            <group col="2" colspan="2">
+                        		<field name="working_hours_open" widget="float_time"/>
+                        		<field name="working_hours_close" widget="float_time"/>
+                        	</group>
+                        	<group colspan="2" col="2">
                                 <separator string="References" colspan="2"/>
                                 <field name="id"/>
                                 <field name="active"/>
@@ -150,6 +152,7 @@
             <field name="arch" type="xml">
                 <tree string="Issue Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                     <field name="id"/>
+                    <field name="create_date"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="priority" string="Severity"/>
@@ -162,6 +165,7 @@
                         states="open,draft,pending,done,cancel" />
                     <field name="type_id" string="Version"/>
                     <field name="user_id"/>
+                    <field name="assigned_to"/>
                     <field name="state"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
@@ -179,21 +183,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
-                    <group>
+                    <group colspan="4" col="20">
                         <filter icon="gtk-home" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
-                            help="Todays's bugs"
+                            help="Today's bugs"
                             />
                         <filter icon="gtk-media-rewind"
                             string="    7 Days    " separator="1"
                             domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Bugs during last 7 days"
                             />
-
-                    </group>
-                    <separator orientation="vertical"/>
-                    <group>
+                    	<separator orientation="vertical"/>
                         <field name="name" select='1' string="Subject"/>
                         <field name="user_id" select="1" widget="selection"/>
                         <field name="state" select="1">
@@ -203,7 +204,7 @@
                         <field name="project_id" select="1" widget="selection" string="Project"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="16" groups="base.group_extended">
+                    <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
 	                    <filter string="Stage" icon="terp-crm" domain="[]"
 	                        context="{'group_by':'stage_id'}" />
 	                    <filter string="Priority" icon="terp-crm" domain="[]"
@@ -278,7 +279,7 @@
                         <filter icon="gtk-home" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
-                            help="Todays's features"
+                            help="Today's features"
                             />
                         <filter icon="gtk-media-rewind"
                             string="    7 Days    " separator="1"
