@@ -541,7 +541,7 @@ class stock_picking(osv.osv):
             default = {}
         default = default.copy()
         picking_obj = self.browse(cr, uid, [id], context)[0]
-        if ('name' not in default) or (picking_obj.get('name')=='/'):
+        if ('name' not in default) or (picking_obj.name=='/'):
             seq_obj_name =  'stock.picking.' + picking_obj.type
             default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)        
 
@@ -1546,8 +1546,12 @@ class stock_move(osv.osv):
     def action_done(self, cr, uid, ids, context={}):
         track_flag = False
         picking_ids = []
+        lines=[]
+        sale=[]
+        purchase=[]
         product_uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
+        product_obj=self.pool.get('product.product')        
         move_obj = self.pool.get('account.move')
         for move in self.browse(cr, uid, ids):
             if move.picking_id: picking_ids.append(move.picking_id.id)
@@ -1570,116 +1574,72 @@ class stock_move(osv.osv):
             acc_src = None
             acc_dest = None
             if move.product_id.valuation=='real_time':
+                
                 journal_id = move.product_id.categ_id.property_stock_journal and  move.product_id.categ_id.property_stock_journal.id or False                
-                if(move.location_id.usage=='internal' and  move.location_dest_id.usage=='internal' and  move.location_id.company_id.id!=move.location_dest_id.company_id.id):
-                    
-                    test = [('product.product', move.product_id.id)]
-                    product_obj=self.pool.get('product.product')
-                    accounts=product_obj.get_product_accounts(cr,uid,move.product_id.id,context)
-                    acc_src=accounts['stock_account_input']
-                    acc_dest=accounts['stock_account_output']
-                    journal_id=accounts['stock_journal']
-                    if not acc_src:
+                accounts=product_obj.get_product_accounts(cr,uid,move.product_id.id,context)
+                account_variation = move.product_id.categ_id.property_stock_variation.id                
+                acc_src=accounts['stock_account_input']
+                acc_dest=accounts['stock_account_output']
+                journal_id=accounts['stock_journal']
+                if not acc_src:
                             raise osv.except_osv(_('Error!'),
                                     _('There is no stock input account defined ' \
                                             'for this product: "%s" (id: %d)') % \
                                             (move.product_id.name,
                                                 move.product_id.id,))
-                    if not acc_dest:
+                if not acc_dest:
                             raise osv.except_osv(_('Error!'),
                                     _('There is no stock output account defined ' \
                                             'for this product: "%s" (id: %d)') % \
                                             (move.product_id.name,
                                                 move.product_id.id,))
-                    if not journal_id:
+                if not journal_id:
                         raise osv.except_osv(_('Error!'),
                             _('There is no journal defined '\
                                 'on the product category: "%s" (id: %d)') % \
                                 (move.product_id.categ_id.name,
                                     move.product_id.categ_id.id,))
-
-                    account_variation = move.product_id.categ_id.property_stock_variation
-                    if not account_variation:
+                if not account_variation:
                         raise osv.except_osv(_('Error!'),
                             _('There is no variation  account defined '\
                                 'on the product category: "%s" (id: %d)') % \
                                 (move.product_id.categ_id.name,
                                     move.product_id.categ_id.id,))
-                    if acc_src != acc_dest:
-                        ref = move.picking_id and move.picking_id.name or False
-                        default_uom = move.product_id.uom_id.id
-                        date = time.strftime('%Y-%m-%d')
-                        q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
-                        if move.product_id.cost_method == 'average' and move.price_unit:
-                            amount = q * move.price_unit
-                        # Base computation on valuation price type
-                        else:
-                            company_id = move.company_id.id
-                            context['currency_id'] = move.company_id.currency_id.id
-                            pricetype = price_type_obj.browse(cr,uid,move.company_id.property_valuation_price_type.id)
-                            amount_unit = move.product_id.price_get(pricetype.field, context)[move.product_id.id]
-                            amount = amount_unit * q or 1.0
-                            # amount = q * move.product_id.standard_price
-    
-                        partner_id = False
-                        if move.picking_id:
-                            partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
-                           
-                        lines = [
-                                (0, 0, {
-                                    'name': move.name,
-                                    'quantity': move.product_qty,
-                                    'product_id': move.product_id and move.product_id.id or False,
-                                    'credit': amount,
-                                    'account_id': account_variation and account_variation.id,
-                                    'ref': ref,
-                                    'date': date,
-                                    'partner_id': partner_id,
-                                    'company_id':move.location_id.company_id.id,
-                                    }),
-                                (0, 0, {
-                                    'name': move.name,
-                                    'product_id': move.product_id and move.product_id.id or False,
-                                    'quantity': move.product_qty,
-                                    'debit': amount,
-                                    'account_id': acc_dest,
-                                    'ref': ref,
-                                    'date': date,
-                                    'partner_id': partner_id,
-                                    'company_id':move.location_id.company_id.id,
-                                    }),
-                                
-                                (0, 0, {
-                                    'name': move.name,
-                                    'quantity': move.product_qty,
-                                    'product_id': move.product_id and move.product_id.id or False,
-                                    'credit': amount,
-                                    'account_id': acc_src,
-                                    'ref': ref,
-                                    'date': date,
-                                    'partner_id': partner_id,
-                                    'company_id':move.location_dest_id.company_id.id
-                                    }),
-                                (0, 0, {
-                                    'name': move.name,
-                                    'product_id': move.product_id and move.product_id.id or False,
-                                    'quantity': move.product_qty,
-                                    'debit': amount,
-                                    'account_id': account_variation and account_variation.id,
-                                    'ref': ref,
-                                    'date': date,
-                                    'partner_id': partner_id,
-                                    'company_id':move.location_dest_id.company_id.id
-                                    })
-#                                
-                        ]
-                        move_obj.create(cr, uid, {
-                            'name': move.name,
-                            'journal_id': journal_id,
-                            'type':'cont_voucher',
-                            'line_id': lines,
-                            'ref': ref,
-                        })
+                if acc_src != acc_dest:
+                    default_uom = move.product_id.uom_id.id
+                    q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
+                    if move.product_id.cost_method == 'average' and move.price_unit:
+                        amount = q * move.price_unit
+                    # Base computation on valuation price type
+                    else:
+                        company_id = move.company_id.id
+                        context['currency_id'] = move.company_id.currency_id.id
+                        pricetype = price_type_obj.browse(cr,uid,move.company_id.property_valuation_price_type.id)
+                        amount_unit = move.product_id.price_get(pricetype.field, context)[move.product_id.id]
+                        amount = amount_unit * q or 1.0
+                        # amount = q * move.product_id.standard_price
+                partner_id = False
+                if move.picking_id:
+                    
+                    if (move.location_id.usage=='internal' and  move.location_dest_id.usage=='customer') or \
+                       (move.location_id.usage=='internal' and  move.location_dest_id.usage=='internal'\
+                        and  move.location_id.company_id.id!=move.location_dest_id.company_id.id):
+                        
+                        sale.append(self.create_account_move(cr,uid,move,account_variation ,acc_dest,amount,context))
+
+                    if (move.location_id.usage =='supplier' and  move.location_dest_id.usage=='internal')  or\
+                        (move.location_id.usage=='internal' and  move.location_dest_id.usage=='internal'\
+                        and  move.location_id.company_id.id!=move.location_dest_id.company_id.id):
+                        purchase.append(self.create_account_move(cr,uid,move,acc_src ,account_variation,amount,context))
+
+                lines=sale[0]  +purchase[0]
+                move_obj.create(cr, uid, {
+                        'name': move.name,
+                        'journal_id': journal_id,
+                        'type':'cont_voucher',
+                        'line_id':lines,
+                        'ref': move.picking_id and move.picking_id.name,
+                    })
         tracking_lot = False                    
         if context:
             tracking_lot = context.get('tracking_lot', False)
@@ -1698,7 +1658,31 @@ class stock_move(osv.osv):
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
         return True
-
+    
+    def create_account_move(self, cr, uid, move,account_id,account_variation,amount, context=None):
+        
+        partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
+        lines=[(0, 0, {
+                                    'name': move.name,
+                                    'quantity': move.product_qty,
+                                    'product_id': move.product_id and move.product_id.id or False,
+                                    'credit': amount,
+                                    'account_id': account_id,
+                                    'ref': move.picking_id and move.picking_id.name or False,
+                                    'date': time.strftime('%Y-%m-%d')   ,
+                                    'partner_id': partner_id,
+                                    }),        
+                                (0, 0, {
+                                    'name': move.name,
+                                    'product_id': move.product_id and move.product_id.id or False,
+                                    'quantity': move.product_qty,
+                                    'debit': amount,
+                                    'account_id': account_variation,
+                                    'ref': move.picking_id and move.picking_id.name or False,
+                                    'date': time.strftime('%Y-%m-%d')   ,
+                                    'partner_id': partner_id,
+                                    })]                                    
+        return lines
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}        

@@ -215,7 +215,7 @@ class product_category(osv.osv):
           relation='account.account', 
           string="Stock variation Account", 
           method=True,
-          view_load=True,),
+          view_load=True,  help="This account will be used in product when valuation type is real-time valuation ",),
     }
     
 
@@ -467,7 +467,7 @@ class product_product(osv.osv):
         'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
         'valuation':fields.selection([('manual_periodic','Manual Periodic Valuation'),
                                         ('real_time','Real Time valuation'),
-                                        ('','')],'Valuation'),
+                                        ('','')],'Valuation',help="Decide if the system must automatically  creates account moves based on stock moves"),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
