@@ -129,7 +129,7 @@
 -
   I create a procurement order for product Shirt.
 -
-  !record {model: mrp.procurement, id: mrp_procurement_shirt0}:
+  !record {model: procurement.order, id: procurement_order_shirt0}:
     name: 'PROC: Shirt'
     product_id: product_product_shirt0
     product_qty: 5.00
@@ -138,11 +138,11 @@
 -
   I confirm the procurement order.
 -
-  !workflow {model: mrp.procurement, action: button_confirm, ref: mrp_procurement_shirt0}
+  !workflow {model: procurement.order, action: button_confirm, ref: procurement_order_shirt0}
 -
   I run the procurement.
 -
-  !workflow {model: mrp.procurement, action: button_check, ref: mrp_procurement_shirt0} 
+  !workflow {model: procurement.order, action: button_check, ref: procurement_order_shirt0} 
 -
   I see that there is a manufacturing order for Shirt.
 -
@@ -153,15 +153,15 @@
 -
   I also check that there are two more procurement orders for sub products Cloth and Buttons.
 -
-  !python {model: mrp.procurement}: |
+  !python {model: procurement.order}: |
     from tools.translate import _
     proc_ids = self.search(cr, uid, [('product_id','in',[ref('product_product_cloth0'),ref('product_product_buttons0')])])
     assert proc_ids, 'No Procurements.'
 -
   The scheduler runs.
 -
-  !function {model: mrp.procurement, name: run_scheduler}:
-    - model: mrp.procurement
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
       search: "[]"
 -
   I check that there is one purchase order for Cloth.
@@ -290,8 +290,8 @@
 -
   Run scheduler again.
 -
-  !function {model: mrp.procurement, name: run_scheduler}:
-    - model: mrp.procurement
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
       search: "[]"
 -
   Check state of manufacturing order for Shirt.

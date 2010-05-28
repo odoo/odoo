@@ -329,9 +329,9 @@
         -->
 
         <record id="view_procurement_form_inherit" model="ir.ui.view">
-        	<field name="name">mrp.procurement.form.inherit</field>
-        	<field name="model">mrp.procurement</field>
-        	<field name="inherit_id" ref="mrp_procurement.mrp_procurement_form_view"/>
+        	<field name="name">procurement.order.form.inherit</field>
+        	<field name="model">procurement.order</field>
+        	<field name="inherit_id" ref="procurement.procurement_form_view"/>
         	<field name="type">form</field>
         	<field name="arch" type="xml">
         		<xpath expr="/form/notebook/page/field[@name='close_move']" position="before">

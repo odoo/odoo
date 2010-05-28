@@ -28,82 +28,12 @@ import netsvc
 import time
 
 
-class stock_warehouse_orderpoint(osv.osv):
-    """
-    Defines Minimum stock rules.
-    """
-    _name = "stock.warehouse.orderpoint"
-    _description = "Minimum Inventory Rule"
-    
-    _columns = {
-        'name': fields.char('Name', size=32, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
-        'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
-        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','=','product')]),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_min_qty': fields.float('Min Quantity', required=True,
-            help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
-            "a procurement to bring the virtual stock to the Max Quantity."),
-        'product_max_qty': fields.float('Max Quantity', required=True,
-            help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
-            "a procurement to bring the virtual stock to the Max Quantity."),
-        'qty_multiple': fields.integer('Qty Multiple', required=True,
-            help="The procurement quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Latest procurement', ondelete="set null"),
-        'company_id': fields.many2one('res.company','Company',required=True),
-    }
-    _defaults = {
-        'active': lambda *a: 1,
-        'logic': lambda *a: 'max',
-        'qty_multiple': lambda *a: 1,
-        'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
-        'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
-    }
-    _sql_constraints = [
-        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
-    ]   
-    
-    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
-        """ Finds location id for changed warehouse.
-        @param warehouse_id: Changed id of warehouse.
-        @return: Dictionary of values.
-        """
-        if warehouse_id:
-            w = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context)
-            v = {'location_id': w.lot_stock_id.id}
-            return {'value': v}
-        return {}
-    
-    def onchange_product_id(self, cr, uid, ids, product_id, context={}):
-        """ Finds UoM for changed product.
-        @param product_id: Changed id of product.
-        @return: Dictionary of values.
-        """
-        if product_id:
-            prod = self.pool.get('product.product').browse(cr,uid,product_id)
-            v = {'product_uom': prod.uom_id.id}
-            return {'value': v}
-        return {}
-    
-    def copy(self, cr, uid, id, default=None,context={}):
-        if not default:
-            default = {}
-        default.update({
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.warehouse.orderpoint') or '',
-        })
-        return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context)
-    
-stock_warehouse_orderpoint()
-
 class StockMove(osv.osv):
     _inherit = 'stock.move'
     
     _columns = {
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
-        'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
+        'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
     
     def copy(self, cr, uid, id, default=None, context=None):
@@ -118,7 +48,7 @@ class StockMove(osv.osv):
         """
         bom_obj = self.pool.get('mrp.bom')
         move_obj = self.pool.get('stock.move')
-        procurement_obj = self.pool.get('mrp.procurement')
+        procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         wf_service = netsvc.LocalService("workflow")
         if move.product_id.supply_method == 'produce' and move.product_id.procure_method == 'make_to_order':
@@ -166,7 +96,7 @@ class StockMove(osv.osv):
                         'move_id': mid,
                         'company_id': line['company_id'],
                     })
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 move_obj.write(cr, uid, [move.id], {
                     'location_id': move.location_dest_id.id,
                     'auto_validate': True,
@@ -175,7 +105,7 @@ class StockMove(osv.osv):
                     'state': 'waiting'
                 })
                 for m in procurement_obj.search(cr, uid, [('move_id','=',move.id)], context):
-                    wf_service.trg_validate(uid, 'mrp.procurement', m, 'button_wait_done', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', m, 'button_wait_done', cr)
         return True
     
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None): 
@@ -231,7 +161,7 @@ class StockPicking(osv.osv):
             for move in picking.move_lines:
                 if move.state == 'done' and move.procurements:
                     for procurement in move.procurements:
-                        wf_service.trg_validate(user, 'mrp.procurement',
+                        wf_service.trg_validate(user, 'procurement.order',
                                 procurement.id, 'button_check', cursor)
         return res
 

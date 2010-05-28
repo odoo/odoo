@@ -35,17 +35,13 @@ class stock_inventory_line_split(osv.osv_memory):
 
     
     def default_get(self, cr, uid, fields, context):
-        """ 
-             To check the availability of production lot. 
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
+        """ To check the availability of production lot. 
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values 
+        @param context: A standard dictionary 
+        @return: A dictionary which of fields with values. 
         """        
         record_id = context and context.get('active_id',False)
         res = super(stock_inventory_line_split, self).default_get(cr, uid, fields, context=context)
@@ -55,18 +51,14 @@ class stock_inventory_line_split(osv.osv_memory):
         return res
     
     def split(self, cr, uid, ids, line_ids, context=None):
-        """ 
-             To split stock inventory lines according to production lot
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param line_ids: the ID or list of IDs of inventory lines we want to split
-             @param context: A standard dictionary 
-             
-             @return: 
-        
+        """ To split stock inventory lines according to production lot.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID or list of IDs if we want more than one 
+        @param line_ids: the ID or list of IDs of inventory lines we want to split
+        @param context: A standard dictionary 
+        @return: 
         """                    
         prodlot_obj = self.pool.get('stock.production.lot')
         ir_sequence_obj = self.pool.get('ir.sequence')

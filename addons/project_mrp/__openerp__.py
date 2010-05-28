@@ -47,7 +47,7 @@ automatically created via sale orders.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['project', 'mrp_procurement', 'sale', 'mrp_jit'],
+    'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
     'init_xml': [],
     'update_xml': ['project_mrp_workflow.xml', 
                    #'process/project_mrp_process.xml',

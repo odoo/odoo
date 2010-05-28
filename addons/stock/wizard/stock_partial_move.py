@@ -30,10 +30,9 @@ class stock_partial_move(osv.osv_memory):
     _name = "stock.partial.move"    
     _description = "Partial Move"    
     _columns = {
-                'date': fields.datetime('Date', required=True),
-                'partner_id': fields.many2one('res.partner',string="Partner", required=True),
-                'address_id': fields.many2one('res.partner.address', 'Delivery Address', help="Address where goods are to be delivered", required=True),
-                               
+        'date': fields.datetime('Date', required=True),
+        'partner_id': fields.many2one('res.partner',string="Partner", required=True),
+        'address_id': fields.many2one('res.partner.address', 'Delivery Address', help="Address where goods are to be delivered", required=True),
      }
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -140,17 +139,13 @@ class stock_partial_move(osv.osv_memory):
         return result
 
     def default_get(self, cr, uid, fields, context=None):
-        """ 
-             To get default values for the object.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
+        """ To get default values for the object.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values 
+        @param context: A standard dictionary 
+        @return: A dictionary which of fields with values. 
         """ 
 
         res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
@@ -185,7 +180,16 @@ class stock_partial_move(osv.osv_memory):
                     res['move%s_product_currency'%(m.id)] = currency
         return res   
 
-    def do_partial(self, cr, uid, ids, context):    
+    def do_partial(self, cr, uid, ids, context):
+        """ Makes partial moves and pickings done.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values 
+        @param context: A standard dictionary 
+        @return: A dictionary which of fields with values. 
+        """ 
+            
         rec_id = context and context.get('active_id', False)
         tracking_lot = context.get('tracking_lot', False)
         if tracking_lot:
@@ -218,5 +222,6 @@ class stock_partial_move(osv.osv_memory):
         return {}
  
 stock_partial_move()    
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

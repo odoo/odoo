@@ -697,8 +697,8 @@ class purchase_order_line(osv.osv):
         return True    
 purchase_order_line()
 
-class mrp_procurement(osv.osv):
-    _inherit = 'mrp.procurement'
+class procurement_order(osv.osv):
+    _inherit = 'procurement.order'
     _columns = {
         'purchase_id': fields.many2one('purchase.order', 'Latest Requisition'),
     }
@@ -776,7 +776,7 @@ class mrp_procurement(osv.osv):
             res[procurement.id] = purchase_id
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': purchase_id})
         return res
-mrp_procurement()
+procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
