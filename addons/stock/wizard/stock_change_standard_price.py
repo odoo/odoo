@@ -34,17 +34,13 @@ class change_standard_price(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields, context):
-        """
-         To get default values for the object.
-
+        """ To get default values for the object.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
          @param fields: List of fields for which we want default values
          @param context: A standard dictionary
-
          @return: A dictionary which of fields with values.
-
         """
         product_pool = self.pool.get('product.product')
         product_obj = product_pool.browse(cr, uid, context.get('active_id', False))
@@ -68,6 +64,16 @@ class change_standard_price(osv.osv_memory):
         return res
 
     def onchange_price(self, cr, uid, ids, new_price, context = {}):
+        """ Sets stock input and output account according to the difference
+            of old price and new price.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected
+        @param new_price: Changed price
+        @param context: A standard dictionary
+        @return: Dictionary of values
+        """
         product_obj = self.pool.get('product.product').browse(cr, uid, context.get('active_id', False))
         price = product_obj.standard_price
         diff = price - new_price
@@ -77,18 +83,14 @@ class change_standard_price(osv.osv_memory):
             return {'value' : {'enable_stock_in_out_acc':False}}
 
     def change_price(self, cr, uid, ids, context):
-        """
-             Changes the Standard Price of Product.
-             And creates an account move accordingly.
-
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected
-             @param context: A standard dictionary
-
-             @return:
-
+        """ Changes the Standard Price of Product.
+            And creates an account move accordingly.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected
+        @param context: A standard dictionary
+        @return:
         """
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context')

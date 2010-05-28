@@ -406,18 +406,18 @@
         Procurement
         -->
 
-		<menuitem action="mrp_procurement.mrp_procurement_action" id="menu_mrp_procurement_action"
+		<menuitem action="procurement.procurement_action" id="menu_mrp_procurement_action"
         		  parent="mrp.menu_mrp_manufacturing" sequence="2" />
-<!--        <menuitem action="mrp_procurement.mrp_procurement_action5" id="menu_mrp_procurement_exception_action"-->
+<!--        <menuitem action="procurement.procurement_action5" id="menu_mrp_procurement_exception_action"-->
 <!--        		  parent="mrp.menu_mrp_control" sequence="1" />-->
 
      	<menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="4"/>
-        <menuitem action="mrp_procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
+        <menuitem action="procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
 
 		<!--
 		Order Point
 		-->
-		<menuitem action="mrp_procurement.action_orderpoint_form" id="menu_action_orderpoint_form" parent="mrp.menu_mrp_reordering"/>
+		<menuitem action="procurement.action_orderpoint_form" id="menu_action_orderpoint_form" parent="mrp.menu_mrp_reordering"/>
 
         <!--
 	    Production Management
@@ -640,8 +640,6 @@
                             <field name="date_finnished"/>
                             <field name="picking_id" groups="base.group_extended"/>
                             <field name="move_prod_id" groups="base.group_extended"/>
-                            <field name="sale_name" groups="base.group_extended"/>
-                            <field name="sale_ref" groups="base.group_extended"/>
                         </page>
                     </notebook>
                 </form>
@@ -813,9 +811,9 @@
         -->
 
         <record id="view_procurement_form_inherit" model="ir.ui.view">
-        	<field name="name">mrp.procurement.form.inherit</field>
-        	<field name="model">mrp.procurement</field>
-        	<field name="inherit_id" ref="mrp_procurement.mrp_procurement_form_view"/>
+        	<field name="name">procurement.order.form.inherit</field>
+        	<field name="model">procurement.order</field>
+        	<field name="inherit_id" ref="procurement.procurement_form_view"/>
         	<field name="type">form</field>
         	<field name="arch" type="xml">
         		<xpath expr="/form/notebook/page/field[@name='move_id']" position="before">

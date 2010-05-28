@@ -19,16 +19,34 @@
 #
 ##############################################################################
 
-#----------------------------------------------------------
-# Init Sales
-#----------------------------------------------------------
 
-import sale
-import stock
-import product
-import wizard
-import report
-import company
-
+{
+    "name" : "Procurements",
+    "version" : "1.0",
+    "author" : "Tiny",
+    "website" : "http://www.openerp.com",
+    "category" : "Generic Modules/Production",
+    "depends" : ["base","process", "product", "stock"],
+    "description": """
+    This is the module for computing Procurements.
+    """,
+    'init_xml': [],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'security/procurement_security.xml',
+        'procurement_data.xml',
+        'wizard/make_procurement_view.xml',
+        'wizard/mrp_procurement_view.xml',
+        'wizard/orderpoint_procurement_view.xml',
+        'procurement_view.xml',
+        'wizard/schedulers_all_view.xml',
+        'procurement_workflow.xml',
+        'process/procurement_process.xml',
+        "company_view.xml",
+    ],
+    'demo_xml': ['stock_orderpoint.xml'],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

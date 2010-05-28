@@ -48,7 +48,7 @@
 -
   I check the procurements.
 -
-  !python {model: mrp.procurement}: |
+  !python {model: procurement.order}: |
     from tools.translate import _
     orderline_obj = self.pool.get('sale.order.line')
     line_ids = orderline_obj.search(cr, uid, [('order_id','=', ref('sale_order_so0'))])
@@ -58,8 +58,8 @@
 -
   The scheduler runs.
 -
-  !function {model: mrp.procurement, name: run_scheduler}:
-    - model: mrp.procurement
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
       search: "[('state','=','confirmed')]"
 -
   Now I check the tasks.

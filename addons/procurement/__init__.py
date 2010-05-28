@@ -19,34 +19,7 @@
 #
 ##############################################################################
 
-
-{
-    "name" : "Procurements",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Production",
-    "depends" : ["base","process", "product", "stock"],
-    "description": """
-    This is the module for computing Procurements.
-    """,
-    'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'security/mrp_procurement_security.xml',
-        'mrp_procurement_data.xml',
-        'wizard/make_procurement_view.xml',
-        'wizard/mrp_procurement_view.xml',
-        'wizard/orderpoint_procurement_view.xml',
-        'mrp_procurement_view.xml',
-        'wizard/schedulers_all_view.xml',
-        'mrp_procurement_workflow.xml',
-        'process/procurement_process.xml',
-        "company_view.xml",
-    ],
-#    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': '',
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import procurement
+import wizard
+import schedulers
+import company

@@ -39,20 +39,16 @@ class stock_invoice_onshipping(osv.osv_memory):
                         ('out_refund', 'Customer Refund'),
                         ('in_refund', 'Supplier Refund')] , 'Type', required=True),
             'invoice_date': fields.date('Invoiced date'),
-            }
+    }
 
     def _get_type(self, cr, uid, context=None):
-        """ 
-             To get invoice type
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param context: A standard dictionary 
-             
-             @return: invoice type
-        
+        """ To get invoice type.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: The ID or list of IDs if we want more than one 
+        @param context: A standard dictionary 
+        @return: Invoice type
         """
         if context is None:
             context = {}     
@@ -80,20 +76,16 @@ class stock_invoice_onshipping(osv.osv_memory):
 
     _defaults = {
             'type': _get_type,
-        }
+    }
 
     def create_invoice(self, cr, uid, ids, context):
-        """ 
-             To create invoice
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param context: A standard dictionary 
-             
-             @return: invoice ids 
-        
+        """ To create invoice
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID or list of IDs if we want more than one 
+        @param context: A standard dictionary 
+        @return: Invoice ids 
         """        
         result = []
         picking_obj = self.pool.get('stock.picking')

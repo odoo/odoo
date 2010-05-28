@@ -19,34 +19,20 @@
 #
 ##############################################################################
 
-import threading
-from osv import osv, fields
 
-class procurement_compute(osv.osv_memory):
-    _name = 'mrp.procurement.compute'
-    _description = 'Compute Procurement'
-    
-    def _procure_calculation_procure(self, cr, uid, ids, context):
-        try:
-            proc_obj = self.pool.get('mrp.procurement')
-            proc_obj._procure_confirm(cr, uid, use_new_cursor=cr.dbname, context=context)
-        finally:
-            cr.close()
-        return {}
-    
-    def procure_calculation(self, cr, uid, ids, context):
-        """ 
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param ids: List of IDs selected 
-         @param context: A standard dictionary 
-        """
-        threaded_calculation = threading.Thread(target=self._procure_calculation_procure, args=(cr, uid, ids, context))
-        threaded_calculation.start()
-        return {}
-    
-procurement_compute()
-
+{
+    "name" : "Marketing",
+    "version" : "1.1",
+    "depends" : ["base"],
+    "author" : "Tiny",
+    "category": 'Generic Modules/Marketing',
+    "description": "Menu for Marketing",
+    'website': 'http://www.openerp.com',
+    'init_xml': [],
+    'demo_xml':[],
+    'update_xml': ['marketing_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
