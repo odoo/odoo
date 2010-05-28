@@ -110,7 +110,7 @@ def _process_text(self, txt):
                     expr = sps.pop(0)
                     txt = eval(expr,self.localcontext)
                     if txt and (isinstance(txt, unicode) or isinstance(txt, str)):
-                        txt = unicode(self.localcontext.get('translate', lambda x:x)(txt))
+                        txt = unicode(txt)
                 except Exception,e:
                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 if type(txt)==type('') or type(txt)==type(u''):
