@@ -114,8 +114,8 @@ class product_uom(osv.osv):
 
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context={}):
         if from_unit.category_id.id <> to_unit.category_id.id:
-            raise osv.except_osv(_('Warning !'),_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!')% (from_unit.name,to_unit.name))
-#            return qty
+#            raise osv.except_osv(_('Warning !'),_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!')% (from_unit.name,to_unit.name))
+            return qty
         if from_unit.factor_inv_data:
             amount = qty * from_unit.factor_inv_data
         else:
@@ -136,8 +136,8 @@ class product_uom(osv.osv):
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
         if from_unit.category_id.id <> to_unit.category_id.id:
-            raise osv.except_osv(_('Warning !'),_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!')% (from_unit.name,to_unit.name))
-#            return price
+#            raise osv.except_osv(_('Warning !'),_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!')% (from_unit.name,to_unit.name))
+            return price
         if from_unit.factor_inv_data:
             amount = price / from_unit.factor_inv_data
         else:
