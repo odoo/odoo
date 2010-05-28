@@ -485,7 +485,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'active': lambda *a: 1,
         'logic': lambda *a: 'max',
         'qty_multiple': lambda *a: 1,
-        'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
+        'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'stock.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
     }
@@ -519,7 +519,7 @@ class stock_warehouse_orderpoint(osv.osv):
         if not default:
             default = {}
         default.update({
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.warehouse.orderpoint') or '',
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context)
     

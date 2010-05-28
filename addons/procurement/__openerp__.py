@@ -44,7 +44,7 @@
         'process/procurement_process.xml',
         "company_view.xml",
     ],
-#    'demo_xml': [],
+    'demo_xml': ['stock_orderpoint.xml'],
     'installable': True,
     'active': False,
     'certificate': '',

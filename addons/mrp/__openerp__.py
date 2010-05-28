@@ -76,7 +76,7 @@
         'report/mrp_report_view.xml',
         'report/mrp_production_order_view.xml',
     ],
-    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
+    'demo_xml': ['mrp_demo.xml'],
     'test': [
              'test/mrp_phantom_bom.yml',
              'test/mrp_production_order.yml',
