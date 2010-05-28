@@ -61,15 +61,16 @@
     </record>
 
 	<record id="action_campaign_analysis_all" model="ir.actions.act_window">
-        <field name="name">Marketing Report</field>
+        <field name="name">Campaigns</field>
         <field name="res_model">campaign.analysis</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree</field>
         <field name="context">{'group_by': [], 'search_default_Campaign': 1, 'search_default_Segment': 1}</field>
         <field name="search_view_id" ref="view_campaign_analysis_search"/>
     </record>
-
-    <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="menu_marketing" sequence="40"/>
+    
+	<menuitem name="Reporting" id="menu_marketing_reporting" parent="marketing.marketing_menu"/>
+    <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="menu_marketing_reporting" sequence="40"/>
 		
 	</data>
 </openerp>
