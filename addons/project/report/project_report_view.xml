@@ -55,10 +55,10 @@
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
                 	<group>
-	                    <filter icon="gtk-media-rewind" string="Last 365 Days"
+	                    <filter icon="gtk-media-rewind" string="  365 Days  "
 	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Tasks performed in last 365 Days"/>
-	                    <filter icon="gtk-media-rewind" string="Last 30 Days"
+	                    <filter icon="gtk-media-rewind" string="   30 Days   "
 	                    		name="month"
 	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                    		help="Tasks performed in last 30 days"/>
