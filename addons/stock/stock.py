@@ -1624,13 +1624,12 @@ class stock_move(osv.osv):
                     if (move.location_id.usage=='internal' and  move.location_dest_id.usage=='customer') or \
                        (move.location_id.usage=='internal' and  move.location_dest_id.usage=='internal'\
                         and  move.location_id.company_id.id!=move.location_dest_id.company_id.id):
-                        print "<<<<<<<<<<<<<<s<<<<<<<<"
                         sale.append(self.create_account_move(cr,uid,move,account_variation ,acc_dest,amount,context))
 
                     if (move.location_id.usage =='supplier' and  move.location_dest_id.usage=='internal')  or\
                         (move.location_id.usage=='internal' and  move.location_dest_id.usage=='internal'\
                         and  move.location_id.company_id.id!=move.location_dest_id.company_id.id):
-                        print "<<<<<<<<<<<<<<puuuuuuuuuuuuuuuuu<<<<<<<<"
+                        
                         purchase.append(self.create_account_move(cr,uid,move,acc_src ,account_variation,amount,context))
                  
                  
