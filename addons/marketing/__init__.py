@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,37 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
+import marketing_wizard
 
-{
-    "name" : "",
-    "version" : "1.1",
-    "depends" : ["marketing",
-                 "crm", 
-                "document",
-                "poweremail" # need to get this module form the branch 
-                # lp:poweremail  
-                ],
-    "author" : "Tiny",
-    "category": 'Generic Modules/Marketing',
-    "description": """
-    """,
-    'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        'marketing_campaign_view.xml',
-        'marketing_campaign_data.xml',    
-        'marketing_campaign_workflow.xml',    
-        'report/campaign_analysis_view.xml',
-        'marketing_campaign_demo.xml'
-    ],
-    'demo_xml': [
-        'marketing_campaign_demo.xml',
-            ],
-    'installable': True,
-    'active': False,
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
