@@ -99,7 +99,6 @@ class sale_report(osv.osv):
                  group by
                      s.date_order,
                      s.partner_id,
-                     pt.uom_id,
                      l.product_id,
                      l.product_uom,
                      s.user_id,
