@@ -44,14 +44,14 @@
     weight_net: 0.0
  
 - 
-  Now I create Expense "visit to India" for  employee1.and select product "travel". 
+  Now I create Expense "September Expenses" for  employee1.and select product "travel". 
 - 
-  !record {model: hr.expense.expense, id: hr_expense_expense_visitonindia0}:
+  !record {model: hr.expense.expense, id: hr_expense_expense_september0}:
     company_id: base.main_company
     currency_id: base.EUR
     date: '2010-05-05'
     employee_id: hr.employee1
-    name: visit on India
+    name: September Expenses
     line_ids:
       - date_value: '2010-05-27'
         name: Travel
@@ -63,38 +63,38 @@
 - |
   I check that expenses on "draft" state.
 -
-  !assert {model: hr.expense.expense, id: hr_expense_expense_visitonindia0}:
+  !assert {model: hr.expense.expense, id: hr_expense_expense_september0}:
     - state == 'draft'
 - |
   I confirm this expenses by click on "Confirm" button.
 - 
-  !workflow {model: hr.expense.expense, action: confirm, ref: hr_expense_expense_visitonindia0}     
+  !workflow {model: hr.expense.expense, action: confirm, ref:hr_expense_expense_september0}     
     
 - |
   I check that state is "Waiting Confirmation".
 -
-  !assert {model: hr.expense.expense, id: hr_expense_expense_visitonindia0}:
+  !assert {model: hr.expense.expense, id: hr_expense_expense_september0}:
     - state == 'confirm'
 - |
   I accept this expense by click on "Accept" button.
 - 
-  !workflow {model: hr.expense.expense, action: validate, ref: hr_expense_expense_visitonindia0}
+  !workflow {model: hr.expense.expense, action: validate, ref: hr_expense_expense_september0}
   
 - |
   I invoiced this expenses by click on "Invoice" button.
 - 
-  !workflow {model: hr.expense.expense, action: invoice, ref: hr_expense_expense_visitonindia0}
+  !workflow {model: hr.expense.expense, action: invoice, ref: hr_expense_expense_september0}
   
 - |
   I check that state is "Invoiced"
 -
-  !assert {model: hr.expense.expense, id: hr_expense_expense_visitonindia0}:
+  !assert {model: hr.expense.expense, id: hr_expense_expense_september0}:
     - state == 'invoiced'
 - |
   Now I check that Invoice is created for that expenses.
 -
   !python {model: hr.expense.expense}: |
-    exp = self.browse(cr, uid, [ref('hr_expense_expense_visitonindia0')])[0]
+    exp = self.browse(cr, uid, [ref('hr_expense_expense_september0')])[0]
     invoice_obj = self.pool.get('account.invoice')
     invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', exp.employee_id.address_id.partner_id.id)]) 
     invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
