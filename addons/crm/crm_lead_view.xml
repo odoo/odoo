@@ -48,8 +48,7 @@
                          string="Convert"
                          help="Convert to Opportunity"
                          icon="gtk-index"   
-                         type="object"
-                         attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                         type="object"/>
                     <newline />
                     <field name="section_id" colspan="1"
                         widget="selection" />
@@ -172,7 +171,7 @@
                             <button colspan="4"
                             string="Reply to Last Email"
                             name="%(crm.action_crm_send_mail)d"
-                            context="{'mail':'reply', 'model': 'crm.lead'}"
+                            context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
                             icon="gtk-undo" type="action" />
                         </form>
                         <tree string="Communication history">

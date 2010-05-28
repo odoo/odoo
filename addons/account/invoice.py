@@ -951,14 +951,8 @@ class account_invoice(osv.osv):
         return taxes.values()
 
     def _log_event(self, cr, uid, ids, factor=1.0, name='Open Invoice'):
-        invs = self.read(cr, uid, ids, ['type','partner_id','amount_untaxed'])
-        for inv in invs:
-            part=inv['partner_id'] and inv['partner_id'][0]
-            pc = pr = 0.0
-            cr.execute('select sum(quantity*price_unit) from account_invoice_line where invoice_id=%s', (inv['id'],))
-            total = inv['amount_untaxed']
-            self.pool.get('res.partner.event').create(cr, uid, {'name':'Invoice: ' + name, 'description':name+' '+str(inv['id']), 'partner_id':part, 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id':uid})
-        return len(invs)
+        #TODO: implement messages system
+        return True
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):

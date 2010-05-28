@@ -25,7 +25,7 @@ import time
 
 class sale_journal_invoice_type(osv.osv):
     _name = 'sale_journal.invoice.type'
-    _description = 'Invoice Type'
+    _description = 'Invoice Types'
     _columns = {
         'name': fields.char('Invoice Type', size=64, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the invoice type without removing it."),
@@ -53,7 +53,7 @@ class sale_journal(osv.osv):
             ('draft','Draft'),
             ('open','Open'),
             ('done','Done'),
-        ], 'State', required=True),
+        ], 'State', required=True, readonly=True),
         'note': fields.text('Note'),
     }
     _defaults = {
@@ -103,7 +103,7 @@ class picking_journal(osv.osv):
             ('draft','Draft'),
             ('open','Open'),
             ('done','Done'),
-        ], 'Creation date', required=True),
+        ], 'Creation date', required=True, readonly=True),
         'note': fields.text('Note'),
     }
     _defaults = {
