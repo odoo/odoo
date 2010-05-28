@@ -54,10 +54,10 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="6">
-                   		<filter icon="gtk-media-rewind" string="Last 365 Days"
+                   		<filter icon="gtk-media-rewind" string="  365 Days  "
 	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Picking in last 365 days"/>
-	                	<filter icon="gtk-media-rewind" string="Last 30 Days"
+	                	<filter icon="gtk-media-rewind" string="   30 Days   "
 	                			name="month"
 	                			domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                			help="Picking in last 30 days"/>

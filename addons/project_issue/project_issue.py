@@ -112,17 +112,17 @@ class project_issue(osv.osv, crm.crm_case):
     _columns = {
         'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'id': fields.integer('ID'),  
-        'name': fields.char('Name', size=128, required=True), 
-        'active': fields.boolean('Active', required=False), 
-        'create_date': fields.datetime('Creation Date' , readonly=True), 
-        'write_date': fields.datetime('Update Date' , readonly=True), 
-        'date_deadline': fields.date('Deadline'), 
-        'date_closed': fields.datetime('Closed', readonly=True), 
+        'name': fields.char('Name', size=128, required=True),
+        'active': fields.boolean('Active', required=False),
+        'create_date': fields.datetime('Creation Date' , readonly=True),
+        'write_date': fields.datetime('Update Date' , readonly=True),
+        'date_deadline': fields.date('Deadline'),
+        'date_closed': fields.datetime('Closed', readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'), 
-        'user_id': fields.many2one('res.users', 'Responsible'), 
-        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'user_id': fields.many2one('res.users', 'Responsible'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"), 
         'company_id': fields.many2one('res.company', 'Company'), 
@@ -164,6 +164,8 @@ class project_issue(osv.osv, crm.crm_case):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to'),
+        'working_hours_open': fields.float('Working Hours to Open the Issue'),
+        'working_hours_close': fields.float('Working Hours to Close the Issue'),
     }
     
     def _get_project(self, cr, uid, context):
@@ -173,7 +175,7 @@ class project_issue(osv.osv, crm.crm_case):
        return False
 
     _defaults = {
-        'active': lambda *a: 1, 
+        'active': lambda *a: 1,
         'user_id': crm.crm_case._get_default_user, 
         'partner_id': crm.crm_case._get_default_partner, 
         'partner_address_id': crm.crm_case._get_default_partner_address, 
@@ -262,6 +264,25 @@ class project_issue(osv.osv, crm.crm_case):
         if not stage.on_change:
             return {'value':{}}
         return {'value':{}}
+    
+    def case_escalate(self, cr, uid, ids, *args):
+        """Escalates case to top level
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(project_issue, self).case_escalate(cr, uid, ids, args)
+        cases = self.browse(cr, uid, ids)
+        for case in cases:
+            data = {}
+            if case.project_id.project_escalation_id:
+                data['project_id'] = case.project_id.project_escalation_id.id
+            else:
+                raise osv.except_osv(_('Warning !'), _('You cannot escalate this case.\nThe relevant Project has not configured the Escalation Project!'))
+            self.write(cr, uid, [case.id], data)
+        return res
 
 project_issue()
 

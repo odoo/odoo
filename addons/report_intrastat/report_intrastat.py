@@ -66,7 +66,7 @@ class report_intrastat(osv.osv):
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'supply_units':fields.float('Supply Units', readonly=True),
         'ref':fields.char('Source document',size=64, readonly=True),
-        'code': fields.char('Country code', size="2", readonly=True),
+        'code': fields.char('Country code', size=2, readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),
         'value': fields.float('Value', readonly=True),

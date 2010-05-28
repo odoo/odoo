@@ -70,7 +70,8 @@ class product_product(osv.osv):
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
         property_obj=self.pool.get('ir.property')
-        account_variation = property_obj.get(cr, uid, 'property_stock_variation', 'product.category', context=context)
+        product_obj=self.browse(cr,uid,ids)[0]
+        account_variation = product_obj.categ_id.property_stock_variation
         move_ids = []        
         for rec_id in ids:
             loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
@@ -87,6 +88,7 @@ class product_product(osv.osv):
                 assert diff, _("Could not find any difference between standard price and new price!")
                 if qty:
                     location_account = account_variation and account_variation.id or False
+                    
                     company_id = location.company_id and location.company_id.id or False                    
                     assert location_account, _('Inventory Account is not specified for Location: %s' % (location.name))
                     assert company_id, _('Company is not specified in Location')

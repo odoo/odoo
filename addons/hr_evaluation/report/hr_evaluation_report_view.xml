@@ -42,33 +42,37 @@
         <field name="arch" type="xml">
             <search string="Evaluations">
             	<group>
-            		<filter icon="terp-hr" string="This Year"
-                    	    domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                    	    help="Tasks performed in this year"/>
-                    <filter icon="terp-hr" string="This Month"
-                    		name="month"
-                    		domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                    		help="Tasks performed in this month"/>
+            		<filter icon="gtk-media-rewind" string="Last 365 Days"
+                    	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                    	help="Tasks performed in last 365 days"/>
+                    <filter icon="gtk-media-rewind" string="Last 30 Days"
+                    	name="month"
+                    	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                    	help="Tasks performed in last 30 days"/>
 	                <filter icon="gtk-media-rewind"
-                            string="    7 Days    "
-                            separator="1"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                            help="Tasks during last 7 days"/>
+                        string="    7 Days    "
+                        separator="1"
+                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                        help="Tasks during last 7 days"/>
                     <separator orientation="vertical"/>
                     <filter string="Draft"
-                    		icon="terp-hr"
-                    		domain="[('state','=','draft')]"
-                    		help = "Draft Evaluations"/>
+                    	icon="terp-hr"
+                    	domain="[('state','=','draft')]"
+                    	help = "Draft Evaluations"/>
 	                <filter string="Plan In Progress"
-	                		icon="terp-hr"
-	                		domain="[('state', '=' ,'wait')]"
-	                		help = "In progress Evaluations"/>
+	                	icon="terp-hr"
+	                	domain="[('state', '=' ,'wait')]"
+	                	help = "In progress Evaluations"/>
                    	<filter string="Final Validation"
-                   			icon="terp-hr"
-                   			domain="[('state','=','progress')]"
-                   			help = "Final Validation Evaluations"/>
+                   		icon="terp-hr"
+                   		domain="[('state','=','progress')]"
+                   		help = "Final Validation Evaluations"/>
+                   	<filter icon="terp-hr"
+                        string="Done"
+                        domain="[('state','=','done')]"/>
   					<separator orientation="vertical"/>
 	                <field name="employee_id" widget="selection"/>
+	                <field name="plan_id" widget="selection"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
@@ -84,20 +88,11 @@
                 </group>
                  <newline/>
 				<group expand="0" string="Extended options..." groups="base.group_extended">
-                	<filter icon="terp-hr"
-                    		string="Done"
-                    		domain="[('state','=','done')]"/>
-                    <filter icon="terp-hr"
-                    		string="Cancelled"
-                    		domain="[('state','=','cancel')]"/>
-                    <separator orientation="vertical"/>
                     <field name="rating"/>
-                    <field name="plan_id" widget="selection"/>
                     <separator orientation="vertical"/>
                     <field name="deadline"/>
-                    <newline/>
-                    <field name="create_date"/>
-                    <field name="closed"/>
+                    <separator orientation="vertical"/>
+                    <field name="state"/>
                 </group>
             </search>
         </field>
