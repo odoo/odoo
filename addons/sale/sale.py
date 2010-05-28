@@ -511,12 +511,12 @@ class sale_order(osv.osv):
     def action_invoice_end(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-            
+
         for order in self.browse(cr, uid, ids, context=context):
             for line in order.order_line:
                 if line.state == 'exception':
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'confirmed'}, context=context)
-            
+
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
 
@@ -1086,7 +1086,7 @@ class sale_order_line(osv.osv):
             warning = {
                 'title': 'No Pricelist !',
                 'message':
-                    'You have to select a pricelist in the sale form !\n'
+                    'You have to select a pricelist or a customer in the sale form !\n'
                     'Please set one before choosing a product.'
                 }
         else:

@@ -1495,8 +1495,10 @@
                                 on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
                             <field name="tracking_id"/>
                             <newline/>
-                            <label/>
-                            <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+                            <group col="2" colspan="2">
+                                <label/>
+                                <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+                            </group>
                             <separator colspan="4" string="Move State"/>
                             <field name="state"/>
                             <group col="5" colspan="2">
