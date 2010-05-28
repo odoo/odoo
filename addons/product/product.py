@@ -209,7 +209,15 @@ class product_category(osv.osv):
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
+        'property_stock_variation': fields.property(
+          'account.account',
+          type='many2one', 
+          relation='account.account', 
+          string="Stock variation Account", 
+          method=True,
+          view_load=True,),
     }
+    
 
     _defaults = {
         'type' : lambda *a : 'normal',
@@ -457,6 +465,9 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
         'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
+        'valuation':fields.selection([('manual_periodic','Manual Periodic Valuation'),
+                                        ('real_time','Real Time valuation'),
+                                        ('','')],'Valuation'),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
