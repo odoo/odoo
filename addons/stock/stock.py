@@ -537,11 +537,14 @@ class stock_picking(osv.osv):
     }
 
     def copy(self, cr, uid, id, default=None, context={}):
+        picking_obj = self.browse(cr, uid, [id], context)[0]
         if default is None:
             default = {}
         default = default.copy()
-        if not default.get('name',False):
-            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking')
+        if ('name' not in default) or (picking_obj.get('name')=='/'):
+            seq_obj_name =  'stock.picking.' + picking_obj.type
+            default['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)        
+
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
@@ -1568,41 +1571,40 @@ class stock_move(osv.osv):
             acc_dest = None
             if move.product_id.valuation=='real_time':
                 journal_id = move.product_id.categ_id.property_stock_journal and  move.product_id.categ_id.property_stock_journal.id or False                
-                if(move.location_id.usage=='internal' and  move.location_dest_id.usage=='internal' and  move.location_id.company_id.id!=move.location_dest_id.company_id.id) or ( move.location_id.usage=='internal' or move.location_dest_id.usage=='internal'):
+                if(move.location_id.usage=='internal' and  move.location_dest_id.usage=='internal' and  move.location_id.company_id.id!=move.location_dest_id.company_id.id):
+                    
                     test = [('product.product', move.product_id.id)]
-                    if move.product_id.categ_id:
-                        test.append( ('product.category', move.product_id.categ_id.id) )
+                    product_obj=self.pool.get('product.product')
+                    accounts=product_obj.get_product_accounts(cr,uid,move.product_id.id,context)
+                    acc_src=accounts['stock_account_input']
+                    acc_dest=accounts['stock_account_output']
+                    journal_id=accounts['stock_journal']
                     if not acc_src:
-                        acc_src = move.product_id.product_tmpl_id.\
-                                property_stock_account_input.id
-                        if not acc_src:
-                            acc_src = move.product_id.categ_id.\
-                                    property_stock_account_input_categ.id
-                        if not acc_src:
                             raise osv.except_osv(_('Error!'),
                                     _('There is no stock input account defined ' \
                                             'for this product: "%s" (id: %d)') % \
                                             (move.product_id.name,
                                                 move.product_id.id,))
                     if not acc_dest:
-                        acc_dest = move.product_id.product_tmpl_id.\
-                                property_stock_account_output.id
-                        if not acc_dest:
-                            acc_dest = move.product_id.categ_id.\
-                                    property_stock_account_output_categ.id
-                        if not acc_dest:
                             raise osv.except_osv(_('Error!'),
                                     _('There is no stock output account defined ' \
                                             'for this product: "%s" (id: %d)') % \
                                             (move.product_id.name,
                                                 move.product_id.id,))
-                    if not move.product_id.categ_id.property_stock_journal.id:
+                    if not journal_id:
                         raise osv.except_osv(_('Error!'),
                             _('There is no journal defined '\
                                 'on the product category: "%s" (id: %d)') % \
                                 (move.product_id.categ_id.name,
                                     move.product_id.categ_id.id,))
-                    journal_id = move.product_id.categ_id.property_stock_journal.id
+
+                    account_variation = move.product_id.categ_id.property_stock_variation
+                    if not account_variation:
+                        raise osv.except_osv(_('Error!'),
+                            _('There is no variation  account defined '\
+                                'on the product category: "%s" (id: %d)') % \
+                                (move.product_id.categ_id.name,
+                                    move.product_id.categ_id.id,))
                     if acc_src != acc_dest:
                         ref = move.picking_id and move.picking_id.name or False
                         default_uom = move.product_id.uom_id.id
@@ -1622,16 +1624,19 @@ class stock_move(osv.osv):
                         partner_id = False
                         if move.picking_id:
                             partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
+                           
                         lines = [
                                 (0, 0, {
                                     'name': move.name,
                                     'quantity': move.product_qty,
                                     'product_id': move.product_id and move.product_id.id or False,
                                     'credit': amount,
-                                    'account_id': acc_src,
+                                    'account_id': account_variation and account_variation.id,
                                     'ref': ref,
                                     'date': date,
-                                    'partner_id': partner_id}),
+                                    'partner_id': partner_id,
+                                    'company_id':move.location_id.company_id.id,
+                                    }),
                                 (0, 0, {
                                     'name': move.name,
                                     'product_id': move.product_id and move.product_id.id or False,
@@ -1640,11 +1645,38 @@ class stock_move(osv.osv):
                                     'account_id': acc_dest,
                                     'ref': ref,
                                     'date': date,
-                                    'partner_id': partner_id})
+                                    'partner_id': partner_id,
+                                    'company_id':move.location_id.company_id.id,
+                                    }),
+                                
+                                (0, 0, {
+                                    'name': move.name,
+                                    'quantity': move.product_qty,
+                                    'product_id': move.product_id and move.product_id.id or False,
+                                    'credit': amount,
+                                    'account_id': acc_src,
+                                    'ref': ref,
+                                    'date': date,
+                                    'partner_id': partner_id,
+                                    'company_id':move.location_dest_id.company_id.id
+                                    }),
+                                (0, 0, {
+                                    'name': move.name,
+                                    'product_id': move.product_id and move.product_id.id or False,
+                                    'quantity': move.product_qty,
+                                    'debit': amount,
+                                    'account_id': account_variation and account_variation.id,
+                                    'ref': ref,
+                                    'date': date,
+                                    'partner_id': partner_id,
+                                    'company_id':move.location_dest_id.company_id.id
+                                    })
+#                                
                         ]
                         move_obj.create(cr, uid, {
                             'name': move.name,
                             'journal_id': journal_id,
+                            'type':'cont_voucher',
                             'line_id': lines,
                             'ref': ref,
                         })

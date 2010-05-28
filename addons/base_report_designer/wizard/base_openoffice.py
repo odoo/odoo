@@ -51,7 +51,8 @@ class base_openoffice(osv.osv_memory):
     _defaults = {
         'name' : 'tiny_plugin-2.0.xpi',
         'pdf_name' : 'Installation Guide to OpenOffice Report Desinger.pdf',
-        'base_desinger_url':'http://doc.openerp.com/book/8/8_20_Config/8_20_Config_reports.html'
+        'base_desinger_url':'http://doc.openerp.com/developer/7_23_RAD_tools/index.html#open-office-report-designer'
+        
         }
         
 base_openoffice()
