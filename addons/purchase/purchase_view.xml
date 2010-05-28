@@ -167,6 +167,9 @@
                     <filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Expected Date" icon="terp-sale" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
+                    <filter string="Source Document”" icon="terp-purchase" domain="[]" context="{'group_by':'origin'}"/>
                 </group>
               </search>
             </field>
@@ -265,7 +268,7 @@
                 <tree colors="red:date_planned&lt;=current_date;black:date_planned&gt;current_date" string="Purchase Order Lines">
                     <field name="order_id"/>
                     <field name="name"/>
-                    <field name="date_planned" widget="date"/>
+                    <field name="date_planned" widget="date" width="135"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
@@ -273,6 +276,25 @@
                     <field name="price_subtotal"/>
                     <field name="invoiced"/>
                 </tree>
+            </field>
+        </record>
+
+          <record id="purchase_order_line_search" model="ir.ui.view">
+            <field name="name">purchase.order.line.search</field>
+            <field name="model">purchase.order.line</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Order">
+                        <group>
+                        <field name='order_id'/>
+                        <field name="product_id" widget="selection" />
+                        </group>
+                        <newline/>
+                        <group expand="1" string="Group By...">
+                        <filter string="State" icon="terp-crm" domain="[]" context="{'group_by' : 'state'}" />
+                        <filter string="Order Reference" icon="terp-crm" domain="[]" context="{'group_by' : 'product_id'}" />
+                        </group>
+               </search>
             </field>
         </record>
 
@@ -309,6 +331,7 @@
             <field name="domain">[('state','in',('confirmed','done')), ('invoiced','=',False)]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+             <field name="search_view_id" ref="purchase_order_line_search"/>
         </record>
         <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
