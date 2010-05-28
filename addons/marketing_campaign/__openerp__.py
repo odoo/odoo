@@ -35,7 +35,6 @@
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
-    'demo_xml':[],
     'update_xml': [
         'marketing_campaign_view.xml',
         'marketing_campaign_data.xml',    
