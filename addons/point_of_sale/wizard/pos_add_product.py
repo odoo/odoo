@@ -62,6 +62,14 @@ class add_product(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
     def close_action(self, cr, uid, ids, context):
+        """
+             To get the product and Make the payment .
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary
+             @return : Return the Make Payment 
+        """
 
         record_id = context and context.get('active_id', False)
         order_obj= self.pool.get('pos.order')

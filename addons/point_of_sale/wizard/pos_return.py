@@ -63,6 +63,14 @@ class pos_return(osv.osv_memory):
         return res
                    
     def view_init(self, cr, uid, fields_list, context=None):
+        """ 
+         Creates view dynamically and adding fields at runtime.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary 
+         @return: New arch of view with new columns.
+        """         
         res = super(pos_return, self).view_init(cr, uid, fields_list, context=context)
         order_obj=self.pool.get('pos.order')           
         if not context:
@@ -77,6 +85,18 @@ class pos_return(osv.osv_memory):
         return res   
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
+
+        """ 
+             Changes the view dynamically
+        
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary 
+             
+             @return: New arch of view.
+        
+        """        
         result = super(pos_return, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
         if not context:
             context={}
@@ -123,6 +143,15 @@ class pos_return(osv.osv_memory):
        
        
     def  create_returns(self, cr, uid, data, context):
+        """ 
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary 
+             
+             @return: Return the add product form again for adding more product
+        
+        """
         return {
                 'name': _('Add Product'),
                 'view_type': 'form',
