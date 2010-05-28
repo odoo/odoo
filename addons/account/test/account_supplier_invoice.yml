@@ -3,7 +3,7 @@
 -
   Creating a account.invoice record
 -
-  !record {model: account.invoice, id: account_invoice_0}:
+  !record {model: account.invoice, id: account_invoice_1}:
     account_id: account.a_pay
     address_contact_id: base.res_partner_address_3000
     address_invoice_id: base.res_partner_address_3000
@@ -22,20 +22,20 @@
     reference_type: none
     type: in_invoice
 -
-  I check that Initially customer invoice is in the draft state
+  I check that Initially supplier invoice is in the draft state
 -
-  !assert {model: account.invoice, id: account_invoice_0}:
+  !assert {model: account.invoice, id: account_invoice_1}:
     - state == 'draft'
 -
   I change the state of invoice to open by clicking Validate button
 -
   Performing a workflow action invoice_open on module account.invoice
 -
-  !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_0}
+  !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_1}
 -
   I check that the invoice state is now open
 -
-  !assert {model: account.invoice, id: account_invoice_0}:
+  !assert {model: account.invoice, id: account_invoice_1}:
     - state == 'open'
 -
   I make a partial payment of 2000 by clicking on Pay Invoice button
@@ -55,12 +55,12 @@
   !python {model: account.invoice.pay}: |
     self.pay_and_reconcile(cr, uid, [ref("account_invoice_pay_firstpaymenttoaxelorforbasicpc0")],
       {"lang": 'en_US', "active_model": "account.invoice", "tz": False, "record_id":
-      25, "active_ids": [ref("account_invoice_0")], "type": "in_invoice", "active_id":
-      ref("account_invoice_0"), })
+      25, "active_ids": [ref("account_invoice_1")], "type": "in_invoice", "active_id":
+      ref("account_invoice_1"), })
 -
   I check that the invoice state is still open
 -
-  !assert {model: account.invoice, id: account_invoice_0}:
+  !assert {model: account.invoice, id: account_invoice_1}:
     - state == 'open'
 -
   I make final partial payment of 1000 by clicking on Pay Invoice button
@@ -81,19 +81,19 @@
   !python {model: account.invoice.pay}: |
     self.pay_and_reconcile(cr, uid, [ref("account_invoice_pay_finalpaymenttoaxelorforbasicpc0")],
       {"lang": 'en_US', "active_model": "account.invoice", "tz": False, "record_id":
-      25, "active_ids": [ref("account_invoice_0")], "type": "in_invoice", "active_id":
-      ref("account_invoice_0"), })
+      25, "active_ids": [ref("account_invoice_1")], "type": "in_invoice", "active_id":
+      ref("account_invoice_1"), })
 
 -
   I check that the invoice state is now Done
 -
-  !assert {model: account.invoice, id: account_invoice_0}:
+  !assert {model: account.invoice, id: account_invoice_1}:
     - state == 'paid'
 -
   I check that an payment entry gets created in the account.move.line
 -
   !python {model: account.invoice}: |
-    acc_id=self.browse(cr, uid, ref("account_invoice_0"))
+    acc_id=self.browse(cr, uid, ref("account_invoice_1"))
     assert(acc_id.move_id)
 #-
 #  I refund the invoice
@@ -110,8 +110,8 @@
 #-
 #  !python {model: account.invoice.refund}: |
 #    self.invoice_refund(cr, uid, [ref("account_invoice_refund_0")], {"lang": 'en_US',
-#      "tz": False, "active_model": "account.invoice", "active_ids": [ref("account_invoice_0")],
-#      "type": "in_invoice", "active_id": ref("account_invoice_0"), })
+#      "tz": False, "active_model": "account.invoice", "active_ids": [ref("account_invoice_1")],
+#      "type": "in_invoice", "active_id": ref("account_invoice_1"), })
 
 
 

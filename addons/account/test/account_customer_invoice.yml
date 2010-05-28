@@ -138,6 +138,6 @@
 #  Performing an osv_memory action invoice_refund on module account.invoice.refund
 #-
 #  !python {model: account.invoice.refund}: |
-#    self.invoice_refund(cr, uid, [ref("account_invoice_refund_0")], {"lang": 'en_US',
-#      "tz": False, "active_model": "account.invoice", "active_ids": [ref("account.account_invoice_0")],
-#      "type": "out_invoice", "active_id": ref("account.account_invoice_0"), })
+#    self.invoice_refund(cr, uid, [ref("account_invoice_refund_0")], {"lang": 'en_US', "tz": False, "active_model": "account.invoice", "active_ids": [ref("account.account_invoice_0")], "type": "out_invoice", "active_id": ref("account.account_invoice_0"), })
+#    return self.compute_refund(cr, uid, [ref("account_invoice_refund_0")], "refund" {"lang": 'en_US',"tz": False, "active_model": "account.invoice", "active_ids": [ref("account.account_invoice_0")], "type": "out_invoice", "active_id": ref("account.account_invoice_0"), })
+
