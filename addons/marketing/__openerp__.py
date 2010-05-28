@@ -19,25 +19,20 @@
 #
 ##############################################################################
 
-import central_journal
-import general_journal
-import account_journal
-import account_balance
-import partner_balance
-import general_ledger
-import third_party_ledger
-import invoice
-import overdue
-import aged_trial_balance
-import tax_report
-import account_tax_code
-import account_balance_landscape
-import compare_account_balance
-import account_invoice_report
-import account_report
-import account_analytic_report
-import account_account_report
-import account_entries_report
-import account_analytic_entries_report
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+{
+    "name" : "Marketing",
+    "version" : "1.1",
+    "depends" : ["base"],
+    "author" : "Tiny",
+    "category": 'Generic Modules/Marketing',
+    "description": "Menu for Marketing",
+    'website': 'http://www.openerp.com',
+    'init_xml': [],
+    'demo_xml':[],
+    'update_xml': ['marketing_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -31,8 +31,10 @@
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': [
+        'crm',
         'project',
         'hr_timesheet_sheet',
+        'project_long_term',
     ],
     'init_xml': [
         'project_issue_data.xml'
