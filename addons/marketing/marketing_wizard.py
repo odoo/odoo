@@ -19,7 +19,20 @@
 #
 ##############################################################################
 
-import marketing_wizard
+from osv import fields, osv
+
+class marketing_installer(osv.osv_memory):
+    _name = 'marketing.installer'
+    _inherit = 'res.config.installer'
+    
+    _columns = {
+        # Generic modules
+        'marketing_campaign':fields.boolean('Marketing Campaign',
+            help="Helps you to manage your marketing campaigns step by step."),
+        'crm_profiling':fields.boolean('Crm Profile',
+            help="Helps you to perform segmentation within partners.")
+            }
+        
+marketing_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
