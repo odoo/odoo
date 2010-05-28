@@ -136,11 +136,11 @@ class product_product(osv.osv):
 product_product()
 
 
-class mrp_procurement(osv.osv):
-    _inherit = 'mrp.procurement'
+class procurement_order(osv.osv):
+    _inherit = 'procurement.order'
     def make_po(self, cr, uid, ids, context={}):
         sequence_obj=self.pool.get('ir.sequence')
-        res = super(mrp_procurement, self).make_po(cr, uid, ids, context)
+        res = super(procurement_order, self).make_po(cr, uid, ids, context)
         for proc_id,po_id in res.items():
             procurement = self.browse(cr, uid, proc_id)
             if procurement.product_id.purchase_requisition:
@@ -157,4 +157,4 @@ class mrp_procurement(osv.osv):
                     'purchase_ids': [(6,0,[po_id])]
                 })
         return res
-mrp_procurement()
+procurement_order()

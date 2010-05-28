@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,17 +15,30 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import mrp
-import stock
-import product
-import installer
-import wizard
-import report
-import company
-import procurement
 
+{
+    'name': 'Sales and MRP Management',
+    'version': '1.0',
+    'category': 'Generic Modules/Sales & MRP',
+    'description': """
+    This module provides facility to the user to install mrp and sale modules 
+    at a time. It is basically used when we want to keep track of production 
+    orders generated from sale orders.
+    """,
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['mrp', 'sale'],
+    'init_xml': [],
+    'update_xml': [
+        'sale_mrp_view.xml',
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

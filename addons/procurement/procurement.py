@@ -62,11 +62,11 @@ mrp_property()
 # Produce, Buy or Find products and place a move
 #     then wizard for picking lists & move
 #
-class mrp_procurement(osv.osv):
+class procurement_order(osv.osv):
     """
     Procurement Orders
     """
-    _name = "mrp.procurement"
+    _name = "procurement.order"
     _description = "Procurement"
     _order = 'priority,date_planned desc'
     _log_create = False
@@ -92,7 +92,7 @@ class mrp_procurement(osv.osv):
 
         'note': fields.text('Note'),
 
-        'property_ids': fields.many2many('mrp.property', 'mrp_procurement_property_rel', 'procurement_id','property_id', 'Properties'),
+        'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
 
         'message': fields.char('Latest error', size=64, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
@@ -115,7 +115,7 @@ class mrp_procurement(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.procurement', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -176,7 +176,7 @@ class mrp_procurement(osv.osv):
         return res
 
     #
-    # This method may be overrided by objects that override mrp.procurment
+    # This method may be overrided by objects that override procurement.order
     # for computing their own purpose
     #
     def _quantity_compute_get(self, cr, uid, proc, context={}):
@@ -286,7 +286,7 @@ class mrp_procurement(osv.osv):
             if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
                 return False
             if not procurement.product_id.seller_ids:
-                cr.execute('update mrp_procurement set message=%s where id=%s', (_('No supplier defined for this product !'), procurement.id))
+                cr.execute('update procurement_order set message=%s where id=%s', (_('No supplier defined for this product !'), procurement.id))
                 return False
             partner = procurement.product_id.seller_ids[0].name
             if user.company_id and user.company_id.partner_id:
@@ -294,7 +294,7 @@ class mrp_procurement(osv.osv):
                     return False
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
-                cr.execute('update mrp_procurement set message=%s where id=%s', (_('No address defined for the supplier'), procurement.id))
+                cr.execute('update procurement_order set message=%s where id=%s', (_('No address defined for the supplier'), procurement.id))
                 return False
         return True
 
@@ -358,7 +358,7 @@ class mrp_procurement(osv.osv):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
                 if not cr.fetchone()[0]:
-                    cr.execute('update mrp_procurement set message=%s where id=%s', (_('Stock is not enough and No minimum orderpoint rule defined'), procurement.id))
+                    cr.execute('update procurement_order set message=%s where id=%s', (_('Stock is not enough and No minimum orderpoint rule defined'), procurement.id))
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):
@@ -403,7 +403,7 @@ class mrp_procurement(osv.osv):
         self.write(cr, uid, ids, {'state': 'cancel'})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
-            wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)
+            wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return True
 
     def action_check_finnished(self, cr, uid, ids):
@@ -439,7 +439,7 @@ class mrp_procurement(osv.osv):
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
-            wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)
+            wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return res
 
     def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
@@ -452,7 +452,7 @@ class mrp_procurement(osv.osv):
         self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
                 use_new_cursor=use_new_cursor, context=context)
 
-mrp_procurement()
+procurement_order()
 
 
 class stock_warehouse_orderpoint(osv.osv):
@@ -460,16 +460,16 @@ class stock_warehouse_orderpoint(osv.osv):
     Defines Minimum stock rules.
     """
     _name = "stock.warehouse.orderpoint"
-    _description = "Orderpoint minimum rule"
-
+    _description = "Minimum Inventory Rule"
+    
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
         'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
         'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','=','product')]),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True ),
+        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_min_qty': fields.float('Min Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
@@ -478,18 +478,21 @@ class stock_warehouse_orderpoint(osv.osv):
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Latest procurement'),
+        'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
         'active': lambda *a: 1,
         'logic': lambda *a: 'max',
         'qty_multiple': lambda *a: 1,
-        'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
+        'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'stock.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
     }
-
+    _sql_constraints = [
+        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
+    ]   
+    
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         """ Finds location id for changed warehouse.
         @param warehouse_id: Changed id of warehouse.
@@ -500,7 +503,7 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'location_id': w.lot_stock_id.id}
             return {'value': v}
         return {}
-
+    
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         """ Finds UoM for changed product.
         @param product_id: Changed id of product.
@@ -511,14 +514,14 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
-
+    
     def copy(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
         default.update({
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.warehouse.orderpoint') or '',
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context)
-
+    
 stock_warehouse_orderpoint()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -59,8 +59,8 @@
 - 
   I launch he scheduler to compute all procurements, and specify all requisitions orders.
 - 
-  !python {model: mrp.procurement.compute.all}: |
-    proc_obj = self.pool.get('mrp.procurement')
+  !python {model: procurement.order.compute.all}: |
+    proc_obj = self.pool.get('procurement.order')
     proc_obj._procure_confirm(cr,uid)
 -
   On the purchase tender, I create a new purchase order for the supplier 'DistriPC' by clicking on

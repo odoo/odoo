@@ -42,7 +42,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['product', 'stock', 'mrp_procurement', 'process'],
+    'depends': ['product', 'stock', 'procurement', 'process'],
     'init_xml': [],
     'update_xml': [
         'wizard/sale_make_invoice_advance.xml',
