@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-hr" id="menu_hr_root" name="Human Resources" sequence="6"/>
-        <menuitem id="menu_hr_human_resources" sequence="2" name="Human Resources" parent="menu_hr_root"/>
+        <menuitem
+            id="menu_hr_root"
+            icon="terp-hr"
+            name="Human Resources"
+            sequence="6"/>
         <menuitem
             id="menu_hr_configuration"
             name="Configuration"
             parent="hr.menu_hr_root"
             sequence="50" />
-      <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_configuration" name="Employees" sequence="1"/>
+        <menuitem
+            id="menu_view_employee_category_configuration_form"
+            parent="hr.menu_hr_configuration"
+            name="Employees"
+            sequence="1"/>
 
         <!--
         ==========
@@ -27,6 +34,7 @@
 	                        <field name="user_id"/>
 	                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
 	                        <field name="active" groups="base.group_extended"/>
+	                        <newline/>
                             <field name="parent_id" />
                             <field name="coach_id" />
 	                    </group>
@@ -37,6 +45,19 @@
                     <notebook colspan="6">
                         <page string="Personal Information">
                             <group col="2" colspan="2">
+                                <separator colspan="2" string="Social IDs"/>
+                                <field name="ssnid"/>
+                                <field name="sinid" groups="base.group_extended"/>
+                                <field name="otherid" groups="base.group_extended"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Status" colspan="2"/>
+                                <field name="gender"/>
+                                <field name="marital" widget="selection"/>
+                                <field name="country_id"/>
+                                <field name="birthday"/>
+                            </group>
+                            <group col="2" colspan="2">
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="address_home_id" colspan="2"/>
                                 <field name="partner_id" invisible="1" />
@@ -45,14 +66,6 @@
                                 <field name="work_email" widget="email" />
                                 <field name="work_location"/>
                             </group>
-
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Social IDs"/>
-                                <field name="ssnid"/>
-                                <field name="sinid" groups="base.group_extended"/>
-                                <field name="otherid" groups="base.group_extended"/>
-                            </group>
-
                             <group col="2" colspan="2">
                                 <separator string="Position" colspan="2"/>
                                 <field name="job_id" widget="selection"/>
@@ -61,14 +74,6 @@
                                 <!--<separator string="Managers" colspan="2"/>
                                 <field name="parent_id" />
                                 <field name="coach_id" />-->
-                            </group>
-
-                            <group col="2" colspan="2">
-                                <separator string="Status" colspan="2"/>
-                                <field name="gender"/>
-                                <field name="marital" widget="selection"/>
-                                <field name="country_id"/>
-                                <field name="birthday"/>
                             </group>
                         </page>
                         <page string="Notes">

@@ -42,6 +42,7 @@ scrum_project()
 class scrum_sprint(osv.osv):
     _name = 'scrum.sprint'
     _description = 'Scrum Sprint'
+
     def _calc_progress(self, cr, uid, ids, name, args, context):
         res = {}
         for sprint in self.browse(cr, uid, ids):
@@ -54,6 +55,7 @@ class scrum_sprint(osv.osv):
             if tot>0:
                 res[sprint.id] = round(prog/tot*100)
         return res
+
     def _calc_effective(self, cr, uid, ids, name, args, context):
         res = {}
         for sprint in self.browse(cr, uid, ids):
@@ -61,6 +63,7 @@ class scrum_sprint(osv.osv):
             for bl in sprint.backlog_ids:
                 res[sprint.id] += bl.effective_hours
         return res
+
     def _calc_planned(self, cr, uid, ids, name, args, context):
         res = {}
         for sprint in self.browse(cr, uid, ids):
@@ -68,6 +71,7 @@ class scrum_sprint(osv.osv):
             for bl in sprint.backlog_ids:
                 res[sprint.id] += bl.planned_hours
         return res
+
     def _calc_expected(self, cr, uid, ids, name, args, context):
         res = {}
         for sprint in self.browse(cr, uid, ids):
@@ -75,21 +79,27 @@ class scrum_sprint(osv.osv):
             for bl in sprint.backlog_ids:
                 res[sprint.id] += bl.expected_hours
         return res
+
     def button_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         return True
+
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True
+
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         return True
+
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         return True
+
     def button_pending(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
+
     _columns = {
         'name' : fields.char('Sprint Name', required=True, size=64),
         'date_start': fields.date('Starting Date', required=True),
@@ -165,6 +175,7 @@ class scrum_product_backlog(osv.osv):
             if tot>0:
                 res[bl.id] = round(prog/tot*100)
         return res
+
     def _calc_effective(self, cr, uid, ids, name, args, context):
         res = {}
         for bl in self.browse(cr, uid, ids):
@@ -172,6 +183,7 @@ class scrum_product_backlog(osv.osv):
             for task in bl.tasks_id:
                 res[bl.id] += task.effective_hours
         return res
+
     def _calc_planned(self, cr, uid, ids, name, args, context):
         res = {}
         for bl in self.browse(cr, uid, ids):
@@ -185,17 +197,21 @@ class scrum_product_backlog(osv.osv):
         for backlog in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task').write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'cancelled'})
         return True
+
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True
+
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         return True
+
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task').write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
         return True
+
     def button_pending(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
@@ -214,7 +230,7 @@ class scrum_product_backlog(osv.osv):
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done (Time spent on tasks)"),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'expected_hours': fields.float('Expected Hours', help='Estimated total time to do the Backlog'),
-        'date':fields.datetime("Created Date"),
+        'create_date': fields.datetime("Creation Date", readonly=True),
     }
     _defaults = {
         'state': 'draft',
@@ -227,6 +243,7 @@ scrum_product_backlog()
 class scrum_task(osv.osv):
     _name = 'project.task'
     _inherit = 'project.task'
+
     def _get_task(self, cr, uid, ids, context={}):
         result = {}
         for line in self.pool.get('scrum.product.backlog').browse(cr, uid, ids, context=context):
@@ -241,6 +258,7 @@ class scrum_task(osv.osv):
                 'scrum.product.backlog': (_get_task, ['sprint_id'], 10)
             }),
     }
+
     def onchange_backlog_id(self, cr, uid, backlog_id):
         if not backlog_id:
             return {}

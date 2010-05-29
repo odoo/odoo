@@ -205,11 +205,11 @@ class account_voucher(osv.osv):
 
 account_voucher()
 
-class VoucherLine(osv.osv):
+class account_voucher_line(osv.osv):
     _inherit = 'account.voucher.line'
     
     def default_get(self, cr, uid, fields, context={}):
-        data = super(VoucherLine, self).default_get(cr, uid, fields, context)
+        data = super(account_voucher_line, self).default_get(cr, uid, fields, context)
         self.voucher_context = context
         return data
     
@@ -217,9 +217,8 @@ class VoucherLine(osv.osv):
         'invoice_id' : fields.many2one('account.invoice','Invoice'),
     }
 
-    
     def move_line_get_item(self, cr, uid, line, context={}):
-        res = super(VoucherLine, self).move_line_get_item(cr, uid, line, context)
+        res = super(account_voucher_line, self).move_line_get_item(cr, uid, line, context)
         res['invoice'] = line.invoice_id or False
         return res 
     
@@ -262,18 +261,13 @@ class VoucherLine(osv.osv):
         return {
             'value' : {'type' : type, 'amount':balance}
         }
-
-VoucherLine()
-
-
+account_voucher_line()
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
     
     def action_cancel(self, cr, uid, ids, *args):
-        
         res = super(account_invoice, self).action_cancel(cr, uid, ids, *args)
-        
         invoices = self.read(cr, uid, ids, ['move_id'])
         voucher_db = self.pool.get('account.voucher')
         voucher_ids = voucher_db.search(cr, uid, [])
@@ -281,7 +275,6 @@ class account_invoice(osv.osv):
         move_db = self.pool.get('account.move')
         move_ids = move_db.search(cr, uid, [])
         move_obj = move_db.browse(cr, uid, move_ids)
-        
         return res
     
 account_invoice()

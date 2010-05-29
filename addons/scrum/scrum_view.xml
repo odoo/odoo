@@ -63,7 +63,7 @@
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>
-                           <field name="date"/>
+                        <field name="create_date"/>
                         <field name="progress" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">

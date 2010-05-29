@@ -1,28 +1,28 @@
 - |
   In order to test hr_expenses for OpenERP, I create expense for employee and manage employee's expenses.
-- | 
-  Creating  unit of measure category "Working Time".
-- 
-  !record {model: product.uom.categ, id: product_uom_categ_workingtime0}:
-    name: Working Time.     
-  
 - |
-  Given that I have employee "employee1" and that address. 
-- 
+  Creating  unit of measure category "Working Time".
+-
+  !record {model: product.uom.categ, id: product_uom_categ_workingtime0}:
+    name: Working Time.
+
+- |
+  Given that I have employee "Marc John" and his address.
+-
   !record {model: hr.employee, id: hr.employee1}:
     address_home_id: base.res_partner_address_1
     address_id: base.main_address
 - |
   I create  product unit of measure "Hour".
-- 
+-
   !record {model: product.uom, id: product_uom_hour0}:
     category_id: 'product_uom_categ_workingtime0'
     factor: 8.0
     name: Hour
-    rounding: 0.01     
-- | 
-  Creating a product  "travel" and select uom "Hour" and category "Working Time". 
-- 
+    rounding: 0.01
+- |
+  Creating a product  "travel" and select uom "Hour" and category "Working Time".
+-
   !record {model: product.product, id: product_product_travel0}:
     categ_id: product.product_category_services
     cost_method: standard
@@ -40,10 +40,10 @@
     warranty: 0.0
     weight: 0.0
     weight_net: 0.0
- 
+
 - |
-  Now I create Expense "September Expenses" for  employee1.and select product "travel". 
-- 
+  Now I create Expense "September Expenses" for  Marc John.And select product "travel".
+-
   !record {model: hr.expense.expense, id: hr_expense_expense_september0}:
     company_id: base.main_company
     currency_id: base.EUR
@@ -65,9 +65,9 @@
     - state == 'draft'
 - |
   I confirm this expenses by click on "Confirm" button.
-- 
-  !workflow {model: hr.expense.expense, action: confirm, ref: hr_expense_expense_september0}     
-    
+-
+  !workflow {model: hr.expense.expense, action: confirm, ref: hr_expense_expense_september0}
+
 - |
   I check that state is "Waiting Confirmation".
 -
@@ -75,14 +75,14 @@
     - state == 'confirm'
 - |
   I accept this expense by click on "Accept" button.
-- 
+-
   !workflow {model: hr.expense.expense, action: validate, ref: hr_expense_expense_september0}
-  
+
 - |
   I invoiced this expenses by click on "Invoice" button.
-- 
+-
   !workflow {model: hr.expense.expense, action: invoice, ref: hr_expense_expense_september0}
-  
+
 - |
   I check that state is "Invoiced"
 -
@@ -94,15 +94,14 @@
   !python {model: hr.expense.expense}: |
     exp = self.browse(cr, uid, [ref('hr_expense_expense_september0')])[0]
     invoice_obj = self.pool.get('account.invoice')
-    invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', exp.employee_id.address_id.partner_id.id)]) 
+    invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', exp.employee_id.address_id.partner_id.id)])
     invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
-    
+
     for invoice in invoice_id.invoice_line:
       product = invoice.product_id.id
-      
+
     for line  in exp.line_ids:
       product_exp = line.product_id.id
-    assert product == product_exp  
-    assert exp.id == invoice_id.id 
-    
-  
+    assert product == product_exp
+    assert exp.id == invoice_id.id
+
