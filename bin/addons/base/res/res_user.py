@@ -22,6 +22,7 @@
 from osv import fields,osv
 from osv.orm import except_orm, browse_record
 import tools
+import operator
 import pytz
 import pooler
 from tools.translate import _
@@ -82,6 +83,11 @@ class groups(osv.osv):
         default['name'] = default['name'] + _(' (copy)')
         return super(groups, self).copy(cr, uid, id, default, context=context)
 
+    def get_extended_interface_group(self, cr, uid, context=None):
+        data_obj = self.pool.get('ir.model.data')
+        extended_group_data_id = data_obj._get_id(cr, uid, 'base', 'group_extended')
+        return data_obj.browse(cr, uid, extended_group_data_id, context=context).res_id
+
 groups()
 
 class roles(osv.osv):
@@ -106,10 +112,11 @@ roles()
 
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [])
+    ids = obj.search(cr, uid, [('translatable','=',True)])
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
     res = [(r['code'], r['name']) for r in res]
     return res
+
 def _tz_get(self,cr,uid, context={}):
     return [(x, x) for x in pytz.all_timezones]
 
@@ -166,6 +173,47 @@ class users(osv.osv):
                                 body=self.get_welcome_mail_body(
                                     cr, uid, context=context) % user)
 
+    def _set_interface_type(self, cr, uid, ids, name, value, arg, context=None):
+        """Implementation of 'view' function field setter, sets the type of interface of the users.
+        @param name: Name of the field
+        @param arg: User defined argument
+        @param value: new value returned
+        @return:  True/False
+        """
+        if not value or value not in ['simple','extended']:
+            return False
+        group_obj = self.pool.get('res.groups')
+        extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
+        self.write(cr, uid, ids, { 'groups_id': [((3 if value == 'simple' else 4), extended_group_id)]}, context=context)
+        return True
+
+
+    def _get_interface_type(self, cr, uid, ids, name, args, context=None):
+        """Implementation of 'view' function field getter, returns the type of interface of the users.
+        @param field_name: Name of the field
+        @param arg: User defined argument
+        @return:  Dictionary of values
+        """
+        group_obj = self.pool.get('res.groups')
+        extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
+        extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
+        return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
+
+    def _email_get(self, cr, uid, ids, name, arg, context=None):
+        return dict([(user.id, user.address_id.email) for user in self.browse(cr, uid, ids, context=context)])
+
+    def _email_set(self, cr, uid, ids, name, value, arg, context=None):
+        if not isinstance(ids,list):
+            ids = [ids]
+        address_obj = self.pool.get('res.partner.address')
+        for user in self.browse(cr, uid, ids, context=context):
+            if user.address_id:
+                address_obj.write(cr, uid, user.address_id.id, {'email': value or None}, context=context)
+            else:
+                address_id = address_obj.create(cr, uid, {'name': user.name, 'email': value or None}, context=context)
+                self.write(cr, uid, ids, {'address_id': address_id}, context)
+        return True
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
@@ -194,7 +242,12 @@ class users(osv.osv):
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
+        'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
+                                selection=[('simple','Simplified'),('extended','Extended')],
+                                string='Interface', help="Choose between the simplified interface and the extended one"),
+        'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char"),
     }
+
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
@@ -208,6 +261,15 @@ class users(osv.osv):
                 result = override_password(result)
             else:
                 result = map(override_password, result)
+        
+        if isinstance(result, list):
+            for rec in result:
+                if not rec.get('action_id',True):
+                    rec['action_id'] = (self._get_menu(cr, uid),'Menu')
+        else:
+            if not result.get('action_id',True):
+                result['action_id'] = (self._get_menu(cr, uid),'Menu')
+        
         return result
 
 
@@ -430,6 +492,13 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _columns = {
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        for record in self.read(cr, uid, ids, ['users'], context=context):
+            if record['users']:
+                raise osv.except_osv(_('Warning !'), _('Make sure you have no users linked with the group(s)!'))
+        return super(groups2, self).unlink(cr, uid, ids, context=context)
+
 groups2()
 
 class res_config_view(osv.osv_memory):
@@ -446,15 +515,10 @@ class res_config_view(osv.osv_memory):
     }
 
     def execute(self, cr, uid, ids, context=None):
-        res=self.read(cr,uid,ids)[0]
-        users_obj = self.pool.get('res.users')
-        group_obj=self.pool.get('res.groups')
-        if 'view' in res and res['view'] and res['view']=='extended':
-            group_ids=group_obj.search(cr,uid,[('name','ilike','Extended')])
-            if group_ids and len(group_ids):
-                users_obj.write(cr, uid, [uid],{
-                                'groups_id':[(4,group_ids[0])]
-                            }, context=context)
+        res = self.read(cr, uid, ids)[0]
+        self.pool.get('res.users').write(cr, uid, [uid],
+                                 {'view':res['view']}, context=context)
+
 res_config_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

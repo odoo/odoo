@@ -82,6 +82,8 @@ class ir_model(osv.osv):
         return super(ir_model,self).write(cr, user, ids, vals, context)
 
     def create(self, cr, user, vals, context=None):
+        if  context is None:
+            context = {}
         if context and context.get('manual',False):
             vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
@@ -260,6 +262,8 @@ class ir_model_fields(osv.osv):
         if 'model_id' in vals:
             model_data = self.pool.get('ir.model').browse(cr, user, vals['model_id'])
             vals['model'] = model_data.model
+        if context is None:
+            context = {}
         if context and context.get('manual',False):
             vals['state'] = 'manual'
         res = super(ir_model_fields,self).create(cr, user, vals, context)
@@ -267,7 +271,7 @@ class ir_model_fields(osv.osv):
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
-            if 'relation' in vals and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
+            if vals.get('relation',False) and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
                  raise except_orm(_('Error'), _("Model %s Does not Exist !" % vals['relation']))
 
             if self.pool.get(vals['model']):
@@ -286,7 +290,7 @@ class ir_model_access(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', required=True),
-        'group_id': fields.many2one('res.groups', 'Group'),
+        'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade'),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
         'perm_create': fields.boolean('Create Access'),
@@ -453,7 +457,7 @@ class ir_model_data(osv.osv):
     def _get_id(self, cr, uid, module, xml_id):
         ids = self.search(cr, uid, [('module','=',module),('name','=', xml_id)])
         if not ids:
-            raise Exception('No references to %s.%s' % (module, xml_id))
+            raise ValueError('No references to %s.%s' % (module, xml_id))
         # the sql constraints ensure us we have only one result
         return ids[0]
 

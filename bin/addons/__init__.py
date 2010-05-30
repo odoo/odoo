@@ -644,16 +644,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             try:
                 _load_data(cr, module_name, id_map, mode, 'test')
             except Exception, e:
-                if tools.config.options['test-continue']:
-                    logger.notifyChannel('ERROR', netsvc.LOG_TEST, e)
-                    pass
-                else:
-                    raise
+                logger.notifyChannel('ERROR', netsvc.LOG_TEST, e)
+                pass
             finally:
-                if tools.config.options['test-rollback']:
-                    cr.rollback()
-                else:
+                if tools.config.options['test-commit']:
                     cr.commit()
+                else:
+                    cr.rollback()
 
     def _load_data(cr, module_name, id_map, mode, kind):
         noupdate = (kind == 'demo')

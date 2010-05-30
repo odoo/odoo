@@ -10,41 +10,6 @@
         <menuitem id="menu_base_config_contact" name="Contacts" parent="menu_base_config" sequence="20" />
 
         <!--
-          ================================
-          Function
-          ================================
-        -->
-        <record id="view_partner_function_form" model="ir.ui.view">
-            <field name="name">res.partner.function.form</field>
-            <field name="model">res.partner.function</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Contact Functions">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                </form>
-            </field>
-        </record>
-        <record id="view_partner_function_tree" model="ir.ui.view">
-            <field name="name">res.partner.function.tree</field>
-            <field name="model">res.partner.function</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Contact Functions">
-                    <field name="code"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_partner_function_form" model="ir.actions.act_window">
-            <field name="name">Contact Functions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.function</field>
-            <field name="view_type">form</field>
-        </record>
-        <menuitem action="action_partner_function_form" id="menu_partner_function_form" parent="base.menu_base_config_contact" sequence="20"/>
-
-        <!--
           =====================
           Partner Address
           =====================
@@ -56,10 +21,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contact">
-                    <field name="name" select='1'/>
-                    <field name="partner_id" select='1'/>
-                    <field name="country_id" select='1'/>
-                </search>
+                    <group>
+                        <filter string="Customer" name="customer" icon="terp-crm" domain="[('is_customer_add','=','1')]" />
+                        <filter string="Supplier" name="supplier"  icon="terp-crm" domain="[('is_supplier_add','=','1')]" />
+                        <separator orientation="vertical"/>
+                        <field name="name" />
+                        <field name="partner_id" />
+                        <field name="country_id" />
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By...">
+                       <filter string="Partner" icon="terp-crm" domain="[]" context="{'group_by' : 'partner_id'}" />
+                       <filter string="Country" icon="terp-crm" domain="[]" context="{'group_by' : 'country_id'}" />
+                       <filter string="Type" icon="terp-crm" domain="[]" context="{'group_by' : 'type'}" />
+                   </group>
+                 </search>
             </field>
         </record>
 
@@ -127,6 +103,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.address</field>
             <field name="view_type">form</field>
+            <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_address_filter"/>
         </record>
         <record id="action_partner_address_form_view1" model="ir.actions.act_window.view">
@@ -316,8 +293,10 @@
                                     <field name="email"/>
                                 </tree>
                             </field>
-                            <separator colspan="4" string="Categories"/>
-                            <field colspan="4" name="category_id" nolabel="1" height="90" groups="base.group_extended"/>
+                            <group  groups="base.group_extended">
+                                    <separator colspan="4" string="Categories"/>
+                                    <field  colspan="4" name="category_id" nolabel="1"/>
+                            </group>
                         </page>
                         <page string="Sales &amp; Purchases">
                             <separator string="General Information" colspan="4"/>
@@ -329,12 +308,13 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <newline/>
                         </page>
-                        <page string="History">
-                            <field colspan="4" name="events" nolabel="1" widget="one2many_list"/>
-                        </page>
                         <page string="Notes">
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
+                        <page string="History">
+                            <field colspan="4" name="events" nolabel="1" widget="one2many_list"/>
+                        </page>
+
                     </notebook>
                 </form>
             </field>
@@ -347,24 +327,27 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
-                        <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
-                        <separator orientation="vertical"/>
                         <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
                         <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-                         <filter string="Employees" icon="terp-partner" domain="[('employee','=',1)]" help="Employee Partners"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address" select="1"/>
                         <field name="country" select="1"/>
                         <field name="category_id" select="1"/>
-                        <field name="user_id" select="1"/>
+                        <field name="user_id" select="1">
+                            <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
+                        </field>
+                   </group>
+                   <newline />
+                   <group expand="1" string="Group By...">
+                       <filter string="Salesman" icon="terp-crm" domain="[]" context="{'group_by' : 'user_id'}" />
                    </group>
                </search>
             </field>
         </record>
 
         <record id="action_partner_form" model="ir.actions.act_window">
-            <field name="name">Partners</field>
+            <field name="name">Customers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
@@ -521,40 +504,6 @@
 
         <!--
           ======================
-          Company Architecture
-          ======================
-        -->
-        <record id="view_partner_tree2" model="ir.ui.view">
-            <field name="name">res.partner.tree</field>
-            <field name="model">res.partner</field>
-            <field name="type">tree</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Partners">
-                    <field name="name"/>
-                    <field name="lang"/>
-                    <field name="ref"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action2" model="ir.actions.act_window">
-            <field name="name">Company Architecture</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_partner_tree2"/>
-        </record>
-        <record id="ir_partner_structure" model="ir.values">
-            <field eval="'client_action_multi'" name="key2"/>
-            <field eval="'res.partner'" name="model"/>
-            <field name="name">Company Architecture</field>
-            <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
-            <field eval="True" name="object"/>
-        </record>
-
-        <!--
-          ======================
           Categories
           ======================
         -->
@@ -639,7 +588,7 @@
             />
 
         <record id="ir_ui_view_sc_partner0" model="ir.ui.view_sc">
-            <field name="name">Partner</field>
+            <field name="name">Address Book</field>
             <field name="resource">ir.ui.menu</field>
             <field name="user_id" ref="base.user_root"/>
              <field name="res_id" ref="menu_partner_form"/>

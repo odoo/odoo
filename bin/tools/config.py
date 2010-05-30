@@ -83,8 +83,7 @@ class configmanager(object):
             'list_db' : True,
             'timezone' : False, # to override the default TZ
             'test-disable' : False,
-            'test-rollback' : True,
-            'test-continue' : False
+            'test-commit' : False,
         }
 
         self.misc = {}
@@ -124,7 +123,6 @@ class configmanager(object):
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='deprecated since v6.0, replaced by module decimal_precision')
-        parser.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
 
         if self.has_ssl:
             group = optparse.OptionGroup(parser, "SSL Configuration")
@@ -137,17 +135,15 @@ class configmanager(object):
                               default="server.pkey",
                               help="specify the private key file for the SSL connection")
             parser.add_option_group(group)
-            
+
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-disable", action="store_true", dest="test_disable",
                          default=False, help="Disable loading test files.")
-        group.add_option("--test-no-rollback", action="store_false", dest="test_rollback",
-                         default=True, help="Don't rollback after running test.")
-        group.add_option("--test-continue", action="store_true", dest="test_continue",
-                         default=False, help="Display exception but then test should continue.")
+        group.add_option("--test-commit", action="store_true", dest="test_commit",
+                         default=False, help="Commit database changes performed by tests.")
         parser.add_option_group(group)
-        
+
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
@@ -164,8 +160,7 @@ class configmanager(object):
         group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port', type="int")
-        if self.has_ssl:
-            group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
+        group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
         parser.add_option_group(group)
@@ -201,6 +196,13 @@ class configmanager(object):
                          help="specify an alternative addons path.",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         parser.add_option_group(group)
+
+        security = optparse.OptionGroup(parser, 'Security-related options')
+        security.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
+        security.add_option('--enable-code-actions', action='store_true',
+                            dest='server_actions_allow_code', default=False,
+                            help='Enables server actions of state "code". Warning, this is a security risk.')
+        parser.add_option_group(security)
 
     def parse_config(self):
         (opt, args) = self.parser.parse_args()
@@ -247,13 +249,13 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
+                'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout','smtp_ssl',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
 
         if self.has_ssl:
-            keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
+            keys.extend(['secure_cert_file', 'secure_pkey_file'])
             keys.append('secure')
 
         for arg in keys:
@@ -261,7 +263,8 @@ class configmanager(object):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog', 'list_db']
+                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
+                'list_db', 'server_actions_allow_code']
 
         if self.has_ssl and not self.options['secure']:
             keys.append('secure')
@@ -288,8 +291,7 @@ class configmanager(object):
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
         self.options["test-disable"] =  opt.test_disable
-        self.options["test-rollback"] =  opt.test_rollback
-        self.options["test-continue"] =  opt.test_continue
+        self.options["test-commit"] =  opt.test_commit
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
 
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
