@@ -119,14 +119,7 @@
                 </form>
             </field>
         </record>
-        <record model="ir.actions.act_window" id="action_pos_pos_form">
-            <field name="name">Point of Sale</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_pos_pos_form"/>
-            <field name="domain">[['date_order','>=',time.strftime('%Y-%m-%d')]]</field>
-        </record>
+
         <record model="ir.ui.view" id="view_pos_order_tree">
             <field name="name">Sales</field>
             <field name="model">pos.order</field>
@@ -153,6 +146,8 @@
                 <search string="Search Sales Order">
                     <filter icon="terp-sale" string="Quotations" domain="[('state','=','draft')]"/>
                     <filter icon="terp-sale" string="Running" domain="[('state','in',('payment','advance'))]"/>
+                     <filter icon="terp-sale" string="Accepted" domain="[('state','=','paid')]"/>
+                      <filter icon="terp-sale" string="Invoiced" domain="[('state','=','invoiced')]"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
@@ -169,6 +164,16 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_pos_pos_form">
+            <field name="name">Point of Sale</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="context">{"search_default_user_id":uid}</field>
+			<field name="search_view_id" ref="view_pos_order_filter"/>
+        </record>
+        
         <menuitem name="Point of Sale" id="menu_point_root" sequence="10"/>
         <menuitem name="Point of Sale" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
         <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
@@ -190,30 +195,7 @@
 
         </record>
 
-        <record model="ir.actions.act_window" id="action_pos_order_tobinvoiced">
-            <field name="name">Sales to Invoice</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">[('state','!=', 'invoiced')]</field>
-            <field name="context">{"search_default_user_id":uid}</field>
-			<field name="search_view_id" ref="view_pos_order_filter"/>
 
-        </record>
-        <menuitem name="Invoicing" id="menu_point_of_sale_invoicing" parent="menu_point_root" sequence="4" />
-        <menuitem name="Sales to Invoice" action="action_pos_order_tobinvoiced" id="menu_point_of_sale_tobinvoiced" parent="menu_point_of_sale_invoicing"/>
-        <record model="ir.actions.act_window" id="action_pos_order_accepted">
-            <field name="name">Accepted Sales</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=', 'paid')]</field>
-            <field name="context">{"search_default_user_id":uid}</field>
- 			<field name="search_view_id" ref="view_pos_order_filter"/>
-        </record>
         <record model="ir.actions.act_window" id="action_pos_order_tree2">
             <field name="name">Point of Sale</field>
             <field name="type">ir.actions.act_window</field>
@@ -867,9 +849,6 @@
                         id="menu_action_all_sales_tree3" action="action_pos_order_tree3" sequence="1"  groups="base.group_extended"/>
         <menuitem name="Sales of the day" parent="menu_action_all_sales_tree3"
                         id="menu_action_sale_of_day_tree2" action="action_trans_pos_tree_today"/>
-        <menuitem name="Accepted Sales" parent="menu_action_all_sales_tree3"
-                        id="menu_action_sale_of_day_accept" action="action_pos_order_accepted"/>
-
         <menuitem name="Sales Reports" parent="menu_point_report_sale" id="menu_sales_report" sequence="2"/>
 
         <menuitem name="Sales of the day" parent="menu_sales_report"
