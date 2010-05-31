@@ -35,12 +35,14 @@
                       is done by the manager.Every evaluation filled by the employees can be viewed
                       in the form of   """,
     "init_xml" : [],
-    "demo_xml" : ["hr_evaluation_demo.xml"],
+    "demo_xml" : ["hr_evaluation_demo.xml",
+                 ],
     "update_xml" : [
                     "security/ir.model.access.csv",
                     "wizard/hr_evaluation_mail_view.xml",
                     "hr_evaluation_view.xml",
                     "report/hr_evaluation_report_view.xml"],
+    "test": ["test/test_hr_evaluation.yml"],                
     "active": False,
     "installable": True
 }
