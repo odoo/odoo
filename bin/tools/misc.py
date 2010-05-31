@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -34,6 +35,7 @@ import socket
 import re
 from itertools import islice
 import threading
+from which import which
 
 
 if sys.version_info[:2] < (2, 4):
@@ -112,23 +114,19 @@ def init_db(cr):
         cr.commit()
 
 def find_in_path(name):
-    if os.name == "nt":
-        sep = ';'
-    else:
-        sep = ':'
-    path = [dir for dir in os.environ['PATH'].split(sep)
-            if os.path.isdir(dir)]
-    for dir in path:
-        val = os.path.join(dir, name)
-        if os.path.isfile(val) or os.path.islink(val):
-            return val
-    return None
+    try:
+        return which(name)
+    except IOError:
+        return None
 
 def find_pg_tool(name):
+    path = None
     if config['pg_path'] and config['pg_path'] != 'None':
-        return os.path.join(config['pg_path'], name)
-    else:
-        return find_in_path(name)
+        path = config['pg_path']
+    try:
+        return which(name, path=path)
+    except IOError:
+        return None
 
 def exec_pg_command(name, *args):
     prog = find_pg_tool(name)
