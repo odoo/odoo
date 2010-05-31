@@ -66,7 +66,15 @@
         'security/ir.model.access.csv'
 
     ],
-    'demo_xml': ['base_demo.xml', 'res/partner/partner_demo.xml', 'res/partner/crm_demo.xml','test/base_test.xml'],
+    'demo_xml': [
+        'base_demo.xml',
+        'res/partner/partner_demo.xml',
+        'res/partner/crm_demo.xml',
+    ],
+    'test': [
+        'test/base_test.xml',
+        'test/test_context.xml',
+    ],
     'installable': True,
     'active': True,
     'certificate': '0076807797149',
