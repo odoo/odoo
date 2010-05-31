@@ -27,8 +27,8 @@
     * IMAP / IMAP with SSL
     * POP / POP with SSL
     * SMTP / SMTP with TLS
-    * ACL basd access polocy 
-    * Queing and History for Emails
+    * ACL based access policy 
+    * Queueing and History for Emails
     * Easy Integration with any Module""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
