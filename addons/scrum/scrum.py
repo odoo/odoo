@@ -179,7 +179,7 @@ class scrum_product_backlog(osv.osv):
         for bl in self.browse(cr, uid, ids):
             res.setdefault(bl.id, 0.0)
             for task in bl.tasks_id:
-                res[bl.id] += task.planned_hours
+                res[bl.id] += task.total_hours
         return res
 
     def button_cancel(self, cr, uid, ids, context={}):
@@ -213,9 +213,9 @@ class scrum_product_backlog(osv.osv):
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
         'progress': fields.function(_calc_progress, method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done (Time spent on tasks)"),
-        'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
-        'expected_hours': fields.float('Expected Hours', help='Estimated total time to do the Backlog'),
+        'effective_hours': fields.function(_calc_effective, method=True, string='Effective Hours', help="Computed using the sum of the task work done (Time spent on tasks)"),
+        'planned_hours': fields.function(_calc_planned, method=True, string='Tasks Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
+        'expected_hours': fields.float('Planned Hours', help='Estimated total time to do the Backlog'),
         'date':fields.datetime("Created Date"),
     }
     _defaults = {
