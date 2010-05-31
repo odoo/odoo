@@ -53,7 +53,6 @@ class configmanager(object):
             'reportgz': False,
             'netrpc': True,
             'xmlrpc': True,
-            'soap': False,
             'translate_in': None,
             'translate_out': None,
             'language': None,
