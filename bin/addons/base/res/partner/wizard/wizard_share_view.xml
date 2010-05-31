@@ -1,41 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-     	<record id="res_partner_share" model="ir.ui.view">
-            <field name="name">partner.share.create.form</field>
-            <field name="model">partner.share.create</field>
+        <record id="share_email_form" model="ir.ui.view">
+            <field name="name">share.email</field>
+            <field name="model">share.email</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Share">
-			  <separator colspan="4" string="Users"/>
-			  <field name="user_ids" colspan="4" nolabel="1"/>
+			<form string="Send Email">
+              <separator colspan="4" string="Step 5: Send Email"/>    			  
+			  <field name="email_to" string="To" colspan="4"/>
+              <field name="subject" string="Subject" colspan="4"/>
+              <field name="body" nolabel="True" colspan="4"/>
 			  <separator colspan="4"/>
 			   <group col="2" colspan="4">
             		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="do_share" string="Share" colspan="1" type="object" icon="gtk-execute"/>
+					<button name="do_send_email" string="Send Mail" type="object" icon="gtk-apply"/>
+				</group>
+			</form>
+            </field>
+        </record>    
+
+        <record id="share_email_act" model="ir.actions.act_window">
+            <field name="name">Step5: Send Email</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">share.email</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="share_email_form"/>
+            <field name="target">new</field>
+        </record>     
+
+     	<record id="share_step0_form" model="ir.ui.view">
+            <field name="name">share.step0.form</field>
+            <field name="model">share.create</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Share">
+              <separator colspan="4" string="Step 1: Chose the action and the additional domain"/>    			  
+			  <field name="action_id"/>
+              <field name="domain"/>
+			  <separator colspan="4"/>
+			   <group col="2" colspan="4">
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+					<button name="do_step_1" string="Next" colspan="1" type="object" icon="gtk-next"/>
 				</group>
 			</form>
             </field>
         </record>
 
-        <record id="res_partner_share_act" model="ir.actions.act_window">
-            <field name="name">Share</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">partner.share.create</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
+        <record id="share_step1_form" model="ir.ui.view">
+            <field name="name">share.step1.form</field>
+            <field name="model">share.create</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Share">              
+			  <separator colspan="4" string="Step 2: Chose the User type"/>              
+			  <field name="user_type"/>
+              <newline/>
+              <separator colspan="4" string="Exising Users"/>
+              <field colspan="4" nolabel="1" name="user_ids" attrs="{'readonly':[('user_type','=','new')]}" domain="[('share_user','=',True)]"/>
+              <separator colspan="4" string="New Users"/>
+              <field colspan="4" nolabel="1" name="new_user" attrs="{'readonly':[('user_type','=','existing')]}" />
+			  <separator colspan="4"/>
+			   <group col="3" colspan="4">
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+                    <button name="do_step_1" string="Previous" colspan="1" type="object" icon="gtk-previous"/>
+					<button name="do_step_2" string="Next" colspan="1" type="object" icon="gtk-next"/>
+				</group>
+			</form>
+            </field>
         </record>
 
-        <record model="ir.values" id="res_partner_share_values">
-            <field name="model_id" ref="model_res_partner" />
-            <field name="object" eval="1" />
-            <field name="name">Share</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('res_partner_share_act'))" />
-            <field name="key">action</field>
-            <field name="model">res.partner</field>
+        <record id="share_step2_form" model="ir.ui.view">
+            <field name="name">share.step2.form</field>
+            <field name="model">share.create</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Share">              
+			  <separator colspan="4" string="Step 3: Chose Access Mode"/>              
+			  <field name="access_mode"/>              
+			  <separator colspan="4"/>
+			   <group col="3" colspan="4">
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+                    <button name="do_step_2" string="Previous" colspan="1" type="object" icon="gtk-previous"/>
+					<button name="do_step_3" string="Next" colspan="1" type="object" icon="gtk-next"/>
+				</group>
+			</form>
+            </field>
         </record>
+
+         
+
+        <act_window name="Sharing Wizard"		    
+		    res_model="share.create"
+		    src_model="res.partner"
+		    view_mode="form"
+		    target="new"    
+            view_id="ref('share_step1_form')"
+            key2="client_action_multi"    
+		    id="share_step1_act"/> 
+
+        
+
+        
+
+        
+
+                 
 
 	</data>
 </openerp>
