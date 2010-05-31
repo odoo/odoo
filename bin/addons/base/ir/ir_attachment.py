@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,7 +25,7 @@ import tools
 
 class ir_attachment(osv.osv):
     def check(self, cr, uid, ids, mode, context=None):
-        if not ids: 
+        if not ids:
             return
         ima = self.pool.get('ir.model.access')
         if isinstance(ids, (int, long)):
@@ -37,8 +37,8 @@ class ir_attachment(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        ids = super(ir_attachment, self).search(cr, uid, args, offset=offset, 
-                                                limit=limit, order=order, 
+        ids = super(ir_attachment, self).search(cr, uid, args, offset=offset,
+                                                limit=limit, order=order,
                                                 context=context, count=False)
         if not ids:
             if count:
@@ -66,7 +66,7 @@ class ir_attachment(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         self.check(cr, uid, ids, 'write', context=context)
         return super(ir_attachment, self).write(cr, uid, ids, vals, context)
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         self.check(cr, uid, [id], 'write', context=context)
         return super(ir_attachment, self).copy(cr, uid, id, default, context)
@@ -84,37 +84,36 @@ class ir_attachment(osv.osv):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_attachment')
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
-        return self.pool.get('ir.actions.act_window').read(cr, uid, res_id, [], context)
+        return self.pool.get('ir.actions.act_window').read(cr, uid, res_id, [], context)    
 
-    def _get_preview(self, cr, uid, ids, name, arg, context=None):
-        result = {}
-        if context is None:
-            context = {}
-        ctx = context.copy()    
-        ctx['bin_size'] = False
-        for i in self.browse(cr, uid, ids, context=ctx):
-            result[i.id] = False
-            for format in ('png','jpg','jpeg','gif','bmp'):
-                if (i.datas_fname and i.datas_fname.lower() or '').endswith(format):
-                    result[i.id]= i.datas
-                    break
-        return result
+    def _name_get_resname(self, cr, uid, ids, object,method, context):
+        data = {}
+        for attachment in self.browse(cr, uid, ids, context=context):
+            model_object = attachment.res_model
+            res_id = attachment.res_id
+            if model_object and res_id:
+                model_pool = self.pool.get(model_object)
+                res = model_pool.name_get(cr,uid,[res_id],context)
+                data[attachment.id] = res[0][1]
+            else:
+                 data[attachment.id] = False
+        return data
 
     _name = 'ir.attachment'
     _columns = {
         'name': fields.char('Attachment Name',size=64, required=True),
         'datas': fields.binary('Data'),
-        'preview': fields.function(_get_preview, type='binary', string='Image Preview', method=True),
         'datas_fname': fields.char('Filename',size=64),
         'description': fields.text('Description'),
         # Not required due to the document module !
+        'res_name': fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
         'res_model': fields.char('Resource Object',size=64, readonly=True),
         'res_id': fields.integer('Resource ID', readonly=True),
         'link': fields.char('Link', size=256),
-
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
     }
+
 ir_attachment()
 
 

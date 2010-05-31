@@ -230,7 +230,7 @@
         </record>
         <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
-		
+
 	<!--		Filters form view-->
 
 		<record id="ir_filters_view_form" model="ir.ui.view">
@@ -248,9 +248,9 @@
                 </form>
             </field>
         </record>
-        
+
         <!--		Filters tree view-->
-        
+
         <record id="ir_filters_view_tree" model="ir.ui.view">
              <field name="name">ir.filters.tree</field>
             <field name="model">ir.filters</field>
@@ -265,7 +265,7 @@
                 </tree>
             </field>
         </record>
-		
+
 		<!--		Filters action-->
 
         <record id="actions_ir_filters_view" model="ir.actions.act_window">
@@ -275,7 +275,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_filters_view_tree"/>
         </record>
-		
+
 		<!--		Filters view menu-->
 
 		<menuitem parent="base.next_id_6" name="Filters"
@@ -674,16 +674,8 @@
                             <separator string="Attached To" colspan="2"/>
                             <field name="res_model" select="2"/>
                             <field name="res_id"/>
+                            <field name="res_name"/>
                         </group>
-                        <separator string="Preview" colspan="4"/>
-                        <field
-                            name="preview"
-                            widget="picture"
-                            readonly="1"
-                            nolabel="1"
-                            colspan="4"
-                            img_height="400"
-                            img_width="800"/>
                     </page>
                     <page string="Notes">
                         <field colspan="4" name="description" nolabel="1"/>

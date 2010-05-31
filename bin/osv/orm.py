@@ -37,37 +37,26 @@
 #         - functions
 #
 #
-
 import calendar
 import copy
 import datetime
 import logging
+import operator
 import pickle
-import random
 import re
 import string
-import sys
 import time
 import traceback
-import datetime
 import types
 
-import fields
 import netsvc
-import tools
+from lxml import etree
+from tools.config import config
 from tools.translate import _
 
-import copy
-import sys
-import operator
+import fields
+import tools
 
-try:
-    from lxml import etree
-except ImportError:
-    sys.stderr.write("ERROR: Import lxml module\n")
-    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
-
-from tools.config import config
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
