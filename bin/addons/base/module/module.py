@@ -23,6 +23,7 @@ import tarfile
 import re
 import urllib
 import os
+import imp
 import tools
 from osv import fields, osv, orm
 import zipfile
@@ -191,6 +192,27 @@ class module(osv.osv):
 
         return super(module, self).unlink(cr, uid, ids, context=context)
 
+    @staticmethod
+    def _check_external_dependencies(terp):
+        depends = terp.get('external_dependencies')
+        if not depends:
+            return
+        for pydep in depends.get('python', []):
+            parts = pydep.split('.')
+            parts.reverse()
+            path = None
+            while parts:
+                part = parts.pop()
+                try:
+                    f, path, descr = imp.find_module(part, path and [path] or None)
+                except ImportError:
+                    raise ImportError('No module named %s' % (pydep,))
+
+        for binary in depends.get('bin', []):
+            if tools.find_in_path(binary) is None:
+                raise Exception('Unable to find %r in path' % (binary,))
+
+
     def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=100):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
@@ -206,6 +228,11 @@ class module(osv.osv):
                 else:
                     od = self.browse(cr, uid, ids2)[0]
                     mdemo = od.demo or mdemo
+            terp = self.get_module_info(module.name)
+            try:
+                self._check_external_dependencies(terp)
+            except Exception, e:
+                raise orm.except_orm(_('Error'), _('Unable %s the module "%s" because an external dependencie is not met: %s' % (newstate, module.name, e.args[0])))
             if not module.dependencies_id:
                 mdemo = module.demo
             if module.state in states_to_update:
