@@ -74,6 +74,7 @@
     'test': [
         'test/base_test.xml',
         'test/test_context.xml',
+        'bug_lp541545.xml',
     ],
     'installable': True,
     'active': True,
