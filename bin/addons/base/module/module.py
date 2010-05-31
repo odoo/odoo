@@ -316,7 +316,7 @@ class module(osv.osv):
             'shortdesc': terp.get('name', ''),
             'author': terp.get('author', 'Unknown'),
             'maintainer': terp.get('maintainer', False),
-            'contributors': ', '.join(terp.get('contributors', [])),
+            'contributors': ', '.join(terp.get('contributors', [])) or False,
             'website': terp.get('website', ''),
             'license': terp.get('license', 'GPL-2'),
             'certificate': terp.get('certificate') or None,
