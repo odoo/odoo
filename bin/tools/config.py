@@ -44,6 +44,8 @@ class configmanager(object):
             'xmlrpc_port': 8069,
             'netrpc_interface': '',
             'netrpc_port': 8070,
+            'xmlrpcs_interface': '',    # this will bind the server to all interfaces
+            'xmlrpcs_port': 8071,
             'db_host': False,
             'db_port': False,
             'db_name': False,
@@ -53,6 +55,7 @@ class configmanager(object):
             'reportgz': False,
             'netrpc': True,
             'xmlrpc': True,
+            'xmlrpcs': True,
             'translate_in': None,
             'translate_out': None,
             'language': None,
@@ -73,7 +76,6 @@ class configmanager(object):
             'smtp_password': False,
             'stop_after_init': False,   # this will stop the server after initialization
             'price_accuracy': 2,
-            'secure' : False,
             'syslog' : False,
             'log_level': logging.INFO,
             'assert_exit_level': logging.ERROR, # level above which a failed assert will be raised
@@ -106,6 +108,15 @@ class configmanager(object):
         group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable the XML-RPC protocol")
         parser.add_option_group(group)
 
+        if self.has_ssl:
+            group = optparse.OptionGroup(parser, "XML-RPC Secure Configuration")
+            group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", help="specify the TCP IP address for the XML-RPC Secure protocol")
+            group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", help="specify the TCP port for the XML-RPC Secure protocol", type="int")
+            group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", help="disable the XML-RPC Secure protocol")
+            group.add_option("--cert-file", dest="secure_cert_file", default="server.cert", help="specify the certificate file for the SSL connection")
+            group.add_option("--pkey-file", dest="secure_pkey_file", default="server.pkey", help="specify the private key file for the SSL connection")
+            parser.add_option_group(group)
+
         group = optparse.OptionGroup(parser, "NET-RPC Configuration")
         group.add_option("--netrpc-interface", dest="netrpc_interface", help="specify the TCP IP address for the NETRPC protocol")
         group.add_option("--netrpc-port", dest="netrpc_port", help="specify the TCP port for the NETRPC protocol", type="int")
@@ -128,18 +139,6 @@ class configmanager(object):
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='deprecated since v6.0, replaced by module decimal_precision')
-
-        if self.has_ssl:
-            group = optparse.OptionGroup(parser, "SSL Configuration")
-            group.add_option("-S", "--secure", dest="secure",
-                             help="launch server over https instead of http")
-            group.add_option("--cert-file", dest="secure_cert_file",
-                              default="server.cert",
-                              help="specify the certificate file for the SSL connection")
-            group.add_option("--pkey-file", dest="secure_pkey_file",
-                              default="server.pkey",
-                              help="specify the private key file for the SSL connection")
-            parser.add_option_group(group)
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
@@ -260,19 +259,21 @@ class configmanager(object):
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
 
         if self.has_ssl:
-            keys.extend(['secure_cert_file', 'secure_pkey_file'])
-            keys.append('secure')
+            keys.extend([
+                'xmlrpcs_interface',
+                'xmlrpcs_port',
+                'xmlrpcs',
+                'secure_cert_file',
+                'secure_pkey_file']
+            )
 
         for arg in keys:
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
+                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'xmlrpcs', 'syslog',
                 'list_db', 'server_actions_allow_code']
-
-        if self.has_ssl and not self.options['secure']:
-            keys.append('secure')
 
         for arg in keys:
             if getattr(opt, arg) is not None:
