@@ -40,10 +40,10 @@ class configmanager(object):
     def __init__(self, fname=None):
         self.options = {
             'email_from':False,
-            'interface': '',    # this will bind the server to all interfaces
-            'port': 8069,
-            'netinterface': '',
-            'netport': 8070,
+            'xmlrpc_interface': '',    # this will bind the server to all interfaces
+            'xmlrpc_port': 8069,
+            'netrpc_interface': '',
+            'netrpc_port': 8070,
             'db_host': False,
             'db_port': False,
             'db_name': False,
@@ -101,12 +101,18 @@ class configmanager(object):
                           help="save configuration to ~/.openerp_serverrc")
         parser.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
 
-        parser.add_option("-n", "--interface", dest="interface", help="specify the TCP IP address")
-        parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
-        parser.add_option("--net_interface", dest="netinterface", help="specify the TCP IP address for netrpc")
-        parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc", type="int")
-        parser.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable netrpc")
-        parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable xmlrpc")
+        group = optparse.OptionGroup(parser, "XML-RPC Configuration")
+        group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", help="specify the TCP IP address for the XML-RPC protocol")
+        group.add_option("--xmlrpc-port", dest="xmlrpc_port", help="specify the TCP port for the XML-RPC protocol", type="int")
+        group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable the XML-RPC protocol")
+        parser.add_option_group(group)
+
+        group = optparse.OptionGroup(parser, "NET-RPC Configuration")
+        group.add_option("--netrpc-interface", dest="netrpc_interface", help="specify the TCP IP address for the NETRPC protocol")
+        group.add_option("--netrpc-port", dest="netrpc_port", help="specify the TCP port for the NETRPC protocol", type="int")
+        group.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable the NETRPC protocol")
+        parser.add_option_group(group)
+
         parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
         parser.add_option("--without-demo", dest="without_demo",
                           help="load demo data for a module (use \"all\" for all modules)", default=False)
@@ -248,10 +254,10 @@ class configmanager(object):
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
 
-        keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
+        keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout','smtp_ssl',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
-                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path',
+                'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
 
         if self.has_ssl:
