@@ -35,10 +35,10 @@
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
               <group col="10" colspan="12">
-	            	<filter icon="gtk-media-rewind" string="Last 365 Days"
+	            	<filter icon="gtk-media-rewind" string="  365 Days  "
 		                    domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 		                    help="Analytic Entries of last 365 days"/>
-	                <filter icon="gtk-media-rewind" string="Last 30 Days"
+	                <filter icon="gtk-media-rewind" string="   30 Days   "
 	                		name="month"
 	                		domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                		help="Analytic Entries of last 30 days"/>
