@@ -29,7 +29,6 @@
     "description": "Menu for Marketing",
     'website': 'http://www.openerp.com',
     'init_xml': [],
-    'demo_xml':[],
     'update_xml': ['marketing_view.xml'],
     'demo_xml': [],
     'installable': True,
