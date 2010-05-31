@@ -44,6 +44,7 @@
         'wizard/hr_attendance_sign_in_out_view.xml',
     ],
     'demo_xml': ['hr_attendance_demo.xml'],
+    'test': ['test/test_hr_attendance.yml'],
     'installable': True,
     'active': False,
     'certificate': '0063495605613',

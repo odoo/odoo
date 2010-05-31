@@ -1,0 +1,109 @@
+- |
+  In order to test hr_attendance module in OpenERP,  I create new attendance and perform Sign In/Sign Out operation.
+  
+- |
+  First I create Employee "Mark Johnson".
+-
+  !record {model: hr.employee, id: hr_employee_employee0}:
+    address_home_id: base.res_partner_address_1
+    company_id: base.main_company
+    gender: male
+    name: Mark Johnson
+    user_id: base.user_root
+    
+- |
+  Given that I have Attendance Reason "Good Morning" for Sign In.
+- 
+  !record {model: hr.action.reason, id: hr_action_reason_goodmorning0}:
+    name: Good Morning
+    action_type: sign_in
+- |
+  I also create another Attendance Reason for Sign Out.
+- 
+  !record {model: hr.action.reason, id: hr_action_reason_goodnight0}:
+    name: Good Night
+    action_type: sign_out
+- |
+  Now , When I came in office , I create Atendances and perform "Sign In" action with proper reason.
+- 
+  !record {model: hr.attendance, id: hr_attendance_0}:
+    action: sign_in
+    action_desc: 'hr_action_reason_goodmorning0'
+    employee_id: 'hr_employee_employee0'
+    name: '2010-05-18 19:08:08'
+- |
+  I check that Employee  is in "Present" state.
+-
+  !assert {model: hr.employee, id: hr_employee_employee0}: 
+    - state == 'present'
+          
+- |
+  When I left office , I create attendance and perform "Sign Out".      	
+- 
+  !record {model: hr.attendance, id: hr_attendance_1}:
+    action: sign_out
+    employee_id: 'hr_employee_employee0'
+    name: '2010-05-18 19:10:55'
+- |
+  I check that Employee  is in "Absent" state.
+-
+  !assert {model: hr.employee, id: hr_employee_employee0}: 
+    - state == 'absent'      
+
+- |
+  I can also fill my attendance using "Sign In/Sign Out" wizard.
+- 
+  !record {model: hr.sign.in.out, id: hr_sign_in_out_markjohnson0}:
+    name: Mark Johnson
+    state: absent
+     
+- | 
+  I click on "Sign In" button of this wizard to perform present action.
+- 
+ !python {model: hr.sign.in.out}: |
+    obj_attendance = self.pool.get('hr.employee')
+    emp_id = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Mark Johnson")])
+    if emp_id:
+    	employee = obj_attendance.read(cr, uid, emp_id)[0]
+    	self.write(cr, uid, [ref('hr_sign_in_out_markjohnson0')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0]})
+    	self.si_check(cr, uid, [ref("hr_sign_in_out_markjohnson0")], {"active_id": ref("hr_employee_employee0")})
+
+- |
+  I check that Employee  is  in "Present" state.
+-
+  !assert {model: hr.employee, id: hr_employee_employee0}:
+    - state == 'present'    
+    
+- |
+  I forgot to "Sign Out" in Yesterday  and want to sign in Today  using This wizard.
+- 
+  !record {model: hr.sign.in.out, id: hr_sign_in_out_markjohnson0}:
+    name: Mark Johnson
+    state: present
+- |
+  I click on "Sign In" button of this wizard. that will Open new form which ask for Last Sign Out date. 
+- 
+ !python {model: hr.sign.in.out}: |
+    obj_attendance = self.pool.get('hr.employee')
+    emp_id = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Mark Johnson")])
+    if emp_id:
+        employee = obj_attendance.read(cr, uid, emp_id)[0]
+        self.write(cr, uid, [ref('hr_sign_in_out_markjohnson0')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0]})
+        self.si_check(cr, uid, [ref("hr_sign_in_out_markjohnson0")])
+- |
+  I select Last Sign Out date in "hr sign out ask" wizard.
+- 
+  !record {model: hr.sign.in.out.ask, id: hr_sign_in_out_ask_markjohnson0}:
+    last_time: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: Mark Johnson  
+- | 
+  Now I click on "Sign In" button of this wizard.  
+- 
+  !python {model: hr.sign.in.out.ask}: |
+    obj_attendance = self.pool.get('hr.employee')
+    emp_id = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Mark Johnson")])
+    if emp_id:
+        employee = obj_attendance.read(cr, uid, emp_id)[0]
+        self.write(cr, uid, [ref('hr_sign_in_out_ask_markjohnson0')], {'emp_id': emp_id[0]})
+        #self.sign_in(cr, uid, [ref("hr_sign_in_out_ask_markjohnson0")], {"active_ids": [ref("hr_attendance.menu_hr_attendance_sigh_in_out")]})
+  
