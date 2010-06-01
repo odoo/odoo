@@ -190,7 +190,7 @@ class email_parser(object):
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'history', [id], 'Receive', True, msg_to, message['body'], msg_from, False, {'model' : self.model})
+            self.rpc(self.model, '_history', [id], 'Receive', True, msg_to, message['body'], msg_from, False, {'model' : self.model})
             #self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
@@ -316,7 +316,7 @@ class email_parser(object):
             }
             self.rpc('ir.attachment', 'create', data_attach)
 
-        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['To']), body['body'], self._decode_header(msg['From']), False, {'model' : self.model})
+        self.rpc(self.model, '_history', [id], 'Send', True, self._decode_header(msg['To']), body['body'], self._decode_header(msg['From']), False, {'model' : self.model})
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -360,7 +360,7 @@ class email_parser(object):
             }
             self.rpc('ir.attachment', 'create', data_attach)
 
-        self.rpc(self.model, 'history', [id], 'Send', True, self._decode_header(msg['To']), message['body'], self._decode_header(msg['From']), False, {'model' : self.model})
+        self.rpc(self.model, '_history', [id], 'Send', True, self._decode_header(msg['To']), message['body'], self._decode_header(msg['From']), False, {'model' : self.model})
         return id
 
     def msg_test(self, msg, case_str):
@@ -390,7 +390,7 @@ class email_parser(object):
                 del msg['Subject']
             msg['Subject'] = '['+str(case_id)+'] '+subject
             msg['Message-Id'] = '<'+str(time.time())+'-openerpcrm-'+str(case_id)+'@'+socket.gethostname()+'>'
-
+        
         emails = self.rpc(self.model, 'emails_get', case_id)
         priority = emails[3]
         em = [emails[0], emails[1]] + (emails[2] or '').split(',')
