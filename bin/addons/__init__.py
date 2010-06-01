@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -716,14 +717,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             for kind in ('init', 'update'):
                 if package.state=='to upgrade':
                     # upgrading the module information
-                    modobj.write(cr, 1, [mid], {
-                    'description': package.data.get('description', ''),
-                    'shortdesc': package.data.get('name', ''),
-                    'author': package.data.get('author', 'Unknown'),
-                    'website': package.data.get('website', ''),
-                    'license': package.data.get('license', 'GPL-2'),
-                    'certificate': package.data.get('certificate') or None,
-                    })
+                    modobj.write(cr, 1, [mid], modobj.get_values_from_terp(package.data))
                 load_init_update_xml(cr, m, idref, mode, kind)
             load_data(cr, m, idref, mode)
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):

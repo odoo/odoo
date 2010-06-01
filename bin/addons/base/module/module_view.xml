@@ -97,7 +97,9 @@
                             <field name="latest_version"/>
                             <field name="author" select="2"/>
                             <field name="website" select="2" widget="url"/>
+                            <field name="maintainer" attrs="{'invisible': [('maintainer', '=', False)]}"/>
                             <field name="url" widget="url"/>
+                            <field name="contributors" widget="char" attrs="{'invisible': [('contributors', '=', False)]}"/>
                             <field name="published_version"/>
                             <field name="license"/>
                             <field name="demo" readonly="1"/>
@@ -141,6 +143,8 @@
                     <field name="name"/>
                     <field name="shortdesc"/>
                     <field name="author"/>
+                    <field name='maintainer'/>
+                    <field name='contributors'/>
                     <field name="installed_version"/>
                     <field name="latest_version"/>
                     <field name="published_version"/>
