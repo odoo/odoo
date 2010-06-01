@@ -12,6 +12,7 @@
                 	<field name="name" invisible="1"/>
                     <field name="project_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
+                    <field name="done_by"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="date_start" invisible="1"/>
@@ -110,6 +111,7 @@
                         <separator orientation="vertical"/>
                         <filter string="Partner" icon="terp-project" context="{'group_by':'partner_id'}" />
                         <filter string="Task" icon="terp-project" context="{'group_by':'name'}" />
+                        <filter string="Done By" icon="terp-project" context="{'group_by':'done_by'}" />
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
                         <filter string="Company" icon="terp-project" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
@@ -122,6 +124,7 @@
                     <newline/>
 	                <group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
 	                    <field name="type" widget="selection"/>
+	                    <field name="done_by" widget="selection"/>
 	                    <separator orientation="vertical"/>
                         <field name="date_start"/>
                         <field name="date_deadline"/>

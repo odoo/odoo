@@ -30,7 +30,7 @@ class one2many_domain(fields.one2many):
                                             user=user, context=context)
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
+        if context is None:
             context = {}
         res = {}
         msg_obj = obj.pool.get('mailgate.message')
@@ -65,7 +65,7 @@ class mailgate_thread(osv.osv):
         @param email: Email address if any
         @param details: Details of case history if any 
         @param context: A standard dictionary for contextual values"""
-        if not context:
+        if context is None:
             context = {}
         # The mailgate sends the ids of the cases and not the object list
         if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
