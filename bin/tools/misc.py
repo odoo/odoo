@@ -839,17 +839,19 @@ def scan_languages():
 
 
 def get_user_companies(cr, user):
+    # FIXME: use orm !
     def _get_company_children(cr, ids):
         if not ids:
             return []
-        cr.execute('SELECT id FROM res_company WHERE parent_id = any(array[%s])' %(','.join([str(x) for x in ids]),))
-        res=[x[0] for x in cr.fetchall()]
+        cr.execute('SELECT id FROM res_company WHERE parent_id IN %s', (tuple(ids),))
+        res = [x[0] for x in cr.fetchall()]
         res.extend(_get_company_children(cr, res))
         return res
-    cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %s AND comp.id = u.company_id' % (user,))
-    compids=[cr.fetchone()[0]]
-    compids.extend(_get_company_children(cr, compids))
-    return compids
+    cr.execute('SELECT company_id FROM res_users WHERE id=%s', (user,))
+    user_comp = cr.fetchone()[0]
+    if not user_comp:
+        return []
+    return [user_comp] + _get_company_children(cr, [user_comp])
 
 def mod10r(number):
     """

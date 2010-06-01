@@ -71,7 +71,7 @@ class res_partner_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from res_partner_category where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct parent_id from res_partner_category where id in %s', (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -235,7 +235,7 @@ class res_partner(osv.osv):
         return True
 
     def address_get(self, cr, uid, ids, adr_pref=['default']):
-        cr.execute('select type,id from res_partner_address where partner_id in ('+','.join(map(str,ids))+')')
+        cr.execute('select type,id from res_partner_address where partner_id in %s', (tuple(ids),))
         res = cr.fetchall()
         adr = dict(res)
         # get the id of the (first) default address if there is one,

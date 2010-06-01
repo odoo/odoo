@@ -32,9 +32,6 @@
 #   required
 #   size
 #
-import string
-import netsvc
-import sys
 
 from psycopg2 import Binary
 import warnings
@@ -460,7 +457,7 @@ class one2many(_column):
             elif act[0] == 6:
                 obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
                 ids2 = act[2] or [0]
-                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id not in ('+','.join(map(str, ids2))+')', (id,))
+                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id not in %s', (id, tuple(ids2)))
                 ids3 = map(lambda x:x[0], cr.fetchall())
                 obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
         return result
@@ -505,7 +502,6 @@ class many2many(_column):
             return res
         for id in ids:
             res[id] = []
-        ids_s = ','.join(map(str, ids))
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         obj = obj.pool.get(self._obj)
 
@@ -513,12 +509,25 @@ class many2many(_column):
         if d1:
             d1 = ' and ' + d1
 
-        cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' \
-                FROM '+self._rel+' , '+obj._table+' \
-                WHERE '+self._rel+'.'+self._id1+' in ('+ids_s+') \
-                    AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+d1
-                +limit_str+' order by '+obj._table+'.'+obj._order+' offset %s',
-                d2+[offset])
+        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
+                   FROM %(rel)s, %(tbl)s \
+                  WHERE %(rel)s.%(id1)s in %%s \
+                    AND %(rel)s.%(id2)s = %(tbl)s.id \
+                 %(d1)s  \
+                 %(limit)s \
+                  ORDER BY %(tbl)s.%(order)s \
+                 OFFSET %(offset)d' \
+            % {'rel': self._rel,
+               'tbl': obj._table,
+               'id1': self._id1,
+               'id2': self._id2,
+               'd1': d1,
+               'limit': limit_str,
+               'order': obj._order,
+               'offset': offset,
+              }
+
+        cr.execute(query, [tuple(ids)] + d2)
         for r in cr.fetchall():
             res[r[1]].append(r[0])
         return res
@@ -700,18 +709,14 @@ class related(function):
     def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
         if values and field_name:
             self._field_get2(cr, uid, obj, context)
-            relation = obj._name
-            res = {}
             if type(ids) != type([]):
                 ids=[ids]
             objlst = obj.browse(cr, uid, ids)
             for data in objlst:
                 t_id = None
                 t_data = data
-                relation = obj._name
                 for i in range(len(self.arg)):
                     field_detail = self._relations[i]
-                    relation = field_detail['object']
                     if not t_data[self.arg[i]]:
                         if self._type not in ('one2many', 'many2many'):
                             t_id = t_data['id']
@@ -733,17 +738,14 @@ class related(function):
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         self._field_get2(cr, uid, obj, context)
         if not ids: return {}
-        relation = obj._name
         res = {}.fromkeys(ids, False)
         objlst = obj.browse(cr, uid, ids)
         for data in objlst:
             if not data:
                 continue
             t_data = data
-            relation = obj._name
             for i in range(len(self.arg)):
                 field_detail = self._relations[i]
-                relation = field_detail['object']
                 try:
                     if not t_data[self.arg[i]]:
                         t_data = False
@@ -772,7 +774,6 @@ class related(function):
                 if res[r]:
                     res[r] = [x.id for x in res[r]]
 
-            
         return res
 
     def __init__(self, *arg, **args):

@@ -527,8 +527,7 @@ class actions_server(osv.osv):
                         'ids': ids,
                         'cr': cr,
                         'uid': uid,
-                        'object':obj,
-                        'obj': obj,
+                        'object':obj
                         }
                     exec action.code in localdict
                     if 'action' in localdict:
