@@ -136,7 +136,7 @@ class project_compute_tasks(osv.osv_memory):
                                                                          'user_id': user_id[0]},
                                                                          context=ctx)
                 loop_no +=1
-        return {} #improve me => Task Scheduling completed successfully => give this msg at end of wizard
+        return {}
 
 project_compute_tasks()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

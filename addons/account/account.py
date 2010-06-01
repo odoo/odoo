@@ -124,10 +124,10 @@ class account_account_type(osv.osv):
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
         'report_type':fields.selection([
             ('none','/'),
-            ('income','Profilt & Loss (Income Accounts)'),
-            ('expanse','Profilt & Loss (Expanse Accounts)'),
+            ('income','Profit & Loss (Income Accounts)'),
+            ('expense','Profit & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
-            ('liabilities','Balance Sheet (Liabilities Accounts)')
+            ('liability','Balance Sheet (Liability Accounts)')
         ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
         'parent_id':fields.many2one('account.account.type', 'Parent Type', required=False),
         'child_ids':fields.one2many('account.account.type', 'parent_id', 'Child Types', required=False),
@@ -171,6 +171,19 @@ class account_account(osv.osv):
     _description = "Account"
     _parent_store = True
 
+    def _get_children_and_consol(self, cr, uid, ids, context={}):
+        ids2=[]
+        temp=[]
+        read_data= self.read(cr, uid, ids,['id','child_id'], context)
+        for data in read_data:
+            ids2.append(data['id'])
+            if data['child_id']:
+                temp=[]
+                for x in data['child_id']:
+                    temp.append(x)
+                ids2 += self._get_children_and_consol(cr, uid, temp, context)
+        return ids2
+        
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         if context is None:
@@ -297,6 +310,17 @@ class account_account(osv.osv):
 
         return result
 
+    def _get_level(self, cr, uid, ids, field_name, arg, context={}):
+        res={}
+        accounts = self.browse(cr, uid, ids)
+        for account in accounts:
+            level = 0
+            if account.parent_id :
+                obj = self.browse(cr, uid, account.parent_id.id)
+                level = obj.level + 1
+            res[account.id] = level
+        return res
+    
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
@@ -343,6 +367,7 @@ class account_account(osv.osv):
         'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
             "otherwise it will only print its balance."),
+        'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -534,7 +559,7 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=16),
-        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('cash', 'Cash'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('expanse', 'Expanse'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
@@ -892,7 +917,7 @@ class account_move(osv.osv):
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
-        'date': fields.date('Date', required=True),
+        'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
             ('bank_pay_voucher','Bank Payment'),
@@ -902,7 +927,7 @@ class account_move(osv.osv):
             ('journal_sale_vou','Journal Sale'),
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
-        ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
+            ],'Entry Type', select=True , size=128, readonly=True, states={'draft':[('readonly',False)]}),
         'narration':fields.text('Narration', readonly=True, select=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
@@ -1416,7 +1441,6 @@ class account_tax(osv.osv):
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code',size=32),
-        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
@@ -1449,7 +1473,6 @@ class account_tax(osv.osv):
         'applicable_type': lambda *a: 'true',
         'type': lambda *a: 'percent',
         'amount': lambda *a: 0,
-        'price_include': lambda *a: 0,
         'active': lambda *a: 1,
         'type_tax_use': lambda *a: 'all',
         'sequence': lambda *a: 1,

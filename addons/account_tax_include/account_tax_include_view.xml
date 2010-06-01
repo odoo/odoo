@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
+	   <!-- Add price include (boolean) on tax form/tree view -->
+       <record id="view_tax_tree_inherit" model="ir.ui.view">
+            <field name="name">account.tax.tree.inherit.tree</field>
+            <field name="type">tree</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="price_include"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_tax_form_inherit" model="ir.ui.view">
+            <field name="name">account.tax.tree.inherit.form</field>
+            <field name="type">form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <field name="sequence" position="after">
+                    <field groups="base.group_extended" name="price_include"/>
+                </field>
+            </field>
+        </record>
+        <!-- End -->
+
         <record id="account_tax_view_price" model="ir.ui.view">
             <field name="name">account.tax.exlcuded.view.form</field>
             <field name="type">form</field>
@@ -14,7 +40,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="account_invoice_view_price" model="ir.ui.view">
             <field name="name">account.invoice.vat.exlcuded.view.form</field>
             <field name="type">form</field>
@@ -26,7 +52,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="invoice_supplier_form_tax_include" model="ir.ui.view">
             <field name="name">account.invoice.supplier.tax_include</field>
             <field name="type">form</field>
@@ -38,7 +64,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="invoice_supplier_form_tax_include2" model="ir.ui.view">
             <field name="name">account.invoice.supplier.tax_include2</field>
             <field name="type">form</field>
@@ -50,7 +76,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="invoice_supplier_form_tax_include3" model="ir.ui.view">
             <field name="name">account.invoice.supplier.tax_include3</field>
             <field name="type">form</field>
@@ -62,7 +88,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="view_invoice_line_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tree</field>
             <field name="model">account.invoice.line</field>
@@ -74,6 +100,6 @@
                 </field>
             </field>
         </record>
-        
+
     </data>
 </openerp>
