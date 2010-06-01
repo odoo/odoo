@@ -6,7 +6,7 @@
         <field name="model">hr.evaluation.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Evaluations Statistics">
+            <tree string="Evaluations Analysis">
                 <field name="create_date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="deadline" invisible="1"/>
@@ -27,7 +27,7 @@
             <field name="model">hr.evaluation.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-            <graph string="Evaluations" type="bar">
+            <graph string="Evaluations Analysis" type="bar">
                  <field name="employee_id"/>
                  <field name="nbr" operator="+"/>
                  <field name="state" group="True"/>
@@ -40,12 +40,12 @@
         <field name="model">hr.evaluation.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Evaluations">
+            <search string="Evaluations Analysis">
             	<group>
-            		<filter icon="gtk-media-rewind" string="Last 365 Days"
+            		<filter icon="gtk-media-rewind" string="365 Days"
                     	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
                     	help="Tasks performed in last 365 days"/>
-                    <filter icon="gtk-media-rewind" string="Last 30 Days"
+                    <filter icon="gtk-media-rewind" string="30 Days"
                     	name="month"
                     	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
                     	help="Tasks performed in last 30 days"/>
@@ -99,7 +99,7 @@
     </record>
 
     <record id="action_evaluation_report_all" model="ir.actions.act_window">
-        <field name="name">Evaluations</field>
+        <field name="name">Evaluations Analysis</field>
         <field name="res_model">hr.evaluation.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>

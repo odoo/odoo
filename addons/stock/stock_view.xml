@@ -757,7 +757,7 @@
                 <form string="Picking list">
                     <group col="6" colspan="4">
                         <field name="name" readonly="1"/>
-                        <field name="address_id"/>
+                        <field name="address_id" required="1"/>
                         <field name="origin"/>
                         <field name="backorder_id" groups="base.group_extended" readonly="1"/>
                         <field name="date" />
@@ -937,7 +937,7 @@
             <field name="arch" type="xml">
                 <form string="Picking list">
                     <group col="6" colspan="4">
-                        <field name="address_id"/>
+                        <field name="address_id" required="1" />
                         <field name="min_date"/>
                         <field name="name" readonly="1"/>
                         <field name="invoice_state"/>
@@ -1119,7 +1119,7 @@
                     <group colspan="4" col="6">
 
                         <field name="name" readonly="1"/>
-                        <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" />
+                        <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" />
                         <field name="origin"/>
                         <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         <field name="date"/>
