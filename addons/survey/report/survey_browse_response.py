@@ -207,7 +207,7 @@ class survey_browse_response(report_rml):
                             <td><para style="terp_tblheader_General_Centre_simple">""" + to_xml(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S'))) + """</para></td>
                             <td><para style="terp_tblheader_General_Centre"></para></td>
                             <td><para style="terp_tblheader_General_right">Answer By:- </para></td>
-                            <td><para style="terp_tblheader_General_right_simple">""" + to_xml(response.user_id.login) + """</para></td>
+                            <td><para style="terp_tblheader_General_right_simple">""" + to_xml(response.user_id.login or '') + """</para></td>
                           </tr>
                         </blockTable><para style="P2"></para>"""
 

@@ -25,13 +25,13 @@
             <field name="arch" type="xml">
             	<search string="Analytic Account">
             		<group col="8" colspan="4">
-	            		<filter icon="gtk-execute" string="My Accounts" domain="[('user_id','=',uid)]" help="My Analytic Accounts"/>
 	            		<filter icon="gtk-execute" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
 	            		<filter icon="gtk-execute" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
 						<field name="code" select="1"/>
 						<field name="partner_id" select="1"/>
+						<field name="user_id" widget="selection"/>
             		</group>
             	</search>
             </field>
@@ -67,7 +67,7 @@
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
                         <field name="parent_id" on_change="on_change_parent(parent_id)"/>
-                        <field name="company_id" select="2" widget="selection"/>
+                        <field name="company_id" select="2" widget="selection" groups="base.group_multi_company"/>
                         <field name="type" select="2"/>
                         <field name="company_currency_id" select="2"/>
                     </group>
@@ -97,6 +97,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph,form</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
+			<field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="account.view_account_analytic_account_search"/>
         </record>
         <!--<menuitem id="menu_analytic_account" name="Analytic Accounts" parent="account.menu_analytic_accounting"/>-->
@@ -152,7 +153,7 @@
                     <field name="ref" select="2"/>
                     <field name="currency_id" select="2"/>
                     <field name="amount_currency" select="2"/>
-                    <field name="company_id" select="2"/>
+                    <field name="company_id" select="2" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="product_id" select="2"/>
                     <field name="product_uom_id" select="2"/>
@@ -177,7 +178,7 @@
                     <field name="ref"/>
                     <field name="currency_id" />
                     <field name="amount_currency" />
-                    <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -188,11 +189,11 @@
             <field name="arch" type="xml">
             	<search string="Search Analytic Lines">
             		<group col='6' colspan='4'>
-            		    <filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Analytic Entries"/>
                         <field name="name" select="1"/>
                         <field name="journal_id" select="1"/>
                         <field name="account_id" select="1"/>
                         <field name="date" select="1"/>
+                        <field name="user_id" widget="selection"/>
             		</group>
             	</search>
             </field>
@@ -202,6 +203,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
+            <field name="context">{"search_default_user_id":uid}</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
         </record>
        <wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Entries by Line"/>
@@ -286,7 +288,7 @@
                     <field name="code" select="1"/>
                     <field name="type" select="2"/>
                     <field name="active" select="2"/>
-                    <field name="company_id" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </form>
             </field>
         </record>
@@ -441,21 +443,6 @@
                 </graph>
             </field>
      </record>
-	
-	<!--  Partners inherited form -->
-
-		<record id="view_contract_partner_info_form" model="ir.ui.view">
-            <field name="name">res.partner.contract.info.inherit</field>
-            <field name="model">res.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-             	<field name="invoice_ids" position="after">
-					<field name="contract_ids" colspan="4" nolabel="1" />
-				</field>
-            </field>
-        </record>
-	
 
     </data>
 </openerp>

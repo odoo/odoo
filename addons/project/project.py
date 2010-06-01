@@ -47,6 +47,8 @@ class project(osv.osv):
     _inherits = {'account.analytic.account':"category_id"}
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
         if user == 1:
                 return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
         if context and context.has_key('user_prefence') and context['user_prefence']:
@@ -133,6 +135,7 @@ class project(osv.osv):
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
+        'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.'),
      }
     _order = "sequence"
     _defaults = {
@@ -147,11 +150,18 @@ class project(osv.osv):
              if leave['date_start'] > leave['date']:
                  return False
          return True
-
+    
+    def _check_escalation(self, cr, uid, ids):
+         project_obj = self.browse(cr, uid, ids[0])
+         if project_obj.project_escalation_id:
+             if project_obj.project_escalation_id.id == project_obj.id:
+                 return False
+         return True 
+     
     _constraints = [
-        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date'])
+        (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date']),
+        (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
-
     def set_template(self, cr, uid, ids, context={}):
         res = self.setActive(cr, uid, ids, value=False, context=context)
         return res
@@ -250,7 +260,8 @@ project()
 
 class task(osv.osv):
     _name = "project.task"
-    _description = "Tasks"
+    _description = "Task"
+    _log_create = True
     _date_name = "date_start"
 
     def _str_get(self, task, level=0, border='***', context={}):
@@ -259,18 +270,17 @@ class task(osv.osv):
             (task.description or '')+'\n\n'
 
     # Compute: effective_hours, total_hours, progress
-    def _hours_get(self, cr, uid, ids, field_names, args, context):
+    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
+        res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id =ANY(%s) GROUP BY task_id",(ids,))
         hours = dict(cr.fetchall())
-        res = {}
         for task in self.browse(cr, uid, ids, context=context):
-            res[task.id] = {}
-            res[task.id]['effective_hours'] = hours.get(task.id, 0.0)
-            res[task.id]['total_hours'] = task.remaining_hours + hours.get(task.id, 0.0)
+            res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
+            res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
-                res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 100),2)
-            else:
-                res[task.id]['progress'] = 0.0
+                if task.state != 'done':
+                    res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
+
             if task.state in ('done','cancel'):
                 res[task.id]['progress'] = 100.0
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
@@ -549,14 +559,16 @@ class config_compute_remaining(osv.osv_memory):
         return False
 
     _columns = {
-        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
-            }
+        'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Put here the remaining hours required to close the task."),
+    }
 
     _defaults = {
         'remaining_hours': _get_remaining
-        }
+    }
 
     def compute_hours(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         task_obj = self.pool.get('project.task')
         request = self.pool.get('res.request')
         if 'active_id' in context:

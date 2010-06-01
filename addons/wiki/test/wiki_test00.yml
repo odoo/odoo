@@ -33,9 +33,8 @@
       ids = self.search(cr, uid, [])
       self.wiki_do_index(cr, uid, ids , {'active_ids': [ref('wiki_wiki_openerpwikiediting0')]})
 -
+    # Remaining Act window
     I check the page history for the current page by clicking on "Page History".After that find difference between history.
--
-    !act_window {name: Page History,view_type: form,id: act_wiki_wiki_history,domain: "[('wiki_id', '=', active_id)]",res_model: wiki.wiki.history,src_model: wiki.wiki,view_mode: tree,key2: client_action_multi,target: new}
 -
     I create a new wiki group on the Given Home Page
 -
@@ -49,10 +48,7 @@
       ids = self.search(cr, uid, [])
       self.open_wiki_page(cr, uid, ids, {'active_ids': [ref('wiki_groups_wikigroupediting0')]})
 -
-    I search the page by clicking on the "search page".
--
-    !act_window {name: Search Page,view_type: form,id: act_wiki_group_open,domain: "[('group_id', '=', active_id)]",res_model: wiki.wiki,src_model: wiki.groups,view_mode: tree,key2: client_action_multi,target: new}
--
+    # Remaining beacuse of Act window (I search the page by clicking on the "search page".)
     In order to create a menu I will create wizard data
 -
     !record {model: wiki.groups, id: wiki.wiki_groups_wikiformatting0}:

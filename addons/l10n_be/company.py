@@ -22,7 +22,7 @@ from osv import osv
 
 class res_company(osv.osv):
     _inherit = "res.company"
-    _description = 'res.company'
+    _description = 'Company'
 
     def _get_default_ad(self, addresses):
         city = post_code = address = country_code = ""

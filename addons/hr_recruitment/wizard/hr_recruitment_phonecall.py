@@ -19,7 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
 
 from osv import osv, fields
@@ -99,17 +98,16 @@ class job2phonecall(osv.osv_memory):
             job_case_obj.case_cancel(cr, uid, [job.id])
             phonecall_case_obj.case_open(cr, uid, [new_phonecall_id])
 
-        value = {
+        return {
             'name': _('Phone Call'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'crm.phonecall',
             'res_id' : new_phonecall_id,
-            'views': [(id3,'form'),(id2,'tree'),(False,'calendar'),(False,'graph')],
+            'views': [(id3,'form'), (id2,'tree'), (False,'calendar'), (False,'graph')],
             'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
         }
-        return value
 
 job2phonecall()
 

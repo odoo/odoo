@@ -29,38 +29,28 @@ class thunderbird_installer(osv.osv_memory):
     _name = 'thunderbird.installer'
     _inherit = 'res.config.installer'
 
-    def process_plugin(self, cr, uid, ids, context):
-        """
-        Default Attach Thunderbird Plug-in File.
-        """
-        data = {}
-        file = open(config['addons_path'] + "/thunderbird/plugin/tiny_plugin-2.0.xpi", 'r')
-        data['plugin_file'] = base64.encodestring(file.read())
-        self.write(cr, uid, ids, data)
-        return False
-
-    def process_pdf_file(self, cr, uid, ids, context):
-        """
-        Default Attach Thunderbird Plug-in Installation File.
-        """
-        data = {}
+    def default_get(self, cr, uid, fields, context={}):
+        data = super(thunderbird_installer, self).default_get(cr, uid, fields, context)
         pdf_file = open(config['addons_path'] + "/thunderbird/doc/Installation Guide to OpenERP Thunderbid Plug-in.pdf", 'r')
         data['pdf_file'] = base64.encodestring(pdf_file.read())
-        self.write(cr, uid, ids, data)
-        return False
+        file = open(config['addons_path'] + "/thunderbird/plugin/tiny_plugin-2.0.xpi", 'r')
+        data['plugin_file'] = base64.encodestring(file.read())
+        return data
 
     _columns = {
         'name':fields.char('File name', size=34),
         'pdf_name':fields.char('File name', size=64),
         'thunderbird':fields.boolean('Thunderbird Module ', help="Allows you to select an object that you’d like to add to your email and its attachments."),
-        'plugin_file':fields.binary('Thunderbird Plug-in', readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbir."),
-        'pdf_file':fields.binary('Thunderbird Plug-in Installation File', help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),        
+        'plugin_file':fields.binary('Thunderbird Plug-in', readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."),
+        'pdf_file':fields.binary('Installation Manual', help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
+        'description':fields.text('Description', readonly=True)        
         }
 
     _defaults = {
         'thunderbird' : True,
         'name' : 'tiny_plugin-2.0.xpi',
         'pdf_name' : 'Installation Guide to OpenERP Thunderbid Plug-in.pdf',
+        'description' : """ * Save The thunderbird plug­in Follow the following step to install thunderbird plug­in. \n    -> 1. From Menu Bar, Open Tools ­> Add ons. \n    -> 2. Now click on install button and a browser window will appear. \n    -> 3. Just select the (.xpi) file from thunderbird/plugin directory and click ok, a new software installation window will appear and within a short time Install Now  button will be enabled. \n    -> 4. Click on Install Now and restart Thunderbird. \n    -> 5. Now Thunderbird plug­in is installed."""
         }
 
 thunderbird_installer()

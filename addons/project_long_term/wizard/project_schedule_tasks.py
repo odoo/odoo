@@ -65,7 +65,7 @@ class project_schedule_task(osv.osv_memory):
                                          {'__doc__': res.user_id.name,
                                           '__name__': res.user_id.name,
                                           'vacation': tuple(leaves),
-                                          'efficiency': resource_eff
+                                          'efficiency': resource_eff,
                                           }))
         return resource_objs
 
@@ -149,7 +149,7 @@ class project_schedule_task(osv.osv_memory):
                     ctx.update({'scheduler': True})
                     user_id = user_obj.search(cr, uid, [('name', '=', t.booked_resource[0].__name__)])
                     task_obj.write(cr, uid, [tasks[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
-                                                                    'date_deadline': e_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                                    'date_end': e_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                     'user_id': user_id[0]},
                                                                     context=ctx)
                 loop_no +=1

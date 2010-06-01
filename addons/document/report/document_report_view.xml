@@ -8,7 +8,6 @@
             <field name="arch" type="xml">
                 <form string="Files">
                     <field name="name" select="1"/>
-                    <field name="file_title" select="1"/>
                     <field name="user" select="1"/>
                     <field name="directory" select="1"/>
                     <field name="file_size"/>
@@ -26,7 +25,6 @@
                 <tree string="Files">
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="file_title"/>
                     <field name="user" select="1"/>
                     <field name="directory" select="1"/>
                     <field name="file_size"/>
@@ -42,14 +40,12 @@
             <field name="arch" type="xml">
                 <search string="All users files">
                 	<group col="12" colspan="4">
-                		<filter icon="terp-stock" string="My" domain="[('user','=',uid)]" help="My Files"/>
                         <separator orientation="vertical"/>
 						<filter icon="terp-stock" string="This Year" domain="[('name','=',time.localtime()[0])]" help="All Months Files"/>
 						<filter icon="terp-stock" string="This Month" domain="[('month','=',time.localtime()[1])]" help="This Months Files"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
 						<field name="month" select="1"/>
-						<field name="file_title" select="1"/>
 	                    <field name="user" select="1"/>
 	                    <field name="directory" select="1"/>
 	           		</group>
@@ -65,6 +61,7 @@
             <field name="res_model">report.document.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
+            <field name="context">{"search_default_user":uid}</field>
             <field name="search_view_id" ref="view_report_document_user_search"/>
         </record>
 
@@ -79,12 +76,10 @@
                 <form string="Wall of Shame">
                     <field name="user_id" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="file_name" select="1"/>
                     <field name="last"/>
                 </form>
             </field>
         </record>
-
 
         <record model="ir.ui.view" id="view_document_wall_tree">
             <field name="name">report.document.wall.tree</field>
@@ -94,7 +89,6 @@
                 <tree string="Wall of Shame">
                     <field name="user_id" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="file_name"/>
                     <field name="last"/>
                 </tree>
             </field>

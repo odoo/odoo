@@ -23,6 +23,7 @@ from osv import fields, osv
 from tools.translate import _
 from mx.DateTime import now
 
+<<<<<<< TREE
 
 class crm_make_sale(osv.osv_memory):
     """ Make sale  order for crm """
@@ -61,6 +62,7 @@ class crm_make_sale(osv.osv_memory):
             context = {}
             
         mod_obj = self.pool.get('ir.model.data')
+
 
         result = mod_obj._get_id(cr, uid, 'sale', 'view_sales_order_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
@@ -176,5 +178,4 @@ class crm_make_sale(osv.osv_memory):
                  }
     
 crm_make_sale()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

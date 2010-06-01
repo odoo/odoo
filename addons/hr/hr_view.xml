@@ -101,7 +101,7 @@
                     <field name="job_id" widget="selection"/>
                     <field name="parent_id" widget="selection" />
                     <newline />
-                    <group expand="1" string="Group By..." colspan="11" col="11">
+                    <group expand="1" string="Group By...">
                         <filter string="Manager" icon="terp-sale" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Coach" icon="terp-sale" domain="[]" context="{'group_by':'coach_id'}" groups="base.group_extended"/>
                         <separator orientation="vertical" />
@@ -360,7 +360,7 @@
 
                     <separator orientation="vertical"/>
                     <field name="name"/>
-                    <field name="department_id" widget="selection">
+                     <field name="department_id" widget="selection">
                             <filter icon="terp-crm"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             help="My Departments Jobs"/>

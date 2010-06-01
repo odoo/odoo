@@ -177,7 +177,6 @@ class document_directory_content(osv.osv):
             fexprs[n.name] = n.expr
 
         if 'uid' not in fields:
-            print "uid not in ", fields
             # FIXME: should pass
             return True
         for child in parsedCal.getChildren():
@@ -189,7 +188,6 @@ class document_directory_content(osv.osv):
                 if enl =='uid':
                     uuid = event.value
                 if not enl in fields:
-                        # print "skip", enl
                         continue
                 if fields[enl] and funcs[enl] == 'field':
                     if ICS_TAGS[enl]=='normal':
@@ -216,7 +214,6 @@ class document_directory_content(osv.osv):
             # end for
 
             if not uuid:
-                print "Skipping cal", child
                 # FIXME: should pass
                 continue
 

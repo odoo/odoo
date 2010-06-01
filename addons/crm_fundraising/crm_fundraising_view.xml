@@ -195,18 +195,25 @@
                                         <field name="email_to"/>
                                         <field name="email_from"/>
                                     </group>
-                                    <newline/>
-                                    <field name="description" colspan="4" nolabel="1"/>
+                                    <notebook colspan="4">
+                                        <page string="Details">
+                                            <field name="description" colspan="4" nolabel="1"/>
+                                        </page>
+                                        <page string="Attachments">
+                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                        </page>
+                                    </notebook>
                                     <button colspan="4"
-                                        string="Reply to Last Email"
-                                        name="%(crm.action_crm_send_mail)d"
-                                        context="{'mail':'reply', 'model': 'crm.fundraising'}"
-                                        icon="gtk-undo" type="action" />
+                                    string="Reply to Last Email"
+                                    name="%(crm.action_crm_send_mail)d"
+                                    context="{'mail':'reply', 'model': 'crm.fundraising'}"
+                                    icon="gtk-undo" type="action" />
                                 </form>
                                 <tree string="Communication history">
-                                    <field name="description"/>
-                                    <field name="email_to"/>
                                     <field name="date"/>
+                                    <field name="email_from" />
+                                    <field name="email_to"/>
+                                    <field name="description"/>
                                 </tree>
                             </field>
                             <button colspan="4" string="Send New Email"
@@ -249,15 +256,14 @@
             </field>
         </record>
 
-<!-- Fund Raising Search View -->
-
+        <!-- Fund Raising Search View -->
         <record id="view_crm_case_fund_filter" model="ir.ui.view">
                 <field name="name">CRM - Funds Search</field>
                 <field name="model">crm.fundraising</field>
                 <field name="type">search</field>
                 <field name="arch" type="xml">
                     <search string="Search Funds">
-                        <group col='6' colspan='4'>
+                        <group>
                             <filter icon="gtk-new" string="Current"
                                 domain="[('state','in',('draft', 'open'))]" name="current"
                                 help="Current Funds" />
@@ -268,12 +274,6 @@
                                 string="Pending"
                                 domain="[('state','=','pending')]"
                                 help="Pending Funds" />
-                            <separator orientation="vertical" />
-                            <filter icon="terp-partner" string="My Funds"
-                                default="1" domain="[('user_id','=',uid)]"
-                                separator="1"
-                                help="Funds Related to Current User"
-                                />
                             <separator orientation="vertical" />
                             <field name="state" select="1" />
                             <field name="name" select='1'
@@ -291,7 +291,7 @@
                             </field>
                         </group>
                         <newline/>
-                        <group expand="0" string="Group By..." colspan="10" col="20">
+                        <group expand="1" string="Group By...">
                             <filter string="Partner" icon="terp-partner"
                                 domain="[]"
                                 context="{'group_by':'partner_id'}" />
@@ -306,6 +306,5 @@
                     </search>
                 </field>
             </record>
-
     </data>
 </openerp>

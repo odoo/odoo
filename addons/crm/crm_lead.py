@@ -32,9 +32,10 @@ class crm_lead(osv.osv, crm_case):
     """ CRM Lead Case """
 
     _name = "crm.lead"
-    _description = "Leads Cases"
+    _description = "Lead"
     _order = "priority, id desc"
-    _inherit = ['res.partner.address', 'mailgate.thread']
+    _inherit = ['res.partner.address']
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
@@ -95,6 +96,10 @@ class crm_lead(osv.osv, crm_case):
 
     _columns = {
         # From crm.case
+        'name': fields.char('Name', size=64), 
+        'active': fields.boolean('Active', required=False), 
+        'date_action_last': fields.datetime('Last Action', readonly=1),
+        'date_action_next': fields.datetime('Next Action', readonly=1),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
@@ -103,10 +108,11 @@ class crm_lead(osv.osv, crm_case):
         'email_cc': fields.text('Watchers Emails', size=252 , help="These \
 people will receive a copy of the future communication between partner \
 and users by email"),
-        'description': fields.text('Description'),
-        'write_date': fields.datetime('Update Date' , readonly=True),
+        'description': fields.text('Notes'),
+        'write_date': fields.datetime('Update Date' , readonly=True), 
 
         # Lead fields
+        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'categ_id': fields.many2one('crm.case.categ', 'Lead Source', \
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
@@ -131,13 +137,12 @@ and users by email"),
                                 method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
-        'function_name': fields.char('Function', size=64),
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        }
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+    }
 
     _defaults = {
         'active': lambda *a: 1,
@@ -148,7 +153,7 @@ and users by email"),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
-
+    
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date
         @param self: The object pointer

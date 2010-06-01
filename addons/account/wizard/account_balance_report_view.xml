@@ -8,7 +8,7 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
               	<form string="Select period">
-				    <field name="company_id"/>
+				    <field name="company_id" groups="base.group_multi_company"/>
 				    <field name="display_account" required = "True"/>
 				    <newline/>
 				    <field name="fiscalyear"/>

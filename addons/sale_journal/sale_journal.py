@@ -53,7 +53,7 @@ class sale_journal(osv.osv):
             ('draft','Draft'),
             ('open','Open'),
             ('done','Done'),
-        ], 'State', required=True),
+        ], 'State', required=True, readonly=True),
         'note': fields.text('Note'),
     }
     _defaults = {
@@ -103,7 +103,7 @@ class picking_journal(osv.osv):
             ('draft','Draft'),
             ('open','Open'),
             ('done','Done'),
-        ], 'Creation date', required=True),
+        ], 'Creation date', required=True, readonly=True),
         'note': fields.text('Note'),
     }
     _defaults = {

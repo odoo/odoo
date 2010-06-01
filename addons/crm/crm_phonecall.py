@@ -29,12 +29,18 @@ class crm_phonecall(osv.osv, crm_case):
     """ Phonecall Cases """
 
     _name = "crm.phonecall"
-    _description = "Phonecall Cases"
+    _description = "Phonecall"
     _order = "id desc"
-    _inherit = 'mailgate.thread'
+    _inherits = {'mailgate.thread': 'thread_id'}
 
     _columns = {
         # From crm.case
+        'name': fields.char('Name', size=64),
+        'active': fields.boolean('Active', required=False), 
+        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
+        'date_action_last': fields.datetime('Last Action', readonly=1),
+        'date_action_next': fields.datetime('Next Action', readonly=1), 
+        'create_date': fields.datetime('Creation Date' , readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'), 
@@ -174,16 +180,6 @@ class crm_phonecall(osv.osv, crm_case):
         return value
 
 crm_phonecall()
-
-class res_partner(osv.osv):
-    """ Inherits partner and adds Phonecalls information in the partner form """
-    _inherit = 'res.partner'
-    
-    _columns = {
-                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
-                }
-
-res_partner()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

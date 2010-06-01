@@ -23,7 +23,8 @@
 {
     "name" : "",
     "version" : "1.1",
-    "depends" : ["crm", 
+    "depends" : ["marketing",
+                 "crm", 
                 "document",
                 "poweremail" # need to get this module form the branch 
                 # lp:poweremail  
@@ -36,8 +37,14 @@
     'init_xml': [],
     'update_xml': [
         'marketing_campaign_view.xml',
+        'marketing_campaign_data.xml',    
+        'marketing_campaign_workflow.xml',    
+        'report/campaign_analysis_view.xml',
+        'marketing_campaign_demo.xml'
     ],
-    'demo_xml': [],
+    'demo_xml': [
+        'marketing_campaign_demo.xml',
+            ],
     'installable': True,
     'active': False,
 }

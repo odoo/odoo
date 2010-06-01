@@ -158,19 +158,23 @@ class pos_return(osv.osv_memory):
                 location_id=res and res[0] or None
                 stock_dest_id = val.id
                                     
-                new_picking=picking_obj.copy(cr, uid, order_id.last_out_picking.id, {'name':'%s (return)' % order_id.name,
+                new_picking=picking_obj.copy(cr, uid, order_id.picking_id.id, {'name':'%s (return)' % order_id.name,
                                                                                     'move_lines':[], 'state':'draft', 'type':'in',
                                                                                     'type':'in',
                                                                                     'date':date_cur})
                 new_order=order_obj.copy(cr,uid,order_id.id, {'name': 'Refund %s'%order_id.name,
                                                               'lines':[],
                                                               'statement_ids':[],
-                                                              'last_out_picking':[]})
+                                                              'picking_id':[]})
                 for line in order_id.lines:
-                    if line.id  and (data['return%s' %line.id]!=0.0):
+                    if line.id  :
+                        try:
+                            qty= data['return%s' %line.id]
+                        except :
+                            qty= line.qty
                         new_move=stock_move_obj.create(cr, uid,{
-                            'product_qty': data['return%s' %line.id],
-                            'product_uos_qty': uom_obj._compute_qty(cr, uid,data['return%s' %line.id] ,line.product_id.uom_id.id),
+                            'product_qty': qty ,
+                            'product_uos_qty': uom_obj._compute_qty(cr, uid,qty ,line.product_id.uom_id.id),
                             'picking_id':new_picking,
                             'product_uom':line.product_id.uom_id.id,
                             'location_id':location_id,
@@ -179,7 +183,7 @@ class pos_return(osv.osv_memory):
                             'name':'%s (return)' %order_id.name,
                             'date':date_cur,
                             'date_planned':date_cur,})
-                        line_obj.copy(cr,uid,line.id,{'qty':-data['return%s' %line.id],
+                        line_obj.copy(cr,uid,line.id,{'qty':-qty  ,
                                                     'order_id': new_order,
                         })
                 order_obj.write(cr,uid, new_order, {'state':'done'})
@@ -262,7 +266,7 @@ class add_product(osv.osv_memory):
         
                 wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
-                order_obj.write(cr,uid,active_id,{'last_out_picking':new_picking})
+                order_obj.write(cr,uid,active_id,{'picking_id':new_picking})
                 
              
         return {            
