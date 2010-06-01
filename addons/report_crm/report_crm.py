@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -111,29 +111,29 @@ class report_crm_case_section(osv.osv):
     _name = "report.crm.case.section"
     _description = "Cases by Section"
     _auto = False
-    
+
     def _get_data(self, cr, uid, ids, field_name, arg, context={}):
         res = {}
         state_perc = 0.0
         avg_ans = 0.0
-        
+
         for case in self.browse(cr, uid, ids, context):
             if field_name != 'avg_answers':
                 state = field_name[5:]
-                cr.execute("select count(*) from crm_case where section_id =%s and state='%s'"%(case.section_id.id,state))
+                cr.execute("select count(*) from crm_case where section_id =%s and state=%s", (case.section_id.id,state))
                 state_cases = cr.fetchone()[0]
                 perc_state = (state_cases / float(case.nbr_cases) ) * 100
-                
+
                 res[case.id] = perc_state
             else:
-                cr.execute('select count(*) from crm_case_log l  where l.section_id=%s'%(case.section_id.id))
+                cr.execute('select count(*) from crm_case_log l where l.section_id=%s', (case.section_id.id,))
                 logs = cr.fetchone()[0]
-                
+
                 avg_ans = logs / case.nbr_cases
-                res[case.id] = avg_ans       
-        
+                res[case.id] = avg_ans
+
         return res
-    
+
     _columns = {
         'name': fields.date('Month', readonly=True),
 #        'user_id':fields.many2one('res.users', 'User', readonly=True),
@@ -181,7 +181,7 @@ class report_crm_case_service_dashboard(osv.osv):
         'create_date' : fields.datetime('Create Date', readonly=True)
     }
     _order = 'date_closed, create_date'
-    
+
     def init(self, cr):
         cr.execute("""create or replace view report_crm_case_service_dashboard as (
             select
@@ -195,12 +195,12 @@ class report_crm_case_service_dashboard(osv.osv):
             where
                 ((to_date(to_char(cse.date_closed, 'YYYY-MM-dd'),'YYYY-MM-dd') <= CURRENT_DATE)
                     AND
-                (to_date(to_char(cse.date_closed, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15)) 
+                (to_date(to_char(cse.date_closed, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
                     AND
                     cse.state='done')
-                
+
                 OR
-                
+
                 ((to_date(to_char(cse.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') <= CURRENT_DATE)
                     AND
                 (to_date(to_char(cse.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
@@ -211,4 +211,3 @@ report_crm_case_service_dashboard()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

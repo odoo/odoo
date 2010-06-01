@@ -20,8 +20,10 @@
 #
 ##############################################################################
 import time
-import netsvc
 
+from operator import itemgetter
+
+import netsvc
 from osv import fields, osv
 
 from tools.misc import currency
@@ -31,6 +33,26 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 from tools import config
+
+def check_cycle(self, cr, uid, ids):
+    """ climbs the ``self._table.parent_id`` chains for 100 levels or
+    until it can't find any more parent(s)
+
+    Returns true if it runs out of parents (no cycle), false if
+    it can recurse 100 times without ending all chains
+    """
+    level = 100
+    while len(ids):
+        cr.execute('SELECT DISTINCT parent_id '\
+                   'FROM '+self._table+' '\
+                   'WHERE id IN %s '\
+                   'AND parent_id IS NOT NULL',
+                   (tuple(ids),))
+        ids = map(itemgetter(0), cr.fetchall())
+        if not level:
+            return False
+        level -= 1
+    return True
 
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
@@ -149,6 +171,7 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
+    logger = netsvc.Logger()
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -195,19 +218,33 @@ class account_account(osv.osv):
             ids3 = self._get_children_and_consol(cr, uid, ids3, context)
         return ids2 + ids3
 
-    def __compute(self, cr, uid, ids, field_names, arg, context={}, query=''):
-        #compute the balance/debit/credit accordingly to the value of field_name for the given account ids
+    def __compute(self, cr, uid, ids, field_names, arg=None, context=None,
+                  query='', query_params=()):
+        """ compute the balance, debit and/or credit for the provided
+        account ids
+
+        Arguments:
+        `ids`: account ids
+        `field_names`: the fields to compute (a list of any of
+                       'balance', 'debit' and 'credit')
+        `arg`: unused fields.function stuff
+        `query`: additional query filter (as a string)
+        `query_params`: parameters for the provided query string
+                        (__compute will handle their escaping) as a
+                        tuple
+        """
         mapping = {
-            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance ",
-            'debit': "COALESCE(SUM(l.debit), 0) as debit ",
-            'credit': "COALESCE(SUM(l.credit), 0) as credit "
+            'balance': "COALESCE(SUM(l.debit),0) " \
+                       "- COALESCE(SUM(l.credit), 0) as balance",
+            'debit': "COALESCE(SUM(l.debit), 0) as debit",
+            'credit': "COALESCE(SUM(l.credit), 0) as credit"
         }
         #get all the necessary accounts
-        ids2 = self._get_children_and_consol(cr, uid, ids, context)
-        acc_set = ",".join(map(str, ids2))
+        children_and_consolidated = self._get_children_and_consol(
+            cr, uid, ids, context=context)
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
-        if ids2:
+        if children_and_consolidated:
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
             wheres = [""]
@@ -215,20 +252,29 @@ class account_account(osv.osv):
                 wheres.append(query.strip())
             if aml_query.strip():
                 wheres.append(aml_query.strip())
-            query = " AND ".join(wheres)
-
-            cr.execute(("SELECT l.account_id as id, " +\
-                    ' , '.join(map(lambda x: mapping[x], field_names)) +
-                    "FROM " \
-                        "account_move_line l " \
-                    "WHERE " \
-                        "l.account_id IN (%s) " \
-                        + query +
-                    " GROUP BY l.account_id") % (acc_set, ))
+            filters = " AND ".join(wheres)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Filters: %s'%filters)
+            # IN might not work ideally in case there are too many
+            # children_and_consolidated, in that case join on a
+            # values() e.g.:
+            # SELECT l.account_id as id FROM account_move_line l
+            # INNER JOIN (VALUES (id1), (id2), (id3), ...) AS tmp (id)
+            # ON l.account_id = tmp.id
+            # or make _get_children_and_consol return a query and join on that
+            request = ("SELECT l.account_id as id, " +\
+                       ' , '.join(map(mapping.__getitem__, field_names)) +
+                       " FROM account_move_line l" \
+                       " WHERE l.account_id IN %s " \
+                            + filters +
+                       " GROUP BY l.account_id")
+            params = (tuple(children_and_consolidated),) + query_params
+            cr.execute(request, params)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Status: %s'%cr.statusmessage)
 
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
-
 
         # consolidate accounts with direct children
         ids2.reverse()
@@ -342,8 +388,10 @@ class account_account(osv.osv):
         if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
             return False
         while(ids):
-            cr.execute('select distinct child_id from account_account_consol_rel where parent_id in ('+','.join(map(str, ids))+')')
-            child_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
+            cr.execute('SELECT DISTINCT child_id '\
+                       'FROM account_account_consol_rel '\
+                       'WHERE parent_id IN %s', (tuple(ids),))
+            child_ids = map(itemgetter(0), cr.fetchall())
             c_ids = child_ids
             if (p_id and (p_id in c_ids)) or (obj_self.id in c_ids):
                 return False
@@ -824,7 +872,10 @@ class account_move(osv.osv):
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
-        cr.execute('select move_id,sum(debit) from account_move_line where move_id in ('+','.join(map(str,ids))+') group by move_id')
+        cr.execute('SELECT move_id, SUM(debit) '\
+                   'FROM account_move_line '\
+                   'WHERE move_id IN %s '\
+                   'GROUP BY move_id', (tuple(ids),))
         result = dict(cr.fetchall())
         for id in ids:
             result.setdefault(id, 0.0)
@@ -919,7 +970,10 @@ class account_move(osv.osv):
                     if new_name:
                         self.write(cr, uid, [move.id], {'name':new_name})
 
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
+            cr.execute('UPDATE account_move '\
+                       'SET state=%s '\
+                       'WHERE id IN %s',
+                       ('posted', tuple(ids)))
         else:
             raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
         return True
@@ -932,7 +986,9 @@ class account_move(osv.osv):
             if not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
         if len(ids):
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
+            cr.execute('UPDATE account_move '\
+                       'SET state=%s '\
+                       'WHERE id IN %s', ('draft', tuple(ids)))
         return True
 
     def write(self, cr, uid, ids, vals, context={}):
@@ -1051,7 +1107,10 @@ class account_move(osv.osv):
         else:
             line_id2 = 0
 
-        cr.execute('select sum('+mode+') from account_move_line where move_id=%s and id<>%s', (move.id, line_id2))
+        cr.execute('SELECT SUM(%s) '\
+                   'FROM account_move_line '\
+                   'WHERE move_id=%s AND id<>%s',
+                   (mode, move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
         return True
@@ -1205,25 +1264,28 @@ class account_tax_code(osv.osv):
 
     This code is used for some tax declarations.
     """
-    def _sum(self, cr, uid, ids, name, args, context, where =''):
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
+    def _sum(self, cr, uid, ids, name, args, context,
+             where ='', where_params=()):
+        parent_ids = tuple(self.search(
+            cr, uid, [('parent_id', 'child_of', ids)]))
         if context.get('based_on', 'invoices') == 'payments':
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line, \
                         account_move AS move \
                         LEFT JOIN account_invoice invoice ON \
                             (invoice.move_id = move.id) \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
+                    WHERE line.tax_code_id in %s '+where+' \
                         AND move.id = line.move_id \
                         AND ((invoice.state = \'paid\') \
                             OR (invoice.id IS NULL)) \
-                    GROUP BY line.tax_code_id')
+                    GROUP BY line.tax_code_id',
+                       (parent_ids,)+where_params)
         else:
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
-                    GROUP BY line.tax_code_id')
+                    WHERE line.tax_code_id in %s '+where+' \
+                    GROUP BY line.tax_code_id',
+                       (parent_ids,)+where_params)
         res=dict(cr.fetchall())
         for record in self.browse(cr, uid, ids, context):
             def _rec_get(record):
@@ -1240,12 +1302,14 @@ class account_tax_code(osv.osv):
         else:
             fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
         where = ''
+        where_params = ()
         if fiscalyear_id:
             pids = map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id).period_ids)
             if pids:
-                where = ' and period_id in (' + (','.join(pids))+')'
+                where = ' and period_id in %s'
+                where_params = (tuple(pids),)
         return self._sum(cr, uid, ids, name, args, context,
-                where=where)
+                where=where, where_params=where_params)
 
     def _sum_period(self, cr, uid, ids, name, args, context):
         if 'period_id' in context and context['period_id']:
@@ -1256,7 +1320,8 @@ class account_tax_code(osv.osv):
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
         return self._sum(cr, uid, ids, name, args, context,
-                where=' and line.period_id='+str(period_id))
+                         where=' and line.period_id=%s',
+                         where_params=(period_id,))
 
     _name = 'account.tax.code'
     _description = 'Tax Code'
@@ -1302,15 +1367,6 @@ class account_tax_code(osv.osv):
         'sign': lambda *args: 1.0,
         'notprintable': lambda *a: False,
     }
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
     
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -1318,7 +1374,9 @@ class account_tax_code(osv.osv):
         default = default.copy()
         default.update({'line_ids': []})
         return super(account_tax_code, self).copy(cr, uid, id, default, context)
-    
+
+    _check_recursion = check_cycle
+
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
@@ -1931,16 +1989,7 @@ class account_account_template(osv.osv):
         'type' : lambda *a :'view',
     }
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select parent_id from account_account_template where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
+    _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id'])
     ]
@@ -1990,16 +2039,7 @@ class account_tax_code_template(osv.osv):
         return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
                 for x in reads]
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code_template where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
+    _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive Tax Codes.', ['parent_id'])
     ]

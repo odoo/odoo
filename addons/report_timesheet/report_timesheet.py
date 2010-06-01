@@ -194,11 +194,11 @@ class report_random_timsheet(osv.osv):
                 account_analytic_line line, hr_department dept,hr_department_user_rel dept_user
             where
                 (dept.id = dept_user.department_id AND dept_user.user_id=line.user_id AND line.user_id is not null)
-                AND (dept.manager_id = """ + str(uid) + """ ) 
+                AND (dept.manager_id = %s)
                 AND (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-3))
             LIMIT 10
             )
-            """ )
+            """, (uid,))
 
 report_random_timsheet()
 

@@ -104,10 +104,7 @@ class account_balance(report_sxw.rml_parse):
                 ctx['periods'] = form['periods'][0][2]
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to']
-#            accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
-#            def cmp_code(x, y):
-#                return cmp(x.code, y.code)
-#            accounts.sort(cmp_code)
+
             child_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, ids, ctx)
             if child_ids:
                 ids = child_ids
@@ -131,18 +128,7 @@ class account_balance(report_sxw.rml_parse):
                     }
                 self.sum_debit += account['debit']
                 self.sum_credit += account['credit']
-#                if account.child_id:
-#                    def _check_rec(account):
-#                        if not account.child_id:
-#                            return bool(account.credit or account.debit)
-#                        for c in account.child_id:
-#                            if not _check_rec(c) or _check_rec(c):
-#                                return True
-#                        return False
-#                    if not _check_rec(account) :
-#                        continue
                 if account['parent_id']:
-#                    acc = self.pool.get('account.account').read(self.cr, self.uid, [ account['parent_id'][0] ] ,['name'], ctx)
                     for r in result_acc:
                         if r['id'] == account['parent_id'][0]:
                             res['level'] = r['level'] + 1
@@ -155,16 +141,6 @@ class account_balance(report_sxw.rml_parse):
                         result_acc.append(res)
                 else:
                     result_acc.append(res)
-#                if account.child_id:
-#                    acc_id = [acc.id for acc in account.child_id]
-#                    lst_string = ''
-#                    lst_string = '\'' + '\',\''.join(map(str,acc_id)) + '\''
-#                    self.cr.execute("select code,id from account_account where id IN (%s)"%(lst_string))
-#                    a_id = self.cr.fetchall()
-#                    a_id.sort()
-#                    ids2 = [x[1] for x in a_id]
-#
-#                    result_acc += self.lines(form, ids2, done, level+1)
             return result_acc
         
         def _sum_credit(self):

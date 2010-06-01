@@ -60,7 +60,6 @@ class pos_order(osv.osv):
         return {'value': {'pricelist_id': pricelist}}
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
-        id_set = ",".join(map(str, ids))
         cr.execute("""
         SELECT
             p.id,
@@ -69,7 +68,7 @@ class pos_order(osv.osv):
                 ) AS amount
         FROM pos_order p
             LEFT OUTER JOIN pos_order_line l ON (p.id=l.order_id)
-        WHERE p.id IN (""" + id_set +""") GROUP BY p.id """)
+        WHERE p.id IN %s GROUP BY p.id """, (tuple(ids),))
         res = dict(cr.fetchall())
 
         for rec in self.browse(cr, uid, ids, context):
@@ -113,8 +112,8 @@ class pos_order(osv.osv):
         return res
 
     def payment_get(self, cr, uid, ids, context=None):
-        cr.execute("select id from pos_payment where order_id in (%s)" % \
-                    ','.join([str(i) for i in ids]))
+        cr.execute("select id from pos_payment where order_id in %s",
+                    (tuple(ids),))
         return [i[0] for i in cr.fetchall()]
 
     def _sale_journal_get(self, cr, uid, context):

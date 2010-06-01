@@ -37,8 +37,8 @@ class one2many_mod_task(fields.one2many):
         for id in ids:
             res[id] = []
         for id in ids:
-            query = "select project_id from event_event where id = %i" %id
-            cr.execute(query)
+            query = "select project_id from event_event where id = %s"
+            cr.execute(query, (id,))
             project_ids = [ x[0] for x in cr.fetchall()]
             ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',project_ids),('state','<>','done')], limit=self._limit)
             for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):

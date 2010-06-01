@@ -65,8 +65,6 @@ class payment_mode(osv.osv):
             join payment_mode pm on (pm.type = pt.id)
             where pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
-
-
 payment_mode()
 
 
@@ -150,19 +148,8 @@ class payment_line(osv.osv):
     _name = 'payment.line'
     _description = 'Payment Line'
 
-    #~ def partner_payable(self, cr, uid, ids, name, args, context={}):
-        #~ if not ids: return {}
-        #~ partners= self.read(cr, uid, ids, ['partner_id'], context)
-        #~ partners= dict(map(lambda x: (x['id'], x['partner_id'][0]), partners))
-        #~ debit = self.pool.get('res.partner')._debit_get(cr, uid,
-                #~ partners.values(), name, args, context)
-        #~ for i in partners:
-            #~ partners[i] = debit[partners[i]]
-        #~ return partners
-
     def translate(self, orig):
         return {
-#               "to_pay": "credit",
                 "due_date": "date_maturity",
                 "reference": "ref"}.get(orig, orig)
 
@@ -224,8 +211,8 @@ class payment_line(osv.osv):
             from account_move_line ml
                 inner join payment_line pl
                 on (ml.id = pl.move_line_id)
-            where pl.id in (%s)"""%
-            (self.translate(name), ','.join(map(str,ids))) )
+            where pl.id in %%s"""% self.translate(name),
+                   (tuple(ids),))
         res = dict(cr.fetchall())
 
         if name == 'partner_id':
@@ -243,61 +230,6 @@ class payment_line(osv.osv):
             for id in ids:
                 res.setdefault(id, (False, ""))
         return res
-
-#   def _currency(self, cursor, user, ids, name, args, context=None):
-#       if not ids:
-#           return {}
-#       res = {}
-#
-#       currency_obj = self.pool.get('res.currency')
-#       account_obj = self.pool.get('account.account')
-#       cursor.execute('''SELECT pl.id, ml.currency_id, ml.account_id
-#       FROM account_move_line ml
-#           INNER JOIN payment_line pl
-#               ON (ml.id = pl.move_line_id)
-#       WHERE pl.id in (''' + ','.join([str(x) for x in ids]) + ')')
-#
-#       res2 = {}
-#       account_ids = []
-#       for payment_line_id, currency_id, account_id in cursor.fetchall():
-#           res2[payment_line_id] = [currency_id, account_id]
-#           account_ids.append(account_id)
-#
-#       account2currency_id = {}
-#       for account in account_obj.browse(cursor, user, account_ids,
-#               context=context):
-#           account2currency_id[account.id] = account.company_currency_id.id
-#
-#       for payment_line_id in ids:
-#           if res2[payment_line_id][0]:
-#               res[payment_line_id] = res2[payment_line_id][0]
-#           else:
-#               res[payment_line_id] = \
-#                       account2currency_id[res2[payment_line_id][1]]
-#
-#       currency_names = {}
-#       for currency_id, name in currency_obj.name_get(cursor, user, res.values(),
-#               context=context):
-#           currency_names[currency_id] = name
-#       for payment_line_id in ids:
-#           res[payment_line_id] = (res[payment_line_id],
-#                   currency_names[res[payment_line_id]])
-#       return res
-#
-#   def _to_pay_currency(self, cursor, user, ids, name , args, context=None):
-#       if not ids:
-#           return {}
-#
-#       cursor.execute('''SELECT pl.id,
-#           CASE WHEN ml.amount_currency < 0
-#               THEN - ml.amount_currency
-#               ELSE ml.credit
-#           END
-#       FROM account_move_line ml
-#           INNER JOIN payment_line pl
-#               ON (ml.id = pl.move_line_id)
-#       WHERE pl.id in (''' + ','.join([str(x) for x in ids]) + ')')
-#       return dict(cursor.fetchall())
 
     def _amount(self, cursor, user, ids, name, args, context=None):
         if not ids:
@@ -334,15 +266,6 @@ class payment_line(osv.osv):
         else:
             return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
 
-#   def select_move_lines(*a):
-#       print a
-#       return []
-
-#   def create(self, cr, uid, vals, context):
-#       print "created!!!"
-#       vals['company_currency'] = self._get_currency(cr, uid, context)
-#       return super(payment_line, self).create(cr, uid, vals, context)
-
     def _get_ml_inv_ref(self, cr, uid, ids, *a):
         res={}
         for id in self.browse(cr, uid, ids):
@@ -377,11 +300,6 @@ class payment_line(osv.osv):
         'move_line_id': fields.many2one('account.move.line','Entry line', domain=[('reconcile_id','=', False), ('account_id.type', '=','payable')],help='This Entry Line will be referred for the information of the ordering customer.'),
         'amount_currency': fields.float('Amount in Partner Currency', digits=(16,2),
             required=True, help='Payment amount in the partner currency'),
-#       'to_pay_currency': fields.function(_to_pay_currency, string='To Pay',
-#           method=True, type='float',
-#           help='Amount to pay in the partner currency'),
-#       'currency': fields.function(_currency, string='Currency',
-#           method=True, type='many2one', obj='res.currency'),
         'currency': fields.many2one('res.currency','Partner Currency',required=True),
         'company_currency': fields.many2one('res.currency','Company Currency',readonly=True),
         'bank_id': fields.many2one('res.partner.bank', 'Destination Bank account'),
@@ -391,21 +309,12 @@ class payment_line(osv.osv):
         'amount': fields.function(_amount, string='Amount in Company Currency',
             method=True, type='float',
             help='Payment amount in the company currency'),
-#       'to_pay': fields.function(select_by_name, string="To Pay", method=True,
-#           type='float', help='Amount to pay in the company currency'),
-#       'due_date': fields.function(select_by_name, string="Due date",
-#           method=True, type='date'),
         'ml_date_created': fields.function(_get_ml_created_date, string="Effective Date",
             method=True, type='date',help="Invoice Effective Date"),
-#       'reference': fields.function(select_by_name, string="Ref", method=True,
-#           type='char'),
         'ml_maturity_date': fields.function(_get_ml_maturity_date, method=True, type='date', string='Maturity Date'),
         'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='many2one', relation='account.invoice', string='Invoice Ref.'),
         'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text",help='Address of the Main Partner'),
         'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text",help='Address of the Ordering Customer.'),
-#        'partner_payable': fields.function(partner_payable, string="Partner payable", method=True, type='float'),
-#       'value_date': fields.function(_value_date, string='Value Date',
-#           method=True, type='date'),
         'date': fields.date('Payment Date',help="If no payment date is specified, the bank will treat this payment line directly"),
         'create_date': fields.datetime('Created' ,readonly=True),
         'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True)

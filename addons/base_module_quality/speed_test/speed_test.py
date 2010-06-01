@@ -53,7 +53,6 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
 """)
         self.min_score = 30
-        return None
 
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
@@ -62,7 +61,9 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
         # remove osv_memory class becaz it does not have demo data
         if obj_list:
-            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model in ('%s')"% ("','".join(obj_list)))
+            cr.execute("SELECT w.res_model FROM ir_actions_todo AS t "\
+                       "LEFT JOIN ir_act_window AS w ON t.action_id=w.id "\
+                       "WHERE w.res_model IN %s", (tuple(obj_list),))
             res = cr.fetchall()
             for remove_obj in res:
                 if remove_obj and (remove_obj[0] in obj_list):
