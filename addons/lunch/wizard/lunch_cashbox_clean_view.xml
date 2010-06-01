@@ -14,8 +14,7 @@
                 		 <label string="Are you sure you want to reset this cashbox ?"/>
                     </group>
                        	<separator string="" colspan="4" />
-                    <group colspan="6" >
-                    	<label string=" " colspan="2"/>
+                    <group colspan="4" col="6">
                     	<button  icon="gtk-cancel" special="cancel" string="No"/>
                     	<button  icon="gtk-ok" name="set_to_zero" string="Set to Zero" type="object"/>
                    </group>
@@ -23,7 +22,14 @@
             </field>
   		</record>
 
-  <!-- Action for lunch cashbox set to zero. -->
+        <record id="action_lunch_cashbox_clean" model="ir.actions.act_window">
+            <field name="name">Set CashBox to Zero</field>
+            <field name="res_model">lunch.cashbox.clean</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_lunch_cashbox_clean"/>
+           <field name="target">new</field>
+        </record>
 
         <act_window id="action_lunch_cashbox_clean_values"
     		key2="client_action_multi" name="Set CashBox to Zero"

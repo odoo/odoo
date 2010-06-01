@@ -2,7 +2,6 @@
 <openerp>
     <data>
 
-		<wizard id="wizard_populate_statement" menu="False" model="account.bank.statement" name="populate_statement" string="Populate Statement with Payment lines"/>
         <!-- View used in the wizard -->
         <record id="view_move_line_form" model="ir.ui.view">
             <field name="name">account.move.line.form.inherit</field>
@@ -26,6 +25,8 @@
                     <field name="partner_id"/>
                     <field name="ref"/>
                     <field name="name"/>
+                    <field name="journal_id"/>
+                    <field name="account_id"/>
                     <field name="date_maturity"/>
                     <field name="date"/>
                     <field name="debit" sum="Total debit"/>
@@ -280,7 +281,6 @@
                     <field name="currency"/>
                     <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                     <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode)"/>
-                    <field domain="[('partner_id', '=', partner_id)]" name="bank_id"/>
                     <field name="create_date"/>
                     <field name="name"/>
                 </tree>
@@ -300,7 +300,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <group colspan="2" col="3" position="inside">
-                    <button name="%(wizard_populate_statement)d" string="Import payment lines" type="action" icon="gtk-open"/>
+                    <button name="%(action_account_populate_statement_confirm)d" string="Import payment lines" type="action" icon="gtk-open"/>
                 </group>
             </field>
         </record>

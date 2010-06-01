@@ -33,8 +33,8 @@
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem name="Configuration" id="menu_event_config" parent="menu_marketing_event_main" sequence="30"/>
-        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="menu_event_config"/>
+        <menuitem name="Configuration" id="menu_event_config" parent="menu_marketing_event_main" sequence="30" groups="base.group_extended"/>
+        <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="menu_event_config" groups="base.group_extended,crm.group_crm_manager"/>
 
         <!-- The base section for all events -->
 
@@ -126,7 +126,6 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group col="10" colspan="4">
-                        <filter icon="gtk-execute" string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-calendar" string="Draft" domain="[('state','=','draft')]" help="Draft Events"/>
                         <filter icon="terp-calendar" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed Events"/>
@@ -147,6 +146,7 @@
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
            <field name="view_mode">tree,form</field>
+           <field name="context">{"search_default_user_id":uid}</field>
            <field name="search_view_id" ref="view_event_search"/>
        </record>
 
@@ -221,24 +221,34 @@
                         <field name="ref2" colspan="4"/>
                     </page>
                     <page string="History">
-                        <field name="history_line" colspan="4" nolabel="1" mode="tree,form">
-                            <form string="Communication history">
-                                <field name="date"/>
-                                <field name="som"/>
-                                <newline/>
-                                <field name="canal_id"/>
-                                <field name="email"/>
-                                <newline/>
-                                <field name="description" colspan="4"/>
-                            </form>
-                            <tree string="Communication history">
-                                <field name="date"/>
-                                <field name="description"/>
-                                <field name="som"/>
-                                <field name="user_id"/>
-                                <field name="canal_id"/>
-                            </tree>
-                        </field>
+                        <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+	                        <form string="Communication history">
+                                    <group col="6" colspan="4">
+                                        <field name="date"/>
+                                        <field name="email_to"/>
+                                        <field name="email_from"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Details">
+                                            <field name="description" colspan="4" nolabel="1"/>
+                                        </page>
+                                        <page string="Attachments">
+                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                    <button colspan="4"
+                                    string="Reply to Last Email"
+                                    name="%(crm.action_crm_send_mail)d"
+                                    context="{'mail':'reply', 'model': 'event.registration'}"
+                                    icon="gtk-undo" type="action" />
+                                </form>
+                                <tree string="Communication history">
+                                    <field name="date"/>
+                                    <field name="email_from" />
+                                    <field name="email_to"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
                         <field name="log_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
                             <tree string="Actions">
                                 <separator string="Action Information" colspan="4"/>
@@ -271,7 +281,6 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group col="12" colspan="4">
-                        <filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Registrations"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-calendar" string="Draft" domain="[('state','=','draft')]" help="Draft Registrations"/>
                         <filter icon="terp-calendar" string="Confirmed" domain="[('state','in',('open','done'))]" help="Confirmed Registrations"/>
@@ -292,6 +301,7 @@
           <field name="view_type">form</field>
           <field name="domain"></field>
           <field name="view_mode">tree,form</field>
+          <field name="context">{"search_default_user_id":uid}</field>
           <field name="search_view_id" ref="view_registration_search"/>
         </record>
         <menuitem

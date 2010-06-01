@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+    <!-- Post Idea for vote Form View  -->
 
-<!-- Post Idea for vote Form View  -->
+      <record id="view_idea_post_vote" model="ir.ui.view">
+        <field name="name">idea.post.vote.form</field>
+        <field name="model">idea.post.vote</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Give Vote">
+                <group colspan="4" >
+                     <field name="vote" colspan="4"/>
+                     <separator string="Comment" colspan="4"/>
+                     <field name="note" colspan="4" nolabel="1"/>
+                </group>
+               <separator string="" colspan="4" />
+               <group colspan="4" col="6">
+                    <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button  icon="gtk-ok" name="do_vote" string="Post" type="object"/>
+               </group>
+           </form>
+        </field>
+    </record>
 
-  		<record id="view_idea_post_vote" model="ir.ui.view">
-            <field name="name">idea.post.vote.form</field>
-            <field name="model">idea.post.vote</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Give Vote">
-                	<group colspan="4" >
-                	     <separator colspan="4" string="Give Vote for Idea"/>
-                		 <field name="vote"/>
-                		 <separator string="Comment" colspan="4"/>
-                		 <field name="content" colspan="4" nolabel="1"/>
-                    </group>
-                       	<separator string="" colspan="4"/>
-                    <group colspan="4" col="6">
-                    	<label string="" colspan="2"/>
-                    	<button  icon="gtk-cancel" special="cancel" string="Close"/>
-                    	<button  icon="gtk-apply" name="do_vote" string="Post" type="object"/>
-                   </group>
-               </form>
-            </field>
-  		</record>
-  		
 
-  		<record id="view_idea_select" model="ir.ui.view">
+    <record id="view_idea_select" model="ir.ui.view">
             <field name="name">idea.select.form</field>
             <field name="model">idea.select</field>
             <field name="type">form</field>
@@ -46,20 +43,19 @@
                </form>
             </field>
   		</record>
-  		
-<!-- Post Idea for vote Action  -->
 
-        <record id="action_idea_post_vote" model="ir.actions.act_window">
-            <field name="name">Vote</field>
-            <field name="res_model">idea.post.vote</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_idea_post_vote"/>
-           <field name="target">new</field>
-        </record>
-        
-        
-        <record id="action_idea_select" model="ir.actions.act_window">
+    <!-- Post Idea for vote Action  -->
+
+    <record id="action_idea_post_vote" model="ir.actions.act_window">
+        <field name="name">Vote</field>
+        <field name="res_model">idea.post.vote</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+       <field name="view_id" ref="view_idea_post_vote"/>
+       <field name="target">new</field>
+    </record>  
+
+    <record id="action_idea_select" model="ir.actions.act_window">
             <field name="name">Idea select</field>
             <field name="res_model">idea.select</field>
             <field name="view_type">form</field>
@@ -67,7 +63,7 @@
            <field name="view_id" ref="view_idea_select"/>
            <field name="target">new</field>
            <field name="context">{'model': 'idea.idea'}</field>
-        </record>
+        </record>     
 
     </data>
 </openerp>

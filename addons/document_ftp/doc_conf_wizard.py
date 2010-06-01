@@ -30,7 +30,7 @@ import os
 class document_configuration_wizard(osv.osv_memory):
 
     _name='document.configuration.wizard'
-    _description = 'Auto Directory configuration'
+    _description = 'Auto Directory Configuration'
     _inherit = 'res.config'
     _rec_name = 'host'
     _columns = {

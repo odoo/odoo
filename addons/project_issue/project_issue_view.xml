@@ -82,8 +82,10 @@
                         		<separator string="Statistics" colspan="2" col="2"/>
                         		<field name="day_open"/>
                         		<field name="day_close"/>
-                    		</group>
-                            <group col="2" colspan="2">
+                        		<field name="working_hours_open" widget="float_time"/>
+                        		<field name="working_hours_close" widget="float_time"/>
+                        	</group>
+                        	<group colspan="2" col="2">
                                 <separator string="References" colspan="2"/>
                                 <field name="id"/>
                                 <field name="active"/>
@@ -112,20 +114,27 @@
                                         <field name="date"/>
                                         <field name="email_to"/>
                                         <field name="email_from"/>
-                                   </group>
-                                   <newline/>
-                                   <field name="description" colspan="4" nolabel="1"/>
-                                   <button colspan="4"
-                                   	string="Reply to Last Email"
-                                   	name="%(crm.action_crm_send_mail)d"
-                                   	context="{'mail':'reply', 'model': 'project.issue'}"
-                                   	icon="gtk-undo" type="action" />
-                               </form>
-                               <tree string="Communication history">
-                                   <field name="description"/>
-                                   <field name="email_to"/>
-                                   <field name="date"/>
-                               </tree>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Details">
+                                            <field name="description" colspan="4" nolabel="1"/>
+                                        </page>
+                                        <page string="Attachments">
+                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                    <button colspan="4"
+                                    string="Reply to Last Email"
+                                    name="%(crm.action_crm_send_mail)d"
+                                    context="{'mail':'reply', 'model': 'project.issue'}"
+                                    icon="gtk-undo" type="action" />
+                                </form>
+                                <tree string="Communication history">
+                                    <field name="date"/>
+                                    <field name="email_from" />
+                                    <field name="email_to"/>
+                                    <field name="description"/>
+                                </tree>
                            </field>
                            <button colspan="4" string="Send New Email"
                            	name="%(crm.action_crm_send_mail)d"
@@ -143,6 +152,7 @@
             <field name="arch" type="xml">
                 <tree string="Issue Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                     <field name="id"/>
+                    <field name="create_date"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="priority" string="Severity"/>
@@ -155,6 +165,7 @@
                         states="open,draft,pending,done,cancel" />
                     <field name="type_id" string="Version"/>
                     <field name="user_id"/>
+                    <field name="assigned_to"/>
                     <field name="state"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
@@ -172,38 +183,28 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
-                    <group>
+                    <group colspan="4" col="20">
                         <filter icon="gtk-home" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
-                            help="Todays's bugs"
+                            help="Today's bugs"
                             />
                         <filter icon="gtk-media-rewind"
                             string="    7 Days    " separator="1"
                             domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Bugs during last 7 days"
                             />
-
-                    </group>
-                    <separator orientation="vertical"/>
-                    <group>
+                    	<separator orientation="vertical"/>
                         <field name="name" select='1' string="Subject"/>
-                        <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" name="my_bugs"/>
-                        </field>
+                        <field name="user_id" select="1" widget="selection"/>
                         <field name="state" select="1">
                             <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" name="current_bugs"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
                         </field>
-                        <field name="project_id" select="1" widget="selection" string="Project">
-                            <filter icon="terp-crm"
-                                domain="[('project_id','=',context.get('project_id',False))]"
-                                help="My Project"
-                                />
-                        </field>
+                        <field name="project_id" select="1" widget="selection" string="Project"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="16">
+                    <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
 	                    <filter string="Stage" icon="terp-crm" domain="[]"
 	                        context="{'group_by':'stage_id'}" />
 	                    <filter string="Priority" icon="terp-crm" domain="[]"
@@ -278,7 +279,7 @@
                         <filter icon="gtk-home" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
-                            help="Todays's features"
+                            help="Today's features"
                             />
                         <filter icon="gtk-media-rewind"
                             string="    7 Days    " separator="1"
@@ -289,19 +290,13 @@
                     <separator orientation="vertical"/>
                     <group>
                         <field name="name" select='1' string="Feature description"/>
-                        <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Features" name="my_feature"/>
-                        </field>
+                        <field name="user_id" select="1" widget="selection"/>
                         <field name="state" select="1">
                             <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
-                        <field name="project_id" select="1" widget="selection" string="Project">
-                            <filter icon="terp-crm"
-                                domain="[('project_id','=',context.get('project_id',False))]"
-                                help="My Project"
-                                />
-                        </field>
+                        <field name="project_id" select="1" widget="selection" string="Project"/>
+
                     </group>
                 </search>
             </field>

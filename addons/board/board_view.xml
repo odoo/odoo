@@ -25,12 +25,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Note">
-	               <field name="name" select="1"/>
-	               <field name="type" select="1" required="1"/>
-	               <field name="user_id" select="1"/>
-	               <field name="date" select="1"/>
-				   <separator string="Notes" colspan="4"/>	
-                   <field colspan="4" name="note" nolabel="1"/>
+                    <field name="name" select="1"/>
+                    <field name="type" select="1" required="1"/>
+                    <field name="user_id" select="1"/>
+                    <field name="date" select="1"/>
+                    <field colspan="4" name="note"/>
                 </form>
             </field>
         </record>
@@ -66,15 +65,12 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Dashboard">
-                	<group col="6" colspan="4">
-                    	<field name="name" select="1" />
-                    		<field name="menu_id" colspan="2"/>
-                    		<button 
-                        		name="%(action_board_menu_create)d"
-                        		string="Create Menu" type="action"
-                        		icon="gtk-justify-fill"  attrs="{'invisible':[('menu_id','!=',False)]}"/>
-                    	</group>    
-                    <field colspan="4" name="line_ids" nolabel="1">
+                    <field name="name" select="1"/>
+                    <button colspan="2"
+                        name="%(action_board_menu_create)d"
+                        string="Create Menu" type="action"
+                        icon="gtk-justify-fill" />
+                    <field colspan="4" name="line_ids">
                         <tree string="Dashboard View">
                             <field name="name"/>
                             <field name="sequence"/>

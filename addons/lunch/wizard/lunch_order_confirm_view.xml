@@ -16,8 +16,7 @@
                 		 <newline/>
                     </group>
                        	<separator string="" colspan="4" />
-                    <group colspan="6">
-                    	<label colspan="2" string=" "/> 
+                    <group colspan="4" col="6">
                     	<button  icon="gtk-cancel" special="cancel" string="Cancel"/>
                     	<button  icon="gtk-ok" name="confirm" string="Confirm Order" type="object"/>
                    </group>
@@ -25,7 +24,14 @@
             </field>
   		</record>
 
-<!--  Action for Confirm order -->
+        <record id="action_lunch_order_confirm" model="ir.actions.act_window">
+            <field name="name">Confirm Order</field>
+            <field name="res_model">lunch.order.confirm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_lunch_order_confirm"/>
+           <field name="target">new</field>
+        </record>
 
         <act_window id="action_lunch_order_confirm_values"
     		key2="client_action_multi" name="Confirm Order"

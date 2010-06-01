@@ -30,13 +30,14 @@ import invoice
 import overdue
 import aged_trial_balance
 import tax_report
-import general_ledger_landscape
 import account_tax_code
 import account_balance_landscape
 import compare_account_balance
 import account_invoice_report
 import account_report
 import account_analytic_report
-
+import account_account_report
+import account_entries_report
+import account_analytic_entries_report
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
