@@ -225,7 +225,7 @@ class crm_send_new_email(osv.osv_memory):
 
                 original = [header, sender, to, sentdate, desc, signature]
 
-            res['text']= '\n'.join(original)
+            res['text']= '\n\n\n' + '\n'.join(original)
 
             if 'subject' in fields:
                 res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')})
