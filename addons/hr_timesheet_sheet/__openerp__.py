@@ -56,9 +56,9 @@ The validation can be configured in the company:
         'report/timesheet_report_view.xml',
     ],
     'demo_xml': ['hr_timesheet_sheet_demo.xml',
-                'test/test_hr_timesheet_sheet.yml'
+                
                  ],
-    'test':[],
+    'test':['test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'active': False,
     'certificate': '0073297700829',
