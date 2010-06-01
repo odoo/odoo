@@ -1130,6 +1130,15 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase',
 'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
 'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph',
+'terp-check','terp-go-month','terp-go-year','terp-go-today','terp-document-new','terp-camera_test',
+'terp-emblem-important','terp-gtk-media-pause','terp-gtk-stop','terp-gnome-cpu-frequency-applet+',
+'terp-dialog-close','terp-gtk-jump-to-rtl','terp-gtk-jump-to-ltr','terp-accessories-archiver',
+'terp-stock_align_left_24','terp-stock_effects-object-colorize','terp-go-home','terp-gtk-go-back-rtl',
+'terp-gtk-go-back-ltr','terp-personal','terp-personal-','terp-personal+','terp-accessories-archiver-minus',
+'terp-accessories-archiver+','terp-stock_symbol-selection','terp-call-start','terp-dolar',
+'terp-face-plain','terp-folder-blue','terp-folder-green','terp-folder-orange','terp-folder-yellow',
+'terp-gdu-smart-failing','terp-go-week','terp-gtk-select-all','terp-locked','terp-mail-forward',
+'terp-mail-message-new','terp-mail-replied','terp-rating-rated','terp-stage','terp-stock_format-scientific'
 ])
 
 def extract_zip_file(zip_file, outdirectory):
