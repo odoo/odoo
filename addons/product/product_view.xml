@@ -9,22 +9,22 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                   <filter string="Services" icon="terp-stock" domain="[('type','=','service')]"/>
-                   <filter string="Stockable" icon="terp-stock" domain="['|',('type','=','product'),('type','=','consu')]"/>
+                   <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
+                   <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
-                   <filter string="Can be sold" icon="terp-stock" domain="[('sale_ok','=',1)]"/>
-                   <filter string="Can be Purchased" icon="terp-stock" domain="[('purchase_ok', '=', 1)]" />
+                   <filter string="Can be sold" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
                    <separator orientation="vertical"/>
                    <field name="default_code"/>
                    <field name="name"/>
                    <field name="categ_id" widget="selection" operator="child_of"/>
                    <newline/>
-                   <group  expand='1' string='Group by...' groups="base.group_extended">
-                       <filter string='Category' icon="terp-stock" domain="[]" context="{'group_by' : 'categ_id'}" />
+                   <group  expand='0' string='Group by...' groups="base.group_extended">
+                       <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
                        <separator orientation="vertical"/>
-                       <filter string='Default UOM' icon="terp-stock" domain="[]" context="{'group_by' : 'uom_id'}" />
+                       <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
-                       <filter string='Type' icon="terp-stock" domain="[]" context="{'group_by' : 'type'}" />
+                       <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                    </group>
                    <newline/>
                    <group expand="0" string="Extended options..." groups="base.group_extended">
