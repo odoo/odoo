@@ -99,7 +99,7 @@ class crm_send_new_email(osv.osv_memory):
                 model = hist.model_id.model
                 model_pool = self.pool.get(model)
                 res_ids = model_pool.search(cr, uid, [('thread_id','=', hist.thread_id.id)])
-                res_id = res_ids and res_ids[0] or False        
+                res_id = res_ids and res_ids[0] or False
                 case = model_pool.browse(cr, uid, res_id)
             emails = [obj.email_to] + (obj.email_cc or '').split(',')
             emails = filter(None, emails)
@@ -107,7 +107,11 @@ class crm_send_new_email(osv.osv_memory):
 
             body = case_pool.format_body(body)
             email_from = getattr(obj, 'email_from', False)
-            case_pool._history(cr, uid, [case], _('Send'), history=True, email=obj.email_to, details=body, email_from=email_from, message_id=message_id)
+
+            case_pool._history(cr, uid, [case], _('Send'), history=True, \
+                                email=obj.email_to, details=body, \
+                                subject=obj.subject, email_from=email_from, \
+                                message_id=message_id, attach=attach)
 
             x_headers = dict()
             #x_headers = {

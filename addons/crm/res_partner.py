@@ -27,10 +27,12 @@ class res_partner(osv.osv):
     
     _columns = {
                 'opportunity_ids': fields.one2many('crm.lead', 'partner_id',\
-                                                     'Opportunities', domain=[('type', '=', 'opportunity')]), 
+                                        'Opportunities', readonly=True, \
+                                        domain=[('type', '=', 'opportunity')]), 
                 'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
-                                                     'Meetings'), 
-                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
+                                        'Meetings', readonly=True), 
+                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
+                                        'Phonecalls', readonly=True), 
                 }
 
 res_partner()

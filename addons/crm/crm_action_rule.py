@@ -82,23 +82,9 @@ this if you want the rule to send an email to the partner."),
         if hasattr(obj, 'categ_id'):
             ok = ok and (not action.trg_categ_id or action.trg_categ_id.id==obj.categ_id.id)
 
-#    TODO: history_line is removed
-#        if hasattr(obj, 'history_line'):
-#            ok = ok and (not action.trg_max_history or action.trg_max_history<=(len(obj.history_line)+1))
-#            reg_history = action.regex_history
-#            result_history = True
-#            if reg_history:
-#                ptrn = re.compile(str(reg_history))
-#                if obj.history_line:
-#                    _result = ptrn.search(str(obj.history_line[0].description))
-#                    if not _result:
-#                        result_history = False
-            regex_h = not reg_history or result_history
-            ok = ok and regex_h
         return ok
 
     def do_action(self, cr, uid, action, model_obj, obj, context={}):
-
         """ @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -118,7 +104,7 @@ this if you want the rule to send an email to the partner."),
                     write['email_cc'] = obj.email_cc+','+obj.act_email_cc
             else:
                 write['email_cc'] = obj.act_email_cc
-
+        
         model_obj.write(cr, uid, [obj.id], write, context)
         emails = []
 

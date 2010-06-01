@@ -57,6 +57,7 @@ class PptxIndex(indexer):
         return ['.pptx']
 
     def _doIndexFile(self,fname):
+        # pptx2txt.pl package not support in windows platform.
         # Download pptx2txt package from  http://sourceforge.net/projects/pptx2txt/" link.
         # To install this tool, just copy pptx2txt.pl to appropriate place (e.g. /usr/bin directory)
         fp = Popen(['pptx2txt.pl', fname], shell=False, stdout=PIPE).stdout
@@ -88,6 +89,7 @@ class DocxIndex(indexer):
         return ['.docx']
 
     def _doIndexFile(self,fname):
+        # docx2txt.pl package not support in windows platform.
         # Download docx2txt package from  "http://sourceforge.net/projects/docx2txt/" link.   
         # In case, you don't want to use Makefile for installation, you can follow these steps for manual installation.
         # Copy docx2txt.pl, docx2txt.sh and docx2txt.config to appropriate place (e.g. /usr/bin directory) . used following command.

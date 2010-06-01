@@ -26,7 +26,7 @@
     'category': 'Generic Modules/Others',
     'description': """This is a complete document management system:
     * User Authentication
-    * Document Indexation
+    * Document Indexation :- .pptx and .docx files are not support in windows platform.
 
     ATTENTION:
     - When you install this module in a running company that have already PDF files stored into the database,
