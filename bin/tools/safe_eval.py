@@ -193,8 +193,8 @@ except ImportError:
 
 
 
-def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval"):
-    """safe_eval(expression[, globals[, locals[, mode]]]) -> value
+def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False):
+    """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
 
     System-restricted Python expression evaluation
 
@@ -216,6 +216,14 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval"):
 
     if globals_dict is None:
         globals_dict = {}
+
+    # prevent altering the globals/locals from within the sandbox
+    # by taking a copy.
+    if not nocopy:
+        globals_dict = dict(globals_dict)
+        if locals_dict is not None:
+            locals_dict = dict(locals_dict)
+
     globals_dict.update(
             __builtins__ = {
                 'True': True,
@@ -230,6 +238,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval"):
                 'tuple': tuple,
             }
     )
+
     return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
 
 
