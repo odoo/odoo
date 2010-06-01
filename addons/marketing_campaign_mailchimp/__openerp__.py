@@ -19,27 +19,23 @@
 #
 ##############################################################################
 
+
 {
-    'name': 'Email Gateway System',
-    'version': '1.0',
-    'category': 'Generic Modules/Mail Service',
-    'description': """The generic email gateway system allows to send and receive emails
-    * IMAP / IMAP with SSL
-    * POP / POP with SSL
-    * SMTP / SMTP with TLS
-    * ACL based access policy 
-    * Queueing and History for Emails
-    * Easy Integration with any Module""",
-    'author': 'Tiny',
+    "name" : "",
+    "version" : "1.1",
+    "depends" : ['marketing_campaign'],
+    "author" : "Tiny",
+    "category": 'Generic Modules/Marketing',
+    "description": """
+    """,
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
     'init_xml': [],
     'update_xml': [
-        "mail_gateway_view.xml"
+        'marketing_campaign_mailchimp_view.xml',
     ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': None,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
