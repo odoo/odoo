@@ -138,7 +138,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id" widget="selection"/>
-                        <field name="sprint_id" widget="selection">
+                        <field name="sprint_id" widget="selection" domain="[('state','in',('draft','open'))]">
                             <filter icon="terp-project"
                                 string="Sprints"
                                 domain="[('sprint_id.state','=','open')]"
