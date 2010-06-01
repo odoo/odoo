@@ -33,40 +33,6 @@
         <menuitem id="next_id_14" name="Partner Events" parent="base.menu_base_config_partner"/>
         <menuitem action="res_partner_canal-act" id="menu_res_partner_canal-act" parent="next_id_14"/>
 
-        <record id="res_partner_event_type-view" model="ir.ui.view">
-            <field name="name">res.partner.event.type.form</field>
-            <field name="model">res.partner.event.type</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Event Type">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="key" select="1"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="res_partner_event_type_view_tree" model="ir.ui.view">
-            <field name="name">res.partner.event.type.tree</field>
-            <field name="model">res.partner.event.type</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Event Type">
-                    <field name="name"/>
-                    <field name="active"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="res_partner_event_type-act" model="ir.actions.act_window">
-            <field name="name">Active Partner Events</field>
-            <field name="res_model">res.partner.event.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'active_test': False}</field>
-        </record>
-        <menuitem action="res_partner_event_type-act" id="menu_res_partner_event_type-act" parent="base.next_id_14"/>
-
         <record id="res_partner_som_tree-view" model="ir.ui.view">
             <field name="name">res.partner.som.tree</field>
             <field name="model">res.partner.som</field>
@@ -103,22 +69,13 @@
             <field name="model">res.partner.event</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partner Events">
+                <form string="Event Logs">
                     <separator colspan="4" string="General Description"/>
-                    <field name="name" select="1"/>
-                    <field name="partner_type" select="1"/>
-                    <field name="som" select="1"/>
+                    <field name="name" select="1" string="Name"/>
                     <field name="date" select="1"/>
-                    <field name="canal_id" select="1"/>
-                    <field name="type" select="1"/>
                     <field name="user_id" select="1"/>
-                    <field name="probability"/>
-                    <field name="planned_revenue"/>
-                    <field name="planned_cost"/>
                     <separator colspan="4" string="Description"/>
-                    <field colspan="4" name="description"/>
-                    <separator colspan="4" string="Document Link"/>
-                    <field colspan="4" name="document"/>
+                    <field colspan="4" name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -128,11 +85,9 @@
             <field name="model">res.partner.event</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Partner Events">
+                <tree string="Event Logs">
                     <field name="date"/>
-                    <field name="name"/>
-                    <field name="som"/>
-                    <field name="partner_type"/>
+                    <field name="name" string="Event"/>
                     <field name="user_id"/>
                 </tree>
             </field>
