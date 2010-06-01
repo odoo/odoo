@@ -1,34 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-        <record id="share_email_form" model="ir.ui.view">
-            <field name="name">share.email</field>
-            <field name="model">share.email</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-			<form string="Send Email">
-              <separator colspan="4" string="Step 5: Send Email"/>    			  
-			  <field name="email_to" string="To" colspan="4"/>
-              <field name="subject" string="Subject" colspan="4"/>
-              <field name="body" nolabel="True" colspan="4"/>
-			  <separator colspan="4"/>
-			   <group col="2" colspan="4">
-            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="do_send_email" string="Send Mail" type="object" icon="gtk-apply"/>
-				</group>
-			</form>
-            </field>
-        </record>    
-
-        <record id="share_email_act" model="ir.actions.act_window">
-            <field name="name">Step5: Send Email</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">share.email</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="share_email_form"/>
-            <field name="target">new</field>
-        </record>     
+    <data>       
 
      	<record id="share_step0_form" model="ir.ui.view">
             <field name="name">share.step0.form</field>
@@ -42,7 +14,7 @@
 			  <separator colspan="4"/>
 			   <group col="2" colspan="4">
             		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="do_step_1" string="Next" colspan="1" type="object" icon="gtk-next"/>
+					<button name="do_step_1" string="Next" colspan="1" type="object" icon="gtk-go-forward"/>
 				</group>
 			</form>
             </field>
@@ -64,8 +36,8 @@
 			  <separator colspan="4"/>
 			   <group col="3" colspan="4">
             		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_step_1" string="Previous" colspan="1" type="object" icon="gtk-previous"/>
-					<button name="do_step_2" string="Next" colspan="1" type="object" icon="gtk-next"/>
+                    <button name="do_step_1" string="Previous" colspan="1" type="object" icon="gtk-go-back"/>
+					<button name="do_step_2" string="Next" colspan="1" type="object" icon="gtk-go-forward"/>
 				</group>
 			</form>
             </field>
@@ -82,8 +54,8 @@
 			  <separator colspan="4"/>
 			   <group col="3" colspan="4">
             		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_step_2" string="Previous" colspan="1" type="object" icon="gtk-previous"/>
-					<button name="do_step_3" string="Next" colspan="1" type="object" icon="gtk-next"/>
+                    <button name="do_step_2" string="Previous" colspan="1" type="object" icon="gtk-go-back"/>
+					<button name="do_step_3" string="Next" colspan="1" type="object" icon="gtk-go-forward"/>
 				</group>
 			</form>
             </field>

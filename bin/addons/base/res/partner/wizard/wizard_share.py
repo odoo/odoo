@@ -34,6 +34,7 @@ def _generate_random_number():
        pass_chars = RANDOM_PASS_CHARACTERS[:]
        random.shuffle(pass_chars)
        return ''.join(pass_chars[0:10])
+   return generate_random_pass()
 
 class share_create(osv.osv_memory):
     _name = 'share.create'
@@ -47,7 +48,9 @@ class share_create(osv.osv_memory):
         'access_mode': fields.selection( [ ('readonly','READ ONLY'),('readwrite','READ & WRITE')],'Access Mode'),
     }
     _defaults = {
-        'user_type' : 'existing'
+        'user_type' : 'existing',
+        'domain': '[]',
+        'access_mode': 'readonly'
     }
 
 
@@ -109,7 +112,10 @@ class share_create(osv.osv_memory):
             vals ={
                 'user_type': this.user_type, 
                 'existing_user_ids': map(lambda x:x.id, this.user_ids),
-                'new_user': this.new_user             
+                'new_user': this.new_user,
+                'domain': this.domain,
+                'access_mode': this.access_mode,
+                'action_id': this.action_id and this.action_id.id or False
             }           
 
         context.update(vals)
@@ -149,25 +155,36 @@ class share_create(osv.osv_memory):
         active_model = context.get('active_model', False)
         active_id = context.get('active_id', False)
         existing_user_ids = context.get('existing_user_ids', False)
+        domain = eval(context.get('domain', '[]'))
 
         # Create Share Group
-        share_group_name = '%s:[%d]%s' %(_('Sharing'), active_id, active_model)
-        group_id = group_obj.create(cr, uid, {'name': share_group_name, 'share_group': True})
+        share_group_name = '%s: %s: %d' %('Sharing', active_model, active_id)
+        group_ids = group_obj.search(cr, uid, [('name','=',share_group_name)])
+        group_id = group_ids and group_ids[0] or False
+        if not group_id:
+            group_id = group_obj.create(cr, uid, {'name': share_group_name, 'share_group': True})
+        else:
+            group = group_obj.browse(cr, uid, group_id, context=context)
+            if not group.share_group:
+                raise osv.except_osv(_('Error'), _("Share Group is exits without sharing !"))        
         
-        # Create new user        
+        # Create new user       
+              
         current_user = user_obj.browse(cr, uid, uid)
         user_ids = []
         if user_type == 'new' and new_users:
             for new_user in new_users.split('\n'):
+                password = _generate_random_number()
                 user_id = user_obj.create(cr, uid, {
                         'login': new_user,
-                        'password': _generate_random_number(),
+                        'password': password,
                         'name': new_user,
                         'user_email': new_user,
                         'groups_id': [(6,0,[group_id])],
                         'action_id': action_id,
+                        'share_user': True,
                         'company_id': current_user.company_id and current_user.company_id.id})
-            user_ids.append(user_id)
+                user_ids.append(user_id)
             context['new_user_ids'] = user_ids
 
         # Modify existing user
@@ -182,23 +199,29 @@ class share_create(osv.osv_memory):
         #TODO: TO Resolve Recurrent Problems       
         active_model_ids = model_obj.search(cr, uid, [('model','=',active_model)])
         active_model_id = active_model_ids and active_model_ids[0] or False
-        obj0 = model_obj.browse(cr, uid, active_model_id, context=context)
-        def _get_relation(model, ttypes):
-            obj = []
-            field_ids = fields_obj.search(cr, uid, [('model','=',model),('ttype','in', ttypes)])          
-            for field in fields_obj.browse(cr, uid, field_ids, context=context):
-                for ttype in ttypes:
-                    if ttype in ('one2many', 'many2many'):
-                        obj += _get_relation(field.relation, [ttype])
-                if field.model_id.model != active_model and field.model_id.id not in obj:
-                    obj.append((field.relation_field, field.model_id))
+        
+        def _get_relation(model_id, ttypes, new_obj=[]):            
+            obj = []            
+            models = map(lambda x:x[1].model, new_obj)
+            field_ids = fields_obj.search(cr, uid, [('model_id','=',model_id),('ttype','in', ttypes)])          
+            for field in fields_obj.browse(cr, uid, field_ids, context=context):                
+                if field.relation not in models:
+                    relation_model_ids = model_obj.search(cr, uid, [('model','=',field.relation)])
+                    relation_model_id = relation_model_ids and relation_model_ids[0] or False
+                    relation_model = model_obj.browse(cr, uid, relation_model_id, context=context)
+                    obj.append((field.relation_field, relation_model))
+
+                    if relation_model_id != model_id and field.ttype in ['one2many', 'many2many']:
+                        obj += _get_relation(relation_model_id, [field.ttype], obj) 
+                
             return obj
 
-        obj1 = _get_relation(active_model, ['one2many'])
-        obj2 = _get_relation(active_model, ['one2many', 'many2many'])
-        obj3 = _get_relation(active_model, ['many2one'])
+        obj0 = model_obj.browse(cr, uid, active_model_id, context=context)        
+        obj1 = _get_relation(active_model_id, ['one2many'])
+        obj2 = _get_relation(active_model_id, ['one2many', 'many2many'])
+        obj3 = _get_relation(active_model_id, ['many2one'])
         for rel_field, model in obj1:
-            obj3 += _get_relation(model.model, ['many2one'])
+            obj3 += _get_relation(model.id, ['many2one'])
 
         if access_mode == 'readonly':
             for rel_field, model in obj1+obj2:
@@ -226,7 +249,7 @@ class share_create(osv.osv_memory):
                         })
 
         rule_obj.create(cr, uid, {
-                'name': '%s-%s'%(group_name, obj0.model),
+                'name': '%s-%s'%(share_group_name, obj0.model),
                 'model_id': obj0.id,
                 'domain': domain,
                 'group_ids': [(6,0,[group_id])]
@@ -238,16 +261,19 @@ class share_create(osv.osv_memory):
                 obj1_domain.append((new_opr1, opt, opr2))
 
             rule_obj.create(cr, uid, {
-                'name': '%s-%s'%(group_name, model.model),
+                'name': '%s-%s'%(share_group_name, model.model),
                 'model_id': model.id,
                 'domain': obj1_domain,
-                'group_ids': [(6,0,[group_id])]
+                'groups': [(6,0,[group_id])]
             })
        # TODO:
        # And on OBJ0, OBJ1, OBJ2, OBJ3: add all rules from groups of the user
        #  that is sharing in the many2many of the rules on the new group 
        #  (rule must be copied instead of adding it if it contains a reference to uid
-       #  or user.xxx so it can be replaced correctly)        
+       #  or user.xxx so it can be replaced correctly)  
+        context['share_model'] = active_model
+        context['share_rec_id'] = active_id
+      
         value = {
             'name': _('Step:4 Sharing Wizard'), 
             'view_type': 'form', 
@@ -267,6 +293,56 @@ class share_result(osv.osv_memory):
     _name = "share.result"    
     _columns = {               
      }
+
+    def do_send_email(self, cr, uid, ids, context=None):        
+        user_obj = self.pool.get('res.users')        
+        if not context:
+            context={}
+        user_id = context.get('user_id', False)
+        user_type = context.get('user_type', False)  
+        share_url = context.get('share_url', False)
+        share_model = context.get('share_model', False)
+        share_rec_id = context.get('share_rec_id', False)
+        #share_obj = self.pool.get(share_model) 
+        #share_rec = share_obj.read(cr, uid, share_rec_id, ['create_uid'], context=context)
+        #share_rec_author_id = share_rec['create_uid'][0]
+        share_rec_author_id = user_id #FIX : author should be create_uid
+        user = user_obj.browse(cr, uid, user_id)
+        share_rec_author = user_obj.browse(cr, uid, share_rec_author_id)
+
+        
+        email_to = share_rec_author.user_email
+        subject = '%s wants to share private data with you' %(user.name)
+        body = """
+Dear,
+
+         %s wants to share private data from OpenERP with you! 
+"""%(user.name)
+        if share_url:
+            body += """
+         To view it, you can access the following URL:
+               %s
+"""%(user.name, share_url)       
+        if user_type == 'new':
+            body += """
+         You may use the following login and password to get access to this
+         protected area:
+               login: %s
+               password: %s
+"""%(user.login, user.password)
+        elif user_type == 'existing':
+             body += """
+         You may use your existing login and password to get access to this
+         additional data. As a reminder, your login is %s.
+"""%(user.name) 
+
+        flag = tools.email_send(
+            user.user_email,
+            email_to,
+            subject,
+            body                
+        )
+        return flag
 
     def view_init(self, cr, uid, fields_list, context=None):
         res = super(share_result, self).view_init(cr, uid, fields_list, context=context)
@@ -289,18 +365,15 @@ class share_result(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         data_obj = self.pool.get('ir.model.data')
         existing_user_ids = context.get('existing_user_ids', [])
-        new_user_ids = context.get('new_user_ids', [])             
+        new_user_ids = context.get('new_user_ids', [])
+        share_model = context.get('share_model', False)
+        share_rec_id = context.get('share_rec_id', False)             
         _arch_lst = """<form string="Share Users">                        
                         <separator colspan="4" string="Step 4: Share User Details"/>  
                     	"""
-        _fields = result['fields']
-                       
-        
-        send_email_act = data_obj._get_id(cr, uid, 'base', 'share_email_act')
+        _fields = result['fields']                      
         
         
-        send_email_act_id = data_obj.browse(cr, uid, send_email_act, context=context).res_id
-
         if new_user_ids and view_type in ['form']:
             for user in user_obj.browse(cr, uid, new_user_ids, context):
                 _fields.update({
@@ -323,12 +396,12 @@ class share_result(osv.osv_memory):
                 })                
                 
                 _arch_lst += """
-                    <group colspan="4" col="10">
+                    <group colspan="4" col="7">
                     <field name="user%s_login"/>
                     <field name="user%s_password"/>
                     <field name="user%s_url" widget="url" />
-                    <button name="%s" string="send_email" type="action" icon="gtk-apply" context="{'user_id':%s, 'user_type':'new', 'share_url': user%s_url}"/>
-                """%(user.id, user.id, user.id, send_email_act_id, user.id, user.id)
+                    <button name="do_send_email" string="Send Email" type="object" icon="gtk-apply" context="{'user_id':%s, 'user_type':'new', 'share_url': user%s_url}"/>
+                """%(user.id, user.id, user.id, user.id, user.id)
                 
                 _arch_lst += """                
                 	</group>"""
@@ -350,11 +423,11 @@ class share_result(osv.osv_memory):
                 })                
                 
                 _arch_lst += """
-                    <group colspan="4" col="10">
+                    <group colspan="4" col="5">
                     <field name="user%s_login" />
                     <field name="user%s_url" widget="url" />
-                    <button name="%s" string="send_email" type="action" icon="gtk-apply" context="{'user_id':%s, 'user_type':'existing', 'share_url': user%s_url}"/>
-                """%(user.id, user.id, user.id, send_email_act_id, user.id, user.id)
+                    <button name="do_send_email" string="Send Email" type="object" icon="gtk-apply" context="{'user_id':%s, 'user_type':'existing', 'share_url': user%s_url, 'share_model': %s, 'share_rec_id': %s }"/>
+                """%(user.id, user.id, user.id, user.id, share_model, share_rec_id)
                 
                 _arch_lst += """                
                 	</group>"""
@@ -391,82 +464,13 @@ class share_result(osv.osv_memory):
             if 'user%s_password'%(user.id) in fields:
                 res['user%s_password'%(user.id)] = user.password
             if 'user%s_url'%(user.id) in fields:
-                res['user%s_url'%(user.id)] = tools.config('share_root_url', False) 
+                res['user%s_url'%(user.id)] = tools.config.get('share_root_url', False) 
 
         for user in user_obj.browse(cr, uid, existing_user_ids):            
             if 'user%s_login'%(user.id) in fields:
                 res['user%s_login'%(user.id)] = user.login            
             if 'user%s_url'%(user.id) in fields:
-                res['user%s_url'%(user.id)] = tools.config('share_root_url', False)                  
+                res['user%s_url'%(user.id)] = tools.config.get('share_root_url', False)                  
         return res
  
 share_result()  
-
-class share_email(osv.osv_memory):
-    _name = 'share.email'
-    _description = 'share email'
-    _columns = {
-        'email_to': fields.char('To', size=64, readonly=True),
-        'subject': fields.char('Subject', size=64, required=True),
-        'body': fields.text('Body', required=True),        
-    }  
-    def default_get(self, cr, uid, fields, context=None):
-        """ 
-             To get default values for the object.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
-        """ 
-
-        res = super(share_email, self).default_get(cr, uid, fields, context=context)
-        user_obj = self.pool.get('res.users')        
-        if not context:
-            context={}
-        user_id = context.get('user_id', False)
-        user_type = context.get('user_type', False)  
-        share_url = context.get('share_url', False)
-       
-        user = user_obj.browse(cr, uid, user_id)
-        if 'email_to' in fields:
-            res['email_to'] = user.user_email
-        if 'subject' in fields:
-            res['subject'] = '%s wants to share private data with you' %(user.name)
-        if 'body' in fields:
-            res['body'] = """
-Dear,
-
-         %s wants to share private data from OpenERP with you! 
-         To view it, you can access the following URL:
-               %s
-"""%(user.name, share_url)       
-        if user_type == 'new':
-            res['body'] += """
-         You may use the following login and password to get access to this
-         protected area:
-               login: %s
-               password: %s
-"""%(user.login, user.password)
-        elif user_type == 'existing':
-             res['body'] += """
-         You may use your existing login and password to get access to this
-         additional data. As a reminder, your login is %s.
-"""%(user.name)                  
-        return res 
-
-    def do_send_email(cr, uid, ids, context=None):
-        user = user_obj.browse(cr, uid, uid)
-        for this in self.browse(cr, uid, ids, context=context):
-            flag = tools.email_send(
-                user.user_email,
-                this.email_to,
-                this.subject,
-                this.body                
-            )
-share_email()
-
