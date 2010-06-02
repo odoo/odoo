@@ -104,11 +104,11 @@ class sale_order(osv.osv):
                 mrp_procurement mp on (mp.move_id=m.id)
             WHERE
                 p.sale_id in %s
-            GROUP BY m.state, p.sale_id''', (tuple(ids),))
+            GROUP BY mp.state, p.sale_id''', (tuple(ids),))
         for oid, nbr, state in cr.fetchall():
             if state == 'cancel':
                 continue
-            if mp_state == 'done':
+            if state == 'done':
                 res[oid][0] += nbr or 0.0
                 res[oid][1] += nbr or 0.0
             else:
