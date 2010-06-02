@@ -184,6 +184,12 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group colspan="4" col="20">
+						<filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft and Open Issues" icon="terp-project" default="1"/>
+                        <filter string="In Progress" domain="[('state','=','open')]" help="Open Issues" icon="terp-project"/>
+                        <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-project"/>
+						
+						<separator orientation="vertical"/>
+						
                         <filter icon="gtk-home" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
@@ -216,6 +222,9 @@
 	                        context="{'group_by':'partner_id'}" />
 	                    <filter string="Salesman" icon="terp-crm"
 	                        domain="[]" context="{'group_by':'user_id'}" />
+						<separator orientation="vertical" />
+						<filter string="Month" icon="terp-crm"
+	                        domain="[]" context="{'group_by':'create_date'}" />
 	                    <separator orientation="vertical" />
                 	</group>
                 </search>
