@@ -80,11 +80,11 @@ class mailgate_thread(osv.osv):
         obj = self.pool.get('mailgate.message')
 
         for case in cases:
-            model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
             data = {
                 'name': keyword, 
                 'user_id': uid, 
-                'model_id' : model_ids and model_ids[0] or False, 
+                'model' : case._name, 
+                'res_id': case.id, 
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                 'thread_id': case.thread_id.id, 
                 'message_id': message_id, 
@@ -98,7 +98,7 @@ class mailgate_thread(osv.osv):
                         'name': subject or 'History', 
                         'history': True, 
                         'user_id': uid, 
-                        'model_id' : model_ids and model_ids[0] or False, 
+                        'model' : case._name, 
                         'res_id': case.id,
                         'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                         'description': details or (hasattr(case, 'description') and case.description or False), 
@@ -144,7 +144,9 @@ class mailgate_message(osv.osv):
         'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True), 
         'description': fields.text('Description'), 
         'partner_id': fields.many2one('res.partner', 'Partner', required=False), 
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'), 
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'model': fields.char('Model Name', size=64, required=False),  
+        'res_id': fields.integer('Resource ID'), 
     }
 
 mailgate_message()
