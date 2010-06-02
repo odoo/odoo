@@ -2771,6 +2771,8 @@ class orm(orm_template):
         for v in self._inherits:
             if self._inherits[v] not in vals:
                 tocreate[v] = {}
+            else:
+                tocreate[v] = {'id' : vals[self._inherits[v]]}
 
         (upd0, upd1, upd2) = ('', '', [])
         upd_todo = []
@@ -2780,6 +2782,9 @@ class orm(orm_template):
                 (table, col, col_detail) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
+            else:
+                if (v not in self._inherit_fields) and (v not in self._columns):
+                    del vals[v]
 
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))

@@ -71,7 +71,8 @@ class expression(object):
         if not reduce(lambda acc, val: acc and (self._is_operator(val) or self._is_leaf(val)), exp, True):
             raise ValueError('Bad domain expression: %r' % (exp,))
         self.__exp = exp
-        self.__tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
+        self.__field_tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
+        self.__all_tables = set()
         self.__joins = []
         self.__main_table = None # 'root' table. set by parse()
         self.__DUMMY_LEAF = (1, '=', 1) # a dummy leaf that must not be parsed or sql generated
@@ -103,6 +104,7 @@ class expression(object):
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
         self.__main_table = table
+        self.__all_tables.add(table)
 
         i = -1
         while i + 1<len(self.__exp):
@@ -114,19 +116,17 @@ class expression(object):
             working_table = table
             main_table = table
             fargs = left.split('.', 1)
-            index = i
             if left in table._inherit_fields:
                 while True:
                     field = main_table._columns.get(fargs[0], False)
                     if field:
                         working_table = main_table
-                        self.__tables[i] = working_table
+                        self.__field_tables[i] = working_table
                         break
                     working_table = main_table.pool.get(main_table._inherit_fields[left][0])
-                    if working_table not in self.__tables.values():
+                    if working_table not in self.__all_tables:
                         self.__joins.append(('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]), working_table._table))
-                        self.__tables[index] = working_table
-                        index += 1
+                        self.__all_tables.add(working_table)
                     main_table = working_table
             
             field = working_table._columns.get(fargs[0], False)
@@ -423,7 +423,7 @@ class expression(object):
         params = []
         for i, e in reverse_enumerate(self.__exp):
             if self._is_leaf(e, internal=True):
-                table = self.__tables.get(i, self.__main_table)
+                table = self.__field_tables.get(i, self.__main_table)
                 q, p = self.__leaf_to_sql(e, table)
                 params.insert(0, p)
                 stack.append(q)
@@ -443,7 +443,7 @@ class expression(object):
         return (query, flatten(params))
 
     def get_tables(self):
-        return ['"%s"' % t._table for t in set(self.__tables.values()+[self.__main_table])]
+        return ['"%s"' % t._table for t in self.__all_tables]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
