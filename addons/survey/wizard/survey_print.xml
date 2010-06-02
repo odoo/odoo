@@ -10,10 +10,11 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Survey Print">
+				    <separator string="Survey" colspan="4"/>
+				    <field name="survey_ids" nolabel="1" colspan="4" />
 				    <separator string="Print Option" colspan="4"/>
 				    <field name="orientation" colspan="4"/>
 				    <field name="paper_size" colspan="4"/>
-				    <field name="survey_title" colspan="4"/>
 				    <field name="page_number" colspan="4"/>
 				    <field name="without_pagebreak" colspan="4"/>
 					<separator colspan="4" />
@@ -34,10 +35,9 @@
 			<field name="target">new</field>
 		</record>
 
-    	<act_window id="action_act_view_survey_print"
-    		key2="client_action_multi" name="Print Survey"
-    		res_model="survey.print" src_model="survey"
-    		view_mode="form" target="new" view_type="form" />
+        <menuitem name="Print Survey" id="menu_print_survey_form" sequence="1"
+            action="action_view_survey_print" parent="menu_reporting"
+            groups="group_survey_manager" icon="STOCK_PRINT"/>
 
 	</data>
 </openerp>

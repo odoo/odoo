@@ -22,6 +22,7 @@
 from osv import osv
 from osv import fields
 from tools.translate import _
+import time
 
 VoteValues = [('-1', 'Not Voted'), ('0', 'Very Bad'), ('25', 'Bad'), \
               ('50', 'Normal'), ('75', 'Good'), ('100', 'Very Good') ]
@@ -150,13 +151,12 @@ class idea_idea(osv.osv):
             if int(field_value) >= 0:
                 vote_obj.create(cr, uid, {'idea_id': id, 'user_id': uid, 'score': textual_value })
 
-
     _columns = {
-        'user_id': fields.many2one('res.users', 'Creator', required=True, readonly=True),
+        'user_id': fields.many2one('res.users', 'Responsible', required=True, readonly=True),
         'title': fields.char('Idea Summary', size=64, required=True),
         'description': fields.text('Description', required=True, help='Content of the idea'),
         'comment_ids': fields.one2many('idea.comment', 'idea_id', 'Comments'),
-        'create_date': fields.datetime('Creation date', readonly=True),
+        'created_date': fields.datetime('Creation date', readonly=True),
         'vote_ids': fields.one2many('idea.vote', 'idea_id', 'Vote'),
         'my_vote': fields.function(_vote_read, fnct_inv = _vote_save, string="My Vote", method=True, type="selection", selection=VoteValues),
         'vote_avg': fields.function(_vote_avg_compute, method=True, string="Average Score", type="float"),
@@ -174,12 +174,16 @@ class idea_idea(osv.osv):
         ),
         'visibility':fields.boolean('Open Idea?', required=False),
         'stat_vote_ids': fields.one2many('idea.vote.stat', 'idea_id', 'Statistics', readonly=True),
+        'vote_limit': fields.integer('Maximum Vote per User',
+                     help="Set to one if  you require only one Vote per user"),
     }
 
     _defaults = {
         'user_id': lambda self,cr,uid,context: uid,
         'my_vote': lambda *a: '-1',
         'state': lambda *a: 'draft',
+        'vote_limit': lambda * a: 1,
+        'created_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),        
         'visibility': lambda *a: True,
     }
     _order = 'id desc'
@@ -278,12 +282,15 @@ class idea_vote(osv.osv):
     _rec_name = 'score'
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'User'),
-        'idea_id': fields.many2one('idea.idea', 'Idea', required=True, ondelete='cascade'),
-        'score': fields.selection(VoteValues, 'Score', required=True)
+        'user_id': fields.many2one('res.users', 'By user', readonly="True"),
+        'idea_id': fields.many2one('idea.idea', 'Idea', readonly="True", ondelete='cascade'),
+        'score': fields.selection(VoteValues, 'Vote Status', readonly="True"),
+        'date': fields.datetime('Date', readonly="True"),
+        'comment': fields.text('Comment', readonly="True"),
     }
     _defaults = {
         'score': lambda *a: DefaultVoteValue,
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),  
     }
 
 idea_vote()

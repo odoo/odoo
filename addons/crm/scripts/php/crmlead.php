@@ -117,7 +117,7 @@ class Contact
 							  "email_from" => new xmlrpcval($post['email'], "string"),
 							  "phone" => new xmlrpcval($post['phone'], "string"),
 							  "partner_name" => new xmlrpcval($post['name'], "string"),
-							  "function_name" => new xmlrpcval($post["jobtitle"], "string"),
+							  "function" => new xmlrpcval($post["jobtitle"], "string"),
 							  "zip" => new xmlrpcval($post['zip'], "string"),
 							  "stage_id" => new xmlrpcval(6, "int"),
 							  "city" => new xmlrpcval($post['city'], "string"),

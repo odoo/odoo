@@ -21,7 +21,7 @@
             <field name="model">wiki.groups</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Wikis">
+                <tree string="Wiki Groups">
                     <field name="name"/>
                 </tree>
             </field>
@@ -34,7 +34,7 @@
             <field name="model">wiki.groups</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Wikis">
+                <form string="Wiki Groups">
                     <group colspan="4" col="4">
                         <field name="name" select="1"/>
                         <field name="create_date" readonly="2"/>
@@ -62,7 +62,7 @@
 <!--  Wiki Groups Action  -->
 
         <record model="ir.actions.act_window" id="action_wiki_groups">
-            <field name="name">Wikis</field>
+            <field name="name">Wiki Groups</field>
             <field name="res_model">wiki.groups</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -74,7 +74,7 @@
             action="action_wiki_groups"/>
 
         <record model="ir.actions.act_window" id="action_wiki_groups_browse">
-            <field name="name">Wikis</field>
+            <field name="name">Wiki Groups</field>
             <field name="res_model">wiki.groups</field>
             <field name="view_type">tree</field>
         </record>
@@ -126,13 +126,15 @@
                 <form string="Wiki">
                     <group col="8" colspan="4">
                         <field name="name" select="1" colspan="6"/>
-                        <field name="group_id" select="1" on_change="onchange_group_id(group_id, text_area)"/>
-                        <field name="section" invisible="not context.get('section',False)"/>
-                        <field name="parent_id"/>
                         <button name="open_wiki_page" type="object"
                         string="Basic Wiki Editing" icon="gtk-ok" />
                     </group>
-
+                    <group col="8" colspan="4">
+                        <field name="group_id" select="1" on_change="onchange_group_id(group_id, text_area)"/>
+                        <field name="section" invisible="not context.get('section',False)"/>
+                        <field name="parent_id"/>
+                    </group>
+					<separator colspan="4" string="Informations"/>
                     <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
                     <separator colspan="4" string="Modifications"/>
                     <group col="6" colspan="4">
@@ -169,7 +171,7 @@
 <!-- search page for wiki -->
 
         <record model="ir.actions.act_window" id="action_wiki">
-            <field name="name">Search Pages</field>
+            <field name="name">Wiki Pages</field>
             <field name="res_model">wiki.wiki</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
