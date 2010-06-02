@@ -35,7 +35,7 @@ class crm_lead_report(osv.osv):
     _name = "crm.lead.report"
     _auto = False
     _description = "CRM Lead Report"
-    
+
     def _get_data(self, cr, uid, ids, field_name, arg, context={}):
 
         """ @param cr: the current row, from the database cursor,
@@ -89,7 +89,10 @@ class crm_lead_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True), 
+        'day': fields.char('Day', size=128, readonly=True),
+        'email': fields.integer('# of Emails', size=128, readonly=True),
+        'expected_closing_days': fields.integer('# of Expected Closing Days', size=128, readonly=True),
+        'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'delay_close': fields.float('Delay to close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
@@ -98,11 +101,10 @@ class crm_lead_report(osv.osv):
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True), 
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
-            
         ],'Type', help="Type is used to separate Leads and Opportunities"),
     }
     def init(self, cr):
@@ -132,13 +134,28 @@ class crm_lead_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    (select count(id) from mailgate_message where thread_id=c.id) as email,
                     date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
+                    sum(cast(to_char(date_trunc('day',c.date_open) - date_trunc('day',c.date_deadline),'DD') as int)) as expected_closing_days,
+                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
+                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
                 from
                     crm_lead c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
-                     c.state, c.user_id,c.section_id,c.stage_id,categ_id,c.partner_id,c.company_id, c.type
-                     ,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
+                group by
+                    to_char(c.create_date, 'YYYY'),
+                    to_char(c.create_date, 'MM'),
+                    c.state,
+                    c.user_id,
+                    c.id,
+                    c.section_id,
+                    c.stage_id,
+                    categ_id,
+                    c.partner_id,
+                    c.company_id,
+                    c.type,
+                    c.create_date,
+                    to_char(c.create_date, 'YYYY-MM-DD')
+
             )""")
 
 crm_lead_report()

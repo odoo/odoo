@@ -12,6 +12,7 @@
                 	<field name="name" invisible="1"/>
                     <field name="project_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
+                    <field name="done_by" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="date_start" invisible="1"/>
@@ -30,7 +31,9 @@
                     <field name="hours_effective" sum='Effective Hours'/>
                     <field name="hours_delay" sum='Avg. Plan.-Eff.'/>
                     <field name="opening_days" sum='Days to Open'/>
+                    <field name="delay_endings_days" sum='OverPass delay'/>
                     <field name="closing_days" sum='Days to Close'/>
+                    <field name="progress" sum='Progress' widget='progressbar'/>
                 </tree>
             </field>
         </record>
@@ -54,7 +57,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
-                	<group>
+                	<group colspan="10" col="12">
 	                    <filter icon="gtk-media-rewind" string="  365 Days  "
 	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Tasks performed in last 365 Days"/>
@@ -104,12 +107,13 @@
 	                    </field>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="11">
+                    <group expand="1" string="Group By..." colspan="10" col="12">
                         <filter string="User" name="User" icon="terp-project" context="{'group_by':'user_id'}" />
                         <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Partner" icon="terp-project" context="{'group_by':'partner_id'}" />
                         <filter string="Task" icon="terp-project" context="{'group_by':'name'}" />
+                        <filter string="Done By" icon="terp-project" context="{'group_by':'done_by'}" />
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
                         <filter string="Company" icon="terp-project" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
@@ -122,9 +126,11 @@
                     <newline/>
 	                <group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
 	                    <field name="type" widget="selection"/>
+	                    <field name="done_by" widget="selection"/>
 	                    <separator orientation="vertical"/>
                         <field name="date_start"/>
                         <field name="date_deadline"/>
+                        <field name="date_end"/>
 	                    <separator orientation="vertical"/>
 	                    <field name="priority"/>
 	                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>

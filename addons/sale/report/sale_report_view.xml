@@ -20,12 +20,12 @@
                 <field name="categ_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_uom_qty" sum="# of Qty"/>
+                <field name="shipped_qty_1"/>
                 <field name="uom_name" invisible="not context.get('set_visible',False)"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay" avg="Days to Close"/>
                 <field name="state" invisible="1"/>
-                <field name="pricelist_id" invisible="1"/>
                 <field name="analytic_account_id" invisible="1"/>
             </tree>
         </field>
@@ -71,6 +71,10 @@
 	                	string="Sales"
 	                	domain="[('state','not in',('draft','done','cancel'))]"/>
 	                <separator orientation="vertical"/>
+	                <filter icon="terp-sale"
+	                    string="Picked"
+	                    domain="[('shipped','=',True)]"/>
+	                <separator orientation="vertical"/>
 	                <field name="partner_id"/>
                     <field name="product_id"/>
 	                <field name="user_id" widget="selection">
@@ -91,7 +95,6 @@
                     <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-sale" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Pricelist" icon="terp-sale" context="{'group_by':'pricelist_id'}"/>
                     <filter string="Analytic Account" icon="terp-sale" context="{'group_by':'analytic_account_id'}"/>
                     <filter string="Category of Product" icon="terp-sale" context="{'group_by':'categ_id'}"/>
                     <separator orientation="vertical"/>
@@ -102,6 +105,7 @@
 				<newline/>
                 <group expand="0" string="Extended options..." groups="base.group_extended">
                     <field name="date"/>
+                    <field name="date_confirm"/>
                     <separator orientation="vertical"/>
                     <field name="shop_id" widget="selection"/>
                     <field name="state"/>
