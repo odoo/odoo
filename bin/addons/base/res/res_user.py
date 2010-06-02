@@ -245,7 +245,7 @@ class users(osv.osv):
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="Choose between the simplified interface and the extended one"),
-        'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char"),
+        'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
     }
 
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
