@@ -64,7 +64,7 @@
                         <field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
                         <newline/>
                         <field name="name"/>
-                        <field domain="[('domain', '=', 'contact')]" name="title"/>
+                        <field domain="[('domain', '=', 'contact')]" name="title" widget="selection"/>
                         <field name="function"/>
                     </group>
                       <group colspan="2" col="2">
@@ -122,7 +122,7 @@
             <field name="arch" type="xml">
                 <form string="Contacts">
                     <field name="name" select="1"/>
-                    <field domain="[('domain', '=', 'contact')]" name="title"/>
+                    <field domain="[('domain', '=', 'contact')]" name="title" widget="selection"/>
                     <field name="street"/>
                     <field name="street2"/>
                     <field name="type"/>
@@ -235,7 +235,7 @@
                         <group colspan="5" col="6">
                             <field name="name" select="1"/>
                             <field name="ref"/>
-                            <field domain="[('domain', '=', 'partner')]" name="title" groups="base.group_extended"/>
+                            <field domain="[('domain', '=', 'partner')]" name="title"  size="0" groups="base.group_extended" widget="selection"/>
                             <field name="lang"/>
                         </group>
                         <group colspan="1" col="2">
@@ -250,7 +250,7 @@
                                 <form string="Partner Contacts">
                                     <group colspan="4" col="6">
                                         <field name="name"/>
-                                        <field domain="[('domain', '=', 'contact')]" name="title" size="0"/>
+                                        <field domain="[('domain', '=', 'contact')]" name="title" size="0" widget="selection"/>
                                         <field name="function"/>
                                     </group>
                                     <newline/>
