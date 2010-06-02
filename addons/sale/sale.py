@@ -49,7 +49,6 @@ def _incoterm_get(self, cr, uid, context=None):
     cr.execute('select code, code||\', \'||name from stock_incoterms where active')
     return cr.fetchall()
 
-
 class sale_order(osv.osv):
     _name = "sale.order"
     _log_create = True

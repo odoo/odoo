@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,24 +19,4 @@
 #
 ##############################################################################
 
-{
-    'name': 'Email Gateway System',
-    'version': '1.0',
-    'category': 'Generic Modules/Mail Service',
-    'description': """The generic email gateway system allows to send and receive emails
-    * History for Emails
-    * Easy Integration with any Module""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
-        "mail_gateway_view.xml",
-        'security/ir.model.access.csv'
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': None,
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

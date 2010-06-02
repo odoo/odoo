@@ -19,24 +19,6 @@
 #
 ##############################################################################
 
-{
-    'name': 'Email Gateway System',
-    'version': '1.0',
-    'category': 'Generic Modules/Mail Service',
-    'description': """The generic email gateway system allows to send and receive emails
-    * History for Emails
-    * Easy Integration with any Module""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
-        "mail_gateway_view.xml",
-        'security/ir.model.access.csv'
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': None,
-}
+import sale_journal_report 
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

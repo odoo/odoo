@@ -546,7 +546,7 @@ class stock_picking(osv.osv):
             'delivery': _('Delivery order')
         }
         if not vals.get('auto_picking', False):
-            message = type_list.get(vals.get('type',_('Picking'))) + " '" + vals['name'] + "' "+ _("created.")
+            message = type_list.get(vals.get('type', False), _('Picking')) + " '" + (vals['name'] or "n/a") + "' "+ _("created.")
             self.log(cr, user, id, message)
         return super(stock_picking, self).create(cr, user, vals, context)
 
@@ -719,7 +719,7 @@ class stock_picking(osv.osv):
                 'internal': 'Internal picking',
                 'delivery': 'Delivery order'
             }
-            message = type_list.get(pick.type, _('Document')) + " '" + pick.name + "' "+ _("is ready to be processed.")
+            message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or 'n/a') + "' "+ _("is ready to be processed.")
             self.log(cr, uid, id, message)
         self.write(cr, uid, ids, {'state': 'assigned'})
         return True
