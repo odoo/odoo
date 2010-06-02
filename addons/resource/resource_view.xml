@@ -201,9 +201,9 @@
             <field name="arch" type="xml">
                 <form string="Leave Detail">
                     <field name="name"/>
+                    <field name="resource_id"  on_change="onchange_resource(resource_id)"/>
                     <field name="company_id"  widget="selection" groups="base.group_multi_company"/>
                     <field name="calendar_id"/>
-                    <field name="resource_id"  on_change="onchange_resource(resource_id)"/>
                     <newline/>
                     <field name="date_from"/>
                     <field name="date_to"/>
