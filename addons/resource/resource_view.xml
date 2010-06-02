@@ -56,8 +56,8 @@
                    </group>
                    <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Resouce" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
-                        <!--<filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>-->
+                        <filter string="Resource" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
+                        <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                </search>
             </field>
@@ -178,11 +178,11 @@
             <field name="arch" type="xml">
                 <tree string="Resources">
                     <field name="name" />
+                    <field name="user_id" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="resource_type" />
                     <field name="calendar_id" />
                     <field name="time_efficiency" groups="base.group_extended"/>
-                    <field name="user_id" />
                 </tree>
             </field>
         </record>
