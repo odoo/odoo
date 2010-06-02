@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,32 +15,24 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
 
-class invoice_directly(osv.osv_memory):
-    _inherit = 'stock.partial.picking'
+class marketing_installer(osv.osv_memory):
+    _name = 'marketing.installer'
+    _inherit = 'res.config.installer'
+    
+    _columns = {
+        # Generic modules
+        'marketing_campaign':fields.boolean('Marketing Campaign',
+            help="Helps you to manage your marketing campaigns step by step."),
+        'crm_profiling':fields.boolean('Crm Profile',
+            help="Helps you to perform segmentation within partners.")
+            }
+        
+marketing_installer()
 
-    def do_partial(self, cr, uid, ids, context):
-        result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
-        pick_obj = self.pool.get('stock.picking')
-        picking_ids = context.get('active_ids', False)
-        pick = pick_obj.browse(cr, uid, picking_ids, context)[0]
-        if pick.invoice_state=='2binvoiced':
-            return {
-                'name': 'Create Invoice',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.invoice.onshipping',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                }
-        return {}
-
-invoice_directly()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
