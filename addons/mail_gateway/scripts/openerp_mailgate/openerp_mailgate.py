@@ -177,17 +177,13 @@ class email_parser(object):
         s = decode_header(s.replace('\r', '')) 
         return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s or []))
     
-    def history(self, model, new_id, subject, msg_to, msg_from, body, attach):
-        thread_data = {
-                    'model': model, 
-                    'res_id': new_id, 
-                    'thread': subject, 
-        }
-        thread_id = self.rpc('mailgate.thread', 'create', thread_data)
+    def history(self, model, new_id, msg_id, subject, msg_to, msg_from, body, attach):
         msg_data = {
                     'name': subject, 
                     'history': True, 
-                    'thread_id': thread_id, 
+                    'model': model, 
+                    'res_id': new_id, 
+                    'message_id': msg_id, 
                     'user_id': self.rpc.user_id, 
                     'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                     'email_from': msg_from, 
@@ -232,7 +228,7 @@ class email_parser(object):
             try:
                 self.rpc(self.model, 'history', [new_id], 'Receive', True, msg_to, message['body'], msg_from, False, {'model' : self.model})
             except Exception, e:
-                self.history(self.model, new_id, msg_subject, msg_to, msg_from, message['body'], att_ids)
+                self.history(self.model, new_id, msg['Message-Id'], msg_subject, msg_to, msg_from, message['body'], att_ids)
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
                 e = '\n\nThe Specified user does not have an access to the Model.'

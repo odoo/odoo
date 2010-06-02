@@ -14,14 +14,19 @@
 	                </group>
                     <notebook colspan="4">
 	                    <page string="Details">
-	                    	<group col="4" colspan="4">
+	                    	<group col="2" colspan="2">
 	                    		<separator string="Email Details" colspan="4"/>
 			                    <field name="email_from" />
 			                    <field name="email_to" />
 			                    <field name="email_cc" />
-			                    <field name="email_bcc" />
-			                    <field name="message_id" />
+			                    <field name="email_bcc" invisible="1"/>
 			               </group>
+			               <group col="2" colspan="2">
+                                <separator string="Message Details" colspan="4"/>
+                                    <field name="model" readonly="1"/>
+                                    <field name="res_id"  readonly="1"/>
+                                <field name="message_id" />
+                           </group>
 			               <separator string="Description" colspan="4"/>
                             <field name="description" nolabel="1" colspan="4" />
 		                </page>
@@ -70,9 +75,6 @@
                 <form string="Mailgateway Thread">
                     <group col="6" colspan="4">
                         <field name="thread" select="1" colspan="3"/>
-                        <newline/>
-                        <field name="model" />
-                        <field name="res_id" />
                     </group>
                     <separator string="Logs" colspan="4"/>
                     <field name="log_ids" nolabel="1" colspan="4" domain="[('history', '=', True)]">
@@ -169,9 +171,17 @@
 	        <field name="view_id" ref="view_mailgate_thread_form"/>
 	        <field name="act_window_id" ref="action_view_mailgate_thread"/>
 	    </record>
-
-
-        <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
+        
+        <!--        Mailgateway message action-->
+        <record model="ir.actions.act_window" id="action_view_mailgate_message">
+            <field name="name">Mailgateway Messages</field>
+            <field name="res_model">mailgate.message</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_mailgate_message_tree"/>
+        </record>
+        
+        <menuitem id="menu_mailgate_message" name="Mailgateway Messages" action="action_view_mailgate_message"
         	parent="base.menu_base_config"  sequence="20"/>
 
         <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
