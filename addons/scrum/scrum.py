@@ -24,6 +24,8 @@ import netsvc
 from osv import fields, osv, orm
 from mx import DateTime
 import re
+import tools
+from tools.translate import _
 
 class scrum_project(osv.osv):
     _inherit = 'project.project'
@@ -287,5 +289,43 @@ class scrum_meeting(osv.osv):
     _defaults = {
         'date' : time.strftime('%Y-%m-%d'),
     }
+
+    def button_send_to_master(self, cr, uid, ids, context={}):
+        meeting_id=self.browse(cr,uid,ids)[0]
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        email=meeting_id and meeting_id.sprint_id.scrum_master_id.user_email
+        body = ""        
+        if email:
+            self.email_send(cr,uid,ids,email)
+        else:
+            raise osv.except_osv(_('Warining !'), _('%s User  no Email Address!' % meeting_id.sprint_id.scrum_master_id.name))
+        return True
+    
+    
+
+    def button_send_product_owner(self, cr, uid, ids, context={}):
+        meeting_id=self.browse(cr,uid,ids)[0]
+        email=meeting_id.sprint_id.product_owner_id.user_email
+        if email:
+            self.email_send(cr,uid,ids,email)
+        else:
+            raise osv.except_osv(_('Warining !'), _('%s User  no Email Address!' % meeting_id.sprint_id.scrum_master_id.name))
+                    
+        return True
+    
+    def email_send(self, cr, uid, ids,email, context={}):
+        email_from=tools.config.get('email_from', False)
+        meeting_id=self.browse(cr,uid,ids)[0]
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        user_email= email_from or user.address_id.email  or email_from
+        body=""
+       
+        body+="Hello " + meeting_id.sprint_id.scrum_master_id.name+",\n" +" \n  Daily Meeting Details of date %s for the Sprint  %s " % (meeting_id.date, meeting_id.sprint_id.name)
+        body += '\n\nDate :%s' % (meeting_id.date) + '\n\nTasks since yesterday \n\n:%s' % (meeting_id.question_yesterday) + '\n\n Task for Today :\n\n%s' % (meeting_id.question_today )+ '\n\n Blocks encountered \n :%s' % (meeting_id.question_blocks or 'No Blocks') 
+        body+="'\n\nThanks\n"+ user.name  
+        sub_name=meeting_id.name or 'Scrum Meeting of %s '%meeting_id.date
+        tools.email_send(user_email , [email],sub_name, body, reply_to=None,openobject_id = str(meeting_id.id))
+        return True
+        
 scrum_meeting()
 
