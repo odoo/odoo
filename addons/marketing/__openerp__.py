@@ -19,28 +19,19 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
 
-class invoice_directly(osv.osv_memory):
-    _inherit = 'stock.partial.picking'
-
-    def do_partial(self, cr, uid, ids, context):
-        result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
-        pick_obj = self.pool.get('stock.picking')
-        picking_ids = context.get('active_ids', False)
-        pick = pick_obj.browse(cr, uid, picking_ids, context)[0]
-        if pick.invoice_state=='2binvoiced':
-            return {
-                'name': 'Create Invoice',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.invoice.onshipping',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                }
-        return {}
-
-invoice_directly()
+{
+    "name" : "Marketing",
+    "version" : "1.1",
+    "depends" : ["base"],
+    "author" : "Tiny",
+    "category": 'Generic Modules/Marketing',
+    "description": "Menu for Marketing",
+    'website': 'http://www.openerp.com',
+    'init_xml': [],
+    'update_xml': ['marketing_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

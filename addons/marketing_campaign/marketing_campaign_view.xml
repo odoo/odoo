@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem name="Direct Marketing" id="menu_marketing" parent="base.menu_base_partner"/>
+
     <!--
     ======================
     Marketing Campaign
@@ -168,8 +168,9 @@
         
     </record>
 
-    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing" action="action_marketing_campaign_form" sequence="10" />
-        
+	<menuitem name="Campaigns" id="menu_marketing_campaign" parent="marketing.marketing_menu"/>
+    <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="10" />
+		        
     <!--
     ======================
     Marketing Segments
@@ -262,7 +263,7 @@
        <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_create_date': 1}</field>
     </record>
 
-    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing" action="action_marketing_campaign_segment_form" sequence="20" />
+    <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign" action="action_marketing_campaign_segment_form" sequence="20" />
         
     <!--
     ======================
@@ -437,7 +438,7 @@
         <field name="context">{'group_by': [], 'search_default_todo': 1}</field>        
     </record>
 
-    <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing" action="action_marketing_campaign_workitem" sequence="30" groups="base.group_extended"/>
+    <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="30" groups="base.group_extended"/>
     
     </data>
 </openerp>

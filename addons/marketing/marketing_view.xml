@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+	   
+        <menuitem name="Marketing" icon="terp-crm" id="marketing_menu" sequence="10"/>
+
+        <record id="view_marketing_installer" model="ir.ui.view">
+            <field name="name">marketing.installer.view</field>
+            <field name="model">marketing.installer</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="arch" type="xml">
+                <data>
+                  <form position="attributes">
+                    <attribute name="string">Marketing Modules Installation</attribute>
+                  </form>
+        
+                  <separator string="title" position="attributes">
+                    <attribute name="string">Configure Your Marketing System</attribute>
+                  </separator>
+                  <xpath expr="//label[@string='description']"
+                         position="attributes">
+                    <attribute name="string">You can enhance OpenERP's basic Marketing support with a few additional OpenERP applications</attribute>
+                  </xpath>
+                  <group colspan="8">
+                    <group colspan="2" col="2">
+                        <separator string="Marketing Mdules" colspan="4" />
+                        <field name="marketing_campaign" />
+                        <field name="crm_profiling" />
+                    </group>
+                  </group>
+                </data>
+            </field>
+        </record>
+
+        <record id="action_marketing_installer" model="ir.actions.act_window">
+            <field name="name">Marketing Modules Installation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">marketing.installer</field>
+            <field name="view_id" ref="view_marketing_installer"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="marketing_installer_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_marketing_installer"/>
+            <field name="sequence">3</field>
+        </record>
+
+    </data>
+</openerp>
