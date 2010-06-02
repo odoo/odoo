@@ -473,9 +473,8 @@ class account_move_line(osv.osv):
             date = now().strftime('%Y-%m-%d')
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
 
-        if part.property_payment_term and part.property_payment_term.line_ids:
-            payterm = part.property_payment_term.line_ids[0]
-            res = self.pool.get('account.payment.term').compute(cr, uid, payterm.id, 100, date)
+        if part.property_payment_term:
+            res = self.pool.get('account.payment.term').compute(cr, uid, part.property_payment_term.id, 100, date)
             if res:
                 val['date_maturity'] = res[0][0]
         if not account_id:
@@ -483,10 +482,10 @@ class account_move_line(osv.osv):
             id2 =  part.property_account_receivable.id
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
-                if jt=='sale':
+                if jt == 'sale':
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id2)
 
-                elif jt=='purchase':
+                elif jt == 'purchase':
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id1)
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
