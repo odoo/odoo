@@ -45,7 +45,7 @@ def check_super(passwd):
 
 def check(db, uid, passwd):
     if not passwd:
-        return False
+        raise Exception('AccessDenied')
     cached_pass = _uid_cache.get(db, {}).get(uid)
     if (cached_pass is not None) and cached_pass == passwd:
         return True
