@@ -50,7 +50,8 @@ class wizard_update_module(wizard.interface):
         return {'update': update, 'add': add}
 
     def _action_module_open(self, cr, uid, data, context):
-        return {
+        
+        res = {
             'domain': str([]),
             'name': 'Module List',
             'view_type': 'form',
@@ -59,8 +60,11 @@ class wizard_update_module(wizard.interface):
             'view_id': False,
             'type': 'ir.actions.act_window'
         }
-
-
+        
+        search_view_id = pooler.get_pool(cr.dbname).get('ir.ui.view').search(cr, uid, [('name','=','ir.module.module.list.select')], context=context)
+        if search_view_id:
+            res.update({'search_view_id' : search_view_id[0]})
+        return res
 
     states = {
         'init': {
