@@ -79,7 +79,7 @@ class scrum_sprint(osv.osv):
         for sprint in self.browse(cr, uid, ids):
             res.setdefault(sprint.id, 0.0)
             for bl in sprint.backlog_ids:
-                res[sprint.id] += bl.expected_hours
+                res[sprint.id] += bl.planned_hours
         return res
 
     def button_cancel(self, cr, uid, ids, context={}):
@@ -115,8 +115,7 @@ class scrum_sprint(osv.osv):
         'backlog_ids': fields.one2many('scrum.product.backlog', 'sprint_id', 'Sprint Backlog'),
         'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done."),
-        'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
-        'expected_hours': fields.function(_calc_expected, method=True, string='Expected Hours', help='Estimated time to do the task.'),
+        'planned_hours': fields.function(_calc_expected, method=True, string='Planned Hours', help='Estimated time to do the task.'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('cancel','Cancelled'),('done','Done')], 'State', required=True),
     }
     _defaults = {
@@ -186,12 +185,12 @@ class scrum_product_backlog(osv.osv):
                 res[bl.id] += task.effective_hours
         return res
 
-    def _calc_planned(self, cr, uid, ids, name, args, context):
+    def _calc_task(self, cr, uid, ids, name, args, context):
         res = {}
         for bl in self.browse(cr, uid, ids):
             res.setdefault(bl.id, 0.0)
             for task in bl.tasks_id:
-                res[bl.id] += task.planned_hours
+                res[bl.id] += task.total_hours
         return res
 
     def button_cancel(self, cr, uid, ids, context={}):
@@ -218,6 +217,22 @@ class scrum_product_backlog(osv.osv):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
 
+    def button_postpone(self, cr, uid, ids, context={}):
+        proejct_task=self.pool.get('project.task')
+        for product in self.browse(cr, uid, ids):   
+            tasks_id=[]
+            for task in product.tasks_id:
+                if task.state!='done':
+                    tasks_id.append(task.id)
+            
+            clone_id = self.copy(cr, uid, product.id, {
+                'name': 'PARTIAL '+ product.name ,
+                'sprint_id':False,
+                'tasks_id':[(6, 0, tasks_id)],
+                })
+        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        return True
+
     _columns = {
         'name' : fields.char('Feature', size=64, required=True),
         'note' : fields.text('Note'),
@@ -230,9 +245,9 @@ class scrum_product_backlog(osv.osv):
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
         'progress': fields.function(_calc_progress, method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done (Time spent on tasks)"),
-        'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
-        'expected_hours': fields.float('Expected Hours', help='Estimated total time to do the Backlog'),
+        'planned_hours': fields.float('Planned Hours', help='Estimated total time to do the Backlog'),
         'create_date': fields.datetime("Creation Date", readonly=True),
+        'task_hours':fields.function(_calc_task, method=True, string='Total Task Hours', help='Estimated time  of the total hours of the tasks')
     }
     _defaults = {
         'state': 'draft',

@@ -40,7 +40,7 @@
                     <field name="sprint_id"/>
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar"/>
-                    <field name="expected_hours" sum="Expected hours" widget="float_time"/>
+                    <field name="planned_hours" sum="Planned hours" widget="float_time"/>
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
@@ -57,10 +57,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product backlog">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="7">
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
+      					<button name="button_postpone" string="Post Pone" type="object"                  
+						help="Post Pone backlog"
+                         icon="gtk-convert"  attrs="{'invisible':[('state','=','done')]}"/>
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>
                         <field name="create_date"/>
@@ -69,8 +72,9 @@
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="6" col="8">
-                                <field name="expected_hours" widget="float_time"/>
+                                <field name="planned_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time"/>
+                                <field name="task_hours" widget="float_time"/>
                             </group>
                             <separator string="Feature Description" colspan="4"/>
                             <field colspan="4" name="note" nolabel="1"/>
@@ -193,7 +197,6 @@
                     <field name="progress" widget="progressbar"/>
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="planned_hours" sum="Planned hours" widget="float_time"/>
-                    <field name="expected_hours" sum="Expected hours" widget="float_time"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
@@ -227,7 +230,6 @@
                             <group colspan="2" col="2">
                                 <separator string="Planning" colspan="2"/>
                                 <field name="planned_hours" widget="float_time"/>
-                                <field name="expected_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time"/>
                                 <field name="progress" widget="progressbar"/>
                             </group>

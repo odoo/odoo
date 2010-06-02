@@ -50,7 +50,7 @@ class backlog_sprint_assign(osv.osv_memory):
                     'project_id': backlog.project_id.id,
                     'user_id': False,
                     'planned_hours':backlog.planned_hours,
-                    'remaining_hours':backlog.expected_hours,
+                    'remaining_hours':backlog.planned_hours,
                 })
             if data['state_open'] and backlog.state == "draft":
                 backlog_obj.write(cr, uid, backlog.id, {'state':'open'})
