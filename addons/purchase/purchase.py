@@ -211,7 +211,6 @@ class purchase_order(osv.osv):
     }
     _name = "purchase.order"
     _description = "Purchase Order"
-    _log_create = True
     _order = "name desc"
 
     def unlink(self, cr, uid, ids, context=None):
@@ -223,7 +222,7 @@ class purchase_order(osv.osv):
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
 
-        # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support 
+        # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support
         # automatically sending subflow.delete upon deletion
         wf_service = netsvc.LocalService("workflow")
         for id in unlink_ids:
@@ -248,7 +247,7 @@ class purchase_order(osv.osv):
         return {'value':{'location_id': res, 'dest_address_id': False}}
 
     def onchange_partner_id(self, cr, uid, ids, part):
-        
+
         if not part:
             return {'value':{'partner_address_id': False, 'fiscal_position': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
@@ -264,12 +263,12 @@ class purchase_order(osv.osv):
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context={}):
         todo = []
-        for po in self.browse(cr, uid, ids):            
+        for po in self.browse(cr, uid, ids):
             if not po.order_line:
                 raise osv.except_osv(_('Error !'),_('You can not confirm purchase order without Purchase Order Lines.'))
-            for line in po.order_line:            
+            for line in po.order_line:
                 if line.state=='draft':
-                    todo.append(line.id)            
+                    todo.append(line.id)
         current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
@@ -313,13 +312,13 @@ class purchase_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for p_id in ids:
             # Deleting the existing instance of workflow for PO
-            wf_service.trg_delete(uid, 'purchase.order', p_id, cr)            
+            wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
         return True
 
     def action_invoice_create(self, cr, uid, ids, *args):
         res = False
-       
+
         journal_obj = self.pool.get('account.journal')
         for o in self.browse(cr, uid, ids):
             il = []
@@ -437,7 +436,7 @@ class purchase_order(osv.osv):
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
-                    todo_moves.append(move)    
+                    todo_moves.append(move)
             self.pool.get('stock.move').action_confirm(cr, uid, todo_moves)
             self.pool.get('stock.move').force_assign(cr, uid, todo_moves)
             wf_service = netsvc.LocalService("workflow")
@@ -459,26 +458,26 @@ class purchase_order(osv.osv):
 
 
     def do_merge(self, cr, uid, ids, context):
-        """ 
-        To merge similar type of purchase orders.        
-        Orders will only be merged if: 
-        * Purchase Orders are in draft  
-        * Purchase Orders belong to the same partner   
+        """
+        To merge similar type of purchase orders.
+        Orders will only be merged if:
+        * Purchase Orders are in draft
+        * Purchase Orders belong to the same partner
         * Purchase Orders are have same stock location, same pricelist
-        Lines will only be merged if: 
-        * Order lines are exactly the same except for the quantity and unit 
+        Lines will only be merged if:
+        * Order lines are exactly the same except for the quantity and unit
 
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param ids: the ID or list of IDs 
-         @param context: A standard dictionary 
-         
+         @param ids: the ID or list of IDs
+         @param context: A standard dictionary
+
          @return: new purchase order id
-            
-        """          
-        wf_service = netsvc.LocalService("workflow")    
-        def make_key(br, fields):                    
+
+        """
+        wf_service = netsvc.LocalService("workflow")
+        def make_key(br, fields):
             list_key = []
             for field in fields:
                 field_val = getattr(br, field)
@@ -496,9 +495,9 @@ class purchase_order(osv.osv):
             return tuple(list_key)
 
     # compute what the new orders should contain
-  
+
         new_orders = {}
-    
+
         for porder in [order for order in self.browse(cr, uid, ids) if order.state == 'draft']:
             order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id'))
             new_order = new_orders.setdefault(order_key, ({}, []))
@@ -541,7 +540,7 @@ class purchase_order(osv.osv):
                         o_line[field] = field_val
                     o_line['uom_factor'] = order_line.product_uom and order_line.product_uom.factor or 1.0
 
-        
+
 
         allorders = []
         for order_key, (order_data, old_ids) in new_orders.iteritems():
@@ -601,7 +600,7 @@ class purchase_order_line(osv.osv):
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner"),
         'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date")
-        
+
     }
     _defaults = {
         'product_qty': lambda *a: 1.0,
@@ -692,7 +691,7 @@ class purchase_order_line(osv.osv):
         return res
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
-        return True    
+        return True
 purchase_order_line()
 
 class mrp_procurement(osv.osv):
@@ -700,7 +699,7 @@ class mrp_procurement(osv.osv):
     _columns = {
         'purchase_id': fields.many2one('purchase.order', 'Latest Requisition'),
     }
-    
+
     def action_po_assign(self, cr, uid, ids, context={}):
         """ This is action which call from workflow to assign purchase order to procurements
         @return: True

@@ -510,12 +510,12 @@ class sale_order(osv.osv):
     def action_invoice_end(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-            
+
         for order in self.browse(cr, uid, ids, context=context):
             for line in order.order_line:
                 if line.state == 'exception':
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'confirmed'}, context=context)
-            
+
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
 

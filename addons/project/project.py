@@ -150,14 +150,14 @@ class project(osv.osv):
              if leave['date_start'] > leave['date']:
                  return False
          return True
-    
+
     def _check_escalation(self, cr, uid, ids):
          project_obj = self.browse(cr, uid, ids[0])
          if project_obj.project_escalation_id:
              if project_obj.project_escalation_id.id == project_obj.id:
                  return False
-         return True 
-     
+         return True
+
     _constraints = [
         (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date']),
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
@@ -261,7 +261,6 @@ project()
 class task(osv.osv):
     _name = "project.task"
     _description = "Task"
-    _log_create = True
     _date_name = "date_start"
 
     def _str_get(self, task, level=0, border='***', context={}):

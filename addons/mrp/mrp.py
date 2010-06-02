@@ -20,6 +20,7 @@
 ##############################################################################
 
 from mx import DateTime
+from datetime import datetime, timedelta
 from osv import fields
 from osv import osv
 from tools.translate import _
@@ -117,9 +118,9 @@ class mrp_bom(osv.osv):
     """
     Defines bills of material for a product.
     """
-    _name = 'mrp.bom'    
+    _name = 'mrp.bom'
     _description = 'Bill of Material'
-    
+
     def _child_compute(self, cr, uid, ids, name, arg, context={}):
         """ Gets child bom.
         @param self: The object pointer
@@ -419,7 +420,6 @@ class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name  = 'date_planned'
-    _log_create = True
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
         """ Calculates total hours and total no. of cycles for a production order.
@@ -647,15 +647,19 @@ class mrp_production(osv.osv):
         """ Changes the production state to Ready and location id of stock move.
         @return: True
         """
+        for production in self.browse(cr, uid, ids):
+            production = self.browse(cr, uid, [production.id])[0]
+            s_date = datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S')
+
         for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Manufacturing Order ') + " '" + name + "' "+ _("is ready to produce.")
+            message = _('Manufacturing Order ') + " '" + name + "' "+ _("scheduled the") + " "
+            message += s_date.strftime('%Y-%m-%d') + " " + _("for") + " " + production.product_id.default_code
             self.log(cr, uid, id, message)
         move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state': 'ready'})
-        for production in self.browse(cr, uid, ids):
-            if production.move_prod_id:
-                move_obj.write(cr, uid, [production.move_prod_id.id],
-                        {'location_id': production.location_dest_id.id})
+        if production.move_prod_id:
+             move_obj.write(cr, uid, [production.move_prod_id.id],
+                   {'location_id': production.location_dest_id.id})
         return True
 
     def action_production_end(self, cr, uid, ids):
