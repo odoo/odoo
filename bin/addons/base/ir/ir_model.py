@@ -68,6 +68,17 @@ class ir_model(osv.osv):
     _constraints = [
         (_check_model_name, 'The Object name must start with x_ and not contain any special character !', ['model']),
     ]
+
+    # overridden to allow searching both on model name (model field)
+    # and model description (name field)
+    def name_search(self, cr, uid, name='', args=None, operator='ilike',  context=None, limit=None):
+        if args is None:
+            args = []
+        domain = args + ['|', ('model', operator, name), ('name', operator, name)]
+        return super(ir_model, self).name_search(cr, uid, None, domain,
+                        operator=operator, limit=limit, context=context)
+
+
     def unlink(self, cr, user, ids, context=None):
         for model in self.browse(cr, user, ids, context):
             if model.state <> 'manual':
