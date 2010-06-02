@@ -218,7 +218,6 @@ class scrum_product_backlog(osv.osv):
         return True
 
     def button_postpone(self, cr, uid, ids, context={}):
-        proejct_task=self.pool.get('project.task')
         for product in self.browse(cr, uid, ids):   
             tasks_id=[]
             for task in product.tasks_id:
