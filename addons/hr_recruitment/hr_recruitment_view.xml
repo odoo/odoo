@@ -2,6 +2,12 @@
 <openerp>
     <data>
 
+       <menuitem
+        id="menu_hr_config_applicant"
+        name="Applicant"
+        parent="hr.menu_hr_configuration"
+        />
+
     # ------------------------------------------------------
     # Job Categories
     # ------------------------------------------------------
@@ -25,7 +31,8 @@
         <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
         <field name="context">{'object_id':'hr.applicant'}</field>
     </record>
-    <menuitem action="hr_job_stage_act" id="menu_hr_job_stage_act" parent="crm.menu_crm_case_stage"/>
+
+    <menuitem action="hr_job_stage_act" id="menu_hr_job_stage_act" name="Stages" parent="menu_hr_config_applicant"/>
 
     # ------------------------------------------------------
     # Jobs
