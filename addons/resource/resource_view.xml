@@ -56,7 +56,7 @@
                    </group>
                    <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Resouce" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
+                        <filter string="Resource" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
                         <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                </search>
@@ -178,11 +178,11 @@
             <field name="arch" type="xml">
                 <tree string="Resources">
                     <field name="name" />
+                    <field name="user_id" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="resource_type" />
                     <field name="calendar_id" />
                     <field name="time_efficiency" groups="base.group_extended"/>
-                    <field name="user_id" />
                 </tree>
             </field>
         </record>
@@ -201,9 +201,9 @@
             <field name="arch" type="xml">
                 <form string="Leave Detail">
                     <field name="name"/>
+                    <field name="resource_id"  on_change="onchange_resource(resource_id)"/>
                     <field name="company_id"  widget="selection" groups="base.group_multi_company"/>
                     <field name="calendar_id"/>
-                    <field name="resource_id"  on_change="onchange_resource(resource_id)"/>
                     <newline/>
                     <field name="date_from"/>
                     <field name="date_to"/>
