@@ -2,12 +2,17 @@
 <openerp>
     <data>
         <menuitem icon="terp-partner" id="menu_base_partner" name="Sales" sequence="0"/>
+
         <menuitem id="menu_address_book" name="Address Book" parent="menu_base_partner" sequence="2"/>
+
         <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="9"
             groups="group_system"/>
 
-        <menuitem id="menu_base_config_partner" name="Partners" parent="menu_base_config" sequence="10" groups="base.group_extended"/>
-        <menuitem id="menu_base_config_contact" name="Contacts" parent="menu_base_config" sequence="20" />
+        <menuitem id="menu_config_address_book" name="Address Book" parent="menu_base_config" sequence="3"
+            groups="group_system"/>
+
+        <menuitem id="menu_config_crm_address_contact" name="Contacts" parent="menu_config_address_book" sequence="3"
+            groups="group_system"/>
 
         <!--
           =====================
@@ -202,7 +207,8 @@
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','partner')]</field>
         </record>
-        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_base_config_partner" sequence="10"/>
+
+        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" name="Company Title" parent="menu_config_address_book" sequence="0"/>
 
         <record id="action_partner_title_contact" model="ir.actions.act_window">
             <field name="name">Contact Titles</field>
@@ -211,8 +217,8 @@
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','contact')]</field>
         </record>
-        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" parent="menu_base_config_contact" sequence="10"/>
 
+        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" name="Titles" parent="menu_config_crm_address_contact" sequence="3"/>
         <!--
           =======================
           Partner
@@ -578,7 +584,8 @@
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" parent="base.menu_base_config_partner"/>
+
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Categories" sequence="1" parent="menu_config_address_book"/>
 
         <act_window domain="[('partner_id', '=', active_id)]"
             id="act_res_partner_event" name="Events"

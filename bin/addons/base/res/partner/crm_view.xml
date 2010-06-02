@@ -30,8 +30,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="next_id_14" name="Partner Events" parent="base.menu_base_config_partner"/>
-        <menuitem action="res_partner_canal-act" id="menu_res_partner_canal-act" parent="next_id_14"/>
+        <menuitem id="menu_partner_events" name="Events" parent="menu_config_address_book"/>
+        <menuitem action="res_partner_canal-act" id="menu_res_partner_canal-act" parent="menu_partner_events"/>
 
         <record id="res_partner_som_tree-view" model="ir.ui.view">
             <field name="name">res.partner.som.tree</field>
@@ -62,7 +62,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="res_partner_som-act" id="menu_res_partner_som-act" parent="base.next_id_14"/>
+        <menuitem action="res_partner_som-act" id="menu_res_partner_som-act" parent="menu_partner_events"/>
 
         <record id="res_partner_event-wopartner-view_form" model="ir.ui.view">
             <field name="name">res.partner.event.form</field>
