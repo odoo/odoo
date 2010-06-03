@@ -11,6 +11,7 @@
 	                    <field name="name" required="1" select="1"/>
 	                    <field name="date" required="1" select="1"/>
 	                    <field name="user_id" string="Responsible" select="1"/>
+	                    <field name="partner_id" />
 	                </group>
                     <notebook colspan="4">
 	                    <page string="Details">
@@ -19,7 +20,7 @@
 			                    <field name="email_from" />
 			                    <field name="email_to" />
 			                    <field name="email_cc" />
-			                    <field name="email_bcc" invisible="1"/>
+			                    <field name="email_bcc" groups="base.group_extended"/>
 			               </group>
 			               <group col="2" colspan="2">
                                 <separator string="Message Details" colspan="4"/>
@@ -45,6 +46,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Mailgateway Message">
+                    <field name="name" />
                     <field name="date" />
                     <field name="email_from" />
                     <field name="user_id" />
