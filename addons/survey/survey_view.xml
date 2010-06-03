@@ -255,8 +255,8 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group col='10' colspan='4'>
-                        <filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]"/>
-                        <filter string="Open" icon="terp-stock" domain="[('state','=','open')]"/>
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
+                        <filter string="Open" icon="terp-check" domain="[('state','=','open')]"/>
                         <separator orientation="vertical"/>
                         <field name="title" select="1"/>
                         <field name="type" select="1" widget="selection"/>
@@ -1065,13 +1065,13 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group col='10' colspan='4'>
-                        <filter icon="terp-crm" string="Unanswered" domain="[('state','=','waiting_answer')]"/>
-                        <filter icon="terp-stock" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
+                        <filter icon="terp-emblem-important" string="Unanswered" domain="[('state','=','waiting_answer')]"/>
+                        <filter icon="terp-gtk-media-pause" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                         <separator orientation="vertical"/>
                         <field name="survey_id" widget="selection" select="1"/>
                         <field name="email" select="1"/>
                         <field name="user_id" select="1" widget="selection" default="1">
-                        <filter string="MY" icon="terp-partner" domain="[('user_id','=',uid)]"/>
+                        <filter string="MY" icon="terp-personal" domain="[('user_id','=',uid)]"/>
                         </field>
                    </group>
                </search>
