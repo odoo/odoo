@@ -1085,7 +1085,7 @@ class sale_order_line(osv.osv):
             warning = {
                 'title': 'No Pricelist !',
                 'message':
-                    'You have to select a pricelist in the sale form !\n'
+                    'You have to select a pricelist or a customer in the sale form !\n'
                     'Please set one before choosing a product.'
                 }
         else:

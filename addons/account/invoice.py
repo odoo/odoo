@@ -952,7 +952,7 @@ class account_invoice(osv.osv):
 
     def _log_event(self, cr, uid, ids, factor=1.0, name='Open Invoice'):
         #TODO: implement messages system
-        return True
+            return True
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):

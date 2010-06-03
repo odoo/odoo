@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,14 +26,14 @@
     'category': 'Generic Modules/Accounting',
     'description': """Allow the user to work tax included prices.
 Especially useful for b2c businesses.
-    
+
 This module implement the modification on the invoice form.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['account'],
     'init_xml': [],
-    'update_xml': ['invoice_tax_incl.xml'],
+    'update_xml': ['account_tax_include_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
