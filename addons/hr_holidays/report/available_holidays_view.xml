@@ -10,8 +10,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Available Holidays">
-                    <field name="employee_id" invisible="1"/>
-                    <field name="holiday_status_id" invisible="1"/>
+                    <field name="employee_id"/>
+                    <field name="category_id"/>
+                    <field name="holiday_status_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="max_leave" sum="Allocated Leaves"/>
                     <field name="taken_leaves" sum="Taken Leaves"/>
@@ -47,6 +48,13 @@
 	        <field name="arch" type="xml">
 	            <search string="Leaves">
 	            	<group>
+	                    <filter icon="terp-hr" string="Employee"
+	                            domain="[('category_id', '=', False)]"
+	                            help="Leaves by empolyee"/>
+	                    <filter icon="terp-hr" string="Category"
+	                            domain="[('employee_id', '=', False)]"
+	                            help="Leaves by category"/>
+                        <separator orientation="vertical"/>
 		            	<filter icon="terp-hr" string="This Year"
 			                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 			                    help="Leaves in this year"/>
@@ -60,6 +68,7 @@
 		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
 		                    help="Leaves during last 7 days"/>
 		                <separator orientation="vertical"/>
+
 						<field name="employee_id"/>
 		                <field name="user_id" widget="selection">
 		                    <filter icon="terp-hr"
@@ -74,7 +83,6 @@
 	                </group>
 	                <newline/>
 	                <group expand="1" string="Group By..." colspan="10" col="12">
-	                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
 	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
 	                    <separator orientation="vertical"/>
 	                    <filter string="Type" icon="terp-hr" context="{'group_by':'holiday_status_id'}"/>
@@ -95,7 +103,7 @@
             <field name="res_model">available.holidays.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{'search_default_month':1,'search_default_User':1,'group_by':[], "search_default_user_id": uid}</field>
             <field name="view_id" ref="view_hr_available_holidays_report_search"/>
         </record>
 

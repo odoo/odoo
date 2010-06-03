@@ -8,6 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Invoice Currency">
+					<separator colspan="4" string="This wizard will change the currency of the invoice"/>
 				    <field name="currency_id"/>
 				    <separator colspan="4"/>
               		<group colspan="2" col="4">
@@ -29,15 +30,6 @@
             <field name="target">new</field>
     	</record>
 
-    	<record model="ir.values" id="account_change_currency">
-            <field name="model_id" ref="account.model_account_invoice" />
-            <field name="object" eval="1" />
-            <field name="name">Change Currency</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_change_currency'))"/>
-            <field name="key">action</field>
-            <field name="model">account.invoice</field>
-        </record>
 
     </data>
 </openerp>

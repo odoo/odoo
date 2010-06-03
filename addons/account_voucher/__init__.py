@@ -20,6 +20,5 @@
 ##############################################################################
 
 import voucher
-import account
 import report
 import wizard

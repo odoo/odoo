@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
+
         <!-- Resource: project.project -->
-        
+
         <record id="scrum_project_1" model="project.project">
             <!-- FIXME !!! -->
             <field name="tasks">[24, 25, 28, 26, 27, 29, 30, 31, 32, 33, 34, 35, 37, 36, 38]</field>
@@ -12,9 +12,9 @@
             <field name="name">Open ERP - dev branch</field>
             <field model="res.users" name="product_owner_id" search="[('login','=','demo')]"/>
         </record>
-        
+
         <!-- Resource: scrum.sprint -->
-        
+
         <record id="scrum_sprint_0" model="scrum.sprint">
             <field name="date_stop">2005-12-20</field>
             <field name="name">Sprint for V3.2.0</field>
@@ -23,12 +23,13 @@
             <field name="project_id" ref="scrum_project_1"/>
             <field name="state">open</field>
         </record>
-        
+
         <!-- Resource: project.product.backlog -->
-        
+
         <record id="scrum_product_backlog_0" model="scrum.product.backlog">
             <field name="priority">3</field>
             <field name="name">Automatic migration system</field>
+            <field name="expected_hours">6.0</field>
             <field name="note">This new system will enable you to migrate automatically from an old version of Open ERP to a new one. This system will migrate not only the Open ERP system but also the customers particularities. This happens without any kind of script or programming. It has been possible to carry out such a system thanks to the descriptive approach of Open ERP components. </field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
             <field name="project_id" ref="scrum_project_1"/>
@@ -36,6 +37,7 @@
         <record id="scrum_product_backlog_1" model="scrum.product.backlog">
             <field name="priority">3</field>
             <field name="name">New accounting module</field>
+            <field name="expected_hours">111.0</field>
             <field name="note">The accounting module of Open ERP (financial accounting and management accounting) is being reshaped. New functionnalities will be added: intangible assets, a new way of presenting ledgers and bookings, new stock valuation calculation, and lots of predefined reports. </field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
             <field name="project_id" ref="scrum_project_1"/>
@@ -43,41 +45,47 @@
         <record id="scrum_product_backlog_2" model="scrum.product.backlog">
             <field name="priority">3</field>
             <field name="name">Automated Plugin System to install/uninstall modules</field>
+            <field name="expected_hours">4.0</field>
             <field name="note">We have to develop a plug-in system which will enable to install/remove modules. The basic version of Open ERP will include only the required minimum, and you will select the modules thanks to the plug-in manager. This allows you to limit your system to your real needs: quality management, localisations, project and service management, marketing campaigns, and so on... </field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
         <record id="scrum_product_backlog_3" model="scrum.product.backlog">
             <field name="name">Review all terms</field>
+            <field name="expected_hours">8.0</field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
         <record id="scrum_product_backlog_4" model="scrum.product.backlog">
             <field name="name">Bugfixes</field>
+            <field name="expected_hours">6.0</field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
         <record id="scrum_product_backlog_5" model="scrum.product.backlog">
             <field name="name">Test for 3.2.0 Publishing</field>
+            <field name="expected_hours">5.0</field>
             <field name="note">Test Open ERP to release stable 3.2.0 version. (may be 3.2.0-pre1 ?)</field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
         <record id="scrum_product_backlog_6" model="scrum.product.backlog">
             <field name="name">Reshape the complete menu</field>
+            <field name="expected_hours">4.0</field>
             <field name="note">Restrucutre the Open ERP menu to be more like others ERP.</field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
         <record id="scrum_product_backlog_7" model="scrum.product.backlog">
             <field name="name">Editable Trees</field>
+            <field name="expected_hours">12.0</field>
             <field name="note">Editable trees in list and one2many_list widgets.</field>
             <field name="sprint_id" ref="scrum_sprint_0"/>
             <field name="project_id" ref="scrum_project_1"/>
         </record>
-        
+
         <!-- Resource: project.task -->
-        
+
         <record id="scrum_task_3" model="project.task">
             <field name="planned_hours">4.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
@@ -185,6 +193,6 @@
             <field name="name">Editable trees</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_7"/>
         </record>
-        
+
     </data>
 </openerp>
