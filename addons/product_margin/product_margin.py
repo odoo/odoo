@@ -81,7 +81,7 @@ class product_product(osv.osv):
                     res[val.id]['purchase_gap']=res[val.id]['normal_cost']-res[val.id]['total_cost']
 
             if 'total_margin' in field_names:
-                res[val.id]['total_margin']=val.turnover-val.total_cost
+                res[val.id]['total_margin']=val.turnover-val.standard_price
             if 'expected_margin' in field_names:
                 res[val.id]['expected_margin']=val.sale_expected-val.normal_cost
             if 'total_margin_rate' in field_names:

@@ -65,17 +65,6 @@ class product_margin(osv.osv_memory):
             'search_view_id': id['res_id']
         }
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        """
-           
-
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: the ID or list of IDs if we want more than one
-
-            @return:
-        """
-        return {'type':'ir.actions.act_window_close'}
 
     _columns = {
         #TODO : import time required to get currect date
@@ -90,7 +79,7 @@ class product_margin(osv.osv_memory):
     }
     _defaults = {
         'from_date':  lambda *a:time.strftime('%Y-01-01'),
-        'to_date': lambda *a:time.strftime('%Y-01-01'),
+        'to_date':lambda *a:time.strftime('%Y-12-31'),
         'invoice_state': lambda *a:"open_paid",
     }
 product_margin()
