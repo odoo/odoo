@@ -39,13 +39,46 @@ def _generate_random_number():
 class share_create(osv.osv_memory):
     _name = 'share.create'
     _description = 'Create share'
+
+    def _access(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
+        res = {}
+        action_id = context.get('action_id', False)
+        access_obj = self.pool.get('ir.model.access')
+        action_obj = self.pool.get('ir.actions.act_window')
+        model_obj = self.pool.get('ir.model')
+        user_obj = self.pool.get('res.users')
+        current_user = user_obj.browse(cr, uid, uid)
+        access_ids = []
+        if action_id:
+            action = action_obj.browse(cr, uid, action_id, context=context)
+            active_model_ids = model_obj.search(cr, uid, [('model','=',action.res_model)])
+            active_model_id = active_model_ids and active_model_ids[0] or False
+            access_ids = access_obj.search(cr, uid, [
+                    ('group_id','in',map(lambda x:x.id, current_user.groups_id)),
+                    ('model_id','',active_model_id)])
+        for rec_id in ids:
+            write_access = False
+            read_access = False
+            for access in access_obj.browse(cr, uid, access_ids, context=context):
+                if access.perm_write:
+                    write_access = True
+                if access.perm_read:
+                    read_access = True
+            res[rec_id]['write_access'] = write_access
+            res[rec_id]['read_access'] = read_access          
+        return res
+
     _columns = {
-        'action_id': fields.many2one('ir.actions.actions', 'Home Action'),
+        'action_id': fields.many2one('ir.actions.act_window', 'Action', required=True),
         'domain': fields.char('Domain', size=64),
         'user_type': fields.selection( [ ('existing','Existing'),('new','New')],'User Type'),
         'user_ids': fields.many2many('res.users', 'share_user_rel', 'share_id','user_id', 'Share Users'),
         'new_user': fields.text("New user"),
         'access_mode': fields.selection( [ ('readonly','READ ONLY'),('readwrite','READ & WRITE')],'Access Mode'),
+        'write_access': fields.function(_access, method=True, string='Write Access',type='boolean', multi='write_access'),
+        'read_access': fields.function(_access, method=True, string='Write Access',type='boolean', multi='read_access'),
     }
     _defaults = {
         'user_type' : 'existing',
@@ -53,7 +86,23 @@ class share_create(osv.osv_memory):
         'access_mode': 'readonly'
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        """ 
+             To get default values for the object.
+        """ 
 
+        res = super(share_create, self).default_get(cr, uid, fields, context=context)               
+        if not context:
+            context={}
+        action_id = context.get('action_id', False)
+        domain = context.get('domain', '[]')  
+       
+                   
+        if 'action_id' in fields:
+            res['action_id'] = action_id
+        if 'domain' in fields:
+            res['domain'] = domain                             
+        return res
 
     def do_step_1(self, cr, uid, ids, context=None):
         """
