@@ -38,6 +38,11 @@
     """,
     "init_xml" : [],
     "demo_xml" : ["project_long_term_demo.xml"],
+    "test" : [
+#              'test/schedule_project_phases.yml',
+#              'test/schedule_project_tasks.yml',
+#              'test/schedule_phase_tasks.yml'
+              ],
     "update_xml": [
         "security/ir.model.access.csv",
         "project_long_term_wizard.xml" ,

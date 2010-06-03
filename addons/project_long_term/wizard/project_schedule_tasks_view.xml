@@ -8,12 +8,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               	<form string="Schedule Tasks">
-              		  <group height="90" width="250">
-	              		  <label string="Task Scheduling completed successfully."/>
-			              <group colspan="4" col="6">
-			            		<button  icon="gtk-ok" colspan="4" special="cancel" string="_Ok"/>
-			              </group>
-						</group>
+		              <group colspan="4" col="6" width="350" height="70">
+		              		<label string="Task Scheduling completed successfully."/>
+		              		<newline/>
+		            		<button  icon="gtk-ok" special="cancel" string="_Ok"/>
+		              </group>
 			  	</form>
             </field>
 		</record>

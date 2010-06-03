@@ -47,6 +47,10 @@
         'security/ir.model.access.csv',
      ],
     'demo_xml': ['project_issue_demo.xml'],
+    'test' : [
+#              'test/convert_issue_to_task.yml', 
+#              'test/test_project_issue_states.yml'
+            ],
     'installable': True,
     'active': False,
 }

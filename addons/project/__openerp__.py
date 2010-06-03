@@ -47,6 +47,9 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
     'demo_xml': [
         'project_demo.xml'
     ],
+    'test':[
+            'test/test_project.yml'
+            ],
     'installable': True,
     'active': False,
     'certificate': '0075116868317',

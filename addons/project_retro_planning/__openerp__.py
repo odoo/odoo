@@ -32,6 +32,9 @@
     'init_xml': [],
     'update_xml': [],
     'demo_xml': [],
+    'test' : [
+#              'test/deadline_change.yml'
+              ],
     'installable': True,
     'active': False,
     'certificate': '0057235475485',
