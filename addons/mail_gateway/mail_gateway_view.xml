@@ -8,32 +8,32 @@
             <field name="arch" type="xml">
                 <form string="mailgate message">
                     <group colspan="4" col="6">
-	                    <field name="name" required="1" select="1"/>
-	                    <field name="date" required="1" select="1"/>
-	                    <field name="user_id" string="Responsible" select="1"/>
-	                </group>	                
+                        <field name="name" required="1" select="1"/>
+                        <field name="date" required="1" select="1"/>
+                        <field name="user_id" string="Responsible" select="1"/>
+                    </group>
                     <notebook colspan="4">
-	                    <page string="Details">
-	                    	<group col="4" colspan="4">
-	                    		<separator string="Email Details" colspan="4"/>
-			                    <field name="email_from" />
-			                    <field name="email_to" />
-			                    <field name="email_cc" />
-			                    <field name="email_bcc" />
-			                    <field name="message_id" />
-			               </group>
-			               <separator string="Description" colspan="4"/>
+                        <page string="Details">
+                            <group col="4" colspan="4">
+                                <separator string="Email Details" colspan="4"/>
+                                <field name="email_from" />
+                                <field name="email_to" />
+                                <field name="email_cc" />
+                                <field name="email_bcc" />
+                                <field name="message_id" />
+                           </group>
+                           <separator string="Description" colspan="4"/>
                             <field name="description" nolabel="1" colspan="4" />
-		                </page>
-		                <page string="Attachments">
-		                	<separator string="Attachments" colspan="4"/>
-		                    <field name="attachment_ids" nolabel="1" colspan="4" readonly="1"/>
-                 		</page>
-	                </notebook>
+                        </page>
+                        <page string="Attachments">
+                            <separator string="Attachments" colspan="4"/>
+                            <field name="attachment_ids" nolabel="1" colspan="4" readonly="1"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_mailgate_message_tree">
             <field name="name">mailgate.message.tree</field>
             <field name="model">mailgate.message</field>
@@ -41,12 +41,12 @@
             <field name="arch" type="xml">
                 <tree string="Mailgateway Message">
                     <field name="date" />
-                    <field name="email_from" />                    
-                    <field name="user_id" />                    
+                    <field name="email_from" />
+                    <field name="user_id" />
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_mailgate_message_search">
             <field name="name">mailgate.message.search</field>
             <field name="model">mailgate.message</field>
@@ -56,11 +56,11 @@
                     <field name="name" />
                     <field name="date" />
                     <field name="user_id" />
-                    <field name="message_id" />                    
+                    <field name="message_id" />
                 </search>
             </field>
         </record>
-        
+
 
         <record model="ir.ui.view" id="view_mailgate_thread_form">
             <field name="name">mailgate.thread.form</field>
@@ -71,33 +71,33 @@
                     <field name="thread" select="1"/>
                     <separator string="Logs" colspan="4"/>
                     <field name="log_ids" nolabel="1" colspan="4" domain="[('history', '=', True)]">
-                    	<tree string="Mailgateway Logs">
-		                    <field name="name" select="1" />
-		                    <field name="date" />
-		                </tree>
-	                    <form string="Mailgate Logs">
-		                    <field name="name" />
-		                    <field name="date" />
-		                    <field name="user_id" />
-		                    <field name="message_id" />		                    
-		                    <notebook colspan="4">
-			                    <page string="Email Details">
-			                    	<group col="4" colspan="4">
-			                    		<separator string="Email Details" colspan="4"/>
-					                    <field name="email_from" />
-					                    <field name="email_to" />
-					                    <field name="email_cc" />
-					                    <field name="email_bcc" />
-					               </group>
-					               <separator string="Description" colspan="4"/>
+                        <tree string="Mailgateway Logs">
+                            <field name="name" select="1" />
+                            <field name="date" />
+                        </tree>
+                        <form string="Mailgate Logs">
+                            <field name="name" />
+                            <field name="date" />
+                            <field name="user_id" />
+                            <field name="message_id" />
+                            <notebook colspan="4">
+                                <page string="Email Details">
+                                    <group col="4" colspan="4">
+                                        <separator string="Email Details" colspan="4"/>
+                                        <field name="email_from" />
+                                        <field name="email_to" />
+                                        <field name="email_cc" />
+                                        <field name="email_bcc" />
+                                   </group>
+                                   <separator string="Description" colspan="4"/>
                                     <field name="description" nolabel="1" colspan="4" />
-				                </page>
-				                <page string="Attachments">
-				                	<separator string="Attachments" colspan="4"/>
-				                    <field name="attachment_ids" nolabel="1" colspan="4" />
-		                 		</page>
-			                </notebook>
-		                </form>
+                                </page>
+                                <page string="Attachments">
+                                    <separator string="Attachments" colspan="4"/>
+                                    <field name="attachment_ids" nolabel="1" colspan="4" />
+                                </page>
+                            </notebook>
+                        </form>
                     </field>
                     <separator string="Histories" colspan="4"/>
                     <field name="message_ids" nolabel="1" colspan="4" domain="[('history', '=', True)]">
@@ -131,7 +131,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_mailgate_thread_tree">
             <field name="name">mailgate.thread.tree</field>
             <field name="model">mailgate.thread</field>
@@ -143,40 +143,40 @@
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_view_mailgate_thread">
-	        <field name="name">Mailgateway Threads</field>
-	        <field name="res_model">mailgate.thread</field>
-	        <field name="view_mode">tree,form</field>
-	        <field name="view_type">form</field>
-	        <field name="view_id" ref="view_mailgate_thread_tree"/>
-	    </record>
-		
-		<record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view1">
-	        <field name="sequence" eval="1"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="view_mailgate_thread_tree"/>
-	        <field name="act_window_id" ref="action_view_mailgate_thread"/>
-	    </record>
-	    <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view2">
-	        <field name="sequence" eval="2"/>
-	        <field name="view_mode">form</field>
-	        <field name="view_id" ref="view_mailgate_thread_form"/>
-	        <field name="act_window_id" ref="action_view_mailgate_thread"/>
-	    </record>
-		
-		
-		 <!-- <menuitem id="base.menu_crm_configuration" name="Cases"
+            <field name="name">Mailgateway Threads</field>
+            <field name="res_model">mailgate.thread</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_mailgate_thread_tree"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view1">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_mailgate_thread_tree"/>
+            <field name="act_window_id" ref="action_view_mailgate_thread"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view2">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mailgate_thread_form"/>
+            <field name="act_window_id" ref="action_view_mailgate_thread"/>
+        </record>
+
+
+         <!-- <menuitem id="base.menu_crm_configuration" name="Cases"
             parent="base.menu_base_config" sequence="0"/>
 
         <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
-        	parent="base.menu_crm_configuration"  sequence="20"/>
-        	-->
+            parent="base.menu_crm_configuration"  sequence="20"/>
+            -->
         <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
             id="act_res_partner_emails" name="Emails"
             res_model="mailgate.message"
             src_model="res.partner"
-            view_id="view_mailgate_message_tree"            
+            view_id="view_mailgate_message_tree"
             />
 
     </data>

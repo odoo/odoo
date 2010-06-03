@@ -153,14 +153,11 @@ class rml_parse(report_sxw.rml_parse):
             return Stringer
 
     def _add_header(self, node, header=1):
-        if self.name == 'account.account.balance.landscape':
-            if header==2:
-                rml_head =  self.rml_header2
-            else:
-                rml_head =  self.rml_header
-            rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
+        if header==2:
+            rml_head =  self.rml_header2
         else:
-            return super(rml_parse, self)._add_header(node, header)
+            rml_head =  self.rml_header
+        rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
         return True
 
     # def _add_header(self, node):

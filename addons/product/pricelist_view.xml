@@ -97,6 +97,21 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="product_pricelist_view_search">
+            <field name="name">product.pricelist.search</field>
+            <field name="model">product.pricelist</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Products Price Search">
+                    <field name="name" />
+                    <field name="type"/>
+                    <field name="currency_id"/>
+                    <field name="active" />
+                </search>
+            </field>
+        </record>
+        
+
         <record id="product_pricelist_view_tree" model="ir.ui.view">
             <field name="name">product.pricelist.tree</field>
             <field name="model">product.pricelist</field>
@@ -145,6 +160,7 @@
             <field name="res_model">product.pricelist</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product_pricelist_view_search" />
         </record>
         <menuitem
             action="product_pricelist_action2" id="menu_product_pricelist_action2"
