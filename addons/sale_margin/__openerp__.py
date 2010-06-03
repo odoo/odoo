@@ -25,7 +25,7 @@
     "category" : "Generic Modules/Sales & Purchases",
     "depends":["sale"],
     "demo_xml":[],
-    "update_xml":["security/ir.model.access.csv","sale_margin_view.xml","report_margin_view.xml"],
+    "update_xml":["security/ir.model.access.csv","sale_margin_view.xml","report/report_margin_view.xml"],
     "active": False,
     "installable": True,
 }
