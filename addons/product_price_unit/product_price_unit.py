@@ -24,6 +24,8 @@ from osv import fields
 from tools.translate import _
 import decimal_precision as dp
 import time
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class product_price_unit(osv.osv):
     _name = "product.price.unit"
@@ -184,110 +186,6 @@ class product_product(osv.osv):
                 res[id][f] = stock.get(id, 0.0)
         return res
     
-    def get_product_available(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
-        states=context.get('states',[])
-        what=context.get('what',())
-        if not ids:
-            ids = self.search(cr, uid, [])
-        res = {}.fromkeys(ids, 0.0)
-        if not ids:
-            return res
-
-        if context.get('shop', False):
-            cr.execute('select warehouse_id from sale_shop where id=%s', (int(context['shop']),))
-            res2 = cr.fetchone()
-            if res2:
-                context['warehouse'] = res2[0]
-
-        if context.get('warehouse', False):
-            cr.execute('select lot_stock_id from stock_warehouse where id=%s', (int(context['warehouse']),))
-            res2 = cr.fetchone()
-            if res2:
-                context['location'] = res2[0]
-
-        if context.get('location', False):
-            if type(context['location']) == type(1):
-                location_ids = [context['location']]
-            else:
-                location_ids = context['location']
-        else:
-            location_ids = []
-            wids = self.pool.get('stock.warehouse').search(cr, uid, [], context=context)
-            for w in self.pool.get('stock.warehouse').browse(cr, uid, wids, context=context):
-                location_ids.append(w.lot_stock_id.id)
-
-        # build the list of ids of children of the location given by id
-        if context.get('compute_child',True):
-            child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
-            location_ids= len(child_location_ids) and child_location_ids or location_ids
-        else:
-            location_ids= location_ids
-
-        uoms_o = {}
-        product2uom = {}
-        for product in self.browse(cr, uid, ids, context=context):
-            product2uom[product.id] = product.uom_id.id
-            uoms_o[product.uom_id.id] = product.uom_id
-
-        results = []
-        results2 = []
-
-        from_date=context.get('from_date',False)
-        to_date=context.get('to_date',False)
-        date_str=False
-        if from_date and to_date:
-            date_str="date_planned>='%s' and date_planned<='%s'"%(from_date,to_date)
-        elif from_date:
-            date_str="date_planned>='%s'"%(from_date)
-        elif to_date:
-            date_str="date_planned<='%s'"%(to_date)
-
-        if 'in' in what:
-            # all moves from a location out of the set to a location in the set
-            cr.execute(
-                'select sum(product_qty), product_id, product_uom,sum(move_value) '\
-                'from stock_move '\
-                'where location_id <> ANY(%s)'\
-                'and location_dest_id =ANY(%s)'\
-                'and product_id =ANY(%s)'\
-                'and state in %s' + (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
-            )
-            results = cr.fetchall()
-        if 'out' in what:
-            # all moves from a location in the set to a location out of the set
-            cr.execute(
-                'select sum(product_qty), product_id, product_uom,sum(move_value) '\
-                'from stock_move '\
-                'where location_id = ANY(%s)'\
-                'and location_dest_id <> ANY(%s) '\
-                'and product_id =ANY(%s)'\
-                'and state in %s' + (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
-            )
-            results2 = cr.fetchall()
-        uom_obj = self.pool.get('product.uom')
-        uoms = map(lambda x: x[2], results) + map(lambda x: x[2], results2)
-        if context.get('uom', False):
-            uoms += [context['uom']]
-
-        uoms = filter(lambda x: x not in uoms_o.keys(), uoms)
-        if uoms:
-            uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
-        for o in uoms:
-            uoms_o[o.id] = o
-        for amount, prod_id, prod_uom,move_value in results:
-            amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                    uoms_o[context.get('uom', False) or product2uom[prod_id]])
-            res[prod_id] += amount
-        for amount, prod_id, prod_uom,move_value in results2:
-            amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                    uoms_o[context.get('uom', False) or product2uom[prod_id]])
-            res[prod_id] -= amount
-        return res
-    
     def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
         res = super(product_product, self)._product_available(cr, uid, ids, field_names, arg, context)
         for f in field_names:
@@ -388,51 +286,24 @@ class account_invoice_tax(osv.osv):
     _inherit = "account.invoice.tax"
     
     def compute(self, cr, uid, invoice_id, context={}):
-        tax_grouped = {}
+        tax_grouped = super(account_invoice_tax, self).compute(cr, uid, invoice_id, context)
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context)
-        cur = inv.currency_id
         company_currency = inv.company_id.currency_id.id
-
+        for t in tax_grouped.values():
+            t['base'] = 0.0
+            t['base_amount'] = 0.0
         for line in inv.invoice_line:
             for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0/line.price_unit_id.coefficient)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
-                val={}
-                val['invoice_id'] = inv.id
-                val['name'] = tax['name']
-                val['amount'] = tax['amount']
-                val['manual'] = False
-                val['sequence'] = tax['sequence']
-                val['base'] = tax['price_unit'] * line['quantity'] / line['price_unit_id'].coefficient
-
-                if inv.type in ('out_invoice','in_invoice'):
-                    val['base_code_id'] = tax['base_code_id']
-                    val['tax_code_id'] = tax['tax_code_id']
-                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
-                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
-                    val['account_id'] = tax['account_collected_id'] or line.account_id.id
-                else:
-                    val['base_code_id'] = tax['ref_base_code_id']
-                    val['tax_code_id'] = tax['ref_tax_code_id']
-                    val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
-                    val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['ref_tax_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
-                    val['account_id'] = tax['account_paid_id'] or line.account_id.id
-
-                key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
-                if not key in tax_grouped:
-                    tax_grouped[key] = val
-                else:
-                    tax_grouped[key]['amount'] += val['amount']
-                    tax_grouped[key]['base'] += val['base']
-                    tax_grouped[key]['base_amount'] += val['base_amount']
-                    tax_grouped[key]['tax_amount'] += val['tax_amount']
-
-        for t in tax_grouped.values():
-            t['amount'] = cur_obj.round(cr, uid, cur, t['amount'])
-            t['base_amount'] = cur_obj.round(cr, uid, cur, t['base_amount'])
-            t['tax_amount'] = cur_obj.round(cr, uid, cur, t['tax_amount'])
+                for t in tax_grouped.values():
+                    t['base'] += tax['price_unit'] * line['quantity'] / line['price_unit_id'].coefficient
+                    if inv.type in ('out_invoice','in_invoice'):
+                        t['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, t['base'] * tax['base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+                    else:
+                        t['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, t['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return tax_grouped
-
+    
 account_invoice_tax()
 
 class hr_expense_line(osv.osv):
@@ -635,158 +506,28 @@ class sale_order_line(osv.osv):
             inv_line_obj.write(cr, uid, created_ids, {'price_unit_id': pu_id})
         return created_ids
     
-    def product_id_change(self, cr, uid, ids, pricelist, price_unit_id, product, qty=0,
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, 
             fiscal_position=False, flag=False):
-        if not partner_id:
-            raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sale form !\nPlease set one customer before choosing a product.'))
-        warning = {}
-        product_uom_obj = self.pool.get('product.uom')
-        partner_obj = self.pool.get('res.partner')
-        product_obj = self.pool.get('product.product')
-        if partner_id:
-            lang = partner_obj.browse(cr, uid, partner_id).lang
-        context = {'lang': lang, 'partner_id': partner_id}
-
+        result = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, 
+            product, qty, uom, qty_uos, uos, name, partner_id, lang, 
+            update_tax, date_order, packaging, fiscal_position, flag)
         if not product:
-            return {'value': {'th_weight': 0, 'product_packaging': False,
-                'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                   'product_uos': []}}
+            return result
 
-        if not date_order:
-            date_order = time.strftime('%Y-%m-%d')
+        product_obj = self.pool.get('product.product')
+        product_obj = product_obj.browse(cr, uid, product)
+        pu_id = product_obj.price_unit_id.id
+        result['value']['price_unit_id'] = pu_id
 
-        result = {}
-        product_obj = product_obj.browse(cr, uid, product, context=context)
-        if product:
-            pu = self.pool.get('product.product').browse(cr, uid, product)
-            pu_id = pu.price_unit_id.id
-            #result['value']['price_unit_id'] = pu_id
-            result['price_unit_id'] = pu_id
-
-        if not packaging and product_obj.packaging:
-            packaging = product_obj.packaging[0].id
-            result['product_packaging'] = packaging
-
-        if packaging:
-            default_uom = product_obj.uom_id and product_obj.uom_id.id
-            pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
-            q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
-#            qty = qty - qty % q + q
-            if qty and (q and not (qty % q) == 0):
-                ean = pack.ean
-                qty_pack = pack.qty
-                type_ul = pack.ul
-                warn_msg = _("You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: ") % (qty)
-                warn_msg = warn_msg + "\n\n" + _("EAN: ") + str(ean) + _(" Quantity: ") + str(qty_pack) + _(" Type of ul: ") + str(type_ul.name)
-                warning = {
-                    'title': _('Picking Information !'),
-                    'message': warn_msg
-                    }
-            result['product_uom_qty'] = qty
-
-        if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product_obj.uom_id.category_id.id != uom2.category_id.id:
-                uom = False
-
-        if uos:
-            if product_obj.uos_id:
-                uos2 = product_uom_obj.browse(cr, uid, uos)
-                if product_obj.uos_id.category_id.id != uos2.category_id.id:
-                    uos = False
-            else:
-                uos = False        
-        if product_obj.description_sale:
-            result['notes'] = product_obj.description_sale
-        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
-        if update_tax: #The quantity only have changed
-            result['delay'] = (product_obj.sale_delay or 0.0)
-            partner = partner_obj.browse(cr, uid, partner_id)
-            result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
-            result.update({'type': product_obj.procure_method})
-
-        if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context)[0][1]
-        domain = {}
-        if (not uom) and (not uos):
-            result['product_uom'] = product_obj.uom_id.id
-            if product_obj.uos_id:
-                result['product_uos'] = product_obj.uos_id.id
-                result['product_uos_qty'] = qty * product_obj.uos_coeff
-                uos_category_id = product_obj.uos_id.category_id.id
-            else:
-                result['product_uos'] = False
-                result['product_uos_qty'] = qty
-                uos_category_id = False
-            result['th_weight'] = qty * product_obj.weight
-            domain = {'product_uom':
-                        [('category_id', '=', product_obj.uom_id.category_id.id)],
-                        'product_uos':
-                        [('category_id', '=', uos_category_id)]}
-
-        elif uos: # only happens if uom is False
-            result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
-            result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
-            result['th_weight'] = result['product_uom_qty'] * product_obj.weight
-        elif uom: # whether uos is set or not
-            default_uom = product_obj.uom_id and product_obj.uom_id.id
-            q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
-            if product_obj.uos_id:
-                result['product_uos'] = product_obj.uos_id.id
-                result['product_uos_qty'] = qty * product_obj.uos_coeff
-            else:
-                result['product_uos'] = False
-                result['product_uos_qty'] = qty
-            result['th_weight'] = q * product_obj.weight        # Round the quantity up
-
-        # get unit price
-
-        if not pricelist:
-            warning = {
-                'title': 'No Pricelist !',
-                'message':
-                    'You have to select a pricelist in the sale form !\n'
-                    'Please set one before choosing a product.'
-                }
-        else:
-            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom,
-                        'date': date_order,
-                        })[pricelist]
-            if price is False:
-                warning = {
-                    'title': 'No valid pricelist line found !',
-                    'message':
-                        "Couldn't find a pricelist line matching this product and quantity.\n"
-                        "You have to change either the product, the quantity or the pricelist."
-                    }
-            else:
-                result.update({'price_unit': price})
-
-        # FIX ME
         pname =  product_obj.name
         if product_obj.variants: 
             pname = pname + ' ['+product_obj.variants + ']'
         if product_obj.price_unit_id and product_obj.price_unit_id.coefficient != 1.0:
             pname = pname + ' (' + product_obj.price_unit_id.name + ')'
         result['name'] = pname
-        return {'value': result, 'domain': domain,'warning': warning}
-    
-    def product_uom_change(self, cursor, user, ids, pricelist,  product, price_unit_id=False, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False):
-        res = self.product_id_change(cursor, user, ids, pricelist, price_unit_id,product,
-                qty=0, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
-                partner_id=partner_id, lang=lang, update_tax=update_tax,
-                date_order=date_order)
-        if 'product_uom' in res['value']:
-            del res['value']['product_uom']
-        if not uom:
-            res['value']['price_unit'] = 0.0
-        return res
+        return result
     
 sale_order_line()
 
@@ -844,17 +585,9 @@ class purchase_order(osv.osv):
     }
     
     def inv_line_create(self, cr, uid, a, ol):
-        return (0, False, {
-            'name': ol.name,
-            'account_id': a,
-            'price_unit': ol.price_unit or 0.0,
-            'price_unit_id': ol.price_unit_id.id ,
-            'quantity': ol.product_qty,
-            'product_id': ol.product_id.id or False,
-            'uos_id': ol.product_uom.id or False,
-            'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
-            'account_analytic_id': ol.account_analytic_id.id,
-        })
+        result = super(purchase_order, self).inv_line_create(cr, uid, a, ol)
+        result[2].update({'price_unit_id': ol.price_unit_id.id})
+        return result
     
     def action_picking_create(self,cr, uid, ids, *args):
         picking_id = super(purchase_order, self).action_picking_create(cr, uid, ids, *args)
