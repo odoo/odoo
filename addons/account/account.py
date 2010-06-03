@@ -277,8 +277,8 @@ class account_account(osv.osv):
                 accounts[res['id']] = res
 
         # consolidate accounts with direct children
-        ids2.reverse()
-        brs = list(self.browse(cr, uid, ids2, context=context))
+        children_and_consolidated.reverse()
+        brs = list(self.browse(cr, uid, children_and_consolidated, context=context))
         sums = {}
         while brs:
             current = brs[0]
