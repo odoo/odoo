@@ -22,9 +22,15 @@
 import xml
 import copy
 from operator import itemgetter
-import time
 import datetime
 from report import report_sxw
+import xml.dom.minidom
+import os, time
+import osv
+import re
+import tools
+import pooler
+import sys
 
 class account_balance(report_sxw.rml_parse):
         _name = 'report.account.account.balance'
@@ -44,6 +50,10 @@ class account_balance(report_sxw.rml_parse):
             })
             self.context = context
 
+        def _add_header(self, node, header=1):
+            if header==0:
+                self.rml_header = "" 
+            return True
         def get_fiscalyear(self, form):
             res=[]
             if form.has_key('fiscalyear'):
@@ -56,16 +66,14 @@ class account_balance(report_sxw.rml_parse):
 
         def get_periods(self, form):
             result=''
-            if form.has_key('periods') and form['periods'][0][2]:
-                period_ids = form['periods'][0][2]
-                self.cr.execute("select name from account_period where id =ANY(%s)" ,(period_ids))
-                res = self.cr.fetchall()
-                len_res = len(res)
-                for r in res:
-                    if (r == res[len_res-1]):
-                        result+=r[0]+". "
+            if form.has_key('periods') and form['periods']:
+                period_ids = form['periods']
+                per_ids = self.pool.get('account.period').browse(self.cr,self.uid,form['periods'])
+                for r in per_ids:
+                    if r == per_ids[len(per_ids)-1]:
+                        result+=r.name+". "
                     else:
-                        result+=r[0]+", "
+                        result+=r.name+", "
             else:
                 fy_obj = self.pool.get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear'])
                 res = fy_obj.period_ids
@@ -172,5 +180,8 @@ class account_balance(report_sxw.rml_parse):
         def _sum_debit(self):
             return self.sum_debit
 
-report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=False)
+
+            
+
+report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=0)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

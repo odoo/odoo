@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-	
+
     <record id="view_hr_holidays_report_tree" model="ir.ui.view">
         <field name="name">hr.holidays.report.tree</field>
         <field name="model">hr.holidays.report</field>
@@ -9,7 +9,8 @@
         <field name="arch" type="xml">
             <tree string="Leaves Statistics">
                 <field name="date" invisible="1"/>
-                <field name="employee_id" invisible="1"/>
+                <field name="employee_id"/>
+                <field name="category_id"/>
                 <field name="user_id" invisible="1"/>
                 <field name="date_from" invisible="1"/>
                 <field name="date_to" invisible="1"/>
@@ -44,6 +45,13 @@
         <field name="arch" type="xml">
             <search string="Leaves">
             	<group>
+                    <filter icon="terp-hr" string="Employee"
+                            domain="[('category_id', '=', False)]"
+                            help="Leaves by empolyee"/>
+                    <filter icon="terp-hr" string="Category"
+                            domain="[('employee_id', '=', False)]"
+                            help="Leaves by category"/>
+	            	<separator orientation="vertical"/>
 	            	<filter icon="terp-hr" string="This Year"
 		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 		                    help="Leaves in this year"/>
@@ -70,16 +78,12 @@
 	               		domain="[('state','=','validate')]"
 	               		help = "Pending Leaves"/>
 					<separator orientation="vertical"/>
-					<field name="employee_id"/>
+					<field name="employee_id" widget="selection"/>
 	                <field name="user_id" widget="selection">
-	                    <filter icon="terp-hr"
-	                        string="My Leaves"
-	                        domain="[('user_id','=',uid)]"/>
 	                </field>
 	            </group>
                 <newline/>
-                <group expand="1" string="Group By...">
-                    <filter string="Employee" name="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Type" icon="terp-hr" context="{'group_by':'holiday_status_id'}"/>
@@ -91,35 +95,34 @@
                     <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended options..." groups="base.group_extended">
+                <group expand="0" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-hr"
-                    		string="Refused"
+                            string="Refused"
                         name="done"
-                    		domain="[('state','=','refuse')]"/>
+                            domain="[('state','=','refuse')]"/>
                     <separator orientation="vertical"/>
                     <field name="date_from"/>
                     <separator orientation="vertical"/>
                     <field name="holiday_status_id" widget="selection"/>
                     <newline/>
                     <filter icon="terp-hr"
-                    		string="Cancelled"
-                    		domain="[('state','=','cancel')]"/>
+                            string="Cancelled"
+                            domain="[('state','=','cancel')]"/>
                     <separator orientation="vertical"/>
-                	<field name="date_to"/>
-                	<separator orientation="vertical"/>
-                	<field name="department_id" widget="selection"/>
+                    <field name="date_to"/>
+                    <separator orientation="vertical"/>
+                    <field name="department_id" widget="selection"/>
                 </group>
-
             </search>
         </field>
     </record>
 
     <record id="action_hr_holidays_report_all" model="ir.actions.act_window">
-        <field name="name">Leaves By Employee</field>
+        <field name="name">Leaves</field>
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_Employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{"search_default_user_id": uid, 'search_default_month':1,'search_default_Employee':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 
@@ -150,6 +153,6 @@
             </graph>
         </field>
     </record>
-    
+
     </data>
 </openerp>

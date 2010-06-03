@@ -54,6 +54,7 @@
     'demo_xml': ['hr_expense_demo.xml',
 #                'hr.expense.expense.csv'
                 ],
+    'test': ['test/test_hr_expense.yml'],            
     'installable': True,
     'active': False,
     'certificate': '0062479841789',

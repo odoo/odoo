@@ -341,7 +341,7 @@
                     <field name="location_dest_id" />
                     <field name="date" />
                     <field name="date_planned" string="Date"/>
-                     <field name="date_expected" string="Date Expected"/>                    
+                     <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -653,7 +653,7 @@
                                             <field colspan="4" invisible="1" name="name"/>
                                             <field invisible="1" name="date"/>
                                             <field name="date_planned"/>
-                                             <field name="date_expected" string="Date Expected"/>                                            
+                                             <field name="date_expected" string="Date Expected"/>
                                             <field name="address_id" context="{'contact_display':'partner'}"/>
                                             <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                             <field name="prodlot_id" groups="base.group_extended"
@@ -779,7 +779,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
-                                     <field name="date_expected" string="Date Expected"/>                                    
+                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
                                     <button
                                            name="%(stock.track_line)d"
@@ -806,7 +806,7 @@
                                             <field colspan="4" invisible="1" name="name"/>
                                             <field invisible="1" name="date"/>
                                             <field name="date_planned"/>
-                                             <field name="date_expected"  string="Date Expected"/>                                            
+                                             <field name="date_expected"  string="Date Expected"/>
                                             <field groups="base.group_extended" name="product_packaging"  domain="[('product_id','=',product_id)]"/>
                                             <field name="prodlot_id" groups="base.group_extended"
                                                 context="{'location_id':location_id, 'product_id':product_id}"
@@ -960,7 +960,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
-                                     <field name="date_expected" string="Date Expected"/>                                    
+                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
                                     <button
                                            name="%(stock.track_line)d"
@@ -987,7 +987,7 @@
                                             <field colspan="4" invisible="1" name="name"/>
                                             <field invisible="1" name="date"/>
                                             <field name="date_planned"/>
-                                             <field name="date_expected"  string="Date Expected"/>                                            
+                                             <field name="date_expected"  string="Date Expected"/>
                                             <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
                                             <field name="prodlot_id" groups="base.group_extended"
                                                 context="{'location_id':location_id, 'product_id':product_id}"
@@ -1162,7 +1162,7 @@
                                             <field groups="product.group_uos" name="product_uos_qty"/>
                                             <field colspan="4" invisible="1" name="name" />
                                             <field groups="base.group_extended" name="date_planned"/>
-                                             <field name="date_expected" groups="base.group_extended" string="Date Expected"/>                                            
+                                             <field name="date_expected" groups="base.group_extended" string="Date Expected"/>
                                             <newline/>
                                             <newline/>
                                             <field groups="base.group_extended" name="product_packaging" domain="[('product_id','=',product_id)]"/>
@@ -1224,6 +1224,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="address_id"/>
+                        <field name="origin"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company" />
                     </group>
                     <newline/>
@@ -1234,8 +1235,6 @@
                         <separator orientation="vertical" />
                         <filter string="Order Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-stock" domain="[]"  context="{'group_by':'min_date'}"/>
-                        <separator orientation="vertical" />
-                        <filter string="Origin" icon="terp-stock" domain="[]" context="{'group_by':'origin'}"/>
                     </group>
                 </search>
             </field>
@@ -1363,7 +1362,7 @@
                                 <separator string="Dates &amp; Priority" colspan="2" />
                                 <field name="date"/>
                                 <field name="date_planned"/>
-                                <field name="date_expected"/>                                
+                                <field name="date_expected"/>
                                 <field name="priority"/>
                             </group>
 
@@ -1477,12 +1476,12 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <separator colspan="4" string="Move Information"/>
-                            <field name="location_id"/>
-                            <field name="location_dest_id"/>
+                            <field name="location_id" widget="selection"/>
+                            <field name="location_dest_id" widget="selection"/>
                             <field colspan="4" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id, parent.address_id)"/>
                             <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                            <field name="product_uom"/>
-                            <field name="product_uos"/>
+                            <field name="product_uom" widget="selection"/>
+                            <field name="product_uos" widget="selection" groups="base.group_extended"/>
                             <field colspan="4" name="name"/>
                             <field name="date"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -1499,8 +1498,10 @@
                                 on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
                             <field name="tracking_id"/>
                             <newline/>
-                            <label/>
-                            <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+                            <group col="2" colspan="2">
+                                <label/>
+                                <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill"/>
+                            </group>
                             <separator colspan="4" string="Move State"/>
                             <field name="state"/>
                             <group col="5" colspan="2">
@@ -1543,7 +1544,9 @@
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Order Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Expected Date" icon="terp-stock" domain="[]" context="{'group_by':'date_expected'}" />
                     </group>
                 </search>
             </field>
