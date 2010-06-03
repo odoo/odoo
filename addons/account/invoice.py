@@ -952,6 +952,11 @@ class account_invoice(osv.osv):
 
     def _log_event(self, cr, uid, ids, factor=1.0, name='Open Invoice'):
         #TODO: implement messages system
+         for invoice in self.browse(cr, uid, ids):
+            for (id,number) in self.name_get(cr, uid, ids):
+                inv_number = number.split('/')[-1]
+                message = _('Invoice ') + " '" + _('INV/')+ inv_number + "' "+ _("Opened,")+_('journal entries')+ "' " + invoice.move_id.name + "' "+_("Created")
+                self.log(cr, uid, id, message)
             return True
 
     def name_get(self, cr, uid, ids, context=None):
