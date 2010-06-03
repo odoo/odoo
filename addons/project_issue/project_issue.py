@@ -113,7 +113,7 @@ class project_issue(osv.osv, crm.crm_case):
         'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'id': fields.integer('ID'),  
         'name': fields.char('Name', size=128, required=True),
-        'active': fields.boolean('Active', required=False),
+        'active': fields.boolean('Active', required=False), 
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Update Date' , readonly=True),
         'date_deadline': fields.date('Deadline'),

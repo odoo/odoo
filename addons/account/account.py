@@ -124,10 +124,10 @@ class account_account_type(osv.osv):
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
         'report_type':fields.selection([
             ('none','/'),
-            ('income','Profilt & Loss (Income Accounts)'),
-            ('expanse','Profilt & Loss (Expanse Accounts)'),
+            ('income','Profit & Loss (Income Accounts)'),
+            ('expense','Profit & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
-            ('liabilities','Balance Sheet (Liabilities Accounts)')
+            ('liability','Balance Sheet (Liability Accounts)')
         ],'Type Heads', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)"),
         'parent_id':fields.many2one('account.account.type', 'Parent Type', required=False),
         'child_ids':fields.one2many('account.account.type', 'parent_id', 'Child Types', required=False),
@@ -170,6 +170,19 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
+
+    def _get_children_and_consol(self, cr, uid, ids, context={}):
+        ids2=[]
+        temp=[]
+        read_data= self.read(cr, uid, ids,['id','child_id'], context)
+        for data in read_data:
+            ids2.append(data['id'])
+            if data['child_id']:
+                temp=[]
+                for x in data['child_id']:
+                    temp.append(x)
+                ids2 += self._get_children_and_consol(cr, uid, temp, context)
+        return ids2
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -297,6 +310,17 @@ class account_account(osv.osv):
 
         return result
 
+    def _get_level(self, cr, uid, ids, field_name, arg, context={}):
+        res={}
+        accounts = self.browse(cr, uid, ids)
+        for account in accounts:
+            level = 0
+            if account.parent_id :
+                obj = self.browse(cr, uid, account.parent_id.id)
+                level = obj.level + 1
+            res[account.id] = level
+        return res
+
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
@@ -343,6 +367,7 @@ class account_account(osv.osv):
         'check_history': fields.boolean('Display History',
             help="Check this box if you want to print all entries when printing the General Ledger, "\
             "otherwise it will only print its balance."),
+        'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -452,7 +477,7 @@ class account_account(osv.osv):
     def _check_moves(self, cr, uid, ids, method, context):
         line_obj = self.pool.get('account.move.line')
         account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
-        
+
         if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
             if method == 'write':
                 raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
@@ -486,7 +511,7 @@ class account_account(osv.osv):
             context = {}
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context)
-        if 'type' in vals.keys(): 
+        if 'type' in vals.keys():
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
@@ -534,7 +559,7 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=16),
-        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('cash', 'Cash'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
@@ -658,7 +683,7 @@ class account_fiscalyear(osv.osv):
             else:
                 return False
         return ids[0]
-    
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
             args = []
@@ -670,7 +695,7 @@ class account_fiscalyear(osv.osv):
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
-    
+
 account_fiscalyear()
 
 class account_period(osv.osv):
@@ -746,7 +771,7 @@ class account_period(osv.osv):
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
-    
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
             args = []
@@ -892,7 +917,7 @@ class account_move(osv.osv):
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
-        'date': fields.date('Date', required=True),
+        'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
             ('bank_pay_voucher','Bank Payment'),
@@ -902,7 +927,7 @@ class account_move(osv.osv):
             ('journal_sale_vou','Journal Sale'),
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
-        ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
+            ],'Entry Type', select=True , size=128, readonly=True, states={'draft':[('readonly',False)]}),
         'narration':fields.text('Narration', readonly=True, select=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
@@ -1350,7 +1375,7 @@ class account_tax_code(osv.osv):
                 return False
             level -= 1
         return True
-    
+
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -1358,7 +1383,7 @@ class account_tax_code(osv.osv):
         default = default.copy()
         default.update({'line_ids': []})
         return super(account_tax_code, self).copy(cr, uid, id, default, context)
-    
+
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
@@ -1940,13 +1965,12 @@ class account_add_tmpl_wizard(osv.osv_memory):
         if not tids or not tids[0]['parent_id']:
             return False
         ptids = tmpl_obj.read(cr, uid, [tids[0]['parent_id'][0]],['code'])
+        res = None
         if not ptids or not ptids[0]['code']:
             raise osv.except_osv(_('Error !'), _('Cannot locate parent code for template account!'))
             res = acc_obj.search(cr,uid,[('code','=',ptids[0]['code'])])
-        if res:
-            return res[0]
-        else:
-            return False
+
+        return res and res[0] or False
 
     _columns = {
         'cparent_id':fields.many2one('account.account', 'Parent target', help="Creates an account with the selected template under this existing parent.", required=True),

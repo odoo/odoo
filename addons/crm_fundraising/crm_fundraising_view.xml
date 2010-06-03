@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+           <!-- Fund Raising Configuration Menu -->
+        <menuitem id="menu_config_fundrising" name="Fund Raising"
+        groups="base.group_extended"
+        parent="base.menu_base_config" sequence="7" />
 
         <!-- Fund Raising Categories Form View -->
 
@@ -13,9 +17,9 @@
             <field name="context">{'object_id':'crm.fundraising'}</field>
         </record>
 
-        <menuitem action="crm_fund_categ_action"
+       <menuitem action="crm_fund_categ_action" name="Categories"
             id="menu_crm_case_fundraising-act" groups="base.group_extended"
-            parent="crm.menu_crm_case_categ" />
+            parent="menu_config_fundrising" />
 
         <!-- Fund Stage Form View -->
 
@@ -28,10 +32,11 @@
             <field name="context">{'object_id':'crm.fundraising'}</field>
         </record>
 
-        <menuitem action="crm_fundraising_stage_act"
-            groups="base.group_extended"
+         <menuitem action="crm_fundraising_stage_act"
+            groups="base.group_extended" name="Stages"
             id="menu_crm_fundraising_stage_act"
-            parent="crm.menu_crm_case_stage" />
+            parent="menu_config_fundrising" />
+
 
         <!-- Fund Resource Type Form View -->
 
@@ -44,10 +49,10 @@
             <field name="context">{'object_id':'crm.fundraising'}</field>
         </record>
 
-        <menuitem action="crm_fundraising_resource_act"
-            groups="base.group_extended"
+       <menuitem action="crm_fundraising_resource_act"
+            groups="base.group_extended" name="Resource Type"
             id="menu_crm_fundraising_resource_act"
-            parent="crm.menu_crm_case_resource_type" />
+            parent="menu_config_fundrising" />
 
 
         <!-- Fund Raising Tree View -->
@@ -195,18 +200,25 @@
                                         <field name="email_to"/>
                                         <field name="email_from"/>
                                     </group>
-                                    <newline/>
-                                    <field name="description" colspan="4" nolabel="1"/>
+                                    <notebook colspan="4">
+                                        <page string="Details">
+                                            <field name="description" colspan="4" nolabel="1"/>
+                                        </page>
+                                        <page string="Attachments">
+                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                        </page>
+                                    </notebook>
                                     <button colspan="4"
-                                        string="Reply to Last Email"
-                                        name="%(crm.action_crm_send_mail)d"
-                                        context="{'mail':'reply', 'model': 'crm.fundraising'}"
-                                        icon="gtk-undo" type="action" />
+                                    string="Reply to Last Email"
+                                    name="%(crm.action_crm_send_mail)d"
+                                    context="{'mail':'reply', 'model': 'crm.fundraising'}"
+                                    icon="gtk-undo" type="action" />
                                 </form>
                                 <tree string="Communication history">
-                                    <field name="description"/>
-                                    <field name="email_to"/>
                                     <field name="date"/>
+                                    <field name="email_from" />
+                                    <field name="email_to"/>
+                                    <field name="description"/>
                                 </tree>
                             </field>
                             <button colspan="4" string="Send New Email"

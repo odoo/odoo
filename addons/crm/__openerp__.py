@@ -108,13 +108,13 @@ between mails and Open ERP.""",
         'crm_phonecall_demo.xml'
     ],
     'test': [
-#            'test/test_crm_lead.yml', 
-#            'test/test_crm_meeting.yml', 
-#            'test/test_crm_opportunity.yml', 
-#            'test/test_crm_phonecall.yml', 
-             ], 
-    'installable': True, 
-    'active': False, 
+            'test/test_crm_lead.yml',
+            'test/test_crm_meeting.yml',
+            'test/test_crm_opportunity.yml',
+            'test/test_crm_phonecall.yml',
+             ],
+    'installable': True,
+    'active': False,
     'certificate': '0079056041421',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
