@@ -105,7 +105,7 @@
                         <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
                         <field name="invoiced"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook colspan="5">
                         <page string="Sale Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
@@ -188,7 +188,7 @@
                                 </tree>
                             </field>
                             <newline/>
-                            <group col="8" colspan="5">
+                            <group col="10" colspan="5">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
