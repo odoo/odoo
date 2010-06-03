@@ -309,8 +309,6 @@ class product_product(osv.osv):
         'price_unit_id': _get_price_unit_id,
     }
     
-        # FIXME - check does not raise error
-#     allow_negative_stock is defined for product_template
     def _check_allow_negative_stock(self, cr, uid, ids):
         for product in self.browse(cr, uid, ids):
             if product.qty_available < 0.0:
@@ -321,7 +319,7 @@ class product_product(osv.osv):
                    return False
         return True
 
-    _constraints = [ (_check_allow_negative_stock, 'Error: Negative stock quantities are not allowed for this product or product category', ['name']), ]
+    _constraints = [(_check_allow_negative_stock, 'Error: Negative stock quantities are not allowed for this product or product category', ['name']),]
 
     
     def on_change_price_unit(self, cr, uid, ids,price_unit_id,standard_price,list_price):
@@ -772,7 +770,7 @@ class sale_order_line(osv.osv):
         pname =  product_obj.name
         if product_obj.variants: 
             pname = pname + ' ['+product_obj.variants + ']'
-        if product_obj.price_unit_id.coefficient != 1.0:
+        if product_obj.price_unit_id and product_obj.price_unit_id.coefficient != 1.0:
             pname = pname + ' (' + product_obj.price_unit_id.name + ')'
         result['name'] = pname
         return {'value': result, 'domain': domain,'warning': warning}
