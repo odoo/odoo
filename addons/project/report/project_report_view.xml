@@ -58,7 +58,7 @@
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
                 	<group colspan="10" col="12">
-	                    <filter icon="gtk-media-rewind" string="  365 Days  "
+	                    <filter icon="terp-go-year" string="  365 Days  "
 	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Tasks performed in last 365 Days"/>
 	                    <filter icon="terp-go-month" string="   30 Days   "
@@ -107,7 +107,7 @@
 	                    </field>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="12">
+                    <group expand="0" string="Group By..." colspan="10" col="12">
                         <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}" />
                         <filter string="Project" icon="terp-folder-blue" context="{'group_by':'project_id'}"/>
                         <separator orientation="vertical"/>
