@@ -172,13 +172,13 @@ httpsd = None
 
 def init_servers():
     global httpd, httpsd
-    if tools.config.get_misc('httpd','enable', True):
-        httpd = HttpDaemon(tools.config.get_misc('httpd','interface', ''), \
-            int(tools.config.get_misc('httpd','port', tools.config.get('port',8069))))
+    if tools.config.get('xmlrpc'):
+        httpd = HttpDaemon(tools.config.get('xmlrpc_interface', ''),
+                           int(tools.config.get('xmlrpc_port', 8069)))
 
-    if tools.config.get_misc('httpsd','enable', False):
-        httpsd = HttpSDaemon(tools.config.get_misc('httpsd','interface', ''), \
-            int(tools.config.get_misc('httpsd','port', 8071)))
+    if tools.config.get('xmlrpcs'):
+        httpsd = HttpSDaemon(tools.config.get('xmlrpcs_interface', ''),
+                             int(tools.config.get('xmlrpcs_port', 8071)))
 
 def reg_http_service(hts, secure_only = False):
     """ Register some handler to httpd.
@@ -226,14 +226,17 @@ class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,SimpleXMLRPCSer
 
 
 def init_xmlrpc():
-    if not tools.config.get_misc('xmlrpc','enable', True):
-        return
-    reg_http_service(HTTPDir('/xmlrpc/',XMLRPCRequestHandler))
-    # Example of http file serving:
-    # reg_http_service(HTTPDir('/test/',HTTPHandler))
-    netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO,
-            "Registered XML-RPC over HTTP")
+    if tools.config.get('xmlrpc', False):
+        # Example of http file serving:
+        # reg_http_service(HTTPDir('/test/',HTTPHandler))
+        reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler))
+        netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO,
+                                      "Registered XML-RPC over HTTP")
 
+    if tools.config.get('xmlrpcs', False):
+        reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler, True))
+        netsvc.Logger().notifyChannel('web-services', netsvc.LOG_INFO,
+                                      "Registered XML-RPC over HTTPS")
 
 class OerpAuthProxy(AuthProxy):
     """ Require basic authentication..

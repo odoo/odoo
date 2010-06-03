@@ -40,10 +40,12 @@ class configmanager(object):
     def __init__(self, fname=None):
         self.options = {
             'email_from':False,
-            'interface': '',    # this will bind the server to all interfaces
-            'port': 8069,
-            'netinterface': '',
-            'netport': 8070,
+            'xmlrpc_interface': '',    # this will bind the server to all interfaces
+            'xmlrpc_port': 8069,
+            'netrpc_interface': '',
+            'netrpc_port': 8070,
+            'xmlrpcs_interface': '',    # this will bind the server to all interfaces
+            'xmlrpcs_port': 8071,
             'db_host': False,
             'db_port': False,
             'db_name': False,
@@ -53,7 +55,7 @@ class configmanager(object):
             'reportgz': False,
             'netrpc': True,
             'xmlrpc': True,
-            'soap': False,
+            'xmlrpcs': True,
             'translate_in': None,
             'translate_out': None,
             'language': None,
@@ -74,7 +76,6 @@ class configmanager(object):
             'smtp_password': False,
             'stop_after_init': False,   # this will stop the server after initialization
             'price_accuracy': 2,
-            'secure' : False,
             'syslog' : False,
             'log_level': logging.INFO,
             'assert_exit_level': logging.ERROR, # level above which a failed assert will be raised
@@ -101,12 +102,27 @@ class configmanager(object):
                           help="save configuration to ~/.openerp_serverrc")
         parser.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
 
-        parser.add_option("-n", "--interface", dest="interface", help="specify the TCP IP address")
-        parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
-        parser.add_option("--net_interface", dest="netinterface", help="specify the TCP IP address for netrpc")
-        parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc", type="int")
-        parser.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable netrpc")
-        parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable xmlrpc")
+        group = optparse.OptionGroup(parser, "XML-RPC Configuration")
+        group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", help="specify the TCP IP address for the XML-RPC protocol")
+        group.add_option("--xmlrpc-port", dest="xmlrpc_port", help="specify the TCP port for the XML-RPC protocol", type="int")
+        group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable the XML-RPC protocol")
+        parser.add_option_group(group)
+
+        if self.has_ssl:
+            group = optparse.OptionGroup(parser, "XML-RPC Secure Configuration")
+            group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", help="specify the TCP IP address for the XML-RPC Secure protocol")
+            group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", help="specify the TCP port for the XML-RPC Secure protocol", type="int")
+            group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", help="disable the XML-RPC Secure protocol")
+            group.add_option("--cert-file", dest="secure_cert_file", default="server.cert", help="specify the certificate file for the SSL connection")
+            group.add_option("--pkey-file", dest="secure_pkey_file", default="server.pkey", help="specify the private key file for the SSL connection")
+            parser.add_option_group(group)
+
+        group = optparse.OptionGroup(parser, "NET-RPC Configuration")
+        group.add_option("--netrpc-interface", dest="netrpc_interface", help="specify the TCP IP address for the NETRPC protocol")
+        group.add_option("--netrpc-port", dest="netrpc_port", help="specify the TCP port for the NETRPC protocol", type="int")
+        group.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable the NETRPC protocol")
+        parser.add_option_group(group)
+
         parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
         parser.add_option("--without-demo", dest="without_demo",
                           help="load demo data for a module (use \"all\" for all modules)", default=False)
@@ -123,18 +139,6 @@ class configmanager(object):
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='deprecated since v6.0, replaced by module decimal_precision')
-
-        if self.has_ssl:
-            group = optparse.OptionGroup(parser, "SSL Configuration")
-            group.add_option("-S", "--secure", dest="secure",
-                             help="launch server over https instead of http")
-            group.add_option("--cert-file", dest="secure_cert_file",
-                              default="server.cert",
-                              help="specify the certificate file for the SSL connection")
-            group.add_option("--pkey-file", dest="secure_pkey_file",
-                              default="server.pkey",
-                              help="specify the private key file for the SSL connection")
-            parser.add_option_group(group)
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
@@ -248,26 +252,28 @@ class configmanager(object):
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
 
-        keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
+        keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout','smtp_ssl',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
-                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path',
+                'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
 
         if self.has_ssl:
-            keys.extend(['secure_cert_file', 'secure_pkey_file'])
-            keys.append('secure')
+            keys.extend([
+                'xmlrpcs_interface',
+                'xmlrpcs_port',
+                'xmlrpcs',
+                'secure_cert_file',
+                'secure_pkey_file']
+            )
 
         for arg in keys:
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
+                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'xmlrpcs', 'syslog',
                 'list_db', 'server_actions_allow_code']
-
-        if self.has_ssl and not self.options['secure']:
-            keys.append('secure')
 
         for arg in keys:
             if getattr(opt, arg) is not None:

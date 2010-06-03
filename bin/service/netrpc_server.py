@@ -26,7 +26,6 @@
 import netsvc
 import threading
 import tools
-import os
 import select
 import socket
 
@@ -152,6 +151,7 @@ netrpcd = None
 
 def init_servers():
     global netrpcd
-    if tools.config.get_misc('netrpcd','enable', True):
-        netrpcd = TinySocketServerThread(tools.config.get_misc('netrpcd','interface', ''), \
-            int(tools.config.get_misc('netrpcd','port', tools.config.get('netport', 8070))))
+    if tools.config.get('netrpc', False):
+        netrpcd = TinySocketServerThread(
+            tools.config.get('netrpc_interface', ''), 
+            int(tools.config.get('netrpc_port', 8070)))
