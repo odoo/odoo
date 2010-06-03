@@ -55,10 +55,11 @@ class mrp_procurement(osv.osv):
                     break
             
             # Creating a project for task.Project is created from Procurement.
+            project_obj = self.pool.get('project.project')
             proj_name = tools.ustr(so_ref)
-            proj_exist_id = self.pool.get('project.project').search(cr, uid, [('name','=',proj_name)], context=context)
+            proj_exist_id = project_obj.search(cr, uid, [('name','=',proj_name)], context=context)
             if  not proj_exist_id:
-                project_id = self.pool.get('project.project').create(cr, uid, {'name':proj_name,'category_id':analytic_account_id, 'partner_id':partner_id})
+                project_id = project_obj.create(cr, uid, {'name':proj_name, 'partner_id':partner_id})
             else:
                 project_id = proj_exist_id[0]
                 

@@ -29,7 +29,7 @@ class scrum_project(osv.osv):
     _inherit = 'project.project'
     _columns = {
         'product_owner_id': fields.many2one('res.users', 'Product Owner'),
-        'sprint_size': fields.integer('Sprint Days'),
+        'sprint_size': fields.integer('Sprint Days',help="Number of days allocated for sprint"),
         'scrum': fields.integer('Is a Scrum Project'),
     }
     _defaults = {
@@ -105,7 +105,7 @@ class scrum_sprint(osv.osv):
         'date_start': fields.date('Starting Date', required=True),
         'date_stop': fields.date('Ending Date', required=True),
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
-        'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True),
+        'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True,help="The person who is responsible for the product"),
         'scrum_master_id': fields.many2one('res.users', 'Scrum Manager', required=True),
         'meeting_ids': fields.one2many('scrum.meeting', 'sprint_id', 'Daily Scrum'),
         'review': fields.text('Sprint Review'),
@@ -189,7 +189,7 @@ class scrum_product_backlog(osv.osv):
         for bl in self.browse(cr, uid, ids):
             res.setdefault(bl.id, 0.0)
             for task in bl.tasks_id:
-                res[bl.id] += task.planned_hours
+                res[bl.id] += task.total_hours
         return res
 
     def button_cancel(self, cr, uid, ids, context={}):
@@ -251,7 +251,7 @@ class scrum_task(osv.osv):
                 result[task.id] = True
         return result.keys()
     _columns = {
-        'product_backlog_id': fields.many2one('scrum.product.backlog', 'Product Backlog'),
+        'product_backlog_id': fields.many2one('scrum.product.backlog', 'Product Backlog',help="Related product backlog that contains this task. Used in SCRUM methodology"),
         'sprint_id': fields.related('product_backlog_id','sprint_id', type='many2one', relation='scrum.sprint', string='Sprint',
             store={
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['product_backlog_id'], 10),

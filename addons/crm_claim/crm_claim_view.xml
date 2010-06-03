@@ -2,6 +2,10 @@
 <openerp>
     <data>
 
+    <menuitem id="menu_config_claim" name="Claim"
+        groups="base.group_extended"
+        parent="base.menu_base_config" sequence="8" />
+
     <!-- Claims categories  -->
 
     <record id="crm_claim_categ_action" model="ir.actions.act_window">
@@ -13,8 +17,9 @@
         <field name="context">{'object_id':'crm.claim'}</field>
     </record>
 
-    <menuitem action="crm_claim_categ_action"
-        id="menu_crm_case_claim-act" parent="crm.menu_crm_case_categ" />
+    <menuitem action="crm_claim_categ_action" name="Categories"
+        id="menu_crm_case_claim-act" parent="menu_config_claim" />
+
 
     <!-- Claim Stages -->
 
@@ -27,8 +32,8 @@
         <field name="context">{'object_id':'crm.claim'}</field>
     </record>
 
-    <menuitem action="crm_claim_stage_act"
-            id="menu_crm_claim_stage_act" parent="crm.menu_crm_case_stage" />
+     <menuitem action="crm_claim_stage_act" name="Stages"
+            id="menu_crm_claim_stage_act" parent="menu_config_claim" />
 
     <!-- Claim Resource Type -->
 
@@ -41,9 +46,9 @@
         <field name="context">{'object_id':'crm.claim'}</field>
     </record>
 
-    <menuitem action="crm_claim_resource_act"
+     <menuitem action="crm_claim_resource_act" name="Resource Type"
             id="menu_crm_claim_stage_act"
-            parent="crm.menu_crm_case_resource_type" />
+            parent="menu_config_claim" />
 
         <!-- Claims    -->
 
