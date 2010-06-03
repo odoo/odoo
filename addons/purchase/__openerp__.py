@@ -56,7 +56,9 @@
              'test/purchase_from_manual.yml',
 #             'test/purchase_from_picking.yml',
     ],
-    'demo_xml': ['purchase_demo.xml','purchase_unit_test.xml'],
+    'demo_xml': ['purchase_demo.xml',
+#                 'purchase_unit_test.xml'
+                 ],
     'installable': True,
     'active': False,
     'certificate': '0057234283549',
