@@ -862,7 +862,6 @@ class account_invoice(osv.osv):
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
-        self._log_event(cr, uid, ids)
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -916,6 +915,7 @@ class account_invoice(osv.osv):
                         'WHERE account_move_line.move_id = %s ' \
                             'AND account_analytic_line.move_id = account_move_line.id',
                             (ref, move_id))
+                self._log_event(cr, uid, ids)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -951,13 +951,18 @@ class account_invoice(osv.osv):
         return taxes.values()
 
     def _log_event(self, cr, uid, ids, factor=1.0, name='Open Invoice'):
-        #TODO: implement messages system
-         for invoice in self.browse(cr, uid, ids):
-            for (id,number) in self.name_get(cr, uid, ids):
-                inv_number = number.split('/')[-1]
-                message = _('Invoice ') + " '" + _('INV/')+ inv_number + "' "+ _("Opened,")+_('journal entries')+ "' " + invoice.move_id.name + "' "+_("Created")
-                self.log(cr, uid, id, message)
-            return True
+        for (invoice_id,number) in self.name_get(cr, uid, ids):
+                invoice = self.browse(cr,uid,invoice_id)
+                message = ("%s %s %s %s %s %s %s") % (
+                    _('Invoice'),
+                    _("INV/"),
+                    number.split('/')[-1],
+                    _("Opened,"),
+                    _('journal entries'),
+                    invoice.move_id.name,
+                    _("Created"))
+                self.log(cr, uid, invoice_id, message)
+        return True
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):

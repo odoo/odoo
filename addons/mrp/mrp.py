@@ -647,19 +647,23 @@ class mrp_production(osv.osv):
         """ Changes the production state to Ready and location id of stock move.
         @return: True
         """
-        for production in self.browse(cr, uid, ids):
-            production = self.browse(cr, uid, [production.id])[0]
-            s_date = datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S')
-
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Manufacturing Order ') + " '" + name + "' "+ _("scheduled the") + " "
-            message += s_date.strftime('%Y-%m-%d') + " " + _("for") + " " + production.product_id.default_code
-            self.log(cr, uid, id, message)
         move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state': 'ready'})
-        if production.move_prod_id:
-             move_obj.write(cr, uid, [production.move_prod_id.id],
-                   {'location_id': production.location_dest_id.id})
+
+        for (production_id,name) in self.name_get(cr, uid, ids):
+            production = self.browse(cr, uid, production_id)
+            if production.move_prod_id:
+                move_obj.write(cr, uid, [production.move_prod_id.id],
+                        {'location_id': production.location_dest_id.id})
+
+            message = ("%s %s %s %s %s %s") % (
+                    _('Manufacturing Order '),
+                    name,
+                    _("scheduled the"),
+                    datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d'),
+                    _("for"),
+                    production.product_id.default_code)
+            self.log(cr, uid, production_id, message)
         return True
 
     def action_production_end(self, cr, uid, ids):
