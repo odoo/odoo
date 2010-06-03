@@ -6,20 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-05-05 14:10:18+0000\n"
-"PO-Revision-Date: 2010-05-05 14:10:18+0000\n"
+"POT-Creation-Date: 2010-06-03 12:40:34+0000\n"
+"PO-Revision-Date: 2010-06-03 12:40:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Futur Stock"
-msgstr ""
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -128,12 +122,6 @@ msgid "Products Received"
 msgstr "Prodotti Ricevuti"
 
 #. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Futur Productions"
-msgstr ""
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 msgid "Incoming Products"
@@ -144,12 +132,6 @@ msgstr "Prodotti in entrata"
 #: field:stock.tracking,serial:0
 msgid "Reference"
 msgstr "Riferimento"
-
-#. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Futur Receptions"
-msgstr ""
 
 #. module: stock
 #: wizard_field:stock.invoice_onshipping,init,group:0
@@ -434,9 +416,10 @@ msgid "terp-graph"
 msgstr "terp-graph"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PREFERENCES"
-msgstr "STOCK_PREFERENCES"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Receptions"
+msgstr ""
 
 #. module: stock
 #: rml:lot.location:0
@@ -509,6 +492,12 @@ msgid "Product Id"
 msgstr "Codice di identifizione di prodotto"
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future P&L"
+msgstr ""
+
+#. module: stock
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Vendite e Acquisti"
@@ -532,6 +521,11 @@ msgstr "Forzare l'uso dei Lotti di Produzione durante l'ordine di produzione"
 #: selection:stock.location,icon:0
 msgid "STOCK_CUT"
 msgstr "STOCK_CUT"
+
+#. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_ZOOM_IN"
+msgstr "STOCK_ZOOM_IN"
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -713,12 +707,6 @@ msgstr "Punto di Stoccaggio del Partner"
 #: help:stock.move,tracking_id:0
 msgid "Tracking lot is the code that will be put on the logistical unit/pallet"
 msgstr "Tracciabilità lotto è il codice che sarà applicato alle confezioni/pallet in spedizione"
-
-#. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Futur Deliveries"
-msgstr ""
 
 #. module: stock
 #: view:stock.tracking:0
@@ -1104,6 +1092,11 @@ msgid "Draft Periodical Inventories"
 msgstr "Imposta inventari periodici"
 
 #. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_PREFERENCES"
+msgstr "STOCK_PREFERENCES"
+
+#. module: stock
 #: wizard_button:inventory.merge,init,end:0
 #: wizard_button:inventory.merge.stock.zero,init,end:0
 #: wizard_button:mrp.stock.move.track,init,end:0
@@ -1254,12 +1247,6 @@ msgid "STOCK_COPY"
 msgstr "STOCK_COPY"
 
 #. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Futur Qty"
-msgstr ""
-
-#. module: stock
 #: selection:stock.invoice_onshipping,init,type:0
 msgid "Supplier Refund"
 msgstr "Rimborso Fornitore"
@@ -1289,13 +1276,6 @@ msgstr "Analisi Locazione Magazzini"
 #: selection:stock.location,icon:0
 msgid "STOCK_CDROM"
 msgstr "STOCK_CDROM"
-
-#. module: stock
-#: code:addons/stock/stock.py:0
-#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
-#, python-format
-msgid "Error"
-msgstr ""
 
 #. module: stock
 #: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
@@ -1360,9 +1340,10 @@ msgid "STOCK_DIALOG_WARNING"
 msgstr "STOCK_DIALOG_WARNING"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_IN"
-msgstr "STOCK_ZOOM_IN"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Qty"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2044,6 +2025,12 @@ msgid "Track Outging Lots"
 msgstr "Traccia i Lotti in uscita"
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Productions"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Return lines"
@@ -2258,6 +2245,12 @@ msgid "Please select one and only one inventory !"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Deliveries"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "terp-project"
 msgstr "terp-project"
@@ -2396,7 +2389,14 @@ msgstr "Movimenti futuri di magazzino"
 #. module: stock
 #: code:addons/stock/product.py:0
 #, python-format
-msgid "Futur P&L"
+msgid "Future Stock"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: stock

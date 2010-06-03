@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-05-05 13:58:30+0000\n"
-"PO-Revision-Date: 2010-05-05 13:58:30+0000\n"
+"POT-Creation-Date: 2010-06-03 12:28:28+0000\n"
+"PO-Revision-Date: 2010-06-03 12:28:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "基础价格"
 #. module: product
 #: help:product.template,standard_price:0
 msgid "The cost of the product for accounting stock valuation. It can serves as a base price for supplier price."
-msgstr "这价格是产品的财务库存估价,它能提供产品供应的基础价格"
+msgstr "它是产品库存估价的成本价格,它能作为产品的供应价格."
 
 #. module: product
 #: selection:product.template,type:0
@@ -38,7 +38,7 @@ msgstr "服务"
 #. module: product
 #: help:product.template,purchase_ok:0
 msgid "Determine if the product is visible in the list of products within a selection from a purchase order line."
-msgstr "在采购订单的产品列表中可见"
+msgstr "是否在采购订单明细的产品列表中可见"
 
 #. module: product
 #: help:product.supplierinfo,name:0
@@ -58,7 +58,7 @@ msgstr "现场高级调试"
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "The minimal quantity to purchase for this supplier, expressed in the default unit of measure."
-msgstr "供应商最少采购数量使用默认单位"
+msgstr "该供应商的最少采购数量 (默认单位)"
 
 #. module: product
 #: field:product.template,weight_net:0
@@ -73,17 +73,17 @@ msgstr "产品计量单位分类"
 #. module: product
 #: help:product.product,virtual_available:0
 msgid "Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming."
-msgstr "产品在选定库位未来库存计算公式: 实际库存 + 接收 - 发出 (或内部库位)"
+msgstr "产品在选定库位的未来库存计算公式: 当前库存 + 接收 - 发出 (或内部库位)"
 
 #. module: product
 #: field:product.price.type,field:0
 msgid "Product Field"
-msgstr "产品字段"
+msgstr "字段值"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
 msgid "Set a template if this rule only apply to a template of product. Keep empty for all products"
-msgstr "设置模板如果这规则只适合于一产品模板. 留空为适用所有产品"
+msgstr "如果这规则只适合于这产品模板设置模板. (留空为适用所有产品)"
 
 #. module: product
 #: field:product.template,procure_method:0
@@ -103,7 +103,7 @@ msgstr "产品工艺"
 #. module: product
 #: help:product.price.type,field:0
 msgid "Associated field in the product form."
-msgstr "产品的相关字段"
+msgstr "相关字段的结果"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -114,7 +114,7 @@ msgstr "标准价格"
 #: code:addons/product/product.py:0
 #, python-format
 msgid "Products: "
-msgstr "产品列表： "
+msgstr "产品： "
 
 #. module: product
 #: help:product.packaging,height:0
@@ -155,7 +155,7 @@ msgstr "公司"
 #. module: product
 #: field:product.template,rental:0
 msgid "Rentable Product"
-msgstr "可租借产品"
+msgstr "可出租产品"
 
 #. module: product
 #: field:product.product,lst_price:0
@@ -181,7 +181,7 @@ msgstr "服务"
 #. module: product
 #: help:product.template,list_price:0
 msgid "Base price for computing the customer price. Sometimes called the catalog price."
-msgstr "计算给客户报价的基础价格.有时候它被称为目录价格"
+msgstr "给客户的报价.有时称为产品列表价格 (标价)"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
@@ -202,7 +202,7 @@ msgstr "价格类型名称"
 #. module: product
 #: help:product.pricelist.version,date_start:0
 msgid "Starting date for this pricelist version to be valid."
-msgstr "有效的价格表版本开始日期"
+msgstr "价格表版本生效的开始日期"
 
 #. module: product
 #: field:product.product,incoming_qty:0
@@ -212,7 +212,7 @@ msgstr "接收"
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr "备货型生产"
+msgstr "按库存生产"
 
 #. module: product
 #: view:product.product:0
@@ -228,7 +228,8 @@ msgstr "无声风扇"
 #. module: product
 #: help:product.template,supply_method:0
 msgid "Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."
-msgstr "生产将根据产品类型创建生产单或任务.采购将在有需要时触发采购订单请求."
+msgstr "根据产品类型将创建生产单或任务. \r\n"
+"采购将触发采购订单请求."
 
 #. module: product
 #: model:process.transition,note:product.process_transition_supplierofproduct0
@@ -259,17 +260,17 @@ msgstr ""
 #. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
-msgstr "新价格="
+msgstr "新价格 ="
 
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Virtual Stock"
-msgstr "虚拟库存"
+msgstr "未来库存"
 
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Fixed"
-msgstr "已修复"
+msgstr "固定的"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
@@ -280,7 +281,7 @@ msgstr "计量单位类型"
 #. module: product
 #: help:product.pricelist.item,product_id:0
 msgid "Set a product if this rule only apply to one product. Keep empty for all products"
-msgstr "如果这规则只适合这产品,设置产品. 留空为适用所有产品"
+msgstr "如果这规则只适合这产品,设置产品. (留空为适用所有产品)"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -374,7 +375,8 @@ msgstr "鼠标"
 #. module: product
 #: help:product.template,cost_method:0
 msgid "Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."
-msgstr "标准价: 这价格是固定的和定期重新计价(通常在年底). 平均价: 这价格是在每次接收产品时重新计算."
+msgstr "标准价格: 成本价格是定期重新计算(通常在年底).\r\n"
+"平均价格: 成本价格是在每次接收产品时重新计算."
 
 #. module: product
 #: field:product.pricelist,name:0
@@ -393,12 +395,12 @@ msgstr "生效"
 #. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
-msgstr "业务伙伴"
+msgstr "业务伙伴列表"
 
 #. module: product
 #: selection:product.template,cost_method:0
 msgid "Average Price"
-msgstr "平均价"
+msgstr "平均价格"
 
 #. module: product
 #: model:process.node,note:product.process_node_product0
@@ -408,12 +410,12 @@ msgstr "创建新产品"
 #. module: product
 #: help:product.pricelist.item,name:0
 msgid "Explicit rule name for this pricelist line."
-msgstr "价格表明细详尽的规则名"
+msgstr "价格表明细的详细规则名称"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Min. Margin"
-msgstr "最小利润"
+msgstr "最小上浮金额"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -503,12 +505,12 @@ msgstr "业务伙伴产品名称"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Miscelleanous"
-msgstr "各种各样的"
+msgstr "其他"
 
 #. module: product
 #: help:product.pricelist.item,base:0
 msgid "The mode for computing the price for this rule."
-msgstr "计算价格公式的模式"
+msgstr "计算价格公式"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -561,12 +563,12 @@ msgstr "价格表版本"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Rules Test Match"
-msgstr "规则匹配测试"
+msgstr "定价规则"
 
 #. module: product
 #: help:res.partner,property_product_pricelist:0
 msgid "This pricelist will be used, instead of the default one,                     for sales to the current partner"
-msgstr "当前业务伙伴的销售价格表.不是默认值."
+msgstr "修改当前业务伙伴销售价格表的默认值."
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist
@@ -598,7 +600,7 @@ msgstr "毛重使用公斤"
 #. module: product
 #: selection:product.ul,type:0
 msgid "Box"
-msgstr "盒"
+msgstr "箱子"
 
 #. module: product
 #: constraint:ir.ui.view:0
@@ -608,7 +610,7 @@ msgstr "无效XML视图结构!"
 #. module: product
 #: help:product.template,sale_ok:0
 msgid "Determine if the product can be visible in the list of product within a selection from a sale order line."
-msgstr "如果在选择销售订单明细的产品列表中能看见这产品确定它"
+msgstr "在销售订单明细的产品列表中可见"
 
 #. module: product
 #: view:res.partner:0
@@ -633,22 +635,23 @@ msgstr "开发中"
 #. module: product
 #: help:product.pricelist.type,key:0
 msgid "Used in the code to select specific prices based on the context. Keep unchanged."
-msgstr "用代码来选择特定的价格.保持不改变"
+msgstr "基于上下文用代码来确定具体的价格. (保持不变)"
 
 #. module: product
 #: help:product.product,outgoing_qty:0
 msgid "Quantities of products that are planned to leave in selected locations or all internal if none have been selected."
-msgstr "产品在选定库位的计划接收数量或如果没有选择库位全部内部库位"
+msgstr "计划在选定的库位发出数量.  (如果没有选定则是内部库位)"
 
 #. module: product
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
-msgstr "总包装重量"
+msgstr "包装总重量"
 
 #. module: product
 #: help:product.template,procure_method:0
 msgid "'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."
-msgstr "按库存:在库存取得或等待重新供应.按单:采购或生产这产品需求请求"
+msgstr "按库存生产:  在仓库或等待重新供应时得到需求.\r\n"
+" 按订单生产:  在采购或产品获得请求时得到需求."
 
 #. module: product
 #: view:product.product:0
@@ -670,7 +673,7 @@ msgstr "希捷 7200.8 80GB 硬盘"
 #. module: product
 #: help:product.pricelist.version,active:0
 msgid "When a version is duplicated it is set to non active, so that the dates do not overlaps with original version. You should change the dates and reactivate the pricelist"
-msgstr "当一个版本重复时它是设为不生效.这样在旧版本日期是不重复的"
+msgstr "在复制一个版本时它设为不生效. 这样旧版本日期是不重复的. 你应该修改日期并激活这价格表"
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -680,7 +683,7 @@ msgstr "希捷 7200.8 160GB 硬盘"
 #. module: product
 #: view:product.product:0
 msgid "Product Variant"
-msgstr "产品变体"
+msgstr "产品系列"
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -700,12 +703,12 @@ msgstr "计量单位类型"
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pack"
-msgstr "包"
+msgstr "包装"
 
 #. module: product
 #: field:product.product,ean13:0
 msgid "EAN13"
-msgstr "(EAN13)欧洲商品编号"
+msgstr "EAN13"
 
 #. module: product
 #: view:product.product:0
@@ -737,7 +740,7 @@ msgstr ""
 #. module: product
 #: help:product.supplierinfo,product_name:0
 msgid "Name of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."
-msgstr "业务伙伴该产品名称将用在询价上.留空为使用内部名称"
+msgstr "该产品在业务伙伴那的名称将用在询价上. (留空为使用内部名称)"
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -809,7 +812,7 @@ msgstr "销售 属性"
 #. module: product
 #: help:product.product,qty_available:0
 msgid "Current quantities of products in selected locations or all internal if none have been selected."
-msgstr "在选定库位当前产品的数量或如果没选择表示所有的内部库位"
+msgstr "在选定库位当前产品的数量. (如果没选择表示所有的内部库位)"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
@@ -819,12 +822,12 @@ msgstr "基础PC"
 #. module: product
 #: field:product.template,loc_row:0
 msgid "Row"
-msgstr "列"
+msgstr "行"
 
 #. module: product
 #: field:product.template,categ_id:0
 msgid "Category"
-msgstr "分类"
+msgstr "类型"
 
 #. module: product
 #: help:product.pricelist.item,min_quantity:0
@@ -845,7 +848,7 @@ msgstr ""
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
-msgstr "实际库存"
+msgstr "当前库存"
 
 #. module: product
 #: view:product.category:0
@@ -855,7 +858,7 @@ msgstr "产品类型"
 #. module: product
 #: help:product.uom,category_id:0
 msgid "Unit of Measure of a category can be converted between each others in the same category."
-msgstr "类别单位能转化的同一类别"
+msgstr "同一类型的计量单位可以相互转换"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -865,7 +868,7 @@ msgstr "产品计量单位"
 #. module: product
 #: help:product.product,incoming_qty:0
 msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
-msgstr "产品在选定库位的计划接收数量(如果没选库位则是所有内部库位)"
+msgstr "产品在选定库位的计划接收数量(如果没选库位则是内部库位)"
 
 #. module: product
 #: field:product.template,sale_ok:0
@@ -885,7 +888,7 @@ msgstr "错误:默认的计量单位和这货物的计量单位必须是同一�
 #. module: product
 #: model:product.template,name:product.product_product_mb2_product_template
 msgid "Mainboard ASUStek A7V8X-X"
-msgstr "主板 ASUStek A7V8X-X"
+msgstr "ASUStek A7V8X-X主板"
 
 #. module: product
 #: field:product.uom,factor:0
@@ -895,7 +898,7 @@ msgstr "比率"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Products Listprices Items"
-msgstr "产品价格表明细"
+msgstr "产品标价明细"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -915,7 +918,8 @@ msgstr "包装数量"
 #. module: product
 #: help:product.template,uos_id:0
 msgid "Used by companies that manages two unit of measure: invoicing and stock management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM."
-msgstr "公司管理使用两个计量单位:发票和库存管理.例如:食品工业的仓库的火腿发票要公斤.留空为使用默认计量单位"
+msgstr "公司管理使用两个计量单位:发票和库存管理. ( 留空为使用默认计量单位)\r\n"
+"例如:食品公司的火腿仓库用块,发票用公斤为单位."
 
 #. module: product
 #: code:addons/product/pricelist.py:0
@@ -957,12 +961,12 @@ msgstr "价格舍入"
 #. module: product
 #: model:product.price.type,name:product.list_price
 msgid "Public Price"
-msgstr "标价"
+msgstr "公开价格"
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
 msgid "Max. Price Margin"
-msgstr "最大毛利"
+msgstr "最大的价格上浮金额"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
@@ -977,7 +981,7 @@ msgstr "IT零部件"
 #. module: product
 #: help:product.packaging,weight_ul:0
 msgid "The weight of the empty UL"
-msgstr "空包装的最大重量"
+msgstr "空包装的重量"
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1007,12 +1011,12 @@ msgstr "产品主管"
 #. module: product
 #: field:product.product,price_extra:0
 msgid "Variant Price Extra"
-msgstr "额外价格变量"
+msgstr "附加的收费"
 
 #. module: product
 #: model:product.template,name:product.product_product_fan_product_template
 msgid "Regular case fan 80mm"
-msgstr "通常80mm风扇"
+msgstr "标准80mm风扇"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -1022,12 +1026,12 @@ msgstr "产品供应商信息"
 #. module: product
 #: help:product.product,packaging:0
 msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
-msgstr "给出相同产品的不同包装方式.如果你使用EDI模块这并不影响包装单和主要使用"
+msgstr "给出相同产品的不同包装方式.如果你使用EDI模块这并不影响包装单和使用"
 
 #. module: product
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
-msgstr "变价幅度"
+msgstr "价格的上浮金额"
 
 #. module: product
 #: wizard_view:product.price_list,init:0
@@ -1066,7 +1070,8 @@ msgstr "第二计量单位"
 #. module: product
 #: help:product.template,seller_delay:0
 msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
-msgstr "默认供应商在供应商确认采购订单到接收完成产品之间的平均延迟.用于计划调度订单请求时所根据的重新排序延误."
+msgstr "产品供应在确认采购订单到接收产品之间的默认平均延迟. \r\n"
+"用于在调度订单请求时要考虑的重订货延迟."
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -1087,7 +1092,7 @@ msgstr "包装的长度"
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
 msgid "Min. Price Margin"
-msgstr "最小毛利"
+msgstr "最小上浮金额"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_km
@@ -1136,7 +1141,7 @@ msgstr "价格表类型"
 #. module: product
 #: help:product.template,state:0
 msgid "Tells the user if he can use the product or not."
-msgstr "产品在企业的状态"
+msgstr "告诉用户能不能使用这产品"
 
 #. module: product
 #: field:product.supplierinfo,product_code:0
@@ -1164,7 +1169,8 @@ msgstr "代码"
 #: help:product.uom,factor_inv:0
 msgid "The coefficient for the formula:\n"
 "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-msgstr "该公式的系数为:系数(基础单位)=1(这单位)×因子=1/比率"
+msgstr "这单位 = 基础单位 * 系数\n"
+"1 / 比率"
 
 #. module: product
 #: view:product.supplierinfo:0
@@ -1202,7 +1208,8 @@ msgstr "运输单位"
 #. module: product
 #: help:product.uom,rounding:0
 msgid "The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."
-msgstr "这计算数量将是一个倍数值.产品使用1.0不能拆分."
+msgstr "这数量计算将乘于一个数值.\r\n"
+"产品使用1.0表示不能拆分."
 
 #. module: product
 #: field:product.packaging,height:0
@@ -1217,7 +1224,7 @@ msgstr "自选配置PC"
 #. module: product
 #: help:product.pricelist.version,date_end:0
 msgid "Ending date for this pricelist version to be valid."
-msgstr "价目表版本有效的结束日期"
+msgstr "价格表版本有效的结束日期"
 
 #. module: product
 #: field:pricelist.partnerinfo,suppinfo_id:0
@@ -1250,12 +1257,12 @@ msgstr "取消"
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by palet or box."
-msgstr "产品总数你可以输入箱子或小包"
+msgstr "产品总数你可以输入箱子或垫板"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist item"
-msgstr "价格表内容"
+msgstr "价格表明细"
 
 #. module: product
 #: model:ir.actions.wizard,name:product.report_wizard_price
@@ -1266,7 +1273,7 @@ msgstr "价格表"
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
-msgstr "标价价格表"
+msgstr "公共价格表"
 
 #. module: product
 #: model:product.template,name:product.product_product_21_product_template
@@ -1340,17 +1347,17 @@ msgstr "价格表明细"
 #. module: product
 #: help:product.supplierinfo,product_code:0
 msgid "Code of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."
-msgstr "业务伙伴的该产品的代码将用在询价上.留空为使用内部代码"
+msgstr "该产品在业务伙伴里所用的代码,它用于向业务伙伴咨询报价.  (留空为使用内部代码)"
 
 #. module: product
 #: selection:product.template,state:0
 msgid "Obsolete"
-msgstr "荒废"
+msgstr "作废"
 
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
-msgstr "托板"
+msgstr "垫板"
 
 #. module: product
 #: field:pricelist.partnerinfo,price:0
@@ -1370,12 +1377,13 @@ msgstr "包装层"
 #. module: product
 #: help:product.template,type:0
 msgid "Will change the way procurements are processed. Consumables are stockable products with infinite stock, or for use when you have no stock management in the system."
-msgstr "将改变产品需求处理.消耗品是可库存的产品并有无限的库存.或使用时没用库存管理系统来管理"
+msgstr "将改变产品需求处理.\r\n"
+"消耗品是有无限的库存的可库存的产品.或在使用时无需用库存管理系统来管理"
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
 msgid "Product suppliers, with their product name, price, etc."
-msgstr "产品供应商.产品名称、价格."
+msgstr "产品供应商,产品名称,价格,等."
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_type
@@ -1432,7 +1440,8 @@ msgstr " ) + "
 #. module: product
 #: help:product.template,sale_delay:0
 msgid "This is the average time between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."
-msgstr "这是确认客户订单和交付的平均时间.是承诺客户的时间."
+msgstr "这是确认客户订单和交付的平均时间.\r\n"
+"是承诺客户的时间."
 
 #. module: product
 #: help:product.template,uos_coeff:0
@@ -1448,22 +1457,22 @@ msgstr "数量3"
 #. module: product
 #: model:product.ul,name:product.product_ul_box
 msgid "Box 20x20x40"
-msgstr "盒 20x20x40"
+msgstr "箱子 20x20x40"
 
 #. module: product
 #: selection:product.template,supply_method:0
 msgid "Produce"
-msgstr "生产"
+msgstr "产品"
 
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "订货型生产"
+msgstr "按订单生产"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
-msgstr "价格附加费"
+msgstr "价格额外费用"
 
 #. module: product
 #: constraint:product.pricelist.version:0
@@ -1493,12 +1502,12 @@ msgstr "价格计算"
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
 msgid "Mainboard ASUStek A7N8X"
-msgstr "主板 ASUStek A7N8X"
+msgstr "ASUStek A7N8X主板"
 
 #. module: product
 #: field:product.template,loc_case:0
 msgid "Case"
-msgstr "盒"
+msgstr "箱子"
 
 #. module: product
 #: field:product.pricelist.version,date_end:0
@@ -1526,12 +1535,12 @@ msgstr "逻辑单位"
 #: field:product.uom,name:0
 #: field:product.uom.categ,name:0
 msgid "Name"
-msgstr "完整的分类名称"
+msgstr "名称"
 
 #. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr "可采购"
+msgstr "可被采购"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
@@ -1564,7 +1573,7 @@ msgstr "成本计算方法"
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Palletization"
-msgstr "托板化"
+msgstr "垫垫板"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
@@ -1587,35 +1596,37 @@ msgstr "价格&供应商"
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full of products palet or box."
-msgstr "全部产品小包或箱子的重量"
+msgstr "含垫板或箱子的产品重量"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
 msgid "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "设定价格以便它有多个价格,折扣后使用四舍五入和之前的附加费,以价格9.99为例四舍五入为10附加费为-0.001."
+msgstr "设定价格,因为它是一个多元价格, 四舍五入后打折或加入附加费. \n"
+"以价格9.99为例四舍五入为10附加费为-0.001."
 
 #. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
-msgstr "生命周期终止"
+msgstr "生命周期结束"
 
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
 msgid "Products & Pricelists"
-msgstr "产品&价格表"
+msgstr "产品列表&价格表"
 
 #. module: product
 #: help:product.uom,factor:0
 msgid "The coefficient for the formula:\n"
 "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-msgstr "该公式的系数为:1(基础单位)=系数(这单位)×比率=1/因子"
+msgstr "基础单位 = 这单位 * 比率\n"
+"1 / 系数"
 
 #. module: product
 #: help:product.template,weight_net:0
 msgid "The net weight in Kg."
-msgstr "净重使用KG"
+msgstr "净重使用公斤"
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
@@ -1639,17 +1650,17 @@ msgstr "价格表版本"
 #: field:product.packaging,sequence:0
 #: field:product.pricelist.item,sequence:0
 msgid "Sequence"
-msgstr "顺序"
+msgstr "序列"
 
 #. module: product
 #: field:product.template,list_price:0
 msgid "Sale Price"
-msgstr "售价"
+msgstr "标价"
 
 #. module: product
 #: help:product.template,produce_delay:0
 msgid "Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."
-msgstr "产品生产的平均时间生产单才有的.如果它是一个多层物料清单在各层和采购订单在不同称和采购单的延迟汇总"
+msgstr "产品生产的平均时间.生产单才有的,如果它是一个多层物料清单,它是各层物料和采购订单的延迟合计."
 
 #. module: product
 #: wizard_field:product.price_list,init,qty1:0
@@ -1676,12 +1687,13 @@ msgstr "产品需求&库位"
 #. module: product
 #: help:product.supplierinfo,delay:0
 msgid "Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
-msgstr "延迟天数是确认采购订单到仓库接收产品之间的延迟天数.用于采购订单计划自动计算计划调度."
+msgstr "延迟天数是确认采购订单到仓库接收产品之间的延迟天数.\r\n"
+"用于制定采购订单计划时调度程序自动计算."
 
 #. module: product
 #: help:product.template,uom_po_id:0
 msgid "Default Unit of Measure used for purchase orders. It must in the same category than the default unit of measure."
-msgstr "采购订单的默认计量单位它必须是与默认计量单位类型同级"
+msgstr "采购计量单位必须与默认计量单位类型相同."
 
 #. module: product
 #: constraint:product.product:0
@@ -1696,7 +1708,7 @@ msgstr "最小数量"
 #. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid "Set a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"
-msgstr "设置产品类别如果这规则只适合产品分类和它的子项.留空为为全部"
+msgstr "如果这规则只适合这产品类型和它的子项,设置产品类型. ( 留空为适合全部)"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1715,7 +1727,7 @@ msgstr "产品"
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box
 msgid "Box 30x40x60"
-msgstr "盒 30x40x60"
+msgstr "箱子 30x40x60"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1725,5 +1737,5 @@ msgstr "千克"
 #. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
-msgstr "降价"
+msgstr "价格折扣"
 

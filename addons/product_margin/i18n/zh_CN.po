@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.10\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-05-05 13:58:30+0000\n"
-"PO-Revision-Date: 2010-05-05 13:58:30+0000\n"
+"POT-Creation-Date: 2010-06-03 12:28:27+0000\n"
+"PO-Revision-Date: 2010-06-03 12:28:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "从"
 #. module: product_margin
 #: help:product.product,sale_expected:0
 msgid "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-msgstr "客户发票(销售价×数量)合计"
+msgstr "客户发票 (标价 * 数量) 合计"
 
 #. module: product_margin
 #: wizard_field:product.margins,init,to_date:0
@@ -70,12 +70,12 @@ msgstr "产品利润"
 #. module: product_margin
 #: help:product.product,total_cost:0
 msgid "Sum of Multification of Invoice price and quantity of Supplier Invoices "
-msgstr "供应商发票(发票价×数量)合计 "
+msgstr "供应商发票 (发票价 * 数量) 合计 "
 
 #. module: product_margin
 #: view:product.product:0
 msgid "Catalog Price"
-msgstr "价目表"
+msgstr "(产品列表价格)标价"
 
 #. module: product_margin
 #: selection:product.margins,init,invoice_state:0
@@ -86,17 +86,17 @@ msgstr "支付"
 #. module: product_margin
 #: help:product.product,sales_gap:0
 msgid "Excepted Sale - Turn Over"
-msgstr "额外销售-营业额"
+msgstr "预计销售 - 营业额"
 
 #. module: product_margin
 #: field:product.product,sale_expected:0
 msgid "Expected Sale"
-msgstr "预销售"
+msgstr "预计销售"
 
 #. module: product_margin
 #: view:product.product:0
 msgid "Standard Price"
-msgstr "标准价格"
+msgstr "成本价格"
 
 #. module: product_margin
 #: help:product.product,purchase_num_invoiced:0
@@ -106,7 +106,7 @@ msgstr "供应商发票数量合计"
 #. module: product_margin
 #: help:product.product,normal_cost:0
 msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-msgstr "供应商发票  (成本价×数量)合计"
+msgstr "供应商发票  (成本价格 * 数量) 合计"
 
 #. module: product_margin
 #: view:product.product:0
@@ -118,7 +118,7 @@ msgstr "营业额"
 #: field:product.product,purchase_num_invoiced:0
 #: field:product.product,sale_num_invoiced:0
 msgid "# Invoiced"
-msgstr "已开票"
+msgstr "已开票数量"
 
 #. module: product_margin
 #: view:product.product:0
@@ -134,7 +134,7 @@ msgstr "无效XML视图结构!"
 #. module: product_margin
 #: help:product.product,expected_margin:0
 msgid "Excepted Sale - Normal Cost"
-msgstr "额外销售-普通成本"
+msgstr "预计销售 - 正常成本"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -154,17 +154,17 @@ msgstr "采购"
 #. module: product_margin
 #: help:product.product,turnover:0
 msgid "Sum of Multification of Invoice price and quantity of Customer Invoices"
-msgstr "客户发票(发票价×数量)合计"
+msgstr "客户发票 (发票价 * 数量) 合计"
 
 #. module: product_margin
 #: help:product.product,expected_margin_rate:0
 msgid "Expected margin * 100 / Expected Sale"
-msgstr "预计利润率×100/预销售"
+msgstr "预计利润 / 预计销售 * 100"
 
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
 msgid "Avg. Price in Customer Invoices)"
-msgstr "客户发票价格"
+msgstr "客户发票的平均单价"
 
 #. module: product_margin
 #: wizard_view:product.margins,init:0
@@ -180,18 +180,18 @@ msgstr "发票状态"
 #. module: product_margin
 #: help:product.product,purchase_gap:0
 msgid "Normal Cost - Total Cost"
-msgstr "普通成本-总成本"
+msgstr "正常成本 - 总成本"
 
 #. module: product_margin
 #: view:product.product:0
 #: field:product.product,sales_gap:0
 msgid "Sales Gap"
-msgstr "销售差距"
+msgstr "销售差额"
 
 #. module: product_margin
 #: field:product.product,normal_cost:0
 msgid "Normal Cost"
-msgstr "普通成本"
+msgstr "正常成本"
 
 #. module: product_margin
 #: view:product.product:0
@@ -201,7 +201,7 @@ msgstr "采购"
 #. module: product_margin
 #: help:product.product,purchase_avg_price:0
 msgid "Avg. Price in Supplier Invoices "
-msgstr "供应商发票价格 "
+msgstr "供应商发票平均单价 "
 
 #. module: product_margin
 #: field:product.product,total_margin:0
@@ -211,12 +211,12 @@ msgstr "总利润"
 #. module: product_margin
 #: help:product.product,total_margin_rate:0
 msgid "Total margin * 100 / Turnover"
-msgstr "总利润×100/营业额"
+msgstr "总利润 / 营业额 * 100"
 
 #. module: product_margin
 #: view:product.product:0
 msgid "Analysis Criteria"
-msgstr "分析标准"
+msgstr "分析准则"
 
 #. module: product_margin
 #: selection:product.margins,init,invoice_state:0
@@ -241,7 +241,7 @@ msgstr "产品利润"
 #. module: product_margin
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
-msgstr "采购缺口"
+msgstr "采购差额"
 
 #. module: product_margin
 #: field:product.product,total_margin_rate:0
