@@ -223,25 +223,32 @@
                     <page string="History">
                         <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
 	                        <form string="Communication history">
-							    <group col="6" colspan="4">
-							        <field name="date"/>
-							        <field name="email_to"/>
-							        <field name="email_from"/>
-								</group>
-							   <newline/>
-							   <field name="description" colspan="4" nolabel="1"/>
-							   <button colspan="4"
-							       string="Reply to Last Email"
-							       name="%(crm.action_crm_send_mail)d"
-							       context="{'mail':'reply', 'model': 'crm.lead'}"
-							       icon="gtk-undo" type="action" />
-							</form>
-							<tree string="Communication history">
-							   <field name="description"/>
-							   <field name="email_to"/>
-							   <field name="date"/>
-							</tree>
-                        </field>
+                                    <group col="6" colspan="4">
+                                        <field name="date"/>
+                                        <field name="email_to"/>
+                                        <field name="email_from"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Details">
+                                            <field name="description" colspan="4" nolabel="1"/>
+                                        </page>
+                                        <page string="Attachments">
+                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                    <button colspan="4"
+                                    string="Reply to Last Email"
+                                    name="%(crm.action_crm_send_mail)d"
+                                    context="{'mail':'reply', 'model': 'event.registration'}"
+                                    icon="gtk-undo" type="action" />
+                                </form>
+                                <tree string="Communication history">
+                                    <field name="date"/>
+                                    <field name="email_from" />
+                                    <field name="email_to"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
                         <field name="log_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
                             <tree string="Actions">
                                 <separator string="Action Information" colspan="4"/>

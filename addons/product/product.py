@@ -446,9 +446,9 @@ class product_product(osv.osv):
         'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
         'price': fields.function(_product_price, method=True, type='float', string='Pricelist', digits_compute=dp.get_precision('Sale Price')),
         'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='List Price', digits_compute=dp.get_precision('Sale Price')),
-        'code': fields.function(_product_code, method=True, type='char', string='Code'),
+        'code': fields.function(_product_code, method=True, type='char', string='Reference'),
         'partner_ref' : fields.function(_product_partner_ref, method=True, type='char', string='Customer ref'),
-        'default_code' : fields.char('Code', size=64),
+        'default_code' : fields.char('Reference', size=64),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=False),
@@ -676,7 +676,20 @@ class pricelist_partnerinfo(osv.osv):
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
 
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
 
+    def create(self, cr, uid, data, context={}):
+        user_id = super(res_users, self).create(cr, uid, data, context)
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'product', 'ir_ui_view_sc_product0')
+        view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+        copy_id = self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                    'user_id': user_id}, context=context)
+        return user_id
+
+res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

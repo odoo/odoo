@@ -33,7 +33,7 @@
             <field name="model">scrum.product.backlog</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Product Backlog">
+                <tree colors="grey:state in ('cancel','done');blue:state in ('pending')" string="Product Backlog">
                     <field name="sequence" invisible="1"/>
                     <field name="name"/>
                     <field name="project_id"/>
@@ -63,7 +63,7 @@
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>
-                           <field name="date"/>
+                        <field name="create_date"/>
                         <field name="progress" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
@@ -127,18 +127,18 @@
                 <search string="Product Backlogs">
                     <group col="10" colspan="4">
                         <filter default="1"
-                            icon="terp-project"
+                            icon="terp-check"
                             string="Current"
                             name="current"
                             domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open'])]"
                             help="Current Backlogs"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-project" string="Draft" domain="[('state','=','draft')]" help="Draft Backlogs"/>
-                        <filter icon="terp-project" string="Open" domain="[('state','=','open')]" help="Open Backlogs"/>
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Backlogs"/>
+                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Backlogs"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id" widget="selection"/>
-                        <field name="sprint_id" widget="selection">
+                        <field name="sprint_id" widget="selection" domain="[('state','in',('draft','open'))]">
                             <filter icon="terp-project"
                                 string="Sprints"
                                 domain="[('sprint_id.state','=','open')]"
@@ -151,11 +151,11 @@
                         <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
-                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Sprint" icon="terp-project" domain="[]" context="{'group_by':'sprint_id'}"/>
-                        <filter string="Responsible" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Sprint" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'sprint_id'}"/>
+                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
 
                 </search>
@@ -184,7 +184,7 @@
             <field name="model">scrum.sprint</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Scrum Sprint">
+            	<tree colors="blue:state in ('pending');grey:state in ('cancel','done')" string="Scrum Sprint">
                     <field name="name"/>
                     <field name="project_id"/>
                     <field name="scrum_master_id"/>
@@ -260,9 +260,10 @@
             <field name="arch" type="xml">
                 <search string="Sprints">
                     <group col="10" colspan="4">
-                        <filter name="filter_current" icon="terp-project" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
-                        <filter icon="terp-project" string="Draft" domain="[('state','=','draft')]" help="Draft Sprints"/>
-                        <filter icon="terp-project" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
+                        <filter name="terp-check" icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Sprints"/>
+                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id" widget="selection"/>
@@ -270,13 +271,13 @@
                         <field name="date_start"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Masters" icon="terp-project" domain="[]"  context="{'group_by':'scrum_master_id'}"/>
-                        <filter string="Product owner" icon="terp-project" domain="[]" context="{'group_by':'product_owner_id'}"/>
-                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                    <group expand="0" string="Group By..." colspan="4" col="20">
+                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Managers" icon="terp-personal" domain="[]"  context="{'group_by':'scrum_master_id'}"/>
+                        <filter string="Product owner" icon="terp-personal" domain="[]" context="{'group_by':'product_owner_id'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="Start Date" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'date_start'}"/>
                     </group>
                 </search>
             </field>
@@ -322,7 +323,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">
-                            <separator colspan="4" string="What did you do since the last meeeting?"/>
+                            <separator colspan="4" string="What did you do since the last meeting?"/>
                             <field colspan="4" name="question_yesterday" nolabel="1"/>
                             <separator colspan="4" string="What do you plan to do till the next meeting?"/>
                             <field colspan="4" name="question_today" nolabel="1"/>
@@ -349,18 +350,18 @@
             <field name="arch" type="xml">
                 <search string="Scrum Sprint">
                     <group col="10" colspan="4">
-                        <filter name="scrum_daily" icon="terp-project" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
+                        <filter name="scrum_daily" icon="terp-go-today" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="sprint_id" widget="selection">
-                            <filter icon="terp-project" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints" default="1"/>
+                            <filter icon="terp-check" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints" default="1"/>
                         </field>
                         <field name="project_id" widget="selection"/>
                         <field name="date"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Sprint" icon="terp-project" domain="[]" context="{'group_by':'sprint_id'}"/>
-                        <filter string="Date" icon="terp-project" domain="[]" context="{'group_by':'date'}"/>
+                    <group expand="0" string="Group By..." colspan="4" col="20">
+                        <filter string="Sprint" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'sprint_id'}"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>
@@ -493,7 +494,7 @@
             <field name="arch" type="xml">
                 <field name="project_id" position="after">
                     <field name="sprint_id" context="{'sprint_invisible':False}">
-                        <filter icon="terp-project" string="Current" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
+                        <filter icon="terp-check" string="Current" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                     </field>
                 </field>
             </field>
@@ -506,8 +507,8 @@
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/search/group[@string='Group By...']/filter[@string='End Date']" position="after">
-                    <filter string="Sprint" icon="terp-project" domain="[]" context="{'group_by':'sprint_id'}"/>
-                    <filter string="Backlog" icon="terp-project" domain="[]" context="{'group_by':'product_backlog_id'}"/>
+                    <filter string="Sprint" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'sprint_id'}"/>
+                    <filter string="Backlog" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'product_backlog_id'}"/>
                     <separator orientation="vertical"/>
                 </xpath>
             </field>

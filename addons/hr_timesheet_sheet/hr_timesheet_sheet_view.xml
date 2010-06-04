@@ -101,7 +101,7 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="base.group_extended"/>
                     <notebook colspan="4">
                         <page string="Daily View">
                             <group col="6" colspan="4">
@@ -192,7 +192,6 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <group col="10" colspan="4">
-                        <separator orientation="vertical"/>
                         <filter icon="terp-crm" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-crm" string="To Validate" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>

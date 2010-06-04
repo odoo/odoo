@@ -47,7 +47,7 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter name="resource" string="Resource" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
+                        <filter name="resource" string="Resource" icon="terp-folder-blue" domain="[]" context="{'group_by':'resource_id'}"/>
                         <filter string="Phase" icon="terp-project" domain="[]" context="{'group_by':'phase_id'}"/>
                     </group>
                 </search>
@@ -102,7 +102,7 @@
                                 <field name="state" select="1"/>
                                 <button string="Draft" name="set_draft" states="open" icon="gtk-indent"/>
                                 <button string="Start Phase" name="set_open" states="pending,draft" icon="gtk-execute"/>
-                                <button string="Done" name="set_done" states="draft,pending,open" icon="gtk-jump-to"/>
+                                <button string="Done" name="set_done" states="draft,pending,open" icon="gtk-apply"/>
                                 <button string="Pending" name="set_pending" states="open" icon="gtk-media-pause"/>
                                 <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                             </group>
@@ -218,23 +218,23 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group colspan="4" col="20">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Phases" icon="terp-project" default="1"/>
-                        <filter string="In Progress" domain="[('state','=','open')]" help="Open Phases" icon="terp-project"/>
-                        <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-project"/>
+                        <filter string="Draft" domain="[('state','=','draft')]" help="Draft Phases" icon="terp-check" default="1"/>
+                        <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="Open Phases" icon="terp-camera_test"/>
+                        <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id" widget="selection">
-                            <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
+                            <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-folder-blue"/>
                         </field>
                         <field name="responsible_id" widget="selection"/>
                         <field name="date_start"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
-                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'responsible_id'}"/>
-                        <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'responsible_id'}"/>
+                        <filter string="Start Date" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'date_start'}"/>
                     </group>
                 </search>
             </field>
@@ -323,7 +323,7 @@
 		<menuitem id="menu_resouce_allocation" action="act_resouce_allocation"
             name="Resource Allocations" parent="menu_project_long_term" />
 
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+        <!--<menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>-->
         <menuitem id="menu_pm_resources_project1"
             groups="base.group_extended"
             name="Resources" parent="base.menu_main_pm" sequence="2"/>

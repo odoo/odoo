@@ -454,7 +454,6 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet Lines">
                    <group col='15' colspan='4'>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-project" string="Current" default="1" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                     	<field name="user_id" widget="selection"/>
@@ -463,6 +462,7 @@
                    <newline/>
                    <group expand="1" string="Group By...">
                         <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-project" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Analytic Account" icon="terp-project" domain="[]" context="{'group_by':'analytic_account_id'}"/>
                    		<filter string="General Account" icon="terp-project" domain="[]" context="{'group_by':'general_account_id'}"/>

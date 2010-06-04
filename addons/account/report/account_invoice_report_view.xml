@@ -16,8 +16,10 @@
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
-                <field name="product_qty" invisible="1"/>
+                <field name="uom_name" invisible="not context.get('set_visible',False)"/>
+                <field name="categ_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
+                <field name="product_qty"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="state" invisible="1"/>
@@ -54,10 +56,10 @@
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
               <group col="10" colspan="12">
-	            	<filter icon="gtk-media-rewind" string="Last 365 Days"
+	            	<filter icon="gtk-media-rewind" string="  365 Days  "
 		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 		                    help="Invoices of last 365 days"/>
-	                <filter icon="gtk-media-rewind" string="Last 30 Days"
+	                <filter icon="gtk-media-rewind" string="   30 Days   "
 	                		name="month"
 	                		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                		help="Invoices of last 30 days"/>
@@ -97,16 +99,17 @@
                 <group expand="1" string="Group By...">
                     <filter string="Salesman" name='User' icon="terp-account" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
-                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
+                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id','set_visible':True}"/>
                     <separator orientation="vertical"/>
                     <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
                     <filter string="Type" icon="terp-account" context="{'group_by':'type'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Default UoM" icon="terp-account" context="{'group_by':'uom_name'}"/>
                     <filter string="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
                     <filter string="Account" icon="terp-account" context="{'group_by':'account_id'}"/>
-                    <filter string="Bank Account" icon="terp-account" context="{'group_by':'partner_bank'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Category of Product" icon="terp-account" context="{'group_by':'categ_id'}"/>
                     <filter string="Currency" icon="terp-account" context="{'group_by':'currency_id'}"/>
                     <filter string="Force Period" icon="terp-account" context="{'group_by':'period_id'}"/>
                     <newline/>

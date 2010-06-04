@@ -6,7 +6,7 @@
         <field name="model">hr.expense.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Expenses Statistics">
+            <tree string="Expenses Analysis">
                 <field name="date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
@@ -36,7 +36,7 @@
          <field name="model">hr.expense.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Expenses Statistics" type="bar">
+             <graph string="Expenses Analysis" type="bar">
                  <field name="user_id"/>
                  <field name="state" group="True"/>
                  <field name="nbr" operator="+"/>
@@ -49,42 +49,42 @@
         <field name="model">hr.expense.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Expenses">
+            <search string="Expenses Analysis">
             	<group>
-            		<filter icon="terp-hr" string="Last 365 Days"
-	                  	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-	                   	    help="Expenses during last 7 year"/>
-	                <filter icon="terp-hr" string="This Month"
-	                   		name="month"
-	                   		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                   		help="Expenses during last month"/>
+            		<filter icon="gtk-media-rewind" string="  365 Days  "
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Expenses during last 7 year"/>
+	                <filter icon="gtk-media-rewind" string="   30 Days   "
+	                    name="month"
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Expenses during last month"/>
 		            <filter icon="gtk-media-rewind"
-	                        string="    7 Days    "
-	                        separator="1"
-	                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-	                        help="Expenses during last 7 days"/>
+	                    string="    7 Days    "
+	                    separator="1"
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Expenses during last 7 days"/>
 	                <separator orientation="vertical"/>
 	                <filter string="Draft"
-	                    	icon="terp-hr"
-	                    	domain="[('state','=','draft')]"
-	                    	help = "Draft Expenses"/>
+	                    icon="terp-hr"
+	                    domain="[('state','=','draft')]"
+	                    help = "Draft Expenses"/>
 		            <filter string="Waiting"
-		                	icon="terp-hr"
-		                	domain="[('state', '=' ,'confirm')]"
-		                	help = "Confirm Expenses"/>
+		                icon="terp-hr"
+		                domain="[('state', '=' ,'confirm')]"
+		                help = "Confirm Expenses"/>
 	                <filter string="Accepted"
-	                   		icon="terp-hr"
-	                   		domain="[('state','=','accepted')]"
-	                   		help = "Accepted Expenses"/>
+	                    icon="terp-hr"
+	                    domain="[('state','=','accepted')]"
+	                    help = "Accepted Expenses"/>
 	  				<separator orientation="vertical"/>
-	                <field name="user_id" widget="selection">
-                        <filter icon="terp-hr"
-	                        		string="Expenses Non Assigned User"
-	                        		help="Expenses Non Assigned User"
-	                        		domain="[('user_id','=',False)]"/>
-                    </field>
                     <field name="product_id"/>
                     <field name="employee_id" widget="selection"/>
+                    <field name="user_id" widget="selection">
+                        <filter icon="terp-hr"
+                            string="My Expenses"
+                            help="My Expenses"
+                            domain="[('user_id','=',uid)]"/>
+                    </field>
 				</group>
 				<newline/>
                 <group expand="1" string="Group By...">
@@ -106,37 +106,29 @@
                 </group>
 				<newline/>
 				<group expand="0" string="Extended filters..." groups="base.group_extended">
-					<filter string="Invoiced"
-	                   		icon="terp-hr"
-	                   		domain="[('state','=','invoiced')]"
-	                   		help = "Invoiced Expenses"/>
-	                <filter string="Reimbursed"
-	                   		icon="terp-hr"
-	                   		domain="[('state','=','paid')]"
-	                   		help = "Reimbursed Expenses"/>
-	                <filter string="Cancelled"
-	                   		icon="terp-hr"
-	                   		domain="[('state','=','cancelled')]"
-	                   		help = "Cancelled Expenses"/>
-	                <separator orientation="vertical"/>
+				    <field name="state"/>
+				    <separator orientation="vertical"/>
+				    <field name="date_confirm"/>
+				    <separator orientation="vertical"/>
+				    <field name="journal_id" widget="selection"/>
+				    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+				    <newline/>
                     <field name="department_id" widget="selection"/>
-                    <field name="journal_id" widget="selection"/>
-                    <field name="currency_id" widget="selection"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
-                    <field name="date_confirm"/>
+                    <separator orientation="vertical"/>
                     <field name="date_valid"/>
+                    <separator orientation="vertical"/>
+                    <field name="currency_id" widget="selection"/>
                 </group>
             </search>
         </field>
     </record>
 
     <record id="action_hr_expense_report_all" model="ir.actions.act_window">
-        <field name="name">Expenses</field>
+        <field name="name">Expenses Analysis</field>
         <field name="res_model">hr.expense.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 

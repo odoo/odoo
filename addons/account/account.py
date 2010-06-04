@@ -183,7 +183,7 @@ class account_account(osv.osv):
                     temp.append(x)
                 ids2 += self._get_children_and_consol(cr, uid, temp, context)
         return ids2
-        
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
         if context is None:
@@ -320,7 +320,7 @@ class account_account(osv.osv):
                 level = obj.level + 1
             res[account.id] = level
         return res
-    
+
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
@@ -477,7 +477,7 @@ class account_account(osv.osv):
     def _check_moves(self, cr, uid, ids, method, context):
         line_obj = self.pool.get('account.move.line')
         account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
-        
+
         if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
             if method == 'write':
                 raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
@@ -511,7 +511,7 @@ class account_account(osv.osv):
             context = {}
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context)
-        if 'type' in vals.keys(): 
+        if 'type' in vals.keys():
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
@@ -559,7 +559,7 @@ class account_journal(osv.osv):
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=16),
-        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('expanse', 'Expanse'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
@@ -683,7 +683,7 @@ class account_fiscalyear(osv.osv):
             else:
                 return False
         return ids[0]
-    
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
             args = []
@@ -695,7 +695,7 @@ class account_fiscalyear(osv.osv):
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
-    
+
 account_fiscalyear()
 
 class account_period(osv.osv):
@@ -771,7 +771,7 @@ class account_period(osv.osv):
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
-    
+
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if args is None:
             args = []
@@ -1375,7 +1375,7 @@ class account_tax_code(osv.osv):
                 return False
             level -= 1
         return True
-    
+
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -1383,7 +1383,7 @@ class account_tax_code(osv.osv):
         default = default.copy()
         default.update({'line_ids': []})
         return super(account_tax_code, self).copy(cr, uid, id, default, context)
-    
+
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
@@ -1441,6 +1441,7 @@ class account_tax(osv.osv):
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'description': fields.char('Tax Code',size=32),
+        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
@@ -1473,6 +1474,7 @@ class account_tax(osv.osv):
         'applicable_type': lambda *a: 'true',
         'type': lambda *a: 'percent',
         'amount': lambda *a: 0,
+        'price_include': lambda *a: 0,
         'active': lambda *a: 1,
         'type_tax_use': lambda *a: 'all',
         'sequence': lambda *a: 1,
@@ -1963,13 +1965,12 @@ class account_add_tmpl_wizard(osv.osv_memory):
         if not tids or not tids[0]['parent_id']:
             return False
         ptids = tmpl_obj.read(cr, uid, [tids[0]['parent_id'][0]],['code'])
+        res = None
         if not ptids or not ptids[0]['code']:
             raise osv.except_osv(_('Error !'), _('Cannot locate parent code for template account!'))
             res = acc_obj.search(cr,uid,[('code','=',ptids[0]['code'])])
-        if res:
-            return res[0]
-        else:
-            return False
+
+        return res and res[0] or False
 
     _columns = {
         'cparent_id':fields.many2one('account.account', 'Parent target', help="Creates an account with the selected template under this existing parent.", required=True),
