@@ -332,19 +332,18 @@ class users(osv.osv):
         'groups_id': _get_group,
         'address_id': False,
     }
-    def company_get(self, cr, uid, uid2, context={}):
+    def company_get(self, cr, uid, uid2, context=None):
         return self._get_company(cr, uid, context=context, uid2=uid2)
     company_get = tools.cache()(company_get)
 
-    def write(self, cr, uid, ids, values, *args, **argv):
-        if (ids == [uid]):
-            ok = True
-            for k in values.keys():
-                if k not in ('password','signature','action_id', 'context_lang', 'context_tz','company_id'):
-                    ok=False
-            if ok:
+    def write(self, cr, uid, ids, values, context=None):
+        if ids == [uid]:
+            for key in values.keys():
+                if not (key in ('view', 'password','signature','action_id', 'company_id') or key.startswith('context_')):
+                    break
+            else:
                 uid = 1
-        res = super(users, self).write(cr, uid, ids, values, *args, **argv)
+        res = super(users, self).write(cr, uid, ids, values, context=context)
         self.company_get.clear_cache(cr.dbname)
         # Restart the cache on the company_get method
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
