@@ -247,6 +247,19 @@ class product_product(osv.osv):
                 product_name = "%s (%s)" %(product_name, product.price_unit_id.name)
             new_results.append((product_id, product_name))
         return new_results
+    
+    #
+    # returns the price respecting the price unit for multiplications qty * price / coeff
+    # 
+    def price_coeff_get(self, cr, uid, ids, ptype='list_price', context={}):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            coeff = 1.0
+            if product.price_unit_id:
+                coeff = product.price_unit_id.coefficient
+            res[product.id] = product.price_get(ptype, context)[product.id] / coeff 
+            
+        return res   
 
 product_product()
 
@@ -289,6 +302,22 @@ class account_invoice_line(osv.osv):
         return result
 
 account_invoice_line()
+
+class account_analytic_line(osv.osv):
+    _inherit = 'account.analytic.line'
+    
+    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
+            unit=False, context=None):
+        res = super(account_analytic_line, self).on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, context)
+        product_obj = self.pool.get('product.product')
+        if prod_id:
+            prod = product_obj.browse(cr, uid, prod_id)
+            amount_unit = prod.price_coeff_get()[prod.id]
+            amount = amount_unit * unit_amount or 1.0
+            res['value']['amount'] = - round(amount, 2)
+        return res
+    
+account_analytic_line()
 
 class account_invoice_tax(osv.osv):
     _inherit = "account.invoice.tax"
