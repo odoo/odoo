@@ -233,8 +233,13 @@ class users(osv.osv):
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
+
+        # Special behavior for this field: res.company.search() will only return the companies
+        # available to the current user (should be the user's companies?), when the user_preference
+        # context is set.
         'company_id': fields.many2one('res.company', 'Company', required=True,
-            help="The company this user is currently working for."),
+            help="The company this user is currently working for.", context={'user_preference': True}),
+
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
             help="Sets the language for the user's user interface, when UI "
@@ -277,7 +282,7 @@ class users(osv.osv):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
 
     _constraints = [
-        (_check_company, 'The chosen company is not in the allowed companies', ['company_id', 'company_ids']),
+        (_check_company, 'The chosen company is not in the allowed companies for this user', ['company_id', 'company_ids']),
     ]
 
     _sql_constraints = [

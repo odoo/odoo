@@ -78,7 +78,8 @@
                 <form string="Users">
                     <notebook colspan="4">
                         <page string="Current Activity">
-                            <field name="company_id" widget="selection" readonly="0" context="{'user_preference':True}"/>
+                            <field name="company_id" widget="selection" readonly="0"
+                                    context="{'user_id': self, 'user_preference': 1}"/>
                             <newline/>
                             <separator colspan="4" string="Preferences"/>
                         </page>
@@ -110,7 +111,7 @@
                         <page string="User">
                             <field name="address_id" select="1"/>
                             <field name="user_email" widget="email"/>
-                            <field name="company_id" required="1"/>
+                            <field name="company_id" required="1" context="{'user_id': self, 'user_preference': 1}"/>
                             <field name="action_id" required="True"/>
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field name="context_lang"/>

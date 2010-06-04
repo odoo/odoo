@@ -56,7 +56,7 @@ from tools.translate import _
 
 import fields
 import tools
-
+from tools.safe_eval import safe_eval as eval
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
@@ -353,8 +353,8 @@ def get_pg_type(f):
             f_type = ('int4', 'INTEGER')
         else:
             f_type = ('varchar', 'VARCHAR(%d)' % f_size)
-    elif isinstance(f, fields.function) and eval('fields.'+(f._type)) in type_dict:
-        t = eval('fields.'+(f._type))
+    elif isinstance(f, fields.function) and eval('fields.'+(f._type),globals()) in type_dict:
+        t = eval('fields.'+(f._type), globals())
         f_type = (type_dict[t], type_dict[t])
     elif isinstance(f, fields.function) and f._type == 'float':
         if f.digits:
@@ -1228,17 +1228,23 @@ class orm_template(object):
                             name = node.get('name')
                             default = self.default_get(cr, user, [name], context=context).get(name)
                             if default:
-                                attrs['selection'] = relation.name_get(cr, 1, default, context=context)
+                                attrs['selection'] = relation.name_get(cr, 1, [default], context=context)
                             else:
                                 attrs['selection'] = []
                         # We can not use the 'string' domain has it is defined according to the record !
                         else:
+                            # If domain and context are strings, we keep them for client-side, otherwise
+                            # we evaluate them server-side to consider them when generating the list of
+                            # possible values
+                            # TODO: find a way to remove this hack, by allow dynamic domains
                             dom = []
-                            if column._domain and not isinstance(column._domain, (str, unicode)):
+                            if column._domain and not isinstance(column._domain, basestring):
                                 dom = column._domain
                             dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
-                            context.update(eval(node.get('context','{}')))
-                            attrs['selection'] = relation._name_search(cr, user, '', dom, context=context, limit=None, name_get_uid=1)
+                            search_context = dict(context)
+                            if column._context and not isinstance(column._context, basestring):
+                                search_context.update(column._context)
+                            attrs['selection'] = relation._name_search(cr, user, '', dom, context=search_context, limit=None, name_get_uid=1)
                             if (node.get('required') and not int(node.get('required'))) or not column.required:
                                 attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
@@ -1951,9 +1957,9 @@ class orm_memory(orm_template):
                 f = True
                 for arg in result:
                      if arg[1] =='=':
-                         val =eval('data[arg[0]]'+'==' +' arg[2]')
+                         val =eval('data[arg[0]]'+'==' +' arg[2]', locals())
                      elif arg[1] in ['<','>','in','not in','<=','>=','<>']:
-                         val =eval('data[arg[0]]'+arg[1] +' arg[2]')
+                         val =eval('data[arg[0]]'+arg[1] +' arg[2]', locals())
                      elif arg[1] in ['ilike']:
                          if str(data[arg[0]]).find(str(arg[2]))!=-1:
                              val= True
