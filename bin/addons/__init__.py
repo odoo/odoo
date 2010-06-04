@@ -28,6 +28,7 @@ import zipimport
 import osv
 import tools
 import tools.osutil
+from tools.safe_eval import safe_eval as eval
 import pooler
 
 

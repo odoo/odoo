@@ -34,6 +34,7 @@ import os
 from lxml import etree
 import base64
 from reportlab.platypus.doctemplate import ActionFlowable
+from tools.safe_eval import safe_eval as eval
 
 encoding = 'utf-8'
 

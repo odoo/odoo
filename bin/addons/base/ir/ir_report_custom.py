@@ -24,6 +24,7 @@ from osv.orm import browse_null
 import ir
 import report.custom
 from tools.translate import _
+from tools.safe_eval import safe_eval as eval
 import netsvc
 
 class report_custom(osv.osv):

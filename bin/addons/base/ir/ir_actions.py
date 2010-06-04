@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields,osv
+from tools.safe_eval import safe_eval as eval
 import tools
 import time
 from tools.config import config
@@ -564,7 +565,7 @@ class actions_server(osv.osv):
                         'object':obj,
                         'obj': obj,
                         }
-                    exec action.code in localdict
+                    eval(action.code, localdict, "exec")
                     if 'action' in localdict:
                         return localdict['action']
                 else:

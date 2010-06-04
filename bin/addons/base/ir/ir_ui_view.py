@@ -22,6 +22,7 @@
 from osv import fields,osv
 from lxml import etree
 from tools import graph
+from tools.safe_eval import safe_eval as eval
 import tools
 import netsvc
 import os

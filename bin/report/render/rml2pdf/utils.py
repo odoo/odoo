@@ -42,6 +42,7 @@ from lxml import etree
 import copy
 import locale
 import traceback, sys
+from tools.safe_eval import safe_eval as eval
 
 _regex = re.compile('\[\[(.+?)\]\]')
 

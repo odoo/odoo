@@ -23,6 +23,7 @@ import sys
 import netsvc
 import osv as base
 import pooler
+from tools.safe_eval import safe_eval as eval
 
 class Env(dict):
     def __init__(self, cr, uid, model, ids):
@@ -54,7 +55,7 @@ def _eval_expr(cr, ident, workitem, action):
             ret=False
         else:
             env = Env(cr, uid, model, ids)
-            ret = eval(line, env)
+            ret = eval(line, env, nocopy=True)
     return ret
 
 def execute_action(cr, ident, workitem, activity):
