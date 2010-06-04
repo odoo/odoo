@@ -71,7 +71,8 @@ class sale_report(osv.osv):
         cr.execute("""
             create or replace view sale_report as (
             select el.*,
-            (select count(1) from sale_order_line where order_id = s.id) as nbr,
+                   -- (select count(1) from sale_order_line where order_id = s.id) as nbr,
+                    (select 1) as nbr,
                      s.date_order as date,
                      s.date_confirm as date_confirm,
                      to_char(s.date_order, 'YYYY') as year,
@@ -101,7 +102,7 @@ class sale_report(osv.osv):
                  sale_order_line l
                  left join product_uom u on (u.id=l.product_uom)
                  left join product_template pt on (pt.id=l.product_id)
-    group by l.id, l.order_id, l.product_id, u.name, pt.categ_id) el
+        group by l.id, l.order_id, l.product_id, u.name, pt.categ_id) el
     where s.id = el.order_id
             )
         """)

@@ -9,7 +9,6 @@ AVAILABLE_STATES = [
     ('done', 'Closed'),
     ('pending','Pending')
 ]
-
 class project_issue_report(osv.osv):
     _name = "project.issue.report"
     _auto = False
@@ -51,9 +50,8 @@ class project_issue_report(osv.osv):
 
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
         'perc_done': fields.function(_get_data, string='%Done', method=True, type="float"),
@@ -65,23 +63,29 @@ class project_issue_report(osv.osv):
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
+        'opening_date': fields.date('Opening Date', readonly=True),
+        'creation_date': fields.date('Creation Date', readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue')]"),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
         'nbr': fields.integer('# of Issues', readonly=True),
+        'working_hours_open': fields.float('# Working Open Hours', readonly=True),
+        'working_hours_close': fields.float('# Working Closing Hours', readonly=True),
+        'delay_open': fields.float('Avg opening Delay', digits=(16,2), readonly=True, group_operator="avg",
+                                       help="Number of Days to close the project issue"),
         'delay_close': fields.float('Avg Closing Delay', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
         'company_id' : fields.many2one('res.company', 'Company'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'type_id': fields.many2one('crm.case.resource.type', 'Type', domain="[('object_id.model', '=', 'project.issue')]"),
-        'date_closed': fields.datetime('Close Date', readonly=True),
+        'date_closed': fields.date('Close Date', readonly=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
         'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" )
     }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'project_issue_report')
         cr.execute("""
@@ -91,48 +95,57 @@ class project_issue_report(osv.osv):
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
+                    to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     c.state,
                     c.user_id,
+                    c.working_hours_open,
+                    c.working_hours_close,
                     c.section_id,
                     c.categ_id,
                     c.stage_id,
-                    to_char(c.date_closed, 'YYYY/mm/dd') as date_closed,
-                    u.company_id as company_id,
+                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
+                    c.company_id as company_id,
                     c.priority as priority,
                     c.project_id as project_id,
                     c.type_id as type_id,
-                    count(*) as nbr,
+                    (select 1) as nbr,
                     c.assigned_to,
                     c.partner_id,
                     c.canal_id,
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
+                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
                     project_issue c
-                left join
-                    res_users u on (c.id = u.id)
+                where c.categ_id in (select res_id from ir_model_data where name='bug_categ')
                 group by
                     to_char(c.create_date, 'YYYY'),
                     to_char(c.create_date, 'MM'),
                     to_char(c.create_date, 'YYYY-MM-DD'),
                     c.state,
+                    to_char(c.date_open, 'YYYY-MM-DD'),
+                    to_char(c.date_closed, 'YYYY-mm-dd'),
                     c.user_id,
                     c.section_id,
                     c.categ_id,
                     c.stage_id,
-                    c.date_closed,
-                    u.company_id,
+                    c.company_id,
                     c.priority,
+                    c.working_hours_open,
+                    c.working_hours_close,
                     c.project_id,
+                    to_char(c.date_closed, 'YYYY-MM-DD'),
                     c.type_id,
+                    c.working_hours_open,
+                    c.working_hours_close,
                     date_trunc('day',c.create_date),
                     c.assigned_to,
                     c.partner_id,
                     c.canal_id,
                     c.task_id
-            )""")
-
+            )""") 
 
 project_issue_report()
 
