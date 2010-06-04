@@ -98,5 +98,5 @@
 -
   Check for timesheet_ids in hr manager's timesheet
 -
-  !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0, string: After hr manager's work task, len of timesheet line of current timesheet must be greater then 1}:
+  !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0, string: After hr manager's work task, length of timesheet line of current timesheet must be greater then 1}:
      - len(timesheet_ids) > 0             

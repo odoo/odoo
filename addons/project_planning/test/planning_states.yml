@@ -26,7 +26,7 @@
      - state == "open"
 
 - 
-  Performing an osv_memory action action_cancel on module report_account_analytic.planning
+  Cancel the planning
 - 
   !python {model: report_account_analytic.planning}: |
     self.action_cancel(cr, uid, [ref("report_account_analytic_planning_projectplanning0")],
@@ -41,7 +41,7 @@
      - state == "cancel"    
     
 - 
-  Performing an osv_memory action action_draft on module report_account_analytic.planning
+  Reopen the planning
 - 
   !python {model: report_account_analytic.planning}: |
     self.action_draft(cr, uid, [ref("report_account_analytic_planning_projectplanning0")],
@@ -56,7 +56,7 @@
      - state == "draft"   
     
 - 
-  Performing an osv_memory action action_open on module report_account_analytic.planning
+  Open the planning
 - 
   !python {model: report_account_analytic.planning}: |
     self.action_open(cr, uid, [ref("report_account_analytic_planning_projectplanning0")],
@@ -71,7 +71,7 @@
      - state == "open"    
     
 - 
-  Performing an osv_memory action action_done on module report_account_analytic.planning
+  Close the planning
 - 
   !python {model: report_account_analytic.planning}: |
     self.action_done(cr, uid, [ref("report_account_analytic_planning_projectplanning0")],

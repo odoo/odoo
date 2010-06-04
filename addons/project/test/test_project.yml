@@ -1,5 +1,5 @@
 -
-  Test project template functionality
+  Test project template feature
 - 
   Create project 'OpenERP Training Programme'
 - 
@@ -145,7 +145,7 @@
         name: Training on OpenERP modules, models and classes
         user_id: base.user_root
 -
-   Check for effective hours and remaining hours
+   Check for effective hours and remaining hours, effective_hours must be equal to 10
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After work task of 10 hours effective_hours must be equal to 10}:
        - remaining_hours == 20
@@ -162,7 +162,7 @@
         name: Training on OpenERP xml views
         user_id: base.user_root
 -
-   Check for effective hours and remaining hours
+   Check for effective hours and remaining hours, effective_hours must be equal to 20
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After one more work task of 10 hours effective_hours must be equal to 20}:
        - remaining_hours == 10
@@ -179,7 +179,7 @@
         name: Training on workflows
         user_id: base.user_root
 -
-   Check for effective hours and remaining hours
+   Check for effective hours and remaining hours, effective_hours must be equal to 30
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After one more work task of 10 hours effective_hours must be equal to 30}:
        - remaining_hours == 0
@@ -192,7 +192,7 @@
   !record {model: config.compute.remaining, id: config_compute_remaining_0}:
     remaining_hours: 10.0
 -
-  Reevaluating the task
+  Reevaluate the task
 - 
   !python {model: config.compute.remaining}: |
     self.compute_hours(cr, uid, [ref("config_compute_remaining_0")], {"lang": "en_US",
@@ -201,7 +201,7 @@
       [ref("project_task_technicaltraining0")], "active_id": ref("project_task_technicaltraining0"), })
       
 -
-   Check for effective hours and remaining hours
+   Check for effective hours and remaining hours, remaining_hours must be 10 while planned_hours remains 30
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After reevaluating the task with 10 hours remaining_hours must be 10 while planned_hours remains 30}:
        - planned_hours == 30
@@ -250,7 +250,7 @@
   !record {model: config.compute.remaining, id: config_compute_remaining_1}:
     remaining_hours: 10.0   
 - 
-  Reevaluating the task with 10 hours remaining
+  Reevaluate the task with 10 hours remaining
 - 
   !python {model: config.compute.remaining}: |
     self.compute_hours(cr, uid, [ref("config_compute_remaining_1")], {"lang": "en_US",
@@ -259,7 +259,7 @@
       1, "search_default_current": 1, "active_ids": [ref("project_task_technicaltraining0")], "active_id": ref("project_task_technicaltraining0"),
       })
 -
-   Check for effective hours and remaining hours
+   Check for effective hours and remaining hours, remaining_hours must be 10 while planned_hours remains 30
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After reevaluating the task with 10 hours remaining_hours must be 10 while planned_hours remains 30}:
        - planned_hours == 30
