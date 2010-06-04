@@ -35,8 +35,13 @@ import netsvc
 import osv
 import pooler
 from config import config
-from tools.safe_eval import safe_eval as eval
 from yaml_import import convert_yaml_import
+
+# Import of XML records requires the unsafe eval as well,
+# almost everywhere, which is ok because it supposedly comes
+# from trusted data, but at least we make it obvious now.
+unsafe_eval = eval
+from tools.safe_eval import safe_eval as eval
 
 class ConvertError(Exception):
     def __init__(self, doc, orig_excpt):
@@ -63,7 +68,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                 f_search = node.get("search",'').encode('utf-8')
                 f_use = node.get("use",'id').encode('ascii')
                 f_name = node.get("name",'').encode('utf-8')
-                q = eval(f_search, idref)
+                q = unsafe_eval(f_search, idref)
                 ids = pool.get(f_model).search(cr, uid, q)
                 if f_use != 'id':
                     ids = map(lambda x: x[f_use], pool.get(f_model).read(cr, uid, ids, [f_use]))
@@ -97,10 +102,10 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                     pytz=pytzclass()
                 idref2['pytz'] = pytz
                 try:
-                        return eval(a_eval, idref2)
-                except:
-                        logger = netsvc.Logger()
-                        logger.notifyChannel("init", netsvc.LOG_WARNING, 'could eval(%s) for %s in %s, please get back and fix it!' % (a_eval,node.get('name'),context))
+                        return unsafe_eval(a_eval, idref2)
+                except Exception, e:
+                        logger = logging.getLogger('init')
+                        logger.warning('couldn\'t eval(%s) for %s in %s, please get back and fix it!' % (a_eval,node.get('name'),context), exc_info=True)
                         return ""
             if t == 'xml':
                 def _process(s, idref):
@@ -145,7 +150,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
         a_eval = node.get('eval','')
         if a_eval:
             idref['ref'] = lambda x: self.id_get(cr, False, x)
-            args = eval(a_eval, idref)
+            args = unsafe_eval(a_eval, idref)
         for n in node:
             return_val = _eval_xml(self,n, pool, cr, uid, idref, context)
             if return_val is not None:
@@ -206,13 +211,13 @@ class xml_import(object):
     def get_context(self, data_node, node, eval_dict):
         data_node_context = (len(data_node) and data_node.get('context','').encode('utf8'))
         if data_node_context:
-            context = eval(data_node_context, eval_dict)
+            context = unsafe_eval(data_node_context, eval_dict)
         else:
             context = {}
 
         node_context = node.get("context",'').encode('utf8')
         if node_context:
-            context.update(eval(node_context, eval_dict))
+            context.update(unsafe_eval(node_context, eval_dict))
 
         return context
 
@@ -242,7 +247,7 @@ form: module.record_id""" % (xml_id,)
         d_id = rec.get("id",'')
         ids = []
         if d_search:
-            ids = self.pool.get(d_model).search(cr,self.uid,eval(d_search))
+            ids = self.pool.get(d_model).search(cr, self.uid, unsafe_eval(d_search))
         if d_id:
             try:
                 ids.append(self.id_get(cr, d_model, d_id))
@@ -405,7 +410,7 @@ form: module.record_id""" % (xml_id,)
         def ref(str_id):
             return self.id_get(cr, None, str_id)
 
-        context=eval(context, locals_dict=locals())
+        context = unsafe_eval(context)
 #        domain = eval(domain) # XXX need to test this line -> uid, active_id, active_ids, ...
 
         res = {
@@ -625,7 +630,7 @@ form: module.record_id""" % (xml_id,)
         if rec_id:
             ids = [self.id_get(cr, rec_model, rec_id)]
         elif rec_src:
-            q = eval(rec_src, eval_dict)
+            q = unsafe_eval(rec_src, eval_dict)
             ids = self.pool.get(rec_model).search(cr, uid, q, context=context)
             if rec_src_count:
                 count = int(rec_src_count)
@@ -660,7 +665,7 @@ form: module.record_id""" % (xml_id,)
             for test in rec.findall('./test'):
                 f_expr = test.get("expr",'').encode('utf-8')
                 expected_value = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
-                expression_value = eval(f_expr, globals_dict, nocopy=True)
+                expression_value = unsafe_eval(f_expr, globals_dict)
                 if expression_value != expected_value: # assertion failed
                     self.assert_report.record_assertion(False, severity)
                     msg = 'assertion "%s" failed!\n'    \
@@ -684,7 +689,7 @@ form: module.record_id""" % (xml_id,)
         rec_id = rec.get("id",'').encode('ascii')
         rec_context = rec.get("context", None)
         if rec_context:
-            rec_context = eval(rec_context)
+            rec_context = unsafe_eval(rec_context)
         self._test_xml_id(rec_id)
         if self.isnoupdate(data_node) and self.mode != 'init':
             # check if the xml record has an id string
@@ -724,7 +729,7 @@ form: module.record_id""" % (xml_id,)
             f_val = False
 
             if f_search:
-                q = eval(f_search, self.idref)
+                q = unsafe_eval(f_search, self.idref)
                 field = []
                 assert f_model, 'Define an attribute model="..." in your .XML file !'
                 f_obj = self.pool.get(f_model)

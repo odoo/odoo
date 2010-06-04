@@ -7,9 +7,13 @@ import pooler
 import netsvc
 import misc
 from config import config
-from tools.safe_eval import safe_eval as eval
 import yaml_tag
 import yaml
+
+# YAML import needs both safe and unsafe eval, but let's
+# default to /safe/.
+unsafe_eval = eval
+from tools.safe_eval import safe_eval as eval
 
 logger_channel = 'tests'
 
@@ -234,8 +238,9 @@ class YamlInterpreter(object):
                 record = model.browse(self.cr, self.uid, id, context)
                 for test in expressions:
                     try:
-                        success = eval(test, self.eval_context, RecordDictWrapper(record))
+                        success = unsafe_eval(test, self.eval_context, RecordDictWrapper(record))
                     except Exception, e:
+                        self.logger.debug('Exception during evaluation of !assert block in yaml_file %s.', self.filename, exc_info=True)
                         raise YamlImportAbortion(e)
                     if not success:
                         msg = 'Assertion "%s" FAILED\ntest: %s\n'
@@ -367,12 +372,13 @@ class YamlInterpreter(object):
         code_context = {'model': model, 'cr': self.cr, 'uid': self.uid, 'log': log, 'context': self.context}
         code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
-            code = compile(statements, self.filename, 'exec')
-            eval(code, {'ref': self.get_id}, code_context)
+            code_obj = compile(statements, self.filename, 'exec')
+            unsafe_eval(code_obj, {'ref': self.get_id}, code_context)
         except AssertionError, e:
             self._log_assert_failure(python.severity, 'AssertionError in Python code %s: %s', python.name, e)
             return
         except Exception, e:
+            self.logger.debug('Exception during evaluation of !python block in yaml_file %s.', self.filename, exc_info=True)
             raise YamlImportAbortion(e)
         else:
             self.assert_report.record(True, python.severity)

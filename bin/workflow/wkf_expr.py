@@ -55,7 +55,7 @@ def _eval_expr(cr, ident, workitem, action):
             ret=False
         else:
             env = Env(cr, uid, model, ids)
-            ret = eval(line, env)
+            ret = eval(line, env, nocopy=True)
     return ret
 
 def execute_action(cr, ident, workitem, activity):

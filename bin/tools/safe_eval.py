@@ -33,6 +33,7 @@ condition/math builtins.
 #  - python 2.6's ast.literal_eval
 
 from opcode import HAVE_ARGUMENT, opmap, opname
+from types import CodeType
 
 __all__ = ['test_expr', 'literal_eval', 'safe_eval', 'const_eval', 'ext_eval' ]
 
@@ -211,6 +212,9 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     ValueError: opcode LOAD_NAME not allowed
 
     """
+    if isinstance(expr, CodeType):
+        raise ValueError("safe_eval does not allow direct evaluation of code objects.")
+
     if '__subclasses__' in expr:
        raise ValueError('expression not allowed (__subclasses__)')
 
@@ -220,6 +224,12 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
     # prevent altering the globals/locals from within the sandbox
     # by taking a copy.
     if not nocopy:
+        # isinstance() does not work below, we want *exactly* the dict class
+        if (globals_dict is not None and type(globals_dict) is not dict) \
+            or (locals_dict is not None and type(locals_dict) is not dict):
+            logging.getLogger('safe_eval').warning('Looks like you are trying to pass a dynamic environment,"\
+                              "you should probably pass nocopy=True to safe_eval()')
+
         globals_dict = dict(globals_dict)
         if locals_dict is not None:
             locals_dict = dict(locals_dict)
@@ -241,5 +251,4 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
 
     return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
 
-
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
