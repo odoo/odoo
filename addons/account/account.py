@@ -1965,13 +1965,12 @@ class account_add_tmpl_wizard(osv.osv_memory):
         if not tids or not tids[0]['parent_id']:
             return False
         ptids = tmpl_obj.read(cr, uid, [tids[0]['parent_id'][0]],['code'])
+        res = None
         if not ptids or not ptids[0]['code']:
             raise osv.except_osv(_('Error !'), _('Cannot locate parent code for template account!'))
             res = acc_obj.search(cr,uid,[('code','=',ptids[0]['code'])])
-        if res:
-            return res[0]
-        else:
-            return False
+
+        return res and res[0] or False
 
     _columns = {
         'cparent_id':fields.many2one('account.account', 'Parent target', help="Creates an account with the selected template under this existing parent.", required=True),

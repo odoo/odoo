@@ -9,7 +9,7 @@
                 <form string="Forward to Partner">
                     <separator string="User" colspan="4" />
                     <field name="email_from" colspan="2" />
-                    <field name="history" colspan="2" on_change="on_change_history(history)"/>
+                    <field name="history" colspan="2" on_change="on_change_history(history, context)"/>
                     <separator string="Send to" colspan="4" />
                     <field name="name" colspan="2" />
 					<group col="2" colspan="2" attrs="{ 'invisible' : [('name','!=','user')]}">
