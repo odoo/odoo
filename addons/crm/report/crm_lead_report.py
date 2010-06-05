@@ -91,7 +91,7 @@ class crm_lead_report(osv.osv):
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'email': fields.integer('# of Emails', size=128, readonly=True),
-        'expected_closing_days': fields.integer('# of Expected Closing Days', size=128, readonly=True),
+        'expected_closing_days': fields.integer('Avg Expected Closing Days', size=128, readonly=True),
         'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'delay_close': fields.float('Delay to close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
@@ -130,17 +130,18 @@ class crm_lead_report(osv.osv):
                     c.section_id,
                     c.categ_id,
                     c.partner_id,
-                    count(*) as nbr,
+                    (select 1) as nbr,
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
                     (select count(id) from mailgate_message where thread_id=c.id) as email,
                     date_trunc('day',c.create_date) as create_date,
-                    sum(cast(to_char(date_trunc('day',c.date_open) - date_trunc('day',c.date_deadline),'DD') as int)) as expected_closing_days,
+                    avg(cast(to_char(date_trunc('day',c.date_open) - date_trunc('day',c.date_deadline),'DD') as int)) as expected_closing_days,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
                     avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
                 from
                     crm_lead c
+                where c.type='lead' or c.type is null
                 group by
                     to_char(c.create_date, 'YYYY'),
                     to_char(c.create_date, 'MM'),

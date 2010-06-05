@@ -10,19 +10,22 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Leads Analysis">
-				<field name="name" invisible="1"/>
-				<field name="month" invisible="1"/>
-				<field name="section_id" invisible="1"/>
-				<field name="user_id" invisible="1"/>
-    			<field name="company_id" invisible="1"/>
-				<field name="partner_id" invisible="1"/>
-				<field name="day" invisible="1"/>
-				<field name="nbr" string="#Leads" sum="#Leads" attrs="{'string': 'type'=='opportunity' and '#opp' or '#lead'}"/>
-                <field name="delay_close" sum='Avg Closing Delay'/>
+                <field name="name" invisible="1"/>
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="type" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="section_id" invisible="1"/>
+                <field name="user_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="nbr" sum="# Leads"/>
+                <field name="email" sum="#Mails"/>
+                <field name="delay_open" sum='Avg Closing Delay'/>
+                <field name="delay_close" sum='Avg Closing Delay'/>
+                <field name="expected_closing_days" sum='#Expected Closing'/>
              </tree>
             </field>
         </record>
@@ -79,11 +82,8 @@
                             domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
                    		<separator orientation="vertical" />
                         <filter icon="terp-crm"
-                    		string="Draft"
-                    		domain="[('state','=','draft')]"/>
-					    <filter icon="terp-crm"
-                    		string="Open"
-                    		domain="[('state','=','open')]"/>
+                    		string="Current"
+                    		domain="[('state','in',('draft','open')]"/>
 					    <filter icon="terp-crm"
                     		string="Pending"
                     		domain="[('state','=','pending')]"/>
@@ -105,19 +105,20 @@
                    <group  expand="1" string="Group By...">
                         <filter string="User" name="User" icon="terp-crm"
                         	domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Company" icon="terp-crm"
-                        	domain="[]"
-                        	context="{'group_by':'company_id'}" />
                         <filter string="Section" icon="terp-crm"
                         	domain="[]"
                         	context="{'group_by':'section_id'}" />
                         <separator orientation="vertical" />
-                        <filter string="State" icon="terp-crm"
-                        	domain="[]" context="{'group_by':'state'}" />
-						<filter string="Stage" icon="terp-crm" domain="[]"
-							context="{'group_by':'stage_id'}" />
+                        <filter string="Stage" icon="terp-crm" domain="[]"
+                          context="{'group_by':'stage_id'}" />
                         <filter string="Category" icon="terp-crm"
                         	domain="[]" context="{'group_by':'categ_id'}" />
+                        <filter string="Partner" icon="terp-personal"
+                        	domain="[]" context="{'group_by':'partner_id'}" />
+                        <separator orientation="vertical" />
+                        <filter string="Company" icon="terp-crm"
+                        	domain="[]"
+                        	context="{'group_by':'company_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Day" icon="terp-crm"
                         	domain="[]" context="{'group_by':'day'}"/>
@@ -129,6 +130,7 @@
                    <newline/>
                    <group  expand="0" string="Extended options..." groups="base.group_extended">
                        <field name="state"/>
+                       <field name="partner_id"/>
 	            	   <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
 		               <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -144,23 +146,24 @@
             <field name="model">crm.lead.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            <tree string="Opportunities Analysis">
-				<field name="name" invisible="1"/>
-				<field name="month" invisible="1"/>
-				<field name="section_id" invisible="1" groups="base.group_extended"/>
-				<field name="user_id" invisible="1"/>
-    			<field name="company_id" invisible="1" groups="base.group_extended"/>
-				<field name="partner_id" invisible="1"/>
-				<field name="day" invisible="1"/>
-				<field name="nbr" string="#Opportunities" sum="#Opportunities"/>
-				<field name="email" sum="# of Emails"/>
-				<field name="expected_closing_days" sum='# of Expected Closing Days'/>
-				<field name="delay_open" sum='Delay to open'/>
-                <field name="delay_close" sum='Delay to close'/>
+            <tree string="Leads Analysis">
+                <field name="name" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="section_id" invisible="1" groups="base.group_extended"/>
+                <field name="user_id" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="type" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="nbr" string="#Opportunities" sum="#Opportunities"/>
+                <field name="email" sum="# of Emails"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                <field name="expected_closing_days" sum='# of Expected Closing Days'/>
+                <field name="delay_open" sum='Delay to open'/>
+                <field name="delay_close" sum='Delay to close'/>
              </tree>
             </field>
         </record>
