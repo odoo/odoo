@@ -21,6 +21,7 @@
 
 from osv import fields,osv
 import tools
+from crm import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -91,7 +92,6 @@ class crm_lead_report(osv.osv):
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'email': fields.integer('# of Emails', size=128, readonly=True),
-        'expected_closing_days': fields.integer('Avg Expected Closing Days', size=128, readonly=True),
         'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'delay_close': fields.float('Delay to close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
@@ -101,7 +101,12 @@ class crm_lead_report(osv.osv):
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
+        'opening_date': fields.date('Opening Date', readonly=True),
+        'creation_date': fields.date('Creation Date', readonly=True),
+        'date_closed': fields.date('Close Date', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
@@ -122,11 +127,15 @@ class crm_lead_report(osv.osv):
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
+                    to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
+                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
                     c.state as state,
                     c.user_id,
                     c.stage_id,
                     c.type as type,
                     c.company_id,
+                    c.priority,
                     c.section_id,
                     c.categ_id,
                     c.partner_id,
@@ -136,23 +145,24 @@ class crm_lead_report(osv.osv):
                     0.0 as perc_cancel,
                     (select count(id) from mailgate_message where thread_id=c.id) as email,
                     date_trunc('day',c.create_date) as create_date,
-                    avg(cast(to_char(date_trunc('day',c.date_open) - date_trunc('day',c.date_deadline),'DD') as int)) as expected_closing_days,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
                     avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
                 from
                     crm_lead c
-                where c.type='lead' or c.type is null
                 group by
                     to_char(c.create_date, 'YYYY'),
+                    to_char(c.date_open, 'YYYY-MM-DD'),
+                    to_char(c.date_closed, 'YYYY-mm-dd'),
                     to_char(c.create_date, 'MM'),
                     c.state,
                     c.user_id,
                     c.id,
                     c.section_id,
                     c.stage_id,
-                    categ_id,
+                    c.categ_id,
                     c.partner_id,
                     c.company_id,
+                    c.priority,
                     c.type,
                     c.create_date,
                     to_char(c.create_date, 'YYYY-MM-DD')
