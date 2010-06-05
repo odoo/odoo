@@ -1576,7 +1576,7 @@ class account_tax(osv.osv):
             }
         """
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        totalex = totalex = round(price_unit * quantity, precision)
+        totalin = totalex = round(price_unit * quantity, precision)
         tin = []
         tex = []
         for tax in taxes:

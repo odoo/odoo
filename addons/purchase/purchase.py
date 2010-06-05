@@ -65,6 +65,7 @@ class purchase_order(osv.osv):
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
+            print res
         return res
 
     def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context):
@@ -574,8 +575,7 @@ class purchase_order_line(osv.osv):
         cur_obj=self.pool.get('res.currency')
         tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids, context=context):
-            price = line.price_unit * line.product_qty
-            taxes = tax_obj.compute_all(cr, uid, line.taxes_id, price, line.product_qty)
+            taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
