@@ -59,6 +59,7 @@
         'res/bank_view.xml',
         'res/country_view.xml',
         'res/res_currency_view.xml',
+        'res/partner/wizard/wizard_share_view.xml',
         'res/partner/crm_view.xml',
         'res/partner/wizard/partner_sms_send_view.xml',
         'res/partner/partner_data.xml',

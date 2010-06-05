@@ -159,6 +159,9 @@ class res_partner(osv.osv):
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
+    def do_share(self, cr, uid, ids, *args):
+        return True
+
     def _check_ean_key(self, cr, uid, ids):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
             thisean=partner_o['ean13']

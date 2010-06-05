@@ -22,6 +22,7 @@
 import wizard_spam
 import wizard_clear_ids
 import wizard_ean_check
+import wizard_share
 import partner_sms_send
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
