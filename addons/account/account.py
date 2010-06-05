@@ -1576,7 +1576,6 @@ class account_tax(osv.osv):
             }
         """
         precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        totalin = totalex = round(price_unit * quantity, precision)
         totalex = totalex = round(price_unit * quantity, precision)
         tin = []
         tex = []
@@ -1586,9 +1585,9 @@ class account_tax(osv.osv):
             else:
                 tex.append(tax)
         tin = self.compute_inv(cr, uid, tin, price_unit, quantity, address_id=address_id, product=product, partner=partner)
-        tex = self._compute(cr, uid, tex, price_unit, quantity, address_id=address_id, product=product, partner=partner)
         for r in tin:
             totalex -= r['amount']
+        tex = self._compute(cr, uid, tex, totalex/quantity, quantity, address_id=address_id, product=product, partner=partner)
         for r in tex:
             totalin += r['amount']
         return {
@@ -1598,7 +1597,9 @@ class account_tax(osv.osv):
         }
 
     def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
-        print "Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included"
+        logger = netsvc.Logger()
+        logger.notifyChannel("warning", netsvc.LOG_WARNING,
+            "Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
         return self._compute(cr, uid, taxes, price_unit, quantity, address_id, product, partner)
 
     def _compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
