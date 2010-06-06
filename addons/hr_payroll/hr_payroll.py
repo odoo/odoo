@@ -109,7 +109,11 @@ class hr_payroll_structure(osv.osv):
 hr_payroll_structure()
 
 class hr_contract(osv.osv):
-
+    """
+    Employee contract based on the visa, work permits
+    allowas to configure different Salary structure
+    """
+    
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
     
@@ -1833,7 +1837,7 @@ class hr_employee(osv.osv):
         'esi_account':fields.char('ESI Account', size=64, required=False, readonly=False),
         'hospital_id':fields.many2one('res.partner.address', 'ESI Hospital', required=False),
         'passport_id':fields.many2one('hr.passport', 'Passport', required=False),
-        'otherid':fields.char('Bank Account', size=64, required=False),
+        'otherid':fields.char('Other Id', size=64, required=False),
         'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'property_bank_account': fields.property(
