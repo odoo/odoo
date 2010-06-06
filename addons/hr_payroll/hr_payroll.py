@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #-*- coding:utf-8 -*-
 ##############################################################################
 #
@@ -28,10 +27,26 @@ from osv import fields
 from tools import config
 from tools.translate import _
 
+class hr_contract_wage_type(osv.osv):
+    """
+    Wages types
+    Basic = Basic Salary
+    Grows = Basic + Allowances
+    New = Grows - Deductions
+    """
+    
+    _inherit = 'hr.contract.wage.type'
+    _columns = {
+        'type' : fields.selection([('basic','Basic'), ('gross','Gross'), ('net','Net')], 'Type', required=True),
+    }
+hr_contract_wage_type()
+
 class hr_passport(osv.osv):
-    '''
-    Passport Detail
-    '''
+    """
+    Employee Passport
+    Passport based Contratacts for Employees
+    """
+    
     _name = 'hr.passport'
     _description = 'Passport Detail'
     
@@ -39,20 +54,28 @@ class hr_passport(osv.osv):
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'name':fields.char('Passport No', size=64, required=True, readonly=False),
         'country_id':fields.many2one('res.country', 'Country of Issue', required=True),
-        'date_issue': fields.date('Passport Issue Date'),
-        'date_expire': fields.date('Passport Expire Date'),
+        'address_id':fields.many2one('res.partner.address', 'Address', required=False),
+        'date_issue': fields.date('Passport Issue Date', required=True),
+        'date_expire': fields.date('Passport Expire Date', required=True),
         'contracts_ids':fields.one2many('hr.contract', 'passport_id', 'Contracts', required=False, readonly=True),
+        'note': fields.text('Description'),
     }
 hr_passport()
 
-class hr_employee_grade(osv.osv):
-    _name = 'hr.employee.grade'
-    _description = 'Function of the Employee'
-    _inherits = {
-        'res.partner.function': 'function_id',
-    }
+class hr_payroll_structure(osv.osv):
+    """
+    Salary structure used to defined
+    * Basic
+    * Allowlance
+    * Deductions
+    """
+    
+    _name = 'hr.payroll.structure'
+    _description = 'Salary Structure'
+
     _columns = {
-        'function_id':fields.many2one('res.partner.function', 'Function', required=False),
+        'name':fields.char('Name', size=256, required=True, readonly=False),
+        'code':fields.char('Code', size=64, required=True, readonly=False),
         'line_ids':fields.one2many('hr.payslip.line', 'function_id', 'Salary Structure', required=False),
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account', required=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
@@ -65,15 +88,25 @@ class hr_employee_grade(osv.osv):
     }
     
     def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Create a new record in hr_payroll_structure model from existing one
+        @param cr: cursor to database
+        @param user: id of current user
+        @param id: list of record ids on which copy method executes
+        @param default: dict type contains the values to be override during copy of object
+        @param context: context arguments, like lang, time zone
+        
+        @return: returns a id of newly created record
+        """
         code = self.browse(cr, uid, id).code
         default = {
             'code':code+"(copy)",
             'company_id':self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         }
-        res_id = super(hr_employee_grade, self).copy(cr, uid, id, default, context)
-        return 0
-        
-hr_employee_grade()
+        res_id = super(hr_payroll_structure, self).copy(cr, uid, id, default, context)
+        return res_id
+    
+hr_payroll_structure()
 
 class hr_contract(osv.osv):
 
@@ -85,21 +118,9 @@ class hr_contract(osv.osv):
         'passport_id':fields.many2one('hr.passport', 'Passport', required=False),
         'visa_no':fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
-        'function' : fields.many2one('hr.employee.grade', 'Function'),
-        'working_days_per_week': fields.integer('Working Days / Week'),
-        'working_hours_per_day':fields.integer('Working Hours / Day'),
-    }
-    _defaults = {
-        'working_days_per_week': lambda *args: 5
+        'struct_id' : fields.many2one('hr.payroll.structure', 'Salary Structure'),
     }
 hr_contract()
-
-class hr_contract_wage_type(osv.osv):
-    _inherit = 'hr.contract.wage.type'
-    _columns = {
-        'type' : fields.selection([('basic','Basic'), ('gross','Gross'), ('net','Net')], 'Type', required=True),
-    }
-hr_contract_wage_type()
 
 class payroll_register(osv.osv):
     '''
@@ -168,7 +189,7 @@ class payroll_register(osv.osv):
     def compute_sheet(self, cr, uid, ids, context={}):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
-        func_pool = self.pool.get('hr.employee.grade')
+        func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
         
@@ -185,7 +206,7 @@ class payroll_register(osv.osv):
                 continue
             
             sql_req= '''
-                SELECT c.wage as wage, function as function
+                SELECT c.wage as wage, struct_id as function
                 FROM hr_contract c
                   LEFT JOIN hr_employee emp on (c.employee_id=emp.id)
                   LEFT JOIN hr_contract_wage_type cwt on (cwt.id = c.wage_type_id)
@@ -202,7 +223,7 @@ class payroll_register(osv.osv):
             if not contract_info:
                 continue
             
-            function = contract_info['function']
+            function = contract_info['struct_id']
             lines = []
             if function:
                 func = func_pool.read(cr, uid, function, ['line_ids'])
@@ -685,7 +706,7 @@ class hr_payslip(osv.osv):
         return res
     
     _columns = {
-        'deg_id':fields.many2one('hr.employee.grade', 'Designation', required=False),
+        'deg_id':fields.many2one('hr.payroll.structure', 'Designation', required=False),
         'register_id':fields.many2one('hr.payroll.register', 'Register', required=False),
         'journal_id': fields.many2one('account.journal', 'Expanse Journal', required=True),
         'bank_journal_id': fields.many2one('account.journal', 'Bank Journal', required=True),
@@ -1297,7 +1318,7 @@ class hr_payslip(osv.osv):
     def compute_sheet(self, cr, uid, ids, context={}):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
-        func_pool = self.pool.get('hr.employee.grade')
+        func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         holiday_pool = self.pool.get('hr.holidays')
         
@@ -1725,7 +1746,7 @@ class hr_payslip_line(osv.osv):
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=False),
         'condition_id':fields.many2one('hr.payslip.line.condition', 'Condition', required=False),
-        'function_id':fields.many2one('hr.employee.grade', 'Function', required=False),
+        'function_id':fields.many2one('hr.payroll.structure', 'Function', required=False),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'base':fields.char('Formula', size=1024, required=False, readonly=False),

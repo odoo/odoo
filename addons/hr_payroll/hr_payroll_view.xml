@@ -1,7 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="hr_hr_employee_view_form3" model="ir.ui.view">
+        <!-- Root Menus -->
+        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll"/>
+        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll"/>
+        
+        <!-- Passport Views    -->
+        <record id="hr_passport_form" model="ir.ui.view">
+            <field name="name">hr.passport.form</field>
+            <field name="model">hr.passport</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Passport">
+                    <group col="6" colspan="4">
+                        <field name="name" select="1" colspan="4"/>
+                        <field name="employee_id" select="1"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Country &amp; Address" colspan="4"/>
+                        <field name="country_id" select="1"/>
+                        <field name="address_id" select="1"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Valid From" colspan="2"/>
+                        <field name="date_issue" select="1"/>
+                        <field name="date_expire" select="1"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Description">
+                            <separator string="Description" colspan="2"/>
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Contracts">
+                            <field name="contracts_ids" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+         <record id="hr_passport_tree" model="ir.ui.view">
+            <field name="name">hr.passport.tree</field>
+            <field name="model">hr.passport</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Passport">
+                    <field name="name" select="1"/>
+                    <field name="employee_id" select="1"/>
+                    <field name="country_id" select="1"/>
+                    <field name="date_expire" select="1"/>
+                    <field name="date_expire" select="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_hr_passport_tree" model="ir.actions.act_window">
+            <field name="name">All Passports</field>
+            <field name="res_model">hr.passport</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_passport_tree"/>
+        </record>
+        <menuitem id="passport_configure" parent="hr.menu_hr_configuration" name="Passport"/>
+        <menuitem
+            id="menu_action_hr_passport_tree" 
+            action="action_hr_passport_tree" 
+            parent="passport_configure" 
+        />
+        <!-- End Passport Views -->
+        
+        <!-- Contract View -->
+        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.view.form</field>
+            <field name="model">hr.contract</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Contract">
+                    <group colspan="3" col="6">
+                        <field name="name" select="1"/>
+                        <field name="employee_id" select="1"/>
+                        <field name="job_id"/>
+                        <field name="wage"/>
+                        <field name="wage_type_id" widget="selection"/>
+                        <field name="type_id" widget="selection"/>
+                    </group>
+                    <notebook>
+                        <page string="Main Data">
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Duration"/>
+                                <field name="date_start" select="1"/>
+                                <field name="date_end" select="1"/>
+                                <field name="working_hours"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Advantages"/>
+                                <field name="struct_id" select="1"/>
+                                <field name="advantages_net"/>
+                                <field name="advantages_gross"/>
+                                <field name="advantages" nolabel="1" colspan="2"/>
+                            </group>
+                            <separator colspan="4" string="Notes"/>
+                            <field colspan="4" name="notes" nolabel="1"/>
+                        </page>
+                        <page string="Contracts">
+                            
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <!-- End Contract View-->
+        <!--
+            <record id="hr_hr_employee_view_form3" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form3</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
@@ -17,7 +124,6 @@
                             <field name="wage_type_id"/>
                             <field name="wage"/>
                         </tree>
-                        
                         <form string="Contract">
                             <separator colspan="4" string="Generalities"/>
                             <field colspan="4" name="name" select="1"/>
@@ -125,6 +231,7 @@
                 </field>
             </field>
         </record>
+        -->
         <!--
             Holiday Status inheritancy
         -->
@@ -341,14 +448,14 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_payslip_tree"/>
         </record>
-        <menuitem id="menu_hr_root_payroll" parent="hr.menu_hr_root" name="Payroll"/>
+        
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
         
-        <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll"/>
+        
         
         <record id="view_hr_employee_grade_tree" model="ir.ui.view">
-            <field name="name">hr.employee.grade.tree</field>
-            <field name="model">hr.employee.grade</field>
+            <field name="name">hr.payroll.structure.tree</field>
+            <field name="model">hr.payroll.structure</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Employee Function">
@@ -361,8 +468,8 @@
         </record>
 
         <record id="view_hr_employee_grade_form" model="ir.ui.view">
-            <field name="name">hr.employee.grade.form</field>
-            <field name="model">hr.employee.grade</field>
+            <field name="name">hr.payroll.structure.form</field>
+            <field name="model">hr.payroll.structure</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee Function">
@@ -387,7 +494,7 @@
         
         <record id="action_view_hr_employee_grade_form" model="ir.actions.act_window">
             <field name="name">Employee Functions</field>
-            <field name="res_model">hr.employee.grade</field>
+            <field name="res_model">hr.payroll.structure</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_employee_grade_tree"/>
         </record>
@@ -469,51 +576,50 @@
         />
         
         <!-- Contract Form-->
-        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.view.form</field>
-            <field name="model">hr.contract</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Contract">
-                    <field name="employee_id"/>
-                    <separator colspan="4" string="General Information"/>
-                    <field colspan="4" name="name" select="1"/>
-                    <newline/>
-                    <separator colspan="4" string="Contract Duration"/>
-                    <field name="function"/>
-                    <field name="working_hours_per_day"/>
-                    <field name="working_days_per_week"/>
-                    <field name="date_start" select="1"/>
-                    <field name="date_end" select="1"/>
-                    
-                    <separator colspan="4" string="Salary"/>
-                    <field name="wage_type_id"/>
-                    <field name="wage"/>
-                    
-                    <separator colspan="4" string="Notes"/>
-                    <field colspan="4" name="notes" nolabel="1"/>
-                    
-                    <separator colspan="4" string="Passport and Visa"/>
-                    <field name="permit_no"/>
-                    <field name="passport_id"/>
-                    <field name="visa_no"/>
-                    <field name="visa_expire"/>
-                </form>
-            </field>
-        </record>
-        <record id="action_hr_contract" model="ir.actions.act_window">
-            <field name="name">Employee Contract</field>
-            <field name="res_model">hr.contract</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
-        <menuitem 
-            action="action_hr_contract" 
-            name="Employee Contract" 
-            id="hr_menu_contract" 
-            parent="payroll_configure"
-        />
-        
+<!--        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">-->
+<!--            <field name="name">hr.contract.view.form</field>-->
+<!--            <field name="model">hr.contract</field>-->
+<!--            <field name="type">form</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form string="Contract">-->
+<!--                    <field name="employee_id"/>-->
+<!--                    <separator colspan="4" string="General Information"/>-->
+<!--                    <field colspan="4" name="name" select="1"/>-->
+<!--                    <newline/>-->
+<!--                    <separator colspan="4" string="Contract Duration"/>-->
+<!--                    <field name="function"/>-->
+<!--                    <field name="working_hours_per_day"/>-->
+<!--                    <field name="working_days_per_week"/>-->
+<!--                    <field name="date_start" select="1"/>-->
+<!--                    <field name="date_end" select="1"/>-->
+<!--                    -->
+<!--                    <separator colspan="4" string="Salary"/>-->
+<!--                    <field name="wage_type_id"/>-->
+<!--                    <field name="wage"/>-->
+<!--                    -->
+<!--                    <separator colspan="4" string="Notes"/>-->
+<!--                    <field colspan="4" name="notes" nolabel="1"/>-->
+<!--                    -->
+<!--                    <separator colspan="4" string="Passport and Visa"/>-->
+<!--                    <field name="permit_no"/>-->
+<!--                    <field name="passport_id"/>-->
+<!--                    <field name="visa_no"/>-->
+<!--                    <field name="visa_expire"/>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+<!--        <record id="action_hr_contract" model="ir.actions.act_window">-->
+<!--            <field name="name">Employee Contract</field>-->
+<!--            <field name="res_model">hr.contract</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">form,tree</field>-->
+<!--        </record>-->
+<!--        <menuitem -->
+<!--            action="action_hr_contract" -->
+<!--            name="Employee Contract" -->
+<!--            id="hr_menu_contract" -->
+<!--            parent="payroll_configure"-->
+<!--        />-->
         
         <record id="view_hr_bank_advice_tree" model="ir.ui.view">
             <field name="name">hr.payroll.advice.tree</field>
@@ -666,104 +772,62 @@
             parent="menu_hr_root_payroll"
         />
         
-        <!--    Passport Views    -->
-        <record id="hr_passport_form" model="ir.ui.view">
-            <field name="name">hr.passport.form</field>
-            <field name="model">hr.passport</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Passport List">
-                    <field name="employee_id" select="1"/>
-                    <newline/>
-                    <field name="name" select="1"/>
-                    <field name="country_id" select="1"/>
-                    <field name="date_issue" select="1"/>
-                    <field name="date_expire" select="1"/>
-                    <field name="contracts_ids" colspan="4" nolabel="1"/>
-                </form>
-            </field>
-        </record>
-         <record id="hr_passport_tree" model="ir.ui.view">
-            <field name="name">hr.passport.tree</field>
-            <field name="model">hr.passport</field>
+        <!--
+        Contribution Register
+        -->
+        <record id="hr_contibution_register_tree" model="ir.ui.view">
+            <field name="name">hr.contibution.register.tree</field>
+            <field name="model">hr.contibution.register</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Passport">
-                    <field name="employee_id" select="1"/>
+                <tree string="Contribution Registers">
                     <field name="name" select="1"/>
-                    <field name="country_id" select="1"/>
-                    <field name="date_expire" select="1"/>
+                    <field name="company_id" select="1"/>
+                    <field name="monthly_total_by_emp"/>
+                    <field name="monthly_total_by_comp"/>
+                    <field name="yearly_total_by_emp"/>
+                    <field name="yearly_total_by_comp"/>
                 </tree>
             </field>
         </record>
-        <record id="action_hr_passport_tree" model="ir.actions.act_window">
-            <field name="name">All Passports</field>
-            <field name="res_model">hr.passport</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="hr_passport_tree"/>
-        </record>
-        <menuitem
-            id="menu_action_hr_passport_tree" 
-            action="action_hr_passport_tree" 
-            parent="hr.menu_open_view_employee_list_my" 
-        />
-
-<!--
-		Contribution Register
--->
-    <record id="hr_contibution_register_tree" model="ir.ui.view">
-        <field name="name">hr.contibution.register.tree</field>
-        <field name="model">hr.contibution.register</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Contribution Registers">
-                <field name="name" select="1"/>
-                <field name="company_id" select="1"/>
-                <field name="monthly_total_by_emp"/>
-                <field name="monthly_total_by_comp"/>
-                <field name="yearly_total_by_emp"/>
-			    <field name="yearly_total_by_comp"/>
-            </tree>
-        </field>
-    </record>
-    <record id="hr_contibution_register_form" model="ir.ui.view">
-        <field name="name">hr.contibution.register.form</field>
-        <field name="model">hr.contibution.register</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Contribution">
-                <field name="name" select="1"/>
-                <field name="account_id"/>
-                <field name="analytic_account_id"/>
-                <field name="company_id" select="1"/>
-                <notebook colspan="4">
-                    <page string="Contribution Lines">
-			            <field colspan="4" name="register_line_ids" nolabel="1" select="1">
-                            <tree string="Register Lines" editable="top">
-                                <field name="code"/>
-                                <field name="employee_id"/>
-                                <field name="period_id"/>	
-                                <field name="emp_deduction"/>
-                                <field name="comp_deduction"/>	
-                                <field name="total"/>						
-                            </tree>
-                         </field>
-                     </page>
-                     <page string="Description">
-                        <separator colspan="4" string="Description"/>
-                        <field name="note" colspan="4" nolabel="1"/>
-                    </page>
-                </notebook>
-                <group col="2" colspan="2">
-                    <separator colspan="4" string="Year"/>
-                    <field name="yearly_total_by_emp"/>
-                    <field name="yearly_total_by_comp"/>
-                </group>
-                <group col="2" colspan="2">
-                    <separator colspan="2" string="Month"/>
-                    <field name="monthly_total_by_emp"/>
-                    <field name="monthly_total_by_comp"/>
-                </group>
+        <record id="hr_contibution_register_form" model="ir.ui.view">
+            <field name="name">hr.contibution.register.form</field>
+            <field name="model">hr.contibution.register</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Contribution">
+                    <field name="name" select="1"/>
+                    <field name="account_id"/>
+                    <field name="analytic_account_id"/>
+                    <field name="company_id" select="1"/>
+                    <notebook colspan="4">
+                        <page string="Contribution Lines">
+                            <field colspan="4" name="register_line_ids" nolabel="1" select="1">
+                                <tree string="Register Lines" editable="top">
+                                    <field name="code"/>
+                                    <field name="employee_id"/>
+                                    <field name="period_id"/>    
+                                    <field name="emp_deduction"/>
+                                    <field name="comp_deduction"/>    
+                                    <field name="total"/>                        
+                                </tree>
+                             </field>
+                         </page>
+                         <page string="Description">
+                            <separator colspan="4" string="Description"/>
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                    <group col="2" colspan="2">
+                        <separator colspan="4" string="Year"/>
+                        <field name="yearly_total_by_emp"/>
+                        <field name="yearly_total_by_comp"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Month"/>
+                        <field name="monthly_total_by_emp"/>
+                        <field name="monthly_total_by_comp"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -784,14 +848,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contribution">
-					  <field name="name"/>
-					  <field name="code"/>
-                      <field name="employee_id"/>	
-				      <field name="period_id"/>	
-					  <field name="emp_deduction"/>
-					  <field name="comp_deduction"/>	
-					  <field name="total"/>					
-				</form>
+                      <field name="name"/>
+                      <field name="code"/>
+                      <field name="employee_id"/>    
+                      <field name="period_id"/>    
+                      <field name="emp_deduction"/>
+                      <field name="comp_deduction"/>    
+                      <field name="total"/>                    
+                </form>
             </field>
         </record>
         
@@ -803,9 +867,9 @@
                 <form string="Condition">
                     <field name="name"/>
                     <field name="date_start"/>
-                    <field name="date_end"/>	
+                    <field name="date_end"/>    
                     <field name="state"/>
-				</form>
+                </form>
             </field>
         </record>
     </data>
