@@ -12,7 +12,7 @@
                     <field name="month" invisible="1"/>
                     <field name="project_id" invisible="1"/>
                     <field name="stage_id" invisible="1"/>
-                    <field name="type_id" string="Type" invisible="1"/>
+                    <field name="type_id" string="Version" invisible="1"/>
                     <field name="priority" invisible="1"/>
                     <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                     <field name="section_id" invisible="1"/>
@@ -91,11 +91,13 @@
                    <newline/>
                    <group  expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Project"  name="project_id" icon="terp-folder-blue" context="{'group_by':'project_id'}" />
-                        <filter string="User" name="User" icon="terp-personal" 
-                        domain="[]" context="{'group_by':'user_id'}" />
-                        <separator orientation="vertical" />
-                       <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}" />
                         <filter string="Task"  icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'task_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter name="User" string="Responsible" icon="terp-personal" 
+                        domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Assigned to" name="Responsible" icon="terp-personal"
+                        domain="[]" context="{'group_by':'assigned_to'}" />
+                       <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Section" icon="terp-sale"
                         	domain="[]"
@@ -103,7 +105,7 @@
                         <filter string="Category" icon="terp-stock_symbol-selection"
                         	domain="[]" context="{'group_by':'categ_id'}" />
                         <separator orientation="vertical" />
-                        <filter string="Type"  icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
+                        <filter string="Version"  icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
