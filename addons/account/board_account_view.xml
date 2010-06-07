@@ -6,12 +6,6 @@
             <field name="name">Accountants</field>
         </record>
 
-        <record id="action_account_analytic_line_to_invoice" model="ir.actions.act_window">
-            <field name="name">Costs to invoice</field>
-            <field name="res_model">report.account.analytic.line.to.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-        </record>
 
         <record id="action_aged_receivable" model="ir.actions.act_window">
             <field name="name">Receivable Accounts</field>
@@ -29,7 +23,6 @@
         </record>
 
 
-        <act_window domain="[('state','&lt;&gt;','close'),('partner_id','&lt;&gt;',False),('to_invoice', '&lt;&gt;', False)]" id="act_my_account" name="Accounts to invoice" res_model="account.analytic.account" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <record id="board_account_form" model="ir.ui.view">
             <field name="name">board.account.form</field>
@@ -40,23 +33,11 @@
                     <hpaned>
 
                         <child1>
-
-                            <action colspan="4" height="160" name="%(hr_timesheet_invoice.action_analytic_account_tree)d" string="Analytic accounts to close" width="510"/>
-
-                            <action colspan="4" height="160" name="%(act_my_account)d" string="Accounts to invoice" width="510"/>
-
                             <action colspan="4" height="160" name="%(account.action_invoice_tree1)d" string="Draft Customer Invoices" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
                         </child1>
-
                         <child2>
-                            <button colspan="4" icon="terp-purchase" name="%(account_report.action_account_report_tree_view_indicator)d" string="My indicators" type="action"/>
-
-                            <action colspan="4" height="220" name="%(action_account_analytic_line_to_invoice)d" string="Costs to invoice"/>
-
                             <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged receivables"/>
-
                             <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/>
-
                         </child2>
                     </hpaned>
                 </form>

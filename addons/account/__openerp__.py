@@ -23,7 +23,7 @@
 {
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "depends" : ["product", "analytic", "process"],
+    "depends" : ["product", "analytic", "process","board"],
     "author" : "Tiny",
     "category": 'Generic Modules/Accounting',
     "description": """Financial and accounting module that covers:
@@ -111,7 +111,8 @@ module named account_voucherss
         'report/account_report_view.xml',
         'report/account_analytic_report_view.xml',
         'report/account_account_report_view.xml',
-        'report/account_analytic_entries_report_view.xml'
+        'report/account_analytic_entries_report_view.xml',
+        'board_account_view.xml',
     ],
     'demo_xml': [
         #'demo/price_accuracy00.yml',
@@ -120,6 +121,7 @@ module named account_voucherss
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'account_unit_test.xml',
+        'board_account_demo.xml',
     ],
     'test': [
         'test/account_customer_invoice.yml',
