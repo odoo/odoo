@@ -1,3 +1,51 @@
+2010-06-07: 5.0.11
+==================
+
+Bugfixes (server)
+-----------------
+
+ * Not linked to a bug report:
+   * [SECURITY] 2010-01-auth: Proper authentication exception
+   * [SECURITY] Avoid (potential) sql injections
+ * https://launchpad.net/bugs/412911
+   * Use the get_python_lib of distutils.
+ * https://launchpad.net/bugs/574874
+   * NetRPC: Correct socket closing
+ * https://launchpad.net/bugs/362280
+   * Made search() working for multilevel _inherits
+
+Bugfixes (addons)
+-----------------
+
+ * Not linked to a bug report:
+   * [SECURITY] Avoid (potential) SQL Injection
+   * stock: stray parent leftover in product
+   * account: context default value in account.__compute, use None rather than {}
+   * base_module_quality: Improve the generated html files
+ * https://launchpad.net/bugs/527826
+   * Stock : calculation of stock from location corrected
+ * https://launchpad.net/bugs/543976
+ * https://launchpad.net/bugs/586300
+   * Account_invoice_layout :Absence of sequence on defaults may cause sorting problems
+ * https://launchpad.net/bugs/447441
+   * Sale : Pricelist in default should respect shop
+ * https://launchpad.net/bugs/585737
+   * Account : Partner ledger report - Correction Account type filtering
+ * https://launchpad.net/bugs/579571
+   * Account : Refund wizard corrected
+ * https://launchpad.net/bugs/582823
+   * Stock : Check on production lot corrected for move
+ * https://launchpad.net/bugs/585467
+   * Report_intrastat : Char field should have size in integer format
+ * https://launchpad.net/bugs/588146
+   * Account : Wrong calculation for payment date corrected
+ * https://launchpad.net/bugs/584931
+   * Account_analytic_default : account_get() corrected
+ * https://launchpad.net/bugs/578679
+   * CRM_Configuration : Domain corrected for planned calls
+ * https://launchpad.net/bugs/588746
+   * Sale : Corrected query of calculating picking rate
+
 2010-05-05: 5.0.10
 ==================
 
