@@ -259,16 +259,10 @@ class configmanager(object):
                 'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout','smtp_ssl',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
-                'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
-
-        if self.has_ssl:
-            keys.extend([
-                'xmlrpcs_interface',
-                'xmlrpcs_port',
-                'xmlrpcs',
-                'secure_cert_file',
-                'secure_pkey_file']
-            )
+                'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
+                'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
+                'secure_cert_file', 'secure_pkey_file'
+                ]
 
         for arg in keys:
             if getattr(opt, arg):
@@ -277,9 +271,8 @@ class configmanager(object):
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
                 'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
                 'list_db', 'server_actions_allow_code']
-        
-        if self.has_ssl:
-            keys.append('xmlrpcs')
+
+        keys.append('xmlrpcs')
 
         for arg in keys:
             if getattr(opt, arg) is not None:
