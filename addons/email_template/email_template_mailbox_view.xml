@@ -130,10 +130,10 @@
            <field name="arch" type="xml">
                <search string="Mailboxes">
                     <filter icon="terp-mail-message-new" string="Drafts" name="draft" domain="[('folder','=','drafts']"/>
-                    <filter icon="terp-accessories-archiver" string="Outbox" name="outbox" domain="[('folder','=','outbox')]"/>
+                    <filter icon="terp-mail-" string="Outbox" name="outbox" domain="[('folder','=','outbox')]"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-jump-to-ltr" string="Sent" domain="[('folder','=','sent')]"/>
-                    <filter icon="terp-accessories-archiver-minus" string="Trash" domain="[('folder','=','trash')]"/>
+                    <filter icon="terp-mail_delete" string="Trash" domain="[('folder','=','trash')]"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-stop" string="Not Applicable" domain="[('state','=','na')]"/>
                     <filter icon="terp-gtk-jump-to-ltr" string="Sending" domain="[('state','=','sending')]"/>
