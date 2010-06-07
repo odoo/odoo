@@ -122,7 +122,7 @@ class report_account_analytic_planning_stat(osv.osv):
             sqlarg = ()
             if line.user_id:
                 where='user_id=%s and '
-                sqlarg = (line.user_id.id)
+                sqlarg = (line.user_id.id,)
             cr.execute('''select
                     sum(planned_hours)
                 from
@@ -132,7 +132,7 @@ class report_account_analytic_planning_stat(osv.osv):
                     project_id in (select id from project_project where category_id=%s) and
                     date_close>=%s and
                     date_close<=%s''',
-                       sqlarg + (
+                        sqlarg + (
                            line.account_id.id,
                            line.planning_id.date_from,
                            line.planning_id.date_to))
