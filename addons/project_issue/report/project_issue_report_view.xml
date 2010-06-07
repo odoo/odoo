@@ -90,7 +90,7 @@
                    </group>
                    <newline/>
                    <group  expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="Project"  name="project_id" icon="terp-folder-blue" context="{'group_by':'project_id'}" />
+                        <filter string="Project"  name="project" icon="terp-folder-blue" context="{'group_by':'project_id'}" />
                         <filter string="Task"  icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'task_id'}"/>
                         <separator orientation="vertical" />
                         <filter name="User" string="Responsible" icon="terp-personal" 
@@ -154,7 +154,7 @@
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">graph,tree</field>
-  			<field name="context">{'search_default_This Month':1,'search_default_project_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
+  			<field name="context">{'search_default_This Month':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_project_issue_report_tree"/>
             <field name="search_view_id" ref="view_project_issue_report_filter"/>
         </record>
