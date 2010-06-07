@@ -107,8 +107,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         #TODO: ids and context are not comming
         res = False
         msg_val = ''
-        res_id = False # Comes from context
-        model = None # Comes from context
+        res_id = context.get('active_id')
+        model = context.get('active_model')
         model_pool = self.pool.get(model)
         if not res_id or not model:
             return res

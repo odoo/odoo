@@ -200,7 +200,7 @@ class mrp_procurement(osv.osv):
         return False
 
     #
-    # Return the quantity of product shipped/produced/served, wich may be
+    # Return the quantity of product shipped/produced/served, which may be
     # different from the planned quantity
     #
     def quantity_get(self, cr, uid, id, context={}):

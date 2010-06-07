@@ -18,8 +18,8 @@
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record id="view_analytic_account_close_tree" model="ir.ui.view">
             <field name="name">report.analytic.account.close.tree</field>
             <field name="model">report.analytic.account.close</field>
@@ -36,7 +36,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_analytic_account_graph" model="ir.ui.view">
             <field name="name">report.analytic.account.close.graph</field>
             <field name="model">report.analytic.account.close</field>
@@ -45,11 +45,11 @@
                 <graph string="Expired analytic accounts" type="bar">
                     <field name="partner_id"/>
                     <field name="quantity" operator="+"/>
-                    <field name="quantity_max" operator="+"/> 
+                    <field name="quantity_max" operator="+"/>
                 </graph>
             </field>
         </record>
-        
+
         <record id="action_analytic_account_tree" model="ir.actions.act_window">
             <field name="name">Expired analytic accounts</field>
             <field name="res_model">report.analytic.account.close</field>
@@ -116,8 +116,8 @@
             <field name="arch" type="xml">
                 <search string="Analytic Lines to Invoice">
                    <group col="12" colspan="4">
-                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
-						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
+                   		<filter string="This Year" icon="terp-go-year" domain="[('name','=',time.localtime()[0])]"/>
+						<filter string="This Month" icon="terp-go-month" domain="[('month','=',time.localtime()[1])]"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
 						<field name="month" select="1"/>
@@ -138,6 +138,6 @@
         <menuitem action="action_account_analytic_line_to_invoice" id="account_analytic_lines_to_invoice_report" parent="account.next_id_40"/>
 
         <act_window domain="[('account_id', '=', active_id),('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]" id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice" name="Lines to Invoice" res_model="account.analytic.line" src_model="account.analytic.account"/>
-        
+
     </data>
 </openerp>

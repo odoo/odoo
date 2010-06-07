@@ -283,32 +283,32 @@
                                 <separator string="Journal View" colspan="4"/>
                                 <field name="view_id"/>
                             </group>
-                            
+
                             <group colspan="2" col="2">
                                 <separator string="Sequence" colspan="4"/>
                                 <field name="sequence_id"/>
                                 <field name="invoice_sequence_id"/>
                             </group>
-                            
+
                             <group colspan="2" col="2">
                                 <separator string="Accounts" colspan="4"/>
                                 <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                                 <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             </group>
-                            
+
                             <group colspan="2" col="2">
-                                <separator string="Validations" colspan="4"/>  
+                                <separator string="Validations" colspan="4"/>
                                 <field name="allow_date" groups="base.group_extended"/>
                             </group>
-                            
+
                             <group colspan="2" col="2">
-                                <separator string="Company" colspan="4"/> 
+                                <separator string="Company" colspan="4"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_id" groups="base.group_extended"/>
                                 <field name="currency"/>
                             </group>
                             <group colspan="2" col="2">
-                                <separator string="Other Configuration" colspan="4"/> 
+                                <separator string="Other Configuration" colspan="4"/>
                                 <field name="centralisation"/>
                                 <field name="group_invoice_lines"/>
                                 <field name="update_posted"/>
@@ -623,6 +623,7 @@
             <field name="arch" type="xml">
                 <tree string="Account Tax">
                     <field name="name"/>
+                    <field name="price_include" groups="base.group_extended"/>
                     <field name="description"/>
                 </tree>
             </field>
@@ -654,6 +655,7 @@
                             <label colspan="2" nolabel="1" string="Keep empty to use the expense account"/>
                             <field groups="base.group_extended" name="child_depend"/>
                             <field groups="base.group_extended" name="sequence"/>
+                            <field groups="base.group_extended" name="price_include"/>
                             <field name="type_tax_use"/>
                             <newline/>
                             <field colspan="4" groups="base.group_extended" name="child_ids"/>
@@ -1493,7 +1495,7 @@
         <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]" id="act_account_partner_account_move_unreconciled" name="Unreconciled Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 
         <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
-		
+
 		<act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All Account Entries" res_model="account.move.line" src_model="res.partner"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">

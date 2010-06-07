@@ -106,7 +106,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <filter icon="terp-partner" domain="[('active','=',False)]" string="Unactive"
+                    <filter icon="terp-personal-" domain="[('active','=',False)]" string="Unactive"
                         groups="base.group_extended"/>
                     <separator orientation="vertical" />
                     <field name="name"/>
@@ -114,12 +114,12 @@
                     <field name="job_id" widget="selection"/>
                     <field name="parent_id" widget="selection" />
                     <newline />
-                    <group expand="1" string="Group By...">
-                        <filter string="Manager" icon="terp-sale" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <filter string="Coach" icon="terp-sale" domain="[]" context="{'group_by':'coach_id'}" groups="base.group_extended"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}" groups="base.group_extended"/>
                         <separator orientation="vertical" />
-                        <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Job" icon="terp-sale" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                     </group>
                 </search>
              </field>
@@ -358,15 +358,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
-                    <filter icon="terp-crm"
+                    <filter icon="terp-check"
                         domain="[('state','in',('open','recruit'))]"
                         string="Current"
                         help="Open and in recruitment positions"/>
-                    <filter icon="terp-crm"
+                    <filter icon="terp-personal+"
                         domain="[('state','=','recruit')]"
                         string="Recruitment"
                         help="In Recruitment"/>
-                    <filter icon="terp-crm"
+                    <filter icon="terp-camera_test"
                         domain="[('state','=','open')]"
                         string="Open"
                         help="Open Positions"/>
@@ -374,7 +374,7 @@
                     <separator orientation="vertical"/>
                     <field name="name"/>
                      <field name="department_id" widget="selection">
-                            <filter icon="terp-crm"
+                            <filter icon="terp-gtk-select-all"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             help="My Departments Jobs"/>
                     </field>
