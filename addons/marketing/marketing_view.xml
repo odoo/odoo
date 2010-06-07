@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-	   
+
         <menuitem name="Marketing" icon="terp-crm" id="marketing_menu" sequence="10"/>
 
         <record id="view_marketing_installer" model="ir.ui.view">
@@ -14,20 +14,23 @@
                   <form position="attributes">
                     <attribute name="string">Marketing Modules Installation</attribute>
                   </form>
-        
                   <separator string="title" position="attributes">
-                    <attribute name="string">Configure Your Marketing System</attribute>
+                    <attribute name="string">Select Marketing Modules to Install</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']"
                          position="attributes">
-                    <attribute name="string">You can enhance OpenERP's basic Marketing support with a few additional OpenERP applications</attribute>
+                    <attribute name="string">OpenERP provides tools to automate your leads process, design marketing campaigns and profile efficiently your customers.</attribute>
+                  </xpath>
+                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                       <attribute name='rowspan'>13</attribute>
+                       <attribute name='string'></attribute>
+                 </xpath>
+                  <xpath expr="//button[@string='Install Modules']" position="attributes">
+                            <attribute name="string">Configure</attribute>
                   </xpath>
                   <group colspan="8">
-                    <group colspan="2" col="2">
-                        <separator string="Marketing Mdules" colspan="4" />
                         <field name="marketing_campaign" />
                         <field name="crm_profiling" />
-                    </group>
                   </group>
                 </data>
             </field>

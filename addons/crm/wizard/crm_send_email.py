@@ -20,11 +20,12 @@
 #
 ##############################################################################
 
+from crm import crm
 from osv import osv, fields
 from tools.translate import _
 import base64
+import time
 import tools
-from crm import crm
 
 class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
@@ -93,10 +94,12 @@ class crm_send_new_email(osv.osv_memory):
             if context.get('mail', 'new') == 'new':
                 if len(case.message_ids):
                     message_id = case.message_ids[0].message_id
+                else:
+                    message_id = "<%s-openerp-@%s-%s-%d>" % (time.time(), cr.dbname, model, res_id)
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id
-                model = hist.model_id.model
+                model = hist.model
                 model_pool = self.pool.get(model)
                 res_ids = model_pool.search(cr, uid, [('thread_id','=', hist.thread_id.id)])
                 res_id = res_ids and res_ids[0] or False
@@ -196,7 +199,7 @@ class crm_send_new_email(osv.osv_memory):
         include_original = context and context.get('include_original', False) or False
         res = {}
         for hist in hist_obj.browse(cr, uid, res_ids, context=context):
-            model = hist.model_id.model
+            model = hist.model
 
             # In the case where the crm.case does not exist in the database
             if not model:
@@ -225,7 +228,7 @@ class crm_send_new_email(osv.osv_memory):
 
                 original = [header, sender, to, sentdate, desc, signature]
 
-            res['text']= '\n'.join(original)
+            res['text']= '\n\n\n' + '\n'.join(original)
 
             if 'subject' in fields:
                 res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')})

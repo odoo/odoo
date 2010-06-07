@@ -1975,7 +1975,7 @@ class FTPHandler(asynchat.async_chat):
         # which IPv6 address to use for binding the socket?
         # Unfortunately RFC-2428 does not provide satisfing information
         # on how to do that.  The assumption is that we don't have any way
-        # to know wich address to use, hence we just use the same address
+        # to know which address to use, hence we just use the same address
         # family used on the control connection.
         if not line:
             self._make_epasv(extmode=True)

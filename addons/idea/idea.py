@@ -39,7 +39,7 @@ class idea_category(osv.osv):
         'summary': fields.text('Summary'),
         'parent_id': fields.many2one('idea.category', 'Parent Categories', ondelete='set null'),
         'child_ids': fields.one2many('idea.category', 'parent_id', 'Child Categories'),
-        'visibility':fields.boolean('Open Idea?', required=False),
+        'visibility':fields.boolean('Open Idea?', required=False, help="If True creator of the idea will be visible to others"),
     }
     _sql_constraints = [
         ('name', 'unique(parent_id,name)', 'The name of the category must be unique' )
@@ -152,9 +152,9 @@ class idea_idea(osv.osv):
                 vote_obj.create(cr, uid, {'idea_id': id, 'user_id': uid, 'score': textual_value })
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'Responsible', required=True, readonly=True),
-        'title': fields.char('Idea Summary', size=64, required=True),
-        'description': fields.text('Description', required=True, help='Content of the idea'),
+        'user_id': fields.many2one('res.users', 'Creator', required=True, readonly=True),
+        'title': fields.char('Idea Summary', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'description': fields.text('Description', help='Content of the idea', readonly=True, states={'draft':[('readonly',False)]}),
         'comment_ids': fields.one2many('idea.comment', 'idea_id', 'Comments'),
         'created_date': fields.datetime('Creation date', readonly=True),
         'vote_ids': fields.one2many('idea.vote', 'idea_id', 'Vote'),
@@ -162,10 +162,10 @@ class idea_idea(osv.osv):
         'vote_avg': fields.function(_vote_avg_compute, method=True, string="Average Score", type="float"),
         'count_votes': fields.function(_vote_count, method=True, string="Count of votes", type="integer"),
         'count_comments': fields.function(_comment_count, method=True, string="Count of comments", type="integer"),
-        'category_id': fields.many2one('idea.category', 'Category', required=True),
-        'state': fields.selection([('draft', 'Draft'), 
+        'category_id': fields.many2one('idea.category', 'Category', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'state': fields.selection([('draft', 'Draft'),
             ('open', 'Opened'),
-            ('close', 'Accepted'), 
+            ('close', 'Accepted'),
             ('cancel', 'Cancelled')],
             'State', readonly=True,
             help='When the Idea is created the state is \'Draft\'.\n It is \
@@ -183,7 +183,7 @@ class idea_idea(osv.osv):
         'my_vote': lambda *a: '-1',
         'state': lambda *a: 'draft',
         'vote_limit': lambda * a: 1,
-        'created_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),        
+        'created_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'visibility': lambda *a: True,
     }
     _order = 'id desc'
@@ -195,11 +195,11 @@ class idea_idea(osv.osv):
         @param user: ID of the user currently logged in
         @param vals: provides data for new record
         @param context: context arguments, like lang, time zone
-        
+
         @return: Returns an id of the new record
         """
         visibility = False
-        
+
         if vals.get('category_id', False):
             category_pool = self.pool.get('idea.category')
             category = category_pool.browse(cr, user, vals.get('category_id'), context)
@@ -208,31 +208,53 @@ class idea_idea(osv.osv):
         vals.update({
             'visibility':visibility
         })
+
         res_id = super(idea_idea, self).create(cr, user, vals, context)
         return res_id
-    
+
+    def copy(self, cr, uid, id, default={}, context={}):
+        """
+        Create the new record in idea_idea model from existing one
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param id: list of record ids on which copy method executes
+        @param default: dict type contains the values to be overridden during copy of object
+        @param context: context arguments, like lang, time zone
+
+        @return: Returns the id of the new record
+        """
+
+        default.update({
+            'comment_ids':False,
+            'vote_ids':False,
+            'stat_vote_ids':False
+
+        })
+        res_id = super(idea_idea, self).copy(cr, uid, id, default, context)
+        return res_id
+
     def write(self, cr, user, ids, vals, context=None):
         """
         Update redord(s) exist in {ids}, with new value provided in {vals}
-    
+
         @param cr: A database cursor
         @param user: ID of the user currently logged in
         @param ids: list of record ids to update
         @param vals: dict of new values to be set
         @param context: context arguments, like lang, time zone
-        
+
         @return: Returns True on success, False otherwise
         """
-        
+
         state = self.browse(cr, user, ids[0]).state
-        
+
         if vals.get('my_vote', False):
             if vals.get('state', state) != 'open':
                 raise osv.except_osv(_("Warning !"), _("Draft/Accepted/Cancelled ideas Could not be voted"))
-        
+
         res = super(idea_idea, self).write(cr, user, ids, vals, context)
         return res
-        
+
     def idea_cancel(self, cr, uid, ids):
         self.write(cr, uid, ids, { 'state': 'cancel' })
         return True
@@ -244,7 +266,7 @@ class idea_idea(osv.osv):
     def idea_close(self, cr, uid, ids):
         self.write(cr, uid, ids, { 'state': 'close' })
         return True
-    
+
     def idea_draft(self, cr, uid, ids):
         self.write(cr, uid, ids, { 'state': 'draft' })
         return True
@@ -290,7 +312,7 @@ class idea_vote(osv.osv):
     }
     _defaults = {
         'score': lambda *a: DefaultVoteValue,
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),  
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
 idea_vote()

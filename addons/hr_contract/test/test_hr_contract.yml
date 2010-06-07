@@ -1,0 +1,46 @@
+- |
+  In order to test hr_contract module in OpenERP,   
+  I will create contract for "Mark Johnson" employee.
+  
+- |
+  First I create Employee "Mark Johnson" 
+-
+  !record {model: hr.employee, id: hr_employee_employee0}:
+    address_home_id: base.res_partner_address_1
+    company_id: base.main_company
+    gender: male
+    name: Mark Johnson
+    user_id: base.user_root
+    
+- |
+  Given that I have Contract wage period "monthly" and 
+  specify "hours in period" is "176.00"
+- 
+  !record {model: hr.contract.wage.type.period, id: hr_contract_wage_type_period_monthly0}:
+    factor_days: 178.0
+    name: monthly
+- |
+  Given that I have Contract wage type "Monthly Gross Wage". 
+  select wage period "monthly" and type "Gross". with hour cost "1.9" 
+- 
+  !record {model: hr.contract.wage.type, id: hr_contract_wage_type_monthlygrosswage0}:
+    factor_type: 1.9
+    name: Monthly Gross Wage
+    period_id: 'hr_contract_wage_type_period_monthly0'
+    type: gross
+       
+- |
+  Now I start by create contract for "Mark Johnson".
+  Select wage type "Monthly Gross Wage" and Wage period "monthly" 
+  which I have given.
+- 
+  !record {model: hr.contract, id: hr_contract_contract0}:
+    advantages_gross: 0.0
+    employee_id: 'hr_employee_employee0'
+    advantages_net: 0.0
+    date_end: '2011-05-18'
+    date_start: '2010-05-18'
+    name: contract1
+    wage: 1.0
+    wage_type_id: hr_contract_wage_type_monthlygrosswage0
+    working_hours: resource.timesheet_group1

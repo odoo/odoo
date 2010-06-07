@@ -20,12 +20,12 @@
                 <field name="categ_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_uom_qty" sum="# of Qty"/>
+                <field name="shipped_qty_1"/>
                 <field name="uom_name" invisible="not context.get('set_visible',False)"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay" avg="Days to Close"/>
                 <field name="state" invisible="1"/>
-                <field name="pricelist_id" invisible="1"/>
                 <field name="analytic_account_id" invisible="1"/>
             </tree>
         </field>
@@ -51,57 +51,62 @@
         <field name="arch" type="xml">
             <search string="Sales Analysis">
             	<group>
-            	    <filter icon="gtk-media-rewind" string="  365 Days  "
+            	    <filter icon="terp-go-year" string="  365 Days  "
 	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    help="Tasks performed in last 365 days"/>
-	                <filter icon="gtk-media-rewind" string="   30 Days   "
+	                <filter icon="terp-go-month" string="   30 Days   "
 	                	name="month"
 	                	domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                	help="Tasks performed in last 30 days"/>
-	                <filter icon="gtk-media-rewind"
+	                <filter icon="terp-go-week"
 	                     string="    7 Days    "
 	                     separator="1"
 	                     domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
 	                     help="Tasks during last 7 days"/>
 	                <separator orientation="vertical"/>
-	                <filter icon="terp-sale"
+	                <filter icon="terp-document-new"
 	                    string="Quotations"
 	                    domain="[('state','=','draft')]"/>
-	                <filter icon="terp-sale"
+	                <filter icon="terp-dolar"
 	                	string="Sales"
 	                	domain="[('state','not in',('draft','done','cancel'))]"/>
+	                <separator orientation="vertical"/>
+	                <filter icon="terp-sale"
+	                    string="Picked"
+	                    domain="[('shipped','=',True)]"/>
 	                <separator orientation="vertical"/>
 	                <field name="partner_id"/>
                     <field name="product_id"/>
 	                <field name="user_id" widget="selection">
-	                    <filter icon="terp-sale"
+	                    <filter icon="terp-dolar"
                             string="My Sales"
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
 	                </field>
 				</group>
 				<newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Salesman" icon="terp-sale" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Shop" icon="terp-sale" context="{'group_by':'shop_id'}"/>
-                    <filter string="Company" icon="terp-sale" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                <group expand="0" string="Group By..." colspan="10" col="12">
+                    <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Shop" icon="terp-go-home" context="{'group_by':'shop_id'}"/>
+                    <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-sale" context="{'group_by':'product_id','set_visible':True}"/>
-                    <filter string="Default UoM" icon="terp-sale" context="{'group_by':'uom_name'}"/>
-                    <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
-                    <filter string="State" icon="terp-sale" context="{'group_by':'state'}"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
+                    <filter string="Default UoM" icon="terp-mrp" context="{'group_by':'uom_name'}"/>
+                    <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Pricelist" icon="terp-sale" context="{'group_by':'pricelist_id'}"/>
-                    <filter string="Analytic Account" icon="terp-sale" context="{'group_by':'analytic_account_id'}"/>
-                    <filter string="Category of Product" icon="terp-sale" context="{'group_by':'categ_id'}"/>
+                    <filter string="Pricelist" icon="terp-dolar" context="{'group_by':'pricelist_id'}"/>
+                    <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}"/>
+                    <filter string="Category of Product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id'}"/>
                     <separator orientation="vertical"/>
-					<filter string="Day" icon="terp-sale" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-sale" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
+                   <filter string="Day" icon="terp-go-month" context="{'group_by':'day'}"/>
+                   <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
 				<newline/>
                 <group expand="0" string="Extended options..." groups="base.group_extended">
                     <field name="date"/>
+                    <field name="date_confirm"/>
                     <separator orientation="vertical"/>
                     <field name="shop_id" widget="selection"/>
                     <field name="state"/>
