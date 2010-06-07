@@ -23,10 +23,20 @@ from osv import fields, osv
 
 class event_registration_list(osv.osv_memory):
     """ List Event Registration """
+    
     _name = "event.registration.list"
     _description = "List Event Registrations"
 
     def open_registration(self, cr, uid, ids, context={}):
+        """
+        Open Event Registration form
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Event registration list's IDs
+        @param context: A standard dictionary for contextual values
+        @return: Dictionary value which open Event registration form.
+        """
+
         if not context.get('active_id', None):
             return {
             'name': 'Event Registrations',
@@ -37,7 +47,7 @@ class event_registration_list(osv.osv_memory):
             }
 
         return {
-            'domain': [('section_id', '=', context['active_id'])],
+            'domain': [('event_id', '=', context['active_id'])],
             'name': 'Event Registrations',
             'view_type': 'form',
             'view_mode': 'tree,form',

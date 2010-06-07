@@ -7,9 +7,12 @@
             <field name="model">event.registration.list</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="">
-              	<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            	<button name="open_registration" string="Open Registrations" type="object" icon="gtk-open"/>
+              <form string="Event Registrations">
+                <group colspan="4" col="2">
+                    <separator string="List Event Registrations" colspan="4"/>
+              		<button special="cancel" string="Close" icon="gtk-close"/>
+            		<button name="open_registration" string="Open Registrations" type="object" icon="gtk-open"/>
+            	</group>
 			</form>
             </field>
 		</record>

@@ -23,10 +23,19 @@ from tools.translate import _
 
 class event_partners_list(osv.osv_memory):
     """ Event Partners """
+    
     _name = "event.partners.list"
     _description = "List Event Partners"
 
     def list_partners(self, cr, uid, ids, context={}):
+        """
+        Open Event Partner
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Event partners list's IDs
+        @param context: A standard dictionary for contextual values
+        @return: Dictionary value which open Partner  form.
+        """
         obj_reg = self.pool.get('event.registration')
         mod_obj = self.pool.get('ir.model.data')
         list_partner = []
