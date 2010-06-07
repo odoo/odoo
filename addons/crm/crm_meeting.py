@@ -57,7 +57,8 @@ class crm_meeting(osv.osv, crm_case):
                              Define Responsible user and Email account for mail gateway.'), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'id': fields.integer('ID'),
-
+        'create_date': fields.datetime('Creation Date' , readonly=True),
+        'write_date': fields.datetime('Write Date' , readonly=True),
         # Meeting fields
         'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \

@@ -29,7 +29,12 @@ class sale_report(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Date Order', readonly=True),
+        'date_confirm': fields.date('Date Confirm', readonly=True),
+        'shipped':fields.boolean('Shipped', readonly=True),
+        'paid':fields.float('Picked', readonly=True),
+        'shipped_qty_1':fields.integer('Shipped Qty', readonly=True),
+        'paid_qty':fields.float('Paid Qty', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
@@ -65,45 +70,39 @@ class sale_report(osv.osv):
         tools.drop_view_if_exists(cr, 'sale_report')
         cr.execute("""
             create or replace view sale_report as (
-                 select
-                     min(l.id) as id,
+            select el.*,
+            (select count(1) from sale_order_line where order_id = s.id) as nbr,
                      s.date_order as date,
+                     s.date_confirm as date_confirm,
                      to_char(s.date_order, 'YYYY') as year,
                      to_char(s.date_order, 'MM') as month,
                      to_char(s.date_order, 'YYYY-MM-DD') as day,
-                     l.product_id as product_id,
-                     u.name as uom_name,
-                     sum(l.product_uom_qty * u.factor) as product_uom_qty,
                      s.partner_id as partner_id,
                      s.user_id as user_id,
                      s.shop_id as shop_id,
                      s.company_id as company_id,
-                     extract(epoch from avg(s.date_confirm-s.create_date))/(24*60*60)::decimal(16,2) as delay,
-                     sum(l.product_uom_qty*l.price_unit) as price_total,
-                     (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty * u.factor))::decimal(16,2) as price_average,
-                     count(*) as nbr,
+                     extract(epoch from (s.date_confirm-s.create_date))/(24*60*60)::decimal(16,2) as delay,
                      s.state,
-                     pt.categ_id,
+                     s.shipped,
+                     s.shipped::integer as shipped_qty_1,
                      s.pricelist_id as pricelist_id,
                      s.project_id as analytic_account_id
-                     from
+    from 
+    sale_order s,
+    (
+        select l.id as id,
+                     l.product_id as product_id,
+                     u.name as uom_name,
+                     sum(l.product_uom_qty * u.factor) as product_uom_qty,
+                     sum(l.product_uom_qty*l.price_unit) as price_total,
+                     (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty * u.factor))::decimal(16,2) as price_average,
+                     pt.categ_id, l.order_id
+        from
                  sale_order_line l
-                 left join sale_order s on (s.id=l.order_id)
                  left join product_uom u on (u.id=l.product_uom)
                  left join product_template pt on (pt.id=l.product_id)
-                 group by
-                     s.date_order,
-                     s.partner_id,
-                     l.product_id,
-                     l.product_uom,
-                     s.user_id,
-                     pt.categ_id,
-                     u.name,
-                     s.state,
-                     s.shop_id,
-                     s.company_id,
-                     s.pricelist_id,
-                     s.project_id
+    group by l.id, l.order_id, l.product_id, u.name, pt.categ_id) el
+    where s.id = el.order_id
             )
         """)
 sale_report()

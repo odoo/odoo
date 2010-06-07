@@ -2,6 +2,8 @@
 <openerp>
     <data>
 
+       <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="1"/>
+
         <record id="project_issue_categ_action" model="ir.actions.act_window">
             <field name="name">Issue Categories</field>
             <field name="res_model">crm.case.categ</field>
@@ -19,7 +21,8 @@
             <field name="domain">[('object_id.model', '=', 'project.issue')]</field>
             <field name="context">{'object_id':'project.issue'}</field>
         </record>
-        <menuitem action="project_issue_stage_act" id="menu_project_issue_stage_act" parent="crm.menu_crm_case_stage"/>
+
+        <menuitem action="project_issue_stage_act" name="Stages" id="menu_project_issue_stage_act" parent="menu_project_confi"/>
 
         <record model="ir.ui.view" id="project_issue_form_view">
             <field name="name">Project Issue Tracker Form</field>
@@ -184,12 +187,18 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group colspan="4" col="20">
-                        <filter icon="gtk-home" string="   Today   "
+						<filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft and Open Issues" icon="terp-check" default="1"/>
+                        <filter string="In Progress" domain="[('state','=','open')]" help="Open Issues" icon="terp-camera_test"/>
+                        <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
+
+						<separator orientation="vertical"/>
+
+                        <filter icon="terp-go-today" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
                             help="Today's bugs"
                             />
-                        <filter icon="gtk-media-rewind"
+                        <filter icon="terp-go-week"
                             string="    7 Days    " separator="1"
                             domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Bugs during last 7 days"
@@ -198,24 +207,27 @@
                         <field name="name" select='1' string="Subject"/>
                         <field name="user_id" select="1" widget="selection"/>
                         <field name="state" select="1">
-                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" name="current_bugs"/>
-                            <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
+                            <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Bugs" name="current_bugs"/>
+                            <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Bugs"/>
                         </field>
                         <field name="project_id" select="1" widget="selection" string="Project"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
-	                    <filter string="Stage" icon="terp-crm" domain="[]"
+                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+	                    <filter string="Stage" icon="terp-stage" domain="[]"
 	                        context="{'group_by':'stage_id'}" />
-	                    <filter string="Priority" icon="terp-crm" domain="[]"
+	                    <filter string="Priority" icon="terp-rating-rated" domain="[]"
 	                        context="{'group_by':'priority'}" />
-	                    <filter string="Campaign" icon="terp-crm"
+	                    <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
 	                        domain="[]" context="{'group_by':'type_id'}" />
 	                    <separator orientation="vertical" />
-	                    <filter string="Partner" icon="terp-crm" domain="[]"
+	                    <filter string="Partner" icon="terp-personal" domain="[]"
 	                        context="{'group_by':'partner_id'}" />
-	                    <filter string="Salesman" icon="terp-crm"
+	                    <filter string="Salesman" icon="terp-personal"
 	                        domain="[]" context="{'group_by':'user_id'}" />
+						<separator orientation="vertical" />
+						<filter string="Month" icon="terp-go-month"
+	                        domain="[]" context="{'group_by':'create_date'}" />
 	                    <separator orientation="vertical" />
                 	</group>
                 </search>
@@ -276,12 +288,12 @@
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
                     <group>
-                        <filter icon="gtk-home" string="   Today   "
+                        <filter icon="terp-go-today" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
                             help="Today's features"
                             />
-                        <filter icon="gtk-media-rewind"
+                        <filter icon="terp-go-week"
                             string="    7 Days    " separator="1"
                             domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Features during last 7 days"
@@ -292,8 +304,8 @@
                         <field name="name" select='1' string="Feature description"/>
                         <field name="user_id" select="1" widget="selection"/>
                         <field name="state" select="1">
-                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
-                            <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Features"/>
+                            <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
+                            <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
                         <field name="project_id" select="1" widget="selection" string="Project"/>
 

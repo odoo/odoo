@@ -1,0 +1,68 @@
+- |
+  In order to test the hr module in OpenERP, I will create new Employee , Department and Job Position.
+-
+  |
+  First I create Department  "R & D" in Department form.
+- 
+  !record {model: hr.department, id: hr_department_rd0}:
+    manager_id: base.user_root
+    name: 'R & D '
+-     
+  |
+  Now, I  create a new employee “employee1”.
+  select "R & D" Department  which I had created.    
+-
+  !record {model: hr.employee, id: hr_employee_employee0}:
+    address_home_id: base.res_partner_address_1
+    company_id: base.main_company
+    gender: male
+    marital: hr.hr_employee_marital_status_single
+    name: employee1
+    user_id: base.user_root
+    department_id: 'hr_department_rd0'
+
+- |
+  In order to check the wizard “Employee Hierarchy” I will create new employee “employee2” and select "employee1" as 
+  Manager.    
+- 
+  !record {model: hr.employee, id: hr_employee_employee1}:
+    address_home_id: base.res_partner_address_3000
+    company_id: base.main_company
+    gender: male
+    name: employee2
+    user_id: base.user_demo
+    parent_id: 'hr_employee_employee0'
+- |
+  Now I will open up form view of  “employee1” and test the wizard “Employee Hierarchy” so it display the employee
+  hierarchy starting from “employee1”. 
+       
+- |
+  Now I will create new Job Position. I will check successfull creation of new Job Position by adding the information.
+- 
+  !record {model: hr.job, id: hr_job_jea0}:
+    department_id: 'hr_department_rd0'
+    description: 'Position of Junier Application Engineer '
+    expected_employees: 5
+    name: 'JEA '
+- |
+  I check that Employee form is in "Open" state.
+-
+  !assert {model: hr.job, id: hr_job_jea0}:
+    - state == 'open'  
+    
+- |
+  I create Employee for this position in this Job Position form.
+- 
+  !record {model: hr.job, id: hr_job_jea0}:
+    employee_ids:
+      - address_home_id: base.res_partner_address_1
+        name: employee3 
+        department_id: 'hr_department_rd0'
+        gender: male
+        parent_id: 'hr_employee_employee0'
+-
+  I check that "NO of Employee" is "1"     
+-
+  !assert {model: hr.job, id: hr_job_jea0}:
+    - no_of_employee != False       
+        

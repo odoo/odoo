@@ -50,7 +50,7 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group col='8' colspan='4'>
-                        <filter icon="terp-hr" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
+                        <filter icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
                         <separator orientation="vertical"/>
                         <field name="user_id" select="1" widget="selection"/>
                         <field name="account_id" select="1" widget="selection"/>

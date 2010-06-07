@@ -31,7 +31,7 @@ class one2many_domain(fields.one2many):
                                             user=user, context=context)
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
+        if context is None:
             context = {}
         res = {}
         msg_obj = obj.pool.get('mailgate.message')
@@ -50,9 +50,11 @@ class mailgate_thread(osv.osv):
     _rec_name = 'thread' 
 
     _columns = {
-        'thread': fields.char('Thread', size=32, required=False), 
+        'thread': fields.char('Thread', size=124, required=False), 
         'message_ids': one2many_domain('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
-        'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
+        'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False),
+        'model': fields.char('Model Name', size=64, required=False),  
+        'res_id': fields.integer('Resource ID'), 
         }
         
     def __history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
@@ -67,7 +69,7 @@ class mailgate_thread(osv.osv):
         @param details: Details of case history if any 
         @param atach: Attachment sent in email
         @param context: A standard dictionary for contextual values"""
-        if not context:
+        if context is None:
             context = {}
         # The mailgate sends the ids of the cases and not the object list
         if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
@@ -78,11 +80,11 @@ class mailgate_thread(osv.osv):
         obj = self.pool.get('mailgate.message')
 
         for case in cases:
-            model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
             data = {
                 'name': keyword, 
                 'user_id': uid, 
-                'model_id' : model_ids and model_ids[0] or False, 
+                'model' : case._name, 
+                'res_id': case.id, 
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                 'thread_id': case.thread_id.id, 
                 'message_id': message_id, 
@@ -96,7 +98,7 @@ class mailgate_thread(osv.osv):
                         'name': subject or 'History', 
                         'history': True, 
                         'user_id': uid, 
-                        'model_id' : model_ids and model_ids[0] or False, 
+                        'model' : case._name, 
                         'res_id': case.id,
                         'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                         'description': details or (hasattr(case, 'description') and case.description or False), 
@@ -130,8 +132,6 @@ class mailgate_message(osv.osv):
 
     _columns = {
         'name':fields.char('Message', size=64), 
-        'model_id': fields.many2one('ir.model', 'Model'), 
-        'res_id': fields.integer('Resource ID'),
         'thread_id':fields.many2one('mailgate.thread', 'Thread'), 
         'date': fields.datetime('Date'), 
         'history': fields.boolean('Is History?', required=False), 
@@ -144,7 +144,9 @@ class mailgate_message(osv.osv):
         'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True), 
         'description': fields.text('Description'), 
         'partner_id': fields.many2one('res.partner', 'Partner', required=False), 
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'), 
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'model': fields.char('Model Name', size=64, required=False),  
+        'res_id': fields.integer('Resource ID'), 
     }
 
 mailgate_message()

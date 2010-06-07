@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -48,7 +48,7 @@ PEP-8 Test , copyright of py files check, method can not call from loops
                         list_files.append(os.path.join(i, j))
         py_list = []
         for file_py in list_files:
-            if file_py.split('.')[-1] == 'py' and not file_py.endswith('__init__.py') and not file_py.endswith('__terp__.py'):
+            if file_py.split('.')[-1] == 'py' and not file_py.endswith('__init__.py') and not file_py.endswith('__openerp__.py'):
                 file_path = os.path.join(module_path, file_py)
                 py_list.append(file_path)
 

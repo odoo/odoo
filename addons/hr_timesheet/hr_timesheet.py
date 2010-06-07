@@ -49,40 +49,44 @@ class hr_analytic_timesheet(osv.osv):
 
     def unlink(self, cr, uid, ids, context={}):
         toremove = {}
-        for obj in self.browse(cr, uid, ids, context):
+        for obj in self.browse(cr, uid, ids, context=context):
             toremove[obj.line_id.id] = True
-        self.pool.get('account.analytic.line').unlink(cr, uid, toremove.keys(), context)
-        return super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context)
+        self.pool.get('account.analytic.line').unlink(cr, uid, toremove.keys(), context=context)
+        return super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context=context)
 
 
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit, context={}):
         res = {}
         if prod_id and unit_amount:
             # find company
-            company_id=self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context)
-            res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount,company_id,unit, context)
+            company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context)
+            res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, context=context)
         return res
 
-    def _getEmployeeProduct(self, cr, uid, context):
+    def _getEmployeeProduct(self, cr, uid, context={}):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
         if emp_id:
-            emp=emp_obj.browse(cr, uid, emp_id[0], context)
+            emp=emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.product_id:
                 return emp.product_id.id
         return False
 
-    def _getEmployeeUnit(self, cr, uid, context):
+    def _getEmployeeUnit(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
+        if context is None:
+            context = {}
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
         if emp_id:
-            emp=emp_obj.browse(cr, uid, emp_id[0], context)
+            emp=emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.product_id:
                 return emp.product_id.uom_id.id
         return False
 
-    def _getGeneralAccount(self, cr, uid, context):
+    def _getGeneralAccount(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
+        if context is None:
+            context = {}
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
         if emp_id:
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
@@ -94,8 +98,10 @@ class hr_analytic_timesheet(osv.osv):
                     return a
         return False
 
-    def _getAnalyticJournal(self, cr, uid, context):
+    def _getAnalyticJournal(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
+        if context is None:
+            context = {}
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
         if emp_id:
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
@@ -109,7 +115,7 @@ class hr_analytic_timesheet(osv.osv):
         'product_id' : _getEmployeeProduct,
         'general_account_id' : _getGeneralAccount,
         'journal_id' : _getAnalyticJournal,
-        'date' : lambda self,cr,uid,ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
+        'date' : lambda self, cr, uid, ctx : ctx.get('date', time.strftime('%Y-%m-%d')),
         'user_id' : lambda obj, cr, uid, ctx : ctx.get('user_id', uid),
     }
     def on_change_account_id(self, cr, uid, ids, account_id):
@@ -147,4 +153,3 @@ class hr_analytic_timesheet(osv.osv):
 hr_analytic_timesheet()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
