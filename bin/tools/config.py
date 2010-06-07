@@ -272,8 +272,11 @@ class configmanager(object):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'xmlrpcs', 'syslog',
+                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
                 'list_db', 'server_actions_allow_code']
+        
+        if self.has_ssl:
+            keys.append('xmlrpcs')
 
         for arg in keys:
             if getattr(opt, arg) is not None:
