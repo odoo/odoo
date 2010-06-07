@@ -30,15 +30,15 @@
         <field name="arch" type="xml">
             <search string="Marketing Reports">
            		<group>
-	            	<filter icon="terp-marketing"
+	            	<filter icon="terp-go-year"
 	                    	string="This Year"
 	                    	domain="[('year','=',time.strftime('%%Y'))]"/>
-	                <filter icon="terp-marketing"
+	                <filter icon="terp-go-month"
 	                    	string="This Month"
 	                    	domain="[('month','=',time.strftime('%%m'))]"/>
 	                <separator orientation="vertical"/>
-		            <filter icon="terp-marketing" 
-		            		string="Date" 
+		            <filter icon="terp-go-month"
+		            		string="Date"
 		            		domain="[('date','=',time.strftime('%%Y/%%m/%%d'))]"/>
 	                <separator orientation="vertical"/>
 					<field name="campaign_id"/>
@@ -48,14 +48,14 @@
 					<field name="country_id"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Campaign" name="Campaign" icon="terp-marketing" context="{'group_by':'campaign_id'}" />
-                    <filter string="Segment" name ="Segment" icon="terp-marketing" context="{'group_by':'segment_id'}" />
-                    <filter string="Partner" icon="terp-marketing" context="{'group_by':'partner_id'}"/>
+                <group expand="0" string="Group By..." colspan="10" col="12">
+                    <filter string="Campaign" name="Campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
+                    <filter string="Segment" name ="Segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}" />
+                    <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-marketing" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-marketing" context="{'group_by':'year'}"/>
-                </group>                
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -68,9 +68,9 @@
         <field name="context">{'group_by': [], 'search_default_Campaign': 1, 'search_default_Segment': 1}</field>
         <field name="search_view_id" ref="view_campaign_analysis_search"/>
     </record>
-    
+
 	<menuitem name="Reporting" id="menu_marketing_reporting" parent="marketing.marketing_menu"/>
     <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="menu_marketing_reporting" sequence="40"/>
-		
+
 	</data>
 </openerp>
