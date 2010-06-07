@@ -75,8 +75,11 @@
         'mrp_installer.xml',
         'report/mrp_report_view.xml',
         'report/mrp_production_order_view.xml',
+        'board_manufacturing_view.xml',
+
+        
     ],
-    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
+    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml','board_manufacturing_demo.xml'],
     'test': [
              'test/mrp_phantom_bom.yml',
              'test/mrp_production_order.yml',
