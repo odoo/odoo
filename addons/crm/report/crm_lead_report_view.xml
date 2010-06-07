@@ -26,6 +26,8 @@
                 <field name="email" sum="#Mails"/>
                 <field name="delay_open" sum='Avg Closing Delay'/>
                 <field name="delay_close" sum='Avg Closing Delay'/>
+                <field name="delay_expected"/>
+                <field name="avg_answers"/>
              </tree>
             </field>
         </record>
@@ -167,12 +169,14 @@
                 <field name="priority"  invisible="1"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="type" invisible="1"/>
-                <field name="partner_id" invisible="1"/>
-                <field name="nbr" string="#Opportunities" sum="#Opportunities"/>
-                <field name="email" sum="# of Emails"/>
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                <field name="nbr" string="#Opportunities" sum="#Opportunities"/>
+                <field name="planned_revenue" sum="Planned Revenues"/>
+                <field name="email" sum="# of Emails"/>
                 <field name="delay_open" sum='Delay to open'/>
                 <field name="delay_close" sum='Delay to close'/>
+                <field name="delay_expected"/>
+                <field name="probability" widget="progressbar"/>
              </tree>
             </field>
         </record>
