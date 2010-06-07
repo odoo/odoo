@@ -197,7 +197,7 @@
 	        <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]][[ a['name'] ]]</font></para>
 	      </td>
 	      <td>
-	        <para style="terp_default_Right_9_Bold">[[ formatLang(abs(a['balance'])) ]]</para>
+	        <para style="terp_default_Right_9_Bold">[[ a['balance'] and formatLang(abs(a['balance'])) or 0.0 ]]</para>
 	      </td>
 	      <td>
 	        <para style="terp_default_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]]</font><font>[[ a['code1'] ]]</font></para>
@@ -206,7 +206,7 @@
 	        <para style="terp_default_9"><font color="white">[[  '. '*(a['level1']-1) ]]</font><font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) ]][[ a['name1'] ]]</font></para>
 	      </td>
 	      <td>
-	        <para style="terp_default_Right_9_Bold">[[ formatLang(abs(a['balance1'])) ]]</para>
+	        <para style="terp_default_Right_9_Bold">[[ a['balance1'] and formatLang(abs(a['balance1'])) or 0.0 ]]</para>
 	      </td>
 	   </tr>
       </blockTable>
@@ -216,13 +216,13 @@
           <para style="terp_default_Bold_9">Balance:([[ get_currency(data['form']) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr())) ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ sum_dr() and formatLang(abs(sum_dr())) or 0.0 ]]</u></para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Balance:([[ get_currency(data['form']) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_cr())) ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ sum_cr() and formatLang(abs(sum_cr())) or 0.0 ]]</u></para>
         </td>
       </tr>
     </blockTable>
