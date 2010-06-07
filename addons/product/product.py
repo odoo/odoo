@@ -245,7 +245,8 @@ class product_template(osv.osv):
         result = {}
         for product in self.browse(cr, uid, ids, context):
             if product.seller_ids:
-                result[product.id] = product.seller_ids[0].delay
+                partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  product.seller_ids if partner_id and partner_id.sequence])
+                result[product.id] = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].delay or False
             else:
                 result[product.id] = 1
         return result
