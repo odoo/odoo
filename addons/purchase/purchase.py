@@ -59,12 +59,13 @@ class purchase_order(osv.osv):
             val = val1 = 0.0
             cur=order.pricelist_id.currency_id
             for line in order.order_line:
-                for c in self.pool.get('account.tax').compute(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id):
+                for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id)['taxes']:
                     val+= c['amount']
                 val1 += line.price_subtotal
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
+            print res
         return res
 
     def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context):
@@ -569,12 +570,14 @@ class purchase_order(osv.osv):
 purchase_order()
 
 class purchase_order_line(osv.osv):
-    def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):
+    def _amount_line(self, cr, uid, ids, prop, arg,context):
         res = {}
         cur_obj=self.pool.get('res.currency')
-        for line in self.browse(cr, uid, ids):
+        tax_obj = self.pool.get('account.tax')
+        for line in self.browse(cr, uid, ids, context=context):
+            taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty)
             cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, line.price_unit * line.product_qty)
+            res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
     _columns = {

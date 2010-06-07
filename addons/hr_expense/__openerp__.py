@@ -40,7 +40,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['hr', 'account', 'account_tax_include'],
+    'depends': ['hr', 'account'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
