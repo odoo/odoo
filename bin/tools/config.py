@@ -108,14 +108,17 @@ class configmanager(object):
         group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable the XML-RPC protocol")
         parser.add_option_group(group)
 
-        if self.has_ssl:
-            group = optparse.OptionGroup(parser, "XML-RPC Secure Configuration")
-            group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", help="specify the TCP IP address for the XML-RPC Secure protocol")
-            group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", help="specify the TCP port for the XML-RPC Secure protocol", type="int")
-            group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", help="disable the XML-RPC Secure protocol")
-            group.add_option("--cert-file", dest="secure_cert_file", default="server.cert", help="specify the certificate file for the SSL connection")
-            group.add_option("--pkey-file", dest="secure_pkey_file", default="server.pkey", help="specify the private key file for the SSL connection")
-            parser.add_option_group(group)
+        title = "XML-RPC Secure Configuration"
+        if not self.has_ssl:
+            title += " (disabled as ssl is unavailable)"
+
+        group = optparse.OptionGroup(parser, title)
+        group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", help="specify the TCP IP address for the XML-RPC Secure protocol")
+        group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", help="specify the TCP port for the XML-RPC Secure protocol", type="int")
+        group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", help="disable the XML-RPC Secure protocol")
+        group.add_option("--cert-file", dest="secure_cert_file", default="server.cert", help="specify the certificate file for the SSL connection")
+        group.add_option("--pkey-file", dest="secure_pkey_file", default="server.pkey", help="specify the private key file for the SSL connection")
+        parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "NET-RPC Configuration")
         group.add_option("--netrpc-interface", dest="netrpc_interface", help="specify the TCP IP address for the NETRPC protocol")
