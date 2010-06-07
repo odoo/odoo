@@ -33,6 +33,7 @@ class idea_category(osv.osv):
 
     _name = "idea.category"
     _description = "Idea Category"
+    _log_create=True
 
     _columns = {
         'name': fields.char('Category', size=64, required=True),
@@ -52,6 +53,7 @@ class idea_idea(osv.osv):
     """ Idea """
     _name = 'idea.idea'
     _rec_name = 'title'
+    _log_create=True
 
     def _vote_avg_compute(self, cr, uid, ids, name, arg, context = None):
 

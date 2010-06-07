@@ -41,6 +41,8 @@ DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['roo
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _rec_name = 'datas_fname'
+    _log_create=True
+
     def _get_filestore(self, cr):
         return os.path.join(DMS_ROOT_PATH, cr.dbname)
 

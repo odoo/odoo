@@ -37,7 +37,6 @@ AVAILABLE_STATES = [
 class crm_opportunity(osv.osv):
     """ Opportunity Cases """
     _name = "crm.lead"
-    _description = "Opportunity"
     _order = "priority,date_action,id desc"
     _inherit = 'crm.lead'
     _columns = {
