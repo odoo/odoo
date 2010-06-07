@@ -108,18 +108,29 @@
             </field>
         </record>
         
-        <!--  Receipt Vouchers -->
+         <!--  Receipt Vouchers -->
         <record model="ir.actions.act_window" id="action_receipt_vou_voucher_list">
-            <field name="name">Voucher Entries</field>
+            <field name="name">Customer Vouchers</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_voucher_tree"/>
-<!--            <field name="domain">[('type','like','rec_voucher')]</field>-->
-<!--            <field name="context">{'type':'rec_voucher'}</field>-->
+            <field name="domain">[('journal_id.type','=','sale')]</field>
         </record>
         <menuitem id="menu_action_receipt_vou_voucher_list"
-        action="action_receipt_vou_voucher_list" parent="account.menu_finance_entries" sequence="8"/>
+        action="action_receipt_vou_voucher_list" parent="account.menu_finance_receivables" sequence="8"/>
+        
+        <!--  Purchase Vouchers -->
+        <record model="ir.actions.act_window" id="action_pay_vou_voucher_list">
+            <field name="name">Vendor Vouchers</field>
+            <field name="res_model">account.voucher</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="view_voucher_tree"/>
+            <field name="domain">[('journal_id.type','=','purchase')]</field>
+        </record>
+        <menuitem id="menu_action_pay_vou_voucher_list"
+        action="action_pay_vou_voucher_list" parent="account.menu_finance_payables" sequence="8"/>
 
 <!--        <record model="ir.actions.act_window" id="action_receipt_cashreceipt_voucher_list">-->
 <!--            <field name="name">Cash Receipt</field>-->
