@@ -185,8 +185,8 @@
            <field name="arch" type="xml">
                <search string="Budget">
                    <group col="20" colspan="4">
-                       <filter string="Draft" domain="[('state','=','draft')]" help="Draft Budgets"  default="1"/>
-                       <filter string="To Validate" domain="[('state','=','validate')]" help="To Validate Budgets" />
+                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"  default="1"/>
+                       <filter string="To Validate" icon="terp-gtk-go-back-rtl" domain="[('state','=','validate')]" help="To Validate Budgets" />
                        <separator orientation="vertical"/>
                        <field name="name" select="1"/>
                        <field name="code" select="1" />
