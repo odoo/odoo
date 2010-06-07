@@ -52,6 +52,7 @@
         'wizard/event_make_invoice_view.xml',
     ],
     'demo_xml': ['event_demo.xml'],
+    'test': ['test/test_event.yml'],
     'installable': True,
     'active': False,
     'certificate': '0083059161581',
