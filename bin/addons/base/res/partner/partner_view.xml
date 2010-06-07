@@ -27,18 +27,18 @@
             <field name="arch" type="xml">
                 <search string="Search Contact">
                     <group>
-                        <filter string="Customer" name="customer" icon="terp-crm" domain="[('is_customer_add','=','1')]" />
-                        <filter string="Supplier" name="supplier"  icon="terp-crm" domain="[('is_supplier_add','=','1')]" />
+                        <filter string="Customer" name="customer" icon="terp-personal" domain="[('is_customer_add','=','1')]" />
+                        <filter string="Supplier" name="supplier"  icon="terp-personal" domain="[('is_supplier_add','=','1')]" />
                         <separator orientation="vertical"/>
                         <field name="partner_id" />
                         <field name="name" />
                         <field name="country_id" />
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By...">
-                       <filter string="Partner" icon="terp-crm" domain="[]" context="{'group_by' : 'partner_id'}" />
-                       <filter string="Country" icon="terp-crm" domain="[]" context="{'group_by' : 'country_id'}" />
-                       <filter string="Type" icon="terp-crm" domain="[]" context="{'group_by' : 'type'}" />
+                    <group expand="0" string="Group By...">
+                       <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by' : 'partner_id'}" />
+                       <filter string="Country" icon="terp-go-home" domain="[]" context="{'group_by' : 'country_id'}" />
+                       <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                    </group>
                  </search>
             </field>
@@ -333,20 +333,20 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
-                        <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
-                        <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                        <filter string="Customers" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                        <filter string="Suppliers" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address" select="1"/>
                         <field name="country" select="1"/>
                         <field name="category_id" select="1"/>
                         <field name="user_id" select="1">
-                            <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
+                            <filter string="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
                         </field>
                    </group>
                    <newline />
-                   <group expand="1" string="Group By...">
-                       <filter string="Salesman" icon="terp-crm" domain="[]" context="{'group_by' : 'user_id'}" />
+                   <group expand="0" string="Group By...">
+                       <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
                    </group>
                </search>
             </field>
