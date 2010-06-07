@@ -133,11 +133,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="after">
-	                <notebook colspan="4">
-	                    <page string="Project">
-	                        <field name="contract_ids" colspan="4" nolabel="1" />
-	                    </page>
-	                </notebook>
+                    <field name="contract_ids" colspan="4" nolabel="1" />
                 </xpath>
             </field>
         </record>
