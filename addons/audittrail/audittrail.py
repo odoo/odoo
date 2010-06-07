@@ -423,8 +423,12 @@ class audittrail_objects_proxy(osv_pool):
         cr = pooler.get_db(db).cursor()
         obj_ids = pool.get('ir.model').search(cr, uid, [('model', '=', object)])
         model_object = pool.get('ir.model').browse(cr, uid, obj_ids)[0]
-
         res_ids = args[0]
+        if not isinstance(res_ids, list):
+            res_ids = [res_ids]
+        else:
+            res_ids = res_ids
+
         old_values = {}
         for res_id in res_ids:
             old_values[res_id] = pool.get(model_object.model).read(cr, uid, res_id, [])
