@@ -84,14 +84,14 @@ class scrum_backlog_merge(osv.osv_memory):
             new_note += backlogs.name
             new_description += (backlogs.name or '') + '\n' + (backlogs.note or '')
 
-            new_exp_hour.append(backlogs.planned_hours)
+            new_exp_hour.append(backlogs.expected_hours)
             for line in backlogs.tasks_id:
                 task_lines.append(line.id)
         id_b = backlog_obj.create(cr, uid, {
             'name': new_note,
             'note': new_description,
             'project_id': new_project_id,
-            'planned_hours': round(max(new_exp_hour))
+            'expected_hours': round(max(new_exp_hour))
         }, context=context)
 
         #To assing a new product backlog to merged tasks
