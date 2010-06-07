@@ -36,16 +36,17 @@
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process'],
+    'depends': ['base', 'process','board'],
     'init_xml': [],
     'update_xml': [
         'document_view.xml',
         'document_data.xml',
         'security/document_security.xml',
         'security/ir.model.access.csv',
-        'report/document_report_view.xml'
+        'report/document_report_view.xml',
+        'board_document_view.xml',
     ],
-    'demo_xml': [ 'document_demo.xml',],
+    'demo_xml': [ 'document_demo.xml','board_document_demo.xml'],
     'test': [
         'test/document_test.yml',
     ],

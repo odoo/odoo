@@ -50,6 +50,7 @@
         'partner_view.xml',
         'process/purchase_process.xml',
         'report/purchase_report_view.xml',
+        'board_purchase_view.xml',
     ],
     'test': [
              'test/purchase_from_order.yml',

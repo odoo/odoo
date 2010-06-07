@@ -42,7 +42,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['product', 'stock', 'mrp_procurement', 'process'],
+    'depends': ['product', 'stock', 'mrp_procurement', 'process','board'],
     'init_xml': [],
     'update_xml': [
         'wizard/sale_make_invoice_advance.xml',
@@ -58,9 +58,10 @@
         'report/sale_report_view.xml',
         'sale_report.xml',
         'stock_view.xml',
+        'board_sale_view.xml',
 #        'process/sale_process.xml',
     ],
-    'demo_xml': ['sale_demo.xml'],
+    'demo_xml': ['sale_demo.xml','board_sale_demo.xml'],
     'test': [
              'test/shipping_manual_sale_order.yml',
              'test/prepaid_sale_order.yml',
