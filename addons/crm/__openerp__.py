@@ -98,14 +98,17 @@ between mails and Open ERP.""",
         'process/crm_configuration_process.xml',
         'crm_installer_view.xml', 
         
-        'res_partner_view.xml'
+        'res_partner_view.xml',
+        'board_crm_statistical_view.xml',
+        'board_crm_view.xml',
     ],
     'demo_xml': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_meeting_demo.xml',
         'crm_opportunity_demo.xml',
-        'crm_phonecall_demo.xml'
+        'crm_phonecall_demo.xml',
+        'board_crm_demo.xml',
     ],
     'test': [
             'test/test_crm_lead.yml',
