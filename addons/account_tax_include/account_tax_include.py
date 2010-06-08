@@ -23,18 +23,6 @@ import time
 from osv import fields, osv
 import decimal_precision as dp
 
-class account_tax(osv.osv):
-    _inherit = 'account.tax'
-    _description = 'Account Tax'
-    _columns = {
-        'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
-                }
-
-    _defaults = {
-        'price_include': 0,
-                }
-account_tax()
-
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
     _columns = {

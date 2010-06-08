@@ -57,7 +57,7 @@
         <menuitem
             action="action_account_fiscal_position_form"
             id="menu_action_account_fiscal_position_form"
-            parent="account.menu_finance_accounting" sequence="20"/>
+            parent="next_id_27" sequence="20"/>
 
         <!--
         Partners Extension
@@ -74,13 +74,13 @@
                 <page string="Accounting" position="inside">
                     <group col="2" colspan="2">
                         <separator string="Customer Accounting Properties" colspan="2"/>
-                        <field name="property_account_receivable" />
+                        <field name="property_account_receivable" groups="account.group_account_user" />
                         <field name="property_account_position" widget="selection"/>
                         <field name="property_payment_term" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Supplier Accounting Properties" colspan="2"/>
-                        <field name="property_account_payable"/>
+                        <field name="property_account_payable" groups="account.group_account_user"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Customer Credit" colspan="2"/>
@@ -132,11 +132,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Project">
-                        <field name="contract_ids" colspan="4" nolabel="1" />
-                    </page>
-                </notebook>
+                <xpath expr="//notebook[last()]" position="after">
+	                <notebook colspan="4">
+	                    <page string="Project">
+	                        <field name="contract_ids" colspan="4" nolabel="1" />
+	                    </page>
+	                </notebook>
+                </xpath>
             </field>
         </record>
         

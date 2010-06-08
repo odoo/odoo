@@ -41,11 +41,13 @@ class report_project_task_user(osv.osv):
         'hours_effective': fields.float('Effective Hours', readonly=True),
         'hours_delay': fields.float('Avg. Plan.-Eff.', readonly=True),
         'remaining_hours': fields.float('Remaining Hours', readonly=True),
+        'progress': fields.float('Progress', readonly=True),
         'total_hours': fields.float('Total Hours', readonly=True),
         'closing_days': fields.float('Days to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the task"),
         'opening_days': fields.float('Days to Open', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to Open the task"),
+        'delay_endings_days': fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
         'nbr': fields.integer('# of tasks', readonly=True),
         'priority' : fields.selection([('4','Very Low'),
                                        ('3','Low'),
@@ -62,7 +64,7 @@ class report_project_task_user(osv.osv):
                ('cancelled', 'Cancelled'),
                ('done', 'Done')],
             'State', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company',readonly=True),
+        'company_id': fields.many2one('res.company', 'Company',readonly=True, groups="base.group_multi_company"),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'type': fields.many2one('project.task.type', 'Stage',readonly=True),
 
@@ -71,49 +73,61 @@ class report_project_task_user(osv.osv):
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'report_project_task_user')
         cr.execute("""
-            create or replace view report_project_task_user as (
-                select
-                    min(t.id) as id,
+            create view report_project_task_user as
+              select
+                    (select 1 ) AS nbr,
+                    t.id as id,
                     to_char(date_start, 'YYYY') as year,
                     to_char(date_start, 'MM') as month,
                     to_char(date_start, 'YYYY-MM-DD') as day,
-                    count(distinct t.id) as nbr,
                     date_trunc('day',t.date_start) as date_start,
                     date_trunc('day',t.date_end) as date_end,
                     to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_deadline,
-                    sum(cast(to_char(date_trunc('day',t.date_end) - date_trunc('day',t.date_start),'DD') as int)) as no_of_days,
+--                    sum(cast(to_char(date_trunc('day',t.date_end) - date_trunc('day',t.date_start),'DD') as int)) as no_of_days,
+                    (extract('epoch' from (t.date_end-t.date_start)))/(3600*24)  as no_of_days,
                     t.user_id,
+                    progress as progress,
                     t.project_id,
                     t.state,
+                    t.effective_hours as hours_effective,
                     t.priority,
                     t.name as name,
                     t.company_id,
                     t.partner_id,
                     t.type,
-                    sum(remaining_hours) as remaining_hours,
-                    sum(total_hours) as total_hours,
-                    sum(planned_hours) as hours_planned,
-                    avg(extract('epoch' from (t.date_end-t.create_date)))/(3600*24)  as closing_days,
-                    avg(extract('epoch' from (t.date_start-t.create_date)))/(3600*24)  as opening_days,
-                    sum(w.hours) as hours_effective,
-                    ((sum(planned_hours)-sum(w.hours))/count(distinct t.id))::decimal(16,2) as hours_delay
-                from project_task t
-                    left join project_task_work w on (t.id=w.task_id)
-                group by
-                    to_char(date_start, 'YYYY'),
-                    to_char(date_start, 'MM'),
-                    t.priority,
+                    remaining_hours as remaining_hours,
+                    total_hours as total_hours,
+                    t.delay_hours as hours_delay,
+                    planned_hours as hours_planned,
+                    (extract('epoch' from (t.date_end-t.create_date)))/(3600*24)  as closing_days,
+                    (extract('epoch' from (t.date_start-t.create_date)))/(3600*24)  as opening_days,
+                    (extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24)  as delay_endings_days
+              from project_task t
+
+                group by 
+                    t.id,
+                    remaining_hours,
+                    t.effective_hours,
+                    progress,
+                    total_hours,
+                    planned_hours,
+                    hours_delay,
+                    year,
+                    month,
+                    day,
+                    create_date,
+                    date_start,
+                    date_end,
+                    date_deadline,
                     t.user_id,
+                    t.project_id,
                     t.state,
-                    date_trunc('day',t.date_end),
-                    to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY'),
+                    t.priority,
+                    name,
                     t.company_id,
                     t.partner_id,
-                    t.type,
-                    t.name,
-                    t.project_id,
-                    t.date_start
-            )
+                    t.type
+
         """)
 report_project_task_user()
 

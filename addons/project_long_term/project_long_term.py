@@ -93,7 +93,7 @@ class project_phase(osv.osv):
         'next_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'prv_phase_id', 'next_phase_id', 'Next Phases'),
         'previous_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'next_phase_id', 'prv_phase_id', 'Previous Phases'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of phases."),
-        'duration': fields.float('Duration', required=True),
+        'duration': fields.float('Duration', required=True, help="By default in days"),
         'product_uom': fields.many2one('product.uom', 'Duration UoM', required=True, help="UoM (Unit of Measure) is the unit of measurement for Duration"),
         'task_ids': fields.one2many('project.task', 'phase_id', "Project Tasks"),
         'resource_ids': fields.one2many('project.resource.allocation', 'phase_id', "Project Resources"),

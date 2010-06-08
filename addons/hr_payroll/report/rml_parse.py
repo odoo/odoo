@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from report import report_sxw
 import xml.dom.minidom
 import os, time
@@ -29,6 +28,7 @@ import tools
 import pooler
 import re
 import sys
+
 
 class rml_parse(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -56,14 +56,12 @@ class rml_parse(report_sxw.rml_parse):
             return new
         else:
             return self.comma_me(new)
-        
     def _ellipsis(self, string, maxlen=100, ellipsis = '...'):
         ellipsis = ellipsis or ''
         try:
             return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
         except Exception, e:
             return False
-        
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen, '...')
 
@@ -150,6 +148,7 @@ class rml_parse(report_sxw.rml_parse):
         except UnicodeDecodeError:
             print "DECODING ERROR"
             return str.encode("ascii")
+
         else:
             print Stringer
             return Stringer
@@ -161,6 +160,3 @@ class rml_parse(report_sxw.rml_parse):
             rml_head =  self.rml_header
         rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
         return True
-
-
-

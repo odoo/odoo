@@ -28,7 +28,7 @@ import pooler
 from tools.translate import _
 
 sale_form = """<?xml version="1.0"?>
-<form string="Convert to Quote">
+<form string="Create a Sale Order">
     <field name="partner_id" required="True"/>
     <field name="shop_id" required="True"/>
     <field name="analytic_account"/>
@@ -135,10 +135,10 @@ class make_sale(wizard.interface):
 
         if data['form']['close']:
             case_obj.case_close(cr, uid, data['ids'])
-        
+
         if not new_ids:
             return {}
-            
+
         if len(new_ids)<=1:
             value = {
                 'domain': str([('id', 'in', new_ids)]),
@@ -159,7 +159,7 @@ class make_sale(wizard.interface):
                 'type': 'ir.actions.act_window',
                 'res_id':new_ids
                 }
-                
+
         return value
 
     states = {

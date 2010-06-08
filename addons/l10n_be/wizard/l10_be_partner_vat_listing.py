@@ -40,7 +40,7 @@ class vat_listing_clients(osv.osv_memory):
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
-        return [(r['id'], r['name'] + ' - ' + r['vat']) \
+        return [(r['id'], r['name'] or '' + ' - ' + r['vat'] or '') \
                 for r in self.read(cr, uid, ids, ['name', 'vat'],
                     context, load='_classic_write')]
 

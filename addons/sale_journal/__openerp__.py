@@ -28,7 +28,7 @@
     The sale journal modules allows you to categorise your
     sales and deliveries (picking lists) between different journals.
     This module is very helpful for bigger companies that
-    work by departments.
+    works by departments.
 
     You can use journal for different purposes, some examples:
     * isolate sales of different departments
@@ -54,8 +54,7 @@
     'update_xml': [
         'security/ir.model.access.csv',
         'sale_journal_view.xml',
-        'picking_journal_view.xml',
-        'picking_journal_view_report.xml'
+        'report/sale_journal_report_view.xml',
     ],
     'demo_xml': ['sale_journal_demo.xml'],
     'installable': True,

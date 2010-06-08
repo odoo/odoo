@@ -21,6 +21,7 @@
 
 from osv import fields,osv
 import tools
+from crm import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -35,7 +36,7 @@ class crm_lead_report(osv.osv):
     _name = "crm.lead.report"
     _auto = False
     _description = "CRM Lead Report"
-    
+
     def _get_data(self, cr, uid, ids, field_name, arg, context={}):
 
         """ @param cr: the current row, from the database cursor,
@@ -89,8 +90,13 @@ class crm_lead_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True), 
+        'day': fields.char('Day', size=128, readonly=True),
+        'email': fields.integer('# of Emails', size=128, readonly=True),
+        'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
         'delay_close': fields.float('Delay to close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
+        'probability': fields.float('Probability',digits=(16,2),readonly=True),
+        'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]" , readonly=True),
@@ -98,11 +104,15 @@ class crm_lead_report(osv.osv):
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True), 
+        'opening_date': fields.date('Opening Date', readonly=True),
+        'creation_date': fields.date('Creation Date', readonly=True),
+        'date_closed': fields.date('Close Date', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
-            
         ],'Type', help="Type is used to separate Leads and Opportunities"),
     }
     def init(self, cr):
@@ -120,25 +130,51 @@ class crm_lead_report(osv.osv):
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
+                    to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
+                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
                     c.state as state,
                     c.user_id,
+                    c.probability,
                     c.stage_id,
                     c.type as type,
                     c.company_id,
+                    c.priority,
                     c.section_id,
                     c.categ_id,
                     c.partner_id,
-                    count(*) as nbr,
+                    c.planned_revenue,
+                    (select 1) as nbr,
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    (select count(id) from mailgate_message where thread_id=c.id) as email,
                     date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
+                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
+                    avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24) as  delay_expected,
+                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
                 from
                     crm_lead c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
-                     c.state, c.user_id,c.section_id,c.stage_id,categ_id,c.partner_id,c.company_id, c.type
-                     ,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
+                group by
+                    to_char(c.create_date, 'YYYY'),
+                    to_char(c.date_open, 'YYYY-MM-DD'),
+                    to_char(c.date_closed, 'YYYY-mm-dd'),
+                    to_char(c.create_date, 'MM'),
+                    c.state,
+                    c.user_id,
+                    c.id,
+                    c.section_id,
+                    c.stage_id,
+                    c.probability,
+                    c.categ_id,
+                    c.partner_id,
+                    c.planned_revenue,
+                    c.company_id,
+                    c.priority,
+                    c.type,
+                    c.create_date,
+                    to_char(c.create_date, 'YYYY-MM-DD')
+
             )""")
 
 crm_lead_report()

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.6\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-05-06 05:39+0000\n"
+"PO-Revision-Date: 2010-05-29 11:45+0000\n"
 "Last-Translator: digitalsatori <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-05-07 04:03+0000\n"
+"X-Launchpad-Export-Date: 2010-05-30 03:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -72,7 +72,7 @@ msgstr "选择消息"
 msgid ""
 "This account will be used to value incoming stock for the current product "
 "category"
-msgstr "该科目将用于统计当前产品分类的入库金额"
+msgstr "这科目将用于当前产品分类的销售收入科目"
 
 #. module: account
 #: help:account.invoice,period_id:0
@@ -222,7 +222,7 @@ msgstr "账龄试算平衡表"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurrent Entries"
-msgstr "定期分录"
+msgstr "周期性凭证"
 
 #. module: account
 #: field:account.analytic.line,amount:0
@@ -875,7 +875,7 @@ msgstr "必须的"
 #: field:product.category,property_account_expense_categ:0
 #: field:product.template,property_account_expense:0
 msgid "Expense Account"
-msgstr "费用科目"
+msgstr "采购科目"
 
 #. module: account
 #: wizard_field:account.move.line.reconcile,addendum,journal_id:0
@@ -1575,7 +1575,7 @@ msgstr "科目编码"
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the expense account"
-msgstr "留空为使用费用科目"
+msgstr "留空为使用采购科目"
 
 #. module: account
 #: wizard_field:account.automatic.reconcile,init,account_ids:0
@@ -2138,7 +2138,8 @@ msgid "Analytic Entry"
 msgstr "辅助核算凭证"
 
 #. module: account
-#: view:res.company:0 field:res.company,overdue_msg:0
+#: view:res.company:0
+#: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
 msgstr "逾期付款信息"
 
@@ -3848,7 +3849,7 @@ msgstr "这会计期间可以重叠"
 msgid ""
 "This account will be used instead of the default one to value outgoing stock "
 "for the current product"
-msgstr "这科目将替换当前产品的默认出仓"
+msgstr "这科目将用于当前产品分类的采购科目"
 
 #. module: account
 #: model:process.node,note:account.process_node_manually0
@@ -4171,7 +4172,7 @@ msgid ""
 "Allows you to change the sign of the balance amount displayed in the "
 "reports, so that you can see positive figures instead of negative ones in "
 "expenses accounts."
-msgstr "允许你修改报表显示的余额的符号,所以你能够看见正数的数字替代费用科目的负数"
+msgstr "允许你修改报表显示的余额的符号,所以你能够看见正数的数字替代科目的负数"
 
 #. module: account
 #: help:account.config.wizard,code:0
@@ -5365,7 +5366,7 @@ msgstr "计算"
 #. module: account
 #: help:account.invoice.line,account_id:0
 msgid "The income or expense account related to the selected product."
-msgstr "选择产品的收入和费用科目"
+msgstr "选择产品的收入和采购科目"
 
 #. module: account
 #: field:account.tax,type_tax_use:0
@@ -5625,7 +5626,7 @@ msgstr "说明"
 msgid ""
 "This account will be used instead of the default one to value incoming stock "
 "for the current product"
-msgstr "这科目将替换当前产品的默认进仓"
+msgstr "这科目将用于当前产品的默认销售收入科目"
 
 #. module: account
 #: field:account.tax,child_ids:0
@@ -5657,7 +5658,7 @@ msgstr "科目设置"
 msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
-msgstr "这科目将替换当前业务伙伴的默认支付科目"
+msgstr "这科目将用于当前业务伙伴的默认应付科目"
 
 #. module: account
 #: field:account.tax.code,code:0
@@ -5829,7 +5830,7 @@ msgstr "科目一览"
 msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category"
-msgstr "这科目将替换当前产品分类的默认出仓"
+msgstr "这科目将用于当前产品分类的采购科目"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -5851,7 +5852,7 @@ msgstr "银行详情"
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
-msgstr "产品费用科目模板"
+msgstr "产品采购科目模板"
 
 #. module: account
 #: rml:account.analytic.account.analytic.check:0
@@ -5949,6 +5950,9 @@ msgstr "计算日期"
 
 #~ msgid "For Value percent enter % ratio between 0-1."
 #~ msgstr "值是一个百分比在0-1之间"
+
+#~ msgid "account.config.wizard"
+#~ msgstr "科目.设置.向导"
 
 #~ msgid "For Tax Type percent enter % ratio between 0-1."
 #~ msgstr "税类型是百分比在0-1之间"

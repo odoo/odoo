@@ -178,12 +178,33 @@
             </field>
         </record>
 
+        <record id="view_crossovered_budget_search" model="ir.ui.view">
+           <field name="name">crossovered.budget.search</field>
+           <field name="model">crossovered.budget</field>
+           <field name="type">search</field>
+           <field name="arch" type="xml">
+               <search string="Budget">
+                   <group col="20" colspan="4">
+                       <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"  default="1"/>
+                       <filter string="To Validate" icon="terp-gtk-go-back-rtl" domain="[('state','=','validate')]" help="To Validate Budgets" />
+                       <separator orientation="vertical"/>
+                       <field name="name" select="1"/>
+                       <field name="code" select="1" />
+                       <field name="state"/>
+                       <field name="date_from"/>
+                       <field name="date_to"/>
+                   </group>
+               </search>
+           </field>
+        </record>
+
         <record model="ir.actions.act_window" id="act_crossovered_budget_view">
             <field name="name">Budget</field>
             <field name="res_model">crossovered.budget</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="crossovered_budget_view_tree"/>
+            <field name="search_view_id" ref="view_crossovered_budget_search"/>
         </record>
         <menuitem parent="next_id_31"
             id="menu_act_crossovered_budget_view"

@@ -24,15 +24,13 @@ from osv import fields, osv
 class marketing_installer(osv.osv_memory):
     _name = 'marketing.installer'
     _inherit = 'res.config.installer'
-    
     _columns = {
         # Generic modules
-        'marketing_campaign':fields.boolean('Marketing Campaign',
-            help="Helps you to manage your marketing campaigns step by step."),
-        'crm_profiling':fields.boolean('Crm Profile',
-            help="Helps you to perform segmentation within partners.")
-            }
-        
+        'marketing_campaign':fields.boolean('Marketing Campaigns',
+            help="Helps you to manage marketing campaigns and automate actions and communication steps."),
+        'crm_profiling':fields.boolean('Profiling Tools',
+            help="Helps you to perform segmentation within partners and design questionaires.")
+    }
 marketing_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
