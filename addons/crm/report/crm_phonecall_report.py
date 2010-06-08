@@ -21,6 +21,7 @@
 
 from osv import fields,osv
 import tools
+from crm import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -78,6 +79,7 @@ class crm_phonecall_report(osv.osv):
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
@@ -89,15 +91,22 @@ class crm_phonecall_report(osv.osv):
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True), 
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
+        'duration': fields.float('Duration', digits=(16,2),readonly=True, group_operator="avg"),
+        'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
+                         domain="[('section_id','=',section_id),\
+                        ('object_id.model', '=', 'crm.phonecall')]", readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'opening_date': fields.date('Opening Date', readonly=True),
+        'creation_date': fields.date('Creation Date', readonly=True),
+        'date_closed': fields.date('Close Date', readonly=True),
     }
 
     def init(self, cr):
@@ -114,23 +123,45 @@ class crm_phonecall_report(osv.osv):
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
+                    to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
+                    to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
+                    c.state,
+                    c.user_id,
+                    c.section_id,
+                    c.categ_id,
+                    c.partner_id,
+                    c.stage_id,
+                    c.duration,
+                    c.company_id,
+                    c.priority,
+                    (select 1) as nbr,
+                    0 as avg_answers,
+                    0.0 as perc_done,
+                    0.0 as perc_cancel,
+                    date_trunc('day',c.create_date) as create_date,
+                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
+                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
+                    
+                from
+                    crm_phonecall c
+                where c.categ_id in (select res_id from ir_model_data where (name = 'categ_phone1' or name ='categ_phone2'))
+                group by 
+                    to_char(c.create_date, 'YYYY'),
+                    to_char(c.create_date, 'MM'),\
                     c.state,
                     c.user_id,
                     c.section_id,
                     c.categ_id,
                     c.partner_id,
                     c.company_id,
-                    count(*) as nbr,
-                    0 as avg_answers,
-                    0.0 as perc_done,
-                    0.0 as perc_cancel,
-                    date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
-                from
-                    crm_phonecall c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
-                     c.state, c.user_id,c.section_id, c.categ_id,c.partner_id,c.company_id
-                     ,to_char(c.create_date, 'YYYY-MM-DD'),c.create_date
+                    c.duration,
+                    c.priority,
+                    to_char(c.date_open, 'YYYY-MM-DD'),
+                    to_char(c.date_closed, 'YYYY-mm-dd'),
+                    c.stage_id,
+                    to_char(c.create_date, 'YYYY-MM-DD'),
+                    c.create_date
             )""")
 
 crm_phonecall_report()
