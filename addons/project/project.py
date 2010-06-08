@@ -343,7 +343,6 @@ class task(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
-        'user_id': lambda obj, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'priority': lambda *a: '2',
         'progress': lambda *a: 0,
