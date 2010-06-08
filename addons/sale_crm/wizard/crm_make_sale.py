@@ -23,7 +23,6 @@ from osv import fields, osv
 from tools.translate import _
 from mx.DateTime import now
 
-<<<<<<< TREE
 
 class crm_make_sale(osv.osv_memory):
     """ Make sale  order for crm """
