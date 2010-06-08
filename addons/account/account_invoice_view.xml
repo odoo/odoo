@@ -63,6 +63,7 @@
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="base.group_user,base.group_extended"/>
                             <newline/>
                             <field name="price_subtotal"/>
+
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
                         </page>
@@ -146,7 +147,7 @@
                         <field name="number" readonly="1"/>
                         <field name="type" invisible="1"/>
                         <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
-                        <button name="%(action_account_change_currency)d" type="action" icon="gtk-apply" string="Change Currency"/>
+                        <button name="%(action_account_change_currency)d" type="action" icon="gtk-apply" string="Change"/>
                         <newline/>
                         <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" context="{'default_customer': 0}"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
@@ -403,7 +404,7 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree"/>
         </record>
-        <menuitem name="Invoices" id="menu_finance_invoice" parent="account.menu_finance" sequence="2"/>
+<!--        <menuitem name="Invoices" id="menu_finance_invoice" parent="account.menu_finance" sequence="2"/>-->
 
         <record id="action_invoice_tree1" model="ir.actions.act_window">
             <field name="name">Customer Invoices</field>
@@ -426,10 +427,10 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
-        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="account.menu_finance_invoice"/>
+        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
-            <field name="name">Supplier Invoices</field>
+            <field name="name">Vendor Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -438,7 +439,7 @@
             <field name="context">{'type':'in_invoice'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
-        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="account.menu_finance_invoice"/>
+        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
 
         <record id="action_invoice_tree3" model="ir.actions.act_window">
             <field name="name">Customer Refunds</field>
@@ -464,10 +465,10 @@
             <field name="act_window_id" ref="action_invoice_tree3"/>
         </record>
 
-        <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="account.menu_finance_invoice"/>
+        <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree4" model="ir.actions.act_window">
-            <field name="name">Supplier Refunds</field>
+            <field name="name">Vendor Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -476,7 +477,7 @@
             <field name="context">{'type':'in_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
-        <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="account.menu_finance_invoice"/>
+        <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 
         <act_window domain="[('partner_id','=',active_id)]" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
