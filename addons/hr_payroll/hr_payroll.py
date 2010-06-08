@@ -29,7 +29,7 @@ from tools.translate import _
 
 class hr_contract_wage_type(osv.osv):
     """
-    Wages types
+    Wage types
     Basic = Basic Salary
     Grows = Basic + Allowances
     New = Grows - Deductions
@@ -578,9 +578,9 @@ class payment_category(osv.osv):
     
     def execute_function(self, cr, uid, id, value, context):
         """
-            self: pointer to self object
-            cr: cursor to database
-            uid: user id of current executer
+        self: pointer to self object
+        cr: cursor to database
+        uid: user id of current executer
         """
         
         line_pool = self.pool.get('hr.allounce.deduction.categoty.line')
@@ -628,10 +628,10 @@ class hr_holidays_status(osv.osv):
             ('unpaid','Un-Paid Holiday'), 
             ('halfpaid','Half-Pay Holiday')
             ], string='Payment'),
-        'account_id': fields.many2one('account.account', 'Account', required=True),
+        'account_id': fields.many2one('account.account', 'Account', required=False),
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account', required=False),
         'head_id': fields.many2one('hr.allounce.deduction.categoty', 'Payroll Head', domain=[('type','=','deduct')]),
-        'code':fields.char('Code', size=64, required=True, readonly=False),
+        'code':fields.char('Code', size=64, required=False, readonly=False),
     }
     _defaults = {
         'type': lambda *args: 'unpaid',
