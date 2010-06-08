@@ -63,36 +63,45 @@ class project_issue(osv.osv, crm.crm_case):
         res_obj = self.pool.get('resource.resource')
 
         res = {}
-        for issue in self.browse(cr, uid, ids , context):
+        for issue in self.browse(cr, uid, ids, context):
             for field in fields:
                 res[issue.id] = {}
                 duration = 0
                 ans = False
-                if field == 'day_open':
+                hours = 0
+                
+                if field in ['working_hours_open','day_open']:
                     if issue.date_open:
                         date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                         date_open = datetime.strptime(issue.date_open, "%Y-%m-%d %H:%M:%S")
                         ans = date_open - date_create
                         date_until = issue.date_open
-                elif field == 'day_close':
+                        #Calculating no. of working hours to open the issue
+                        hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
+                                mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
+                                mx.DateTime.strptime(issue.date_open, '%Y-%m-%d %H:%M:%S'))
+                elif field in ['working_hours_close','day_close']:
                     if issue.date_closed:
                         date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                         date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
                         date_until = issue.date_closed
                         ans = date_close - date_create
+                        #Calculating no. of working hours to close the issue
+                        hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
+                                mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
+                                mx.DateTime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
                 if ans:
                     resource_id = False
                     if issue.user_id:
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
                         if resource_ids and len(resource_ids):
                             resource_id = resource_ids[0]
-
                     duration = float(ans.days)
-                    if issue.section_id and issue.section_id.resource_calendar_id:
-                        duration =  float(ans.days) * 24
-                        new_dates = cal_obj.interval_get(cr,
+                    if issue.project_id and issue.project_id.resource_calendar_id:
+                        duration = float(ans.days) * 24
+                        new_dates = cal_obj.interval_min_get(cr,
                             uid,
-                            issue.section_id.resource_calendar_id and issue.section_id.resource_calendar_id.id or False,
+                            issue.project_id.resource_calendar_id.id,
                             mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
                             duration,
                             resource=resource_id
@@ -104,9 +113,11 @@ class project_issue(osv.osv, crm.crm_case):
                                 no_days.append(in_time.date)
                             if out_time > date_until:
                                 break
-                        duration =  len(no_days)
-                res[issue.id][field] = abs(float(duration))
-
+                        duration = len(no_days)
+                if field in ['working_hours_open','working_hours_close']:
+                    res[issue.id][field] = hours
+                else:
+                    res[issue.id][field] = abs(float(duration))
         return res
 
     _columns = {
@@ -164,8 +175,10 @@ class project_issue(osv.osv, crm.crm_case):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to'),
-        'working_hours_open': fields.float('Working Hours to Open the Issue'),
-        'working_hours_close': fields.float('Working Hours to Close the Issue'),
+        'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
+                                method=True, multi='working_days_open', type="float", store=True),
+        'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
+                                method=True, multi='working_days_close', type="float", store=True),
     }
     
     def _get_project(self, cr, uid, context):

@@ -11,19 +11,20 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Production">
-					<field name="date_planned"/>
-					<field name="bom_id" invisible="1"/>
-					<field name="product_id" invisible="1"/>
-					<field name="product_qty" sum='Product Qty'/>
-					<field name="nbr" string="#Production Orders" sum='#Production Orders'/>
-					<field name="state" invisible="1"/>
-					<field name="picking_id" invisible="1"/>
-                    <field name="priority" invisible="1"/>
-                    <field name="year" invisible="1" />
-					<field name="month" invisible="1"/>
-					<field name="location_src_id" invisible="1"/>
-					<field name="location_dest_id" invisible="1"/>
-					<field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                      <field name="date_planned"/>
+                      <field name="bom_id" invisible="1"/>
+                      <field name="product_id" invisible="1"/>
+                      <field name="product_qty" sum='Product Qty'/>
+                      <field name="nbr" string="#Line Orders" sum='#Line Orders'/>
+                      <field name="state" invisible="1"/>
+                      <field name="picking_id" invisible="1"/>
+                      <field name="priority" invisible="1"/>
+                      <field name="day" invisible="1" />
+                      <field name="month" invisible="1" />
+                      <field name="year" invisible="1" />
+                      <field name="location_src_id" invisible="1"/>
+                      <field name="location_dest_id" invisible="1"/>
+                      <field name="company_id" groups="base.group_multi_company" invisible="1"/>
 				</tree>
             </field>
         </record>
@@ -47,14 +48,14 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="6">
-	                    <filter icon="gtk-media-rewind" string="  365 Days  "
+	                    <filter icon="terp-go-year" string="  365 Days  "
 	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Production performed in last 365 Days"/>
-	                    <filter icon="gtk-media-rewind" string="   30 Days   "
+	                    <filter icon="terp-go-month" string="   30 Days   "
 	                    		name="month"
 	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                    		help="Production performed in last 30 days"/>
-		                <filter icon="gtk-media-rewind"
+		                <filter icon="terp-go-week"
 	                            string="    7 Days    "
 	                            separator="1"
 	                            domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
@@ -69,7 +70,7 @@
                    </group>
                    <newline/>
 
-                   <group expand="1" string="Group By...">
+                   <group expand="0" string="Group By...">
                     	<filter string="Raw Material Location" icon="terp-gtk-jump-to-rtl" context="{'group_by':'location_src_id'}"/>
                     	<filter string="Finished Products Location" icon="terp-gtk-jump-to-ltr" context="{'group_by':'location_dest_id'}"/>
                     	<separator orientation="vertical"/>
@@ -81,7 +82,7 @@
                     	<filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                     	<separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-month" context="{'group_by':'day'}"/>
-                    	<filter string="Month" name="month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    	<filter string="Month" name="terp-go-month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     	<filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                    </group>
                     <newline/>

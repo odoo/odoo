@@ -11,7 +11,7 @@
 	                    <field name="name" required="1" select="1"/>
 	                    <field name="date" required="1" select="1"/>
 	                    <field name="user_id" string="Responsible" select="1"/>
-	                    <field name="partner_id" />
+	                    <field name="partner_id" readonly="1" />
 	                </group>
                     <notebook colspan="4">
 	                    <page string="Details">
@@ -46,10 +46,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Mailgateway Message">
-                    <field name="name" />
                     <field name="date" />
-                    <field name="email_from" />
-                    <field name="user_id" />
+                    <field name="name" />
+                    <field name="email_from" string="From"/>
+                    <field name="user_id" string="Responsible"/>
                 </tree>
             </field>
         </record>
