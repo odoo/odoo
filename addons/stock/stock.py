@@ -814,7 +814,7 @@ class stock_picking(osv.osv):
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
             for move_line in picking.move_lines:
-                origin = move_line.picking_id.name
+                origin = move_line.picking_id.name or ''
                 if move_line.picking_id.origin:
                     origin += ':' + move_line.picking_id.origin
                 if group:
