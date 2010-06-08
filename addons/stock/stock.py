@@ -848,9 +848,9 @@ class stock_picking(osv.osv):
 
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
                 notes = False
-                if move_line.sale_line_id:
+                if ('sale_line_id' in move_line._columns.keys()) and move_line.sale_line_id:
                     notes = move_line.sale_line_id.notes
-                elif move_line.purchase_line_id:
+                elif ('purchase_line_id' in move_line._columns.keys()) and move_line.purchase_line_id:
                     notes = move_line.purchase_line_id.notes
 
                 invoice_line_id = invoice_line_obj.create(cr, uid, {
