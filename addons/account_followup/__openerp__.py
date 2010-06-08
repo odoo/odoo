@@ -55,6 +55,9 @@
         'followup_data.xml'
     ],
     'demo_xml': ['followup_demo.xml'],
+    'test': [
+             'test/account_followup.yml'
+            ],
     'installable': True,
     'active': False,
     'certificate': '0072481076453',
