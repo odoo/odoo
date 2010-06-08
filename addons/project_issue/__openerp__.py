@@ -45,6 +45,7 @@
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
+        "board_project_issue_view.xml",
      ],
     'demo_xml': ['project_issue_demo.xml'],
     'installable': True,
