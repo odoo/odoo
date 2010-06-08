@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-04-16 09:47+0000\n"
+"PO-Revision-Date: 2010-06-03 20:09+0000\n"
 "Last-Translator: Ferdinand @ ChriCar <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-21 04:06+0000\n"
+"X-Launchpad-Export-Date: 2010-06-04 03:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -272,10 +272,6 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
-"zeigt die Ansicht des Journalberichtes. Open ERP wird gezeigt welche Felder "
-"sichtbar sein sollen, welche erforderlich sind oder keine Schreibrechte habe "
-"und in der Reihenfolge der Auftragsnummern. Sie können einen eigenen View "
-"für eine schnellere Buchungsbearbeitung herstellen."
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -2176,7 +2172,8 @@ msgid "Analytic Entry"
 msgstr "Buchung Analysekonto"
 
 #. module: account
-#: view:res.company:0 field:res.company,overdue_msg:0
+#: view:res.company:0
+#: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
 msgstr "Text Zahlungserinnerung"
 
@@ -3314,7 +3311,9 @@ msgstr "Buchen OP Ausgleich"
 #. module: account
 #: wizard_view:account.wizard_paid_open,init:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(Rechnungen müssen ausgeglichen werden)"
+msgstr ""
+"(Rechnungen dürfen nicht ausgeglichen sein, wenn diese wieder geöffnet "
+"werden sollen)"
 
 #. module: account
 #: view:account.invoice:0
@@ -5314,7 +5313,7 @@ msgstr "Benutze Buchungsvorlage"
 #. module: account
 #: wizard_button:account.wizard_paid_open,init,end:0
 msgid "No"
-msgstr "Nummer"
+msgstr "Nein"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move
@@ -6062,3 +6061,6 @@ msgstr "Aktivieren, wenn Benutzer das Konto ausgleichen dürfen."
 #: wizard_button:account.subscription.generate,init,generate:0
 msgid "Compute Entry Dates"
 msgstr "Berechne eingegebene Daten"
+
+#~ msgid "account.config.wizard"
+#~ msgstr "account.config.wizard"

@@ -72,7 +72,7 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         val = 0.0
-        for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id):
+        for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id)['taxes']:
             val += c['amount']
         return val
 
@@ -774,23 +774,16 @@ sale_order()
 # - update it on change product and unit price
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
-    def _amount_line_net(self, cr, uid, ids, field_name, arg, context=None):
-        if context is None:
-            context = {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-        return res
-
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
-        if context is None:
-            context = {}
         res = {}
+        context = context or {}
+        tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
+            price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
+            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty)
             cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+            res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
     def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
@@ -799,7 +792,7 @@ class sale_order_line(osv.osv):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             try:
-                res[line.id] = int(line.product_uom_qty / line.product_packaging.qty)
+                res[line.id] = int((line.product_uom_qty+line.product_packaging.qty-0.0001) / line.product_packaging.qty)
             except:
                 res[line.id] = 1
         return res
@@ -816,7 +809,6 @@ class sale_order_line(osv.osv):
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'procurement_id': fields.many2one('mrp.procurement', 'Procurement'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
-        'price_net': fields.function(_amount_line_net, method=True, string='Net Price', digits_compute= dp.get_precision('Sale Price')),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly',False)]}),
         'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),

@@ -59,12 +59,13 @@ class purchase_order(osv.osv):
             val = val1 = 0.0
             cur=order.pricelist_id.currency_id
             for line in order.order_line:
-                for c in self.pool.get('account.tax').compute(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id):
+                for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id)['taxes']:
                     val+= c['amount']
                 val1 += line.price_subtotal
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
+            print res
         return res
 
     def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context):
@@ -211,6 +212,7 @@ class purchase_order(osv.osv):
     }
     _name = "purchase.order"
     _description = "Purchase Order"
+    _log_create = True
     _order = "name desc"
 
     def unlink(self, cr, uid, ids, context=None):
@@ -568,12 +570,14 @@ class purchase_order(osv.osv):
 purchase_order()
 
 class purchase_order_line(osv.osv):
-    def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):
+    def _amount_line(self, cr, uid, ids, prop, arg,context):
         res = {}
         cur_obj=self.pool.get('res.currency')
-        for line in self.browse(cr, uid, ids):
+        tax_obj = self.pool.get('account.tax')
+        for line in self.browse(cr, uid, ids, context=context):
+            taxes = tax_obj.compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty)
             cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, line.price_unit * line.product_qty)
+            res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
     _columns = {
@@ -722,22 +726,24 @@ class mrp_procurement(osv.osv):
         po_obj = self.pool.get('purchase.order')
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
-            partner = procurement.product_id.seller_ids[0].name
-            partner_id = partner.id
+            partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id])
+            partner_rec = partner_list and partner_list[0] and partner_list[0][1] or False
+            partner = partner_rec.name or False
+            partner_id = partner_rec.id or False
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
 
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
-            if procurement.product_id.seller_ids[0].qty:
-                qty = max(qty,procurement.product_id.seller_ids[0].qty)
+            if partner_rec.qty:
+                qty = max(qty,partner_rec.qty)
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
-            newdate = newdate - procurement.product_id.seller_ids[0].delay
+            newdate = newdate - partner_rec.delay
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
