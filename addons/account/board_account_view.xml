@@ -6,7 +6,6 @@
             <field name="name">Accountants</field>
         </record>
 
-
         <record id="action_aged_receivable" model="ir.actions.act_window">
             <field name="name">Receivable Accounts</field>
             <field name="res_model">report.account.receivable</field>
@@ -22,8 +21,6 @@
             <field name="domain">[('type','=','income')]</field>
         </record>
 
-
-
         <record id="board_account_form" model="ir.ui.view">
             <field name="name">board.account.form</field>
             <field name="model">board.board</field>
@@ -31,7 +28,6 @@
             <field name="arch" type="xml">
                 <form string="Account Board">
                     <hpaned>
-
                         <child1>
                             <action colspan="4" height="160" name="%(account.action_invoice_tree1)d" string="Draft Customer Invoices" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
                         </child1>
@@ -52,6 +48,7 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_account_form"/>
         </record>
+        
         <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
         <menuitem id="next_id_68" name="Accounting" parent="base.dashboard"
             groups="account.group_account_manager"/>
