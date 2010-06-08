@@ -249,6 +249,16 @@
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
+        <record id="act_project_phase_list" model="ir.actions.act_window">
+            <field name="name">Project Phases</field>
+            <field name="res_model">project.phase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+ 			<field name="context">{'search_default_responsible_id':uid}</field>
+            <field name="search_view_id" ref="view_project_phase_search"/>
+        </record>
+
+
     # ------------------------------------------------------
     # Project
     # ------------------------------------------------------

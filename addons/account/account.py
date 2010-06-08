@@ -1564,8 +1564,42 @@ class account_tax(osv.osv):
                 cur_price_unit+=amount2
         return res
 
-    def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+    def compute_all(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+        """
+        RETURN: {
+                'total': 0.0,                # Total without taxes
+                'total_included: 0.0,        # Total with taxes
+                'taxes': []                  # List of taxes, see compute for the format
+            }
+        """
+        precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
+        totalin = totalex = round(price_unit * quantity, precision)
+        tin = []
+        tex = []
+        for tax in taxes:
+            if tax.price_include:
+                tin.append(tax)
+            else:
+                tex.append(tax)
+        tin = self.compute_inv(cr, uid, tin, price_unit, quantity, address_id=address_id, product=product, partner=partner)
+        for r in tin:
+            totalex -= r['amount']
+        tex = self._compute(cr, uid, tex, totalex/quantity, quantity, address_id=address_id, product=product, partner=partner)
+        for r in tex:
+            totalin += r['amount']
+        return {
+            'total': totalex,
+            'total_included': totalin,
+            'taxes': tin + tex
+        }
 
+    def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+        logger = netsvc.Logger()
+        logger.notifyChannel("warning", netsvc.LOG_WARNING,
+            "Deprecated, use compute_all(...)['taxes'] instead of compute(...) to manage prices with tax included")
+        return self._compute(cr, uid, taxes, price_unit, quantity, address_id, product, partner)
+
+    def _compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
         """
         Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
 
@@ -1582,7 +1616,6 @@ class account_tax(osv.osv):
             else:
                 r['amount'] = round(r['amount'] * quantity, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
                 total += r['amount']
-
         return res
 
     def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
