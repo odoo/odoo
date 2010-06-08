@@ -20,7 +20,6 @@
             <field name="arch" type="xml">
                 <form string="Groups">
                     <field name="name" select="1"/>
-                    <field name="share_group"/>
                     <notebook colspan="4">
                         <page string="Users">
                             <field colspan="4" name="users" nolabel="1"/>
@@ -108,7 +107,6 @@
                     <field name="active"/>
                     <field name="login" select="1"/>
                     <field name="password" password="True"/>
-                    <field name="share_user"/>
                     <newline/>
                     <notebook colspan="4">
                         <page string="User">

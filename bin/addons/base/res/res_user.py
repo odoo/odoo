@@ -39,7 +39,6 @@ class groups(osv.osv):
             'group_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment',size=250),
-        'share_group': fields.boolean('Share')
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the group must be unique !')
@@ -248,7 +247,6 @@ class users(osv.osv):
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
-        'share_user': fields.boolean('Share'),
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="Choose between the simplified interface and the extended one"),
