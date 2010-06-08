@@ -58,8 +58,9 @@
         'auction_view.xml',
         'auction_report.xml',
         'auction_wizard.xml',
-        'board_auction_manager_view.xml',
         'board_auction_view.xml',
+        'board_auction_manager_view.xml',
+        
     ],
     'demo_xml': ['auction_demo.xml','board_auction_demo.xml'],
     'installable': True,

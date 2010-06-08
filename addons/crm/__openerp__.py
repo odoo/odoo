@@ -51,6 +51,7 @@ between mails and Open ERP.""",
         'mail_gateway',
         'base_calendar',
         'resource',
+        'board'
     ],
     'init_xml': [
         'crm_data.xml',
@@ -99,8 +100,9 @@ between mails and Open ERP.""",
         'crm_installer_view.xml', 
         
         'res_partner_view.xml',
-        'board_crm_statistical_view.xml',
         'board_crm_view.xml',
+        'board_crm_statistical_view.xml',
+       
     ],
     'demo_xml': [
         'crm_demo.xml',
