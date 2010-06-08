@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+		<record id="view_account_journal_form_inherit" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                 <xpath expr="/form/notebook/page[@string='General Information']/group/field[@name='centralisation']" position="after">
+                    <field name="update_posted"/>
+                </xpath>
+            </field>
+       	</record>
+       	
+		<record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+            	<xpath expr="/form/notebook/page[@string='Journal Entries Lines']/group/button[@name='button_validate']" position="after">
+                    <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
+                </xpath>
+            </field>
+       	</record>
+   	</data>
+</openerp>

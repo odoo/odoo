@@ -557,39 +557,34 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
-        'name': fields.char('Journal Name', size=64, required=True, translate=True),
-        'code': fields.char('Code', size=16),
-        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'name': fields.char('Journal Name', size=64, required=True, translate=True,help="Name of the journal"),
+        'code': fields.char('Code', size=16,required=True,help="Code of the journal"),
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'),('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
                                  " Select 'General' to be used at the time of stock input/output."\
                                  " Select 'Situation' to be used at the time of making vouchers."),
         'refund_journal': fields.boolean('Refund Journal', help='Fill this if the journal is to be used for refunds of invoices.'),
-
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
-
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the journal without removing it."),
-        'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
-        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]"),
-        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]"),
+        'view_id': fields.many2one('account.journal.view', 'Display Mode', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
+        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]",help="This will act as a default account for credit amount"),
+        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]",help="This will act as a default account for debit amount"),
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
-        'update_posted': fields.boolean('Allow Cancelling Entries'),
         'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
         'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=True),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
-        'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
+        'company_id': fields.many2one('res.company', 'Company', required=True,select=1,help="Company related to a journal"),
         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
             help="The sequence used for invoice numbers in this journal."),
         'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
     _defaults = {
-        'active': lambda *a: 1,
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
@@ -617,6 +612,16 @@ class account_journal(osv.osv):
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
+    
+    def onchange_type(self, cr, uid, ids, type):
+        res={}
+        for line in self.browse(cr, uid, ids):
+            if type == 'situation':
+                  res= {'value':{'centralisation': True}}
+            else:
+                  res= {'value':{'centralisation': False}}
+        return res
+       
 
 account_journal()
 
@@ -989,14 +994,6 @@ class account_move(osv.osv):
 
     def button_validate(self, cursor, user, ids, context=None):
         return self.post(cursor, user, ids, context=context)
-
-    def button_cancel(self, cr, uid, ids, context={}):
-        for line in self.browse(cr, uid, ids, context):
-            if not line.journal_id.update_posted:
-                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
-        if len(ids):
-            cr.execute('update account_move set state=%s where id =ANY(%s)',('draft',ids,))
-        return True
 
     def write(self, cr, uid, ids, vals, context={}):
         c = context.copy()

@@ -272,22 +272,19 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="active" select="1"/>
-                        <field name="type"/>
+                        <field name="type" on_change="onchange_type(type)"/>
                         <field name="refund_journal" attrs="{'readonly':[('type','=','general'),('type','=','cash'),('type','=','situation')]}"/>
                     </group>
-
-                    <notebook colspan="4">
+					    <notebook colspan="4">
                         <page string="General Information">
                             <group colspan="2" col="2">
                                 <separator string="Journal View" colspan="4"/>
-                                <field name="view_id"/>
+                                <field name="view_id" widget="selection"/>
                             </group>
 
                             <group colspan="2" col="2">
                                 <separator string="Sequence" colspan="4"/>
                                 <field name="sequence_id"/>
-                                <field name="invoice_sequence_id"/>
                             </group>
 
                             <group colspan="2" col="2">
@@ -295,24 +292,29 @@
                                 <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                                 <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             </group>
-
-                            <group colspan="2" col="2">
+                            
+							<group colspan="2" col="2">
                                 <separator string="Validations" colspan="4"/>
                                 <field name="allow_date" groups="base.group_extended"/>
                             </group>
-
+                            
                             <group colspan="2" col="2">
                                 <separator string="Company" colspan="4"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_id" groups="base.group_extended"/>
                                 <field name="currency"/>
                             </group>
+                            
                             <group colspan="2" col="2">
                                 <separator string="Other Configuration" colspan="4"/>
-                                <field name="centralisation"/>
-                                <field name="group_invoice_lines"/>
-                                <field name="update_posted"/>
+                                <field name="centralisation" groups="base.group_extended"/>
                                 <field name="entry_posted"/>
+                             </group>
+                             
+                             <group colspan="2" col="2" attrs="{'invisible':[('invoice_sequence_id','=', False)]}">
+                                <separator string="Invoicing Data" colspan="4"/>
+                                <field name="invoice_sequence_id"/>
+                                <field name="group_invoice_lines"/>
                             </group>
                         </page>
                         <page string="Entry Controls">
@@ -957,7 +959,6 @@
                             <field name="state" select="1"/>
                             <group col="2" colspan="2">
                                 <button name="button_validate" states="draft" string="Validate" type="object" icon="gtk-execute"/>
-                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Other Information">
