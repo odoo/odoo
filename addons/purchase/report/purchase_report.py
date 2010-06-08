@@ -31,7 +31,7 @@ class purchase_report(osv.osv):
     _description = "Purchases Orders"
     _auto = False
     _columns = {
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Date order', readonly=True),
         'name': fields.char('Year',size=64,required=False, readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'state': fields.selection([
@@ -61,7 +61,11 @@ class purchase_report(osv.osv):
         'expected_date':fields.date('Expected Date', readonly=True),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
+        'shipped_qty':fields.integer('Received Qty', readonly=True),
+        'invoiced_qty':fields.integer('Invoiced Qty', readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
+        'delay':fields.float('Days to Close', digits=(16,2), readonly=True),
+        'delay_pass':fields.float('Overpassed expected', digits=(16,2), readonly=True),
         'quantity': fields.float('# of Products', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
@@ -94,9 +98,13 @@ class purchase_report(osv.osv):
                     s.create_uid as user_id,
                     s.company_id as company_id,
                     s.invoice_method,
+                    s.shipped::integer as shipped_qty,
+                    l.invoiced::integer as invoiced_qty,
                     l.product_id,
                     s.location_id as location_id,
                     sum(l.product_qty*u.factor) as quantity,
+                    extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
+                    extract(epoch from age(s.minimum_planned_date,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
                     sum(l.product_qty*l.price_unit) as price_total,
                     (sum(l.product_qty*l.price_unit)/sum(l.product_qty*u.factor))::decimal(16,2) as price_average
@@ -107,9 +115,12 @@ class purchase_report(osv.osv):
                 group by
                     s.company_id,
                     s.create_uid,
+                    s.shipped,
+                    l.invoiced,
                     s.partner_id,
                     s.location_id,
                     s.date_approve,
+                    s.minimum_planned_date,
                     date_trunc('day',s.minimum_planned_date),
                     s.partner_address_id,
                     s.pricelist_id,

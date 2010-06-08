@@ -76,6 +76,7 @@ class project_issue(osv.osv, crm.crm_case):
                         date_open = datetime.strptime(issue.date_open, "%Y-%m-%d %H:%M:%S")
                         ans = date_open - date_create
                         date_until = issue.date_open
+                        #Calculating no. of working hours to open the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
                                 mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
                                 mx.DateTime.strptime(issue.date_open, '%Y-%m-%d %H:%M:%S'))
@@ -85,6 +86,7 @@ class project_issue(osv.osv, crm.crm_case):
                         date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
                         date_until = issue.date_closed
                         ans = date_close - date_create
+                        #Calculating no. of working hours to close the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
                                 mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
                                 mx.DateTime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
