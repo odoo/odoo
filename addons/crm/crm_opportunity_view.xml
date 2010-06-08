@@ -275,21 +275,21 @@
                 <field name="type">search</field>
                 <field name="arch" type="xml">
                     <search string="Search Opportunities">
-                        <filter icon="terp-project"
+                        <filter icon="terp-check"
                             string="Current"
                             name="current"
                             domain="[('state','in',('draft','open'))]"/>
-                        <filter icon="terp-project"
+                        <filter icon="terp-camera_test"
                             string="Open"
                             domain="[('state','=','open')]"/>
-                        <filter icon="terp-project"
+                        <filter icon="terp-gtk-media-pause"
                             string="Pending"
                             domain="[('state','=','pending')]"/>
                         <separator orientation="vertical"/>
-                        <filter icon="gtk-home" string="Today"
+                        <filter icon="terp-go-today" string="Today"
                             domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 23:59:59'))]"
                             help="Todays' Opportunities" />
-                        <filter icon="gtk-media-rewind" string="7 Days"
+                        <filter icon="terp-go-week" string="7 Days"
                             help="Opportunities during last 7 days"
                             domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d')),\
                                 ('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
@@ -297,33 +297,33 @@
                         <separator orientation="vertical"/>
                         <field name="name" string="Opportunity"/>
                         <field name="user_id" widget="selection">
-                            <filter icon="terp-partner"
+                            <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
                                 help="Unassigned Opportunities" />
                         </field>
                         <field name="section_id"
                             default="context.get('section_id', False)" select="1"
                             widget="selection">
-                            <filter icon="terp-crm"
+                            <filter icon="terp-personal+"
                                 domain="[('section_id','=',context.get('section_id',False))]"
                                 help="My Sale Team" />
                         </field>
                         <newline/>
                         <group expand="0" string="Group By..." colspan="16">
-                            <filter string="Stage" icon="terp-crm" domain="[]"
+                            <filter string="Stage" icon="terp-stage" domain="[]"
                                 context="{'group_by':'stage_id'}" />
-                            <filter string="Priority" icon="terp-crm" domain="[]"
+                            <filter string="Priority" icon="terp-rating-rated" domain="[]"
                                 context="{'group_by':'priority'}" />
-                            <filter string="Category" icon="terp-crm"
+                            <filter string="Category" icon="terp-stock_symbol-selection"
                                 domain="[]" context="{'group_by':'categ_id'}" />
 
                             <separator orientation="vertical" />
-                            <filter string="Salesman" icon="terp-crm"
+                            <filter string="Salesman" icon="terp-personal"
                                 domain="[('user_id','=',uid)]" context="{'group_by':'user_id'}" />
                             <separator orientation="vertical" />
-                            <filter string="Creation" icon="terp-project"
+                            <filter string="Creation" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'create_date'}" />
-                            <filter string="Exp.Closing" icon="terp-project"
+                            <filter string="Exp.Closing" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'date_deadline'}" />
                         </group>
                     </search>
