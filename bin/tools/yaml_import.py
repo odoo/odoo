@@ -335,7 +335,7 @@ class YamlInterpreter(object):
         else:
             raise KeyError("Object '%s' does not contain field '%s'" % (model, field_name))
         if is_ref(expression):
-            elements = self.process_ref(expression)
+            elements = self.process_ref(expression, column)
             if column._type in ("many2many", "one2many"):
                 value = [(6, 0, elements)]
             else: # many2one
