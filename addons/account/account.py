@@ -513,6 +513,10 @@ class account_account(osv.osv):
             self._check_moves(cr, uid, ids, "write", context)
         if 'type' in vals.keys():
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
+        if 'company_id' in vals:
+            obj=self.pool.get('account.move.line').search(cr, uid, [('account_id', '=', ids)])
+            if obj:
+                raise osv.except_osv(_('Warning !'), _('You cannot update Company as its related record exist in Entry Lines'))
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context={}):
@@ -711,7 +715,7 @@ class account_period(osv.osv):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
                                   help='When monthly periods are created. The state is \'Draft\'. At the end of monthly period it is in \'Done\' state.'),
-        'company_id': fields.many2one('res.company', 'Company', required=True)
+        'company_id': fields.related('fiscalyear_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -783,7 +787,15 @@ class account_period(osv.osv):
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
-
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        obj=[]
+        if 'company_id' in vals:
+            obj=self.pool.get('account.move.line').search(cr, uid, [('period_id', '=', ids)])
+            if obj:
+                raise osv.except_osv(_('Warning !'), _('You cannot update Company as its related record exist in Entry Lines'))
+        return super(account_period, self).write(cr, uid, ids, vals, context=context)
+     
 account_period()
 
 class account_journal_period(osv.osv):
@@ -809,7 +821,7 @@ class account_journal_period(osv.osv):
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
                                   help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
-        'company_id' : fields.many2one('res.company', 'Company')
+        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company')
     }
 
     def _check(self, cr, uid, ids, context={}):

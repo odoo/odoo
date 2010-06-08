@@ -497,10 +497,18 @@ class account_move_line(osv.osv):
             if l.account_id.type == 'closed':
                 return False
         return True
-
+    
+    def _check_company_id(self, cr, uid, ids):
+        lines = self.browse(cr, uid, ids)
+        for l in lines:
+            if l.company_id == l.account_id.company_id and l.company_id == l.period_id.company_id:
+                return True
+        return False
+    
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
+        (_check_company_id,'Company must be same for its related account and period.',['company_id'] ),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -574,28 +582,37 @@ class account_move_line(osv.osv):
         unmerge = []
         total = 0.0
         merges_rec = []
-        for line in self.browse(cr, uid, ids, context):
-            if line.reconcile_id:
-                raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
-            if line.reconcile_partial_id:
-                for line2 in line.reconcile_partial_id.line_partial_ids:
-                    if not line2.reconcile_id:
-                        if line2.id not in merges:
-                            merges.append(line2.id)
-                        total += (line2.debit or 0.0) - (line2.credit or 0.0)
-                merges_rec.append(line.reconcile_partial_id.id)
-            else:
-                unmerge.append(line.id)
-                total += (line.debit or 0.0) - (line.credit or 0.0)
-        if not total:
-            res = self.reconcile(cr, uid, merges+unmerge, context=context)
-            return res
-        r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
-            'type': type,
-            'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
-        })
-        self.pool.get('account.move.reconcile').reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
-        return True
+        flag=False
+        for line in self.browse(cr, uid, ids, context.get('active_ids')):
+            for line1 in self.browse(cr, uid, ids, context.get('active_ids')):
+                if line1.company_id == line.company_id:
+                    flag=True
+                else:   
+                    raise osv.except_osv(_('Warning !'), _('To reconcile the records Company must be the same'))
+        if flag:
+            for line in self.browse(cr, uid, ids, context):
+                if line.reconcile_id:
+                    raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
+                if line.reconcile_partial_id:
+                    for line2 in line.reconcile_partial_id.line_partial_ids:
+                        if not line2.reconcile_id:
+                            if line2.id not in merges:
+                                merges.append(line2.id)
+                            total += (line2.debit or 0.0) - (line2.credit or 0.0)
+                    merges_rec.append(line.reconcile_partial_id.id)
+                else:
+                    unmerge.append(line.id)
+                    total += (line.debit or 0.0) - (line.credit or 0.0)
+                    
+            if not total:
+                res = self.reconcile(cr, uid, merges+unmerge, context=context)
+                return res
+            r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
+                'type': type,
+                'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
+            })
+            self.pool.get('account.move.reconcile').reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
+            return True
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
         lines = self.browse(cr, uid, ids, context=context)
@@ -604,104 +621,112 @@ class account_move_line(osv.osv):
         currency = 0.0
         account_id = False
         partner_id = False
-        for line in unrec_lines:
-            if line.state <> 'valid':
-                raise osv.except_osv(_('Error'),
-                        _('Entry "%s" is not valid !') % line.name)
-            credit += line['credit']
-            debit += line['debit']
-            currency += line['amount_currency'] or 0.0
-            account_id = line['account_id']['id']
-            partner_id = (line['partner_id'] and line['partner_id']['id']) or False
-        writeoff = debit - credit
-        # Ifdate_p in context => take this date
-        if context.has_key('date_p') and context['date_p']:
-            date=context['date_p']
-        else:
-            date = time.strftime('%Y-%m-%d')
-
-        cr.execute('SELECT account_id, reconcile_id \
-                FROM account_move_line \
-                WHERE id =ANY(%s) \
-                GROUP BY account_id,reconcile_id',(ids,))
-        r = cr.fetchall()
-        #TODO: move this check to a constraint in the account_move_reconcile object
-        if (len(r) != 1) and not context.get('fy_closing', False):
-            raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
-        if not unrec_lines:
-            raise osv.except_osv(_('Error'), _('Entry is already reconciled'))
-        account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
-        if not context.get('fy_closing', False) and not account.reconcile:
-            raise osv.except_osv(_('Error'), _('The account is not defined to be reconciled !'))
-        if r[0][1] != None:
-            raise osv.except_osv(_('Error'), _('Some entries are already reconciled !'))
-
-        if (not self.pool.get('res.currency').is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
-           (account.currency_id and (not self.pool.get('res.currency').is_zero(cr, uid, account.currency_id, currency))):
-            if not writeoff_acc_id:
-                raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off entry !'))
-            if writeoff > 0:
-                debit = writeoff
-                credit = 0.0
-                self_credit = writeoff
-                self_debit = 0.0
+        flag=False
+        for line in self.browse(cr, uid, ids, context.get('active_ids')):
+            for line1 in self.browse(cr, uid, ids, context.get('active_ids')):
+                if line1.company_id == line.company_id:
+                    flag=True
+                else:   
+                    raise osv.except_osv(_('Warning !'), _('To reconcile the records Company must be the same'))
+        if flag:
+            for line in unrec_lines:
+                if line.state <> 'valid':
+                    raise osv.except_osv(_('Error'),
+                            _('Entry "%s" is not valid !') % line.name)
+                credit += line['credit']
+                debit += line['debit']
+                currency += line['amount_currency'] or 0.0
+                account_id = line['account_id']['id']
+                partner_id = (line['partner_id'] and line['partner_id']['id']) or False
+            writeoff = debit - credit
+            # Ifdate_p in context => take this date
+            if context.has_key('date_p') and context['date_p']:
+                date=context['date_p']
             else:
-                debit = 0.0
-                credit = -writeoff
-                self_credit = 0.0
-                self_debit = -writeoff
+                date = time.strftime('%Y-%m-%d')
 
-            # If comment exist in context, take it
-            if 'comment' in context and context['comment']:
-                libelle=context['comment']
-            else:
-                libelle='Write-Off'
+            cr.execute('SELECT account_id, reconcile_id \
+                    FROM account_move_line \
+                    WHERE id =ANY(%s) \
+                    GROUP BY account_id,reconcile_id',(ids,))
+            r = cr.fetchall()
+            #TODO: move this check to a constraint in the account_move_reconcile object
+            if (len(r) != 1) and not context.get('fy_closing', False):
+                raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
+            if not unrec_lines:
+                raise osv.except_osv(_('Error'), _('Entry is already reconciled'))
+            account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
+            if not context.get('fy_closing', False) and not account.reconcile:
+                raise osv.except_osv(_('Error'), _('The account is not defined to be reconciled !'))
+            if r[0][1] != None:
+                raise osv.except_osv(_('Error'), _('Some entries are already reconciled !'))
 
-            writeoff_lines = [
-                (0, 0, {
-                    'name':libelle,
-                    'debit':self_debit,
-                    'credit':self_credit,
-                    'account_id':account_id,
+            if (not self.pool.get('res.currency').is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
+               (account.currency_id and (not self.pool.get('res.currency').is_zero(cr, uid, account.currency_id, currency))):
+                if not writeoff_acc_id:
+                    raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off entry !'))
+                if writeoff > 0:
+                    debit = writeoff
+                    credit = 0.0
+                    self_credit = writeoff
+                    self_debit = 0.0
+                else:
+                    debit = 0.0
+                    credit = -writeoff
+                    self_credit = 0.0
+                    self_debit = -writeoff
+
+                # If comment exist in context, take it
+                if 'comment' in context and context['comment']:
+                    libelle=context['comment']
+                else:
+                    libelle='Write-Off'
+
+                writeoff_lines = [
+                    (0, 0, {
+                        'name':libelle,
+                        'debit':self_debit,
+                        'credit':self_credit,
+                        'account_id':account_id,
+                        'date':date,
+                        'partner_id':partner_id,
+                        'currency_id': account.currency_id.id or False,
+                        'amount_currency': account.currency_id.id and -currency or 0.0
+                    }),
+                    (0, 0, {
+                        'name':libelle,
+                        'debit':debit,
+                        'credit':credit,
+                        'account_id':writeoff_acc_id,
+                        'analytic_account_id': context.get('analytic_id', False),
+                        'date':date,
+                        'partner_id':partner_id
+                    })
+                ]
+
+                writeoff_move_id = self.pool.get('account.move').create(cr, uid, {
+                    'period_id': writeoff_period_id,
+                    'journal_id': writeoff_journal_id,
                     'date':date,
-                    'partner_id':partner_id,
-                    'currency_id': account.currency_id.id or False,
-                    'amount_currency': account.currency_id.id and -currency or 0.0
-                }),
-                (0, 0, {
-                    'name':libelle,
-                    'debit':debit,
-                    'credit':credit,
-                    'account_id':writeoff_acc_id,
-                    'analytic_account_id': context.get('analytic_id', False),
-                    'date':date,
-                    'partner_id':partner_id
+                    'state': 'draft',
+                    'line_id': writeoff_lines
                 })
-            ]
 
-            writeoff_move_id = self.pool.get('account.move').create(cr, uid, {
-                'period_id': writeoff_period_id,
-                'journal_id': writeoff_journal_id,
-                'date':date,
-                'state': 'draft',
-                'line_id': writeoff_lines
+                writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
+                ids += writeoff_line_ids
+
+            r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
+                #'name': date,
+                'type': type,
+                'line_id': map(lambda x: (4,x,False), ids),
+                'line_partial_ids': map(lambda x: (3,x,False), ids)
             })
-
-            writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
-            ids += writeoff_line_ids
-
-        r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
-            #'name': date,
-            'type': type,
-            'line_id': map(lambda x: (4,x,False), ids),
-            'line_partial_ids': map(lambda x: (3,x,False), ids)
-        })
-        wf_service = netsvc.LocalService("workflow")
-        # the id of the move.reconcile is written in the move.line (self) by the create method above
-        # because of the way the line_id are defined: (4, x, False)
-        for id in ids:
-            wf_service.trg_trigger(uid, 'account.move.line', id, cr)
-        return r_id
+            wf_service = netsvc.LocalService("workflow")
+            # the id of the move.reconcile is written in the move.line (self) by the create method above
+            # because of the way the line_id are defined: (4, x, False)
+            for id in ids:
+                wf_service.trg_trigger(uid, 'account.move.line', id, cr)
+            return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context):
         if context.get('account_id', False):
