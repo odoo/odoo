@@ -26,9 +26,7 @@ import time
 
 class product_product(osv.osv):
     _inherit = "product.product"
-
-
-    def _product_margin(self, cr, uid, ids, field_names, arg, context):
+    def _product_margin(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
         for val in self.browse(cr, uid, ids,context=context):
             res[val.id] = {}
