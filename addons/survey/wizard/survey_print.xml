@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-	
+
 		<!-- Survey Print Form View -->
-				 
+
 		<record id="view_survey_print" model="ir.ui.view">
 			<field name="name">Survey Print</field>
 			<field name="model">survey.print</field>
@@ -35,7 +35,7 @@
 			<field name="target">new</field>
 		</record>
 
-        <menuitem name="Print Survey" id="menu_print_survey_form" sequence="1"
+        <menuitem name="Surveys" id="menu_print_survey_form" sequence="1"
             action="action_view_survey_print" parent="menu_reporting"
             groups="group_survey_manager" icon="STOCK_PRINT"/>
 

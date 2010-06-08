@@ -34,7 +34,7 @@
     'depends': ['base', 'account', 'stock', 'process', 'mrp_procurement'],
     'init_xml': [],
     'update_xml': [
-                   
+
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
         'purchase_workflow.xml',
@@ -49,7 +49,7 @@
         'stock_view.xml',
         'partner_view.xml',
         'process/purchase_process.xml',
-        'report/purchase_report_view.xml',
+#        'report/purchase_report_view.xml',
     ],
     'test': [
              'test/purchase_from_order.yml',
