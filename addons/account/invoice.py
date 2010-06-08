@@ -1300,7 +1300,7 @@ class account_invoice_line(osv.osv):
             result['name'] = res.partner_ref
 
         domain = {}
-        result['uos_id'] = uom or res.uom_id.id or False
+        result['uos_id'] = res.uom_id.id or uom or False
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
             if res2 :
@@ -1323,8 +1323,22 @@ class account_invoice_line(osv.osv):
         if company.currency_id.id != currency.id:
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
+            
+        if uom:
+            uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
+            if res.uom_id.category_id.id == uom.category_id.id:
+                new_price=res_final['value']['price_unit']*uom.factor_inv
+                res_final['value']['price_unit'] = new_price
         return res_final
-
+    
+    def uos_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
+        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context)
+        if 'uos_id' in res['value']:
+            del res['value']['uos_id']
+        if not uom:
+            res['value']['price_unit'] = 0.0
+        return res
+    
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = []
         tax_grouped = {}
