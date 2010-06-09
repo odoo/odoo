@@ -65,7 +65,6 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace">
-                 <field name="valuation"/>
                     <label string="Cost Price" align="1.0"/>
                     <group col="2" colspan="1">
                         <field name="standard_price" readonly="True" nolabel="1"/>
@@ -127,7 +126,18 @@
                 </group>
             </field>
         </record>
-
+        
+        <record id="view_product_valuation_form" model="ir.ui.view">
+            <field name="name">product.valuation.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+            	<field name="cost_method" postion="after">
+				<field name="valuation"/>
+				</field>
+           </field>
+        </record>
 
     </data>
 </openerp>
