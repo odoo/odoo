@@ -26,7 +26,7 @@
                 <field name="name">Assets</field>
                 <field name="code">10</field>
                 <field name="type">view</field>
-                <field name="user_type" ref="account_type_view"/>
+                <field name="user_type" ref="acct_type_asset_view"/>
                 <field name="reconcile" eval="False"/>
                 <field name="parent_id" ref="bal"/>
         </record>
@@ -35,7 +35,7 @@
                 <field name="name">Liabilities</field>
                 <field name="code">11</field>
                 <field name="type">view</field>
-                <field name="user_type" ref="account_type_view"/>
+                <field name="user_type" ref="acct_type_liability_view"/>
                 <field name="reconcile" eval="False"/>
                 <field name="parent_id" ref="bal"/>
         </record>
@@ -160,7 +160,7 @@
                 <field name="name">Income</field>
                 <field name="code">20</field>
                 <field name="type">view</field>
-                <field name="user_type" ref="account_type_view"/>
+                <field name="user_type" ref="acct_type_income_view"/>
                 <field name="reconcile" eval="False"/>
                 <field name="parent_id" ref="gpf"/>
         </record>
@@ -169,7 +169,7 @@
                 <field name="name">Expense</field>
                 <field name="code">21</field>
                 <field name="type">view</field>
-                <field name="user_type" ref="account_type_view"/>
+                <field name="user_type" ref="acct_type_expense_view"/>
                 <field name="reconcile" eval="False"/>
                 <field name="parent_id" ref="gpf"/>
         </record>
