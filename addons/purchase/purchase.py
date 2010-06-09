@@ -729,7 +729,7 @@ class procurement_order(osv.osv):
             partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id])
             partner_rec = partner_list and partner_list[0] and partner_list[0][1] or False
             partner = partner_rec.name or False
-            partner_id = partner_rec.id or False
+            partner_id = partner.id or False
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
 
