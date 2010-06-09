@@ -2694,6 +2694,22 @@ class orm(orm_template):
         self._inherit_fields = res
         self._inherits_reload_src()
 
+    def __getattr__(self, name):
+        for model, field in self._inherits.iteritems():
+            if hasattr(self.pool.get(model), name):
+                break
+        else:
+            return super(orm, self).__getattr__(name)
+
+        def _proxy(cr, uid, ids, *args, **kwargs):
+            objects = self.browse(cr, uid, ids, kwargs.get('context', None))
+            lst = [obj[field].id for obj in objects if obj[field]]
+            proxy = self.pool.get(model)
+            return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
+
+        return _proxy
+        
+
     def fields_get(self, cr, user, fields=None, context=None):
         """
         Get the description of list of fields
