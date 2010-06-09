@@ -53,6 +53,9 @@ At the end of the month, the planning manager can also check if the encoded time
         #'report_account_analytic.planning.csv',
         'project_planning_demo.xml',
     ],
+    'test': [
+             'test/planning_states.yml'
+             ],
     'installable': True,
     'active': False,
     'certificate': '0034901836973',
