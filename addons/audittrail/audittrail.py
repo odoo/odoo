@@ -296,6 +296,9 @@ class audittrail_objects_proxy(osv_pool):
             if 'id' in new_value:
                 del new_value['id']
             if not logged_uids or uid in logged_uids:
+                resource_pool = pool.get(model_object.model)
+                resource_name = hasattr(resource_pool,'name_get')
+            if not resource_name:
                 resource_name = pool.get(model_object.model).name_get(cr, uid, [res_id])
                 resource_name = resource_name and resource_name[0][1] or ''
                 vals = {
@@ -406,7 +409,7 @@ class audittrail_objects_proxy(osv_pool):
             return res
         cr.close()
 
-    def log_action(self, db, uid, object, method, fct_src, *args):
+    def action_log(self, db, uid, object, method, fct_src, *args):
         """
         Logging function: This function is performs logging oprations according to method
         @param db: the current database
@@ -417,42 +420,57 @@ class audittrail_objects_proxy(osv_pool):
 
         @return: Returns result as per method of Object proxy
         """
-
         logged_uids = []
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
         obj_ids = pool.get('ir.model').search(cr, uid, [('model', '=', object)])
         model_object = pool.get('ir.model').browse(cr, uid, obj_ids)[0]
-        res_ids = args[0]
-        if not isinstance(res_ids, list):
-            res_ids = [res_ids]
-        else:
-            res_ids = res_ids
 
+        res_id = args[0]
+
+        old_values_text = {}
         old_values = {}
-        for res_id in res_ids:
-            old_values[res_id] = pool.get(model_object.model).read(cr, uid, res_id, [])
+        new_values = {}
+        old_values = pool.get(model_object.model).read(cr, uid, res_id,[])[0]
+        for field in old_values.keys():
+            old_values_text[field] = self.get_value_text(cr, uid, field, old_values[field], model_object)
 
-        for res_id in res_ids:
-            if not logged_uids or uid in logged_uids:
-                resource_name = pool.get(model_object.model).name_get(cr, uid, [res_id])
-                resource_name = resource_name and resource_name[0][1] or ''
-                id = pool.get('audittrail.log').create(cr, uid, {"method": 'action', "object_id": model_object.id, "user_id": uid, "res_id": res_id, "name": resource_name, "method_name": method})
-                lines = []
-                for field in old_values[res_id]:
-                    if old_values[res_id][field]:
-                        line = {
-                              'name': field,
-                              'old_value': old_values[res_id][field],
-                              'old_value_text': self.get_value_text(cr, uid, field, old_values[res_id][field], model_object)
-                              }
-                        lines.append(line)
-                cr.commit()
-                self.create_log_line(cr, uid, id, model_object, lines)
-            res = fct_src(db, uid, object, method, *args)
-            cr.close()
-            return res
+        res = super(audittrail_objects_proxy, self).execute(db, uid, object, method,*args)
+        cr.commit()
+        new_values = pool.get(model_object.model).read(cr, uid, res_id,[])[0]
+
+        resource_pool = pool.get(model_object.model)
+        resource_name = hasattr(resource_pool,'name_get')
+        if not resource_name:
+            resource_name = pool.get(model_object.model).name_get(cr, uid, args[0])
+            resource_name = resource_name and resource_name[0][1] or ''
+        id =args and args[0] and args[0][0]
+        l_id = pool.get('audittrail.log').create(cr, uid, {"method": 'action', "object_id": model_object.id, "user_id": uid, "res_id": id, "name": resource_name, "method_name": method})
+        diff = {}
+        log_line_pool = pool.get('audittrail.log.line')
+        for field in old_values.keys():
+            if old_values[field] == new_values[field]:
+                continue
+            else:
+                diff.update({field: (old_values[field], new_values[field])})
+
+            if model_object._inherits:
+                inherits_ids = pool.get('ir.model').search(cr, uid, [('model', '=', model_object._inherits.keys()[0])])
+                f_id = pool.get('ir.model.fields').search(cr, uid, [('name', '=', field), ('model_id', 'in', (model_object.id, inherits_ids[0]))])
+            else:
+                f_id = pool.get('ir.model.fields').search(cr, uid, [('name', '=', field), ('model_id', '=', model_object.id)])
+            if f_id:
+                fields = pool.get('ir.model.fields').read(cr, uid, f_id)
+                log_line_pool.create(cr, uid, {'field_id': f_id[0], 'log_id': l_id, \
+                                'old_value': str(old_values[field]),\
+                                 'new_value': str(new_values[field]),\
+                                 'old_value_text':str(old_values_text[field]),
+                                 'new_value_text':self.get_value_text(cr, uid, field, new_values[field], model_object),
+                                 })
+        cr.commit()
         cr.close()
+        return res
+
 
     def execute(self, db, uid, object, method, *args, **kw):
         """
@@ -497,7 +515,7 @@ class audittrail_objects_proxy(osv_pool):
 
                     elif field not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink') and (field != 'write' and field != 'create'):
                         if thisrule.log_action:
-                            return self.log_action(db, uid, object, method, fct_src, *args)
+                            return self.action_log(db, uid, object, method, fct_src, *args)
                 return fct_src(db, uid, object, method, *args)
         res = my_fct(db, uid, object, method, *args)
         cr.close()
