@@ -255,12 +255,12 @@
                         <field name="product_uos" groups="product.group_uos,base.group_extended" widget="selection"/>
                         <field name="product_uos_qty" groups="product.group_uos,base.group_extended" />
                         <newline/>
-                        <field name="multi_level_bom" on_change="onchange_multi_level_bom(multi_level_bom)"/>
+                        <field name="multi_level_bom"/>
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4" >
-                        <page string="Components" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
+                        <page string="Components" attrs="{'invisible': [('multi_level_bom','=',False)]}">
                             <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list" />
                         </page>
                         <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
@@ -296,9 +296,9 @@
 	                    <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By" colspan="4" col="8" groups="base.group_extended">
-                        <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Routing" icon="terp-mrp" domain="[]" context="{'group_by':'routing_id'}"/>
+                    <group expand="0" string="Group By" colspan="4" col="8" groups="base.group_extended">
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                    </group>
                 </search>
             </field>
@@ -653,21 +653,21 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                    <group col='9' colspan='4'>
-                       <filter icon="terp-mrp" string="Draft"
+                       <filter icon="terp-document-new" string="Draft"
                            domain="[('state','=','draft')]"
                            help="Non confirmed manufacturing orders"/>
-                       <filter icon="terp-mrp" string="Current" name="Current"
+                       <filter icon="terp-check" string="Current" name="Current"
                            default="1"
                            domain="[('state','in',('confirmed','ready','exception'))]"
                            help="Manufacturing Orders which are waiting for raw materials"/>
-                       <filter icon="terp-mrp" string="Ready"
+                       <filter icon="terp-camera_test" string="Ready"
                            domain="[('state','=','ready')]"
                            help="Manufacturing Orders which are ready to produce" />
-                       <filter icon="terp-mrp" string="In Production"
+                       <filter icon="terp-check" string="In Production"
                            domain="[('state','=','in_production')]"
                            help="Manufacturing Orders which are in production" />
                        <separator orientation="vertical"/>
-                       <filter icon="terp-mrp" string="Late"
+                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                            help="Production started late" />
                        <separator orientation="vertical"/>
@@ -677,12 +677,12 @@
                        <field name="origin"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By" colspan="10" col="8">
-                        <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Routing" icon="terp-mrp" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
+                    <group expand="0" string="Group By" colspan="10" col="8">
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
-                        <filter string="Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
                     </group>
                </search>
             </field>

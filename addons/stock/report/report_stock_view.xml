@@ -9,17 +9,17 @@
             <field name="arch" type="xml">
                 <search string="Search Location">
                     <group col="10" colspan="4">
-                        <filter icon="terp-stock" name="internal_locations" string="Internal Locations" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations"/>
-                        <filter icon="terp-stock" string="Customer Locations" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
-                        <filter icon="terp-stock" string="Supplier Locations" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
+                        <filter icon="terp-go-home" name="internal_locations" string="Internal Locations" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations"/>
+                        <filter icon="terp-go-home" string="Customer Locations" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
+                        <filter icon="terp-go-home" string="Supplier Locations" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
                         <separator orientation="vertical"/>
                         <field name="location_id"/>
                         <field name="product_id"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="10">
-                        <filter string="Location" icon="terp-stock" domain="[]"  context="{'group_by':'location_id'}"/>
-                        <filter string="Product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Location" icon="terp-go-home" domain="[]"  context="{'group_by':'location_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                     </group>
                 </search>
             </field>
@@ -155,12 +155,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Dates of Inventories">
-                    <filter icon="gtk-media-rewind" name="stockable" string="Stockable"
+                    <filter icon="terp-accessories-archiver" name="stockable" string="Stockable"
                         domain="[('product_id.type','=', 'product')]"/>
-                    <filter icon="gtk-media-rewind" string="Consumable"
+                    <filter icon="terp-accessories-archiver" string="Consumable"
                         domain="[('product_id.type','=', 'consumable')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="gtk-media-rewind" string="Non Inv"
+                    <filter icon="terp-accessories-archiver-minus" string="Non Inv"
                         domain="[('date','=', False)]"/>
                     <separator orientation="vertical"/>
                     <field name="product_id"/>

@@ -26,7 +26,7 @@
     'category': 'Profile',
     'description': """Profile for Accounting""",
     'author': 'Tiny',
-    'depends': ['account', 'report_analytic', 'board_account', 'account_followup'],
+    'depends': ['account', 'board_account', 'account_followup'],
     'update_xml': ['security/ir.model.access.csv', 'profile_accounting.xml'],
     'demo_xml': [],
     'installable': True,

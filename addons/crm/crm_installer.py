@@ -39,7 +39,8 @@ class crm_installer(osv.osv_memory):
         'crm_caldav': fields.boolean('Calendar Synchronizing', help="Help you to synchronize the meetings with other calender clients(e.g.: Sunbird)."), 
         'sale_crm': fields.boolean('Create Quotation from Opportunity', help="This module relates sale to opportunity cases in the CRM."),
         'fetchmail': fields.boolean('Fetch Emails', help="Fetchmail Server."),
-        'thunderbird': fields.boolean('Thunderbird', help="Thunderbird Interface."),  
+        'thunderbird': fields.boolean('Thunderbird', help="Thunderbird Interface."), 
+        'wiki_sale_faq': fields.boolean('Sale FAQ', help="Sale FAQ."), 
     }
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

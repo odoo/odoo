@@ -225,7 +225,7 @@ class survey_question(osv.osv):
         'page_id': fields.many2one('survey.page', 'Survey Page', ondelete='cascade', required=1),
         'question':  fields.char('Question', size=128, required=1),
         'answer_choice_ids': fields.one2many('survey.answer', 'question_id', 'Answer'),
-        'is_require_answer': fields.boolean('Require Answer to Question (optional)'),
+        'is_require_answer': fields.boolean('Require Answer to Question'),
         'required_type': fields.selection([('all','All'), ('at least','At Least'), ('at most','At Most'), ('exactly','Exactly'), ('a range','A Range')], 'Respondent must answer'),
         'req_ans': fields.integer('#Required Answer'),
         'maximum_req_ans': fields.integer('Maximum Required Answer'),
@@ -250,7 +250,7 @@ class survey_question(osv.osv):
              ('date_and_time','Date and Time'),('descriptive_text','Descriptive Text'),
              ('table','Table'),
             ], 'Question Type',  required=1,),
-        'is_comment_require': fields.boolean('Add Comment Field (optional)'),
+        'is_comment_require': fields.boolean('Add Comment Field'),
         'comment_label': fields.char('Field Label', size = 255),
         'comment_field_type': fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
         'comment_valid_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),
@@ -269,7 +269,7 @@ class survey_question(osv.osv):
         'comment_valid_err_msg': fields.text('Error message'),
         'make_comment_field': fields.boolean('Make Comment Field an Answer Choice'),
         'make_comment_field_err_msg': fields.text('Error message'),
-        'is_validation_require': fields.boolean('Validate Text (optional)'),
+        'is_validation_require': fields.boolean('Validate Text'),
         'validation_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),\
              ('must_be_specific_length', 'Must Be Specific Length'),\
              ('must_be_whole_number', 'Must Be A Whole Number'),\
@@ -609,7 +609,7 @@ class survey_response(osv.osv):
         reads = self.read(cr, uid, ids, ['user_id','date_create'], context)
         res = []
         for record in reads:
-            name = record['user_id'][1] + ' (' + record['date_create'].split('.')[0] + ')'
+            name = (record['user_id'] and record['user_id'][1] or '' )+ ' (' + record['date_create'].split('.')[0] + ')'
             res.append((record['id'], name))
         return res
 

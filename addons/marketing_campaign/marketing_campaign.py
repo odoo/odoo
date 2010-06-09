@@ -129,9 +129,7 @@ class marketing_campaign_segment(osv.osv): #{{{
         curr_date = time.strftime('%Y-%m-%d %H:%M:%S')
         vals = {'state': 'running'}
         if not segment.date_run:
-            vals['date_run'] = segment.campaign_id.date_run and \
-                                segment.campaign_id.date_run or \
-                                time.strftime('%Y-%m-%d %H:%M:%S')                
+            vals['date_run'] = time.strftime('%Y-%m-%d %H:%M:%S')                
         if not segment.sync_last_date:
             vals['sync_last_date']=curr_date
         if not segment.date_done:
@@ -142,7 +140,7 @@ class marketing_campaign_segment(osv.osv): #{{{
         
     def state_done_set(self, cr, uid, ids, *args):
         date_done = self.browse(cr, uid, ids[0]).date_done 
-        if (date_done > time.strftime('%Y-%m-%d')):
+        if (date_done > time.strftime('%Y-%m-%d %H:%M:%S')):
             raise osv.except_osv("Error", "Segment cannot be closed before end date")
 
         wi_ids = self.pool.get("marketing.campaign.workitem").search(cr, uid,
@@ -186,7 +184,7 @@ class marketing_campaign_segment(osv.osv): #{{{
                                         }
                             self.pool.get('marketing.campaign.workitem').create(
                                                     cr, uid, wi_vals)
-                self.write(cr, uid, segment.id, {'sync_last_date':action_date}) 
+                self.write(cr, uid, segment.id, {'sync_last_date':action_date})
         return True
 
 marketing_campaign_segment()#}}}
@@ -196,7 +194,7 @@ class marketing_campaign_activity(osv.osv): #{{{
     _description = "Campaign Activity"
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=128, required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign', 
                                             required = True, ondelete='cascade'),
         'object_id': fields.related('campaign_id','object_id',
@@ -212,7 +210,7 @@ class marketing_campaign_activity(osv.osv): #{{{
                                   ('action', 'Action'),
                                   ('subcampaign', 'Sub-Campaign')],
                                   'Type', required=True),
-        'email_template_id': fields.many2one('poweremail.templates','Email Template'),
+        'email_template_id': fields.many2one('email.template','Email Template'),
         'report_id': fields.many2one('ir.actions.report.xml', 'Reports', ),         
         'report_directory_id': fields.many2one('document.directory','Directory',
                                 help="Folder is used to store the generated reports"),
@@ -254,8 +252,9 @@ class marketing_campaign_activity(osv.osv): #{{{
 
     def process(self, cr, uid, act_id, wi_id, context={}):
         activity = self.browse(cr, uid, act_id)
-        workitem_obj = self.pool.get('marketing.campaign.workitem')        
+        workitem_obj = self.pool.get('marketing.campaign.workitem')
         workitem = workitem_obj.browse(cr, uid, wi_id)
+        
         if activity.type == 'paper' :
             service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
             (report_data, format) = service.create(cr, uid, [], {}, {})
@@ -278,12 +277,12 @@ class marketing_campaign_activity(osv.osv): #{{{
             if not workitem.partner_id.email:
                 return {'error_msg'  : "There is no email defined for the partner"}
             vals = {
-                'pem_from': tools.ustr(accounts.name) + "<" + tools.ustr(accounts.email_id) + ">",
-                'pem_to': workitem.partner_id.email,
-                'pem_subject': template.def_subject,
-                'pem_body_text': template.def_body_text,
-                'pem_body_html': template.def_body_html,
-                'pem_account_id':accounts.id,
+                'email_from': tools.ustr(accounts.name) + "<" + tools.ustr(accounts.email_id) + ">",
+                'email_to': workitem.partner_id.email,
+                'subject': template.def_subject,
+                'body_text': template.def_body_text,
+                'body_html': template.def_body_html,
+                'account_id':accounts.id,
                 'state':'na',
                 'mail_type':'multipart/alternative' #Options:'multipart/mixed','multipart/alternative','text/plain','text/html'
             }
@@ -294,12 +293,11 @@ class marketing_campaign_activity(osv.osv): #{{{
 #                    vals['pem_body_html'] = tools.ustr(vals['pem_body_html'] or '') + signature
 
             #Create partly the mail and later update attachments
-            mail_id = self.pool.get('poweremail.mailbox').create(cr, uid, vals, context)
+            mail_id = self.pool.get('email_template.mailbox').create(cr, uid, vals, context)
         elif activity.type == 'action' :
             server_obj = self.pool.get('ir.actions.server')
             server_obj.run(cr, uid, [activity.server_action_id.id], context)
             #???
-
         return True    
 marketing_campaign_activity()#}}}
 
@@ -410,13 +408,13 @@ class marketing_campaign_workitem(osv.osv): #{{{
     
 marketing_campaign_workitem() #}}}  
 
-class poweremail_templates(osv.osv):
-    _inherit = "poweremail.templates"
+class email_template(osv.osv):
+    _inherit = "email.template"
     
     _defaults = {
         'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
     }
-poweremail_templates() 
+email_template() 
 
 class report_xml(osv.osv):
 

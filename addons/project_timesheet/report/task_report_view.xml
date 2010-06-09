@@ -148,16 +148,16 @@
             <field name="arch" type="xml">
             	<search string="Tasks by User">
             		<group colspan="4" col="3">
-	            		<filter icon="terp-project" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" />
-	            		<filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" />
+	            		<filter icon="terp-go-year" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" />
+	            		<filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" />
 	            		<separator orientation="vertical"/>
 	                    <field name="user_id" select="1" widget="selection"/>
                 	</group>
                 	<newline/>
                 	<group expand="1" string="Group By..." colspan="4" col="3">
-                	    <filter string="User" icon="terp-project" context="{'group_by':'user_id'}" default="1" />
-                    	<filter string="Year" icon="terp-project" context="{'group_by':'year'}" />
-                    	<filter string="Month" icon="terp-project" context="{'group_by':'month'}" />
+                	    <filter string="User" icon="terp-personal" context="{'group_by':'user_id'}" default="1" />
+                    	<filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" />
+                    	<filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" />
                 	</group>
             	</search>
             </field>

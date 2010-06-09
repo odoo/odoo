@@ -108,8 +108,8 @@ class crm_lead(osv.osv, crm_case):
         'email_cc': fields.text('Watchers Emails', size=252 , help="These \
 people will receive a copy of the future communication between partner \
 and users by email"),
-        'description': fields.text('Description'),
-        'write_date': fields.datetime('Update Date' , readonly=True),
+        'description': fields.text('Notes'),
+        'write_date': fields.datetime('Update Date' , readonly=True), 
 
         # Lead fields
         'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
@@ -137,7 +137,6 @@ and users by email"),
                                 method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
-        'function_name': fields.char('Function', size=64),
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\

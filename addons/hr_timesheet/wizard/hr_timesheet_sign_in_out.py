@@ -115,31 +115,19 @@ class hr_si_project(osv.osv_memory):
         # get the latest action (sign_in or out) for this employee
         cr.execute('select action from hr_attendance where employee_id=%s and action in (\'sign_in\',\'sign_out\') order by name desc limit 1', (emp_id,))
         res = (cr.fetchone() or ('sign_out',))[0]
+        in_out = res == 'sign_out' and 'out' or 'in'
         #TODO: invert sign_in et sign_out
-        if res == 'sign_out':
-            model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_timesheet_sign_in')])
-            resource_id = obj_model.read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
-            return {
-                'name': 'Sign in / Sign out',
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'hr.sign.in.project',
-                'views': [(False,'tree'), (resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new'
-                    }
-        else:
-            model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_timesheet_sign_out')])
-            resource_id = obj_model.read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
-            return {
-                'name': 'Sign in / Sign out',
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'hr.sign.out.project',
-                'views': [(False,'tree'), (resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new'
-                    }
+        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_timesheet_sign_%s' % in_out)])
+        resource_id = obj_model.read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+        return {
+            'name': 'Sign in / Sign out',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'hr.sign.%s.project' % in_out,
+            'views': [(False,'tree'), (resource_id,'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new'
+        }
 
     def _get_empid(self, cr, uid, context=None):
         emp_obj = self.pool.get('hr.employee')
@@ -153,10 +141,7 @@ class hr_si_project(osv.osv_memory):
         emp_obj = self.pool.get('hr.employee')
         data = self.read(cr, uid, ids, [], context)[0]
         emp_id = data['emp_id']
-        try:
-            success = emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data['date'] or False)
-        except except_osv, e:
-            raise osv.except_osv(e.name, e.value)
+        success = emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data['date'] or False)
         return {}
 
     def default_get(self, cr, uid, fields_list, context=None):
