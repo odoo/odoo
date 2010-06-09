@@ -39,6 +39,12 @@
     * Delivery methods:
         - all at once, multi-parcel
         - delivery costs
+    * Dashboard for salesman that includes:
+    * Your open quotations
+    * Top 10 sales of the month
+    * Cases statistics
+    * Graph of sales by product
+    * Graph of cases of the month        
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',

@@ -53,6 +53,11 @@
     * Load forecast on workcenters
     * Print a production order
     * Stock forecasts
+    Dashboard provided by this module::
+    * List of next production orders
+    * List of deliveries (out picking)
+    * Graph of work center load
+    * List of procurement in exception
     """,
     'init_xml': [],
     'update_xml': [

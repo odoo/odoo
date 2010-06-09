@@ -30,7 +30,10 @@
         * to manage your events and their registrations
         * to use emails to automatically confirm and send acknowledgements for any registration to an event
         * ...
-
+    A dashboard for associations that includes:
+    * Registration by Events (graph)
+    * Next Events (list)
+    * Unpaid Invoices (list)
     Note that:
     - You can define new types of events in
                 Events / Configuration / Types of Events

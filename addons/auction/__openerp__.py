@@ -32,6 +32,11 @@
      It completely manages an auction such as managing bids,
      keeping track of the sold articles along with the paid
      and unpaid objects including delivery of the articles.
+     Dashboards for auction that includes:
+       * My Latest Objects (list)
+       * My Latest Deposits (list)
+       * Objects Statistics (list)
+       * My Objects By Day (list)     
     """,
     'author': 'Tiny',
     'depends': ['base', 'account', 'hr_attendance'],

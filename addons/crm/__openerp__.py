@@ -41,7 +41,15 @@ appropriate staff, and make sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
-between mails and Open ERP.""",
+between mails and Open ERP. 
+Create dashboard for CRM that includes:
+    * My Leads (list)
+    * Leads by Stage (graph)
+    * My Meetings (list)
+    * Sales Pipeline by Stage (graph)
+    * My Cases (list)
+    * Jobs Tracking (graph)
+""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': [

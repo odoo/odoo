@@ -34,6 +34,10 @@
     Budgets
     Customer and Supplier Invoices
     Bank statements
+    Creates a dashboards for accountants that includes:
+    * List of uninvoiced quotations
+    * Graph of aged receivables
+    * Graph of aged incomes    
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a

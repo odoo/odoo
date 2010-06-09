@@ -29,6 +29,11 @@
     "depends" : ["product", "analytic", "process", "mail_gateway","board"],
     "description": """Project management module that track multi-level projects, tasks,
 work done on tasks, eso. It is able to render planning, order tasks, eso.
+ Dashboard for project members that includes:
+    * List of my open tasks
+    * List of messages
+    * Members list of project
+    * Issues
     """,
     "init_xml" : [],
     "update_xml": [

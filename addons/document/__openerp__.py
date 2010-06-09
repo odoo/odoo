@@ -27,7 +27,11 @@
     'description': """This is a complete document management system:
     * User Authentication
     * Document Indexation :- .pptx and .docx files are not support in windows platform.
-
+    * Dashboard for Document that includes:
+        * New Files (list)
+        * Files by Resource Type (graph)
+        * Files by Partner (graph)
+        * Files by Month (graph)
     ATTENTION:
     - When you install this module in a running company that have already PDF files stored into the database,
       you will lose them all.
