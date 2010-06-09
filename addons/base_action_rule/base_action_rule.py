@@ -136,7 +136,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
     
     def pre_action(self, cr, uid, ids, model, context=None):
         # Searching for action rules
-        cr.execute("SELECT m.model, r.id  from base_action_rule r left join ir_model m on (m.id = r.name)")
+        cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule LEFT JOIN ir_model model on (model.id = rule.name)")
         res = cr.fetchall()
         # Check if any rule matching with current object
         for obj_name, rule_id in res:
@@ -197,6 +197,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):
+        """
+        This Function is call by scheduler.
+        """
         rule_pool= self.pool.get('base.action.rule')
         rule_ids = rule_pool.search(cr, uid, [], context=context)
         return rule_pool.write(cr, uid, rule_ids, {}, context=context)
