@@ -64,14 +64,15 @@ class stock_partial_picking(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False) 
         picking_ids = pick_obj.search(cr, uid, [('id', 'in', picking_ids)])               
+        partner_id = set([pick.partner_id for pick in pick_obj.browse(cr, uid, picking_ids)])
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
                     	<field name="date" colspan="4" />
-                    	<field name="partner_id"/>
+                    	<field name="partner_id" domain="[('id','=',%d)]"/>
                     	<field name="address_id"/>
                     	<newline/>
                         <separator colspan="4" string="Move Detail"/>
-                    	"""
+                    	"""%(partner_id)
         _moves_fields = result['fields']
         if picking_ids and view_type in ['form']:
             for pick in pick_obj.browse(cr, uid, picking_ids, context):
