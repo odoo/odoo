@@ -69,13 +69,11 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_auction_manager_form1"/>
         </record>
-        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
-        <menuitem name="Auction Manager" id="board_menu_auction_manager" parent="base.dashboard" />
         <menuitem
             name="Auction Manager"
             action="open_board_auction_manager"
             sequence="1"
-            id="menu_board_auction_manager" parent="board_menu_auction_manager"/>
+            id="menu_board_auction_manager"  icon="terp-graph" parent="menu_board_auction"/>
 
     </data>
 </openerp>

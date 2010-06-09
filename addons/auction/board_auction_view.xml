@@ -59,12 +59,12 @@
             <field name="view_id" ref="board_auction_manager_form"/>
         </record>
         <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
-        <menuitem name="Auction Member" id="board_menu_auction_member" parent="base.dashboard" />
+        <menuitem name="Auction" id="menu_board_auction" parent="base.dashboard" />
         <menuitem
             name="Auction Member"
             action="open_board_auction"
-            sequence="1"
-            id="menu_board_auction" parent="board_menu_auction_member" />
+            sequence="2"
+            id="board_menu_auction_member" icon="terp-graph" parent="menu_board_auction" />
 
 </data>
 </openerp>
