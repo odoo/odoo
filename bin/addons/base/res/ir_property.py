@@ -60,9 +60,11 @@ class ir_property(osv.osv):
         'value_binary' : fields.binary('Value'),
         'value_reference': fields.reference('Value', selection=_models_get2, size=128),
         'value_datetime' : fields.datetime('Value'),
+        'value_boolean': fields.boolean('Value'),
 
         'type' : fields.selection([('char', 'Char'),
                                    ('float', 'Float'),
+                                   ('boolean', 'Boolean'),
                                    ('integer', 'Integer'),
                                    ('integer_big', 'Integer Big'),
                                    ('text', 'Text'),
@@ -88,6 +90,7 @@ class ir_property(osv.osv):
         type2field = {
             'char': 'value_text',
             'float': 'value_float',
+            'boolean' : 'value_integer',
             'integer': 'value_integer',
             'integer_big': 'value_integer',
             'text': 'value_text',
@@ -137,6 +140,8 @@ class ir_property(osv.osv):
             return record.value_text
         elif record.type == 'float':
             return record.value_float
+        elif record.type == 'boolean':
+            return bool(record.value_integer)
         elif record.type in ('integer', 'integer_big'):
             return record.value_integer
         elif record.type == 'binary':
@@ -146,6 +151,8 @@ class ir_property(osv.osv):
         elif record.type == 'datetime':
             return record.value_datetime
         elif record.type == 'date':
+            if not record.value_datetime:
+                return False
             return time.strftime('%Y-%m-%d', time.strptime(record.value_datetime, '%Y-%m-%d %H:%M:%S'))
 
         return False
@@ -158,6 +165,12 @@ class ir_property(osv.osv):
             return self.get_by_id(cr, uid, nid, context=context)
         return False
 
+    def _get_domain_default(self, cr, uid, prop_name, model, context=None):
+        domain = self._get_domain(cr, uid, prop_name, model, context=context)
+        if domain is None:
+            return None
+        return ['&', ('res_id', '=', False)] + domain
+
     def _get_domain(self, cr, uid, prop_name, model, context=None):
         cr.execute('select id from ir_model_fields where name=%s and model=%s', (prop_name, model))
         res = cr.fetchone()
@@ -169,7 +182,7 @@ class ir_property(osv.osv):
                                            context=context)
 
         domain = ['&', ('fields_id', '=', res[0]),
-                '|', ('company_id', '=', cid), ('company_id', '=', False)]
+                  '|', ('company_id', '=', cid), ('company_id', '=', False)]
         return domain
 
 ir_property()

@@ -875,11 +875,11 @@ class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
         prop = obj.pool.get('ir.property')
-        domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
+        domain = prop._get_domain_default(cr, uid, prop_name, obj._name, context)
         ids = prop.search(cr, uid, domain, order='company_id', context=context)
         if not ids:
             return False
-        return prop.get_by_id(cr, uid, ids, context=context) 
+        return prop.get_by_id(cr, uid, ids, context=context)
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
