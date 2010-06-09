@@ -34,7 +34,7 @@
     'depends': ['base', 'account', 'stock', 'process', 'mrp_procurement'],
     'init_xml': [],
     'update_xml': [
-                   
+
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
         'purchase_workflow.xml',

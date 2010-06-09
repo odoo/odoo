@@ -1,0 +1,35 @@
+
+-
+  In order to test close period wizard I create a period then close it and checked it's state
+-
+  !record {model: account.period, id: account_period_jan0}:
+    company_id: base.main_company
+    date_start: '2010-01-01'
+    date_stop: '2010-01-31'
+    fiscalyear_id: account.data_fiscalyear
+    name: Jan-2010
+    special: 1
+
+-
+  I check that the period state is "Draft"
+-
+  !assert {model: account.period, id: account_period_jan0, string: Period is in Draft state}:
+    - state == 'draft'
+-
+  I use "Close a Period" wizard to close period Jan-2010
+-
+  !record {model: account.period.close, id: account_period_close_0}:
+    sure: 1
+-
+  I clicked on Close Period Button to close Period
+
+-
+  !python {model: account.period.close}: |
+    self.data_save(cr, uid, [ref("account_period_close_0")], {"lang": 'en_US', "active_model":
+      "account.period", "active_ids": [ref("account_period_jan0")], "tz": False, "active_id":
+      ref("account_period_jan0"), })
+-
+  I check that the period state is "Done"
+-
+  !assert {model: account.period, id: account_period_jan0, string: Period is in Done state}:
+    - state == 'done'
