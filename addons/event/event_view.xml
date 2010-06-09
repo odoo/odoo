@@ -80,17 +80,23 @@
                            <button string="Set To Draft" name="button_draft" states="confirm,cancel,done" type="object" icon="gtk-convert"/>
                         </group>
                     </page>
-                    <page string="Mailing">
+                   <page string="Mailing">
                         <field name="reply_to"/>
-                        <separator string="Auto Registration Email" colspan="4"/>
-                        <field name="mail_auto_registr"/>
                         <newline/>
-                        <field name="mail_registr" colspan="4"/>
-                        <separator string="Auto Confirmation Email" colspan="4"/>
-                        <field name="mail_auto_confirm"/>
-                        <newline/>
-                        <field name="mail_confirm" colspan="4"/>
-                        <newline/>
+                        <group col="3" colspan="2">
+                            <separator string="Auto Registration Email" colspan="2"/>
+                            <newline/>
+                            <field name="mail_auto_registr"/>
+                            <separator string="Registration Email" colspan="2"/>
+                            <field name="mail_registr" colspan="2" nolabel="1"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator string="Auto Confirmation Email" colspan="2"/>
+                            <field name="mail_auto_confirm"/>
+                            <newline/>
+                            <separator string="Confirmation Email" colspan="2"/>
+                            <field name="mail_confirm" colspan="2" nolabel="1"/>
+                        </group>
                     </page>
                     <page string="Statistics">
                         <separator string="Registrations" colspan="4"/>
@@ -103,6 +109,7 @@
         </record>
 
         <!-- event.event tree view -->
+        
         <record model="ir.ui.view" id="view_event_tree">
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
@@ -126,20 +133,34 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group col="10" colspan="4">
-                        <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Events"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed Events"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Event" select="1"/>
-                        <field name="user_id" select="1"/>
+                        <field name="user_id" widget="selection">
+                               <filter icon="terp-partner"
+                                    string="My Events"
+                                    help="My Events"
+                                    domain="[('user_id','=',uid)]"/>
+                        </field>            
                         <field name="date_begin" select="1"/>
                         <field name="state" select="1"/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="4" col="12">
+                        <filter string="Responsible" name="user" icon="terp-partner" context="{'group_by': 'user_id'}"/>
+                        <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
+                        <filter string="state" icon="terp-crm" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Creation" icon="terp-project"
+                            domain="[]" context="{'group_by':'date_begin'}" />
                     </group>
                 </search>
             </field>
         </record>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS  -->
+    
        <record model="ir.actions.act_window" id="action_event_view">
            <field name="name">Events</field>
            <field name="type">ir.actions.act_window</field>
@@ -155,6 +176,7 @@
     <!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
         <!-- Registration view (form) by _inherits  .................. -->
+        
         <record model="ir.ui.view" id="event_registration_tree">
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
@@ -189,90 +211,96 @@
                         <field name="unit_price"/>
                     </group>
                     <notebook colspan="4">
-                    <page string="General">
-                        <field name="contact_id" on_change="onchange_contact_id(contact_id, partner_id)" /><newline/>
-                        <field name="email_from"/>
-                        <button name="remind_partner" string="Send Reminder" states="open,pending" type="object" colspan="2" icon="gtk-go-forward"/>
-                        <newline/>
-                        <separator string="Badge" colspan="4"/>
-                        <field name="badge_title"/>
-                        <field name="badge_name" on_change="onchange_badge_name(badge_name)"/>
-                        <field name="badge_partner"/>
-                        <newline/>
-                        <separator string="Status" colspan="4"/>
-                        <group col="8" colspan="4">
-                            <field name="state" select="1" colspan="2"/>
-                            <button name="button_reg_close" string="Registration Invoiced" states="open" type="object" icon="gtk-print"/>
-                            <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                            <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-                        </group>
-                    </page>
-                    <page string="Extra Info">
-                        <field name="name" select="1" colspan="4"/>
-                        <field name="id" select="1"/>
-                        <field name="active"/>
-                        <field name="email_cc" colspan="4"/>
-                        <field name="categ_id" on_change="onchange_categ_id(categ_id)"/>
-                        <separator colspan="4" string="Dates"/>
-                        <field name="create_date"/>
-                        <field name="date_closed"/>
-                        <separator colspan="4" string="References"/>
-                        <field name="ref" colspan="4"/>
-                        <field name="ref2" colspan="4"/>
-                    </page>
-                    <page string="History">
-                        <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-	                        <form string="Communication history">
-                                    <group col="6" colspan="4">
+                        <page string="General">
+                            <field name="contact_id" on_change="onchange_contact_id(contact_id, partner_id)" /><newline/>
+                            <field name="email_from"/>
+                            <button name="remind_partner" string="Send Reminder" states="open,pending" type="object" colspan="2" icon="gtk-go-forward"/>
+                            <newline/>
+                            <separator string="Badge" colspan="4"/>
+                            <field name="badge_title"/>
+                            <field name="badge_name" on_change="onchange_badge_name(badge_name)"/>
+                            <field name="badge_partner"/>
+                            <newline/>
+                            <separator string="Status" colspan="4"/>
+                            <group col="8" colspan="4">
+                                <field name="state" select="1" colspan="2"/>
+                                <button name="button_reg_close" string="Registration Invoiced" states="open" type="object" icon="gtk-print"/>
+                                <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                            </group>
+                        </page>
+                        <page string="Payments">
+                            <field name="invoice_label" select="1"/>
+                            <field name="tobe_invoiced" select="1"/>
+                            <field name="invoice_id"/>
+                        </page>
+                        <page string="History">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                                <form string="Communication history">
+                                        <group col="6" colspan="4">
+                                            <field name="date"/>
+                                            <field name="email_to"/>
+                                            <field name="email_from"/>
+                                        </group>
+                                        <notebook colspan="4">
+                                            <page string="Details">
+                                                <field name="description" colspan="4" nolabel="1"/>
+                                            </page>
+                                            <page string="Attachments">
+                                                <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                            </page>
+                                        </notebook>
+                                        <button colspan="4"
+                                        string="Reply to Last Email"
+                                        name="%(crm.action_crm_send_mail)d"
+                                        context="{'mail':'reply', 'model': 'event.registration'}"
+                                        icon="gtk-undo" type="action" />
+                                    </form>
+                                    <tree string="Communication history">
                                         <field name="date"/>
+                                        <field name="email_from" />
                                         <field name="email_to"/>
-                                        <field name="email_from"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Details">
-                                            <field name="description" colspan="4" nolabel="1"/>
-                                        </page>
-                                        <page string="Attachments">
-                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                                        </page>
-                                    </notebook>
-                                    <button colspan="4"
-                                    string="Reply to Last Email"
-                                    name="%(crm.action_crm_send_mail)d"
-                                    context="{'mail':'reply', 'model': 'event.registration'}"
-                                    icon="gtk-undo" type="action" />
-                                </form>
-                                <tree string="Communication history">
+                                        <field name="description"/>
+                                    </tree>
+                                </field>
+                            <field name="log_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
+                                <tree string="Actions">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name"/>
                                     <field name="date"/>
-                                    <field name="email_from" />
-                                    <field name="email_to"/>
-                                    <field name="description"/>
+                                    <field name="user_id"/>
                                 </tree>
+                                <form string="Actions">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </form>
                             </field>
-                        <field name="log_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
-                            <tree string="Actions">
-                                <separator string="Action Information" colspan="4"/>
-                                <field name="name"/>
-                                <field name="date"/>
-                                <field name="user_id"/>
-                            </tree>
-                            <form string="Actions">
-                                <separator string="Action Information" colspan="4"/>
-                                <field name="name" colspan="4"/>
-                                <field name="date"/>
-                                <field name="user_id"/>
-                            </form>
-                        </field>
-                    </page>
-                    <page string="Payments">
-                        <field name="invoice_label" select="1"/>
-                        <field name="tobe_invoiced" select="1"/>
-                        <field name="invoice_id"/>
-                    </page>
+                        </page>
+                        <page string="Extra Info">
+                            <group col="6" colspan="4">
+                                <field name="name" select="1" colspan="6"/>
+                                <newline/>
+                                <field name="categ_id"/>
+                                <field name="id" select="1"/>
+                                <field name="active"/>
+                                <separator colspan="6" string="Watchers Emails" />
+                                <field name="email_cc" colspan="6" nolabel="1"/>
+                            </group>
+                            <separator colspan="4" string="Dates"/>
+                            <field name="create_date"/>
+                            <field name="date_closed"/>
+                            <separator colspan="4" string="References"/>
+                            <field name="ref" colspan="4"/>
+                            <field name="ref2" colspan="4"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
         </record>
+
+<!-- Search view of event registration form-->
 
         <record model="ir.ui.view" id="view_registration_search">
             <field name="name">Registrations</field>
@@ -285,12 +313,18 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Registrations"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','in',('open','done'))]" help="Confirmed Registrations"/>
                         <separator orientation="vertical"/>
-                        <field name="event_id" select="1"/>
-                        <field name="user_id" select="1"/>
-                        <field name="partner_id" select="1"/>
+                        <field name="event_id" widget="selection"/>
+                        <field name="user_id" widget="selection"/>
                         <field name="state" select="1"/>
-                        <field name="invoice_label" select="1"/>
                     </group>
+                    <newline/>    
+                    <group expand="1" string="Group By...">
+                        <filter string="Event" icon="terp-crm" domain="[]" context="{'group_by':'event_id'}"/> 
+                        <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Partner" icon="terp-crm" domain="[]" context="{'group_by':'partner_id'}"/>                        
+                        <filter string="Responsible" name="uid" icon="terp-partner" domain="[]" context="{'group_by':'user_id'}"/>
+                   </group>
                 </search>
             </field>
         </record>
@@ -308,86 +342,6 @@
             name="Registrations"
             id="menu_action_registration" parent="menu_event_main"
             action="action_registration"/>
-
-    <!-- report , event on registration... start -->
-        <record model="ir.ui.view" id="report_event_registration_tree">
-            <field name="name">report.event.registration.tree</field>
-            <field name="model">report.event.registration</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Event on Registration">
-                    <field name="name" select="1"/>
-                    <field name="date_begin" select="1"/>
-                    <field name="date_end"/>
-                    <field name="draft_state"/>
-                    <field name="confirm_state"/>
-                    <field name="register_max"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model ="ir.ui.view" id="report_event_registration_graph">
-            <field name="name">report.event.registration.graph</field>
-            <field name="model">report.event.registration</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Event on Registration" type="bar">
-                    <field name="name"/>
-                    <field name="draft_state" operator="+"/>
-                    <field name="confirm_state" operator="+"/>
-                    <field name="register_max" operator="+"/>
-                </graph>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_event_registration">
-            <field name="name">Events On Registrations</field>
-            <field name="res_model">report.event.registration</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-        </record>
         <menuitem name="Reporting" id="menu_report_event" parent="menu_marketing_event_main" sequence="20"/>
-        <!--<menuitem parent="menu_report_event" action="action_event_registration" id="menu_report_event_registration"/>-->
-        <menuitem parent="menu_report_event" action="action_event_registration" id="menu_report_event_registration" />
-    <!-- end... -->
-
-
-    <!-- report , event  type on registration... start -->
-        <record model="ir.ui.view" id="report_event_type_registration_tree">
-            <field name="name">report.event.type.registration.tree</field>
-            <field name="model">report.event.type.registration</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Registration By Event Types">
-                    <field name="name" select="1"/>
-                    <field name="nbevent"/>
-                    <field name="draft_state"/>
-                    <field name="confirm_state"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="report_event_type_registration_graph">
-            <field name="name">report.event.type.registration.graph</field>
-            <field name="model">report.event.type.registration</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Registration By Event Types" type="bar">
-                    <field name="name"/>
-                    <field name="draft_state" operator="+"/>
-                    <field name="confirm_state" operator="+"/>
-                </graph>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_event_type_registration">
-            <field name="name">Registration By Event Types</field>
-            <field name="res_model">report.event.type.registration</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-        </record>
-            <menuitem parent="menu_report_event" action="action_event_type_registration" id="menu_report_event_type_registration"/>
-
-    <!-- end...  -->
     </data>
 </openerp>
