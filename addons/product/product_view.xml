@@ -428,7 +428,7 @@
             <field name="arch" type="xml">
                 <form string="Supplier Information">
                     <field name="name"/>
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence"/>
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>
                     <field name="delay"/>
@@ -453,7 +453,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Supplier Information">
-                    <field name="sequence" string="Seq" invisible="1"/>
+                    <field name="sequence" string="Seq"/>
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="qty"/>

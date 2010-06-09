@@ -262,8 +262,9 @@ class procurement_order(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_id.product_tmpl_id.supply_method <> 'produce':
-                if procurement.product_id.seller_ids:
-                    partner = procurement.product_id.seller_ids[0].name
+                partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id])
+                if partner_list:
+                    partner = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].name or False
                     if user.company_id and user.company_id.partner_id:
                         if partner.id == user.company_id.partner_id.id:
                             return True
@@ -288,7 +289,9 @@ class procurement_order(osv.osv):
             if not procurement.product_id.seller_ids:
                 cr.execute('update procurement_order set message=%s where id=%s', (_('No supplier defined for this product !'), procurement.id))
                 return False
-            partner = procurement.product_id.seller_ids[0].name
+            partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id and partner_id.sequence])
+            partner = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].name or False
+
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
                     return False

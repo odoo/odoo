@@ -28,8 +28,8 @@ import re
 class scrum_project(osv.osv):
     _inherit = 'project.project'
     _columns = {
-        'product_owner_id': fields.many2one('res.users', 'Product Owner'),
-        'sprint_size': fields.integer('Sprint Days',help="Number of days allocated for sprint"),
+        'product_owner_id': fields.many2one('res.users', 'Product Owner', help="The person who is responsible for the product"),
+        'sprint_size': fields.integer('Sprint Days', help="Number of days allocated for sprint"),
         'scrum': fields.integer('Is a Scrum Project'),
     }
     _defaults = {

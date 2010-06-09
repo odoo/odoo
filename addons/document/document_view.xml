@@ -193,10 +193,7 @@
                         <group col="2" colspan="2" attrs="{'invisible':[('type','=','binary')]}">
                         <field name="url" widget="url"/>
                         </group>
-
                     </group>
-
-
                     <group col="2" colspan="2">
                         <separator string="Relation" colspan="2"/>
                          <field name="res_name" readonly="1"/>
@@ -219,7 +216,9 @@
                 <page string="Security">
                     <field name="group_ids" colspan="4" nolabel="1"/>
                 </page>
-
+                <page string="Indexed Content" groups="base.group_extended">
+                    <field name="index_content" colspan="4" nolabel="1"/>
+                </page>
                 <page string="Notes">
                     <field colspan="4" name="description" nolabel="1"/>
                 </page>
@@ -234,22 +233,22 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
              <search string="IR Attachment">
-             <filter icon="gtk-media-rewind" string="Recent"
+             <filter icon="terp-go-month" string="Recent"
                     help="less 1 month modified/created attachments"
                     domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
                 />
                     <separator orientation="vertical"/>
                   <field name="user_id" widget="selection">
-                    <filter icon="terp-partner"
+                    <filter icon="terp-personal"
                         domain="[('user_id','=', False)]"
                         help="Filter on my Attachment" />
                     </field>
                     <field name="partner_id" widget="selection"/>
                     <newline/>
-                 <group expand="1" string="Group By...">
-                    <filter string="Partner" icon="terp-partner" domain="[]"
+                 <group expand="0" string="Group By...">
+                    <filter string="Partner" icon="terp-personal" domain="[]"
                        context="{'group_by':'partner_id'}" />
-                    <filter string="Directory" icon="gtk-open" domain="[]" context="{'group_by':'parent_id'}"/>
+                    <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
                  </group>
               </search>
              </field>
@@ -265,6 +264,8 @@
                 <field name="type"/>
                 <field name="datas_fname"/>
                 <field name="user_id"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="parent_id" invisible="1"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
             </tree>

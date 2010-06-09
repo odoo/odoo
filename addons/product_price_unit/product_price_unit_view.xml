@@ -162,7 +162,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/field[@name='order_line']/form/notebook/page/field[@name='price_unit']" position="after">
-                    <field name="price_unit_id"/>
+                    <field name="price_unit_id" required="True"/>
                 </xpath>
             </field>
         </record>
@@ -175,7 +175,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="price_unit" position="after">
-                    <field name="price_unit_id"/>
+                    <field name="price_unit_id" required="True"/>
                 </field>
             </field>
         </record>

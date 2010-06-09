@@ -56,7 +56,13 @@ class product_template(osv.osv):
     _inherit = "product.template"
     _name = "product.template"
 
+    def _get_price_unit_id(self, cr, uid, *args):
+        cr.execute('select id from product_price_unit where coefficient = 1')
+        res = cr.fetchone()
+        return res and res[0] or False
+    
     _columns = {
+        'price_unit_id': fields.many2one('product.price.unit','Price Unit', help="Use if Price is not defined for UoM"),
         'standard_price_coeff': fields.float(string='Standard Price/Coeff',digits=(16,8)) ,
         'list_price_coeff': fields.float(string='List Price/Coeff',digits=(16,8)),
         'property_stock_location': fields.property('stock.location',
@@ -66,6 +72,18 @@ class product_template(osv.osv):
         'allow_negative_stock' : fields.boolean('Allow Negative Stock', help="Allows negative stock quantities - use with care !"),
 
     }
+    
+    _defaults = {
+        'price_unit_id': _get_price_unit_id,
+    }
+    
+    def init(self, cr):
+        cr.execute("""
+            update product_template
+               set price_unit_id = (select id from product_price_unit where coefficient = 1)
+             where price_unit_id is null
+               and exists (select id from product_price_unit where coefficient = 1)"""
+            )
 
 product_template()
 
@@ -73,11 +91,6 @@ class product_product(osv.osv):
     _name = "product.product"
     _inherit = "product.product"
 
-    def _get_price_unit_id(self, cr, uid, *args):
-        cr.execute('select id from product_price_unit where coefficient = 1')
-        res = cr.fetchone()
-        return res and res[0] or False
-    
     def _avg_price(self, cr, uid, ids, field_names=None, arg=False, context={}):
         res = {} 
         for product in self.browse(cr, uid, ids, context=context):
@@ -198,15 +211,10 @@ class product_product(osv.osv):
         return res
     
     _columns = {
-        'price_unit_id': fields.many2one('product.price.unit','Price Unit', help="Use if Price is not defined for UoM"),
         'stock_value': fields.function(_stock_value, method=True, type='float', string='Value', help="Current Value products in selected locations or all internal if none have been selected.", multi='stock_value'),
         'average_price': fields.function(_avg_price, method=True, type='float', string='Average Price',digits=(16,4)),
     }
 
-    _defaults = {
-        'price_unit_id': _get_price_unit_id,
-    }
-    
     def _check_allow_negative_stock(self, cr, uid, ids):
         for product in self.browse(cr, uid, ids):
             if product.qty_available < 0.0:
@@ -239,6 +247,19 @@ class product_product(osv.osv):
                 product_name = "%s (%s)" %(product_name, product.price_unit_id.name)
             new_results.append((product_id, product_name))
         return new_results
+    
+    #
+    # returns the price respecting the price unit for multiplications qty * price / coeff
+    # 
+    def price_coeff_get(self, cr, uid, ids, ptype='list_price', context={}):
+        res = {}
+        for product in self.browse(cr, uid, ids, context=context):
+            coeff = 1.0
+            if product.price_unit_id:
+                coeff = product.price_unit_id.coefficient
+            res[product.id] = product.price_get(ptype, context)[product.id] / coeff 
+            
+        return res   
 
 product_product()
 
@@ -251,9 +272,9 @@ class account_invoice_line(osv.osv):
         res = cr.fetchone()
         return res and res[0] or False
 
-    def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):
-        res = {}
-        cur_obj=self.pool.get('res.currency')
+    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
+        res = super(account_invoice_line,self)._amount_line(cr, uid, ids, prop, unknow_none, unknow_dict)
+        cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
             if line.price_unit_id:
                 if line.invoice_id:
@@ -282,6 +303,22 @@ class account_invoice_line(osv.osv):
 
 account_invoice_line()
 
+class account_analytic_line(osv.osv):
+    _inherit = 'account.analytic.line'
+    
+    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
+            unit=False, context=None):
+        res = super(account_analytic_line, self).on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, context)
+        product_obj = self.pool.get('product.product')
+        if prod_id:
+            prod = product_obj.browse(cr, uid, prod_id)
+            amount_unit = prod.price_coeff_get()[prod.id]
+            amount = amount_unit * unit_amount or 1.0
+            res['value']['amount'] = - round(amount, 2)
+        return res
+    
+account_analytic_line()
+
 class account_invoice_tax(osv.osv):
     _inherit = "account.invoice.tax"
     
@@ -295,13 +332,14 @@ class account_invoice_tax(osv.osv):
             t['base'] = 0.0
             t['base_amount'] = 0.0
         for line in inv.invoice_line:
-            for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0/line.price_unit_id.coefficient)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
-                for t in tax_grouped.values():
-                    t['base'] += tax['price_unit'] * line['quantity'] / line['price_unit_id'].coefficient
-                    if inv.type in ('out_invoice','in_invoice'):
-                        t['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, t['base'] * tax['base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
-                    else:
-                        t['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, t['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+            if line.price_unit_id:
+                for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0/line.price_unit_id.coefficient)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
+                    for t in tax_grouped.values():
+                        t['base'] += tax['price_unit'] * line['quantity'] / line['price_unit_id'].coefficient
+                        if inv.type in ('out_invoice','in_invoice'):
+                            t['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, t['base'] * tax['base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
+                        else:
+                            t['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, t['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')}, round=False)
         return tax_grouped
     
 account_invoice_tax()
@@ -430,9 +468,10 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
     
     def _amount_line_tax(self, cr, uid, line, context={}):
-        val = 0.0
-        for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0)/ line.price_unit_id.coefficient, line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id):
-            val+= c['amount']
+        val = super(sale_order,self)._amount_line_tax(cr, uid, line, context)
+        if line.price_unit_id:
+            for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0)/ line.price_unit_id.coefficient, line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id):
+                val+= c['amount']
         return val
     
     def action_ship_create(self, cr, uid, ids, *args):
@@ -489,7 +528,7 @@ class sale_order_line(osv.osv):
         return res
     
     _columns = {
-        'price_unit_id': fields.many2one('product.price.unit','Price Unit', required=True),
+        'price_unit_id': fields.many2one('product.price.unit','Price Unit'),
     }
     
     _defaults = {
@@ -544,7 +583,7 @@ class purchase_order(osv.osv):
         return res
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context):
-        res = {}
+        res = super(purchase_order,self)._amount_all(cr, uid, ids, field_name, arg, context)
         cur_obj=self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids):
             res[order.id] = {
@@ -553,10 +592,11 @@ class purchase_order(osv.osv):
                 'amount_total': 0.0,
             }
             val = val1 = 0.0
-            cur=order.pricelist_id.currency_id
+            cur = order.pricelist_id.currency_id
             for line in order.order_line:
                 for c in self.pool.get('account.tax').compute(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id):
-                    val+= c['amount'] / line.price_unit_id.coefficient
+                    if line.price_unit_id:
+                        val+= c['amount'] / line.price_unit_id.coefficient
                 val1 += line.price_subtotal
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
@@ -612,15 +652,16 @@ class purchase_order_line(osv.osv):
         return res and res[0] or False
 
     def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res = {}
+        res = super(purchase_order_line,self)._amount_line(cr, uid, ids, prop, unknow_none, unknow_dict)
         cur_obj=self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
             cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, line.price_unit * line.product_qty / line.price_unit_id.coefficient) 
+            if line.price_unit_id:
+                res[line.id] = cur_obj.round(cr, uid, cur, line.price_unit * line.product_qty / line.price_unit_id.coefficient) 
         return res
 
     _columns = {
-        'price_unit_id' : fields.many2one('product.price.unit','Price Unit', required=True),
+        'price_unit_id' : fields.many2one('product.price.unit','Price Unit'),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Purchase Price')),
     }
     _defaults = {
@@ -639,6 +680,185 @@ class purchase_order_line(osv.osv):
         return result
 
 purchase_order_line()
+
+class stock_partial_move(osv.osv_memory):
+    _inherit = "stock.partial.move"
+
+    def view_init(self, cr, uid, fields_list, context=None):
+        res = super(stock_partial_move, self).view_init(cr, uid, fields_list, context=context)
+        move_obj = self.pool.get('stock.move')
+        if not context:
+            context={}
+        moveids = []
+        for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
+            if m.state in ('done', 'cancel'):
+                continue
+            if 'move%s_product_id'%(m.id) not in self._columns:
+                self._columns['move%s_product_id'%(m.id)] = fields.many2one('product.product',string="Product")
+            if 'move%s_product_qty'%(m.id) not in self._columns:
+                self._columns['move%s_product_qty'%(m.id)] = fields.float("Quantity")
+            if 'move%s_product_uom'%(m.id) not in self._columns:
+                self._columns['move%s_product_uom'%(m.id)] = fields.many2one('product.uom',string="Product UOM")
+
+            if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
+                if 'move%s_product_price'%(m.id) not in self._columns:
+                    self._columns['move%s_product_price'%(m.id)] = fields.float("Price")
+                if 'move%s_product_currency'%(m.id) not in self._columns:
+                    self._columns['move%s_product_currency'%(m.id)] = fields.many2one('res.currency',string="Currency")
+                if 'move%s_product_price_unit_id'%(m.id) not in self._columns:
+                    self._columns['move%s_product_price_unit_id'%(m.id)] = fields.float("Price Unit")
+        return res
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
+        result = super(stock_partial_move, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
+        move_obj = self.pool.get('stock.move')
+        move_ids = context.get('active_ids', False)
+        move_ids = move_obj.search(cr, uid, [('id','in',move_ids)])
+        _moves_arch_lst = """<form string="Deliver Products">
+                        <separator colspan="4" string="Information"/>
+                        <field name="date" colspan="4" />
+                        <newline/>
+                        <separator colspan="4" string="Move Detail"/>
+                        """
+        _moves_fields = result['fields']
+        if move_ids and view_type in ['form']:
+            for m in move_obj.browse(cr, uid, move_ids, context):
+                if m.state in ('done', 'cancel'):
+                    continue
+                _moves_fields.update({
+                    'move%s_product_id'%(m.id)  : {
+                                'string': _('Product'),
+                                'type' : 'many2one',
+                                'relation': 'product.product',
+                                'required' : True,
+                                'readonly' : True,
+                                },
+                    'move%s_product_qty'%(m.id) : {
+                                'string': _('Quantity'),
+                                'type' : 'float',
+                                'required': True,
+                                },
+                    'move%s_product_uom'%(m.id) : {
+                                'string': _('Product UOM'),
+                                'type' : 'many2one',
+                                'relation': 'product.uom',
+                                'required' : True,
+                                'readonly' : True,
+                                }
+                })
+
+                _moves_arch_lst += """
+                    <group colspan="4" col="12">
+                    <field name="move%s_product_id" nolabel="1"/>
+                    <field name="move%s_product_qty" string="Qty" />
+                    <field name="move%s_product_uom" nolabel="1" />
+                """%(m.id, m.id, m.id)
+                if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
+                    _moves_fields.update({
+                        'move%s_product_price'%(m.id) : {
+                                'string': _('Price'),
+                                'type' : 'float',
+                                },
+                        'move%s_product_currency'%(m.id): {
+                                'string': _('Currency'),
+                                'type' : 'float',
+                                'type' : 'many2one',
+                                'relation': 'res.currency',
+                                },
+                        'move%s_product_price_unit_id'%(m.id): {
+                                'string': _('Price Unit'),
+                                'type' : 'float',
+                                'type' : 'many2one',
+                                'relation': 'product.price.unit',
+                                },
+                    })
+                    _moves_arch_lst += """
+                        <field name="move%s_product_price" />
+                        <field name="move%s_product_currency" nolabel="1"/>
+                        <field name="move%s_product_price_unit_id" nolabel="1"/>
+                    """%(m.id, m.id, m.id)
+                _moves_arch_lst += """
+                    </group>
+                    """
+        _moves_arch_lst += """
+                <separator string="" colspan="4" />
+                <label string="" colspan="2"/>
+                <group col="2" colspan="2">
+                <button icon='gtk-cancel' special="cancel"
+                    string="_Cancel" />
+                <button name="do_partial" string="_Deliver"
+                    colspan="1" type="object" icon="gtk-apply" />
+            </group>                    
+        </form>"""
+        result['arch'] = _moves_arch_lst
+        result['fields'] = _moves_fields
+        return result
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
+        move_obj = self.pool.get('stock.move')
+        if not context:
+            context={}
+        moveids = []
+        if 'date' in fields:
+            res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for m in move_obj.browse(cr, uid, context.get('active_ids', [])):
+            if m.state in ('done', 'cancel'):
+                continue
+            if 'move%s_product_id'%(m.id) in fields:
+                res['move%s_product_id'%(m.id)] = m.product_id.id
+            if 'move%s_product_qty'%(m.id) in fields:
+                res['move%s_product_qty'%(m.id)] = m.product_qty
+            if 'move%s_product_uom'%(m.id) in fields:
+                res['move%s_product_uom'%(m.id)] = m.product_uom.id
+
+            if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
+                price = 0
+                price_unit_id = False
+                if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
+                    price = m.purchase_line_id.price_unit
+                if hasattr(m, 'purchase_line_id') and m.price_unit_id:
+                    price_unit_id = m.purchase_line_id.price_unit_id.id
+
+                currency = False
+                if hasattr(m.picking_id, 'purchase_id') and m.picking_id.purchase_id:
+                    currency = m.picking_id.purchase_id.pricelist_id.currency_id.id
+
+                if 'move%s_product_price'%(m.id) in fields:
+                    res['move%s_product_price'%(m.id)] = price
+                if 'move%s_product_currency'%(m.id) in fields:
+                    res['move%s_product_currency'%(m.id)] = currency
+                if 'move%s_product_price_unit_id'%(m.id) in fields:
+                    res['move%s_product_price_unit_id'%(m.id)] = price_unit_id
+        return res
+
+    def do_partial(self, cr, uid, ids, context):
+        move_obj = self.pool.get('stock.move')
+        move_ids = context.get('active_ids', False)
+        partial = self.browse(cr, uid, ids[0], context)
+        partial_datas = {
+            'delivery_date' : partial.date
+        }
+        for m in move_obj.browse(cr, uid, move_ids):
+            if m.state in ('done', 'cancel'):
+                continue
+            partial_datas['move%s'%(m.id)] = {
+                'product_id' : getattr(partial, 'move%s_product_id'%(m.id)).id,
+                'product_qty' : getattr(partial, 'move%s_product_qty'%(m.id)),
+                'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id)).id
+            }
+
+            if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
+                partial_datas['move%s'%(m.id)].update({
+                    'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
+                    'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id,
+                    'product_price_unit_id' : getattr(partial, 'move%s_product_price_unit_id'%(m.id)),
+                })
+
+        res = move_obj.do_partial(cr, uid, move_ids, partial_datas, context=context)
+        return {}
+
+stock_partial_move()
 
 class stock_partial_picking(osv.osv_memory):
     _inherit = "stock.partial.picking"
@@ -757,19 +977,6 @@ class stock_partial_picking(osv.osv_memory):
         return result
 
     def default_get(self, cr, uid, fields, context=None):
-        """ 
-             To get default values for the object.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
-        """ 
-
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         pick_obj = self.pool.get('stock.picking')        
         if not context:
@@ -794,6 +1001,7 @@ class stock_partial_picking(osv.osv_memory):
 
                 if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
                     price = 0
+                    price_unit_id = False
                     if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
                         price = m.purchase_line_id.price_unit
                     if hasattr(m, 'purchase_line_id') and m.price_unit_id:
@@ -834,7 +1042,7 @@ class stock_partial_picking(osv.osv_memory):
                     partial_datas['move%s'%(m.id)].update({             
                         'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
                         'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id,
-                        'product_price_unit_id' : getattr(partial, 'move%s_product_price_unit_id'%(m.id)).id,
+                        'product_price_unit_id' : getattr(partial, 'move%s_product_price_unit_id'%(m.id)),
                     })          
         res = pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
         return {}
