@@ -136,7 +136,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
     
     def pre_action(self, cr, uid, ids, model, context=None):
         # Searching for action rules
-        cr.execute("SELECT m.model, r.id  from base_action_rule r left join ir_model m on (m.id = r.name)")
+        cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule LEFT JOIN ir_model model on (model.id = rule.name)")
         res = cr.fetchall()
         # Check if any rule matching with current object
         for obj_name, rule_id in res:
@@ -147,7 +147,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context))
         return True
 
-    def new_create(self, old_create, model, context=None):
+    def _create(self, old_create, model, context=None):
         if not context:
             context  = {}
         def make_call_old(cr, uid, vals, context=context):
@@ -157,7 +157,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             return new_id
         return make_call_old
     
-    def new_write(self, old_write, model, context=None):
+    def _write(self, old_write, model, context=None):
         if not context:
             context  = {}
         def make_call_old(cr, uid, ids, vals, context=context):
@@ -168,38 +168,35 @@ the rule to mark CC(mail to any other person defined in actions)."),
             return old_write(cr, uid, ids, vals, context=context)
         return make_call_old
 
-    def create(self, cr, uid, vals, context=None):
+    def _register_hook(self, cr, uid, ids, context=None):
         if not context:
             context = {}
-        res_id = super(base_action_rule, self).create(cr, uid, vals, context)
         model_pool = self.pool.get('ir.model')
-        model = model_pool.browse(cr, uid, vals.get('name'), context=context).model
-        obj_pool = self.pool.get(model)
-        obj_pool.__setattr__('old_create', obj_pool.create)
-        obj_pool.__setattr__('old_write', obj_pool.write)
-        obj_pool.__setattr__('create', self.new_create(obj_pool.create, model, context=context))
-        obj_pool.__setattr__('write', self.new_write(obj_pool.write, model, context=context))
+        for action_rule in self.browse(cr, uid, ids, context=context):
+            model = action_rule.name.model
+            obj_pool = self.pool.get(model)        
+            obj_pool.__setattr__('create', self._create(obj_pool.create, model, context=context))
+            obj_pool.__setattr__('write', self._write(obj_pool.write, model, context=context))
+        return True
+
+    def create(self, cr, uid, vals, context=None):
+        res_id = super(base_action_rule, self).create(cr, uid, vals, context)
+        self._register_hook(cr, uid, [res_id], context=context)        
         return res_id
     
     def write(self, cr, uid, ids, vals, context=None):
         res = super(base_action_rule, self).write(cr, uid, ids, vals, context)
-        model_pool = self.pool.get('ir.model')
-        if not context:
-            context = {}
-        for rule in self.browse(cr, uid, ids, context=context):
-            model = model_pool.browse(cr, uid, rule.name.id, context=context).model
-            obj_pool = self.pool.get(model)
-            obj_pool.__setattr__('old_create', obj_pool.create)
-            obj_pool.__setattr__('old_write', obj_pool.write)
-            obj_pool.__setattr__('create', self.new_create(obj_pool.create, model, context=context))
-            obj_pool.__setattr__('write', self.new_write(obj_pool.write, model, context=context))
+        self._register_hook(cr, uid, ids, context=context)
         return res
 
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):
+        """
+        This Function is call by scheduler.
+        """
         rule_pool= self.pool.get('base.action.rule')
         rule_ids = rule_pool.search(cr, uid, [], context=context)
-        return rule_pool.write(cr, uid, rule_ids, {}, context=context)
+        return self._register_hook(cr, uid, rule_ids, context=context)
         
 
     def format_body(self, body):
