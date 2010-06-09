@@ -1,0 +1,44 @@
+-
+  In order to test account use models wizard in OpenERP I create an account model record
+-
+  !record {model: account.model, id: account_model_mymodelonyears0}:
+    journal_id: account.expenses_journal
+    lines_id:
+      - account_id: account.a_recv
+        credit: 0.0
+        debit: 0.0
+        name: test1
+        sequence: 0.0
+        date: today
+        quantity: 0.0
+    name: My Model on %(year)s
+
+-
+  I create an account use model record
+
+-
+  !record {model: account.use.model, id: account_use_model_0}:
+    {}
+
+-
+  I create entries.
+-
+  !python {model: account.use.model}: |
+    self.create_entries(cr, uid, [ref("account_use_model_0")], {"lang": 'en_US', "active_model":
+      "account.model", "active_ids": [ref("account_model_mymodelonyears0")], "tz":
+      False, "active_id": ref("account_model_mymodelonyears0"), })
+-
+  I create an account use model record
+-
+  !record {model: account.use.model, id: account_use_model_1}:
+    {}
+
+-
+  I checked that Moves are created successfully
+
+-
+  !python {model: account.use.model}: |
+    self.open_moves(cr, uid, [ref("account_use_model_1")], {"lang": 'en_US', "move_ids":
+      [], "tz": False, "active_model": "account.model", "active_ids": [ref("account_model_mymodelonyears0")],
+      "active_id": ref("account_model_mymodelonyears0"), })
+
