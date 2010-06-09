@@ -27,6 +27,7 @@
                         <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_journal"/>
+                        <field name="property_stock_variation"/>
                     </group>
                 </form>
             </field>
@@ -61,6 +62,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="standard_price" position="replace">
+                 <field name="valuation"/>
                     <label string="Cost Price" align="1.0"/>
                     <group col="2" colspan="1">
                         <field name="standard_price" readonly="True" nolabel="1"/>

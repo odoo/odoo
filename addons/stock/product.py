@@ -312,6 +312,9 @@ class product_product(osv.osv):
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to use a tracking lot during receptions"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to use a tracking lot during deliveries"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one', domain=[('usage','=','internal')]),
+        'valuation':fields.selection([('manual_periodic','Manual Periodic Valuation'),
+                                        ('real_time','Real Time valuation'),
+                                        ('','')],'Valuation',help="Decide if the system must automatically  creates account moves based on stock moves"),
     }
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
@@ -417,6 +420,13 @@ class product_category(osv.osv):
             type='many2one', relation='account.account',
             string='Stock Output Account', method=True, view_load=True,
             help='This account will be used to value the output stock'),
+    'property_stock_variation': fields.property(
+          'account.account',
+          type='many2one', 
+          relation='account.account', 
+          string="Stock variation Account", 
+          method=True,
+          view_load=True,  help="This account will be used in product when valuation type is real-time valuation ",),            
     }
 
 product_category()

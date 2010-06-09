@@ -145,11 +145,6 @@ parameter) will see those record just disappear.
             <field name="name">Stock Weight</field>
             <field name="digits">2</field>
         </record>
-        <record forcecreate="True" id="property_stock_variation" model="ir.property">
-            <field name="name">property_stock_variation</field>
-            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_variation')]"/>
-			<field eval="'account.account,'+str(ref('account.a_recv'))" model="account.account" name="value"/>
- 			<field name="company_id" ref="base.main_company"/>            
-        </record>
+       
     </data>
 </openerp>
