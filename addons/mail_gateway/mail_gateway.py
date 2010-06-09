@@ -134,6 +134,7 @@ class mailgate_message(osv.osv):
     _columns = {
         'name':fields.char('Message', size=64), 
         'thread_id':fields.many2one('mailgate.thread', 'Thread'), 
+        'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
         'date': fields.datetime('Date'), 
         'history': fields.boolean('Is History?', required=False), 
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 

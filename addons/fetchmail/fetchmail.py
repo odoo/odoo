@@ -429,7 +429,6 @@ class mail_server_history(osv.osv):
     _inherit = "mailgate.message"
     
     _columns = {
-        'ref_id': fields.char('Referance Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
         'server_id': fields.many2one('email.server',"Mail Server", readonly=True, select=True),
         'type':fields.selection([
             ('pop','POP Server'),
