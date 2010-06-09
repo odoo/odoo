@@ -27,8 +27,11 @@
                         <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_journal"/>
-                        <field name="property_stock_variation"/>
                     </group>
+					<group col="2" colspan="2">
+                        <separator string="Variation Stock Properties" colspan="4"/>
+                         <field name="property_stock_variation"/>
+                    </group>    
                 </form>
             </field>
         </record>
