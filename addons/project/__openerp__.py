@@ -26,9 +26,14 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "analytic", "process", "mail_gateway"],
+    "depends" : ["product", "analytic", "process", "mail_gateway","board"],
     "description": """Project management module that track multi-level projects, tasks,
 work done on tasks, eso. It is able to render planning, order tasks, eso.
+ Dashboard for project members that includes:
+    * List of my open tasks
+    * List of messages
+    * Members list of project
+    * Issues
     """,
     "init_xml" : [],
     "update_xml": [
@@ -43,9 +48,12 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
         "project_installer.xml",
         "report/project_report_view.xml",
         "wizard/project_close_task_view.xml",
+        "board_project_view.xml",
+        'board_project_manager_view.xml'
     ],
     'demo_xml': [
-        'project_demo.xml'
+        'project_demo.xml',
+        'board_project_demo.xml',
     ],
     'test':[
             'test/test_project.yml'

@@ -30,7 +30,10 @@
         * to manage your events and their registrations
         * to use emails to automatically confirm and send acknowledgements for any registration to an event
         * ...
-
+    A dashboard for associations that includes:
+    * Registration by Events (graph)
+    * Next Events (list)
+    * Unpaid Invoices (list)
     Note that:
     - You can define new types of events in
                 Events / Configuration / Types of Events
@@ -49,8 +52,9 @@
         'wizard/event_registration_view.xml',
         'wizard/event_registrations_partner.xml',
         'wizard/event_make_invoice_view.xml',
+        'board_association_view.xml',
     ],
-    'demo_xml': ['event_demo.xml'],
+    'demo_xml': ['event_demo.xml','board_association_demo.xml'],
     'installable': True,
     'active': False,
     'certificate': '0083059161581',
