@@ -45,6 +45,7 @@ class survey(osv.osv):
     _name = 'survey'
     _description = 'Survey'
     _rec_name = 'title'
+    _log_create = True
 
     def default_get(self, cr, uid, fields, context={}):
         data = super(survey, self).default_get(cr, uid, fields, context)
@@ -588,6 +589,8 @@ survey_answer()
 class survey_response(osv.osv):
     _name = "survey.response"
     _rec_name = 'date_create'
+    _log_create = True
+
     _columns = {
         'survey_id' : fields.many2one('survey', 'Survey', required=1, ondelete='cascade'),
         'date_create' : fields.datetime('Create Date', required=1),

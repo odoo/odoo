@@ -131,6 +131,7 @@ class make_sale(wizard.interface):
                     sale_line_obj.create(cr, uid, value)
 
             case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
+            case._table.log(cr, uid, case.id, "Opportunity '" + case.name + "' is converted into Sale Order: " + str(new_id) , context=context)
             new_ids.append(new_id)
 
         if data['form']['close']:
