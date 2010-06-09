@@ -65,9 +65,9 @@ hr_passport()
 class hr_payroll_structure(osv.osv):
     """
     Salary structure used to defined
-    * Basic
-    * Allowlance
-    * Deductions
+    - Basic
+    - Allowlance
+    - Deductions
     """
     
     _name = 'hr.payroll.structure'
@@ -127,9 +127,9 @@ class hr_contract(osv.osv):
 hr_contract()
 
 class payroll_register(osv.osv):
-    '''
+    """
     Payroll Register
-    '''
+    """
     _name = 'hr.payroll.register'
     _description = 'Payroll Register'
     
@@ -514,11 +514,14 @@ class contrib_register_line(osv.osv):
 contrib_register_line()
 
 class payment_category(osv.osv):
-    '''
-    Open ERP Model
-    '''
+    """
+    Allowance, Deduction Heads
+    House Rent Allowance, Medical Allowance, Food Allowance
+    Professional Tax, Advance TDS, Providend Funds, etc    
+    """
+    
     _name = 'hr.allounce.deduction.categoty'
-    _description = 'Allowance Deduction Categoty'
+    _description = 'Allowance Deduction Heads'
     
     _columns = {
         'name':fields.char('Categoty Name', size=64, required=True, readonly=False),
@@ -529,13 +532,40 @@ class payment_category(osv.osv):
             ('other','Others'),
         ],'Type', select=True),
         'contribute_per':fields.float('Contribution', digits=(16, int(config['price_accuracy'])), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
-        'contribute':fields.boolean('Contribe by Company ?', help='Is company contribute on this deduction, like Provident Fund'),
-        'include_in_salary':fields.boolean('Included in Salary ?', help='If company contribute on this deduction then should company contribution is also deducted from Employee Salary'),
-        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
-        'line_ids':fields.one2many('hr.allounce.deduction.categoty.line', 'category_id', 'Calculations', required=False),
         'base':fields.char('Based on', size=64, required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
+        'note': fields.text('Description'),    
+        'user_id':fields.char('User', size=64, required=False, readonly=False),
+        'state':fields.char('Label', size=64, required=False, readonly=False),
+        'company_id':fields.many2one('res.company', 'Company', required=False),
+    }
+    _defaults = {
+        'condition': lambda *a: 'True',
+        'base': lambda *a:'basic',
+        'sequence': lambda *a:5,
+        'company_id': lambda self, cr, uid, context: \
+                self.pool.get('res.users').browse(cr, uid, uid,
+                    context=context).company_id.id,
+    }
+payment_category()
+
+class company_contribution(osv.osv):
+    """
+    Company contribution
+    Allows to configure company contribution for some taxes
+    """
+    
+    _name = 'company.contribution'
+    _description = "Company Contribution"
+    
+    _columns = {
+        'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Heads', required=False),
+        'name':fields.char('Name', size=256, required=True, readonly=False),
+        'contribute':fields.boolean('Contribe by Company ?', help='Is company contribute on this deduction, like Provident Fund'),
+        'include_in_salary':fields.boolean('Included in Salary ?', help='If company contribute on this deduction then should company contribution is also deducted from Employee Salary'),
+        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
+        'line_ids':fields.one2many('company.contribution.line', 'contribution_id', 'Calculations', required=False),
         'register_id':fields.property(
             'hr.contibution.register',
             type='many2one',
@@ -546,12 +576,7 @@ class payment_category(osv.osv):
             help="Contribution register based on company",
             required=False
         ),
-        'note': fields.text('Description'),    
-        'user_id':fields.char('User', size=64, required=False, readonly=False),
-        'state':fields.char('Label', size=64, required=False, readonly=False),
-        'company_id':fields.many2one('res.company', 'Company', required=False),
         'amount_type':fields.selection([
-#            ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
             ('func','Function Calculation'),
         ],'Amount Type', select=True),
@@ -565,11 +590,10 @@ class payment_category(osv.osv):
             help="Expanse account where company expanse will be encoded",
             required=False
         ),
+        'company_id':fields.many2one('res.company', 'Company', required=False),
     }
+    
     _defaults = {
-        'condition': lambda *a: 'True',
-        'base': lambda *a:'basic',
-        'sequence': lambda *a:5,
         'amount_type': lambda *a:'fix',
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
@@ -583,7 +607,7 @@ class payment_category(osv.osv):
         uid: user id of current executer
         """
         
-        line_pool = self.pool.get('hr.allounce.deduction.categoty.line')
+        line_pool = self.pool.get('company.contribution.line')
         res = 0
         ids = line_pool.search(cr, uid, [('category_id','=',id), ('to_val','>=',value),('from_val','<=',value)])
         if not ids:
@@ -593,19 +617,20 @@ class payment_category(osv.osv):
         else:
             res = line_pool.browse(cr, uid, ids)[0].value
         return res
-        
-payment_category()
+    
+company_contribution()
 
-class payment_category_line(osv.osv):
-    '''
-    Allowance Deduction Categoty
-    '''
-    _name = 'hr.allounce.deduction.categoty.line'
+class company_contribution_line(osv.osv):
+    """
+    Company contribution lines
+    """
+    
+    _name = 'company.contribution.line'
     _description = 'Allowance Deduction Categoty'
     _order = 'sequence'
     
     _columns = {
-        'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Category', required=False),
+        'contribution_id':fields.many2one('company.contribution', 'Contribution', required=False),
         'name':fields.char('Name', size=64, required=False, readonly=False),
         'umo_id':fields.many2one('product.uom', 'Unite', required=False),
         'from_val': fields.float('From', digits=(16, int(config['price_accuracy']))),
@@ -616,7 +641,7 @@ class payment_category_line(osv.osv):
         'sequence':fields.integer('Sequence'),
         'value': fields.float('Value', digits=(16, int(config['price_accuracy']))),
     }
-payment_category_line()
+company_contribution_line()
 
 class hr_holidays_status(osv.osv):
     _inherit = "hr.holidays.status"
