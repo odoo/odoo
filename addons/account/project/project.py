@@ -107,7 +107,7 @@ class account_analytic_account(osv.osv):
                    "LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s)"
                    " WHERE a.id IN %%(ids)s "
                    "GROUP BY a.id" % (where_date),
-                   dict(context, ids=tuple(ids)))
+                   dict(context, ids=tuple(ids2)))
 
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
@@ -117,7 +117,7 @@ class account_analytic_account(osv.osv):
         cr.execute("SELECT a.id, r.currency_id "
                    "FROM account_analytic_account a "
                    "INNER JOIN res_company r ON (a.company_id = r.id) "
-                   "WHERE a.id in %s", (tuple(ids),))
+                   "WHERE a.id in %s", (tuple(ids2),))
 
         currency = dict(cr.fetchall())
         self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
