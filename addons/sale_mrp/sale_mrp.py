@@ -23,10 +23,14 @@
 from osv import osv, fields
 
 class mrp_production(osv.osv):
-    
     _inherit = 'mrp.production'
     
     def _ref_calc(self, cr, uid, ids, field_names=None, arg=False, context={}):
+        """ Finds reference of sale order for production order.
+        @param field_names: Names of fields.
+        @param arg: User defined arguments
+        @return: Dictionary of values.
+        """
         if not field_names:
             field_names=[]
         res = {}
@@ -65,4 +69,11 @@ class mrp_production(osv.osv):
                         res[production['id']] = move.sale_line_id and move.sale_line_id.order_id.client_order_ref or False
         return res
     
+    _columns = {
+        'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sale order.'),
+        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_ref', type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
+    }
+    
 mrp_production()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

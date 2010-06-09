@@ -27,17 +27,20 @@ import ir
 import netsvc
 import time
 
-class mrp_procurement(osv.osv):
-    _inherit = 'mrp.procurement'
+class procurement_order(osv.osv):
+    _inherit = 'procurement.order'
     _columns = {
         'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
     }
     
     def check_produce_product(self, cr, uid, procurement, context=[]):
+        """ Finds the bill of material for the product from procurement order.
+        @return: True or False
+        """
         properties = [x.id for x in procurement.property_ids]
         bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
         if not bom_id:
-            cr.execute('update mrp_procurement set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
+            cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
             return False
         return True
     
@@ -45,7 +48,7 @@ class mrp_procurement(osv.osv):
         """ This is action which call from workflow to assign production order to procurements
         @return: True
         """
-        procurement_obj = self.pool.get('mrp.procurement')
+        procurement_obj = self.pool.get('procurement.order')
         res = procurement_obj.make_mo(cr, uid, ids, context=context)
         res = res.values()
         return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
@@ -59,7 +62,7 @@ class mrp_procurement(osv.osv):
         production_obj = self.pool.get('mrp.production')
         move_obj = self.pool.get('stock.move')
         wf_service = netsvc.LocalService("workflow")
-        procurement_obj = self.pool.get('mrp.procurement')
+        procurement_obj = self.pool.get('procurement.order')
         for procurement in procurement_obj.browse(cr, uid, ids):
             res_id = procurement.move_id.id
             loc_id = procurement.location_id.id
@@ -88,6 +91,6 @@ class mrp_procurement(osv.osv):
                     {'location_id': procurement.location_id.id})
         return res
     
-mrp_procurement()
+procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

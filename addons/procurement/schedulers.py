@@ -26,8 +26,8 @@ from mx import DateTime
 import time
 
 
-class mrp_procurement(osv.osv):
-    _inherit = 'mrp.procurement'
+class procurement_order(osv.osv):
+    _inherit = 'procurement.order'
 
     def _procure_confirm(self, cr, uid, ids=None, use_new_cursor=False, context=None):
         '''
@@ -40,11 +40,11 @@ class mrp_procurement(osv.osv):
             cr = pooler.get_db(use_new_cursor).cursor()
         wf_service = netsvc.LocalService("workflow")
 
-        procurement_obj = self.pool.get('mrp.procurement')
+        procurement_obj = self.pool.get('procurement.order')
         if not ids:
             ids = procurement_obj.search(cr, uid, [], order="date_planned")
         for id in ids:
-            wf_service.trg_validate(uid, 'mrp.procurement', id, 'button_restart', cr)
+            wf_service.trg_validate(uid, 'procurement.order', id, 'button_restart', cr)
         if use_new_cursor:
             cr.commit()
 
@@ -57,11 +57,11 @@ class mrp_procurement(osv.osv):
         report_except = 0
         report_later = 0
         while True:
-            cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by priority,date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
+            cr.execute('select id from procurement_order where state=%s and procure_method=%s order by priority,date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
             ids = map(lambda x: x[0], cr.fetchall())
             for proc in procurement_obj.browse(cr, uid, ids):
                 if (maxdate.strftime('%Y-%m-%d') >= proc.date_planned):
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
                 else:
                     offset += 1
                     report_later += 1
@@ -84,7 +84,7 @@ class mrp_procurement(osv.osv):
             ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
             for proc in procurement_obj.browse(cr, uid, ids):
                 if ((maxdate).strftime('%Y-%m-%d') >= proc.date_planned) :
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
                     report_ids.append(proc.id)
                 else:
                     report_later += 1
@@ -129,7 +129,7 @@ class mrp_procurement(osv.osv):
         if not context:
             context = {}
         product_obj = self.pool.get('product.product')
-        proc_obj = self.pool.get('mrp.procurement')
+        proc_obj = self.pool.get('procurement.order')
         warehouse_obj = self.pool.get('stock.warehouse')
         wf_service = netsvc.LocalService("workflow")
 
@@ -161,8 +161,8 @@ class mrp_procurement(osv.osv):
                     'location_id': location_id,
                     'procure_method': 'make_to_order',
                     })
-                wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
-                wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_check', cr)
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
 
     def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
             use_new_cursor=False, context=None, user_id=False):
@@ -175,7 +175,7 @@ class mrp_procurement(osv.osv):
             cr = pooler.get_db(use_new_cursor).cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
         location_obj = self.pool.get('stock.location')
-        procurement_obj = self.pool.get('mrp.procurement')
+        procurement_obj = self.pool.get('procurement.order')
         request_obj = self.pool.get('res.request')
         wf_service = netsvc.LocalService("workflow")
         report = []
@@ -186,8 +186,9 @@ class mrp_procurement(osv.osv):
         while ids:
             ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids):
-                if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
-                    continue
+                if op.procurement_id.state != 'exception':
+                    if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
+                        continue
                 prods = location_obj._product_virtual_get(cr, uid,
                         op.location_id.id, [op.product_id.id],
                         {'uom': op.product_uom.id})[op.product_id.id]
@@ -217,9 +218,9 @@ class mrp_procurement(osv.osv):
                             'procure_method': 'make_to_order',
                             'origin': op.name
                         })
-                        wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
+                        wf_service.trg_validate(uid, 'procurement.order', proc_id,
                                 'button_confirm', cr)
-                        wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
+                        wf_service.trg_validate(uid, 'procurement.order', proc_id,
                                 'button_check', cr)
                         orderpoint_obj.write(cr, uid, [op.id],
                                 {'procurement_id': proc_id})
@@ -237,6 +238,6 @@ class mrp_procurement(osv.osv):
             cr.commit()
             cr.close()
         return {}
-mrp_procurement()
+procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

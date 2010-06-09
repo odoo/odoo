@@ -5,9 +5,9 @@
         Procurement
         -->
 
-        <record id="mrp_procurement_tree_view" model="ir.ui.view">
-            <field name="name">mrp.procurement.tree</field>
-            <field name="model">mrp.procurement</field>
+        <record id="procurement_tree_view" model="ir.ui.view">
+            <field name="name">procurement.order.tree</field>
+            <field name="model">procurement.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';green:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
@@ -22,9 +22,9 @@
                 </tree>
             </field>
         </record>
-        <record id="mrp_procurement_form_view" model="ir.ui.view">
-            <field name="name">mrp.procurement.form</field>
-            <field name="model">mrp.procurement</field>
+        <record id="procurement_form_view" model="ir.ui.view">
+            <field name="name">procurement.order.form</field>
+            <field name="model">procurement.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Procurement">
@@ -66,7 +66,7 @@
                         <field name="move_id" groups="base.group_extended"/>
                         <field name="date_close"/>
                         <field name="close_move" groups="base.group_extended"/>
-						<group colspan="4"  groups="base.group_extended">
+						<group colspan="4"  groups="base.group_extended" expand="1">
 	                    	<separator colspan="4" string="Properties" />
 	                        <field colspan="4" name="property_ids" nolabel="1"/>
 	                    </group>
@@ -79,9 +79,9 @@
                 </form>
             </field>
         </record>
-        <record id="view_mrp_procurement_filter" model="ir.ui.view">
-            <field name="name">mrp.procurement.select</field>
-            <field name="model">mrp.procurement</field>
+        <record id="view_procurement_filter" model="ir.ui.view">
+            <field name="name">procurement.order.select</field>
+            <field name="model">procurement.order</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
@@ -109,51 +109,51 @@
                 </search>
             </field>
         </record>
-        <record id="mrp_procurement_action" model="ir.actions.act_window">
+        <record id="procurement_action" model="ir.actions.act_window">
             <field name="name">Procurement Orders</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
+            <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
             <field name="context">{'search_default_current':1}</field>
-            <field name="search_view_id" ref="view_mrp_procurement_filter"/>
+            <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="context">{'search_default_Current':1}</field>
         </record>
 
-        <record id="mrp_procurement_action3" model="ir.actions.act_window">
+        <record id="procurement_action3" model="ir.actions.act_window">
             <field name="name">Procurements</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
+            <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_mrp_procurement_filter"/>
+            <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="domain">[]</field>
             <field name="context">{}</field>
         </record>
 
-        <record id="mrp_procurement_action5" model="ir.actions.act_window">
+        <record id="procurement_action5" model="ir.actions.act_window">
             <field name="name">Procurement Exceptions</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
+            <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
         </record>
 
-        <record id="mrp_procurement_action4" model="ir.actions.act_window">
+        <record id="procurement_action4" model="ir.actions.act_window">
             <field name="name">Procurement Exceptions to Fix</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
+            <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
             <field name="filter" eval="True"/>
         </record>
 
-        <record id="mrp_procurement_action11" model="ir.actions.act_window">
+        <record id="procurement_action11" model="ir.actions.act_window">
             <field name="name">Temporary Procurement Exceptions</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
+            <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
@@ -255,17 +255,17 @@
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id}"
             domain="[('product_id', '=', active_id)]"
-            id="act_mrp_procurement_2_stock_warehouse_orderpoint"
+            id="act_procurement_2_stock_warehouse_orderpoint"
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"
-            src_model="mrp.procurement"/>
+            src_model="procurement.order"/>
 
         <act_window
             domain="[('id', '=', product_id)]"
             id="act_product_product_2_stock_warehouse_orderpoint"
             name="Product"
             res_model="product.product"
-            src_model="mrp.procurement"/>
+            src_model="procurement.order"/>
 
     </data>
 </openerp>

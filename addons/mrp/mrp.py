@@ -460,18 +460,6 @@ class mrp_production(osv.osv):
             result[prod.id] = prod.date_planned[:10]
         return result
 
-    def _ref_calc(self, cr, uid, ids, field_names=None, arg=False, context={}):
-        """ Finds reference sale order for production order.
-        @param field_names: Names of fields.
-        @param arg: User defined arguments
-        @return: Dictionary of values.
-        """
-        res = {}
-        for f in field_names:
-            for order_id in ids:
-                res[order_id] = {f:False}
-        return res
-
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request."),
@@ -512,8 +500,6 @@ class mrp_production(osv.osv):
         'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
-        'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sale order.'),
-        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_ref', type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -831,7 +817,7 @@ class mrp_production(osv.osv):
         seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
-        proc_obj = self.pool.get('mrp.procurement')
+        proc_obj = self.pool.get('procurement.order')
         wf_service = netsvc.LocalService("workflow")
         for production in self.browse(cr, uid, ids):
             if not production.product_lines:
@@ -925,7 +911,7 @@ class mrp_production(osv.osv):
                     'move_id': move_id,
                     'company_id': production.company_id.id,
                 })
-                wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 proc_ids.append(proc_id)
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
