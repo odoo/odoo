@@ -41,7 +41,7 @@ class base_openoffice(osv.osv_memory):
             
     def process_pdf_file(self, cr, uid, ids, context):
         """
-        Default Attach Thunderbird Plug-in Installation File.
+        Default Attach  Plug-in Installation File.
         """
         data = {}
         pdf_file = open(config['addons_path'] + "/base_report_designer/report_desinger/doc/OpenOffice.pdf", 'r')
