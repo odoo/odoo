@@ -542,7 +542,7 @@
                 </form>
             </field>
         </record>
-         <record id="hr_allounce_deduction_categoty_tree" model="ir.ui.view">
+        <record id="hr_allounce_deduction_categoty_tree" model="ir.ui.view">
             <field name="name">hr.allounce.deduction.categoty.tree</field>
             <field name="model">hr.allounce.deduction.categoty</field>
             <field name="type">tree</field>
@@ -565,6 +565,79 @@
             action="hr_allounce_deduction_tree" 
             parent="payroll_configure" 
         />
+        <!-- End Payment Heads -->
+        
+        <!-- Company Contribution -->
+        <record id="hr_company_contribution_form" model="ir.ui.view">
+            <field name="name">company.contribution.form</field>
+            <field name="model">company.contribution</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Company Contribution">
+                    <group col="6" colspan="6">
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="category_id"/>
+                        <field name="company_id" select="1"/>
+                        <field name="active" select="1"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Contributions"/>
+                        <field name="amount_type" attrs="{'required': [('contribute','=',True)]}"/>
+                        <field name="contribute_per" attrs="{'required': [('contribute','=',True)], 'readonly':[(('amount_type','=','func'))]}"/>
+                        <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Accounts"/>
+                        <field name="include_in_salary" />
+                        <field name="account_id" attrs="{'required': [('contribute','=',True), ('include_in_salary','=',True)]}"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
+                            <field name="line_ids" colspan="4" nolabel="1">
+                                <tree string="Function Arguments" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="sequence"/>
+                                    <field name="from_val"/>
+                                    <field name="to_val"/>
+                                    <field name="amount_type"/>
+                                    <field name="value"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Description">
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id="hr_company_contribution_tree" model="ir.ui.view">
+            <field name="name">company.contribution.tree</field>
+            <field name="model">company.contribution</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Company Contribution">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="contribute_per"/>
+                    <field name="amount_type"/>
+                    <field name="register_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_hr_company_contribution_tree" model="ir.actions.act_window">
+            <field name="name">Company Contributions</field>
+            <field name="res_model">company.contribution</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_company_contribution_tree"/>
+        </record>
+        <menuitem 
+            id="menu_hr_company_contribution_tree" 
+            action="action_hr_company_contribution_tree" 
+            parent="payroll_configure" 
+        />
+        <!-- End Company Contribution -->
         
         <!-- Contract Form-->
 <!--        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">-->

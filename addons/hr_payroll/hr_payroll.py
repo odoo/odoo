@@ -531,7 +531,6 @@ class payment_category(osv.osv):
             ('deduct','Deduction'),
             ('other','Others'),
         ],'Type', select=True),
-        'contribute_per':fields.float('Contribution', digits=(16, int(config['price_accuracy'])), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
         'base':fields.char('Based on', size=64, required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
@@ -562,7 +561,7 @@ class company_contribution(osv.osv):
     _columns = {
         'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Heads', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
-        'contribute':fields.boolean('Contribe by Company ?', help='Is company contribute on this deduction, like Provident Fund'),
+        'code':fields.char('Code', size=64, required=True, readonly=False),
         'include_in_salary':fields.boolean('Included in Salary ?', help='If company contribute on this deduction then should company contribution is also deducted from Employee Salary'),
         'gratuity':fields.boolean('Use for Gratuity ?', required=False),
         'line_ids':fields.one2many('company.contribution.line', 'contribution_id', 'Calculations', required=False),
@@ -580,6 +579,7 @@ class company_contribution(osv.osv):
             ('fix','Fixed Amount'),
             ('func','Function Calculation'),
         ],'Amount Type', select=True),
+        'contribute_per':fields.float('Contribution', digits=(16, int(config['price_accuracy'])), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
         'account_id':fields.property(
             'account.account',
             type='many2one',
@@ -591,10 +591,13 @@ class company_contribution(osv.osv):
             required=False
         ),
         'company_id':fields.many2one('res.company', 'Company', required=False),
+        'active':fields.boolean('Active', required=False),
+        'note': fields.text('Description'),
     }
     
     _defaults = {
         'amount_type': lambda *a:'fix',
+        'active': lambda *a:True,
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
