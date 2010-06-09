@@ -129,14 +129,14 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Mailboxes">
-                    <filter icon="terp-crm" string="Drafts" name="draft" domain="[('folder','=','drafts']"/>
-                    <filter icon="terp-crm" string="Outbox" name="outbox" domain="[('folder','=','outbox')]"/>
+                    <filter icon="terp-mail-message-new" string="Drafts" name="draft" domain="[('folder','=','drafts']"/>
+                    <filter icon="terp-mail-" string="Outbox" name="outbox" domain="[('folder','=','outbox')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-crm" string="Sent" domain="[('folder','=','sent')]"/>
-                    <filter icon="terp-crm" string="Trash" domain="[('folder','=','trash')]"/>
+                    <filter icon="terp-gtk-jump-to-ltr" string="Sent" domain="[('folder','=','sent')]"/>
+                    <filter icon="terp-mail_delete" string="Trash" domain="[('folder','=','trash')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-crm" string="Not Applicable" domain="[('state','=','na')]"/>
-                    <filter icon="terp-crm" string="Sending" domain="[('state','=','sending')]"/>
+                    <filter icon="terp-gtk-stop" string="Not Applicable" domain="[('state','=','na')]"/>
+                    <filter icon="terp-gtk-jump-to-ltr" string="Sending" domain="[('state','=','sending')]"/>
                     <separator orientation="vertical"/>
                     <field name="email_from" select="1"/>
                     <field name="email_to" select="1"/>

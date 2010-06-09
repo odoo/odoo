@@ -131,9 +131,9 @@ class project_schedule_task(osv.osv_memory):
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
                     if each_task.user_id:
-                       for resource in resources:
-                            if resource.__name__ == each_task.user_id.name:
-                               task = create_tasks(i, hours, priorty, resource)
+                       for resrce in resources:
+                            if resrce.__name__ == each_task.user_id.name:
+                               task = create_tasks(i, hours, priorty, resrce)
                     else:
                         task = create_tasks(i, hours, priorty)
                     i += 1

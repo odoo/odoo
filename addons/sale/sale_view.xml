@@ -14,6 +14,7 @@
                 <form string="Sale Shop">
                     <field name="name" select="1"/>
                     <field name="warehouse_id" required="1" select="1" widget="selection"/>
+                    <field name="company_id" widget='selection'/>
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
                     <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>

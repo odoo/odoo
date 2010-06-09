@@ -258,7 +258,7 @@ class split_in_production_lot(osv.osv_memory):
                     quantity_rest -= quantity
                     uos_qty = quantity / move_qty * move.product_uos_qty
                     uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
-                    if quantity_rest <= 0:
+                    if quantity_rest < 0:
                         quantity_rest = quantity
                         break
                     default_val = {
@@ -266,8 +266,11 @@ class split_in_production_lot(osv.osv_memory):
                         'product_uos_qty': uos_qty, 
                         'state': move.state
                     }
-                    current_move = move_obj.copy(cr, uid, move.id, default_val)
-                    new_move.append(current_move)
+                    if quantity_rest > 0:
+                        current_move = move_obj.copy(cr, uid, move.id, default_val)
+                        new_move.append(current_move)
+                    if quantity_rest == 0:
+                        current_move = move.id
                     prodlot_id = False
                     if line.use_exist and line.name:
                         prodlot_id = prodlot_obj.search(cr, uid, [('prefix','=',line.name),('product_id','=',data.product_id.id)])

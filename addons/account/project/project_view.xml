@@ -25,8 +25,8 @@
             <field name="arch" type="xml">
             	<search string="Analytic Account">
             		<group col="8" colspan="4">
-	            		<filter icon="gtk-execute" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
-	            		<filter icon="gtk-execute" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
+	            		<filter icon="terp-check" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
+	            		<filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
 						<field name="code" select="1"/>
@@ -414,8 +414,8 @@
             <field name="arch" type="xml">
                 <search string="Analytic Entries Stats">
                 	<group col="8" colspan="4">
-	                	<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Sale journal in this year"/>
-		               	<filter icon="terp-sale" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Sale journal in this month"/>
+	                	<filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Sale journal in this year"/>
+		               	<filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Sale journal in this month"/>
 		               	<separator orientation="vertical"/>
 	                    <field name="name" select="1"/>
 	               		<field name="month" select="1"/>
