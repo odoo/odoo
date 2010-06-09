@@ -1006,7 +1006,7 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
-        
+
         <record id="action_move_to_review" model="ir.actions.act_window">
             <field name="name">Journal Entries to Review</field>
             <field name="type">ir.actions.act_window</field>
@@ -1030,7 +1030,7 @@
         </record>
 
         <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
-        
+
         <record id="action_account_moves_sale" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move</field>
@@ -1042,7 +1042,7 @@
         </record>
 
         <menuitem action="action_account_moves_sale" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>
-        
+
         <record id="action_account_moves_purchase" model="ir.actions.act_window">
             <field name="name">Transaction Journals</field>
             <field name="res_model">account.move</field>
@@ -1097,7 +1097,7 @@
         </record>
         <menuitem action="action_move_line_search_view3" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"/>
         <menuitem action="action_move_line_search_view4" id="journal_bank_move_lines" parent="menu_finance_bank_and_cash"/>
-        
+
 <!--        <menuitem action="action_move_line_search" id="menu_action_move_line_search" parent="account.next_id_29"/>-->
 
         <menuitem id="menu_finance_charts" name="Charts" parent="account.menu_finance" sequence="4"/>
@@ -1851,7 +1851,6 @@
                     </tree>
                   </field>
                 </group>
-                <xpath expr='//button[@name="action_skip"]' position='replace'/>
               </data>
             </field>
         </record>
