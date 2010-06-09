@@ -181,7 +181,7 @@ class email_server(osv.osv):
         context.update({
             'server_id':server.id
         })
-        history_pool = self.pool.get('mail.server.history')
+        history_pool = self.pool.get('mailgate.message')
         msg_txt = email.message_from_string(message)
         message_id = msg_txt.get('Message-ID', False)
 
@@ -329,7 +329,7 @@ class email_server(osv.osv):
                 'name': message_id, 
                 'res_id': res_id, 
                 'server_id': server.id, 
-                'note': msg.get('body', msg.get('from')),
+                'description': msg.get('body', msg.get('from')),
                 'ref_id':msg.get('references', msg.get('id')),
                 'type':server.type
             }
@@ -412,17 +412,11 @@ email_server()
 
 class mail_server_history(osv.osv):
 
-    _name = "mail.server.history"
-    _description = "Mail Server History"
+    _inherit = "mailgate.message"
     
     _columns = {
-        'name': fields.char('Message Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
         'ref_id': fields.char('Referance Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
-        'res_id': fields.integer("Resource ID", readonly=True, select=True),
         'server_id': fields.many2one('email.server',"Mail Server", readonly=True, select=True),
-        'model_id':fields.related('server_id', 'object_id', type='many2one', relation='ir.model', string='Model', readonly=True, select=True), 
-        'note': fields.text('Notes', readonly=True),
-        'create_date': fields.datetime('Created Date', readonly=True),
         'type':fields.selection([
             ('pop','POP Server'),
             ('imap','IMAP Server'),
