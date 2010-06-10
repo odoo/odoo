@@ -3118,8 +3118,9 @@ class orm(orm_template):
             ids = [ids]
 
         self._check_concurrency(cr, ids, context)
-
         self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
+
+        result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
         # No direct update of parent_left/right
         vals.pop('parent_left', None)
@@ -3208,7 +3209,6 @@ class orm(orm_template):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
 
-        result = []
         for field in upd_todo:
             for id in ids:
                 result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
@@ -3279,8 +3279,19 @@ class orm(orm_template):
                         cr.execute('update '+self._table+' set parent_left=parent_left-%s, parent_right=parent_right-%s where parent_left>=%s and parent_left<%s', (pleft-position+distance,pleft-position+distance, pleft+distance, pright+distance))
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
+        result.sort()
+
+        done = {}
         for order, object, ids, fields in result:
-            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+            key = (object,tuple(fields))
+            done.setdefault(key, {})
+            # avoid to do several times the same computation
+            todo = []
+            for id in ids:
+                if id not in done[key]:
+                    done[key][id] = True
+                    todo.append(id)
+            self.pool.get(object)._store_set_values(cr, user, todo, fields, context)
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -3543,6 +3554,8 @@ class orm(orm_template):
         return result2
 
     def _store_set_values(self, cr, uid, ids, fields, context):
+        if not ids:
+            return True
         field_flag = False
         field_dict = {}
         if self._log_access:
