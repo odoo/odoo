@@ -21,35 +21,20 @@
 
 
 {
-    'name': 'Invoice on analytic lines',
-    'version': '1.0',
-    'category': 'Generic Modules/Accounting',
-    'description': """
-Module to generate invoices based on costs (human resources, expenses, ...).
-You can define price lists in analytic account, make some theoretical revenue
-reports, eso.""",
-    'author': 'Tiny',
+    "name" : "Account Cancel",
+    "version" : "1.1",
+    "depends" : ["account"],
+    "author" : "Tiny",
+    "category": 'Generic Modules/Accounting',
+    "description": """
+    Module Add Allow cancelling entries field on form view of account journal if it set to true it allows user to cancel entries & invoices.
+    """,
     'website': 'http://www.openerp.com',
-    'depends': ['account', 'hr_timesheet'],
     'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'hr_timesheet_invoice_view.xml',
-        'hr_timesheet_invoice_wizard.xml',
-        'hr_timesheet_invoice_report.xml',
-        'report/report_analytic_view.xml',
-        'report/hr_timesheet_invoice_report_view.xml',
-        'wizard/hr_timesheet_invoice_analytic_cost_ledger_view.xml',
-        'wizard/hr_timesheet_analytic_profit_view.xml',
-        'wizard/hr_timesheet_invoice_create_view.xml',
-        'wizard/hr_timesheet_invoice_create_final_view.xml',
-        'board_hr_timesheet_invoice.xml',
-    ],
-    'demo_xml': ['hr_timesheet_invoice_demo.xml',
-                 ],
-    'test': ['test/test_hr_timesheet_invoice.yml'],             
+    'update_xml': ['account_cancel_view.xml' ],
+    'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0056091842381',
+
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

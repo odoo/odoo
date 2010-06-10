@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,24 +15,9 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from osv import fields, osv
-
-class marketing_installer(osv.osv_memory):
-    _name = 'marketing.installer'
-    _inherit = 'res.config.installer'
-    _columns = {
-        # Generic modules
-        'marketing_campaign':fields.boolean('Marketing Campaigns',
-            help="Helps you to manage marketing campaigns and automate actions and communication steps."),
-        'marketing_campaign_mailchimp':fields.boolean('Mailchimp Integration',
-            help="This modules integrate mailchimp.com's service with OpenERP to automate mass mailings."),
-        'crm_profiling':fields.boolean('Profiling Tools',
-            help="Helps you to perform segmentation within partners and design questionaires.")
-    }
-marketing_installer()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

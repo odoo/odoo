@@ -272,22 +272,19 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="active" select="1"/>
-                        <field name="type"/>
+                        <field name="type" on_change="onchange_type(type)"/>
                         <field name="refund_journal" attrs="{'readonly':[('type','=','general'),('type','=','cash'),('type','=','situation')]}"/>
                     </group>
-
-                    <notebook colspan="4">
+					    <notebook colspan="4">
                         <page string="General Information">
                             <group colspan="2" col="2">
                                 <separator string="Journal View" colspan="4"/>
-                                <field name="view_id"/>
+                                <field name="view_id" widget="selection"/>
                             </group>
 
                             <group colspan="2" col="2">
                                 <separator string="Sequence" colspan="4"/>
                                 <field name="sequence_id"/>
-                                <field name="invoice_sequence_id"/>
                             </group>
 
                             <group colspan="2" col="2">
@@ -296,7 +293,7 @@
                                 <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             </group>
 
-                            <group colspan="2" col="2">
+							<group colspan="2" col="2">
                                 <separator string="Validations" colspan="4"/>
                                 <field name="allow_date" groups="base.group_extended"/>
                             </group>
@@ -307,15 +304,19 @@
                                 <field name="user_id" groups="base.group_extended"/>
                                 <field name="currency"/>
                             </group>
+
                             <group colspan="2" col="2">
                                 <separator string="Other Configuration" colspan="4"/>
-                                <field name="centralisation"/>
-                                <field name="group_invoice_lines"/>
-                                <field name="update_posted"/>
+                                <field name="centralisation" groups="base.group_extended"/>
                                 <field name="entry_posted"/>
+	                            <group colspan="2" col="2">
+	                                <separator string="Invoicing Data" colspan="4"/>
+	                                <field name="invoice_sequence_id"/>
+	                                <field name="group_invoice_lines"/>
+	                            </group>
                             </group>
                         </page>
-                        <page string="Entry Controls">
+                        <page string="Entry Controls" groups="base.group_extended">
                             <separator colspan="4" string="Accounts Type Allowed (empty for no control)"/>
                             <field colspan="4" name="type_control_ids" nolabel="1"/>
                             <separator colspan="4" string="Accounts Allowed (empty for no control)"/>
@@ -957,7 +958,6 @@
                             <field name="state" select="1"/>
                             <group col="2" colspan="2">
                                 <button name="button_validate" states="draft" string="Validate" type="object" icon="gtk-execute"/>
-                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Other Information">
