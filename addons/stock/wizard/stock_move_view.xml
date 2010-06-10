@@ -119,26 +119,14 @@
 	                		</form>
 	                	</field>
                     </group>
-                  <group colspan="4" attrs="{'invisible':[('use_exist','=',True)]}">
-	                	<field name="line_ids" colspan="4" nolabel="1">
-	                		<tree string="Lots Number" editable="top">
-	                			<field name="name" string="Lots"/>
-	                			<field name="quantity" />
-	                		</tree>
-	                		<form string="Lots Number">
-	                			<field name="name" string="Lots"/>
-	                			<field name="quantity" />
-	                		</form>
-	                	</field>
-                    </group>
                   <group colspan="4" attrs="{'invisible':[('use_exist','!=',True)]}">
 	                	<field name="line_exist_ids" colspan="4" nolabel="1">
 	                		<tree string="Lots Number" editable="top">
-	                			<field name="prodlot_id" string="Lots"/>
+	                			<field name="prodlot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
 	                			<field name="quantity" />
 	                		</tree>
 	                		<form string="Lots Number">
-	                			<field name="prodlot_id" string="Lots"/>
+	                			<field name="prodlot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
 	                			<field name="quantity" />
 	                		</form>
 	                	</field>
