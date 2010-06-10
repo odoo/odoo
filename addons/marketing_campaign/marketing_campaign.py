@@ -165,10 +165,12 @@ class marketing_campaign_segment(osv.osv):
             if segment.sync_last_date:
                 criteria += [(segment.sync_mode, '>', segment.sync_last_date)]
             if segment.ir_filter_id:
-                criteria += segment.ir_filter_id.domain
-            object_ids = model_obj.search(cr, uid, criteria)
+                criteria += eval(segment.ir_filter_id.domain)
+            object_ids = model_obj.search(cr, uid, criteria, context=context)
 
+            print segment.object_id.model, criteria
             for o_ids in  model_obj.browse(cr, uid, object_ids, context=context) :
+                print 'Found Object', o_ids.name
                 # avoid duplicated workitem for the same resource
                 if segment.sync_mode == 'write_date':
                     segids = self.pool.get('marketing.campaign.workitem').search(cr, uid, [('res_id','=',o_ids.id),('segment_id','=',segment.id)])
@@ -367,7 +369,7 @@ class marketing_campaign_workitem(osv.osv):
         'res_id': fields.integer('Resource ID'),
         'res_name': fields.function(_res_name_get, method=True, string='Resource Name', type="char", size=64),
         'date': fields.datetime('Execution Date'),
-        'partner_id': fields.many2one('res.partner', 'Partner',required=True),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
         'state': fields.selection([('todo', 'ToDo'), ('inprogress', 'In Progress'),
                                    ('exception', 'Exception'), ('done', 'Done'),
                                    ('cancelled', 'Cancelled')], 'State'),

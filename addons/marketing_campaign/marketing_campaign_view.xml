@@ -154,12 +154,12 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,diagram</field>
         <field name="view_id" ref="view_marketing_campaign_tree"/>
-       <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_test': 1}</field>
+       <field name="context">{'group_by': []}</field>
        <field name="search_view_id" ref="view_marketing_campaign_search"/>
 
     </record>
 
-	<menuitem name="Campaigns" id="menu_marketing_campaign" parent="marketing.marketing_menu"/>
+    <menuitem name="Campaigns" id="menu_marketing_campaign" parent="marketing.marketing_menu"/>
     <menuitem id="menu_marketing_campaign_form" parent="menu_marketing_campaign" action="action_marketing_campaign_form" sequence="10" />
 
     <!--
