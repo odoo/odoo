@@ -106,17 +106,17 @@ class marketing_campaign_segment(osv.osv):
                                       type='many2one', relation='ir.model',
                                       string='Object'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter', help=""),
-        'sync_last_date': fields.datetime('Date'),
-        'sync_mode': fields.selection([('create_date', 'Create'),
-                                      ('write_date', 'Write')],
-                                      'Mode'),
+        'sync_last_date': fields.datetime('Latest Synchronization'),
+        'sync_mode': fields.selection([('create_date', 'Sync only on creation'),
+                                      ('write_date', 'Sync at each modification')],
+                                      'Synchronization Mode'),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled')],
                                    'State',),
-        'date_run': fields.datetime('Running'),
-        'date_done': fields.datetime('Done'),
+        'date_run': fields.datetime('Launching Date'),
+        'date_done': fields.datetime('End Date'),
     }
 
     _defaults = {
@@ -169,6 +169,11 @@ class marketing_campaign_segment(osv.osv):
             object_ids = model_obj.search(cr, uid, criteria)
 
             for o_ids in  model_obj.browse(cr, uid, object_ids, context=context) :
+                # avoid duplicated workitem for the same resource
+                if segment.sync_mode == 'write_date':
+                    segids = self.pool.get('marketing.campaign.workitem').search(cr, uid, [('res_id','=',o_ids.id),('segment_id','=',segment.id)])
+                    if segids:
+                        continue
                 for act_id in act_ids:
                     wi_vals = {
                         'segment_id': segment.id,
