@@ -26,3 +26,7 @@ def generate_contact(cr):
 
     cr.execute("INSERT into res_partner_contact (name, title, email, first_name, website)  (SELECT coalesce(name, 'Noname'), title, email, function , to_char(id, '99999999') from res_partner_address)")
     cr.commit()
+    cr.execute("DROP TRIGGER  IF EXISTS contactjob  on res_partner_contact")
+    cr.execute("DROP LANGUAGE  IF EXISTS  plpgsql CASCADE;")
+    cr.execute("DROP FUNCTION IF EXISTS  add_to_job()")
+    cr.commit()
