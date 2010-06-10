@@ -31,7 +31,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'account', 'stock', 'process', 'mrp_procurement'],
+    'depends': ['base', 'account', 'stock', 'process', 'procurement'],
     'init_xml': [],
     'update_xml': [
 
