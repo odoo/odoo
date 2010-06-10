@@ -69,7 +69,7 @@ class project_issue(osv.osv, crm.crm_case):
                 duration = 0
                 ans = False
                 hours = 0
-                
+
                 if field in ['working_hours_open','day_open']:
                     if issue.date_open:
                         date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
@@ -121,38 +121,38 @@ class project_issue(osv.osv, crm.crm_case):
         return res
 
     _columns = {
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
-        'id': fields.integer('ID'),  
+        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False),
+        'id': fields.integer('ID'),
         'name': fields.char('Name', size=128, required=True),
-        'active': fields.boolean('Active', required=False), 
+        'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Update Date' , readonly=True),
         'date_deadline': fields.date('Deadline'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'), 
+                             Define Responsible user and Email account for mail gateway.'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"), 
-        'company_id': fields.many2one('res.company', 'Company'), 
-        'description': fields.text('Description'), 
+                                 domain="[('partner_id','=',partner_id)]"),
+        'company_id': fields.many2one('res.company', 'Company'),
+        'description': fields.text('Description'),
         'state': fields.selection([
-                                    ('draft', 'Draft'), 
-                                    ('open', 'Todo'), 
-                                    ('cancel', 'Cancelled'), 
-                                    ('done', 'Closed'), 
+                                    ('draft', 'Draft'),
+                                    ('open', 'Todo'),
+                                    ('cancel', 'Cancelled'),
+                                    ('done', 'Closed'),
                                     ('pending', 'Pending'),
-                                ], 'State', size=16, readonly=True, 
+                                ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
-        'email_from': fields.char('Email', size=128, help="These people will receive email."), 
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+        'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'email_cc': fields.text('Watchers Emails', size=252 , help="These people\
  will receive a copy of the future" \
-" communication between partner and users by email"), 
+" communication between partner and users by email"),
         'date_open': fields.datetime('Opened', readonly=True),
         # Project Issue fields
         'date_closed': fields.datetime('Closed', readonly=True),
@@ -180,7 +180,7 @@ class project_issue(osv.osv, crm.crm_case):
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
                                 method=True, multi='working_days_close', type="float", store=True),
     }
-    
+
     def _get_project(self, cr, uid, context):
        user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
        if user.context_project_id:
@@ -189,14 +189,14 @@ class project_issue(osv.osv, crm.crm_case):
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id': crm.crm_case._get_default_user, 
-        'partner_id': crm.crm_case._get_default_partner, 
-        'partner_address_id': crm.crm_case._get_default_partner_address, 
-        'email_from': crm.crm_case. _get_default_email, 
+        'user_id': crm.crm_case._get_default_user,
+        'partner_id': crm.crm_case._get_default_partner,
+        'partner_address_id': crm.crm_case._get_default_partner_address,
+        'email_from': crm.crm_case. _get_default_email,
         'state': lambda *a: 'draft',
-        'section_id': crm.crm_case. _get_section, 
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c), 
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
+        'section_id': crm.crm_case. _get_section,
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'project_id':_get_project,
     }
 
@@ -277,7 +277,7 @@ class project_issue(osv.osv, crm.crm_case):
         if not stage.on_change:
             return {'value':{}}
         return {'value':{}}
-    
+
     def case_escalate(self, cr, uid, ids, *args):
         """Escalates case to top level
         @param self: The object pointer
@@ -286,16 +286,17 @@ class project_issue(osv.osv, crm.crm_case):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(project_issue, self).case_escalate(cr, uid, ids, args)
         cases = self.browse(cr, uid, ids)
         for case in cases:
             data = {}
             if case.project_id.project_escalation_id:
                 data['project_id'] = case.project_id.project_escalation_id.id
+                if case.project_id.project_escalation_id.user_id:
+                    data['user_id'] = case.project_id.project_escalation_id.user_id.id
             else:
-                raise osv.except_osv(_('Warning !'), _('You cannot escalate this case.\nThe relevant Project has not configured the Escalation Project!'))
+                raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
-        return res
+        return True
 
 project_issue()
 
