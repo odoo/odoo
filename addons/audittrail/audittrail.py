@@ -288,19 +288,21 @@ class audittrail_objects_proxy(osv_pool):
         cr = pooler.get_db(db).cursor()
         obj_ids = pool.get('ir.model').search(cr, uid, [('model', '=', object)])
         model_object = pool.get('ir.model').browse(cr, uid, obj_ids)[0]
+        res_id = fct_src(db, uid, object, method, *args)
 
         if method in ('create'):
-            res_id = fct_src(db, uid, object, method, *args)
+
             cr.commit()
             new_value = pool.get(model_object.model).read(cr, uid, [res_id], args[0].keys())[0]
             if 'id' in new_value:
                 del new_value['id']
+
+        resource_pool = pool.get(model_object.model)
+        try:
+            resource_name = resource_pool.name_get(cr, uid, [res_id])
+            resource_name = resource_name and resource_name[0][1] or ''
+
             if not logged_uids or uid in logged_uids:
-                resource_pool = pool.get(model_object.model)
-                resource_name = hasattr(resource_pool,'name_get')
-            if not resource_name:
-                resource_name = pool.get(model_object.model).name_get(cr, uid, [res_id])
-                resource_name = resource_name and resource_name[0][1] or ''
                 vals = {
                         "method": method,
                         "object_id": model_object.id,
@@ -318,9 +320,14 @@ class audittrail_objects_proxy(osv_pool):
                               }
                         lines.append(line)
                 self.create_log_line(cr, uid, id, model_object, lines)
-            cr.commit()
-            cr.close()
-            return res_id
+        except Exception:
+            if not hasattr(resource_pool,'name_get'):
+                resource_name = resource_pool.read(cr, uid, [args[0]])
+                resource_name = resource_name and resource_name[0][1] or ''
+
+        cr.commit()
+        cr.close()
+        return res_id
 
         if method in ('write'):
             res_ids = args[0]
@@ -415,7 +422,7 @@ class audittrail_objects_proxy(osv_pool):
         @param db: the current database
         @param uid: the current user’s ID for security checks,
         @param object: Object who's values are being changed
-        @param method: method to log: create, read, write, unlink
+        @param method: get any method and create log
         @param fct_src: execute method of Object proxy
 
         @return: Returns result as per method of Object proxy
@@ -471,14 +478,13 @@ class audittrail_objects_proxy(osv_pool):
         cr.close()
         return res
 
-
     def execute(self, db, uid, object, method, *args, **kw):
         """
         Overrides Object Proxy execute method
         @param db: the current database
         @param uid: the current user’s ID for security checks,
         @param object: Object who's values are being changed
-        @param method: method to log: create, read, write, unlink
+        @param method: get any method and create log
 
         @return: Returns result as per method of Object proxy
         """
@@ -528,7 +534,7 @@ class audittrail_objects_proxy(osv_pool):
         @param db: the current database
         @param uid: the current user’s ID for security checks,
         @param object: Object who's values are being changed
-        @param method: method to log: create, read, write, unlink
+        @param method: get any method and create log
         @param fct_src: execute method of Object proxy
 
         @return: Returns result as per method of Object proxy
