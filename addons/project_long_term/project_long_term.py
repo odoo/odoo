@@ -33,7 +33,7 @@ class project_phase(osv.osv):
          data_phase = self.browse(cr, uid, ids[0], context=context)
          prev_ids = data_phase.previous_phase_ids
          next_ids = data_phase.next_phase_ids
-         # it should nither be in prev_ids nor in next_ids
+         # it should neither be in prev_ids nor in next_ids
          if (data_phase in prev_ids) or (data_phase in next_ids):
              return False
          ids = [id for id in prev_ids if id in next_ids]
@@ -93,7 +93,7 @@ class project_phase(osv.osv):
         'next_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'prv_phase_id', 'next_phase_id', 'Next Phases'),
         'previous_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'next_phase_id', 'prv_phase_id', 'Previous Phases'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of phases."),
-        'duration': fields.float('Duration', required=True),
+        'duration': fields.float('Duration', required=True, help="By default in days"),
         'product_uom': fields.many2one('product.uom', 'Duration UoM', required=True, help="UoM (Unit of Measure) is the unit of measurement for Duration"),
         'task_ids': fields.one2many('project.task', 'phase_id', "Project Tasks"),
         'resource_ids': fields.one2many('project.resource.allocation', 'phase_id', "Project Resources"),
@@ -235,7 +235,7 @@ class project_resource_allocation(osv.osv):
     _columns = {
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', required=True),
-        'useability': fields.float('Useability', help="Useability of this ressource for this project phase in percentage (=50%)"),
+        'useability': fields.float('Usability', help="Usability of this resource for this project phase in percentage (=50%)"),
     }
     _defaults = {
         'useability': 100,

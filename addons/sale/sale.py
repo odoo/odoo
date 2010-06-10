@@ -39,6 +39,7 @@ class sale_shop(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 sale_shop()
 
@@ -48,7 +49,6 @@ def _incoterm_get(self, cr, uid, context=None):
             context = {}
     cr.execute('select code, code||\', \'||name from stock_incoterms where active')
     return cr.fetchall()
-
 
 class sale_order(osv.osv):
     _name = "sale.order"
@@ -73,7 +73,7 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         val = 0.0
-        for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id):
+        for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id)['taxes']:
             val += c['amount']
         return val
 
@@ -278,7 +278,7 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.many2one('res.company','Company',select=1),
+        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
@@ -423,6 +423,7 @@ class sale_order(osv.osv):
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+
         inv = {
             'name': order.client_order_ref or order.name,
             'origin': order.name,
@@ -440,6 +441,7 @@ class sale_order(osv.osv):
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice' : context.get('date_invoice',False),
             'company_id' : order.company_id.id,
+            'user_id':order.user_id and order.user_id.id or False
         }
         inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))
@@ -511,12 +513,12 @@ class sale_order(osv.osv):
     def action_invoice_end(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-            
+
         for order in self.browse(cr, uid, ids, context=context):
             for line in order.order_line:
                 if line.state == 'exception':
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'confirmed'}, context=context)
-            
+
             if order.state == 'invoice_except':
                 self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
 
@@ -775,23 +777,16 @@ sale_order()
 # - update it on change product and unit price
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
-    def _amount_line_net(self, cr, uid, ids, field_name, arg, context=None):
-        if context is None:
-            context = {}
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-        return res
-
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
-        if context is None:
-            context = {}
         res = {}
+        context = context or {}
+        tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
+            price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
+            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty)
             cur = line.order_id.pricelist_id.currency_id
-            res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+            res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
     def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
@@ -800,7 +795,7 @@ class sale_order_line(osv.osv):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             try:
-                res[line.id] = int(line.product_uom_qty / line.product_packaging.qty)
+                res[line.id] = int((line.product_uom_qty+line.product_packaging.qty-0.0001) / line.product_packaging.qty)
             except:
                 res[line.id] = 1
         return res
@@ -817,7 +812,6 @@ class sale_order_line(osv.osv):
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'procurement_id': fields.many2one('mrp.procurement', 'Procurement'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
-        'price_net': fields.function(_amount_line_net, method=True, string='Net Price', digits_compute= dp.get_precision('Sale Price')),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly',False)]}),
         'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -1086,7 +1080,7 @@ class sale_order_line(osv.osv):
             warning = {
                 'title': 'No Pricelist !',
                 'message':
-                    'You have to select a pricelist in the sale form !\n'
+                    'You have to select a pricelist or a customer in the sale form !\n'
                     'Please set one before choosing a product.'
                 }
         else:

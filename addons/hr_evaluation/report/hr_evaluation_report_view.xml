@@ -6,7 +6,7 @@
         <field name="model">hr.evaluation.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Evaluations Statistics">
+            <tree string="Evaluations Analysis">
                 <field name="create_date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="deadline" invisible="1"/>
@@ -27,7 +27,7 @@
             <field name="model">hr.evaluation.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-            <graph string="Evaluations" type="bar">
+            <graph string="Evaluations Analysis" type="bar">
                  <field name="employee_id"/>
                  <field name="nbr" operator="+"/>
                  <field name="state" group="True"/>
@@ -40,71 +40,66 @@
         <field name="model">hr.evaluation.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-            <search string="Evaluations">
+            <search string="Evaluations Analysis">
             	<group>
-            		<filter icon="terp-hr" string="This Year"
-                    	    domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                    	    help="Tasks performed in this year"/>
-                    <filter icon="terp-hr" string="This Month"
-                    		name="month"
-                    		domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                    		help="Tasks performed in this month"/>
-	                <filter icon="gtk-media-rewind"
-                            string="    7 Days    "
-                            separator="1"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                            help="Tasks during last 7 days"/>
+            		<filter icon="terp-go-year" string="365 Days"
+                    	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                    	help="Tasks performed in last 365 days"/>
+                    <filter icon="terp-go-month" string="30 Days"
+                    	name="month"
+                    	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                    	help="Tasks performed in last 30 days"/>
+	                <filter icon="terp-go-week"
+                        string="    7 Days    "
+                        separator="1"
+                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                        help="Tasks during last 7 days"/>
                     <separator orientation="vertical"/>
                     <filter string="Draft"
-                    		icon="terp-hr"
-                    		domain="[('state','=','draft')]"
-                    		help = "Draft Evaluations"/>
+                    	icon="terp-document-new"
+                    	domain="[('state','=','draft')]"
+                    	help = "Draft Evaluations"/>
 	                <filter string="Plan In Progress"
-	                		icon="terp-hr"
-	                		domain="[('state', '=' ,'wait')]"
-	                		help = "In progress Evaluations"/>
+	                	icon="terp-camera_test"
+	                	domain="[('state', '=' ,'wait')]"
+	                	help = "In progress Evaluations"/>
                    	<filter string="Final Validation"
-                   			icon="terp-hr"
-                   			domain="[('state','=','progress')]"
-                   			help = "Final Validation Evaluations"/>
+                   		icon="terp-check"
+                   		domain="[('state','=','progress')]"
+                   		help = "Final Validation Evaluations"/>
+                   	<filter icon="terp-dialog-close"
+                        string="Done"
+                        domain="[('state','=','done')]"/>
   					<separator orientation="vertical"/>
 	                <field name="employee_id" widget="selection"/>
+	                <field name="plan_id" widget="selection"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By...">
-                    <filter string="Employee" name="employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
-                    <filter string="Rating" icon="terp-hr" context="{'group_by':'rating'}"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Employee" name="employee" icon="terp-personal" context="{'group_by':'employee_id'}"/>
+                    <filter string="Rating" icon="terp-rating-rated" context="{'group_by':'rating'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Plan" icon="terp-hr" context="{'group_by':'plan_id'}"/>
-                    <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
+                    <filter string="Plan" icon="terp-stock_align_left_24" context="{'group_by':'plan_id'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-hr" context="{'group_by':'create_date'}"/>
-                    <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
+                    <filter string="Day" icon="terp-go-month" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'create_date'}"/>
+                    <filter string="Year" icon="terp-go-month" context="{'group_by':'year'}"/>
                 </group>
                  <newline/>
 				<group expand="0" string="Extended options..." groups="base.group_extended">
-                	<filter icon="terp-hr"
-                    		string="Done"
-                    		domain="[('state','=','done')]"/>
-                    <filter icon="terp-hr"
-                    		string="Cancelled"
-                    		domain="[('state','=','cancel')]"/>
-                    <separator orientation="vertical"/>
                     <field name="rating"/>
-                    <field name="plan_id" widget="selection"/>
                     <separator orientation="vertical"/>
                     <field name="deadline"/>
-                    <newline/>
-                    <field name="create_date"/>
-                    <field name="closed"/>
+                    <separator orientation="vertical"/>
+                    <field name="state"/>
                 </group>
             </search>
         </field>
     </record>
 
     <record id="action_evaluation_report_all" model="ir.actions.act_window">
-        <field name="name">Evaluations</field>
+        <field name="name">Evaluations Analysis</field>
         <field name="res_model">hr.evaluation.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>

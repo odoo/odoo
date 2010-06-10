@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-05-06 09:55+0000\n"
+"PO-Revision-Date: 2010-05-30 15:07+0000\n"
 "Last-Translator: Grzegorz Grzelak (Cirrus.pl) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-05-07 04:03+0000\n"
+"X-Launchpad-Export-Date: 2010-05-31 03:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -117,7 +117,7 @@ msgstr "Nadrzędne"
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Voucher"
-msgstr ""
+msgstr "Dokument dziennika"
 
 #. module: account
 #: field:account.invoice,residual:0
@@ -136,7 +136,7 @@ msgstr ""
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr ""
+msgstr "Skasuj uzgodnienie"
 
 #. module: account
 #: constraint:account.period:0
@@ -156,7 +156,7 @@ msgstr "Zapisy"
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Debit Centralisation"
-msgstr ""
+msgstr "Centralizacja Winien"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_invoice_state_confirm
@@ -647,7 +647,7 @@ msgstr "Warunki płatności dla partnera"
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Account Entry Reconcile"
-msgstr ""
+msgstr "Uzgodnienie zapisów"
 
 #. module: account
 #: wizard_button:account.move.bank.reconcile,init,open:0
@@ -867,7 +867,7 @@ msgstr "Konta analityczne"
 #: model:ir.actions.wizard,name:account.wizard_print_journal
 #: model:ir.ui.menu,name:account.menu_print_journal
 msgid "Print Journal"
-msgstr "Drukuj dziennik"
+msgstr "Drukuj zapisy dzienników"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
@@ -1339,7 +1339,7 @@ msgstr "Zamknij rok podatkowy"
 #. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralised counterpart"
-msgstr ""
+msgstr "Centralizacja przeciwnej strony"
 
 #. module: account
 #: view:wizard.company.setup:0
@@ -1546,7 +1546,7 @@ msgstr "Dodatnie"
 #: model:ir.actions.wizard,name:account.wizard_general_journal
 #: model:ir.ui.menu,name:account.menu_general_journal
 msgid "Print General Journal"
-msgstr ""
+msgstr "Drukuj stany dzienników"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
@@ -1786,7 +1786,7 @@ msgstr "Uzgodnienie zapisów z faktur i płatności"
 #: model:ir.actions.wizard,name:account.wizard_central_journal
 #: model:ir.ui.menu,name:account.menu_central_journal
 msgid "Print Central Journal"
-msgstr ""
+msgstr "Drukuj konta dzienników"
 
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,period_length:0
@@ -1877,7 +1877,7 @@ msgstr "Data początkowa"
 #. module: account
 #: model:account.journal,name:account.refund_expenses_journal
 msgid "x Expenses Credit Notes Journal"
-msgstr ""
+msgstr "x Dziennik korekt wydatków"
 
 #. module: account
 #: field:account.analytic.journal,type:0
@@ -2010,7 +2010,7 @@ msgstr "          Data początkowa"
 #. module: account
 #: wizard_view:account.analytic.account.journal.report,init:0
 msgid "Analytic Journal Report"
-msgstr ""
+msgstr "Raport dzenników analitycznych"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
@@ -2119,7 +2119,7 @@ msgstr "dni"
 #. module: account
 #: selection:account.aged.trial.balance,init,direction_selection:0
 msgid "Past"
-msgstr "Poprzednio"
+msgstr "Przeszłość"
 
 #. module: account
 #: field:account.analytic.account,company_currency_id:0
@@ -2168,7 +2168,8 @@ msgid "Analytic Entry"
 msgstr "Zapis analityczny"
 
 #. module: account
-#: view:res.company:0 field:res.company,overdue_msg:0
+#: view:res.company:0
+#: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
 msgstr "Komunikat przeterminowanych płatności"
 
@@ -2846,7 +2847,7 @@ msgstr "Widok dziennika"
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Credit Centralisation"
-msgstr ""
+msgstr "Centralizacja Ma"
 
 #. module: account
 #: rml:account.overdue:0
@@ -2886,7 +2887,7 @@ msgstr "Nowa Faktura Klienta"
 #: wizard_button:account.move.line.reconcile,addendum,reconcile:0
 #: wizard_button:account.move.line.reconcile,init_full,reconcile:0
 msgid "Reconcile"
-msgstr "Uzgodnij"
+msgstr "Uzgodnienie"
 
 #. module: account
 #: rml:account.overdue:0
@@ -3004,7 +3005,7 @@ msgstr "Uzgodnienie"
 #. module: account
 #: field:account.move.line,centralisation:0
 msgid "Centralisation"
-msgstr ""
+msgstr "Centralizacja"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
@@ -3235,7 +3236,7 @@ msgstr "Uwagi"
 msgid ""
 "The account moves of the invoice have been reconciled with account moves of "
 "the payment(s)."
-msgstr "Zapisy konta dla faktury zostały uzgodnione ze zapisami płatności."
+msgstr "Zapisy konta dla faktury zostały uzgodnione z zapisami płatności."
 
 #. module: account
 #: rml:account.invoice:0
@@ -3308,7 +3309,7 @@ msgstr "Uzgodnij zapisy"
 #. module: account
 #: wizard_view:account.wizard_paid_open,init:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr ""
+msgstr "(Faktura musi mieć skasowane uzgodnienia, jeśli chcesz ją otworzyć)"
 
 #. module: account
 #: view:account.invoice:0
@@ -3536,7 +3537,7 @@ msgstr "Zapłać i uzgodnij"
 #: rml:account.central.journal:0
 #: model:ir.actions.report.xml,name:account.account_central_journal
 msgid "Central Journal"
-msgstr "Dziennik główny"
+msgstr "Konta dziennika"
 
 #. module: account
 #: rml:account.third_party_ledger:0
@@ -3922,7 +3923,7 @@ msgstr "Wprowadź ręcznie zestawienie"
 #: model:ir.actions.act_window,name:account.action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Financial Journals"
-msgstr "Dzienniki finansowe"
+msgstr "Dzienniki księgowe"
 
 #. module: account
 #: selection:account.account.balance.report,checktype,state:0
@@ -5504,7 +5505,7 @@ msgstr "Zapis na koncie"
 #: rml:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr ""
+msgstr "Stany dzienników"
 
 #. module: account
 #: field:account.account,balance:0
@@ -5653,7 +5654,7 @@ msgstr "Do"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 msgid "Entries of Open Analytic Journals"
-msgstr ""
+msgstr "Zapisy otwartych dzienników analitycznych"
 
 #. module: account
 #: view:account.invoice.tax:0
@@ -5686,7 +5687,7 @@ msgstr "Rok podatkowy do zamknięcia"
 #: wizard_field:account.analytic.account.quantity_cost_ledger.report,init,date1:0
 #: wizard_field:account.automatic.reconcile,init,date1:0
 msgid "Start of period"
-msgstr "Pociątek okresu"
+msgstr "Początek okresu"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_template_folder
@@ -5875,7 +5876,7 @@ msgstr "Rok podatkowy"
 #. module: account
 #: selection:account.aged.trial.balance,init,direction_selection:0
 msgid "Future"
-msgstr "Przyszłe"
+msgstr "Przyszłość"
 
 #. module: account
 #: help:account.account.balance.report,checktype,fiscalyear:0
@@ -5909,7 +5910,7 @@ msgstr "Zapis"
 #: model:process.transition,note:account.process_transition_reconcilepaid0
 #: model:process.transition,note:account.process_transition_supplierreconcilepaid0
 msgid "Paid invoice when reconciled."
-msgstr ""
+msgstr "Faktura zapłacona przy uzgadnianiu"
 
 #. module: account
 #: field:account.tax,python_compute_inv:0

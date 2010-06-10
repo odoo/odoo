@@ -18,9 +18,9 @@
                     <field name="date_stop"/>
                     <separator colspan="4" string=""/>
                     <group col="3" colspan="4">
-                        <button name="create_period" string="Create Daily Periods" type="object"/>
-                        <button name="create_period_weekly" string="Create Weekly Periods" type="object"/>
-                        <button name="create_period_monthly" string="Create Monthly Periods" type="object"/>
+                        <button name="create_period"  icon="gtk-execute" string="Create Daily Periods" type="object"/>
+                        <button name="create_period_weekly" icon="gtk-execute"  string="Create Weekly Periods" type="object"/>
+                        <button name="create_period_monthly"  icon="gtk-execute" string="Create Monthly Periods" type="object"/>
                     </group>
                 </form>
             </field>
@@ -239,7 +239,7 @@
             <field name="arch" type="xml">
                 <search string="Search Stock and Sales Forecast">
                  <group col='10' colspan='4'>
-                    <filter icon="terp-purchase" string="Validated" domain="[('state','=','validated')]" separator="1"/>
+                    <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" separator="1"/>
                     <field name="company_id" select="1" widget="selection"/>
                     <field name="warehouse_id" select="1" widget="selection"/>
                     <field name="period_id" select="1" widget="selection"/>

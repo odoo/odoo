@@ -101,7 +101,7 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="base.group_extended"/>
                     <notebook colspan="4">
                         <page string="Daily View">
                             <group col="6" colspan="4">
@@ -192,22 +192,21 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <group col="10" colspan="4">
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-crm" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
-                        <filter icon="terp-crm" string="To Validate" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                        <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
+                        <filter icon="terp-gtk-go-back-rtl" string="To Validate" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
                         <field name="user_id" select="1" widget="selection"/>
                         <field name="date_from"/>
                         <field name="department_id" widget="selection">
-                            <filter icon="terp-crm"
+                            <filter icon="terp-personal+"
                                 domain="[('department_id','=',context.get('department_id',False))]"
                                 help="My Departments Timesheet"/>
                         </field>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By...">
-                        <filter string="Users" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     </group>
                 </search>
             </field>

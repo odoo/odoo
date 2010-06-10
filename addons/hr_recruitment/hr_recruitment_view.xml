@@ -2,6 +2,12 @@
 <openerp>
     <data>
 
+       <menuitem
+        id="menu_hr_config_applicant"
+        name="Applicant"
+        parent="hr.menu_hr_configuration"
+        />
+
     # ------------------------------------------------------
     # Job Categories
     # ------------------------------------------------------
@@ -25,7 +31,8 @@
         <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
         <field name="context">{'object_id':'hr.applicant'}</field>
     </record>
-    <menuitem action="hr_job_stage_act" id="menu_hr_job_stage_act" parent="crm.menu_crm_case_stage"/>
+
+    <menuitem action="hr_job_stage_act" id="menu_hr_job_stage_act" name="Stages" parent="menu_hr_config_applicant"/>
 
     # ------------------------------------------------------
     # Jobs
@@ -69,26 +76,21 @@
         <field name="arch" type="xml">
             <form string="Jobs - Recruitment Form">
                 <group colspan="4" col="8">
-                     <group colspan="3" col="6">
                         <field name="name" string="Subject"/>
+                        <field name="partner_name"/>
+                        <field name="job_id" on_change="onchange_job(job_id)"/>
+                        <button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
+                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
+                    <newline/>
+                    <group colspan="2" col="4">
                         <field name="stage_id"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
-                    <newline/>
-                    <group colspan="3" col="6">
-	                  	<field name="partner_name"/>
-	                   	<field name="job_id" on_change="onchange_job(job_id)"/>
-	                   	<button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
-                     </group>
-                    <newline/>
-                    <group colspan="3" col="6">
                         <field name="user_id"/>
                         <field name="department_id" widget="selection"/>
-                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
-                    </group>
-                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                        <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
+                        <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
             	</group>
                 <notebook colspan="4">
                     <page string="Job Info">
@@ -152,26 +154,33 @@
                            <field colspan="4" name="email_cc" string="CC"/>
                        </group>
                        <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
-                        <form string="Communication history">
-                            <group col="6" colspan="4">
-                                <field name="date"/>
-                                <field name="email_to"/>
-                                <field name="email_from"/>
-							</group>
-                                   <newline/>
-                                   <field name="description" colspan="4" nolabel="1"/>
-                                   <button colspan="4"
-                                   	string="Reply to Last Email"
-                                   	name="%(crm.action_crm_send_mail)d"
-                                   	context="{'mail':'reply', 'model': 'hr.applicant'}"
-                                   	icon="gtk-undo" type="action" />
-                               </form>
-                               <tree string="Communication history">
-                                   <field name="description"/>
-                                   <field name="email_to"/>
-                                   <field name="date"/>
-                               </tree>
-                           </field>
+                           <form string="Communication history">
+                                    <group col="6" colspan="4">
+                                        <field name="date"/>
+                                        <field name="email_to"/>
+                                        <field name="email_from"/>
+                                    </group>
+                                    <notebook colspan="4">
+                                        <page string="Details">
+                                            <field name="description" colspan="4" nolabel="1"/>
+                                        </page>
+                                        <page string="Attachments">
+                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                        </page>
+                                    </notebook>
+                                    <button colspan="4"
+                                    string="Reply to Last Email"
+                                    name="%(crm.action_crm_send_mail)d"
+                                    context="{'mail':'reply', 'model': 'hr.applicant'}"
+                                    icon="gtk-undo" type="action" />
+                                </form>
+                                <tree string="Communication history">
+                                    <field name="date"/>
+                                    <field name="email_from" />
+                                    <field name="email_to"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
                            <button colspan="4" string="Send New Email"
                            	name="%(crm.action_crm_send_mail)d"
                            	context="{'mail':'new', 'model': 'hr.applicant'}"
@@ -202,20 +211,20 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="gtk-new" string="Current"
+               <filter icon="terp-check" string="Current"
                    domain="[('state','in',('draft','open'))]"
                    help="All new and in progress jobs"
                    default="1"
                />
-               <filter icon="gtk-new" string="New"
+               <filter icon="terp-document-new" string="New"
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"
                />
-               <filter icon="gtk-yes" string="In Progress"
+               <filter icon="terp-camera_test" string="In Progress"
                    domain="[('state','=','open')]"
                    help="Open Jobs"
                />
-               <filter icon="gtk-media-pause" string="Pending"
+               <filter icon="terp-gtk-media-pause" string="Pending"
                    domain="[('state','=','pending')]"
                    help="Pending Jobs"
                />
@@ -224,27 +233,27 @@
                <field name="email_from"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id" widget="selection">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitements" icon="gtk-execute" separator="1"/>
+                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitements" icon="terp-personal-" separator="1"/>
                </field>
                <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
-                   <filter icon="terp-hr" context="{'invisible_department': False}"
+                   <filter icon="terp-personal+" context="{'invisible_department': False}"
                        domain="[('department_id','=',context.get('department_id',False))]"
                        help="My Department"/>
                </field>
                <newline/>
                 <group expand="0" string="Group By..." colspan="11" col="20">
-                    <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
-                    <filter string="Responsible" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                    <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Job" icon="terp-project" domain="[]" context="{'group_by':'job_id'}"/>
-                    <filter string="Stage" icon="terp-project" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="Degree" icon="terp-project" domain="[]" context="{'group_by':'type_id'}"/>
-                    <filter string="Availability" icon="terp-project" domain="[]" context="{'group_by':'availability'}"/>
-                    <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="Degree" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'type_id'}"/>
+                    <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'availability'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Appreciation" icon="terp-project" domain="[]" context="{'group_by':'priority'}"/>
+                    <filter string="Appreciation" icon="terp-face-plain" domain="[]" context="{'group_by':'priority'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Date" icon="terp-project" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
                 </group>
            </search>
         </field>

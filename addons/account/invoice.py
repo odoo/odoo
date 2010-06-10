@@ -333,6 +333,7 @@ class account_invoice(osv.osv):
                 raise orm.except_orm(_('Configuration Error!'),
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
+                raise
                 raise orm.except_orm(_('UnknownError'), str(e))
 
     def confirm_paid(self, cr, uid, ids, context=None):
@@ -951,23 +952,8 @@ class account_invoice(osv.osv):
         return taxes.values()
 
     def _log_event(self, cr, uid, ids, factor=1.0, name='Open Invoice'):
-        invs = self.read(cr, uid, ids, ['type','partner_id','amount_untaxed'])
-        for inv in invs:
-            part=inv['partner_id'] and inv['partner_id'][0]
-            pc = pr = 0.0
-            cr.execute('select sum(quantity*price_unit) from account_invoice_line where invoice_id=%s', (inv['id'],))
-            total = inv['amount_untaxed']
-            if inv['type'] in ('in_invoice','in_refund'):
-                partnertype='supplier'
-                eventtype = 'purchase'
-                pc = total*factor
-            else:
-                partnertype = 'customer'
-                eventtype = 'sale'
-                pr = total*factor
-            if self.pool.get('res.partner.event.type').check(cr, uid, 'invoice_open'):
-                self.pool.get('res.partner.event').create(cr, uid, {'name':'Invoice: '+name, 'som':False, 'description':name+' '+str(inv['id']), 'document':name, 'partner_id':part, 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'canal_id':False, 'user_id':uid, 'partner_type':partnertype, 'probability':1.0, 'planned_revenue':pr, 'planned_cost':pc, 'type':eventtype})
-        return len(invs)
+        #TODO: implement messages system
+        return True
 
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
@@ -1146,16 +1132,16 @@ account_invoice()
 class account_invoice_line(osv.osv):
     def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):
         res = {}
-        cur_obj=self.pool.get('res.currency')
+        tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
+            price = line.price_unit * (1-(line.discount or 0.0)/100.0)
+            taxes = tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, price, line.quantity)
+            res[line.id] = taxes['total']
             if line.invoice_id:
-                res[line.id] = line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0)
                 cur = line.invoice_id.currency_id
                 res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
-            else:
-                res[line.id] = round(line.price_unit * line.quantity * (1-(line.discount or 0.0)/100.0),self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
         return res
-
 
     def _price_unit_default(self, cr, uid, context=None):
         if context is None:
@@ -1170,7 +1156,7 @@ class account_invoice_line(osv.osv):
                     taxes = l[2].get('invoice_line_tax_id')
                     if len(taxes[0]) >= 3 and taxes[0][2]:
                         taxes = tax_obj.browse(cr, uid, taxes[0][2])
-                        for tax in tax_obj.compute(cr, uid, taxes, p,l[2].get('quantity'), context.get('address_invoice_id', False), l[2].get('product_id', False), context.get('partner_id', False)):
+                        for tax in tax_obj.compute_all(cr, uid, taxes, p,l[2].get('quantity'), context.get('address_invoice_id', False), l[2].get('product_id', False), context.get('partner_id', False))['taxes']:
                             t = t - tax['amount']
             return t
         return 0
@@ -1185,7 +1171,8 @@ class account_invoice_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
         'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The income or expense account related to the selected product."),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Account')),
-        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal',store=True, type="float", digits_compute= dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', type="float",
+            digits_compute= dp.get_precision('Account'), store=True),
         'quantity': fields.float('Quantity', required=True),
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Account')),
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
@@ -1313,7 +1300,7 @@ class account_invoice_line(osv.osv):
             result['name'] = res.partner_ref
 
         domain = {}
-        result['uos_id'] = uom or res.uom_id.id or False
+        result['uos_id'] = res.uom_id.id or uom or False
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
             if res2 :
@@ -1336,7 +1323,21 @@ class account_invoice_line(osv.osv):
         if company.currency_id.id != currency.id:
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
+
+        if uom:
+            uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
+            if res.uom_id.category_id.id == uom.category_id.id:
+                new_price = res_final['value']['price_unit'] * uom.factor_inv
+                res_final['value']['price_unit'] = new_price
         return res_final
+
+    def uos_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
+        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context)
+        if 'uos_id' in res['value']:
+            del res['value']['uos_id']
+        if not uom:
+            res['value']['price_unit'] = 0.0
+        return res
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = []
@@ -1354,10 +1355,10 @@ class account_invoice_line(osv.osv):
                 continue
             res.append(mres)
             tax_code_found= False
-            for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id,
+            for tax in tax_obj.compute_all(cr, uid, line.invoice_line_tax_id,
                     (line.price_unit * (1.0 - (line['discount'] or 0.0) / 100.0)),
                     line.quantity, inv.address_invoice_id.id, line.product_id,
-                    inv.partner_id):
+                    inv.partner_id)['taxes']:
 
                 if inv.type in ('out_invoice', 'in_invoice'):
                     tax_code_id = tax['base_code_id']
@@ -1460,7 +1461,7 @@ class account_invoice_tax(osv.osv):
         company_currency = inv.company_id.currency_id.id
 
         for line in inv.invoice_line:
-            for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
+            for tax in tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id)['taxes']:
                 val={}
                 val['invoice_id'] = inv.id
                 val['name'] = tax['name']
@@ -1522,11 +1523,7 @@ account_invoice_tax()
 class res_partner(osv.osv):
     """ Inherits partner and adds invoice information in the partner form """
     _inherit = 'res.partner'
-
     _columns = {
-                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
-                }
-
+        'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
+    }
 res_partner()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,10 +23,10 @@
 {
     "name" : "",
     "version" : "1.1",
-    "depends" : ["crm", 
+    "depends" : ["marketing",
+                "crm", 
                 "document",
-                "poweremail" # need to get this module form the branch 
-                # lp:poweremail  
+                "email_template"
                 ],
     "author" : "Tiny",
     "category": 'Generic Modules/Marketing',

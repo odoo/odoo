@@ -53,6 +53,11 @@
     * Load forecast on workcenters
     * Print a production order
     * Stock forecasts
+    Dashboard provided by this module::
+    * List of next production orders
+    * List of deliveries (out picking)
+    * Graph of work center load
+    * List of procurement in exception
     """,
     'init_xml': [],
     'update_xml': [
@@ -75,8 +80,11 @@
         'mrp_installer.xml',
         'report/mrp_report_view.xml',
         'report/mrp_production_order_view.xml',
+        'board_manufacturing_view.xml',
+
+        
     ],
-    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
+    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml','board_manufacturing_demo.xml'],
     'test': [
              'test/mrp_phantom_bom.yml',
              'test/mrp_production_order.yml',

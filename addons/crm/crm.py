@@ -120,8 +120,8 @@ class crm_case(object):
             context = {}
 
         s = self.get_stage_dict(cr, uid, ids, context=context)
+        section = self._name
         for case in self.browse(cr, uid, ids, context):
-            section = (case.section_id.id or False)
             if section in s:
                 st = case.stage_id.id  or False
                 if st in s[section]:
@@ -137,13 +137,13 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
-
-        sid = self.pool.get('crm.case.stage').search(cr, uid, \
+        stage_obj = self.pool.get('crm.case.stage')
+        sid = stage_obj.search(cr, uid, \
                             [('object_id.model', '=', self._name)], context=context)
         s = {}
         previous = {}
-        for stage in self.pool.get('crm.case.stage').browse(cr, uid, sid, context=context):
-            section = stage.section_id.id or False
+        section = self._name
+        for stage in stage_obj.browse(cr, uid, sid, context=context):
             s.setdefault(section, {})
             s[section][previous.get(section, False)] = stage.id
             previous[section] = stage.id
@@ -161,9 +161,8 @@ class crm_case(object):
             context = {}
 
         s = self.get_stage_dict(cr, uid, ids, context=context)
+        section = self._name
         for case in self.browse(cr, uid, ids, context):
-            section = (case.section_id.id or False)
-
             if section in s:
                 st = case.stage_id.id or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
@@ -203,9 +202,13 @@ class crm_case(object):
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email}}
     
-    def _history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool._history(cr, uid, cases, keyword, history=history, email=email, details=details, email_from=email_from, message_id=message_id, context=context)
+        return mailgate_pool._history(cr, uid, cases, keyword, history=history,\
+                                       subject=subject, email=email, \
+                                       details=details, email_from=email_from,\
+                                       message_id=message_id, attach=attach, \
+                                       context=context)
     
     def case_open(self, cr, uid, ids, *args):
         """Opens Case
@@ -438,6 +441,7 @@ class crm_case_section(osv.osv):
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
         'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
         'note': fields.text('Description'),
+        'working_hours': fields.float('Working Hours', digits=(16,2 )),
     }
 
     _defaults = {

@@ -30,7 +30,6 @@ import invoice
 import overdue
 import aged_trial_balance
 import tax_report
-import general_ledger_landscape
 import account_tax_code
 import account_balance_landscape
 import compare_account_balance
