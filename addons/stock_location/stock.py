@@ -33,6 +33,12 @@ class stock_location_path(osv.osv):
         'location_from_id' : fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1),
         'location_dest_id' : fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1),
         'delay': fields.integer('Delay (days)', help="Number of days to do this transition"),
+        'invoice_state': fields.selection([
+            ("invoiced", "Invoiced"),
+            ("2binvoiced", "To Be Invoiced"),
+            ("none", "Not from Picking")], "Invoice Status",
+            required=True,),
+        'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
             'Automatic Move',
@@ -45,7 +51,8 @@ class stock_location_path(osv.osv):
     }
     _defaults = {
         'auto': lambda *arg: 'auto',
-        'delay': lambda *arg: 1
+        'delay': lambda *arg: 1,
+        'invoice_state': lambda *args: 'none',
     }
 stock_location_path()
 
@@ -63,12 +70,18 @@ class product_pulled_flow(osv.osv):
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Address'),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
         'product_id':fields.many2one('product.product','Product'),
+        'invoice_state': fields.selection([
+            ("invoiced", "Invoiced"),
+            ("2binvoiced", "To Be Invoiced"),
+            ("none", "Not from Picking")], "Invoice Status",
+            required=True,),
     }
     _defaults = {
         'cancel_cascade': lambda *arg: False,
         'procure_method': lambda *args: 'make_to_stock',
         'type_proc': lambda *args: 'move',
         'picking_type':lambda *args:'out',
+        'invoice_state': lambda *args: 'none',
     }
 product_pulled_flow()
 
