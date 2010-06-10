@@ -26,8 +26,7 @@
     "depends" : ["account"],
     "author" : "Tiny",
     "category": 'Generic Modules/Accounting',
-    "description": """account_cancel module covers:
-    the cancellation of accounting entries and invoices""",
+    "description": """It covers the cancellation of accounting entries and invoices""",
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': ['account_cancel_view.xml' ],

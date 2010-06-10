@@ -572,6 +572,7 @@ class account_journal(osv.osv):
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]",help="This will act as a default account for credit amount"),
         'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]",help="This will act as a default account for debit amount"),
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
+        'update_posted': fields.boolean('Allow Cancelling Entries',help="Check this box if you want to cancel the entries related to this journal or want to cancel the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
         'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=True),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
@@ -994,6 +995,14 @@ class account_move(osv.osv):
 
     def button_validate(self, cursor, user, ids, context=None):
         return self.post(cursor, user, ids, context=context)
+    
+    def button_cancel(self, cr, uid, ids, context={}):
+        for line in self.browse(cr, uid, ids, context):
+            if not line.journal_id.update_posted:
+                raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
+        if len(ids):
+            cr.execute('update account_move set state=%s where id =ANY(%s)',('draft',ids,))
+        return True
 
     def write(self, cr, uid, ids, vals, context={}):
         c = context.copy()
