@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <form string="mailgate message">
                     <group colspan="4" col="6">
-	                    <field name="name" required="1" select="1"/>
+	                    <field name="name" string="Subject" required="1" select="1"/>
 	                    <field name="date" required="1" select="1"/>
 	                    <field name="user_id" string="Responsible" select="1"/>
 	                    <field name="partner_id" readonly="1" />
@@ -48,7 +48,7 @@
             <field name="arch" type="xml">
                 <tree string="Mailgateway Message">
                     <field name="date" />
-                    <field name="name" />
+                    <field name="name" string="Subject"/>
                     <field name="email_from" string="From"/>
                     <field name="user_id" string="Responsible"/>
                 </tree>
@@ -61,7 +61,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Mailgateway Message Search">
-                    <field name="name" />
+                    <field name="name" string="Subject"/>
                     <field name="date" />
                     <field name="user_id" />
                     <field name="message_id" />

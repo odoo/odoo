@@ -32,6 +32,8 @@
                 <form string="Issue Tracker Form">
                     <group colspan="4" col="6">
                         <field name="name"/>
+                        <field name="project_id" required="True"/>
+                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                         <field name="user_id"/>
                         <field name="assigned_to" />
                         <group colspan="2" col="4">
@@ -39,8 +41,6 @@
                             <button icon="gtk-go-back" string="" name="stage_previous" type="object"/>
                             <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
-                        <field name="project_id" required="True"/>
-                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General">
@@ -72,40 +72,6 @@
                                 <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                                 <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                             </group>
-                        </page>
-                        <page string="History" groups="base.group_extended">
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Date"/>
-                                <field name="create_date"/>
-                                <field name="write_date" />
-                                <field name="date_closed"/>
-                                <field name="date_open"/>
-                            </group>
-                            <group colspan="2" col="2">
-                        		<separator string="Statistics" colspan="2" col="2"/>
-                        		<field name="day_open"/>
-                        		<field name="day_close"/>
-                        		<field name="working_hours_open" widget="float_time"/>
-                        		<field name="working_hours_close" widget="float_time"/>
-                        	</group>
-                        	<group colspan="2" col="2">
-                                <separator string="References" colspan="2"/>
-                                <field name="id"/>
-                                <field name="active"/>
-                            </group>
-                            <field name="log_ids" nolabel="1" colspan="4">
-		                        <tree string="Logs">
-		                            <field name="name" colspan="4"/>
-		                            <field name="date"/>
-		                            <field name="user_id"/>
-		                        </tree>
-		                        <form string="Logs">
-		                            <separator string="Action Information" colspan="4"/>
-		                            <field name="name" colspan="4"/>
-		                            <field name="date"/>
-		                            <field name="user_id"/>
-		                        </form>
-		                    </field>
                         </page>
                         <page string="Emails" groups="base.group_extended">
                             <group colspan="4">
@@ -144,6 +110,40 @@
                            	context="{'mail':'new', 'model': 'project.issue'}"
                            	icon="gtk-go-forward" type="action" />
                         </page>
+                           <page string="History" groups="base.group_extended">
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Date"/>
+                                <field name="create_date"/>
+                                <field name="write_date" />
+                                <field name="date_closed"/>
+                                <field name="date_open"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Statistics" colspan="2" col="2"/>
+                                <field name="day_open"/>
+                                <field name="day_close"/>
+                                <field name="working_hours_open" widget="float_time"/>
+                                <field name="working_hours_close" widget="float_time"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="References" colspan="2"/>
+                                <field name="id"/>
+                                <field name="active"/>
+                            </group>
+                            <field name="log_ids" nolabel="1" colspan="4">
+                                <tree string="Logs">
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </tree>
+                                <form string="Logs">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </form>
+                            </field>
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -153,7 +153,7 @@
             <field name="model">project.issue</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Issue Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                <tree string="Issue Tracker Tree"  colors="red:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="id"/>
                     <field name="create_date"/>
                     <field name="name"/>
@@ -186,13 +186,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
-                    <group colspan="4" col="20">
-						<filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft and Open Issues" icon="terp-check" default="1"/>
+                    <group>
+						<filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and Open Issues" icon="terp-check" default="1"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
-
 						<separator orientation="vertical"/>
-
                         <filter icon="terp-go-today" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
@@ -204,21 +202,20 @@
                             help="Bugs during last 7 days"
                             />
                     	<separator orientation="vertical"/>
-                        <field name="name" select='1' string="Subject"/>
-                        <field name="user_id" select="1" widget="selection"/>
-                        <field name="state" select="1">
-                            <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Bugs" name="current_bugs"/>
-                            <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Bugs"/>
-                        </field>
-                        <field name="project_id" select="1" widget="selection" string="Project"/>
+                        <field name="name" string="Name"/>
+                        <field name="user_id" widget="selection"/>
+                        <field name="project_id" widget="selection" string="Project"/>
+                        <field name="state"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                    <group expand="0" string="Group By..."  groups="base.group_extended">
+	                    <filter string="Project"  icon="terp-folder-blue" domain="[]"
+                            context="{'group_by':'project_id'}" />
 	                    <filter string="Stage" icon="terp-stage" domain="[]"
 	                        context="{'group_by':'stage_id'}" />
 	                    <filter string="Priority" icon="terp-rating-rated" domain="[]"
 	                        context="{'group_by':'priority'}" />
-	                    <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
+	                    <filter string="Version" icon="terp-gtk-jump-to-rtl"
 	                        domain="[]" context="{'group_by':'type_id'}" />
 	                    <separator orientation="vertical" />
 	                    <filter string="Partner" icon="terp-personal" domain="[]"
@@ -228,7 +225,6 @@
 						<separator orientation="vertical" />
 						<filter string="Month" icon="terp-go-month"
 	                        domain="[]" context="{'group_by':'create_date'}" />
-	                    <separator orientation="vertical" />
                 	</group>
                 </search>
             </field>

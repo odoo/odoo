@@ -27,13 +27,21 @@ class event_make_invoice(osv.osv_memory):
     _name = "event.make.invoice"
     _description = "Event Make Invoice"
     _columns = {
-        'inv_created': fields.char('Invoice Created', size=32, readonly=True),
-        'inv_rejected': fields.char('Invoice Rejected', size=32, readonly=True),
-        'inv_rej_reason': fields.text('Error Messages', readonly=True),
+        'inv_created': fields.char('Invoice Created', size=32, readonly=True), 
+        'inv_rejected': fields.char('Invoice Rejected', size=32, readonly=True), 
+        'inv_rej_reason': fields.text('Error Messages', readonly=True), 
 #        'invoice_ids': fields.char('Invoice Ids', size=128), # Improve me
                }
 
     def _makeInvoices(self, cr, uid, context={}):
+        """
+        Get default value for  fields
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
+        @return: Dictionary of value
+        """
+        
         invoices = {}
         invoice_ids = []
         create_ids=[]
@@ -45,7 +53,7 @@ class event_make_invoice(osv.osv_memory):
         obj_event_reg = self.pool.get('event.registration')
         obj_lines = self.pool.get('account.invoice.line')
         inv_obj = self.pool.get('account.invoice')
-        data_event_reg = obj_event_reg.browse(cr,uid, context['active_ids'], context=context)
+        data_event_reg = obj_event_reg.browse(cr, uid, context['active_ids'], context=context)
 
         for reg in data_event_reg:
             if reg.state=='draft':
@@ -79,27 +87,27 @@ class event_make_invoice(osv.osv_memory):
                 continue
 
             inv_create = inv_create + 1
-            value = obj_lines.product_id_change(cr, uid, [], reg.event_id.product_id.id,uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
-            data_product = self.pool.get('product.product').browse(cr,uid,[reg.event_id.product_id.id])
+            value = obj_lines.product_id_change(cr, uid, [], reg.event_id.product_id.id, uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
+            data_product = self.pool.get('product.product').browse(cr, uid, [reg.event_id.product_id.id])
             for tax in data_product[0].taxes_id:
                 tax_ids.append(tax.id)
 
             vals = value['value']
             c_name = reg.contact_id and ('-' + self.pool.get('res.partner.contact').name_get(cr, uid, [reg.contact_id.id])[0][1]) or ''
             vals.update({
-                'name': reg.invoice_label + '-' + c_name,
-                'price_unit': reg.unit_price,
-                'quantity': reg.nb_register,
-                'product_id':reg.event_id.product_id.id,
-                'invoice_line_tax_id': [(6, 0, tax_ids)],
+                'name': reg.invoice_label + '-' + c_name, 
+                'price_unit': reg.unit_price, 
+                'quantity': reg.nb_register, 
+                'product_id':reg.event_id.product_id.id, 
+                'invoice_line_tax_id': [(6, 0, tax_ids)], 
             })
             inv_line_ids = obj_event_reg._create_invoice_lines(cr, uid, [reg.id], vals)
 
             val_invoice['value'].update({
-                'origin': reg.invoice_label,
-                'reference': False,
-                'invoice_line': [(6,0,[inv_line_ids])],
-                'comment': "",
+                'origin': reg.invoice_label, 
+                'reference': False, 
+                'invoice_line': [(6, 0, [inv_line_ids])], 
+                'comment': "", 
             })
 
             inv_id = inv_obj.create(cr, uid, val_invoice['value'])
@@ -108,7 +116,7 @@ class event_make_invoice(osv.osv_memory):
             obj_event_reg._history(cr, uid, [reg.id], 'Invoiced', history=True)
 
 #        {'inv_created' : str(inv_create) , 'inv_rejected' : str(inv_reject), 'invoice_ids': str(list_inv), 'inv_rej_reason': inv_rej_reason}
-        return {'inv_created' : str(inv_create) , 'inv_rejected' : str(inv_reject), 'inv_rej_reason': inv_rej_reason}
+        return {'inv_created': str(inv_create), 'inv_rejected': str(inv_reject), 'inv_rej_reason': inv_rej_reason}
 
     def default_get(self, cr, uid, fields_list, context=None):
         res = super(event_make_invoice, self).default_get(cr, uid, fields_list, context)
@@ -116,18 +124,26 @@ class event_make_invoice(osv.osv_memory):
         return res
 
     def confirm(self, cr, uid, ids, context={}):
+        """
+        Open Account invoice form.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of event make invoice's Id.
+        @param context: A standard dictionary for contextual values
+        @return: Dictionary of value
+        """
         obj_model = self.pool.get('ir.model.data')
         data_inv = self.read(cr, uid, ids, [], context)[0]
-        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','invoice_form')])
-        resource_id = obj_model.read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+        model_data_ids = obj_model.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'invoice_form')])
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
 #            'domain': "[('id','in', ["+','.join(map(str,data_inv['invoice_ids']))+"])]",
-            'name': 'Invoices',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'account.invoice',
-            'views': [(False,'tree'),(resource_id,'form')],
-            'context': "{'type':'out_invoice'}",
+            'name': 'Invoices', 
+            'view_type': 'form', 
+            'view_mode': 'tree,form', 
+            'res_model': 'account.invoice', 
+            'views': [(False, 'tree'), (resource_id, 'form')], 
+            'context': "{'type':'out_invoice'}", 
             'type': 'ir.actions.act_window'
         }
 
