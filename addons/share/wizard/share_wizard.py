@@ -282,9 +282,24 @@ class share_create(osv.osv_memory):
         obj3 = _get_relation(active_model_id, ['many2one'])
         for rel_field, model in obj1:
             obj3 += _get_relation(model.id, ['many2one'])
+
+        current_user = user_obj.browse(cr, uid, uid, context=context)
         if access_mode == 'readonly':
-            #TODO: intersect with read access rights of user running the 
-            #      wizard, to avoid adding more access than current
+            res = []
+            # intersect with read access rights of user running the 
+            # wizard, to avoid adding more access than current
+            for group in current_user.groups_id:
+                for access_control in group.model_access:
+                     if access_control.model_id.id in res:
+                        continue
+                     if access_control.perm_read:
+                        res.append(access_control.model_id.id)
+                        model_access_obj.create(cr, uid, {
+                        'name': 'Read Access of group %s on %s model'%(share_group_name, access_control.model_id.name),
+                        'model_id' : access_control.model_id.id,
+                        'group_id' : group_id,
+                        'perm_read' : True
+                        })    
             res = []
             for rel_field, model in obj0+obj1+obj2+obj3:
                 if model.id in res:
@@ -311,8 +326,21 @@ class share_create(osv.osv_memory):
                         'perm_unlink' : True,
                         'perm_create' : True,
                         })
-            #TODO: intersect with access rights of user 
-            #      running the wizard, to avoid adding more access than current
+            # intersect with access rights of user 
+            # running the wizard, to avoid adding more access than current
+
+            for group in current_user.groups_id:
+                for access_control in group.model_access:
+                     if access_control.model_id.id in res:
+                        continue
+                     if access_control.perm_read:
+                        res.append(access_control.model_id.id)
+                        model_access_obj.create(cr, uid, {
+                        'name': 'Read Access of group %s on %s model'%(share_group_name, access_control.model_id.name),
+                        'model_id' : access_control.model_id.id,
+                        'group_id' : group_id,
+                        'perm_read' : True
+                        })
             for rel_field, model in obj2+obj3:
                 if model.id in res:
                     continue
@@ -323,11 +351,24 @@ class share_create(osv.osv_memory):
                         'group_id' : group_id,
                         'perm_read' : True
                         })
-        # TODO:
+        # 
         # And on OBJ0, OBJ1, OBJ2, OBJ3: add all rules from groups of the user
         #  that is sharing in the many2many of the rules on the new group 
         #  (rule must be copied instead of adding it if it contains a reference to uid
         #  or user.xxx so it can be replaced correctly)
+
+        for group in current_user.groups_id:
+            res = []
+            for rel_field, model in obj0+obj1+obj2+obj3:
+                if model.id in res:
+                    continue
+                res.append(model.id)
+                for rule in group.rule_groups:
+                    if rule.model_id == model.id:                 
+                        rule_obj.copy(cr, uid, rule.id, default={
+                        'name': '%s-%s'%(share_group_name, model.model), 
+                        'groups': [(6,0,[group_id])]}, context=context)
+
         rule_obj.create(cr, uid, {
                 'name': '%s-%s'%(share_group_name, active_model.model),
                 'model_id': active_model.id,
