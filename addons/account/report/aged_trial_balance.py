@@ -49,11 +49,11 @@ class aged_trial_report(rml_parse.rml_parse):
     def _get_lines(self, form):
 
         if (form['result_selection'] == 'customer' ):
-            self.ACCOUNT_TYPE = "('receivable')"
+            self.ACCOUNT_TYPE = ('receivable')
         elif (form['result_selection'] == 'supplier'):
-            self.ACCOUNT_TYPE = "('payable')"
+            self.ACCOUNT_TYPE = ('payable')
         else:
-            self.ACCOUNT_TYPE = "('payable','receivable')"
+            self.ACCOUNT_TYPE = ('payable','receivable')
 
 
         res = []
@@ -65,16 +65,17 @@ class aged_trial_report(rml_parse.rml_parse):
                 FROM res_partner,account_move_line AS line, account_account
                 WHERE (line.account_id=account_account.id)
                     AND ((reconcile_id IS NULL)
-                    OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > '%s' )))
+                    OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
                     AND (line.partner_id=res_partner.id)
                     AND (account_account.company_id = %s)
-                ORDER BY res_partner.name""" % (form['date1'],form['company_id']))
+                ORDER BY res_partner.name""",
+                (form['date1'], form['company_id']))
         partners = self.cr.dictfetchall()
         ## mise a 0 du total
         for i in range(7):
             self.total_account.append(0)
 
-        partner_ids = tuple(map(attrgetter('id'), partners))
+        partner_ids = tuple(map(itemgetter('id'), partners))
         # This dictionary will store the debit-credit for all partners, using partner_id as key.
         totals = {}
         self.cr.execute("""SELECT partner_id, SUM(debit-credit)
@@ -88,7 +89,7 @@ class aged_trial_report(rml_parse.rml_parse):
                     AND account_account.active
                     GROUP BY partner_id""" , (
                         self.ACCOUNT_TYPE, partner_ids,
-                        form['date1'],form['company_id']))
+                        form['date1'], form['company_id']))
         t = self.cr.fetchall()
         for i in t:
             totals[i[0]] = i[1]
