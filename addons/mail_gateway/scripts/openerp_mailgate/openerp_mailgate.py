@@ -177,13 +177,19 @@ class email_parser(object):
         s = decode_header(s.replace('\r', '')) 
         return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s or []))
     
-    def history(self, model, new_id, msg_id, subject, msg_to, msg_from, body, attach):
+    def history(self, model, new_id, msg_id, ref_id, subject, msg_to, msg_from, body, attach):
+        try:
+            thread_id = self.rpc(model, 'read', new_id, ['thread_id'])['thread_id'][0]
+        except Exception, e:
+            thread_id = None
         msg_data = {
                     'name': subject, 
                     'history': True, 
                     'model': model, 
                     'res_id': new_id, 
+                    'thread_id': thread_id, 
                     'message_id': msg_id, 
+                    'ref_id': ref_id or '', 
                     'user_id': self.rpc.user_id, 
                     'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                     'email_from': msg_from, 
@@ -228,7 +234,7 @@ class email_parser(object):
             try:
                 self.rpc(self.model, 'history', [new_id], 'Receive', True, msg_to, message['body'], msg_from, False, {'model' : self.model})
             except Exception, e:
-                self.history(self.model, new_id, msg['Message-Id'], msg_subject, msg_to, msg_from, message['body'], att_ids)
+                self.history(self.model, new_id, msg['Message-Id'], msg['References'], msg_subject, msg_to, msg_from, message['body'], att_ids)
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
                 e = '\n\nThe Specified user does not have an access to the Model.'
@@ -294,22 +300,23 @@ class email_parser(object):
             return False
         del msg['To']
         msg['To'] = emails[0]
+        msg['Subject'] = 'OpenERP Record-id:' + msg['Subject']
         if len(emails)>1:
             if 'Cc' in msg:
                 del msg['Cc']
             msg['Cc'] = ','.join(emails[1:])
         del msg['Reply-To']
         msg['Reply-To'] = self.email
-        s = smtplib.SMTP(self.smtp_server, self.smtp_port)
-        s.ehlo()
-        s.starttls()
-        s.ehlo()
-        
         if self.smtp_user and self.smtp_password:
+            s = smtplib.SMTP(self.smtp_server, self.smtp_port)
+            s.ehlo()
+            s.starttls()
+            s.ehlo()
             s.login(self.smtp_user, self.smtp_password)
             s.sendmail(self.email, emails, msg.as_string())
-        s.close()
-        return True
+            s.close()
+            return True
+        return False
 
 
     def parse(self, msg):
@@ -319,7 +326,7 @@ class email_parser(object):
         if msg.get('Subject', ''):
             del msg['Subject']
         msg['Subject'] = '['+str(res_id)+'] '+subject
-        msg['Message-Id'] = '<'+str(time.time())+'-openerpcrm-'+str(res_id)+'@'+socket.gethostname()+'>'
+#        msg['Message-Id'] = '<'+str(time.time())+'-openerpcrm-'+str(res_id)+'@'+socket.gethostname()+'>'
 
         mm = [self._decode_header(msg['From']), self._decode_header(msg['To'])]+self._decode_header(msg.get('Cc', '')).split(',')
         msg_mails = map(self.email_get, filter(None, mm))

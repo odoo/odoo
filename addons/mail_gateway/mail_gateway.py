@@ -75,7 +75,6 @@ class mailgate_thread(osv.osv):
         if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
             cases = self.pool.get(context['model']).browse(cr, uid, cases, context=context)
 
-        model_obj = self.pool.get('ir.model')
         att_obj = self.pool.get('ir.attachment')
         obj = self.pool.get('mailgate.message')
 
@@ -114,6 +113,7 @@ class mailgate_thread(osv.osv):
                         'attachment_ids': [(6, 0, attachments)]
                         }
             res = obj.create(cr, uid, data, context)
+            case._table.log(cr, uid, case.id, case._description + " '" + case.name + "': " + keyword, context=context)
         return True
     
     _history = __history
@@ -129,10 +129,12 @@ class mailgate_message(osv.osv):
     _name = 'mailgate.message'
     _description = 'Mailgateway Message'
     _order = 'date desc'
+    _log_create=True
 
     _columns = {
         'name':fields.char('Message', size=64), 
         'thread_id':fields.many2one('mailgate.thread', 'Thread'), 
+        'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
         'date': fields.datetime('Date'), 
         'history': fields.boolean('Is History?', required=False), 
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
