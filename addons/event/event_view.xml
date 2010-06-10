@@ -127,8 +127,8 @@
                 <search string="Events">
                     <group col="10" colspan="4">
                         <separator orientation="vertical"/>
-                        <filter icon="terp-calendar" string="Draft" domain="[('state','=','draft')]" help="Draft Events"/>
-                        <filter icon="terp-calendar" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed Events"/>
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Events"/>
+                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed Events"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Event" select="1"/>
                         <field name="user_id" select="1"/>
@@ -282,8 +282,8 @@
                 <search string="Event Registration">
                     <group col="12" colspan="4">
                         <separator orientation="vertical"/>
-                        <filter icon="terp-calendar" string="Draft" domain="[('state','=','draft')]" help="Draft Registrations"/>
-                        <filter icon="terp-calendar" string="Confirmed" domain="[('state','in',('open','done'))]" help="Confirmed Registrations"/>
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Registrations"/>
+                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','in',('open','done'))]" help="Confirmed Registrations"/>
                         <separator orientation="vertical"/>
                         <field name="event_id" select="1"/>
                         <field name="user_id" select="1"/>

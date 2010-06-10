@@ -36,27 +36,26 @@
         <field name="arch" type="xml">
             <search string="Analytic Accounts Analysis">
             	<group>
-
-	                <filter icon="gtk-media-rewind" string="Last 365 Days"
+	                <filter icon="terp-go-year" string="  365 Days  "
                             domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
                             help="Analytic Accounts of last 365 days"/>
-                    <filter icon="gtk-media-rewind" string="Last 30 Days"
+                    <filter icon="terp-go-month" string="   30 Days   "
                             name="This Month"
                             domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
                             help="Analytic Accounts of last 30 days"/>
-                    <filter icon="gtk-media-rewind"
+                    <filter icon="terp-go-week"
                             string="    7 Days    "
                             separator="1"
                             domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')), ('day','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Analytic Accounts during last 7 days"/>
 	                <separator orientation="vertical"/>
-	                <filter icon="terp-account"
+	                <filter icon="terp-document-new"
                     		string="Draft"
                     		domain="[('state','=','draft')]"/>
-                    <filter icon="terp-account"
+                    <filter icon="terp-camera_test"
                     		string="Open"
                     		domain="[('state','=','open')]"/>
-                    <filter icon="terp-account"
+                    <filter icon="terp-gtk-media-pause"
                     		string="Pending"
                     		domain="[('state','=','pending')]"/>
                     <separator orientation="vertical"/>
@@ -64,28 +63,28 @@
 	                <field name="product_id" />
 	                <field name="partner_id"/>
 	                <field name="user_id" widget="selection">
-	                    <filter icon="terp-account"
+	                    <filter icon="terp-folder-orange"
 	                        	string="My Accounts"
 	                        	help="My Account"
 	                        	domain="[('user_id','=',uid)]"/>
 	                </field>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                	<filter string="User" name="User" icon="terp-account" context="{'group_by':'user_id'}"/>
-                    <filter string="Associated Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
+                <group expand="0" string="Group By..." colspan="10" col="12">
+                	<filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                    <filter string="Associated Partner" icon="terp-personal+" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
-					<filter string="Company" icon="terp-account" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Analytic Account" icon="terp-account" context="{'group_by':'parent_id'}"/>
-                    <filter string="Analytic Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
+					<filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'parent_id'}"/>
+                    <filter string="Analytic Journal" icon="terp-folder-green" context="{'group_by':'journal_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
-                    <filter string="Account Type" icon="terp-account" context="{'group_by':'type'}"/>
-                    <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                    <filter string="Account Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
+                    <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Day" icon="terp-account" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
+                    <filter string="Day" icon="terp-go-month" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">

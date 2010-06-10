@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record model="ir.ui.view" id="view_purchase_order_report_graph">
+        <record model="ir.ui.view" id="view_purchase_order_graph">
             <field name="name">product.month.graph</field>
             <field name="model">purchase.report</field>
             <field name="type">graph</field>
@@ -27,21 +27,21 @@
                 	<field name="partner_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
                     <field name="quantity" invisible="1"/>
-                    <field name="nbr" sum="# of Lines"/>
-                    <field name="price_average" avg="Average Price"/>
-                	<field name="price_total" sum="Total Price"/>
                 	<field name="day" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="warehouse_id" invisible="1"/>
-                    <field name="partner_address_id" invisible="1"/>
-                    <field name="dest_address_id" invisible="1"/>
-                    <field name="pricelist_id" invisible="1"/>
                     <field name="validator" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="location_id" invisible="1"/>
-                    <field name="fiscal_position" invisible="1"/>
+                    <field name="shipped_qty" sum="# of received"/>
+                    <field name="invoiced_qty" sum="# of invoiced"/>
+                    <field name="nbr" sum="# of Lines"/>
+                    <field name="price_average" avg="Average Price"/>
+                	<field name="price_total" sum="Total Price"/>
+                    <field name="delay" sum="# Days to close"/>
+                	<field name="delay_pass" sum="Total Price"/>
                 </tree>
             </field>
         </record>
@@ -53,87 +53,70 @@
         <field name="arch" type="xml">
             <search string="Purchase Orders">
             <group colspan="10" col="12">
-            	<filter icon="terp-go-year" string="This Year"
+            	<filter icon="terp-purchase" string="This Year"
 	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                    	    help="Tasks performed in this year"/>
-                <filter icon="terp-go-month" string="This Month"
+                <filter icon="terp-purchase" string="This Month"
                 		name="month"
                 		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
                 		help="Tasks performed in this month"/>
-                <filter icon="terp-go-week"
+                <filter icon="gtk-media-rewind"
                         string="    7 Days    "
                         separator="1"
                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                         help="Tasks during last 7 days"/>
                 <separator orientation="vertical"/>
-                <filter icon="terp-document-new"
+                <filter icon="terp-purchase"
                     	string="Quotations"
                     	domain="[('state','=','draft')]"/>
-                <filter icon="terp-gtk-media-pause"
+                <filter icon="terp-purchase"
                 		string="Waiting Schedule"
                 		domain="[('state','=','waiting_date')]"/>
-                <filter icon="terp-camera_test"
+                <filter icon="terp-purchase"
                 		string="Manual in progress"
                 		domain="[('state','=','manual')]"/>
+                <filter icon="terp-purchase" string="Done" domain="[('state','=','done')]"/>
 
                 <separator orientation="vertical"/>
                 <field name="partner_id" string="Supplier"/>
                 <field name="product_id"/>
                 <field name="user_id" widget="selection">
-                    <filter icon="terp-personal-"
+                    <filter icon="terp-purchase"
                     		string="Purchase Non User"
                     		help="Purchase Non User"
                     		domain="[('user_id','=',False)]"/>
                 </field>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 				</group>
 				<newline/>
-                <group expand="0" string="Group By..." colspan="10" col="12">
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Warehouse" icon="terp-go-home" context="{'group_by':'warehouse_id'}"/>
-                    <filter string="Location" icon="terp-go-home" context="{'group_by':'location_id'}"/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Responsible" name="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}"/>
+                    <filter string="Supplier" name="partner_id" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
+                    <filter string="Validated by" icon="terp-purchase" context="{'group_by':'validator'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Responsible" name="Responsible" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Pricelist" icon="terp-dolar" context="{'group_by':'pricelist_id'}"/>
-                    <filter string="Validated by" icon="terp-personal" context="{'group_by':'validator'}"/>
+                    <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Address Contact Name" icon="terp-personal" context="{'group_by':'partner_address_id'}"/>
-                    <filter string="Dest. Contact Name" icon="terp-gtk-jump-to-ltr" context="{'group_by':'dest_address_id'}"/>
-                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                    <filter string="State" icon="terp-purchase" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Supplier" name="partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
-                    <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                    <filter string="Fiscal Position" icon="terp-go-year" context="{'group_by':'fiscal_position'}"/>
-                    <newline/>
-                    <filter string="Day" icon="terp-go-month" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-go-year" context="{'group_by':'name'}"/>
+                    <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
+                    <filter string="Destination" icon="terp-purchase" context="{'group_by':'location_id'}"/>
+                    <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-purchase" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-purchase" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-purchase" context="{'group_by':'name'}"/>
                 </group>
 				<newline/>
                 <group expand="0" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
-                    <filter icon="terp-emblem-important" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
-                    <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
-                    <separator orientation="vertical"/>
+                    <field name="date"/>
                     <field name="date_approve"/>
-                    <separator orientation="vertical"/>
-                    <field name="partner_address_id"/>
+                    <field name="expected_date"/>
+                    <newline/>
                     <field name="invoice_method"/>
                     <field name="warehouse_id" widget="selection"/>
                     <field name="validator" widget="selection"/>
-
-                    <newline/>
-                    <filter icon="terp-emblem-important" string="Invoice Exception  " domain="[('state','=','invoice_except')]"/>
-                    <filter icon="terp-gtk-stop" string="Cancel" domain="[('state','=','cancel')]"/>
                     <separator orientation="vertical"/>
-                    <field name="expected_date"/>
-                    <separator orientation="vertical"/>
-                    <field name="dest_address_id"/>
-                    <field name="fiscal_position" widget="selection"/>
-                    <field name="location_id" widget="selection"/>
-                    <field name="pricelist_id" widget="selection"/>
-
- 					<newline/>
-					<field name="date"/>
+                    <field name="location_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
             </search>
         </field>
