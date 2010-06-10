@@ -477,10 +477,11 @@ class stock_picking(osv.osv):
             'internal': _('Internal picking'),
             'delivery': _('Delivery order')
         }
+        new_id = super(stock_picking, self).create(cr, user, vals, context)
         if not vals.get('auto_picking', False):
             message = type_list.get(vals.get('type', False), _('Picking')) + " '" + (vals['name'] or "n/a") + "' "+ _("created.")
-            self.log(cr, user, id, message)
-        return super(stock_picking, self).create(cr, user, vals, context)
+            self.log(cr, user, new_id, message)
+        return new_id
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True),
