@@ -39,6 +39,7 @@ class sale_shop(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 sale_shop()
 
@@ -277,7 +278,7 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.many2one('res.company','Company',select=1),
+        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
@@ -422,6 +423,7 @@ class sale_order(osv.osv):
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+
         inv = {
             'name': order.client_order_ref or order.name,
             'origin': order.name,
@@ -439,6 +441,7 @@ class sale_order(osv.osv):
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice' : context.get('date_invoice',False),
             'company_id' : order.company_id.id,
+            'user_id':order.user_id and order.user_id.id or False
         }
         inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))

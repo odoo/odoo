@@ -62,7 +62,7 @@ class account_payment_term(osv.osv):
             elif line.value == 'balance':
                 amt = round(amount, prec)
             if amt:
-                next_date = datetime.strptime(date_ref, '%y-%m-%d') + relativedelta(days=line.days)
+                next_date = datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days)
                 if line.days2 < 0:
                     next_date += relativedelta(day=line.days2)
                 if line.days2 > 0:
@@ -509,8 +509,13 @@ class account_account(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
+
+        if 'company_id' in vals:
+            move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)])
+            if move_lines:
+                raise osv.except_osv(_('Warning !'), _('You cannot modify Company of account as its related record exist in Entry Lines'))
         if 'active' in vals and not vals['active']:
-            self._check_moves(cr, uid, ids, "write", context)
+            self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
@@ -589,6 +594,14 @@ class account_journal(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+    def write(self, cr, uid, ids, vals, context=None):
+        obj=[]
+        if 'company_id' in vals:
+            move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
+            if move_lines:
+                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
+        return super(account_period, self).write(cr, uid, ids, vals, context=context)
+
     def create(self, cr, uid, vals, context={}):
         journal_id = super(account_journal, self).create(cr, uid, vals, context)
 #       journal_name = self.browse(cr, uid, [journal_id])[0].code
@@ -717,7 +730,7 @@ class account_period(osv.osv):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
                                   help='When monthly periods are created. The state is \'Draft\'. At the end of monthly period it is in \'Done\' state.'),
-        'company_id': fields.many2one('res.company', 'Company', required=True)
+        'company_id': fields.related('fiscalyear_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -790,6 +803,14 @@ class account_period(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        obj=[]
+        if 'company_id' in vals:
+            move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
+            if move_lines:
+                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this period as its related record exist in Entry Lines'))
+        return super(account_period, self).write(cr, uid, ids, vals, context=context)
+
 account_period()
 
 class account_journal_period(osv.osv):
@@ -815,7 +836,7 @@ class account_journal_period(osv.osv):
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
                                   help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
-        'company_id' : fields.many2one('res.company', 'Company')
+        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company')
     }
 
     def _check(self, cr, uid, ids, context={}):

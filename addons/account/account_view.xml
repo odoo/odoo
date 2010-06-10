@@ -838,8 +838,8 @@
             <field name="arch" type="xml">
                 <search string="Search Entry Lines">
                     <group col='10' colspan='4'>
-                        <filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Entry Lines"/>
-                        <filter icon="terp-account" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Entry Lines"/>
+                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>
                         <separator orientation="vertical"/>
                         <field name="date" select='1'/>
                         <field name="account_id" select='1'/>
@@ -980,8 +980,8 @@
             <field name="arch" type="xml">
                 <search string="Search Move">
                     <group col='8' colspan='4'>
-                        <filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
-                        <filter icon="terp-account" string="Posted" domain="[('state','=','posted')]" help="Posted Move Lines"/>
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
+                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Move Lines"/>
                         <separator orientation="vertical"/>
                         <field name="date" select='1'/>
                         <field name="name" select='1'/>
@@ -989,11 +989,11 @@
                         <field name="partner_id" select='1'/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="12" col="10">
-                        <filter string="Journal" icon="terp-account" domain="[]" context="{'group_by':'journal_id'}"/>
-                        <filter string="Period" icon="terp-account" domain="[]" context="{'group_by':'period_id'}"/>
-                        <filter string="Type" icon="terp-account" domain="[]" context="{'group_by':'type', 'set_visible':True}"/>
-                        <filter string="States" icon="terp-account" domain="[]" context="{'group_by':'state'}"/>
+                    <group expand="0" string="Group By..." colspan="12" col="10">
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type', 'set_visible':True}"/>
+                        <filter string="States" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -1007,7 +1007,7 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
-        
+
         <record id="action_move_to_review" model="ir.actions.act_window">
             <field name="name">Journal Entries to Review</field>
             <field name="type">ir.actions.act_window</field>
@@ -1018,8 +1018,8 @@
             <field name="domain">[('to_check','=',True)]</field>
         </record>
         <menuitem action="action_move_to_review" id="menu_action_move_to_review" parent="periodical_processing_journal_entries_validation"/>
-<!--        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_entries" sequence="40"/>-->
-<!--        <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>-->
+        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_entries" sequence="40"/>
+        <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
 
         <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
             <field name="name">Journal Entries</field>
@@ -1031,7 +1031,7 @@
         </record>
 
         <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
-        
+
         <record id="action_account_moves_sale" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
             <field name="res_model">account.move</field>
@@ -1043,7 +1043,7 @@
         </record>
 
         <menuitem action="action_account_moves_sale" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>
-        
+
         <record id="action_account_moves_purchase" model="ir.actions.act_window">
             <field name="name">Transaction Journals</field>
             <field name="res_model">account.move</field>
@@ -1098,8 +1098,8 @@
         </record>
         <menuitem action="action_move_line_search_view3" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"/>
         <menuitem action="action_move_line_search_view4" id="journal_bank_move_lines" parent="menu_finance_bank_and_cash"/>
-        
-<!--        <menuitem action="action_move_line_search" id="menu_action_move_line_search" parent="account.next_id_29"/>-->
+
+        <menuitem action="action_move_line_search" id="menu_action_move_line_search" parent="account.next_id_29"/>
 
         <menuitem id="menu_finance_charts" name="Charts" parent="account.menu_finance" sequence="4"/>
     <!--    <wizard id="wizard_account_chart" menu="False" model="account.account" name="account.chart" string="Chart of Accounts"/>
@@ -1852,7 +1852,6 @@
                     </tree>
                   </field>
                 </group>
-                <xpath expr='//button[@name="action_skip"]' position='replace'/>
               </data>
             </field>
         </record>

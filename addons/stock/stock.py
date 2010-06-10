@@ -786,7 +786,8 @@ class stock_picking(osv.osv):
                     'name': (invoice.name or '') + ', ' + (picking.name or ''),
                     'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'comment': (comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
-                    'date_invoice':context.get('date_inv',False)
+                    'date_invoice':context.get('date_inv',False),
+                    'user_id':picking.sale_id.user_id and picking.sale_id.user_id.id or False
                 }
                 invoice_obj.write(cr, uid, [invoice_id], invoice_vals, context=context)
             else:
@@ -803,6 +804,7 @@ class stock_picking(osv.osv):
                     'fiscal_position': partner.property_account_position.id,
                     'date_invoice': context.get('date_inv',False),
                     'company_id': picking.company_id.id,
+                    'user_id':picking.sale_id.user_id and picking.sale_id.user_id.id or False
                     }
                 cur_id = self.get_currency_id(cr, uid, picking)
                 if cur_id:
@@ -814,7 +816,7 @@ class stock_picking(osv.osv):
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
             for move_line in picking.move_lines:
-                origin = move_line.picking_id.name
+                origin = move_line.picking_id.name or ''
                 if move_line.picking_id.origin:
                     origin += ':' + move_line.picking_id.origin
                 if group:
