@@ -30,6 +30,13 @@ class partner_vat_intra(osv.osv_memory):
     """
     _name = "partner.vat.intra"
     _description = 'Partner VAT Intra'
+    
+    def _get_xml_data(self, cr, uid, context='None'):
+        if context.get('file_save', False):
+            val=base64.encodestring(context['file_save'])
+            return val
+        else:
+            return base64.encodestring('')
 
     def _get_europe_country(self, cursor, user, context=None):
         return self.pool.get('res.country').search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
@@ -56,6 +63,8 @@ class partner_vat_intra(osv.osv_memory):
 
     _defaults = {
         'country_ids': _get_europe_country,
+        'file_save': _get_xml_data,
+        'name': lambda *a: 'vat_Intra.xml',
                 }
 
     def create_xml(self, cursor, user, ids, context=None):
@@ -132,14 +141,21 @@ class partner_vat_intra(osv.osv_memory):
         amount_sum = int(amount_sum)
         data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
         data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n\t</DeclarantList>\n</VatIntra>'
-        data = {
-             'msg': 'XML Flie has been Created. Save the File with '".xml"' extension.',
-             'file_save': base64.encodestring(data_file),
-             'name': 'vat_Intra.xml',
-             'country_ids': [[6, 0, obj_country.search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])]],
-             }
-        self.write(cursor, user, ids, {'file_save':data['file_save'], 'msg':data['msg'], 'name':data['name'], 'no_vat':p_list, 'country_ids':data['country_ids']}, context=context)
-        return True
+        mod_obj = self.pool.get('ir.model.data')
+        model_data_ids = mod_obj.search(cursor, user,[('model','=','ir.ui.view'),('name','=','view_vat_intra_save')], context=context)
+        resource_id = mod_obj.read(cursor, user, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context['file_save'] = data_file
+        return {
+            'name': _('Save'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'partner.vat.intra',
+            'views': [(resource_id,'form')],
+            'view_id': 'view_vat_intra_save',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
 
 partner_vat_intra()
 

@@ -27,7 +27,14 @@ class l10n_be_vat_declaration(osv.osv_memory):
     """ Vat Declaration """
     _name = "l1on_be.vat.declaration"
     _description = "Vat Declaration"
-
+    
+    def _get_xml_data(self, cr, uid, context='None'):
+        if context.get('file_save', False):
+            val=base64.encodestring(context['file_save'])
+            return val
+        else:
+            return base64.encodestring('')
+        
     _columns = {
         'name': fields.char('File Name', size=32),
         'period_id': fields.many2one('account.period','Period', required=True),
@@ -39,6 +46,8 @@ class l10n_be_vat_declaration(osv.osv_memory):
     }
     _defaults = {
         'msg': 'Save the File with '".xml"' extension.',
+        'file_save': _get_xml_data,
+        'name': lambda *a: 'vat_declaration.xml',
     }
 
     def create_xml(self, cr, uid, ids, context=None):
@@ -99,9 +108,21 @@ class l10n_be_vat_declaration(osv.osv_memory):
                     data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(abs(int(item['sum_period']*100))) +  '</D'+str(int(item['code'])) +'>'
 
         data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
-        data['file_save'] = base64.encodestring(data_of_file)
-        self.write(cr, uid, ids, {'file_save': data['file_save'], 'name': 'vat_declare.xml'}, context=context)
-        return True
+        mod_obj = self.pool.get('ir.model.data')
+        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context['file_save'] = data_of_file
+        return {
+            'name': _('Save'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'l1on_be.vat.declaration',
+            'views': [(resource_id,'form')],
+            'view_id': 'view_vat_save',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
 l10n_be_vat_declaration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
