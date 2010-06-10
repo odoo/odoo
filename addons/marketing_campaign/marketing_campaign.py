@@ -156,7 +156,9 @@ class marketing_campaign_segment(osv.osv):
             segment_ids = self.search(cr, uid, [('state', '=', 'running')], context=context)
 
         action_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        campaigns = {}
         for segment in self.browse(cr, uid, segment_ids, context=context):
+            campaigns[segment.campaign_id.id] = True
             act_ids = self.pool.get('marketing.campaign.activity').search(cr,
                   uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)])
 
@@ -168,9 +170,7 @@ class marketing_campaign_segment(osv.osv):
                 criteria += eval(segment.ir_filter_id.domain)
             object_ids = model_obj.search(cr, uid, criteria, context=context)
 
-            print segment.object_id.model, criteria
             for o_ids in  model_obj.browse(cr, uid, object_ids, context=context) :
-                print 'Found Object', o_ids.name
                 # avoid duplicated workitem for the same resource
                 if segment.sync_mode == 'write_date':
                     segids = self.pool.get('marketing.campaign.workitem').search(cr, uid, [('res_id','=',o_ids.id),('segment_id','=',segment.id)])
@@ -187,6 +187,7 @@ class marketing_campaign_segment(osv.osv):
                     }
                     self.pool.get('marketing.campaign.workitem').create(cr, uid, wi_vals)
             self.write(cr, uid, segment.id, {'sync_last_date':action_date})
+        self.pool.get('marketing.campaign.workitem').process_all(cr, uid, campaigns.keys(), context=context)
         return True
 
 marketing_campaign_segment()
@@ -330,7 +331,7 @@ class marketing_campaign_transition(osv.osv):
         'interval_type': fields.selection([('hours', 'Hours'), ('days', 'Days'),
                                            ('months', 'Months'),
                                             ('years','Years')],'Interval Type')
-        }
+    }
 
     def default_get(self, cr, uid, fields, context={}):
         value = super(marketing_campaign_transition, self).default_get(cr, uid,
@@ -431,9 +432,10 @@ class marketing_campaign_workitem(osv.osv):
 
         return True
 
-    def process_all(self, cr, uid, context={}):
+    def process_all(self, cr, uid, camp_ids=None, context={}):
         camp_obj = self.pool.get('marketing.campaign')
-        camp_ids = camp_obj.search(cr, uid, [('state','=','running')], context=context)
+        if not camp_ids:
+            camp_ids = camp_obj.search(cr, uid, [('state','=','running')], context=context)
         for camp in camp_obj.browse(cr, uid, camp_ids, context=context):
             if camp.mode in ('test_realtime','active'):
                 workitem_ids = self.search(cr, uid, [('state', '=', 'todo'),
