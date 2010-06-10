@@ -105,6 +105,7 @@ class hr_applicant(osv.osv, crm.crm_case):
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response' : fields.integer("Response"),
+        'reference': fields.char('Reference', size=128),
     }
 
     def _get_stage(self, cr, uid, context=None):
