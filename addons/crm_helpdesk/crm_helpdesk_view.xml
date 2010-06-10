@@ -234,12 +234,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
-                    <filter icon="gtk-home" string="Today"
+                    <filter icon="terp-go-today" string="Today"
                         separator="1"
                         domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                         help="Todays's Helpdesk Requests"
                         />
-                    <filter icon="gtk-media-rewind"
+                    <filter icon="terp-go-week"
                         string="7 Days" separator="1"
                         help="Helpdesk requests during last 7 days"
                         domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
@@ -249,17 +249,17 @@
                     <field name="partner_id" />
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="section_id" select="1" widget="selection" string="Sales Team">
-                        <filter icon="terp-crm"
+                        <filter icon="terp-personal+"
                             domain="[('section_id','=',context.get('section_id',False))]"
                             help="My section" />
                     </field>
                     <newline/>
-                    <group expand="1" string="Group By...">
-                        <filter string="Customer" icon="terp-crm"
+                    <group expand="0" string="Group By...">
+                        <filter string="Customer" icon="terp-personal"
                             domain="[]" context="{'group_by':'partner_id'}" />
-                        <filter string="State" icon="terp-crm" domain="[]"
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
                             context="{'group_by':'state'}" />
-                        <filter string="Priority" icon="terp-crm"
+                        <filter string="Priority" icon="terp-rating-rated"
                             domain="[]" context="{'group_by':'priority'}" />
                     </group>
                 </search>
