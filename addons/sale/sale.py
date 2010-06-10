@@ -423,6 +423,7 @@ class sale_order(osv.osv):
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+
         inv = {
             'name': order.client_order_ref or order.name,
             'origin': order.name,
@@ -440,6 +441,7 @@ class sale_order(osv.osv):
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice' : context.get('date_invoice',False),
             'company_id' : order.company_id.id,
+            'user_id':order.user_id and order.user_id.id or False
         }
         inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))

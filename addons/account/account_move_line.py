@@ -585,9 +585,9 @@ class account_move_line(osv.osv):
 
         company_list = []
         for line in self.browse(cr, uid, ids, context=context):
-            if not line.company_id in company_list:
+            if company_list and not line.company_id.id in company_list:
                 raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
-            company_list.append(line.company_id)
+            company_list.append(line.company_id.id)
 
         for line in self.browse(cr, uid, ids, context):
             if line.reconcile_id:
@@ -623,9 +623,9 @@ class account_move_line(osv.osv):
 
         company_list = []
         for line in self.browse(cr, uid, ids, context=context):
-            if not line.company_id in company_list:
+            if company_list and not line.company_id.id in company_list:
                 raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
-            company_list.append(line.company_id)
+            company_list.append(line.company_id.id)
 
         for line in unrec_lines:
             if line.state <> 'valid':
