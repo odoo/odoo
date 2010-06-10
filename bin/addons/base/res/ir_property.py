@@ -60,7 +60,6 @@ class ir_property(osv.osv):
         'value_binary' : fields.binary('Value'),
         'value_reference': fields.reference('Value', selection=_models_get2, size=128),
         'value_datetime' : fields.datetime('Value'),
-        'value_boolean': fields.boolean('Value'),
 
         'type' : fields.selection([('char', 'Char'),
                                    ('float', 'Float'),
@@ -86,7 +85,15 @@ class ir_property(osv.osv):
         value = values.pop('value', None)
         if not value:
             return values
-        type_ = values.get('type', 'many2one')
+
+        prop = None
+        type_ = values.get('type')
+        if not type_:
+            if not ids:
+                raise ValueError()
+            prop = self.browse(cr, uid, ids[0])
+            type_ = prop.type
+
         type2field = {
             'char': 'value_text',
             'float': 'value_float',
@@ -109,9 +116,9 @@ class ir_property(osv.osv):
             elif isinstance(value, (int, long)):
                 field_id = values.get('fields_id')
                 if not field_id:
-                    if not ids:
+                    if not prop:
                         raise ValueError()
-                    field_id = self.browse(cr, uid, ids[0]).fields_id
+                    field_id = prop.fields_id
                 else:
                     field_id = self.pool.get('ir.model.fields').browse(cr, uid, field_id)
 
