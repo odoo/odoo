@@ -177,8 +177,11 @@ class ir_property(osv.osv):
         if not res:
             return None
 
-        company = self.pool.get('res.company')
-        cid = company._company_default_get(cr, uid, model, res[0],
+        if 'force_company' in context and context['force_company']:
+            cid = context['force_company']
+        else:
+            company = self.pool.get('res.company')
+            cid = company._company_default_get(cr, uid, model, res[0],
                                            context=context)
 
         domain = ['&', ('fields_id', '=', res[0]),
