@@ -207,7 +207,9 @@ class split_in_production_lot(osv.osv_memory):
     
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number')
+        'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number'),
+        'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Lots Existing Numbers'),
+        'use_exist' : fields.boolean('Use Exist'),
      }
     def split_lot(self, cr, uid, ids, context=None):
         """ 
@@ -249,10 +251,12 @@ class split_in_production_lot(osv.osv_memory):
                 quantity_rest = move.product_qty
                 uos_qty_rest = move.product_uos_qty
                 new_move = []                            
-                for line in data.line_ids:
+                if data.use_exist:
+                    lines = [l for l in data.line_exist_ids if l]
+                else:
+                    lines = [l for l in data.line_ids if l]
+                for line in lines:
                     quantity = line.quantity
-                    
-
                     if quantity <= 0 or move_qty == 0:
                         continue
                     quantity_rest -= quantity
@@ -272,20 +276,21 @@ class split_in_production_lot(osv.osv_memory):
                     if quantity_rest == 0:
                         current_move = move.id
                     prodlot_id = False
-                    if line.use_exist and line.name:
-                        prodlot_id = prodlot_obj.search(cr, uid, [('prefix','=',line.name),('product_id','=',data.product_id.id)])
+                    if data.use_exist and line.prodlot_id:
+                        prodlot_id = prodlot_obj.search(cr, uid, [('id','=',line.prodlot_id.id)])
                         if prodlot_id:
-                            prodlot_id = prodlot_id[0]                    
+                            prodlot_id = prodlot_id[0]
                     if not prodlot_id:
-                        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-                        prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix' : line.name}, 
+                      #  sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+                        prodlot_id = prodlot_obj.create(cr, uid, {'name': line.name},
+                        # 'prefix' : line.name}, 
                                                  {'product_id': move.product_id.id})                    
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id})
                     prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
-                    ref = '%d' % (move.id)
-                    if prodlot.ref:
-                        ref = '%s, %s' % (prodlot.ref, ref) 
-                    prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
+                 #   ref = '%d' % (move.id)
+                 #   if prodlot.ref:
+                 #       ref = '%s, %s' % (prodlot.ref, ref) 
+                 #   prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
                     
                     update_val = {}
                     if quantity_rest > 0:                        
@@ -295,10 +300,24 @@ class split_in_production_lot(osv.osv_memory):
         return new_move
 split_in_production_lot()
 
+class stock_move_split_lines_exist(osv.osv_memory):
+    _name = "stock.move.split.lines.exist"
+    _description = "Exist Split lines"
+    _columns = {
+        'name': fields.char('Tracking serial', size=64), 
+        'quantity': fields.integer('Quantity'), 
+        'lot_id': fields.many2one('stock.move.split', 'Lot'),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot'),
+    }
+    _defaults = {
+        'quantity': lambda *x: 1,
+    }
+
+stock_move_split_lines_exist()
+
 class stock_move_split_lines(osv.osv_memory):
     _name = "stock.move.split.lines"
     _description = "Split lines"
-    
     _columns = {
         'name': fields.char('Tracking serial', size=64), 
         'quantity': fields.integer('Quantity'), 
