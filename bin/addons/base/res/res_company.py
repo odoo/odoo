@@ -133,12 +133,12 @@ class res_company(osv.osv):
         ids = self._get_company_children(cr, uid, company)
         return ids
 
+    @tools.cache()
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
             return []
         ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
         return ids
-    _get_company_children = tools.cache()(_get_company_children)
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context={}):
         if company_id:
@@ -168,7 +168,6 @@ class res_company(osv.osv):
 
     def write(self, cr, *args, **argv):
         self.cache_restart(cr)
-        # Restart the cache on the company_get method
         return super(res_company, self).write(cr, *args, **argv)
 
     def _get_euro(self, cr, uid, context={}):

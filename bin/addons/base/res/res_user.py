@@ -20,9 +20,9 @@
 ##############################################################################
 
 from osv import fields,osv
-from osv.orm import except_orm, browse_record
+from osv.orm import browse_record
 import tools
-import operator
+from functools import partial
 import pytz
 import pooler
 from tools.translate import _
@@ -55,7 +55,6 @@ class groups(osv.osv):
                 raise osv.except_osv(_('Error'),
                         _('The name of the group can not start with "-"'))
         res = super(groups, self).write(cr, uid, ids, vals, context=context)
-        # Restart the cache on the company_get method
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
@@ -332,11 +331,14 @@ class users(osv.osv):
         'groups_id': _get_group,
         'address_id': False,
     }
+
+    @tools.cache()
     def company_get(self, cr, uid, uid2, context=None):
         return self._get_company(cr, uid, context=context, uid2=uid2)
-    company_get = tools.cache()(company_get)
 
     def write(self, cr, uid, ids, values, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
         if ids == [uid]:
             for key in values.keys():
                 if not (key in ('view', 'password','signature','action_id', 'company_id') or key.startswith('context_')):
@@ -344,9 +346,13 @@ class users(osv.osv):
             else:
                 uid = 1
         res = super(users, self).write(cr, uid, ids, values, context=context)
+
+        # clear caches linked to the users
         self.company_get.clear_cache(cr.dbname)
-        # Restart the cache on the company_get method
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
+        clear = partial(self.pool.get('ir.rule').clear_cache, cr)
+        map(clear, ids)
+
         return res
 
     def unlink(self, cr, uid, ids, context=None):
