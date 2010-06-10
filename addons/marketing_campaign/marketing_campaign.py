@@ -42,7 +42,7 @@ class marketing_campaign(osv.osv): #{{{
         'name': fields.char('Name', size=64, required=True),
         'object_id': fields.many2one('ir.model', 'Object', required=True,
                                       help="Choose the Object on which you want \
-                                                      this campaign to be run"),
+this campaign to be run"),
         'mode':fields.selection([('test', 'Test'),
                                 ('test_realtime', 'Realtime'),
                                 ('manual', 'Manual'),
@@ -56,7 +56,7 @@ class marketing_campaign(osv.osv): #{{{
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
         'fixed_cost': fields.float('Fixed Cost', help="The fixed cost is cost\
-                                                you required for the campaign"),
+you required for the campaign"),
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -128,11 +128,11 @@ class marketing_campaign_segment(osv.osv): #{{{
         vals = {'state': 'running'}
         if not segment.date_run:
             vals['date_run'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        if not segment.sync_last_date:
-            vals['sync_last_date']=curr_date
-        if not segment.date_done:
-            vals['date_done']= (datetime.now() + _intervalTypes['years'](1) \
-                                            ).strftime('%Y-%m-%d %H:%M:%S')
+#        if not segment.sync_last_date:
+#            vals['sync_last_date']=curr_date
+#        if not segment.date_done:
+#            vals['date_done']= (datetime.now() + _intervalTypes['years'](1) \
+#                                            ).strftime('%Y-%m-%d %H:%M:%S')
         self.write(cr, uid, ids, vals)
         return True
 
@@ -152,12 +152,21 @@ class marketing_campaign_segment(osv.osv): #{{{
     def state_cancel_set(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'cancelled'})
         return True
-
+        
+    def synchroniz(self, cr, uid, ids, *args):
+        self.process_segment(cr, uid, {'segment_ids' : ids})
+        return True
+    
     def process_segment(self, cr, uid, context={}):
-        segment_ids = self.search(cr, uid, [('state', '=', 'running')])
+        last_action_date = ''
+        if 'segment_ids' in context:
+            segment_ids = context['segment_ids']
+            last_action_date = (datetime.now() + _intervalTypes['days'](-1) \
+                                                ).strftime('%Y-%m-%d %H:%M:%S')
+
+        else : 
+            segment_ids = self.search(cr, uid, [('state', '=', 'running')])
         action_date = time.strftime('%Y-%m-%d %H:%M:%S')
-        last_action_date = (datetime.now() + _intervalTypes['days'](-1) \
-                                            ).strftime('%Y-%m-%d %H:%M:%S')
         for segment in self.browse(cr, uid, segment_ids):
             act_ids = self.pool.get('marketing.campaign.activity').search(cr,
                                   uid, [('start', '=', True),
@@ -166,9 +175,10 @@ class marketing_campaign_segment(osv.osv): #{{{
                 segment.sync_last_date <= action_date )\
                  or not segment.sync_last_date :
                 model_obj = self.pool.get(segment.object_id.model)
-                object_ids = model_obj.search(cr, uid, [
-                                        (segment.sync_mode, '<=', action_date),
-                                (segment.sync_mode, '>=', last_action_date)])
+                criteria  = [(segment.sync_mode, '<=', action_date)]
+                if last_action_date : 
+                    criteria.append((segment.sync_mode, '>=', last_action_date))
+                object_ids = model_obj.search(cr, uid, criteria)
                 for o_ids in  model_obj.read(cr, uid, object_ids) :
                     partner_id = 'partner_id' in o_ids and o_ids['partner_id'] \
                                         or False
@@ -190,7 +200,9 @@ marketing_campaign_segment()#}}}
 class marketing_campaign_activity(osv.osv): #{{{
     _name = "marketing.campaign.activity"
     _description = "Campaign Activity"
-
+    
+    _actions_type = [('email', 'E-mail'), ('paper', 'Paper'), ('action', 'Action'),
+                        ('subcampaign', 'Sub-Campaign')]    
     _columns = {
         'name': fields.char('Name', size=128, required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
@@ -199,15 +211,17 @@ class marketing_campaign_activity(osv.osv): #{{{
                                       type='many2one', relation='ir.model',
                                       string='Object'),
         'start': fields.boolean('Start',help= "Its necessary to start activity \
-                                                        before running campaign"),
+before running campaign"),
         'condition': fields.char('Condition', size=256, required=True,
-                                 help="Condition that is to be tested before \
-                                                           action is executed"),
+                                 help="It is simple python condition that is to \
+be tested before action is executed. Eg : revenue > 10"),
         'type': fields.selection([('email', 'E-mail'),
                                   ('paper', 'Paper'),
                                   ('action', 'Action'),
                                   ('subcampaign', 'Sub-Campaign')],
-                                  'Type', required=True),
+                                  'Type', required=True,
+                                  help="Describe type of action to be performed on the Activity.\
+                                    Eg : Send email,Send paper.."),
         'email_template_id': fields.many2one('email.template','Email Template'),
         'report_id': fields.many2one('ir.actions.report.xml', 'Reports', ),
         'report_directory_id': fields.many2one('document.directory','Directory',
@@ -233,6 +247,13 @@ class marketing_campaign_activity(osv.osv): #{{{
         'condition': lambda *a: 'True',
         'object_id' : lambda obj, cr, uid, context  : context.get('object_id',False),
     }
+    def __init__(self, *args):
+        self._actions = {'paper' : self.process_wi_report,
+                    'email' : self.process_wi_email,
+                    'server_action' : self.process_wi_action,
+            }        
+        return super(marketing_campaign_activity, self).__init__(*args)
+            
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
                                         context=None, count=False):
@@ -248,55 +269,62 @@ class marketing_campaign_activity(osv.osv): #{{{
         return super(marketing_campaign_activity, self).search(cr, uid, args,
                                            offset, limit, order, context, count)
 
-    def process(self, cr, uid, act_id, wi_id, context={}):
-        activity = self.browse(cr, uid, act_id)
-        workitem_obj = self.pool.get('marketing.campaign.workitem')
-        workitem = workitem_obj.browse(cr, uid, wi_id)
+    def process_wi_report(self, cr, uid, activity, workitem):
+        service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
+        (report_data, format) = service.create(cr, uid, [], {}, {})
+        attach_vals = {
+                'name': '%s_%s_%s'%(activity.report_id.report_name,
+                                    activity.name,workitem.partner_id.name),
+                'datas_fname': '%s.%s'%(activity.report_id.report_name,
+                                            activity.report_id.report_type),
+                'parent_id': activity.report_directory_id.id,
+                'datas': base64.encodestring(report_data),
+                'file_type': format
+                }
+        self.pool.get('ir.attachment').create(cr, uid, attach_vals)
+        return True
 
-        if activity.type == 'paper' :
-            service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
-            (report_data, format) = service.create(cr, uid, [], {}, {})
-            attach_vals = {
-                    'name': '%s_%s_%s'%(activity.report_id.report_name,
-                                        activity.name,workitem.partner_id.name),
-                    'datas_fname': '%s.%s'%(activity.report_id.report_name,
-                                                activity.report_id.report_type),
-                    'parent_id': activity.report_directory_id.id,
-                    'datas': base64.encodestring(report_data),
-                    'file_type': format
-                    }
-            self.pool.get('ir.attachment').create(cr, uid, attach_vals)
-        elif activity.type == 'email' :
-            context = {}
-            template = activity.email_template_id
-            accounts = template.enforce_from_account
-            if not template.enforce_from_account:
-                return {'error_msg'  : "There is no account defined for the email"}
-            if not workitem.partner_id.email:
-                return {'error_msg'  : "There is no email defined for the partner"}
-            vals = {
-                'email_from': tools.ustr(accounts.name) + "<" + tools.ustr(accounts.email_id) + ">",
-                'email_to': workitem.partner_id.email,
-                'subject': template.def_subject,
-                'body_text': template.def_body_text,
-                'body_html': template.def_body_html,
-                'account_id':accounts.id,
-                'state':'na',
-                'mail_type':'multipart/alternative' #Options:'multipart/mixed','multipart/alternative','text/plain','text/html'
-            }
+    def process_wi_email(self, cr, uid, activity, workitem):
+        template = activity.email_template_id
+        accounts = template.enforce_from_account
+        if not template.enforce_from_account:
+            return {'error_msg'  : "There is no account defined for the email"}
+        if not workitem.partner_id.email:
+            return {'error_msg'  : "There is no email defined for the partner"}
+        vals = {
+            'email_from': tools.ustr(accounts.name) + "<" + tools.ustr(accounts.email_id) + ">",
+            'email_to': workitem.partner_id.email,
+            'subject': template.def_subject,
+            'body_text': template.def_body_text,
+            'body_html': template.def_body_html,
+            'account_id':accounts.id,
+            'state':'na',
+            'mail_type':'multipart/alternative' #Options:'multipart/mixed','multipart/alternative','text/plain','text/html'
+        }
 #            if accounts.use_sign:
 #                signature = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
 #                if signature:
 #                    vals['pem_body_text'] = tools.ustr(vals['pem_body_text'] or '') + signature
 #                    vals['pem_body_html'] = tools.ustr(vals['pem_body_html'] or '') + signature
 
-            #Create partly the mail and later update attachments
-            mail_id = self.pool.get('email_template.mailbox').create(cr, uid, vals, context)
-        elif activity.type == 'action' :
-            server_obj = self.pool.get('ir.actions.server')
-            server_obj.run(cr, uid, [activity.server_action_id.id], context)
-            #???
+        #Create partly the mail and later update attachments
+        mail_id = self.pool.get('email_template.mailbox').create(cr, uid, vals, context)
         return True
+        
+    def process_wi_action(self, cr, uid, activity, workitem):
+        context = {}
+        server_obj = self.pool.get('ir.actions.server')
+        server_obj.run(cr, uid, [activity.server_action_id.id], context)    
+        return True
+                
+
+    def process(self, cr, uid, act_id, wi_id, context={}):
+        activity = self.browse(cr, uid, act_id)
+        workitem_obj = self.pool.get('marketing.campaign.workitem')
+        workitem = workitem_obj.browse(cr, uid, wi_id)
+        self._actions[activity.type](cr, uid, activity, workitem)
+        return True    
+
 marketing_campaign_activity()#}}}
 
 class marketing_campaign_transition(osv.osv): #{{{

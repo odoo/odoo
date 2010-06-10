@@ -181,9 +181,10 @@
                     <field name="object_id" invisible="1" readonly="True"/>
                 </group>
                 <group colspan="2" col="2">
-                    <separator string="Synchronization" colspan="2"/>
+                   <separator string="Synchronization" colspan="2"/>
                    <field name="sync_last_date"/>
                    <field name="sync_mode" required="True"/>
+                   <button string="Synchroniz" states="draft,running" name="synchroniz" icon="gtk-apply" type="object"/>
                 </group>
                 <group colspan="2" col="2">
                     <separator string="Dates" colspan="2"/>
@@ -209,9 +210,8 @@
             <tree string="Segments">
                 <field name="name"/>
                 <field name="campaign_id"/>
-                <field name="object_id"/>
                 <field name="date_run"/>
-                <field name="date_done"/>
+                <field name="sync_last_date"/>
                 <field name="state" />
             </tree>
         </field>
@@ -223,10 +223,10 @@
        <field name="type">search</field>
        <field name="arch" type="xml">
            <search string="Segments">
-               <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]"/>
-               <filter icon="terp-check" string="Running" domain="[('state','=','running')]"/>
+               <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
+               <filter icon="terp-check" string="Running" name="running" domain="[('state','=','running')]"/>
                <separator orientation="vertical"/>
-               <filter icon="terp-go-month" string="Create Date" name="create_date" domain="[('sync_mode','=','create_date')]"/>
+               <filter icon="terp-go-month" string="Create Date" domain="[('sync_mode','=','create_date')]"/>
                <filter icon="terp-go-month" string="Write Date" domain="[('sync_mode','=','write_date')]"/>
                <separator orientation="vertical"/>
                <field name="name" select="1"/>
@@ -242,7 +242,7 @@
            </search>
        </field>
    </record>
-+
+
     <record model="ir.actions.act_window" id="action_marketing_campaign_segment_form">
         <field name="name">Segments</field>
         <field name="type">ir.actions.act_window</field>
@@ -250,8 +250,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_marketing_campaign_segment_tree"/>
-       <field name="search_view_id" ref="view_marketing_campaign_segment_search"/>
-       <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_create_date': 1}</field>
+        <field name="search_view_id" ref="view_marketing_campaign_segment_search"/>
+        <field name="context">{'group_by': [], 'search_default_running': 1}</field>
     </record>
 
     <menuitem id="menu_marketing_campaign_segment_form" parent="menu_marketing_campaign" action="action_marketing_campaign_segment_form" sequence="20" />
@@ -393,7 +393,7 @@
                         <separator string="Date" colspan="2"/>
                         <field name="date"/>
                         <label string="" colspan="1"/>
-                        <button string="Preview" states="todo" name="preview" icon="gtk-apply"/>
+                        <button string="Preview" states="todo" name="preview" icon="gtk-apply" type="object"/>
                     </group>
                 </group>
                 <separator string="Status" colspan="4"/>
@@ -444,6 +444,15 @@
     </record>
 
     <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="30" groups="base.group_extended"/>
+
+    <act_window name="All Segments"
+        res_model="marketing.campaign.segment"
+        src_model="marketing.campaign"
+        view_type="form"
+        view_mode="tree,form"
+        id="act_marketing_campaing_segment_opened"
+        domain="[('campaign_id','=',active_id)]"
+    />
 
     </data>
 </openerp>
