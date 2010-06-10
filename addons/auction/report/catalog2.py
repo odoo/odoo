@@ -126,7 +126,7 @@ class auction_catalog(report_rml):
             for test in ab:
                 if test.has_key('auction_id'):
                     auction_ids.append(test['auction_id'][0])
-            cr.execute('select * from auction_lots where auction_id =ANY(%s)',(auction_ids,))
+            cr.execute('select * from auction_lots where auction_id IN %s',(tuple(auction_ids),))
             res = cr.dictfetchall()
             for cat in res:
                 product =doc.createElement('product')

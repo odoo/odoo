@@ -37,16 +37,7 @@ class account_open_closed_fiscalyear(osv.osv_memory):
         period_journal = data_fyear.end_journal_period_id
         ids_move = self.pool.get('account.move').search(cr,uid,[('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
         if ids_move:
-            cr.execute('delete from account_move where id =ANY(%s)',(ids_move,))
-                    #cr.execute('UPDATE account_journal_period ' \
-            #        'SET state = %s ' \
-            #        'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %s)',
-            #        ('draft',data_fyear))
-            #cr.execute('UPDATE account_period SET state = %s ' \
-            #        'WHERE fiscalyear_id = %s', ('draft',data_fyear))
-            #cr.execute('UPDATE account_fiscalyear ' \
-            #        'SET state = %s, end_journal_period_id = null '\
-            #        'WHERE id = %s', ('draft',data_fyear))
+            cr.execute('delete from account_move where id IN %s', (tuple(ids_move),))
         return {}
 
 account_open_closed_fiscalyear()

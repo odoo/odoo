@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from operator import itemgetter
 import decimal_precision as dp
 
 import netsvc
@@ -564,12 +565,13 @@ class account_invoice(osv.osv):
     def move_line_id_payment_get(self, cr, uid, ids, *args):
         res = []
         if not ids: return res
-        cr.execute('select \
-                l.id \
-            from account_move_line l \
-                left join account_invoice i on (i.move_id=l.move_id) \
-            where i.id in ('+','.join(map(str,map(int, ids)))+') and l.account_id=i.account_id')
-        res = map(lambda x: x[0], cr.fetchall())
+        cr.execute('SELECT l.id '\
+                   'FROM account_move_line l '\
+                   'LEFT JOIN account_invoice i ON (i.move_id=l.move_id) '\
+                   'WHERE i.id IN %s '\
+                   'AND l.account_id=i.account_id',
+                   (tuple(ids),))
+        res = map(itemgetter(0), cr.fetchall())
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -888,8 +890,9 @@ class account_invoice(osv.osv):
 
     def action_number(self, cr, uid, ids, *args):
         cr.execute('SELECT id, type, number, move_id, reference ' \
-                'FROM account_invoice ' \
-                'WHERE id IN ('+','.join(map(str, ids))+')')
+                    'FROM account_invoice ' \
+                    'WHERE id IN %s',
+                    (tuple(ids),))
         obj_inv = self.browse(cr, uid, ids)[0]
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
@@ -1112,7 +1115,9 @@ class account_invoice(osv.osv):
         move_ids = [move_id,]
         if invoice.move_id:
             move_ids.append(invoice.move_id.id)
-        cr.execute('SELECT id FROM account_move_line WHERE move_id = ANY(%s)',(move_ids,))
+        cr.execute('SELECT id FROM account_move_line '\
+                   'WHERE move_id in %s',
+                   ((move_id, invoice.move_id.id),))
         lines = line.browse(cr, uid, map(lambda x: x[0], cr.fetchall()) )
         for l in lines+invoice.payment_ids:
             if l.account_id.id==src_account_id:

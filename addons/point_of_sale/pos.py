@@ -96,7 +96,7 @@ class pos_order(osv.osv):
                 ) AS amount
         FROM pos_order p
             LEFT OUTER JOIN pos_order_line l ON (p.id=l.order_id)
-        WHERE p.id =ANY(%s) GROUP BY p.id """,(ids,))
+        WHERE p.id IN %s GROUP BY p.id """,(tuple(ids),))
         res = dict(cr.fetchall())
         for rec in self.browse(cr, uid, ids, context):
             if rec.partner_id \

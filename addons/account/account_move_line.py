@@ -298,9 +298,10 @@ class account_move_line(osv.osv):
         for line_id in ids:
             res[line_id] = False
         cursor.execute('SELECT l.id, i.id ' \
-                'FROM account_move_line l, account_invoice i ' \
-                'WHERE l.move_id = i.move_id ' \
-                    'AND l.id =ANY(%s)',(ids,))
+                        'FROM account_move_line l, account_invoice i ' \
+                        'WHERE l.move_id = i.move_id ' \
+                        'AND l.id in %s',
+                        (tuple(ids),))
         invoice_ids = []
         for line_id, invoice_id in cursor.fetchall():
             res[line_id] = invoice_id
@@ -620,10 +621,11 @@ class account_move_line(osv.osv):
         else:
             date = time.strftime('%Y-%m-%d')
 
-        cr.execute('SELECT account_id, reconcile_id \
-                FROM account_move_line \
-                WHERE id =ANY(%s) \
-                GROUP BY account_id,reconcile_id',(ids,))
+        cr.execute('SELECT account_id, reconcile_id '\
+                   'FROM account_move_line '\
+                   'WHERE id IN %s '\
+                   'GROUP BY account_id,reconcile_id',
+                   (tuple(ids),))
         r = cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
         if (len(r) != 1) and not context.get('fy_closing', False):

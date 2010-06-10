@@ -33,10 +33,10 @@ class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _description = 'Analytic Account'
 
-    def _compute_currency_for_level_tree(self, cr, uid, ids, ids2, res, acc_set, context={}):
+    def _compute_currency_for_level_tree(self, cr, uid, ids, ids2, res, context={}):
         # Handle multi-currency on each level of analytic account
         # This is a refactoring of _balance_calc computation
-        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id in (%s)" % acc_set)
+        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id IN %s" , (tuple(ids2),))
         currency= dict(cr.fetchall())
         res_currency= self.pool.get('res.currency')
         for id in ids:
@@ -61,13 +61,11 @@ class account_analytic_account(osv.osv):
 
     def _credit_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
-
+        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         for i in ids:
             res.setdefault(i,0.0)
 
-        if not ids2:
+        if not parent_ids:
             return res
 
         where_date = ''
@@ -75,19 +73,17 @@ class account_analytic_account(osv.osv):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency<0 and a.id =ANY(%s) GROUP BY a.id",(ids2,))
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency<0 and a.id IN %s GROUP BY a.id",(tuple(parent_ids),))
         r = dict(cr.fetchall())
-        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
+        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, r, context)
 
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
-
+        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         for i in ids:
             res.setdefault(i,0.0)
 
-        if not ids2:
+        if not parent_ids:
             return res
 
         where_date = ''
@@ -95,19 +91,17 @@ class account_analytic_account(osv.osv):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency>0 and a.id =ANY(%s) GROUP BY a.id" ,(ids2,))
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency>0 and a.id IN %s GROUP BY a.id" ,(tuple(parent_ids),))
         r= dict(cr.fetchall())
-        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
+        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, r, context)
 
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
-
+        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         for i in ids:
             res.setdefault(i,0.0)
 
-        if not ids2:
+        if not parent_ids:
             return res
 
         where_date = ''
@@ -115,23 +109,22 @@ class account_analytic_account(osv.osv):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id =ANY(%s) GROUP BY a.id",(ids2,))
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id IN %s GROUP BY a.id",(tuple(parent_ids),))
 
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
-        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
+        return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
 
     def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
         #XXX must convert into one uom
         res = {}
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
+        parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
 
         for i in ids:
             res.setdefault(i,0.0)
 
-        if not ids2:
+        if not parent_ids:
             return res
 
         where_date = ''
@@ -143,13 +136,13 @@ class account_analytic_account(osv.osv):
         cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
                 FROM account_analytic_account a \
                     LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
-                WHERE a.id =ANY(%s) GROUP BY a.id',(ids2,))
+                WHERE a.id IN %s GROUP BY a.id',(tuple(parent_ids),))
 
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
         for id in ids:
-            if id not in ids2:
+            if id not in parent_ids:
                 continue
             for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
                 if child != id:

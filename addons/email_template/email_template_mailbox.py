@@ -52,7 +52,6 @@ class email_template_mailbox(osv.osv):
                     for attid in values['attachments_ids']:
                         attachment = self.pool.get('ir.attachment').browse(cr, uid, attid, context)#,['datas_fname','datas'])
                         payload[attachment.datas_fname] = attachment.datas
-                    print "233333333333333"
                 result = account_obj.send_mail(cr, uid,
                               [values['account_id'][0]],
                               {'To':values.get('email_to', u'') or u'', 'CC':values.get('email_cc', u'') or u'', 'BCC':values.get('email_bcc', u'') or u''},

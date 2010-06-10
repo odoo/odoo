@@ -466,7 +466,7 @@ class crm_case_section(osv.osv):
         level = 100
  
         while len(ids):
-            cr.execute('select distinct parent_id from crm_case_section where id =ANY(%s)', (ids,))
+            cr.execute('select distinct parent_id from crm_case_section where id IN %s', (tuple(ids),))
             ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False

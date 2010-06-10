@@ -223,7 +223,7 @@ class mrp_bom(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct bom_id from mrp_bom where id =ANY(%s)',(ids,))
+            cr.execute('select distinct bom_id from mrp_bom where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False

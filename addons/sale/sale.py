@@ -114,7 +114,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 mrp_procurement mp on (mp.move_id=m.id)
             WHERE
-                p.sale_id = ANY(%s) GROUP BY mp.state, p.sale_id''',(ids,))
+                p.sale_id IN %s GROUP BY mp.state, p.sale_id''',(tuple(ids),))
         for oid, nbr, mp_state in cr.fetchall():
             if mp_state == 'cancel':
                 continue
@@ -322,7 +322,7 @@ class sale_order(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):
             return False
-        cr.execute('select id from sale_order_line where order_id = ANY(%s) and state=%s',(ids,'cancel'))
+        cr.execute('select id from sale_order_line where order_id IN %s and state=%s',(tuple(ids),'cancel'))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
