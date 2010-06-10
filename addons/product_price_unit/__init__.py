@@ -18,8 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-import crm_make_sale
-
+import product_price_unit
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

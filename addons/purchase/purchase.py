@@ -273,6 +273,8 @@ class purchase_order(osv.osv):
                     todo.append(line.id)
         current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
+        message = _('confirm Order') + " ' " + po.name
+        self.log(cr,uid,po,message)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True

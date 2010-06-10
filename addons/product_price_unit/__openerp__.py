@@ -19,7 +19,21 @@
 #
 ##############################################################################
 
-import crm_make_sale
-
+{
+    "name" : "Product Price Unit",
+    "version" : "1.1",
+    "author" : "Tiny",
+    "category" : "",
+    "depends" : ["base", 'account','hr_expense','mrp', 'sale'],
+    "init_xml" : [],
+    "demo_xml" : [],
+    "description": """
+    """,
+    'update_xml': [
+        'product_price_unit_data.xml',
+        'product_price_unit_view.xml',
+    ],
+    'installable': True,
+    'active': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
