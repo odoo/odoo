@@ -89,10 +89,11 @@ class ir_property(osv.osv):
         prop = None
         type_ = values.get('type')
         if not type_:
-            if not ids:
-                raise ValueError()
-            prop = self.browse(cr, uid, ids[0])
-            type_ = prop.type
+            if ids:
+                prop = self.browse(cr, uid, ids[0])
+                type_ = prop.type
+            else:
+                type_ = self._defaults['type']
 
         type2field = {
             'char': 'value_text',
