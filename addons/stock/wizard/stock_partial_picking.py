@@ -52,7 +52,7 @@ class stock_partial_picking(osv.osv_memory):
                 if 'move%s_product_uom'%(m.id) not in self._columns:
                     self._columns['move%s_product_uom'%(m.id)] = fields.many2one('product.uom',string="Product UOM")
 
-                if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
+                if (m.product_id.cost_method == 'average'):
                     if 'move%s_product_price'%(m.id) not in self._columns:
                         self._columns['move%s_product_price'%(m.id)] = fields.float("Price")
                     if 'move%s_product_currency'%(m.id) not in self._columns:
@@ -63,16 +63,14 @@ class stock_partial_picking(osv.osv_memory):
         result = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)        
         pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False) 
-        picking_ids = pick_obj.search(cr, uid, [('id', 'in', picking_ids)])               
-        partner_id = set([pick.partner_id for pick in pick_obj.browse(cr, uid, picking_ids)])
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
                     	<field name="date" colspan="4" />
-                    	<field name="partner_id" domain="[('id','=',%d)]"/>
+                    	<field name="partner_id"/>
                     	<field name="address_id"/>
                     	<newline/>
                         <separator colspan="4" string="Move Detail"/>
-                    	"""%(partner_id)
+                    	"""
         _moves_fields = result['fields']
         if picking_ids and view_type in ['form']:
             for pick in pick_obj.browse(cr, uid, picking_ids, context):
@@ -107,7 +105,7 @@ class stock_partial_picking(osv.osv_memory):
                         <field name="move%s_product_qty" string="Qty" />
                         <field name="move%s_product_uom" nolabel="1" />
                     """%(m.id, m.id, m.id)
-                    if (pick.type == 'in') and (m.product_id.cost_method == 'average'):                        
+                    if (m.product_id.cost_method == 'average'):                        
                         _moves_fields.update({
                             'move%s_product_price'%(m.id) : {
                                     'string': _('Price'),
@@ -177,15 +175,19 @@ class stock_partial_picking(osv.osv_memory):
                 if 'move%s_product_uom'%(m.id) in fields:
                     res['move%s_product_uom'%(m.id)] = m.product_uom.id
 
-                if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
-                    price = 0
-                    if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
-                        price = m.purchase_line_id.price_unit
-
+                if (m.product_id.cost_method == 'average'):
                     currency = False
-                    if hasattr(pick, 'purchase_id') and pick.purchase_id:
-                        currency = pick.purchase_id.pricelist_id.currency_id.id
-        
+                    price = 0
+                    if (pick.type == 'in'):
+                        if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
+                            price = m.purchase_line_id.price_unit
+                        if hasattr(pick, 'purchase_id') and pick.purchase_id:
+                            currency = pick.purchase_id.pricelist_id.currency_id.id
+                    if (pick.type == 'out'):
+                        if hasattr(m, 'sale_line_id') and m.sale_line_id:
+                            price = m.sale_line_id.price_unit
+                        if hasattr(pick, 'sale_id') and pick.sale_id:
+                            currency = pick.sale_id.pricelist_id.currency_id.id
                     if 'move%s_product_price'%(m.id) in fields:
                         res['move%s_product_price'%(m.id)] = price
                     if 'move%s_product_currency'%(m.id) in fields:
@@ -211,7 +213,7 @@ class stock_partial_picking(osv.osv_memory):
                     'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id)).id
                 }
 
-                if (pick.type == 'in') and (m.product_id.cost_method == 'average'):   
+                if (m.product_id.cost_method == 'average'):   
                     partial_datas['move%s'%(m.id)].update({             
                         'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
                         'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id
