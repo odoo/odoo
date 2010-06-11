@@ -52,7 +52,6 @@ class email_template_mailbox(osv.osv):
                     for attid in values['attachments_ids']:
                         attachment = self.pool.get('ir.attachment').browse(cr, uid, attid, context)#,['datas_fname','datas'])
                         payload[attachment.datas_fname] = attachment.datas
-                    print "233333333333333"
                 result = account_obj.send_mail(cr, uid,
                               [values['account_id'][0]],
                               {'To':values.get('email_to', u'') or u'', 'CC':values.get('email_cc', u'') or u'', 'BCC':values.get('email_bcc', u'') or u''},
@@ -152,30 +151,6 @@ class email_template_mailbox(osv.osv):
         'state': lambda * a: 'na',
         'folder': lambda * a: 'outbox',
     } 
-
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
-        if context.get('company', False):
-            users_groups = self.pool.get('res.users').browse(cr, uid, uid, context).groups_id
-            group_acc_rel = {}
-            #get all accounts and get a table of {group1:[account1,account2],group2:[account1]}
-            for each_account_id in self.pool.get('email_template.account').search(cr, uid, [('state', '=', 'approved'), ('company', '=', 'yes')], context=context):
-                account = self.pool.get('email_template.account').browse(cr, uid, each_account_id, context)
-                for each_group in account.allowed_groups:
-                    if not account.id in group_acc_rel.get(each_group, []):
-                        groups = group_acc_rel.get(each_group, [])
-                        groups.append(account.id)
-                        group_acc_rel[each_group] = groups
-            users_company_accounts = []
-            for each_group in group_acc_rel.keys():
-                if each_group in users_groups:
-                    for each_account in group_acc_rel[each_group]:
-                        if not each_account in users_company_accounts:
-                            users_company_accounts.append(each_account)
-            args.append(('account_id', 'in', users_company_accounts))
-        return super(osv.osv, self).search(cr, uid, args, offset, limit,
-                order, context=context, count=count)
 
 email_template_mailbox()
 
