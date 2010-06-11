@@ -65,6 +65,8 @@
              'test/shipping_manual_sale_order.yml',
              'test/prepaid_sale_order.yml',
              'test/advance_invoice.yml',
+             'test/so_make_line_invoice.yml',
+             'test/so_make_invoice.yml',
              'test/sale_procurement.yml',
             ],
     'installable': True,
