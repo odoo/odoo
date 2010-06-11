@@ -105,6 +105,9 @@ class wizard_vat_declaration(wizard.interface):
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
         for item in tax_info:
+            if item['code'] == '91' and ending_month != 12:
+                #the tax code 91 can only be send for the declaration of December
+                continue
             if item['code']:
                 if item['code'] == '71-72':
                     item['code']='71'
