@@ -433,7 +433,7 @@ class one2many(_column):
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
+        ids2 = obj.pool.get(self._obj).search(cr, user, self._domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             res[r[self._fields_id]].append(r['id'])
         return res
