@@ -164,7 +164,6 @@ class email_parser(object):
        return s.decode('latin1')
 
     def _decode_header(self, text):
-        from email.Header import decode_header
         if text:
             text = decode_header(text.replace('\r', '')) 
         return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), text or []))
