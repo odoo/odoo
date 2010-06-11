@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <record id="view_base_report_designer" model="ir.ui.view">
+            <field name="name">OpenOffice Report Designer</field>
+            <field name="model">base.openoffice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="arch" type="xml">
+            <data>
+                <form position="attributes">
+                  <attribute name="string">Base Report Designer Module Installation</attribute>
+                </form>
+                <separator string="title" position="attributes">
+                   <attribute name="string">Base Report Designer</attribute>
+                </separator>
+              <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                <attribute name='string'></attribute>
+                <attribute name='rowspan'>15</attribute>
+              </xpath>
+              <group colspan="8" height="250" width="700">
+                <separator string="OpenOffice Report Desinger" colspan="4"/>
+                <field name="base_desinger_url"  widget="url" />
+                <newline/>
+                <field name="plugin_file"/>
+                <button name="add_plugin" string="Click To Get the plugin"
+                    colspan="1" type="object" icon="gtk-execute" />
+
+                <newline/>
+                <field name="pdf_file"/>
+                <button name="process_pdf_file" string="Click To Documenation"
+                    colspan="1" type="object" icon="gtk-execute" />
+                <newline/>
+                <separator string="Openoffice Report Desinger plugin installation note." colspan="4"/>
+                <label colspan="2" string="Save The  plug­in and Documenation read the step to How to install it from Documenation"/>
+                <button special="cancel" string="Close" icon="gtk-cancel"/>
+            </group>
+           </data>
+            </field>
+        </record>
+
+        <record id="action_base_report_designer" model="ir.actions.act_window">
+            <field name="name">Base Report Designer Module Installation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.openoffice</field>
+            <field name="view_id" ref="view_base_report_designer"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="report_designer_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="action_base_report_designer"/>
+      <field name="sequence">4</field>
+    </record>
+
+    <record id="view_report_designer" model="ir.ui.view">
+            <field name="name">OpenOffice Report Designer</field>
+            <field name="model">base.openoffice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Report Desinger">
+                      <group colspan="8" height="250" width="700">
+                        <separator string="OpenOffice Report Desinger" colspan="4"/>
+                        <field name="base_desinger_url"  widget="url" />
+                        <newline/>
+                        <field name="plugin_file"/>
+                        <button name="add_plugin" string="Click To Get the plugin"
+                            colspan="1" type="object" icon="gtk-execute" />
+
+                        <newline/>
+                        <field name="pdf_file"/>
+                        <button name="process_pdf_file" string="Click To Documenation"
+                            colspan="1" type="object" icon="gtk-execute" />
+                        <newline/>
+                        <separator string="Openoffice Report Desinger plugin installation note." colspan="4"/>
+                        <label colspan="2" string="Save The  plug­in and Documenation read the step to How to install it from Documenation"/>
+                        <button special="cancel" string="Close" icon="gtk-cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_report_designer" model="ir.actions.act_window">
+            <field name="name">OpenOffice Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.openoffice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+	
+	<record id="report_designer_ir_actions_todo_tree" model="ir.ui.view">
+		    <field name="model">ir.actions.todo</field>
+		    <field name="name">report_desinger</field>
+		    <field name="type">tree</field>
+		    <field name="inherit_id" ref="base.ir_actions_todo_tree"/>
+			<field name="arch" type="xml">
+	 			<xpath expr="//button[@string='Launch']" position="replace">
+        			<button name="%(action_report_designer)d" states="open,skip" string="Report Desinger" type="action" icon="gtk-execute" help="Launch Configuration Wizard"/>
+      			</xpath>
+    		</field>
+	</record>        
+
+   </data>
+</openerp>
+
