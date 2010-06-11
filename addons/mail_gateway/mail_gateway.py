@@ -53,9 +53,9 @@ class mailgate_thread(osv.osv):
         'thread': fields.char('Thread', size=32, required=False), 
         'message_ids': one2many_domain('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
         'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
-        }
+    }
         
-    def __history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
+    def __history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -69,9 +69,13 @@ class mailgate_thread(osv.osv):
         @param context: A standard dictionary for contextual values"""
         if context is None:
             context = {}
+        if attach is None:
+            attach = []
+
         # The mailgate sends the ids of the cases and not the object list
-        if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
-            cases = self.pool.get(context['model']).browse(cr, uid, cases, context=context)
+
+        if all(isinstance(case_id, (int, long)) for case_id in cases):
+            cases = self.browse(cr, uid, cases, context=context)
 
         model_obj = self.pool.get('ir.model')
         att_obj = self.pool.get('ir.attachment')
@@ -84,7 +88,7 @@ class mailgate_thread(osv.osv):
                 'user_id': uid, 
                 'model_id' : model_ids and model_ids[0] or False, 
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
-                'thread_id': case.thread_id.id, 
+                'thread_id': case.thread_id.id,
                 'message_id': message_id, 
             }
             attachments = []
@@ -93,24 +97,24 @@ class mailgate_thread(osv.osv):
                     attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
                 
                 data = {
-                        'name': subject or 'History', 
-                        'history': True, 
-                        'user_id': uid, 
-                        'model_id' : model_ids and model_ids[0] or False, 
-                        'res_id': case.id,
-                        'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
-                        'description': details or (hasattr(case, 'description') and case.description or False), 
-                        'email_to': email or \
-                                (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
-                                    case.user_id.address_id.email) or tools.config.get('email_from', False), 
-                        'email_from': email_from or \
-                                (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
-                                    case.user_id.address_id.email) or tools.config.get('email_from', False), 
-                        'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False, 
-                        'thread_id': case.thread_id.id, 
-                        'message_id': message_id, 
-                        'attachment_ids': [(6, 0, attachments)]
-                        }
+                    'name': subject or 'History', 
+                    'history': True, 
+                    'user_id': uid, 
+                    'model_id' : model_ids and model_ids[0] or False, 
+                    'res_id': case.id,
+                    'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
+                    'description': details or (hasattr(case, 'description') and case.description or False), 
+                    'email_to': email or \
+                        (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
+                         case.user_id.address_id.email) or tools.config.get('email_from', False), 
+                    'email_from': email_from or \
+                        (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
+                         case.user_id.address_id.email) or tools.config.get('email_from', False), 
+                    'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False, 
+                    'thread_id': case.thread_id.id, 
+                    'message_id': message_id, 
+                    'attachment_ids': [(6, 0, attachments)]
+                }
             res = obj.create(cr, uid, data, context)
         return True
     
