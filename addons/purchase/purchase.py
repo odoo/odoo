@@ -633,7 +633,7 @@ class purchase_order_line(osv.osv):
         prod= self.pool.get('product.product').browse(cr, uid,product)
         lang=False
         if partner_id:
-            lang=self.pool.get('res.partner').read(cr, uid, partner_id)['lang']
+            lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
         context={'lang':lang}
         context['partner_id'] = partner_id
 
