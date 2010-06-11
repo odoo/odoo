@@ -101,7 +101,7 @@ class marketing_campaign_segment(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64,required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
-                                                required=True),
+             required=True, select=1),
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
                                       string='Object'),
@@ -200,7 +200,7 @@ class marketing_campaign_activity(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
-                                            required = True, ondelete='cascade'),
+                                            required = True, ondelete='cascade', select=1),
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
                                       string='Object'),
@@ -336,7 +336,7 @@ class marketing_campaign_transition(osv.osv):
 
     _columns = {
         'activity_from_id': fields.many2one('marketing.campaign.activity',
-                                                             'Source Activity'),
+                                                             'Source Activity', select=1),
         'activity_to_id': fields.many2one('marketing.campaign.activity',
                                                         'Destination Activity'),
         'interval_nbr': fields.integer('Interval No.'),
@@ -378,12 +378,12 @@ class marketing_campaign_workitem(osv.osv):
         'campaign_id': fields.related('segment_id', 'campaign_id',
              type='many2one', relation='marketing.campaign', string='Campaign', readonly=True),
         'object_id': fields.related('segment_id', 'campaign_id', 'object_id',
-             type='many2one', relation='ir.model', string='Object'),
-        'res_id': fields.integer('Resource ID'),
+             type='many2one', relation='ir.model', string='Object', select=1),
+        'res_id': fields.integer('Resource ID', select=1),
         'res_name': fields.function(_res_name_get, method=True, string='Resource Name', type="char", size=64),
         'date': fields.datetime('Execution Date'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'state': fields.selection([('todo', 'ToDo'), ('inprogress', 'In Progress'),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
+        'state': fields.selection([('todo', 'To Do'), ('inprogress', 'In Progress'),
                                    ('exception', 'Exception'), ('done', 'Done'),
                                    ('cancelled', 'Cancelled')], 'State'),
 
