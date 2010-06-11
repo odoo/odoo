@@ -234,12 +234,10 @@ class ir_values(osv.osv):
                 try:
                     datas = self.pool.get(model).read(cr, uid, [id], fields, context)
                 except except_orm, e:
-                    print 'false 1',model,fields,e
                     return False
                 datas= datas and datas[0] or None
                 if not datas:
                     #ir_del(cr, uid, x[0])
-                    print 'false 2'
                     return False
             else:
                 datas = pickle.loads(str(x[2].encode('utf-8')))
