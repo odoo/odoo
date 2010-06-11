@@ -193,7 +193,7 @@ class pos_order(osv.osv):
                             res[order.id]['amount_tax'])
                 else:
                     res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
-                        tax_obj.compute(cr, uid, line.product_id.taxes_id,
+                        tax_obj.compute_all(cr, uid, line.product_id.taxes_id,
                             line.price_unit * \
                             (1-(line.discount or 0.0)/100.0), line.qty),
                             res[order.id]['amount_tax'])                                                    
@@ -789,7 +789,7 @@ class pos_order(osv.osv):
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
                 if order.price_type=='tax_excluded':
-                    computed_taxes = account_tax_obj.compute(
+                    computed_taxes = account_tax_objcompute_all(
                         cr, uid, taxes, line.price_unit, line.qty)
                 else:
                     computed_taxes = account_tax_obj.compute_inv(
@@ -1058,7 +1058,7 @@ class pos_order_line(osv.osv):
         for line in self.browse(cr, uid, ids):
             tax_amount = 0.0
             taxes = [t for t in line.product_id.taxes_id]
-            computed_taxes = account_tax_obj.compute(cr, uid, taxes, line.price_unit, line.qty)
+            computed_taxes = account_tax_objcompute_all(cr, uid, taxes, line.price_unit, line.qty)
             for tax in computed_taxes:
                 tax_amount += tax['amount']
             price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
