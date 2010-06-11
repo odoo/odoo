@@ -20,5 +20,6 @@
 ##############################################################################
 
 import base_report_designer_modify
+import base_openoffice
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
