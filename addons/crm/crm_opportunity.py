@@ -52,8 +52,9 @@ class crm_opportunity(osv.osv):
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing'),
-        'date_action': fields.date('Next Action'),
-         }
+        'date_action': fields.date('Next Action Date'),
+        'title_action': fields.char('Next Action', size=64),
+     }
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer

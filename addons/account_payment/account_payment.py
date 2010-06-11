@@ -18,28 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import fields
-from osv import osv
 import time
-import netsvc
-import pooler
 
+from osv import osv, fields
+import netsvc
 
 class payment_type(osv.osv):
     _name= 'payment.type'
     _description= 'Payment Type'
     _columns= {
-        'name': fields.char('Name', size=64, required=True,help='Payment Type'),
-        'code': fields.char('Code', size=64, required=True,help='Specifies the Code for Payment Type'),
+        'name': fields.char('Name', size=64, required=True, help='Payment Type'),
+        'code': fields.char('Code', size=64, required=True, help='Specifies the Code for Payment Type'),
         'suitable_bank_types': fields.many2many('res.partner.bank.type',
             'bank_type_payment_type_rel',
             'pay_type_id','bank_type_id',
             'Suitable bank types')
-    }
+            }
 
 payment_type()
-
 
 class payment_mode(osv.osv):
     _name= 'payment.mode'
@@ -66,16 +62,14 @@ class payment_mode(osv.osv):
             where pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
 
-
 payment_mode()
-
 
 class payment_order(osv.osv):
     _name = 'payment.order'
     _description = 'Payment Order'
     _rec_name = 'reference'
 
-    def get_wizard(self,type):
+    def get_wizard(self, type):
         logger = netsvc.Logger()
         logger.notifyChannel("warning", netsvc.LOG_WARNING,
                 "No wizard found for the payment type '%s'." % type)
@@ -145,7 +139,6 @@ class payment_order(osv.osv):
         return True
 
 payment_order()
-
 
 class payment_line(osv.osv):
     _name = 'payment.line'
