@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -158,7 +157,7 @@ class stock_location(osv.osv):
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the stock location without removing it."),
-        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production')], 'Location Type', required=True),
+        'usage': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True),
         'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
 
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
@@ -166,7 +165,7 @@ class stock_location(osv.osv):
         'stock_real': fields.function(_product_qty_available, method=True, type='float', string='Real Stock', multi="stock"),
         'stock_virtual': fields.function(_product_qty_available, method=True, type='float', string='Virtual Stock', multi="stock"),
 
-        'account_id': fields.many2one('account.account', string='Inventory Account', domain=[('type', '!=', 'view')]),
+        #'account_id': fields.many2one('account.account', string='Inventory Account', domain=[('type', '!=', 'view')]),
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
@@ -195,7 +194,7 @@ class stock_location(osv.osv):
         'parent_right': fields.integer('Right Parent', select=1),
         'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock"),
         'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock"),
-        'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
+        'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared for every companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box if the current location is a place for destroyed items'),
     }
     _defaults = {
@@ -545,10 +544,11 @@ class stock_picking(osv.osv):
             'internal': _('Internal picking'),
             'delivery': _('Delivery order')
         }
+        new_id = super(stock_picking, self).create(cr, user, vals, context)
         if not vals.get('auto_picking', False):
             message = type_list.get(vals.get('type', False), _('Picking')) + " '" + (vals['name'] or "n/a") + "' "+ _("created.")
-            self.log(cr, user, id, message)
-        return super(stock_picking, self).create(cr, user, vals, context)
+            self.log(cr, user, new_id, message)
+        return new_id
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True),
@@ -974,9 +974,9 @@ class stock_picking(osv.osv):
 
                 account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
                 notes = False
-                if move_line.sale_line_id:
+                if ('sale_line_id' in move_line._columns.keys()) and move_line.sale_line_id:
                     notes = move_line.sale_line_id.notes
-                elif move_line.purchase_line_id:
+                elif ('purchase_line_id' in move_line._columns.keys()) and move_line.purchase_line_id:
                     notes = move_line.purchase_line_id.notes
 
                 invoice_line_id = invoice_line_obj.create(cr, uid, {
@@ -1737,6 +1737,48 @@ class stock_move(osv.osv):
         #self.action_cancel(cr,uid, ids2, context)
         return True
 
+    def _get_accounting_values(self, cr, uid, move, context=None):
+        product_obj=self.pool.get('product.product')
+        product_uom_obj = self.pool.get('product.uom')
+        price_type_obj = self.pool.get('product.price.type')
+        accounts = product_obj.get_product_accounts(cr,uid,move.product_id.id,context)
+        acc_src = accounts['stock_account_input']
+        acc_dest = accounts['stock_account_output']
+        acc_variation = accounts['property_stock_variation']
+        journal_id = accounts['stock_journal']
+
+        if not acc_src:
+            raise osv.except_osv(_('Error!'),  _('There is no stock input account defined ' \
+                                    'for this product: "%s" (id: %d)') % \
+                                    (move.product_id.name, move.product_id.id,))
+        if not acc_dest:
+            raise osv.except_osv(_('Error!'),  _('There is no stock output account defined ' \
+                                    'for this product: "%s" (id: %d)') % \
+                                    (move.product_id.name, move.product_id.id,))
+        if not journal_id:
+            raise osv.except_osv(_('Error!'), _('There is no journal defined '\
+                                    'on the product category: "%s" (id: %d)') % \
+                                    (move.product_id.categ_id.name, move.product_id.categ_id.id,))
+        if not acc_variation:
+            raise osv.except_osv(_('Error!'), _('There is no variation  account defined '\
+                                    'on the product category: "%s" (id: %d)') % \
+                                    (move.product_id.categ_id.name, move.product_id.categ_id.id,))
+        if acc_src != acc_dest:
+            default_uom = move.product_id.uom_id.id
+            q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
+            if move.product_id.cost_method == 'average' and move.price_unit:
+                amount = q * move.price_unit
+            # Base computation on valuation price type
+            else:
+                company_id = move.company_id.id
+                context['currency_id'] = move.company_id.currency_id.id
+                pricetype = price_type_obj.browse(cr,uid,move.company_id.property_valuation_price_type.id)
+                amount_unit = move.product_id.price_get(pricetype.field, context)[move.product_id.id]
+                amount = amount_unit * q or 1.0
+                # amount = q * move.product_id.standard_price
+        return journal_id, acc_src, acc_dest, acc_variation, amount
+
+
     def action_done(self, cr, uid, ids, context={}):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return: 
@@ -1745,6 +1787,7 @@ class stock_move(osv.osv):
         picking_ids = []
         product_uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
+        product_obj=self.pool.get('product.product')        
         move_obj = self.pool.get('account.move')
         for move in self.browse(cr, uid, ids):
             if move.picking_id: picking_ids.append(move.picking_id.id)
@@ -1766,90 +1809,37 @@ class stock_move(osv.osv):
             #
             acc_src = None
             acc_dest = None
-            if move.location_id.account_id:
-                acc_src = move.location_id.account_id.id
-            if move.location_dest_id.account_id:
-                acc_dest = move.location_dest_id.account_id.id
-            if acc_src or acc_dest:
-                test = [('product.product', move.product_id.id)]
-                if move.product_id.categ_id:
-                    test.append( ('product.category', move.product_id.categ_id.id) )
-                if not acc_src:
-                    acc_src = move.product_id.product_tmpl_id.\
-                            property_stock_account_input.id
-                    if not acc_src:
-                        acc_src = move.product_id.categ_id.\
-                                property_stock_account_input_categ.id
-                    if not acc_src:
-                        raise osv.except_osv(_('Error!'),
-                                _('There is no stock input account defined ' \
-                                        'for this product: "%s" (id: %d)') % \
-                                        (move.product_id.name,
-                                            move.product_id.id,))
-                if not acc_dest:
-                    acc_dest = move.product_id.product_tmpl_id.\
-                            property_stock_account_output.id
-                    if not acc_dest:
-                        acc_dest = move.product_id.categ_id.\
-                                property_stock_account_output_categ.id
-                    if not acc_dest:
-                        raise osv.except_osv(_('Error!'),
-                                _('There is no stock output account defined ' \
-                                        'for this product: "%s" (id: %d)') % \
-                                        (move.product_id.name,
-                                            move.product_id.id,))
-                if not move.product_id.categ_id.property_stock_journal.id:
-                    raise osv.except_osv(_('Error!'),
-                        _('There is no journal defined '\
-                            'on the product category: "%s" (id: %d)') % \
-                            (move.product_id.categ_id.name,
-                                move.product_id.categ_id.id,))
-                journal_id = move.product_id.categ_id.property_stock_journal.id
-                if acc_src != acc_dest:
-                    ref = move.picking_id and move.picking_id.name or False
-                    default_uom = move.product_id.uom_id.id
-                    date = time.strftime('%Y-%m-%d')
-                    q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
-                    if move.product_id.cost_method == 'average' and move.price_unit:
-                        amount = q * move.price_unit
-                    # Base computation on valuation price type
-                    else:
-                        company_id = move.company_id.id
-                        context['currency_id'] = move.company_id.currency_id.id
-                        pricetype = price_type_obj.browse(cr,uid,move.company_id.property_valuation_price_type.id)
-                        amount_unit = move.product_id.price_get(pricetype.field, context)[move.product_id.id]
-                        amount = amount_unit * q or 1.0
-                        # amount = q * move.product_id.standard_price
+            if move.product_id.valuation == 'real_time':
+                lines = []
+                if ((move.location_id.usage == 'internal' and move.location_dest_id.usage == 'customer') or (move.location_id.usage == 'internal' and move.location_dest_id.usage == 'transit')):
+                    if move.location_id.company_id:
+                        context.update({'force_company': move.location_id.company_id.id})
+                    journal_id, acc_src, acc_dest, acc_variation, amount = self._get_accounting_values(cr, uid, move, context)
+                    lines = [(journal_id, self.create_account_move(cr, uid, move, acc_dest, acc_variation, amount, context))]
 
-                    partner_id = False
-                    if move.picking_id:
-                        partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
-                    lines = [
-                            (0, 0, {
-                                'name': move.name,
-                                'quantity': move.product_qty,
-                                'product_id': move.product_id and move.product_id.id or False,
-                                'credit': amount,
-                                'account_id': acc_src,
-                                'ref': ref,
-                                'date': date,
-                                'partner_id': partner_id}),
-                            (0, 0, {
-                                'name': move.name,
-                                'product_id': move.product_id and move.product_id.id or False,
-                                'quantity': move.product_qty,
-                                'debit': amount,
-                                'account_id': acc_dest,
-                                'ref': ref,
-                                'date': date,
-                                'partner_id': partner_id})
-                    ]
+                elif ((move.location_id.usage == 'supplier' and move.location_dest_id.usage == 'internal') or (move.location_id.usage == 'transit' and move.location_dest_id.usage == 'internal')): 
+                    if move.location_dest_id.company_id:
+                        context.update({'force_company': move.location_dest_id.company_id.id})
+                    journal_id, acc_src, acc_dest, acc_variation, amount = self._get_accounting_values(cr, uid, move, context)
+                    lines = [(journal_id, self.create_account_move(cr, uid, move, acc_variation, acc_src, amount, context))]
+                elif (move.location_id.usage == 'internal' and move.location_dest_id.usage == 'internal' and move.location_id.company_id != move.location_dest_id.company_id):
+                    if move.location_id.company_id:
+                        context.update({'force_company': move.location_id.company_id.id})
+                    journal_id, acc_src, acc_dest, acc_variation, amount = self._get_accounting_values(cr, uid, move, context)
+                    line1 = [(journal_id, self.create_account_move(cr, uid, move, acc_dest, acc_variation, amount, context))]
+                    if move.location_dest_id.company_id:
+                        context.update({'force_company': move.location_dest_id.company_id.id})
+                    journal_id, acc_src, acc_dest, acc_variation, amount = self._get_accounting_values(cr, uid, move, context)
+                    line2 = [(journal_id, self.create_account_move(cr, uid, move, acc_variation, acc_src, amount, context))]
+                    lines = line1 + line2
+                for j_id, line in lines:
                     move_obj.create(cr, uid, {
                         'name': move.name,
-                        'journal_id': journal_id,
-                        'line_id': lines,
-                        'ref': ref,
-                    })
+                        'journal_id': j_id,
+                        'type':'cont_voucher',
+                        'line_id': line,
+                        'ref': move.picking_id and move.picking_id.name,
+                        })
         tracking_lot = False
         if context:
             tracking_lot = context.get('tracking_lot', False)
@@ -1869,6 +1859,30 @@ class stock_move(osv.osv):
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
         return True
     
+    def create_account_move(self, cr, uid, move,account_id,account_variation,amount, context=None):
+        
+        partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
+        lines=[(0, 0, {
+                                    'name': move.name,
+                                    'quantity': move.product_qty,
+                                    'product_id': move.product_id and move.product_id.id or False,
+                                    'credit': amount,
+                                    'account_id': account_id,
+                                    'ref': move.picking_id and move.picking_id.name or False,
+                                    'date': time.strftime('%Y-%m-%d')   ,
+                                    'partner_id': partner_id,
+                                    }),        
+                                (0, 0, {
+                                    'name': move.name,
+                                    'product_id': move.product_id and move.product_id.id or False,
+                                    'quantity': move.product_qty,
+                                    'debit': amount,
+                                    'account_id': account_variation,
+                                    'ref': move.picking_id and move.picking_id.name or False,
+                                    'date': time.strftime('%Y-%m-%d')   ,
+                                    'partner_id': partner_id,
+                                    })]                                    
+        return lines
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -2375,6 +2389,7 @@ class stock_picking_move_wizard(osv.osv_memory):
     def action_move(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
         picking_obj = self.pool.get('stock.picking')
+        account_move_obj = self.pool.get('account.move')
         for act in self.read(cr, uid, ids):
             move_lines = move_obj.browse(cr, uid, act['move_ids'])
             for line in move_lines:

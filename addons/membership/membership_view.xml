@@ -104,14 +104,14 @@
             <field name="arch" type="xml">
                 <tree string="Members">
                     <field name="name"/>
+                    <field name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')]}"/>
                     <field name="membership_start"/>
                     <field name="membership_stop"/>
                     <field name="membership_state"/>
-                    <field name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')]}"/>
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_res_partner_member_filter" model="ir.ui.view">
             <field name="name">res.partner.select</field>
             <field name="model">res.partner</field>
@@ -133,6 +133,24 @@
             </field>
         </record>
         
+
+        <record id="view_res_partner_member_filter2" model="ir.ui.view">
+            <field name="name">res.partner.select2</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="view_res_partner_member_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="membership_state" position="after">
+	            <group expand="1" string="Group By" colspan="10" col="8">
+	                <separator orientation="vertical"/>
+	                <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
+	                <filter string="End Date" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
+	                <filter string="Associate Member" icon="terp-personal" domain="[]" context="{'group_by':'associate_member'}"/>
+	                <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
+                </group>
+                </field>
+            </field>
+        </record>
 
         <record model="ir.actions.act_window" id="action_membership_members">
             <field name="name">Members</field>
@@ -166,6 +184,17 @@
             />
  -->
 
+        <record id="view_res_partner_member_form2" model="ir.ui.view">
+            <field name="name">res.partner.form2</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="supplier" position="after">
+                        <field name="member"/>
+               </field>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="view_partner_tree">
             <field name="name">res.partner.tree.form.inherit</field>
