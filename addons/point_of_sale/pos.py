@@ -192,11 +192,10 @@ class pos_order(osv.osv):
                             (1-(line.discount or 0.0)/100.0), line.qty),
                             res[order.id]['amount_tax'])
                 else:
-                    res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
-                        tax_obj.compute_all(cr, uid, line.product_id.taxes_id,
+                    res[order.id]['amount_tax'] = tax_obj.compute_all(cr, uid, line.product_id.taxes_id,
                             line.price_unit * \
-                            (1-(line.discount or 0.0)/100.0), line.qty),
-                            res[order.id]['amount_tax'])                                                    
+                            (1-(line.discount or 0.0)/100.0), line.qty)['total_included']
+                                                                                
         return res
         
 
@@ -1058,9 +1057,7 @@ class pos_order_line(osv.osv):
         for line in self.browse(cr, uid, ids):
             tax_amount = 0.0
             taxes = [t for t in line.product_id.taxes_id]
-            computed_taxes = account_tax_objcompute_all(cr, uid, taxes, line.price_unit, line.qty)
-            for tax in computed_taxes:
-                tax_amount += tax['amount']
+            tax_amount = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['total_included']
             price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
