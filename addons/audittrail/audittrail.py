@@ -131,8 +131,22 @@ class audittrail_log(osv.osv):
     _name = 'audittrail.log'
     _description = "Audittrail Log"
 
+#    def _name_get_resname(self, cr, uid, ids, *args):
+#        data = {}
+#        for resname in self.browse(cr, uid, ids,[]):
+#            model_object = resname.object_id.name
+#            res_id = resname.res_id
+#            if model_object and res_id:
+#            #    model_pool = self.pool.get(model_object)
+#                res = model_object.name_get(cr,uid,[res_id])
+#                data[resname.id] = res and res[0][1]
+#            else:
+#                 data[resname.id] = False
+#        return data
+
     _columns = {
         "name": fields.char("Name", size=32),
+     #   'name': fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
         "object_id": fields.many2one('ir.model', 'Object'),
         "user_id": fields.many2one('res.users', 'User'),
         "method": fields.char("Method", size=64),
@@ -187,14 +201,20 @@ class audittrail_objects_proxy(osv_pool):
             context = {}
         pool = pooler.get_pool(cr.dbname)
         field_pool = pool.get('ir.model.fields')
-        field_ids = field_pool.search(cr, uid, [('name', '=', field_name), ('model_id', '=', model.id)])
+        model_pool = pool.get('ir.model')
+        obj_pool = pool.get(model.model)
+        if obj_pool._inherits:
+            inherits_ids = model_pool.search(cr, uid, [('model', '=', obj_pool._inherits.keys()[0])])
+            field_ids = field_pool.search(cr, uid, [('name', '=', field_name), ('model_id', 'in', (model.id, inherits_ids[0]))])
+        else:
+            field_ids = field_pool.search(cr, uid, [('name', '=', field_name), ('model_id', '=', model.id)])
         field_id = field_ids and field_ids[0] or False
         assert field_id, _("'%s' field is not exits in '%s' model" %(field_name, model.model))
-        
+
         field = field_pool.read(cr, uid, field_id)
         relation_model = field['relation']
         relation_model_pool = relation_model and pool.get(relation_model) or False
-       
+
         if field['ttype'] == 'many2one':
             res = False
             relation_id = False
@@ -206,11 +226,11 @@ class audittrail_objects_proxy(osv_pool):
             return res
 
         elif field['ttype'] in ('many2many','one2many'):
-            res = []            
-            for relation_model_object in relation_model_pool.read(cr, uid, values, [relation_model_pool._rec_name]):                    
+            res = []
+            for relation_model_object in relation_model_pool.read(cr, uid, values, [relation_model_pool._rec_name]):
                 res.append(relation_model_object[relation_model_pool._rec_name])
             return res
-       
+
         return values
 
     def create_log_line(self, cr, uid, log_id, model, lines=[]):
@@ -236,7 +256,7 @@ class audittrail_objects_proxy(osv_pool):
                 field_ids = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', '=', model.id)])
             field_id = field_ids and field_ids[0] or False
             assert field_id, _("'%s' field is not exits in '%s' model" %(line['name'], model.model))
-            
+
             field = field_pool.read(cr, uid, field_id)
             old_value = 'old_value' in line and  line['old_value'] or ''
             new_value = 'new_value' in line and  line['new_value'] or ''
@@ -259,7 +279,7 @@ class audittrail_objects_proxy(osv_pool):
                     "new_value_text": new_value_text,
                     "field_description": field['field_description']
                     }
-            line_id = log_line_pool.create(cr, uid, vals)            
+            line_id = log_line_pool.create(cr, uid, vals)
         #End Loop
         return True
 
@@ -281,43 +301,43 @@ class audittrail_objects_proxy(osv_pool):
         resource_pool = pool.get(model)
         log_pool = pool.get('audittrail.log')
         model_pool = pool.get('ir.model')
-        
-        model_ids = model_pool.search(cr, uid, [('model', '=', model)])        
-        model_id = model_ids and model_ids[0] or False 
+
+        model_ids = model_pool.search(cr, uid, [('model', '=', model)])
+        model_id = model_ids and model_ids[0] or False
         assert model_id, _("'%s' Model is not exits..." %(model))
         model = model_pool.browse(cr, uid, model_id)
 
         if method in ('create'):
             res_id = fct_src(db, uid, model.model, method, *args)
-            cr.commit()            
+            cr.commit()
             resource = resource_pool.read(cr, uid, res_id, args[0].keys())
             vals = {
                     "method": method,
                     "object_id": model.id,
-                    "user_id": uid, 
+                    "user_id": uid,
                     "res_id": resource['id'],
             }
             if 'id' in resource:
                 del resource['id']
             log_id = log_pool.create(cr, uid, vals)
             lines = []
-            for field in resource:                
+            for field in resource:
                 line = {
                       'name': field,
                       'new_value': resource[field],
                       'new_value_text': self.get_value_text(cr, uid, field, resource[field], model)
                       }
                 lines.append(line)
-            self.create_log_line(cr, uid, log_id, model, lines)       
+            self.create_log_line(cr, uid, log_id, model, lines)
 
             cr.commit()
             cr.close()
-            return res_id        
+            return res_id
 
         elif method in ('read'):
             res_ids = args[0]
             old_values = {}
-            res = fct_src(db, uid, model, method, *args)
+            res = fct_src(db, uid, model.model, method, *args)
             if type(res) == list:
                 for v in res:
                     old_values[v['id']] = v
@@ -327,22 +347,22 @@ class audittrail_objects_proxy(osv_pool):
                 vals = {
                     "method": method,
                     "object_id": model.id,
-                    "user_id": uid, 
+                    "user_id": uid,
                     "res_id": res_id,
-                    
+
                 }
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
-                for field in old_values[res_id]:                    
+                for field in old_values[res_id]:
                     line = {
                               'name': field,
                               'old_value': old_values[res_id][field],
                               'old_value_text': self.get_value_text(cr, uid, field, old_values[res_id][field], model)
                               }
                     lines.append(line)
-            
+
                 self.create_log_line(cr, uid, log_id, model, lines)
-            
+
             cr.close()
             return res
 
@@ -356,27 +376,29 @@ class audittrail_objects_proxy(osv_pool):
                 vals = {
                     "method": method,
                     "object_id": model.id,
-                    "user_id": uid, 
+                    "user_id": uid,
                     "res_id": res_id,
-                    
+
                 }
-                log_id = log_pool.create(cr, uid, vals)                    
+                log_id = log_pool.create(cr, uid, vals)
                 lines = []
-                for field in old_values[res_id]:                   
+                for field in old_values[res_id]:
+                    if field in ('id'):
+                        continue
                     line = {
                           'name': field,
                           'old_value': old_values[res_id][field],
                           'old_value_text': self.get_value_text(cr, uid, field, old_values[res_id][field], model)
                           }
                     lines.append(line)
-                   
+
                 self.create_log_line(cr, uid, log_id, model, lines)
-            res = fct_src(db, uid, model, method, *args)
+            res = fct_src(db, uid, model.model, method, *args)
             cr.commit()
             cr.close()
             return res
         else:
-            res_ids = args[0]            
+            res_ids = args[0]
             old_values = {}
             fields = []
             if len(args)>1 and type(args[1]) == dict:
@@ -384,10 +406,10 @@ class audittrail_objects_proxy(osv_pool):
             if type(res_ids) in (long, int):
                 res_ids = [res_ids]
             if res_ids:
-                for resource in resource_pool.read(cr, uid, res_ids, fields): 
-                    resource_id = resource['id']                  
+                for resource in resource_pool.read(cr, uid, res_ids, fields):
+                    resource_id = resource['id']
                     if 'id' in resource:
-                        del resource['id']       
+                        del resource['id']
                     old_values_text = {}
                     old_value = {}
                     for field in resource.keys():
@@ -406,14 +428,14 @@ class audittrail_objects_proxy(osv_pool):
                     vals = {
                         "method": method,
                         "object_id": model.id,
-                        "user_id": uid, 
-                        "res_id": resource_id,                    
+                        "user_id": uid,
+                        "res_id": resource_id,
                     }
-                
-                    
+
+
                     log_id = log_pool.create(cr, uid, vals)
                     lines = []
-                    for field in resource.keys():                    
+                    for field in resource.keys():
                         line = {
                               'name': field,
                               'new_value': resource[field],
@@ -422,14 +444,14 @@ class audittrail_objects_proxy(osv_pool):
                               'old_value_text': old_values[resource_id]['text'][field]
                               }
                         lines.append(line)
-                    
+
                     self.create_log_line(cr, uid, log_id, model, lines)
                 cr.commit()
             cr.close()
             return res
         return True
 
-    
+
 
     def execute(self, db, uid, model, method, *args, **kw):
         """
@@ -449,11 +471,11 @@ class audittrail_objects_proxy(osv_pool):
         logged_uids = []
         fct_src = super(audittrail_objects_proxy, self).execute
 
-        def my_fct(db, uid, model, method, *args):            
+        def my_fct(db, uid, model, method, *args):
             rule = False
-            model_ids = model_pool.search(cr, uid, [('model', '=', model)])        
-            model_id = model_ids and model_ids[0] or False 
-            
+            model_ids = model_pool.search(cr, uid, [('model', '=', model)])
+            model_id = model_ids and model_ids[0] or False
+
             for model_name in pool.obj_list():
                 if model_name == 'audittrail.rule':
                     rule = True
@@ -481,7 +503,7 @@ class audittrail_objects_proxy(osv_pool):
                 return fct_src(db, uid, model, method, *args)
         res = my_fct(db, uid, model, method, *args)
         cr.close()
-        return res   
+        return res
 
 
     def exec_workflow(self, db, uid, model, method, *args, **argv):
