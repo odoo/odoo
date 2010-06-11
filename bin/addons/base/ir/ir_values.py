@@ -233,11 +233,13 @@ class ir_values(osv.osv):
                         pos+=1
                 try:
                     datas = self.pool.get(model).read(cr, uid, [id], fields, context)
-                except except_orm:
+                except except_orm, e:
+                    print 'false 1',model,fields,e
                     return False
                 datas= datas and datas[0] or None
                 if not datas:
                     #ir_del(cr, uid, x[0])
+                    print 'false 2'
                     return False
             else:
                 datas = pickle.loads(str(x[2].encode('utf-8')))
@@ -246,8 +248,10 @@ class ir_values(osv.osv):
                 return (x[0],x[1],datas,meta2)
             return (x[0],x[1],datas)
         keys = []
+        print 'avant', result
         res = filter(bool, map(lambda x: _result_get(x, keys), list(result)))
         res2 = res[:]
+        print 'avant', res2
         for r in res:
             if type(r[2])==type({}) and 'type' in r[2]:
                 if r[2]['type'] in ('ir.actions.report.xml','ir.actions.act_window','ir.actions.wizard'):
@@ -263,6 +267,7 @@ class ir_values(osv.osv):
     #                else:
     #                    #raise osv.except_osv('Error !','You have not permission to perform operation !!!')
     #                    res2.remove(r)
+        print 'apres', res2
         return res2
 ir_values()
 
