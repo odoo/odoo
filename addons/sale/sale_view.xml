@@ -14,6 +14,7 @@
                 <form string="Sale Shop">
                     <field name="name" select="1"/>
                     <field name="warehouse_id" required="1" select="1" widget="selection"/>
+                    <field name="company_id" widget='selection'/>
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
                     <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>
@@ -105,7 +106,7 @@
                         <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
                         <field name="invoiced"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook colspan="5">
                         <page string="Sale Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
@@ -130,6 +131,7 @@
                                                 name="product_uom_qty"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position, True)"
                                                 />
+                                                <field groups="product.group_uos" name="product_uos_qty"/>
                                             <field name="product_uom"
                                                 on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
                                             <field
@@ -185,7 +187,6 @@
                                     <field name="price_subtotal"/>
                                 </tree>
                             </field>
-                            <newline/>
                             <group col="8" colspan="10">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
@@ -367,6 +368,7 @@
                             <field name="order_id"/>
                             <field name="order_partner_id" readonly="1" invisible="1"/>
                             <field name="product_uom_qty" readonly="1"/>
+                            <field groups="product.group_uos" name="product_uos_qty"/>
                             <field name="product_uom"/>
                             <field name="product_id" readonly="1"/>
                             <field name="invoiced"/>

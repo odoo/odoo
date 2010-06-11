@@ -39,8 +39,7 @@
               </group>
 			  <separator colspan="4"/>
 			   <group col="3" colspan="4">
-            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_step_1" string="Previous" colspan="1" type="object" icon="gtk-go-back"/>
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>                   
 					<button name="do_step_2" string="Next" colspan="1" type="object" icon="gtk-go-forward"/>
 				</group>
 			</form>
@@ -54,13 +53,12 @@
             <field name="arch" type="xml">
 			<form string="Share">              
 			  <separator colspan="4" string="Step 3: Chose Access Mode"/>
-              <group colspan="4" attrs="{'invisible':[('read_access','!=',True)]}">              
-    			  <field name="access_mode" attrs="{'readonly':[('write_access','!=',True)]}"/>              
+              <group colspan="4">              
+    			  <field name="access_mode"/>              
               </group>              
 			  <separator colspan="4"/>
 			   <group col="3" colspan="4">
             		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_step_2" string="Previous" colspan="1" type="object" icon="gtk-go-back"/>
 					<button name="do_step_3" string="Next" colspan="1" type="object" icon="gtk-go-forward"/>
 				</group>
 			</form>

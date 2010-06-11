@@ -102,9 +102,15 @@ class email_template(osv.osv):
                 }
 
     _columns = {
-        'name' : fields.char('Name of Template', size=100, required=True),
+        'name' : fields.char('Name', size=100, required=True),
         'object_name':fields.many2one('ir.model', 'Model'),
         'model_int_name':fields.char('Model Internal Name', size=200,),
+        'enforce_from_account':fields.many2one(
+                   'email_template.account',
+                   string="Enforce From Account",
+                   help="Emails will be sent only from this account."),
+        'from_email' : fields.related('enforce_from_account', 'email_id',
+                                                type='char', string='From',),        
         'def_to':fields.char(
                  'Recepient (To)',
                  size=250,
@@ -141,7 +147,7 @@ class email_template(osv.osv):
                     help="The text version of the mail",
                     translate=True),
         'use_sign':fields.boolean(
-                  'Use Signature',
+                  'Signature',
                   help="the signature from the User details" 
                   "will be appened to the mail"),
         'file_name':fields.char(
@@ -168,11 +174,6 @@ class email_template(osv.osv):
                   string="Allowed User Groups",
                   help="Only users from these groups will be"
                   " allowed to send mails from this Template"),
-        'enforce_from_account':fields.many2one(
-                   'email_template.account',
-                   string="Enforce From Account",
-                   help="Emails will be sent only from this account.",
-                   domain="[('company','=','yes')]"),
         'model_object_field':fields.many2one(
                  'ir.model.fields',
                  string="Field",
@@ -218,6 +219,7 @@ class email_template(osv.osv):
     }
 
     _defaults = {
+        'template_language' : lambda *a:'mako',
 
     }
     _sql_constraints = [
@@ -623,19 +625,6 @@ class email_template_preview(osv.osv_memory):
     _name = "email_template.preview"
     _description = "Email Template Preview"
     
-    def _get_model_recs(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        #Fills up the selection box which allows records from the selected object to be displayed
-        self.context = context
-        if 'active_id' in context.keys():
-#            context['active_id'] = 5
-            ref_obj_id = self.pool.get('email.template').read(cr, uid, context['active_id'], ['object_name'], context)
-            ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id[0], ['model'], context)['model']
-            ref_obj_ids = self.pool.get(ref_obj_name).search(cr, uid, [], context=context)
-            ref_obj_recs = self.pool.get(ref_obj_name).name_get(cr, uid, ref_obj_ids, context)
-            return ref_obj_recs
-    
     def _default_model(self, cursor, user, context=None):
         """
         Returns the default value for model field
@@ -655,7 +644,6 @@ class email_template_preview(osv.osv_memory):
                                        'email.template',
                                        'Template', readonly=True),
         'rel_model':fields.many2one('ir.model', 'Model', readonly=True),
-        'rel_model_ref':fields.selection(_get_model_recs, 'Referred Document'),
         'to':fields.char('To', size=250, readonly=True),
         'cc':fields.char('CC', size=250, readonly=True),
         'bcc':fields.char('BCC', size=250, readonly=True),
@@ -668,7 +656,7 @@ class email_template_preview(osv.osv_memory):
         'ref_template': lambda self, cr, uid, ctx:ctx['active_id'],
         'rel_model': _default_model
     }
-
+    # Need to check 
     def on_change_ref(self, cr, uid, ids, rel_model_ref, context=None):
         if context is None:
             context = {}
