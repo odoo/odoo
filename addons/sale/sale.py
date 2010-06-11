@@ -113,7 +113,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             LEFT JOIN
-                mrp_procurement mp on (mp.move_id=m.id)
+                procurement_order mp on (mp.move_id=m.id)
             WHERE
                 p.sale_id = ANY(%s) GROUP BY mp.state, p.sale_id''',(ids,))
         for oid, nbr, mp_state in cr.fetchall():
@@ -661,7 +661,7 @@ class sale_order(osv.osv):
                         'note': line.notes,
                         'company_id': order.company_id.id,
                     })
-                    proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+                    proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'name': order.name,
                         'origin': order.name,
                         'date_planned': date_planned,
@@ -679,10 +679,10 @@ class sale_order(osv.osv):
                         'company_id': order.company_id.id,
                     })
                     wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
                 elif line.product_id and line.product_id.product_tmpl_id.type == 'service':
-                    proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+                    proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'name': line.name,
                         'origin': order.name,
                         'date_planned': date_planned,
@@ -696,7 +696,7 @@ class sale_order(osv.osv):
                     })
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
                     wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 else:
                     #
                     # No procurement because no product in the sale.order.line.
@@ -810,7 +810,7 @@ class sale_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
-        'procurement_id': fields.many2one('mrp.procurement', 'Procurement'),
+        'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly',False)]}),
@@ -859,7 +859,7 @@ class sale_order_line(osv.osv):
                     return line.product_uos_qty or 0.0
                 return line.product_uom_qty
             else:
-                return self.pool.get('mrp.procurement').quantity_get(cr, uid,
+                return self.pool.get('procurement.order').quantity_get(cr, uid,
                         line.procurement_id.id, context=context)
 
         def _get_line_uom(line):
@@ -868,7 +868,7 @@ class sale_order_line(osv.osv):
                     return line.product_uos.id
                 return line.product_uom.id
             else:
-                return self.pool.get('mrp.procurement').uom_get(cr, uid,
+                return self.pool.get('procurement.order').uom_get(cr, uid,
                         line.procurement_id.id, context=context)
 
         create_ids = []

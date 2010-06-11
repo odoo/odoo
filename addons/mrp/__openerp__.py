@@ -26,7 +26,7 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
-    "depends" : ["mrp_procurement", "stock", "resource", "purchase", "product","process"],
+    "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
     This is the base module to manage the manufacturing process in Open ERP.
 
@@ -82,7 +82,7 @@
         'report/mrp_production_order_view.xml',
         'board_manufacturing_view.xml',
 
-        
+
     ],
     'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml','board_manufacturing_demo.xml'],
     'test': [

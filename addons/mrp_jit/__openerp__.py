@@ -40,7 +40,7 @@
     
     """,
     'author': 'Tiny',
-    'depends': ['mrp_procurement'],
+    'depends': ['procurement'],
     'update_xml': ['mrp_jit.xml'],
     'demo_xml': [],
     'installable': True,
