@@ -25,11 +25,10 @@
     # ------------------------------------------------------
     <record id="hr_job_stage_act" model="ir.actions.act_window">
         <field name="name">Applicant Stages</field>
-        <field name="res_model">crm.case.stage</field>
+        <field name="res_model">hr.recruitment.stage</field>
         <field name="view_type">form</field>
-        <field name="view_id"  ref="crm.crm_case_stage_tree"/>
-        <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
-        <field name="context">{'object_id':'hr.applicant'}</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
     </record>
 
     <menuitem action="hr_job_stage_act" id="menu_hr_job_stage_act" name="Stages" parent="menu_hr_config_applicant"/>
