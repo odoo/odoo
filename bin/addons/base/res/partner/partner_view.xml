@@ -5,7 +5,7 @@
 
         <menuitem id="menu_address_book" name="Address Book" parent="menu_base_partner" sequence="2"/>
 
-        <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="9"
+        <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="11"
             groups="group_system"/>
 
         <menuitem id="menu_config_address_book" name="Address Book" parent="menu_base_config" sequence="3"
@@ -317,9 +317,9 @@
                         <page string="Notes">
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
-                        <page string="History">
-                            <field colspan="4" name="events" nolabel="1" widget="one2many_list" string="Event Logs"/>
-                        </page>
+<!--                        <page string="History">-->
+<!--                            <field colspan="4" name="events" nolabel="1" widget="one2many_list" string="Event Logs"/>-->
+<!--                        </page>-->
 
                     </notebook>
                 </form>
@@ -333,8 +333,8 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
-                        <filter string="Customers" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
-                        <filter string="Suppliers" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                        <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                        <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address" select="1"/>
@@ -357,7 +357,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_supplier":supplier}</field>
+            <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
@@ -384,7 +384,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('customer','=',1)]</field>
-            <field name="context">{'default_customer':1}</field>
+            <field name="context">{'default_customer':1, 'search_default_customer':1}</field>
             <field name="filter" eval="True"/>
         </record>
 
@@ -415,15 +415,6 @@
             <field name="view_type">form</field>
             <field name="domain">[('supplier','&lt;&gt;',1),('customer','&lt;&gt;',1)]</field>
             <field name="filter" eval="True"/>
-        </record>
-
-        <record id="action_partner_customer_form_new" model="ir.actions.act_window">
-            <field name="name">New Partner</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="view_partner_form"/>
         </record>
 
         <record id="view_payterm_form" model="ir.ui.view">
@@ -549,6 +540,7 @@
                 </tree>
             </field>
         </record>
+        <!--
         <record id="action_partner_category" model="ir.actions.act_window">
             <field name="name">Partners by Categories</field>
             <field name="type">ir.actions.act_window</field>
@@ -559,6 +551,7 @@
         </record>
         <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_address_book" sequence="1"
             groups="base.group_extended"/>
+        -->
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
             <field name="name">Partner Categories</field>

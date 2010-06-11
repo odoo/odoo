@@ -874,12 +874,17 @@ class serialized(_column):
 class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
+        from orm import browse_record
         prop = obj.pool.get('ir.property')
-        domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
+        domain = prop._get_domain_default(cr, uid, prop_name, obj._name, context)
         ids = prop.search(cr, uid, domain, order='company_id', context=context)
         if not ids:
             return False
-        return prop.get_by_id(cr, uid, ids, context=context) 
+
+        default_value = prop.get_by_id(cr, uid, ids, context=context)
+        if isinstance(default_value, browse_record):
+            return default_value.id
+        return default_value
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
@@ -903,7 +908,7 @@ class property(function):
 
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
-        if id_val and id_val != default_val:
+        if id_val is not default_val:
             def_id = self._field_get(cr, uid, obj._name, prop_name)
             company = obj.pool.get('res.company')
             cid = company._company_default_get(cr, uid, obj._name, def_id,
@@ -924,23 +929,16 @@ class property(function):
 
     def _fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
         from orm import browse_record
-        if context is None:
-            context = {}
-
-        property = obj.pool.get('ir.property')
+        properties = obj.pool.get('ir.property')
 
         default_val = self._get_default(obj, cr, uid, prop_name, context)
-        if isinstance(default_val, browse_record):
-            default_val = default_val.id
-        else:
-            default_val = False
 
         nids = self._get_by_id(obj, cr, uid, prop_name, ids, context)
 
         res = {}
         for id in ids:
             res[id] = default_val
-        for prop in property.browse(cr, uid, nids):
+        for prop in properties.browse(cr, uid, nids):
             value = prop.get_by_id(context=context)
             if isinstance(value, browse_record):
                 if not value.exists():

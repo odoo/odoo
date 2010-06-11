@@ -30,7 +30,7 @@
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
                     <field colspan="4" name="fields_id" select="1"/>
                     <field colspan="4" name="type"/>
-                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('integer', 'integer_big'))]}">
+                    <group colspan="4" attrs="{'invisible' : [('type', 'not in', ('integer', 'integer_big', 'boolean'))]}">
                         <field colspan="4" name="value_integer" widget="integer"/>
                     </group>
                     <group colspan="4" attrs="{'invisible' : [('type', '!=', 'float')]}">

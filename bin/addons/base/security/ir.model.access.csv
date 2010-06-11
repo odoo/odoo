@@ -1,5 +1,6 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_ir_attachment_group_system","ir_attachment group_system","model_ir_attachment",,1,1,1,1
+"access_ir_attachment_all","ir_attachment all","model_ir_attachment",,1,0,0,0
+"access_ir_attachment_group_user","ir_attachment group_user","model_ir_attachment",group_user,1,1,1,1
 "access_ir_cron_group_cron","ir_cron group_cron","model_ir_cron","group_system",1,1,1,1
 "access_ir_cron_user","ir_cron user","model_ir_cron","group_user",1,0,0,0
 "access_ir_default_group_system","ir_default group_system","model_ir_default",,1,1,1,1
@@ -26,8 +27,9 @@
 "access_ir_rule_group_erp_manager","ir_rule group_erp_manager","model_ir_rule","group_erp_manager",1,1,1,1
 "access_ir_sequence_group_user","ir_sequence group_user","model_ir_sequence",,1,1,1,1
 "access_ir_sequence_type_group_user","ir_sequence_type group_user","model_ir_sequence_type",,1,0,0,0
-"access_ir_translation_group_system","ir_translation group_system","model_ir_translation",,1,1,1,1
-"access_ir_ui_menu_group_user","ir_ui_menu group_user","model_ir_ui_menu",,1,0,1,0
+"access_ir_translation_all","ir_translation all","model_ir_translation",,1,0,0,0
+"access_ir_translation_group_system","ir_translation group_system","model_ir_translation","group_system",1,1,1,1
+"access_ir_ui_menu_group_user","ir_ui_menu group_user","model_ir_ui_menu",,1,0,0,0
 "access_ir_ui_menu_group_system","ir_ui_menu group_system","model_ir_ui_menu","group_system",1,1,1,1
 "access_ir_ui_view_group_user","ir_ui_view group_user","model_ir_ui_view",,1,0,0,0
 "access_ir_ui_view_group_system","ir_ui_view group_system","model_ir_ui_view","group_system",1,1,1,1
@@ -97,7 +99,7 @@
 "access_workflow_group_system","workflow_group_system","model_workflow","group_system",1,1,1,1
 "access_workflow_activity_all","workflow_activity_all","model_workflow_activity",,1,0,0,0
 "access_workflow_activity_group_system","workflow_activity_group_system","model_workflow_activity","group_system",1,1,1,1
-"access_workflow_instance_all","workflow_instance_all","model_workflow_instance",,1,1,1,1
+"access_workflow_instance_all","workflow_instance_all","model_workflow_instance",,1,0,0,0
 "access_workflow_transition_all","workflow_transition_all","model_workflow_transition",,1,0,0,0
 "access_workflow_transition_group_system","workflow_transition_group_system","model_workflow_transition","group_system",1,1,1,1
 "access_workflow_triggers_all","workflow_triggers_all","model_workflow_triggers",,1,0,0,0
@@ -125,5 +127,5 @@
 "access_maintenance_group_user","maintenance_contract group_user","model_maintenance_contract","group_maintenance_manager",1,1,1,1
 "access_maintenance_contract_module","maintenance.contract.module","model_maintenance_contract_module","group_maintenance_manager",1,1,1,1
 "access_maintenance_contract_wizard","maintenance.contract.wizard","model_maintenance_contract_wizard","group_maintenance_manager",1,1,1,1
-"access_multi_company_default user","multi_company_default User","model_multi_company_default","group_user",1,0,0,0
+"access_multi_company_default user","multi_company_default all","model_multi_company_default",,1,0,0,0
 "access_multi_company_default manager","multi_company_default Manager","model_multi_company_default","group_erp_manager",1,1,1,1
