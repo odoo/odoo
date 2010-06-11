@@ -248,10 +248,8 @@ class ir_values(osv.osv):
                 return (x[0],x[1],datas,meta2)
             return (x[0],x[1],datas)
         keys = []
-        print 'avant', result
         res = filter(bool, map(lambda x: _result_get(x, keys), list(result)))
         res2 = res[:]
-        print 'avant', res2
         for r in res:
             if type(r[2])==type({}) and 'type' in r[2]:
                 if r[2]['type'] in ('ir.actions.report.xml','ir.actions.act_window','ir.actions.wizard'):
@@ -264,10 +262,6 @@ class ir_values(osv.osv):
                                 res2.remove(r)
                             if r[1]=='Menuitem' and not res2:
                                   raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
-    #                else:
-    #                    #raise osv.except_osv('Error !','You have not permission to perform operation !!!')
-    #                    res2.remove(r)
-        print 'apres', res2
         return res2
 ir_values()
 
