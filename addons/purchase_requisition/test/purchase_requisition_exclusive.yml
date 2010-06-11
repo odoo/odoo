@@ -52,8 +52,8 @@
 - 
   I launch he scheduler to compute all procurements, and planify all requisitions orders.
 -  
-  !python {model: mrp.procurement.compute.all}: |
-    proc_obj = self.pool.get('mrp.procurement')
+  !python {model: procurement.order.compute.all}: |
+    proc_obj = self.pool.get('procurement.order')
     proc_obj._procure_confirm(cr,uid)
 -
   I should find a purchase requisition with the origin 'TEST/TENDER/0002', that includes a request for

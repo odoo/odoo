@@ -4,6 +4,8 @@
 -
   I create two products.
 -
+  I create one product Table.
+-
   !record {model: product.product, id: product_product_table0}:
     categ_id: product.cat1
     name: Table
@@ -12,6 +14,8 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
+-
+  I create another product Wood.
 -
   !record {model: product.product, id: product_product_wood0}:
     categ_id: product.cat1
@@ -68,21 +72,21 @@
 -
   I check that one procurement is generated.
 -
-  !python {model: mrp.procurement}: |
+  !python {model: procurement.order}: |
     from tools.translate import _
     proc_ids = self.search(cr, uid, [('state','=','confirmed')])
     assert proc_ids, _('No Procurements!')
 - 
   The scheduler runs.
 -
-  !function {model: mrp.procurement, name: run_scheduler}:
-    - model: mrp.procurement
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
       search: "[('state','=','confirmed')]"
 -
   I check that the procurement for the product table is in exception state.
   As my product's supply method is produce and mrp module is yet not installed.
 -
-  !python {model: mrp.procurement}: |
+  !python {model: procurement.order}: |
     from tools.translate import _
     proc_ids = self.search(cr, uid, [('state','=','exception')])
     assert proc_ids, _('No Procurements are in exception state!')

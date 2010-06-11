@@ -10,6 +10,7 @@
                 <field name="date_planned"/>
                 <field name="day_diff"/>
                 <field name="year" invisible="1" />
+                <field name="state" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="day" invisible="1"/>
                 <field name="location_id" invisible="1"/>
@@ -18,9 +19,7 @@
                 <field name="partner_id"/>
                 <field name="product_qty"/>
                 <field name="product_uom"/>
-                <field name="state"/>
                 <field name="value"/>
-
            </tree>
         </field>
     </record>
@@ -60,15 +59,10 @@
                     help="Stock Moves of today"/>
                 <separator orientation="vertical"/>
 
-                <filter string="Waiting"
-                    	icon="terp-gtk-media-pause"
-                    	domain="[('state','=','waiting')]"
-                    	help = "Confirmed Stock-Moves"/>
-
-                <filter string="Available"
+                <filter string="Future"
                     	icon="terp-camera_test"
-                    	domain="[('state','=','assigned')]"
-                    	help = "Available Stock-Moves"/>
+                    	domain="[('state','in',('assigned','done','waiting','confirmed'))]"
+                    	help = "Future Stock-Moves"/>
 
                 <filter string="Done"
                 		name="done"
@@ -76,14 +70,15 @@
                     	domain="[('state','=','done')]"
                     	help = "Completed Stock-Moves"/>
 
+
                 <separator orientation="vertical"/>
-                <filter icon="terp-go-home" string="Internal Locations" domain="[('location_id.usage','=','internal')]"/>
-                <filter icon="terp-go-home" string="Scrap Locations" domain="[('location_id.scrap_location','=',1)]"/>
+                <filter icon="terp-go-home" string="Internal" domain="[('location_id.usage','=','internal')]"/>
+                <filter icon="terp-go-home" string="Scrap" domain="[('location_id.scrap_location','=',1)]"/>
                 <separator orientation="vertical"/>
                 <field name="product_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Group By..." >
+                <group expand="1" string="Group By..." >
                     <filter string="Partner" name="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter name="product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <separator orientation="vertical"/>
@@ -112,7 +107,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
  		<field name="search_view_id"  ref="view_stock_search"/>
- 		<field name="context">{'search_default_product':1, 'search_default_src_location':1,'search_default_done':1,'group_by':[]}</field>
+ 		<field name="context">{'search_default_product':1, 'search_default_src_location':1,'search_default_done':1,'group_by':[], 'group_by_no_leaf':1}</field>
     </record>
 
 	<menuitem

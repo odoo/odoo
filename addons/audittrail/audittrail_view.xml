@@ -63,9 +63,10 @@
             <!--<field name="view_id" ref="view_audittrail_rule_form" />-->
         </record>
 
-        <menuitem name="Audittrails" id="menu_action_audittrail"
+        <menuitem name="Audittrail" id="menu_action_audittrail"
             groups="base.group_extended"
             parent="base.menu_administration" />
+
         <menuitem name="Rules" id="menu_action_audittrail_rule_tree"
             action="action_audittrail_rule_tree" parent="menu_action_audittrail" />
 
@@ -93,9 +94,8 @@
                     <field name="name" readonly="1" select="1"/>
                     <field name="res_id" readonly="1"/>
                     <field name="object_id" select="1" readonly="1"/>
-                    <field name="method_name" select="1" readonly="1"/>
                     <field name="line_ids" colspan="4" mode="tree,form"
-                        widget="one2many_list" readonly="1">
+                        widget="one2many_list" readonly="1" nolabel="1">
                         <form string="Log Lines">
                             <field name="field_id" colspan="4"
                                 readonly="1" />
@@ -157,11 +157,7 @@
             <field name="view_type">form</field>
         </record>
         <menuitem name="Logs" id="menu_action_audittrail_log_tree"
-            action="action_audittrail_log_tree" parent="menu_action_audittrail" />
-
-        <!--  <wizard string="View log" menu="False" model="audittrail.log" name="audittrail.view.log" id="wizard_audittrail_log"/>-->
-        <menuitem name="View Logs" id="menu_action_log_tree2"
-            action="action_audittrail_view_log" parent="menu_action_audittrail" />
+            action="action_audittrail_log_tree" parent="menu_action_audittrail" />       
 
     </data>
 </openerp>

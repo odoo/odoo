@@ -36,9 +36,6 @@
 								<field name="send_pref" colspan="2" />
 							</group>
 						</page>
-						<page string="security" attrs="{'invisible':[('company','!=','yes')]}">
-							<field name="allowed_groups" attrs="{'required':[('company','=','yes')]}" nolabel="1"/>
-						</page>
 					</notebook>
 					<group colspan="4" col="10">
 						<field name="state" select="1"/>

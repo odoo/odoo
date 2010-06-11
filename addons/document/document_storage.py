@@ -96,6 +96,8 @@ class document_storage(osv.osv):
     """
     _name = 'document.storage'
     _description = 'Storage Media'
+    _log_create=True
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),

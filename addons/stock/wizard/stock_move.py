@@ -29,24 +29,20 @@ class stock_move_track(osv.osv_memory):
     _columns = {
         'tracking_prefix': fields.char('Tracking prefix', size=64), 
         'quantity': fields.float("Quantity per lot")
-              }
+    }
 
     _defaults = {
         'quantity': lambda *x: 1
-                 }
+    }
     
     def track_lines(self, cr, uid, ids, context={}):
-        """ 
-             To track stock moves lines
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param context: A standard dictionary 
-             
-             @return: 
-        
+        """ To track stock moves lines
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: An ID or list of IDs if we want more than one 
+        @param context: A standard dictionary 
+        @return: 
         """                
         datas = self.read(cr, uid, ids)[0]
         move_obj = self.pool.get('stock.move')
@@ -67,17 +63,13 @@ class stock_move_consume(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields, context=None):
-        """ 
-             Get default values
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for default value 
-             @param context: A standard dictionary 
-             
-             @return: default values of fields
-        
+        """ Get default values
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for default value 
+        @param context: A standard dictionary 
+        @return: default values of fields
         """
         res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)        
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
@@ -93,17 +85,13 @@ class stock_move_consume(osv.osv_memory):
         return res   
             
     def do_move_consume(self, cr, uid, ids, context={}):
-        """ 
-             To move consumed products
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param context: A standard dictionary 
-             
-             @return: 
-        
+        """ To move consumed products
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID or list of IDs if we want more than one 
+        @param context: A standard dictionary 
+        @return: 
         """              
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
@@ -126,17 +114,13 @@ class stock_move_scrap(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields, context=None):
-        """ 
-             Get default values
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for default value 
-             @param context: A standard dictionary 
-             
-             @return: default values of fields
-        
+        """ Get default values
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for default value 
+        @param context: A standard dictionary 
+        @return: default values of fields
         """
         res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)        
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
@@ -158,17 +142,13 @@ class stock_move_scrap(osv.osv_memory):
         return res
         
     def move_scrap(self, cr, uid, ids, context={}):
-        """ 
-             To move scraped products
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param context: A standard dictionary 
-             
-             @return: 
-        
+        """ To move scraped products
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID or list of IDs if we want more than one 
+        @param context: A standard dictionary 
+        @return: 
         """              
         move_obj = self.pool.get('stock.move')        
         move_ids = context['active_ids']
@@ -186,58 +166,52 @@ class split_in_production_lot(osv.osv_memory):
     _description = "Split in Production lots"
     
     def default_get(self, cr, uid, fields, context=None):
-        """ 
-             Get default values
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for default value 
-             @param context: A standard dictionary 
-             
-             @return: default values of fields
-        
+        """ Get default values
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for default value 
+        @param context: A standard dictionary 
+        @return: Default values of fields
         """
         
         res = super(split_in_production_lot, self).default_get(cr, uid, fields, context=context)        
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)  
         if 'product_id' in fields:
             res.update({'product_id': move.product_id.id})  
+        if 'qty' in fields:
+            res.update({'qty': move.product_qty})  
         return res
     
     _columns = {
+        'qty': fields.integer('Quantity'), 
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number')
+        'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number'),
+        'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Lots Existing Numbers'),
+        'use_exist' : fields.boolean('Use Exist'),
      }
+    
     def split_lot(self, cr, uid, ids, context=None):
-        """ 
-             To split a lot
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param context: A standard dictionary 
-             
-             @return: 
-        
+        """ To split a lot
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: An ID or list of IDs if we want more than one 
+        @param context: A standard dictionary 
+        @return: 
         """                    
         self.split(cr, uid, ids, context.get('active_ids'), context=context)
         return {}
 
     def split(self, cr, uid, ids, move_ids, context=None):
-        """ 
-             To split stock moves into production lot
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param move_ids: the ID or list of IDs of stock move we want to split
-             @param context: A standard dictionary 
-             
-             @return: 
-        
+        """ To split stock moves into production lot
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID or list of IDs if we want more than one 
+        @param move_ids: the ID or list of IDs of stock move we want to split
+        @param context: A standard dictionary 
+        @return: 
         """                    
         prodlot_obj = self.pool.get('stock.production.lot')
         ir_sequence_obj = self.pool.get('ir.sequence')
@@ -249,10 +223,12 @@ class split_in_production_lot(osv.osv_memory):
                 quantity_rest = move.product_qty
                 uos_qty_rest = move.product_uos_qty
                 new_move = []                            
-                for line in data.line_ids:
+                if data.use_exist:
+                    lines = [l for l in data.line_exist_ids if l]
+                else:
+                    lines = [l for l in data.line_ids if l]
+                for line in lines:
                     quantity = line.quantity
-                    
-
                     if quantity <= 0 or move_qty == 0:
                         continue
                     quantity_rest -= quantity
@@ -272,20 +248,21 @@ class split_in_production_lot(osv.osv_memory):
                     if quantity_rest == 0:
                         current_move = move.id
                     prodlot_id = False
-                    if line.use_exist and line.name:
-                        prodlot_id = prodlot_obj.search(cr, uid, [('prefix','=',line.name),('product_id','=',data.product_id.id)])
+                    if data.use_exist and line.prodlot_id:
+                        prodlot_id = prodlot_obj.search(cr, uid, [('id','=',line.prodlot_id.id)])
                         if prodlot_id:
-                            prodlot_id = prodlot_id[0]                    
+                            prodlot_id = prodlot_id[0]
                     if not prodlot_id:
-                        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-                        prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix' : line.name}, 
+                      #  sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+                        prodlot_id = prodlot_obj.create(cr, uid, {'name': line.name},
+                        # 'prefix' : line.name}, 
                                                  {'product_id': move.product_id.id})                    
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id})
                     prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
-                    ref = '%d' % (move.id)
-                    if prodlot.ref:
-                        ref = '%s, %s' % (prodlot.ref, ref) 
-                    prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
+                 #   ref = '%d' % (move.id)
+                 #   if prodlot.ref:
+                 #       ref = '%s, %s' % (prodlot.ref, ref) 
+                 #   prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
                     
                     update_val = {}
                     if quantity_rest > 0:                        
@@ -295,10 +272,24 @@ class split_in_production_lot(osv.osv_memory):
         return new_move
 split_in_production_lot()
 
+class stock_move_split_lines_exist(osv.osv_memory):
+    _name = "stock.move.split.lines.exist"
+    _description = "Exist Split lines"
+    _columns = {
+        'name': fields.char('Tracking serial', size=64), 
+        'quantity': fields.integer('Quantity'), 
+        'lot_id': fields.many2one('stock.move.split', 'Lot'),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot'),
+    }
+    _defaults = {
+        'quantity': lambda *x: 1,
+    }
+
+stock_move_split_lines_exist()
+
 class stock_move_split_lines(osv.osv_memory):
     _name = "stock.move.split.lines"
     _description = "Split lines"
-    
     _columns = {
         'name': fields.char('Tracking serial', size=64), 
         'quantity': fields.integer('Quantity'), 
@@ -306,6 +297,7 @@ class stock_move_split_lines(osv.osv_memory):
         'lot_id': fields.many2one('stock.move.split', 'Lot'),
         'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
     }
+    
     _defaults = {
         'quantity': lambda *x: 1,
         'action' : lambda *x: 'split', 

@@ -26,8 +26,7 @@ class stock_split_move_line(osv.osv_memory):
     _description = "Split Moves"
     
     def default_get(self, cr, uid, fields, context):
-        """ 
-         To get default values for the object.
+        """ To get default values for the object.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
@@ -44,8 +43,7 @@ class stock_split_move_line(osv.osv_memory):
         return res
     
     def view_init(self, cr, uid, fields_list, context=None):
-        """ 
-         Creates view dynamically and adding fields at runtime.
+        """ Creates view dynamically and adding fields at runtime.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
@@ -67,8 +65,7 @@ class stock_split_move_line(osv.osv_memory):
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
                         context=None, toolbar=False, submenu=False):
-        """ 
-         Changes the view dynamically
+        """ Changes the view dynamically
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
@@ -94,8 +91,7 @@ class stock_split_move_line(osv.osv_memory):
         return res
     
     def split_lines(self, cr, uid, ids, context):
-        """ 
-         Splits moves in quantity given in the wizard.
+        """ Splits moves in quantity given in the wizard.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in

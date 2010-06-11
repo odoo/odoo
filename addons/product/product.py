@@ -210,6 +210,7 @@ class product_category(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
     }
+    
 
     _defaults = {
         'type' : lambda *a : 'normal',
