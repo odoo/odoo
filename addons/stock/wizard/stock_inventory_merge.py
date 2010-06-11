@@ -31,22 +31,15 @@ import wizard
 class stock_inventory_merge(osv.osv_memory):
     _name = "stock.inventory.merge"
     _description = "Merge Inventory"
-    _columns = {
-           
-            }
 
     def do_merge(self, cr, uid, ids, context):
-        """ 
-             To merge selected Inventories.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
-             @param context: A standard dictionary 
-             
-             @return: 
-        
+        """ To merge selected Inventories.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
+        @return: 
         """ 
         invent_obj = self.pool.get('stock.inventory')
         invent_line_obj = self.pool.get('stock.inventory.line')

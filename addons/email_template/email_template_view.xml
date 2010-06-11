@@ -62,7 +62,9 @@
 					<field name="model_int_name" invisible="1" />
 					<notebook colspan="4">
 						<page string="Mail Details">
+							<field name="enforce_from_account" required= "1"/>
 							<group col="4" colspan="2">
+							    <field name="from_email"/>
 								<field name="def_to" colspan="4" required="1" />
 								<field name="def_cc" colspan="4" />
 								<field name="def_bcc" colspan="4" />
@@ -109,15 +111,7 @@
 									type="action" colspan="4" target="new" />
 							</group>
 						</page>
-						<page string="Security">
-							<separator colspan="4" string="Allowed User Groups" />
-							<field name="allowed_groups" string="Allowed User Groups"
-								nolabel="1" />
-						</page>
 						<page string="Advanced">
-							<separator string="Automatic Email" colspan="4" />
-							<field name="enforce_from_account" attrs="{'required':[('auto_email','=',True)]}" />
-							<newline/>
 							<field name="ref_ir_act_window" />
 							<field name="ref_ir_value" />
 							<separator string="Attachments (Report to attach)" colspan="4"/>

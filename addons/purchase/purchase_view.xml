@@ -21,8 +21,6 @@
             parent="base.menu_purchase_root" sequence="4"/>
       <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
               name="Incoming Shipments" sequence="9"/>
-        <menuitem action="stock.action_reception_picking_move" id="menu_action_reception_picking_move"
-              name="Incoming Products" parent="menu_procurement_management_inventory" sequence="10"/>
       <menuitem action="stock.action_picking_tree_out" id="menu_action_picking_treeout" parent="menu_procurement_management_inventory" sequence="11"/>
 
      <!--Invoice control-->
@@ -353,9 +351,9 @@
         -->
 
         <record id="view_procurement_form_inherit" model="ir.ui.view">
-        	<field name="name">mrp.procurement.form.inherit</field>
-        	<field name="model">mrp.procurement</field>
-        	<field name="inherit_id" ref="mrp_procurement.mrp_procurement_form_view"/>
+        	<field name="name">procurement.order.form.inherit</field>
+        	<field name="model">procurement.order</field>
+        	<field name="inherit_id" ref="procurement.procurement_form_view"/>
         	<field name="type">form</field>
         	<field name="arch" type="xml">
         		<xpath expr="/form/notebook/page/field[@name='close_move']" position="before">
