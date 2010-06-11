@@ -34,6 +34,11 @@ Thanks to the double entry management, the inventory controlling is powerful and
 * Bar code supported
 * Rapid detection of mistakes through double entry system
 * Traceability (upstream/downstream, production lots, serial number, ...)
+* Dashboard for warehouse that includes:
+    * Products to receive in delay (date < = today)
+    * Procurement in exception
+    * Graph : Number of Receive products vs planned (bar graph on week par day)
+    * Graph : Number of Delivery products vs planned (bar graph on week par day)
     """,
     "website" : "http://www.openerp.com",
     "depends" : ["product", "account"],
@@ -67,6 +72,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "report/report_stock_picking_view.xml",
         "security/stock_security.xml",
         "security/ir.model.access.csv",
+        "board_warehouse_view.xml"
     ],
     'test': ['test/stock_test.yml'],
     'installable': True,

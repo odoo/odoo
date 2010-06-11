@@ -76,7 +76,7 @@ class share_create(osv.osv_memory):
         'user_type': fields.selection( [ ('existing','Existing'),('new','New')],'User Type'),
         'user_ids': fields.many2many('res.users', 'share_user_rel', 'share_id','user_id', 'Share Users'),
         'new_user': fields.text("New user"),
-        'access_mode': fields.selection( [ ('readonly','READ ONLY'),('readwrite','READ & WRITE')],'Access Mode'),
+        'access_mode': fields.selection([('readwrite','READ & WRITE'),('readonly','READ ONLY')],'Access Mode'),
         'write_access': fields.function(_access, method=True, string='Write Access',type='boolean', multi='write_access'),
         'read_access': fields.function(_access, method=True, string='Write Access',type='boolean', multi='read_access'),
     }
@@ -84,6 +84,7 @@ class share_create(osv.osv_memory):
         'user_type' : 'existing',
         'domain': '[]',
         'access_mode': 'readonly'
+        
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -124,7 +125,8 @@ class share_create(osv.osv_memory):
             vals ={
                 'domain': this.domain, 
                 'action_id': this.action_id and this.action_id.id or False,
-            }           
+            }   
+            step1_id = this.id        
 
         context.update(vals)
         value = {
@@ -132,7 +134,8 @@ class share_create(osv.osv_memory):
             'view_type': 'form', 
             'view_mode': 'form', 
             'res_model': 'share.create',            
-            'view_id': False, 
+            'view_id': False,
+            'res_id': step1_id, 
             'views': [(step1_form_view_id, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')], 
             'type': 'ir.actions.act_window', 
             'context': context,
@@ -162,9 +165,6 @@ class share_create(osv.osv_memory):
                 'user_type': this.user_type, 
                 'existing_user_ids': map(lambda x:x.id, this.user_ids),
                 'new_user': this.new_user,
-                'domain': this.domain,
-                'access_mode': this.access_mode,
-                'action_id': this.action_id and this.action_id.id or False
             }           
 
         context.update(vals)
@@ -189,6 +189,13 @@ class share_create(osv.osv_memory):
         """
         if not context:
             context = {}
+
+        for this in self.browse(cr, uid, ids, context=context):            
+            vals ={
+                'access_mode': this.access_mode,
+            }           
+
+        context.update(vals)
         
         group_obj = self.pool.get('res.groups')
         user_obj = self.pool.get('res.users')
@@ -248,7 +255,7 @@ class share_create(osv.osv_memory):
         
 
         #ACCESS RIGHTS / IR.RULES COMPUTATION 
-        #TODO: TO Resolve Recurrent Problems    
+           
         active_model_ids = model_obj.search(cr, uid, [('model','=',active_model)])
         active_model_id = active_model_ids and active_model_ids[0] or False
         
@@ -268,14 +275,36 @@ class share_create(osv.osv_memory):
                 
             return obj
 
-        obj0 = model_obj.browse(cr, uid, active_model_id, context=context)        
+        active_model = model_obj.browse(cr, uid, active_model_id, context=context)
+        obj0 = [(None, active_model)]
         obj1 = _get_relation(active_model_id, ['one2many'])
         obj2 = _get_relation(active_model_id, ['one2many', 'many2many'])
         obj3 = _get_relation(active_model_id, ['many2one'])
         for rel_field, model in obj1:
             obj3 += _get_relation(model.id, ['many2one'])
+
+        current_user = user_obj.browse(cr, uid, uid, context=context)
         if access_mode == 'readonly':
-            for rel_field, model in obj1+obj2+obj3:
+            res = []
+            # intersect with read access rights of user running the 
+            # wizard, to avoid adding more access than current
+            for group in current_user.groups_id:
+                for access_control in group.model_access:
+                     if access_control.model_id.id in res:
+                        continue
+                     if access_control.perm_read:
+                        res.append(access_control.model_id.id)
+                        model_access_obj.create(cr, uid, {
+                        'name': 'Read Access of group %s on %s model'%(share_group_name, access_control.model_id.name),
+                        'model_id' : access_control.model_id.id,
+                        'group_id' : group_id,
+                        'perm_read' : True
+                        })    
+            res = []
+            for rel_field, model in obj0+obj1+obj2+obj3:
+                if model.id in res:
+                    continue
+                res.append(model.id)
                 model_access_obj.create(cr, uid, {
                         'name': 'Read Access of group %s on %s model'%(share_group_name, model.name),
                         'model_id' : model.id,
@@ -283,27 +312,68 @@ class share_create(osv.osv_memory):
                         'perm_read' : True
                         })
         if access_mode == 'readwrite':
-            for rel_field, model in obj1+obj2+obj3:
+            res = []
+            for rel_field, model in obj0+obj1:
+                if model.id in res:
+                    continue
+                res.append(model.id)
                 model_access_obj.create(cr, uid, {
-                        'name': 'Read Access of group %s on %s model'%(share_group_name, model.name),
+                        'name': 'Write Access of group %s on %s model'%(share_group_name, model.name),
                         'model_id' : model.id,
                         'group_id' : group_id,
                         'perm_read' : True,
-                        'perm_write' : True
+                        'perm_write' : True,
+                        'perm_unlink' : True,
+                        'perm_create' : True,
+                        })
+            # intersect with access rights of user 
+            # running the wizard, to avoid adding more access than current
+
+            for group in current_user.groups_id:
+                for access_control in group.model_access:
+                     if access_control.model_id.id in res:
+                        continue
+                     if access_control.perm_read:
+                        res.append(access_control.model_id.id)
+                        model_access_obj.create(cr, uid, {
+                        'name': 'Read Access of group %s on %s model'%(share_group_name, access_control.model_id.name),
+                        'model_id' : access_control.model_id.id,
+                        'group_id' : group_id,
+                        'perm_read' : True
                         })
             for rel_field, model in obj2+obj3:
+                if model.id in res:
+                    continue
+                res.append(model.id)
                 model_access_obj.create(cr, uid, {
                         'name': 'Read Access of group %s on %s model'%(share_group_name, model.name),
                         'model_id' : model.id,
                         'group_id' : group_id,
                         'perm_read' : True
                         })
+        # 
+        # And on OBJ0, OBJ1, OBJ2, OBJ3: add all rules from groups of the user
+        #  that is sharing in the many2many of the rules on the new group 
+        #  (rule must be copied instead of adding it if it contains a reference to uid
+        #  or user.xxx so it can be replaced correctly)
+
+        for group in current_user.groups_id:
+            res = []
+            for rel_field, model in obj0+obj1+obj2+obj3:
+                if model.id in res:
+                    continue
+                res.append(model.id)
+                for rule in group.rule_groups:
+                    if rule.model_id == model.id:                 
+                        rule_obj.copy(cr, uid, rule.id, default={
+                        'name': '%s-%s'%(share_group_name, model.model), 
+                        'groups': [(6,0,[group_id])]}, context=context)
 
         rule_obj.create(cr, uid, {
-                'name': '%s-%s'%(share_group_name, obj0.model),
-                'model_id': obj0.id,
-                'domain': domain,
-                'group_ids': [(6,0,[group_id])]
+                'name': '%s-%s'%(share_group_name, active_model.model),
+                'model_id': active_model.id,
+                'domain_force': domain,
+                'groups': [(6,0,[group_id])]
             })
         for rel_field, model in obj1:
             obj1_domain = []
@@ -314,15 +384,10 @@ class share_create(osv.osv_memory):
             rule_obj.create(cr, uid, {
                 'name': '%s-%s'%(share_group_name, model.model),
                 'model_id': model.id,
-                'domain': obj1_domain,
+                'domain_force': obj1_domain,
                 'groups': [(6,0,[group_id])]
             })
-       # TODO:
-       # And on OBJ0, OBJ1, OBJ2, OBJ3: add all rules from groups of the user
-       #  that is sharing in the many2many of the rules on the new group 
-       #  (rule must be copied instead of adding it if it contains a reference to uid
-       #  or user.xxx so it can be replaced correctly)  
-        context['share_model'] = active_model
+        context['share_model'] = active_model.model
         context['share_rec_id'] = active_id
 
         

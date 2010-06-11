@@ -23,7 +23,7 @@
 {
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "depends" : ["product", "analytic", "process"],
+    "depends" : ["product", "analytic", "process","board"],
     "author" : "Tiny",
     "category": 'Generic Modules/Accounting',
     "description": """Financial and accounting module that covers:
@@ -34,6 +34,10 @@
     Budgets
     Customer and Supplier Invoices
     Bank statements
+    Creates a dashboards for accountants that includes:
+    * List of uninvoiced quotations
+    * Graph of aged receivables
+    * Graph of aged incomes    
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
@@ -100,9 +104,9 @@ module named account_voucherss
         'project/wizard/account_analytic_chart_view.xml',
         'product_view.xml',
         'account_assert_test.xml',
-#        'process/statement_process.xml',
-#        'process/customer_invoice_process.xml',
-#        'process/supplier_invoice_process.xml',
+        'process/statement_process.xml',
+        'process/customer_invoice_process.xml',
+        'process/supplier_invoice_process.xml',
         'sequence_view.xml',
         'company_view.xml',
         'account_installer.xml',
@@ -111,7 +115,8 @@ module named account_voucherss
         'report/account_report_view.xml',
         'report/account_analytic_report_view.xml',
         'report/account_account_report_view.xml',
-        'report/account_analytic_entries_report_view.xml'
+        'report/account_analytic_entries_report_view.xml',
+        'board_account_view.xml',
     ],
     'demo_xml': [
         #'demo/price_accuracy00.yml',
@@ -120,6 +125,7 @@ module named account_voucherss
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'account_unit_test.xml',
+        'board_account_demo.xml',
     ],
     'test': [
         'test/account_customer_invoice.yml',

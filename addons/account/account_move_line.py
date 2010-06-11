@@ -498,9 +498,17 @@ class account_move_line(osv.osv):
                 return False
         return True
 
+    def _check_company_id(self, cr, uid, ids):
+        lines = self.browse(cr, uid, ids)
+        for l in lines:
+            if l.company_id != l.account_id.company_id or l.company_id != l.period_id.company_id:
+                return False
+        return True
+
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
+        (_check_company_id,'Company must be same for its related account and period.',['company_id'] ),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -574,6 +582,13 @@ class account_move_line(osv.osv):
         unmerge = []
         total = 0.0
         merges_rec = []
+
+        company_list = []
+        for line in self.browse(cr, uid, ids, context=context):
+            if company_list and not line.company_id.id in company_list:
+                raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
+            company_list.append(line.company_id.id)
+
         for line in self.browse(cr, uid, ids, context):
             if line.reconcile_id:
                 raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
@@ -587,6 +602,7 @@ class account_move_line(osv.osv):
             else:
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
+
         if not total:
             res = self.reconcile(cr, uid, merges+unmerge, context=context)
             return res
@@ -604,6 +620,13 @@ class account_move_line(osv.osv):
         currency = 0.0
         account_id = False
         partner_id = False
+
+        company_list = []
+        for line in self.browse(cr, uid, ids, context=context):
+            if company_list and not line.company_id.id in company_list:
+                raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
+            company_list.append(line.company_id.id)
+
         for line in unrec_lines:
             if line.state <> 'valid':
                 raise osv.except_osv(_('Error'),
@@ -836,7 +859,7 @@ class account_move_line(osv.osv):
         if vals.get('date', False):
             todo_date = vals['date']
             del vals['date']
-            
+
         for line in self.browse(cr, uid, ids,context=context):
             ctx = context.copy()
             if ('journal_id' not in ctx):
@@ -848,8 +871,8 @@ class account_move_line(osv.osv):
                 if line.move_id:
                     ctx['period_id'] = line.move_id.period_id.id
                 else:
-                    ctx['period_id'] = line.period_id.id  
-            #Check for centralisation  
+                    ctx['period_id'] = line.period_id.id
+            #Check for centralisation
             journal = self.pool.get('account.journal').browse(cr, uid, ctx['journal_id'], context=ctx)
             if journal.centralisation:
                 self._check_moves(cr, uid, context=ctx)

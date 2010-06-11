@@ -3,6 +3,7 @@
     <data>
         <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" sequence="2"/>
         <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1"/>
+        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="5"/>
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="4"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="6"/>
@@ -407,7 +408,7 @@
                     <newline/>
                     <field name="usage"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="account_id" groups="base.group_extended"/>
+                    <!--<field name="account_id" groups="base.group_extended"/>-->
                     <field name="location_id"/>
                     <field name="address_id" context="{'contact_display':'partner'}"/>
                     <field name="icon" groups="base.group_extended"/>
@@ -758,11 +759,12 @@
                 <form string="Picking list">
                     <group col="6" colspan="4">
                         <field name="name" readonly="1"/>
-                        <field name="address_id"/>
+                        <field name="address_id" required="1"/>
                         <field name="origin"/>
                         <field name="backorder_id" groups="base.group_extended" readonly="1"/>
                         <field name="date" />
                         <field name="min_date"/>
+                        <field name="type" invisible="1"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                         <notebook colspan="4">
@@ -937,12 +939,13 @@
             <field name="arch" type="xml">
                 <form string="Picking list">
                     <group col="6" colspan="4">
-                        <field name="address_id"/>
+                        <field name="address_id" required="1" />
                         <field name="min_date"/>
                         <field name="name" readonly="1"/>
                         <field name="invoice_state"/>
                         <field name="backorder_id" readonly="1"/>
                         <field name="origin" readonly="1"/>
+                        <field name="type" invisible="1"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
@@ -1118,7 +1121,7 @@
                     <group colspan="4" col="6">
 
                         <field name="name" readonly="1"/>
-                        <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" />
+                        <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" required="1" />
                         <field name="origin"/>
                         <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         <field name="date"/>
@@ -1447,7 +1450,7 @@
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancel')" string="Moves">
                     <field name="picking_id" string="Reference"/>
-                    <field name="origin" string="Latest Procurement"/>
+                    <field name="origin"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="product_id"/>
                     <field name="product_qty" />
@@ -1510,9 +1513,9 @@
                                 <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
                             </group>
                         </page>
-                        <page string="Return Picking History">
+                    <!--    <page string="Return Picking History">
                             <field name="move_stock_return_history" nolabel="1"/>
-                         </page>
+                         </page-->
                     </notebook>
                 </form>
             </field>
@@ -1530,7 +1533,7 @@
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
                         <filter icon="terp-go-today" string="Planned Today" domain="[('date_planned::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
-                        <field name="origin" string="Latest Procurement"/>
+                        <field name="origin"/>
                         <field name="partner_id" string="Supplier"/>
                         <field name="product_id"/>
                     </group>
@@ -1551,7 +1554,7 @@
         </record>
 
         <record id="action_reception_picking_move" model="ir.actions.act_window">
-            <field name="name">Incoming Products</field>
+            <field name="name">Incoming Packings</field>
             <field name="res_model">stock.move</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1761,5 +1764,33 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree_out"/>
         </record>
+
+        <record id="action_out_picking_move" model="ir.actions.act_window">
+            <field name="name">Outcoming Packings</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_id','!=',False),('picking_id.type','=','out')]</field>
+            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="context">{"search_default_receive":1}</field>
+            <field name="search_view_id" ref="view_move_search_reception_picking"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_move_out_picking_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="act_window_id" ref="action_out_picking_move"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_move_out_picking_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_move_form_reception_picking"/>
+            <field name="act_window_id" ref="action_out_picking_move"/>
+        </record>
+
+      <menuitem action="action_reception_picking_move" id="menu_action_pdct_in" parent="menu_stock_products_moves" sequence="1"/>
+      <menuitem action="action_out_picking_move" id="menu_action_pdct_out" parent="menu_stock_products_moves" sequence="2"/>
     </data>
 </openerp>

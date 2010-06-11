@@ -26,7 +26,6 @@
                 	<field name="user_id" invisible="1"/>
                 	<field name="partner_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
-                    <field name="quantity" invisible="1"/>
                 	<field name="day" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
@@ -35,9 +34,10 @@
                     <field name="company_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="location_id" invisible="1"/>
+                    <field name="nbr" sum="# of Lines"/>
                     <field name="shipped_qty" sum="# of received"/>
                     <field name="invoiced_qty" sum="# of invoiced"/>
-                    <field name="nbr" sum="# of Lines"/>
+                    <field name="quantity" sum="# Qty"/>
                     <field name="price_average" avg="Average Price"/>
                 	<field name="price_total" sum="Total Price"/>
                     <field name="delay" sum="# Days to close"/>
