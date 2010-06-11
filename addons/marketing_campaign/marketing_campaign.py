@@ -412,8 +412,14 @@ class marketing_campaign_workitem(osv.osv):
             self.create(cr, uid, workitem_vals)
         return True
 
+    def button_draft(self, cr, uid, workitem_ids, context={}):
+        for wi in self.browse(cr, uid, workitem_ids, context=context):
+            if wi.state=='exception':
+                self.write(cr, uid, [wi.id], {'state':'todo'}, context=context)
+        return True
+
     def button_cancel(self, cr, uid, workitem_ids, context={}):
-        for wi in self.browse(cr, uid, workitem_ids):
+        for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('todo','exception'):
                 self.write(cr, uid, [wi.id], {'state':'cancelled'}, context=context)
         return True

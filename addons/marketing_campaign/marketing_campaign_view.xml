@@ -404,8 +404,9 @@
                 <separator string="Status" colspan="4"/>
                 <group colspan="4" col="11">
                     <field name="state" nolabel="1" readonly="True" select="1"/>
+                    <button string="Retry" states="exception" name="button_draft" type="object" icon="gtk-ok"/>
                     <button string="Process" states="todo" name="process" type="object" icon="gtk-ok"/>
-                    <button string="Cancel" states="todo" name="button_cancel" type="object" icon="gtk-cancel"/>
+                    <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="gtk-cancel"/>
                 </group>
             </form>
         </field>
