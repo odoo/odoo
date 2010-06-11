@@ -66,7 +66,7 @@
                                 <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
                                 <button name="%(action_view_pos_return)d" string="Return Picking" type="action" icon="gtk-ok" states="paid"
-                                    attrs="{'invisible':[('state','!=','paid'),('state','!=','invoiced')]}"/>
+                                    attrs="{'invisible':[('state','!=','paid'),('state','!=','invoiced')]}" context="{'return':'return'}" />
                             </group>
                         </page>
 
@@ -85,6 +85,7 @@
                                 <field name="date_order"/>
                                 <field name="date_validation" />
                                 <field name="date_payment" groups="base.group_extended"/>
+                                <field name="type_rec"  colspan="4"/>
                             </group>
                             <group colspan="4">
                                 <separator string="Invoicing" colspan="4"/>
@@ -109,12 +110,9 @@
                                 </form>
                             </field>
                         </page>
+
                         <page string="Notes" >
-                            <separator string="Notes" colspan="4" />
-                            <group colspan="4">
-                                <field name="type_rec"  colspan="4"/>
-                                <field name="note"  colspan="4"/>
-                            </group>
+							<field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
 

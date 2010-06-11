@@ -8,7 +8,7 @@
 
 		<record id="process_process_serviceproductprocess0" model="process.process">
 			<field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
-			<field name="model_id" ref="mrp.model_mrp_procurement"/>
+			<field name="model_id" ref="mrp.model_procurement_order"/>
 			<field eval="1" name="active"/>
 		</record>
 
@@ -18,7 +18,7 @@
 
 		<record id="process_node_serviceonorder0" model="process.node">
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
-			<field name="model_id" ref="mrp.model_mrp_procurement"/>
+			<field name="model_id" ref="mrp.model_procurement_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Assignment from Production or Purchase Order.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Make to Order&quot;&quot;&quot;" name="name"/>
@@ -29,7 +29,7 @@
 
 		<record id="process_node_servicemts0" model="process.node">
 			<field name="menu_id" ref="mrp.menu_mrp_procurement_action"/>
-			<field name="model_id" ref="mrp.model_mrp_procurement"/>
+			<field name="model_id" ref="mrp.model_procurement_order"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Assignment from stock.&quot;&quot;&quot;" name="note"/>
 			<field eval="&quot;&quot;&quot;Make to stock&quot;&quot;&quot;" name="name"/>

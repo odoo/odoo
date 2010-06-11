@@ -69,7 +69,7 @@ class purchase_report(osv.osv):
         'quantity': fields.float('# of Products', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
-        'nbr': fields.integer('# of Lines', readonly=True),
+        'nbr': fields.integer('# of Ordered Lines', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
 
@@ -106,7 +106,7 @@ class purchase_report(osv.osv):
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(s.minimum_planned_date,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
-                    sum(l.product_qty*l.price_unit) as price_total,
+                    l.price_unit*l.product_qty*u.factor as price_total,
                     (sum(l.product_qty*l.price_unit)/sum(l.product_qty*u.factor))::decimal(16,2) as price_average
                 from purchase_order s
                     left join purchase_order_line l on (s.id=l.order_id)
@@ -118,7 +118,10 @@ class purchase_report(osv.osv):
                     s.shipped,
                     l.invoiced,
                     s.partner_id,
+                    l.product_qty,
+                    u.factor,
                     s.location_id,
+                    l.price_unit,
                     s.date_approve,
                     s.minimum_planned_date,
                     date_trunc('day',s.minimum_planned_date),
