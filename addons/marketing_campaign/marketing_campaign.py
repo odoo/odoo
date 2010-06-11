@@ -242,7 +242,7 @@ class marketing_campaign_activity(osv.osv):
         self._actions = {'paper' : self.process_wi_report,
                     'email' : self.process_wi_email,
                     'server_action' : self.process_wi_action,
-            }        
+        }
         return super(marketing_campaign_activity, self).__init__(*args)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
@@ -259,7 +259,7 @@ class marketing_campaign_activity(osv.osv):
         return super(marketing_campaign_activity, self).search(cr, uid, args,
                                            offset, limit, order, context, count)
 
-    def process_wi_report(self, cr, uid, activity, workitem):
+    def process_wi_report(self, cr, uid, activity, workitem, context={}):
         service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
         (report_data, format) = service.create(cr, uid, [], {}, {})
         attach_vals = {
@@ -274,46 +274,58 @@ class marketing_campaign_activity(osv.osv):
         self.pool.get('ir.attachment').create(cr, uid, attach_vals)
         return True
 
-    def process_wi_email(self, cr, uid, activity, workitem):
-        template = activity.email_template_id
-        accounts = template.enforce_from_account
-        if not template.enforce_from_account:
-            return {'error_msg'  : "There is no account defined for the email"}
-        if not workitem.partner_id.email:
-            return {'error_msg'  : "There is no email defined for the partner"}
-        vals = {
-            'email_from': tools.ustr(accounts.name) + "<" + tools.ustr(accounts.email_id) + ">",
-            'email_to': workitem.partner_id.email,
-            'subject': template.def_subject,
-            'body_text': template.def_body_text,
-            'body_html': template.def_body_html,
-            'account_id':accounts.id,
-            'state':'na',
-            'mail_type':'multipart/alternative' #Options:'multipart/mixed','multipart/alternative','text/plain','text/html'
-        }
-#            if accounts.use_sign:
-#                signature = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
-#                if signature:
-#                    vals['pem_body_text'] = tools.ustr(vals['pem_body_text'] or '') + signature
-#                    vals['pem_body_html'] = tools.ustr(vals['pem_body_html'] or '') + signature
+    def process_wi_email(self, cr, uid, activity, workitem, context=None):
+        print 'Sending Email Init', activity.name
+        return self.pool.get('email.template').generate_mail(cr, uid, activity.email_template_id.id, [workitem.res_id], context=context)
 
-        #Create partly the mail and later update attachments
-        mail_id = self.pool.get('email_template.mailbox').create(cr, uid, vals, context)
+        #if not template.enforce_from_account:
+        #    self.pool.get('marketing.campaign.workitem').write(cr, uid, [workitem.id], {
+        #        'error_msg': 'There is no account defined for the email',
+        #        'state': 'exception'
+        #    })
+        #    return False
+        #if not workitem.partner_id.email:
+        #    self.pool.get('marketing.campaign.workitem').write(cr, uid, [workitem.id], {
+        #        'error_msg': "There is no email defined for the partner",
+        #        'state': 'exception'
+        #    })
+        #    return False
+        #vals = {
+        #    'email_from': tools.ustr(accounts.name) + "<" + tools.ustr(accounts.email_id) + ">",
+        #    'email_to': template.email_to,
+        #    'email_cc': template.email_cc,
+        #    'email_bcc': template.email_bcc,
+        #    'subject': template.def_subject,
+        #    'body_text': template.def_body_text,
+        #    'body_html': template.def_body_html,
+        #    'account_id': accounts.id,
+        #    'state':'na',
+        #    'mail_type':'multipart/alternative' #Options:'multipart/mixed','multipart/alternative','text/plain','text/html'
+        #}
+#       #     if accounts.use_sign:
+#       #         signature = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
+#       #         if signature:
+#       #             vals['pem_body_text'] = tools.ustr(vals['pem_body_text'] or '') + signature
+#       #             vals['pem_body_html'] = tools.ustr(vals['pem_body_html'] or '') + signature
+
+        ##Create partly the mail and later update attachments
+        #print 'Sending Email', vals
+        #mail_id = self.pool.get('email_template.mailbox').create(cr, uid, vals, context)
         return True
-        
-    def process_wi_action(self, cr, uid, activity, workitem):
+
+    def process_wi_action(self, cr, uid, activity, workitem, context={}):
         context = {}
         server_obj = self.pool.get('ir.actions.server')
-        server_obj.run(cr, uid, [activity.server_action_id.id], context)    
+        server_obj.run(cr, uid, [activity.server_action_id.id], context)
         return True
-                
 
     def process(self, cr, uid, act_id, wi_id, context={}):
         activity = self.browse(cr, uid, act_id)
+        print 'Process', activity.name
         workitem_obj = self.pool.get('marketing.campaign.workitem')
-        workitem = workitem_obj.browse(cr, uid, wi_id)
-        self._actions[activity.type](cr, uid, activity, workitem)
-        return True
+        workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
+        print 'WI', workitem, activity.type
+        return self._actions[activity.type](cr, uid, activity, workitem, context)
 
 marketing_campaign_activity()
 
@@ -419,14 +431,18 @@ class marketing_campaign_workitem(osv.osv):
                 }
                 expr = eval(str(wi.activity_id.condition), eval_context)
                 if expr:
-                    try :
+                    try:
+                        result = True
                         if wi.campaign_id.mode in ('manual','active'):
-                            self.pool.get('marketing.campaign.activity').process(
+                            result = self.pool.get('marketing.campaign.activity').process(
                                 cr, uid, wi.activity_id.id, wi.id, context)
-                        self.write(cr, uid, wi.id, {'state': 'done'})
-                        self.process_chain(cr, uid, wi.id, context)
+                        if result:
+                            self.write(cr, uid, wi.id, {'state': 'done'})
+                            self.process_chain(cr, uid, wi.id, context)
+                        else:
+                            self.write(cr, uid, wi.id, {'state': 'exception'})
                     except Exception,e:
-                        self.write(cr, uid, wi.id, {'state': 'exception'})
+                        self.write(cr, uid, wi.id, {'state': 'exception', 'error_msg': str(e)})
                 else :
                     self.write(cr, uid, wi.id, {'state': 'cancelled'})
 
@@ -444,7 +460,7 @@ class marketing_campaign_workitem(osv.osv):
                 workitem_ids = self.search(cr, uid, [('state', '=', 'todo')])
             else:
                 # manual states are not processed automatically
-                pass
+                workitem_ids = []
         if workitem_ids:
             self.process(cr, uid, workitem_ids, context)
 

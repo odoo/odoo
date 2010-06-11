@@ -182,15 +182,15 @@
                 </group>
                 <group colspan="2" col="2">
                    <separator string="Synchronization" colspan="2"/>
-                   <field name="sync_last_date"/>
                    <field name="sync_mode" required="True"/>
+                   <field name="sync_last_date"/>
                    <label string="" colspan="1"/>
                    <button string="Synchronize" states="running" name="synchroniz" icon="gtk-apply" type="object"/>
                 </group>
                 <group colspan="2" col="2">
                     <separator string="Dates" colspan="2"/>
-                    <field name="date_run" attrs="{'readonly':[('date_run','!=',False),('state','=','running')]}"/>
-                    <field name="date_done"/>
+                    <field name="date_run" readonly="1"/>
+                    <field name="date_done" readonly="1"/>
                 </group>
                 <separator string="Status" colspan="4"/>
                 <group col="10" colspan="4">
@@ -396,6 +396,10 @@
                         <label string="" colspan="1"/>
                         <button string="Preview" states="todo" name="preview" icon="gtk-apply" type="object"/>
                     </group>
+                </group>
+                <group colspan="4" col="4" attrs="{'invisible':[('state','!=','exception')]}">
+                    <separator string="Error Message" colspan="4"/>
+                    <field name="error_msg" nolabel="1" colspan="4"/>
                 </group>
                 <separator string="Status" colspan="4"/>
                 <group colspan="4" col="11">
