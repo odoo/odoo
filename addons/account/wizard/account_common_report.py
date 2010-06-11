@@ -64,19 +64,35 @@ class account_common_report(osv.osv_memory):
         else:
            return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
 
+    def _get_account(self, cr, uid, context=None):
+        tmp = self.pool.get('account.account').search(cr, uid, [], limit=1 )
+        if not tmp:
+            return False
+        return tmp[0]
+
     def _get_fiscalyear(self, cr, uid, context=None):
-        return 1
+        now = time.strftime('%Y-%m-%d')
+        tmp = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
+        if not tmp:
+            return False
+        return tmp[0]
+
+    def _get_all_journal(self, cr, uid, context=None):
+        return self.pool.get('account.journal').search(cr, uid ,[])
 
     _defaults = {
-            'state' : 'none',
-            'date_from' : time.strftime('%Y-01-01'),
-            'date_to' : time.strftime('%Y-%m-%d'),
-            'company_id' : _get_company,
-            'display_account' : 'bal_all',
-            'sortbydate' : 'sort_date',
-            'fiscalyear' : _get_fiscalyear,
-            'landscape': True,
-            'amount_currency' : True,
+#            'state' : 'none',
+#            'date_from' : time.strftime('%Y-01-01'),
+#            'date_to' : time.strftime('%Y-%m-%d'),
+#            'company_id' : _get_company,
+#            'display_account' : 'bal_all',
+#            'sortbydate' : 'sort_date',
+            'fiscalyear_id' : _get_fiscalyear,
+#            'landscape': True,
+#            'amount_currency' : True,
+            'journal_ids': _get_all_journal,
+            'filter': 'filter_no',
+            'account_id': _get_account,
     }
 
     def next_view(self, cr, uid, ids, context=None):
