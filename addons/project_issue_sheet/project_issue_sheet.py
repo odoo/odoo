@@ -19,17 +19,7 @@
 #
 ##############################################################################
 
-import base64
-import os
-import re
-import time
-import mx.DateTime
-from datetime import datetime, timedelta
-
-import tools
-from crm import crm
 from osv import fields,osv,orm
-from osv.orm import except_orm
 from tools.translate import _
 
 class project_issue(osv.osv):

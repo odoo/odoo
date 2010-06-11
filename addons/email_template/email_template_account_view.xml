@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-        
+
         <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="15"/>
         <menuitem name="Email Template" id="menu_email_template" parent="base.menu_tools"/>
-        
+
 		<record model="ir.ui.view" id="email_template_account_form">
 			<field name="name">email_template.account.form</field>
 			<field name="model">email_template.account</field>
@@ -35,9 +35,6 @@
 								<field name="user" select="2" colspan="2" />
 								<field name="send_pref" colspan="2" />
 							</group>
-						</page>
-						<page string="security" attrs="{'invisible':[('company','!=','yes')]}">
-							<field name="allowed_groups" attrs="{'required':[('company','=','yes')]}" nolabel="1"/>
 						</page>
 					</notebook>
 					<group colspan="4" col="10">
@@ -74,12 +71,12 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Accounts">
-                    <filter icon="terp-crm" string="My Accounts" name="my" domain="[('user','=',uid)]"/>
-                    <filter icon="terp-crm" string="Personal Accounts" domain="[('company','=','no')]"/>
-                    <filter icon="terp-crm" string="Company Accounts" domain="[('company','=','yes')]"/>
+                    <filter icon="terp-personal" string="My Accounts" name="my" domain="[('user','=',uid)]"/>
+                    <filter icon="terp-personal+" string="Personal Accounts" domain="[('company','=','no')]"/>
+                    <filter icon="terp-go-home" string="Company Accounts" domain="[('company','=','yes')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-crm" string="Draft" name="draft" domain="[('state','=','draft')]"/>
-                    <filter icon="terp-crm" string="Suspended" domain="[('state','=','suspended')]"/>
+                    <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-emblem-important" string="Suspended" domain="[('state','=','suspended')]"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="user" select="1"/>

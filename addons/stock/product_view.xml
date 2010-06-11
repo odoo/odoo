@@ -28,10 +28,6 @@
                         <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_journal"/>
                     </group>
-					<group col="2" colspan="2">
-                        <separator string="Variation Stock Properties" colspan="4"/>
-                         <field name="property_stock_variation"/>
-                    </group>    
                 </form>
             </field>
         </record>
@@ -126,18 +122,19 @@
                 </group>
             </field>
         </record>
-        
+
         <record id="view_product_valuation_form" model="ir.ui.view">
-            <field name="name">product.valuation.form.inherit</field>
+            <field name="name">product.valuation.stock.form.inherit</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-            	<field name="cost_method" position="after">
-				<field name="valuation"/>
-				</field>
-           </field>
+                <field name="cost_method" position="after">
+                    <field name="valuation"/>
+                </field>
+            </field>
         </record>
+
 
     </data>
 </openerp>

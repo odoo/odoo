@@ -73,7 +73,7 @@ class procurement_order(osv.osv):
                 'move_type': 'one',
                 'address_id': line.partner_address_id.id,
                 'note': line.name, # TODO: note on procurement ?
-                'invoice_state': 'none',
+                'invoice_state': line.invoice_state,
             })
             move_id = self.pool.get('stock.move').create(cr, uid, {
                 'name': line.name,

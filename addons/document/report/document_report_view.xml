@@ -41,8 +41,8 @@
                 <search string="All users files">
                 	<group col="12" colspan="4">
                         <separator orientation="vertical"/>
-						<filter icon="terp-stock" string="This Year" domain="[('name','=',time.localtime()[0])]" help="All Months Files"/>
-						<filter icon="terp-stock" string="This Month" domain="[('month','=',time.localtime()[1])]" help="This Months Files"/>
+						<filter icon="terp-go-year" string="This Year" domain="[('name','=',time.localtime()[0])]" help="All Months Files"/>
+						<filter icon="terp-go-month" string="This Month" domain="[('month','=',time.localtime()[1])]" help="This Months Files"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
 						<field name="month" select="1"/>

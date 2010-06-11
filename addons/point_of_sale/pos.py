@@ -226,6 +226,7 @@ class pos_order(osv.osv):
         else:
             return False
     def copy(self, cr, uid, id, default=None, context={}):
+        
         if not default:
             default = {}
         default.update({
@@ -235,7 +236,6 @@ class pos_order(osv.osv):
             'invoice_id': False,
             'account_move': False,
             'picking_id': False,
-            'statement_ids':False,
             'nb_print': 0,
             'pickings': []
         })

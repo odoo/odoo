@@ -49,6 +49,7 @@ class account_invoice_report(osv.osv):
         'price_total':fields.float('Total Price', readonly=True),
         'price_average':fields.float('Average Price', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
+        'reconciled':fields.integer('# reconciled lines', readonly=True),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -62,7 +63,7 @@ class account_invoice_report(osv.osv):
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Cancelled')
-            ], 'Order State', readonly=True),
+            ], 'Invoice State', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'address_contact_id': fields.many2one('res.partner.address', 'Contact Address Name', readonly=True),
         'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
@@ -89,6 +90,7 @@ class account_invoice_report(osv.osv):
                              l.quantity * u.factor
                          end) as product_qty,
                      s.partner_id as partner_id,
+                     s.reconciled::integer,
                      s.payment_term as payment_term,
                      s.period_id as period_id,
                      u.name as uom_name,
@@ -137,6 +139,7 @@ class account_invoice_report(osv.osv):
                      l.product_id,
                      u.name,
                      l.uos_id,
+                     s.reconciled,
                      s.user_id,
                      s.state,
                      s.residual,
