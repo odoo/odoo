@@ -128,7 +128,7 @@
                                  <tree editable="bottom" string="Project's Tasks">
                                     <field name="name"/>
                                     <field name="user_id"/>
-                                    <field name="planned_hours" widget="float_time" on_change="onchange_planned(project_id, user_id, planned_hours, effective_hours)"/>
+                                    <field name="planned_hours" widget="float_time"/>
                                   </tree>
                                   <form string="Project's Tasks">
                                       <notebook colspan="4">
@@ -142,11 +142,10 @@
                                                   <separator string="Dates" colspan="2"/>
                                                   <field name="date_start"/>
                                                   <field name="date_deadline"/>
-                                                  <field name="occupation_rate"/>
                                             </group>
                                             <group colspan="2" col="2">
                                                   <separator string="Planning" colspan="2"/>
-                                                  <field name="planned_hours" widget="float_time" on_change="onchange_planned(project_id, user_id, planned_hours, effective_hours)"/>
+                                                  <field name="planned_hours" widget="float_time"/>
                                                 <field name="remaining_hours" widget="float_time" sum="Remaining Hours"/>
                                                 <field name="effective_hours" invisible="1"/>
                                             </group>
@@ -270,32 +269,7 @@
     # Project Task
     # ------------------------------------------------------
 
-        <record id="view_project_phase_task_form1" model="ir.ui.view">
-            <field name="name">project.phase.task.form1</field>
-            <field name="model">project.task</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
-            <field name="arch" type="xml">
-                <field name="planned_hours" position="replace">
-                    <field name="planned_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" on_change="onchange_planned(project_id, user_id, planned_hours, effective_hours, date_start, occupation_rate)"/>
-                </field>
-
-            </field>
-       </record>
-
-        <record id="view_project_phase_task_form2" model="ir.ui.view">
-            <field name="name">project.phase.task.form2</field>
-            <field name="model">project.task</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.view_task_form2"/>
-            <field name="arch" type="xml">
-                <field name="date_end" position = "after">
-                      <field name="occupation_rate"/>
-                </field>
-            </field>
-       </record>
-
-        <act_window
+    <act_window
         id="project_phase_task_list"
         name="Related Tasks"
         res_model="project.task"
@@ -303,7 +277,7 @@
         view_mode="tree,form"
         domain="[('phase_id','=',active_id)]"/>
 
-        <act_window
+    <act_window
         domain="[('project_id', '=', active_id)]"
         id="act_project_phases"
         name="Phases"

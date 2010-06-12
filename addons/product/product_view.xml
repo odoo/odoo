@@ -466,7 +466,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Variant">
- 					<field name="product_tmpl_id" select="1"/>                
+                     <field name="product_tmpl_id" select="1"/>                
                     <field name="active" select="1"/>
                     <field name="variants" select="1"/>
                     <field name="default_code" select="1"/>
@@ -606,7 +606,7 @@
             <field name="view_id" ref="product_template_tree_view"/>
         </record>
 
-		<record id="ir_ui_view_sc_product0" model="ir.ui.view_sc">
+        <record id="ir_ui_view_sc_product0" model="ir.ui.view_sc">
             <field name="name">Products</field>
             <field name="resource">ir.ui.menu</field>
             <field name="user_id" ref="base.user_root"/>
