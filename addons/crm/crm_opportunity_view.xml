@@ -255,6 +255,8 @@
                             icon="gtk-go-forward" />
                         <field name="planned_revenue" sum="Total of Planned Revenue"/>
                         <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
+                        <field name="section_id"
+                            invisible="context.get('invisible_section', True)" />
                         <field name="user_id"/>
                         <field name="state"/>
                         <button name="case_open" string="Open"
@@ -323,11 +325,17 @@
                                 help="Unassigned Opportunities" />
                         </field>
                         <field name="section_id"
-                            default="context.get('section_id', False)" select="1"
+                            default="context.get('section_id', False)"
+                            context="{'invisible_section': False}"
                             widget="selection">
                             <filter icon="terp-personal+"
-                                domain="[('section_id','=',context.get('section_id',False))]"
+                                domain="[('section_id.user_id','=',uid)]"
+                                context="{'invisible_section': False}"
                                 help="My Sale Team" />
+                            <filter icon="terp-personal+"
+                                context="{'invisible_section': False}"
+                                domain="[]"
+                                help="Show Sales Team"/>
                         </field>
                         <newline/>
                         <group expand="0" string="Group By..." colspan="16">
