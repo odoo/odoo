@@ -65,6 +65,7 @@
                 <form string="Product">
                    <group colspan="4" col="6">
                     <group colspan="4" col="2">
+                        <separator string="Name" colspan="2"/>
                         <field name="name"/>
                         <field groups="product.group_product_variant" name="variants" />
                     </group>
@@ -74,10 +75,9 @@
                         <field name="ean13" groups="base.group_extended"/>
                     </group>
                     <group colspan="1" col="2">
-                        <separator string="Product Characteristics" colspan="2"/>
+                        <separator string="Characteristics" colspan="2"/>
                         <field name="sale_ok"/>
                         <field name="purchase_ok"/>
-                        <field groups="base.group_extended" name="rental"/>
                     </group>
                    </group>
 
