@@ -95,7 +95,7 @@
                 <form string="Stock and Sales Forecasts">
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
-                    <field name="period_id1" widget="selection"/>
+                    <field name="period_id1"/>
                     <newline/>
                     <field name="warehouse_id1" domain = "[('company_id','=',company_id)] "/>
                     <newline/>
@@ -240,11 +240,11 @@
                 <search string="Search Stock and Sales Forecast">
                  <group col='10' colspan='4'>
                     <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" separator="1"/>
-                    <field name="company_id" select="1" widget="selection"/>
-                    <field name="warehouse_id" select="1" widget="selection"/>
-                    <field name="period_id" select="1" widget="selection"/>
-                    <field name="product_id" select="1" widget="selection"/>
-                    <field name="create_uid" select="1" widget="selection"/>
+                    <field name="company_id" widget="selection"/>
+                    <field name="warehouse_id" widget="selection"/>
+                    <field name="period_id" widget="selection"/>
+                    <field name="product_id"/>
+                    <field name="create_uid"/>
                 </group>
               </search>
             </field>
@@ -388,7 +388,7 @@
                     <field name="company_id" widget="selection"/>
                     <field name="warehouse_id" widget="selection"/>
                     <field name="period_id" widget="selection"/>
-                    <field name="product_id" widget="selection"/>
+                    <field name="product_id"/>
                  </group>
               </search>
             </field>

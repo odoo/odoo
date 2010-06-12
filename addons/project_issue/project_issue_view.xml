@@ -106,9 +106,9 @@
                                 </tree>
                            </field>
                            <button colspan="4" string="Send New Email"
-                           	name="%(crm.action_crm_send_mail)d"
-                           	context="{'mail':'new', 'model': 'project.issue'}"
-                           	icon="gtk-go-forward" type="action" />
+                               name="%(crm.action_crm_send_mail)d"
+                               context="{'mail':'new', 'model': 'project.issue'}"
+                               icon="gtk-go-forward" type="action" />
                         </page>
                            <page string="History" groups="base.group_extended">
                             <group col="2" colspan="2">
@@ -187,10 +187,10 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-						<filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and Open Issues" icon="terp-check" default="1"/>
+                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and Open Issues" icon="terp-check" default="1"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
-						<separator orientation="vertical"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
@@ -201,31 +201,31 @@
                             domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Bugs during last 7 days"
                             />
-                    	<separator orientation="vertical"/>
+                        <separator orientation="vertical"/>
                         <field name="name" string="Name"/>
-                        <field name="user_id" widget="selection"/>
-                        <field name="project_id" widget="selection" string="Project"/>
+                        <field name="user_id"/>
+                        <field name="project_id" string="Project"/>
                         <field name="state"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..."  groups="base.group_extended">
-	                    <filter string="Project"  icon="terp-folder-blue" domain="[]"
+                        <filter string="Project"  icon="terp-folder-blue" domain="[]"
                             context="{'group_by':'project_id'}" />
-	                    <filter string="Stage" icon="terp-stage" domain="[]"
-	                        context="{'group_by':'stage_id'}" />
-	                    <filter string="Priority" icon="terp-rating-rated" domain="[]"
-	                        context="{'group_by':'priority'}" />
-	                    <filter string="Version" icon="terp-gtk-jump-to-rtl"
-	                        domain="[]" context="{'group_by':'type_id'}" />
-	                    <separator orientation="vertical" />
-	                    <filter string="Partner" icon="terp-personal" domain="[]"
-	                        context="{'group_by':'partner_id'}" />
-	                    <filter string="Salesman" icon="terp-personal"
-	                        domain="[]" context="{'group_by':'user_id'}" />
-						<separator orientation="vertical" />
-						<filter string="Month" icon="terp-go-month"
-	                        domain="[]" context="{'group_by':'create_date'}" />
-                	</group>
+                        <filter string="Stage" icon="terp-stage" domain="[]"
+                            context="{'group_by':'stage_id'}" />
+                        <filter string="Priority" icon="terp-rating-rated" domain="[]"
+                            context="{'group_by':'priority'}" />
+                        <filter string="Version" icon="terp-gtk-jump-to-rtl"
+                            domain="[]" context="{'group_by':'type_id'}" />
+                        <separator orientation="vertical" />
+                        <filter string="Partner" icon="terp-personal" domain="[]"
+                            context="{'group_by':'partner_id'}" />
+                        <filter string="Salesman" icon="terp-personal"
+                            domain="[]" context="{'group_by':'user_id'}" />
+                        <separator orientation="vertical" />
+                        <filter string="Month" icon="terp-go-month"
+                            domain="[]" context="{'group_by':'create_date'}" />
+                    </group>
                 </search>
             </field>
         </record>
@@ -298,12 +298,12 @@
                     <separator orientation="vertical"/>
                     <group>
                         <field name="name" select='1' string="Feature description"/>
-                        <field name="user_id" select="1" widget="selection"/>
+                        <field name="user_id" select="1"/>
                         <field name="state" select="1">
                             <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                             <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
-                        <field name="project_id" select="1" widget="selection" string="Project"/>
+                        <field name="project_id" select="1" string="Project"/>
 
                     </group>
                 </search>

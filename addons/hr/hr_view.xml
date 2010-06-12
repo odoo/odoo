@@ -30,18 +30,18 @@
             <field name="arch" type="xml">
                 <form string="Employee">
                     <group colspan="4" col="8">
-	                    <group colspan="6" col="6">
-	                        <field colspan="6" name="name" select="1"/>
-	                        <field name="user_id"/>
-	                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-	                        <field name="active" groups="base.group_extended"/>
-	                        <newline/>
+                        <group colspan="6" col="6">
+                            <field colspan="6" name="name" select="1"/>
+                            <field name="user_id"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="active" groups="base.group_extended"/>
+                            <newline/>
                             <field name="parent_id" />
                             <field name="coach_id" />
-	                    </group>
-	                    <group colspan="2" col="1">
-	                        <field name="photo" widget='image' nolabel="1"/>
-	                    </group>
+                        </group>
+                        <group colspan="2" col="1">
+                            <field name="photo" widget='image' nolabel="1"/>
+                        </group>
                     </group>
                     <notebook colspan="6">
                         <page string="Personal Information">
@@ -113,7 +113,7 @@
                     <field name="name"/>
                     <field name="department_id" widget="selection"/>
                     <field name="job_id" widget="selection"/>
-                    <field name="parent_id" widget="selection" />
+                    <field name="parent_id"/>
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>

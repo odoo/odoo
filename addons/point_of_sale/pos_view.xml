@@ -93,7 +93,7 @@
                             <group colspan="4">
                                 <separator string="Invoicing" colspan="4"/>
                                 <field name="sale_journal" domain="[('type','=','sale'),('company_id','=',company_id)]"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]"/>
                                 <field name="invoice_id"/>
                                 <group colspan="2" col="3">
                                     <button name="invoice" string="Create _Invoice" states="paid"/>
@@ -159,7 +159,7 @@
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
-                    <field name="user_id" select="1" widget="selection"/>
+                    <field name="user_id" select="1"/>
                     <field name="date_order" select="1" string="Order date" />
                     <newline/>
                     <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">

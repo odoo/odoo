@@ -242,7 +242,7 @@
                         <field name="project_id" required="1" select="1" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                         <field name="total_hours" widget="float_time"/>
                         <field name="date_deadline"/>
-                        <field name="user_id" select="1" widget="selection"/>
+                        <field name="user_id" select="1"/>
                         <field name="progress" widget="progressbar"/>
                     </group>
                     <notebook colspan="4">
@@ -417,10 +417,10 @@
                         <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1" widget="selection">
+                        <field name="project_id" select="1">
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-folder-blue"/>
                         </field>
-                        <field name="user_id" select="1" widget="selection">
+                        <field name="user_id" select="1">
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
@@ -549,7 +549,7 @@
           <field eval="18" name="priority"/>
           <field name="arch" type="xml">
               <field name="password" position="after">
-               <field name="context_project_id" completion="1" widget="selection"/>
+               <field name="context_project_id" completion="1"/>
               </field>
           </field>
      </record>
@@ -562,7 +562,7 @@
          <field eval="18" name="priority"/>
          <field name="arch" type="xml">
             <page string="Current Activity" position="inside">
-                <field name="context_project_id" completion="1" widget="selection" context="{'user_prefence':True}"/>
+                <field name="context_project_id" completion="1" context="{'user_prefence':True}"/>
             </page>
        </field>
     </record>
@@ -611,9 +611,8 @@
                        <filter domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" icon="terp-go-today" string="Today" />
                        <separator orientation="vertical"/>
                        <field name="subject"/>
-                       <field name="project_id" select="1" widget="selection"/>
-                       <field name="user_id" select="1" widget="selection">
-                       </field>
+                       <field name="project_id" select="1"/>
+                       <field name="user_id" select="1"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">

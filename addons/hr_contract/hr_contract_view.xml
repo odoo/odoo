@@ -133,17 +133,17 @@
             </field>
         </record>
 
-		<record id="hr_contract_view_search" model="ir.ui.view">
+        <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.view.search</field>
             <field name="model">hr.contract</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract">
                    <group col='15' colspan='4'>
-                   		<field name="name"/>
-                      	<field name="employee_id"/>
-                       	<field name="date_start"/>
-                       	<field name="date_end"/>
+                           <field name="name"/>
+                          <field name="employee_id"/>
+                           <field name="date_start"/>
+                           <field name="date_end"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
@@ -217,7 +217,7 @@
             <field name="search_view_id" ref="hr_contract_view_search"/>
         </record>
 
-		<record id="hr_contract_type_view_form" model="ir.ui.view">
+        <record id="hr_contract_type_view_form" model="ir.ui.view">
             <field name="name">hr.contract.type.view.form</field>
             <field name="model">hr.contract.type</field>
             <field name="type">form</field>
@@ -228,7 +228,7 @@
             </field>
         </record>
 
-		 <record id="hr_contract_type_view_tree" model="ir.ui.view">
+         <record id="hr_contract_type_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.type.view.tree</field>
             <field name="model">hr.contract.type</field>
             <field name="type">tree</field>
@@ -250,7 +250,7 @@
         <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_root" name="Contracts" sequence="4"/>
 
         <!-- Contracts Button on Employee Form -->
-		<act_window domain="[('employee_id', '=', active_id)]" id="act_hr_employee_2_hr_contract" name="Contracts" res_model="hr.contract" src_model="hr.employee"/>
+        <act_window domain="[('employee_id', '=', active_id)]" id="act_hr_employee_2_hr_contract" name="Contracts" res_model="hr.contract" src_model="hr.employee"/>
 
 
     </data>
