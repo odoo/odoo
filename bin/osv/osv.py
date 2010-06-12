@@ -131,7 +131,6 @@ class osv_pool(netsvc.Service):
                 if method.startswith('_'):
                     raise except_osv('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
                 res = pool.execute_cr(cr, uid, obj, method, *args, **kw)
-                print 'Got RES', res
                 if res is None:
                     self.logger.warning('The method %s of the object %s can not return `None` !', method, obj)
                 cr.commit()
