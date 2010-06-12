@@ -1224,7 +1224,6 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
                         if not check_group(node):
-                            # the field is just invisible. default value must be in the selection
                             name = node.get('name')
                             default = self.default_get(cr, user, [name], context=context).get(name)
                             if default:
@@ -1244,7 +1243,7 @@ class orm_template(object):
                             search_context = dict(context)
                             if column._context and not isinstance(column._context, basestring):
                                 search_context.update(column._context)
-                            attrs['selection'] = relation._name_search(cr, user, '', dom, context=search_context, limit=None, name_get_uid=1)
+                            attrs['selection'] = relation._name_search(cr, 1, '', dom, context=search_context, limit=None, name_get_uid=1)
                             if (node.get('required') and not int(node.get('required'))) or not column.required:
                                 attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
