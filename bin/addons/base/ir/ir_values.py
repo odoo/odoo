@@ -232,10 +232,8 @@ class ir_values(osv.osv):
                     else:
                         pos+=1
                 try:
-                    print model, fields
                     datas = self.pool.get(model).read(cr, uid, [id], fields, context)
                 except except_orm, e:
-                    print 'Except', e
                     return False
                 datas= datas and datas[0] or None
                 if not datas:
