@@ -780,7 +780,7 @@ class related(function):
         relation = obj._name
         res = {}.fromkeys(ids, False)
 
-        objlst = obj.browse(cr, uid, ids, context=context)
+        objlst = obj.browse(cr, 1, ids, context=context)
         for data in objlst:
             if not data:
                 continue
@@ -807,7 +807,7 @@ class related(function):
         if self._type=='many2one':
             ids = filter(None, res.values())
             if ids:
-                ng = dict(obj.pool.get(self._obj).name_get(cr, uid, ids, context=context))
+                ng = dict(obj.pool.get(self._obj).name_get(cr, 1, ids, context=context))
                 for r in res:
                     if res[r]:
                         res[r] = (res[r], ng[res[r]])
