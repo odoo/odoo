@@ -885,7 +885,7 @@ class property(function):
         default_value = prop.get_by_id(cr, uid, ids, context=context)
         if isinstance(default_value, browse_record):
             return default_value.id
-        return default_value
+        return default_value or False
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
