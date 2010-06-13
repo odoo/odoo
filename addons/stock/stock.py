@@ -1172,14 +1172,6 @@ class stock_picking(osv.osv):
                 delivered_pack_id = pick.id
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
-            delivery_id = delivery_obj.create(cr, uid, {
-                'name':  delivered_pack.name or move.name,
-                'partner_id': partner_id,
-                'address_id': address_id,
-                'date': delivery_date,
-                'picking_id' :  pick.id,
-                'move_delivered' : [(6,0, map(lambda x:x.id, delivered_pack.move_lines))]
-            }, context=context)
             res[pick.id] = {'delivered_picking': delivered_pack.id or False}
         return res
 
@@ -1378,7 +1370,6 @@ class stock_move(osv.osv):
         'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
-        'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
         'scraped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scraped'),
     }
     _constraints = [
@@ -1434,12 +1425,9 @@ class stock_move(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default['move_stock_return_history'] = []
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
     def create(self, cr, user, vals, context=None):
-        if vals.get('move_stock_return_history',False):
-            vals['move_stock_return_history'] = []
         # Check that the stock.move is in draft state at creation to force
         # passing through button_confirm
         if vals.get('state','draft') not in ('draft','done','waiting'):
