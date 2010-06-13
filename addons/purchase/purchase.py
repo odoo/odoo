@@ -726,17 +726,16 @@ class procurement_order(osv.osv):
         po_obj = self.pool.get('purchase.order')
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
-            partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id])
-            partner_rec = partner_list and partner_list[0] and partner_list[0][1] or False
-            partner = partner_rec.name or False
-            partner_id = partner_rec.id or False
+            partner = procurement.product_id.seller_ids[0].name
+            partner_id = partner.id
+            partner_rec = procurement.product_id.seller_ids[0]
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
 
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
-            if partner_rec.qty:
+            if procurement.product_id.seller_ids[0].qty:
                 qty = max(qty,partner_rec.qty)
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
