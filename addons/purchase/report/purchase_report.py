@@ -56,13 +56,13 @@ class purchase_report(osv.osv):
         'validator' : fields.many2one('res.users', 'Validated By', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
-        'shipped_qty':fields.float('Received', digits=(16,2), readonly=True, group_operator='avg'),
-        'invoiced_qty':fields.float('Invoiced', digits=(16,2), readonly=True, group_operator='avg'),
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True, group_operator="avg"),
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True, group_operator="avg"),
         'quantity': fields.float('# of Products', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Unit Price', readonly=True, group_operator="avg"),
+        'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
+        'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
         'nbr': fields.integer('# of PO Lines', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
@@ -90,18 +90,20 @@ class purchase_report(osv.osv):
                     s.partner_id as partner_id,
                     s.create_uid as user_id,
                     s.company_id as company_id,
-                    avg(s.shipped_rate) as shipped_qty,
-                    avg(s.invoiced_rate) as invoiced_qty,
                     l.product_id,
                     s.location_id as location_id,
                     sum(l.product_qty*u.factor) as quantity,
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
-                    l.price_unit*l.product_qty*u.factor as price_total,
+                    (l.price_unit*l.product_qty*u.factor)::decimal(16,2) as price_total,
+                    avg(100.0 * (l.price_unit*l.product_qty*u.factor) / (t.standard_price*l.product_qty*u.factor))::decimal(16,2) as negociation,
+                    sum(t.standard_price*l.product_qty*u.factor)::decimal(16,2) as price_standard,
                     (sum(l.product_qty*l.price_unit)/sum(l.product_qty*u.factor))::decimal(16,2) as price_average
                 from purchase_order s
                     left join purchase_order_line l on (s.id=l.order_id)
+                        left join product_product p on (l.product_id=p.id)
+                            left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
                 where l.product_id is not null
                 group by

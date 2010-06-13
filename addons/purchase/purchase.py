@@ -171,11 +171,9 @@ class purchase_order(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
         'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
         'shipped':fields.boolean('Received', readonly=True, select=True),
-        'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float',
-            store=True), # Improve the store=True or remove from report
+        'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Invoiced & Paid', type='boolean'),
-        'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float',
-            store=True), # Improve the store=True or remove from report
+        'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Picking')], 'Invoicing Control', required=True,
             help="From Order: a draft invoice will be pre-generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
@@ -429,6 +427,7 @@ class purchase_order(osv.osv):
                         'product_uom': order_line.product_uom.id,
                         'product_uos': order_line.product_uom.id,
                         'date_planned': order_line.date_planned,
+                        'date_expected': order_line.date_planned,
                         'location_id': loc_id,
                         'location_dest_id': dest,
                         'picking_id': picking_id,

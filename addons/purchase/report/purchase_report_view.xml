@@ -34,11 +34,11 @@
                     <field name="state" invisible="1"/>
                     <field name="location_id" invisible="1"/>
                     <field name="nbr"/>
-                    <field name="shipped_qty" widget="progressbar"/>
-                    <field name="invoiced_qty" widget="progressbar"/>
                     <field name="quantity" sum="# of Products"/>
                     <field name="price_average" avg="Average Price"/>
                     <field name="price_total" sum="Total Price"/>
+                    <field name="price_standard" sum="Products Costs"/>
+                    <field name="negociation" widget="progressbar"/>
                     <field name="delay"/>
                     <field name="delay_pass"/>
                 </tree>
@@ -123,23 +123,15 @@
     <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"/>
     <menuitem action="action_purchase_order_report_all" id="menu_action_purchase_order_report_all" parent="base.next_id_73" sequence="3"/>
 
-    <record id="action_purchase_order_qty_amount_all" model="ir.actions.act_window">
-        <field name="name">Purchase Orders by Month</field>
-        <field name="res_model">purchase.report</field>
+    <record id="action_stock_move_report_po" model="ir.actions.act_window">
+        <field name="name">Receptions Analysis</field>
+        <field name="res_model">report.stock.move</field>
         <field name="view_type">form</field>
-        <field name="view_mode">graph,tree</field>
-        <field name="context">{'group_by_no_leaf': 1, 'group_by': ['month']}</field>
-        <field name="domain">[('date','>=',time.strftime('%Y-01-01'))]</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_month':1, 'search_default_group_product':1, 'search_default_group_partner':1, 'search_default_done':1, 'search_default_in': 1, 'group_by':[], 'group_by_no_leaf':1}</field>
     </record>
+    <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="base.next_id_73" sequence="8"/>
 
-    <record id="action_purchase_order_by_user_all" model="ir.actions.act_window">
-        <field name="name">Purchase Orders by Supplier</field>
-        <field name="res_model">purchase.report</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">graph,tree</field>
-        <field name="context">{'group_by_no_leaf': 1, 'group_by': ['partner_id']}</field>
-        <field name="domain">[('date','>=',time.strftime('%Y-01-01'))]</field>
-    </record>
 
     </data>
 </openerp>
