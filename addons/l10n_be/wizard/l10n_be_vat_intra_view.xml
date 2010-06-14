@@ -23,6 +23,8 @@
 								<newline/>
 								<field name="mand_id" colspan="4"/>
 								<newline/>
+								<field name="tax_code_id" string="Company" colspan="4" widget="selection"/>
+								<newline/>
 								</group>
 								<separator string="Periods" colspan="4"/>
 								<field name="period_ids" nolabel="1" colspan="4"/>
@@ -33,8 +35,8 @@
 								</page>
 								</notebook>
 								<separator colspan="4"/><label/>
-							<button name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
 							<button special="cancel" string="Close" icon="gtk-cancel"/>
+							<button name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
 					</group>
 				</form>
 			</field>

@@ -36,6 +36,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
     _columns = {
         'name': fields.char('File Name', size=32),
         'period_id': fields.many2one('account.period','Period', required=True),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)]),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
         'ask_resitution': fields.boolean('Ask Restitution'),
@@ -61,11 +62,16 @@ class l10n_be_vat_declaration(osv.osv_memory):
             context = {}
 
         list_of_tags=['00','01','02','03','44','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','88','91']
-        obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
+        data_tax = self.browse(cr, uid, ids[0])
+        if data_tax.tax_code_id:
+            obj_company = data_tax.tax_code_id.company_id
+        else:
+            obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         user_cmpny = obj_company.name
         vat_no = obj_company.partner_id.vat
         if not vat_no:
-            osv.except_osv(_('Data Insufficient'), _('No VAT  Number Associated with Main Company!'))
+            raise osv.except_osv(_('Data Insufficient'), _('No VAT  Number Associated with Main Company!'))
+
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
