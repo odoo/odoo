@@ -1427,14 +1427,6 @@ class stock_move(osv.osv):
         default = default.copy()
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
-    def create(self, cr, user, vals, context=None):
-        # Check that the stock.move is in draft state at creation to force
-        # passing through button_confirm
-        if vals.get('state','draft') not in ('draft','done','waiting'):
-            logger = netsvc.Logger()
-            logger.notifyChannel("code", netsvc.LOG_WARNING, "All new stock.move must be in state draft at the creation !")
-        return super(stock_move, self).create(cr, user, vals, context)
-
     def _auto_init(self, cursor, context):
         res = super(stock_move, self)._auto_init(cursor, context)
         cursor.execute('SELECT indexname \
