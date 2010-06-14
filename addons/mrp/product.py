@@ -50,13 +50,17 @@ class product_product(osv.osv):
         
         return res
     
+
+    _columns = {
+        "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials'),
+    }
+
     def do_change_standard_price(self, cr, uid, ids, datas, context={}):
         """ Changes the Standard Price of Product and parent products and creates an account move accordingly.
         @param datas: dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
-        @param context: A standard dictionary 
-        @return:  
-        """           
-        #TODO : TO Check 
+        @param context: A standard dictionary
+        @return:
+        """
         res = super(product_product, self).do_change_standard_price(cr, uid, ids, datas, context=context)
         bom_obj = self.pool.get('mrp.bom')
         def _compute_price(bom):
@@ -68,7 +72,7 @@ class product_product(osv.osv):
                         price += bom_line.product_qty * prod_price
 
                     accounts = self.get_product_accounts(cr, uid, bom.bom_id.product_id.id, context)
-                    
+
                     datas = {
                         'new_price': price,
                         'stock_output_account': accounts['stock_account_output'],
@@ -78,9 +82,9 @@ class product_product(osv.osv):
                     super(product_product, self).do_change_standard_price(cr, uid, [bom.bom_id.product_id.id], datas, context)
                 _compute_price(bom.bom_id)
             return price
-       
+
         bom_ids = bom_obj.search(cr, uid, [('product_id', 'in', ids)])
-        
+
         for bom in bom_obj.browse(cr, uid, bom_ids):
             _compute_price(bom)
 

@@ -240,15 +240,11 @@ class split_in_production_lot(osv.osv_memory):
                     default_val = {
                         'product_qty': quantity,
                         'product_uos_qty': uos_qty,
-                        'state': 'draft'
+                        'state': move.state
                     }
                     if quantity_rest > 0:
                         current_move = move_obj.copy(cr, uid, move.id, default_val)
                         move_obj.action_confirm(cr, uid, [current_move])
-                        if move.state=='assigned':
-                            move_obj.force_assign(cr, uid, [current_move])
-                        elif move.state<>'confirmed':
-                            move_obj.write(cr, uid, [current_move], {'state': move.state})
                         new_move.append(current_move)
                     if quantity_rest == 0:
                         current_move = move.id

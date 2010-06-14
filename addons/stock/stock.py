@@ -1248,7 +1248,6 @@ class stock_production_lot(osv.osv):
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
         'company_id': fields.many2one('res.company','Company',select=1),
     }
-    
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial'),
@@ -1427,14 +1426,6 @@ class stock_move(osv.osv):
             default = {}
         default = default.copy()
         return super(stock_move, self).copy(cr, uid, id, default, context)
-
-    def create(self, cr, user, vals, context=None):
-        # Check that the stock.move is in draft state at creation to force
-        # passing through button_confirm
-        if vals.get('state','draft') not in ('draft','done','waiting'):
-            logger = netsvc.Logger()
-            logger.notifyChannel("code", netsvc.LOG_WARNING, "All new stock.move must be in state draft at the creation !")
-        return super(stock_move, self).create(cr, user, vals, context)
 
     def _auto_init(self, cursor, context):
         res = super(stock_move, self)._auto_init(cursor, context)

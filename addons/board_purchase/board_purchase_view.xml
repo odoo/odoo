@@ -14,7 +14,7 @@
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','=','draft')]</field> 
+            <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','=','draft')]</field>
             <field name="search_view_id" ref="purchase.purchase_order_tree"/>
         </record>
         <record id="purchase_waiting" model="ir.actions.act_window">
@@ -23,7 +23,7 @@
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','in',('wait','confirmed'))]</field> 
+            <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','in',('wait','confirmed'))]</field>
             <field name="search_view_id" ref="purchase.purchase_order_tree"/>
         </record>
 
@@ -39,8 +39,8 @@
                             <action colspan="4" height="220" name="%(purchase_waiting)d" string="Purchase Order in Waiting"  width="510"/>
                         </child1>
                         <child2>
-                            <action colspan="4" height="220" name="%(purchase.action_purchase_order_qty_amount_all)d" string="Total Qty and Amount by month"  />
-                            <action colspan="4" height="220" name="%(purchase.action_purchase_order_by_user_all)d" string="Total Orders by User per month"  />
+                            <action colspan="4" height="220" name="%(purchase.action_purchase_order_report_graph)d" string="Total Qty and Amount by month"  />
+                            <action colspan="4" height="220" name="%(purchase.action_purchase_order_by_user_all)d" string="Total Orders Lines by User per month"  />
                         </child2>
                     </hpaned>
                 </form>

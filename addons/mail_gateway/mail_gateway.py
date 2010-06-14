@@ -21,8 +21,6 @@
 
 from osv import osv, fields
 import time
-import  base64
-import re
 import tools
 import binascii
 import socket
@@ -31,6 +29,8 @@ from email.header import decode_header
 import netsvc
 
 logger = netsvc.Logger()
+import base64
+import re
 
 
 class mailgate_thread(osv.osv):
