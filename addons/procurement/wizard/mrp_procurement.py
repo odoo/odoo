@@ -31,7 +31,8 @@ class procurement_compute(osv.osv_memory):
             proc_obj = self.pool.get('procurement.order')
             proc_obj._procure_confirm(cr, uid, use_new_cursor=cr.dbname, context=context)
         finally:
-            cr.close()
+            pass
+            #cr.close()
         return {}
     
     def procure_calculation(self, cr, uid, ids, context):
