@@ -20,7 +20,7 @@
 {
     "name" : "Products Attributes & Manufacturers",
     "version" : "1.0",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category" : "Enterprise Specific Modules/Manufacturer Industries",
     "depends" : ["base", "account", "product", "stock"],
     "init_xml" : [],

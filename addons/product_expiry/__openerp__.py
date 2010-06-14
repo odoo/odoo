@@ -20,7 +20,7 @@
 {
     "name" : "Products date of expiry",
     "version" : "1.0",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category" : "Enterprise Specific Modules/Food Industries",
     "depends" : ["base", "account", "product", "stock"],
     "init_xml" : [],
