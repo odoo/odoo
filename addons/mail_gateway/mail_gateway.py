@@ -181,13 +181,23 @@ class mailgate_tool(osv.osv):
         return bits
     
     def history(self, cr, uid, model, new_id, msg, attach, server_id=None, server_type=None):
+        """This function creates history for mails fetched
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param model: OpenObject Model
+        @param new_id: Id of the record of OpenObject model created from the Email details 
+        @param msg: Email details
+        @param attach: Email attachments
+        @param server_id: Id of the POP/IMAP Server if the mail is fetched using OpenERP interface 
+        @param server_type: Type of Fetchmail server"""
         try:
             thread_id = self.pool.get(model).read(cr, uid, new_id, ['thread_id'])['thread_id'][0]
         except Exception, e:
             thread_id = None
         msg_data = {
                     'name': msg.get('subject', 'No subject'), 
-                    'date': msg.get('date') , # or time.strftime('%Y-%m-%d %H:%M:%S')??
+                    'date': msg.get('date') , 
                     'description': msg.get('body', msg.get('from')), 
                     'history': True,
                     'model': model, 
@@ -207,6 +217,15 @@ class mailgate_tool(osv.osv):
         return True
     
     def email_send(self, cr, uid, model, res_id, msg, email_default ):
+        """This function Sends return email on submission of  Fetched email in OpenERP database
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param model: OpenObject Model
+        @param res_id: Id of the record of OpenObject model created from the Email details 
+        @param msg: Email details
+        @param email_default: Default Email address in case of any Problem
+        """
         message = email.message_from_string(str(msg))
         subject = '['+str(res_id)+'] '+ self._decode_header(message['Subject'])
         message['Message-Id'] = '<' + str(time.time()) + '-openerp-' + \
@@ -232,6 +251,16 @@ class mailgate_tool(osv.osv):
         return True
 
     def process_email(self, cr, uid, model, message, attach=True, server_id=None, server_type=None, context=None):
+        """This function Processes email and create record for given OpenERP model 
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param model: OpenObject Model
+        @param message: Email details
+        @param attach: Email attachments
+        @param server_id: Id of the POP/IMAP Server if the mail is fetched using OpenERP interface 
+        @param server_type: Type of Fetchmail server
+        @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
         context.update({
