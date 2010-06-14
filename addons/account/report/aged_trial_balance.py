@@ -49,11 +49,11 @@ class aged_trial_report(rml_parse.rml_parse):
     def _get_lines(self, form):
 
         if (form['result_selection'] == 'customer' ):
-            self.ACCOUNT_TYPE = ('receivable')
+            self.ACCOUNT_TYPE = ('receivable', )
         elif (form['result_selection'] == 'supplier'):
-            self.ACCOUNT_TYPE = ('payable')
+            self.ACCOUNT_TYPE = ('payable', )
         else:
-            self.ACCOUNT_TYPE = ('payable','receivable')
+            self.ACCOUNT_TYPE = ('payable', 'receivable')
 
 
         res = []
