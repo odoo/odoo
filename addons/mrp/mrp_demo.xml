@@ -171,6 +171,7 @@
             <field name="routing_id" ref="mrp_routing_2"/>
             <field name="type">normal</field>
             <field model="product.product" name="product_id" ref="product.product_product_cpu_gen"/>
+            <field name="multi_level_bom">True</field>
         </record>
 
         <record id="mrp_bom_1" model="mrp.bom">
@@ -180,6 +181,7 @@
             <field name="product_qty">1.0</field>
             <field name="routing_id" ref="mrp_routing_0"/>
             <field model="product.product" name="product_id" ref="product.product_product_pc2" />
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_2" model="mrp.bom">
             <field name="name">Assembly Medium PC</field>
@@ -187,6 +189,7 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_pc3"/>
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_3" model="mrp.bom">
             <field name="name">Assembly Customizable PC</field>
@@ -194,6 +197,7 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_pc4"/>
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_4" model="mrp.bom">
             <field name="name">HDD on demand</field>
@@ -202,6 +206,7 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_5" model="mrp.bom">
             <field name="name">RAM on demand</field>
@@ -210,6 +215,7 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_21"/>
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_6" model="mrp.bom">
             <field name="name">HDD on demand</field>
@@ -218,6 +224,7 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_7" model="mrp.bom">
             <field name="name">HDD on demand</field>
@@ -226,6 +233,7 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_20"/>
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_8" model="mrp.bom">
             <field name="name">HDD Seagate</field>
@@ -234,6 +242,7 @@
             <field name="product_qty">1.0</field>
             <field name="type">normal</field>
             <field model="product.product" name="product_id" ref="product.product_product_hdd1"/>
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_9" model="mrp.bom">
             <field name="name">Assembly Basic PC</field>
@@ -243,6 +252,7 @@
             <field name="routing_id" ref="mrp_routing_0"/>
             <field name="type">normal</field>
             <field model="product.product" name="product_id" ref="product.product_product_pc1"/>
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_10" model="mrp.bom">
             <field name="name">Complete PC with peripherals</field>
@@ -250,6 +260,7 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_23"/>
+            <field name="multi_level_bom">True</field>
         </record>
         <record id="mrp_bom_11" model="mrp.bom">
             <field name="name">RAM on demand</field>
@@ -258,6 +269,7 @@
             <field name="product_qty">1.0</field>
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" ref="product.product_product_23"/>
+            <field name="multi_level_bom">True</field>
         </record>
 
         <record id="mrp_bom_13" model="mrp.bom">
@@ -266,6 +278,7 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" ref="product.product_product_cpu3"/>
+            <field name="multi_level_bom">True</field>
         </record>
 
         <record id="mrp_bom_kit" model="mrp.bom">

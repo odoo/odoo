@@ -2,7 +2,7 @@
 #-*- coding:utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    mga@tinyerp.com
 #
@@ -21,140 +21,57 @@
 #
 ##############################################################################
 
-import os
-import re
 import time
 
-import email
-import binascii
-import mimetypes
-
 from imaplib import IMAP4
-from imaplib import IMAP4_SSL   
-
+from imaplib import IMAP4_SSL
 from poplib import POP3
 from poplib import POP3_SSL
 
-from email.header import Header
-from email.header import decode_header
-
 import netsvc
-from osv import osv
-from osv import fields
-from tools.translate import _
+from osv import osv, fields
 
 logger = netsvc.Logger()
 
-def html2plaintext(html, body_id=None, encoding='utf-8'):
-    ## (c) Fry-IT, www.fry-it.com, 2007
-    ## <peter@fry-it.com>
-    ## download here: http://www.peterbe.com/plog/html2plaintext
 
-    """ from an HTML text, convert the HTML to plain text.
-    If @body_id is provided then this is the tag where the
-    body (not necessarily <body>) starts.
-    """
-    try:
-        from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
-    except:
-        return html
-
-    urls = []
-    if body_id is not None:
-        strainer = SoupStrainer(id=body_id)
-    else:
-        strainer = SoupStrainer('body')
-
-    soup = BeautifulSoup(html, parseOnlyThese=strainer, fromEncoding=encoding)
-    for link in soup.findAll('a'):
-        title = link.renderContents()
-        for url in [x[1] for x in link.attrs if x[0]=='href']:
-            urls.append(dict(url=url, tag=str(link), title=title))
-
-    html = soup.__str__()
-
-    url_index = []
-    i = 0
-    for d in urls:
-        if d['title'] == d['url'] or 'http://'+d['title'] == d['url']:
-            html = html.replace(d['tag'], d['url'])
-        else:
-            i += 1
-            html = html.replace(d['tag'], '%s [%s]' % (d['title'], i))
-            url_index.append(d['url'])
-
-    html = html.replace('<strong>','*').replace('</strong>','*')
-    html = html.replace('<b>','*').replace('</b>','*')
-    html = html.replace('<h3>','*').replace('</h3>','*')
-    html = html.replace('<h2>','**').replace('</h2>','**')
-    html = html.replace('<h1>','**').replace('</h1>','**')
-    html = html.replace('<em>','/').replace('</em>','/')
-
-    # the only line breaks we respect is those of ending tags and
-    # breaks
-
-    html = html.replace('\n',' ')
-    html = html.replace('<br>', '\n')
-    html = html.replace('<tr>', '\n')
-    html = html.replace('</p>', '\n\n')
-    html = re.sub('<br\s*/>', '\n', html)
-    html = html.replace(' ' * 2, ' ')
-
-    # for all other tags we failed to clean up, just remove then and
-    # complain about them on the stderr
-    def desperate_fixer(g):
-        #print >>sys.stderr, "failed to clean up %s" % str(g.group())
-        return ' '
-
-    html = re.sub('<.*?>', desperate_fixer, html)
-
-    # lstrip all lines
-    html = '\n'.join([x.lstrip() for x in html.splitlines()])
-
-    for i, url in enumerate(url_index):
-        if i == 0:
-            html += '\n\n'
-        html += '[%s] %s\n' % (i+1, url)
-    return html
-    
 class email_server(osv.osv):
-    
+
     _name = 'email.server'
     _description = "POP/IMAP Server"
-    
+
     _columns = {
-        'name':fields.char('Name', size=256, required=True, readonly=False),
-        'active':fields.boolean('Active', required=False),
+        'name':fields.char('Name', size=256, required=True, readonly=False), 
+        'active':fields.boolean('Active', required=False), 
         'state':fields.selection([
-            ('draft','Not Confirmed'),
-            ('wating','Waiting for Verification'),
-            ('done','Confirmed'),
-        ],'State', select=True, readonly=True),
-        'server' : fields.char('Server', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'port' : fields.integer('Port', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+            ('draft', 'Not Confirmed'), 
+            ('wating', 'Waiting for Verification'), 
+            ('done', 'Confirmed'), 
+        ], 'State', select=True, readonly=True), 
+        'server' : fields.char('Server', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}), 
+        'port' : fields.integer('Port', required=True, readonly=True, states={'draft':[('readonly', False)]}), 
         'type':fields.selection([
-            ('pop','POP Server'),
-            ('imap','IMAP Server'),
-        ],'State', select=True, readonly=False),
-        'is_ssl':fields.boolean('SSL ?', required=False),
-        'attach':fields.boolean('Add Attachments ?', required=False),
-        'date': fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}),
-        'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'note': fields.text('Description'),
-        'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]"),
-        'object_id': fields.many2one('ir.model',"Model", required=True),
-        'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly',False)]}, help="Priority between 0 to 10, select define the order of Processing"),
-        'user_id':fields.many2one('res.users', 'User', required=False),
+            ('pop', 'POP Server'), 
+            ('imap', 'IMAP Server'), 
+        ], 'State', select=True, readonly=False), 
+        'is_ssl':fields.boolean('SSL ?', required=False), 
+        'attach':fields.boolean('Add Attachments ?', required=False), 
+        'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}), 
+        'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly', False)]}), 
+        'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly', False)]}), 
+        'note': fields.text('Description'), 
+        'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]"), 
+        'object_id': fields.many2one('ir.model', "Model", required=True), 
+        'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"), 
+        'user_id':fields.many2one('res.users', 'User', required=False), 
     }
     _defaults = {
-        'state': lambda *a: "draft",
-        'active': lambda *a: True,
-        'priority': lambda *a: 5,
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'user_id': lambda self, cr, uid, ctx: uid,
+        'state': lambda *a: "draft", 
+        'active': lambda *a: True, 
+        'priority': lambda *a: 5, 
+        'date': lambda *a: time.strftime('%Y-%m-%d'), 
+        'user_id': lambda self, cr, uid, ctx: uid, 
     }
-    
+
     def check_duplicate(self, cr, uid, ids):
         vals = self.read(cr, uid, ids, ['user', 'password'])[0]
         cr.execute("select count(id) from email_server where user='%s' and password='%s'" % (vals['user'], vals['password']))
@@ -162,215 +79,41 @@ class email_server(osv.osv):
         if res:
             if res[0] > 1:
                 return False
-        return True 
+        return True
 
     _constraints = [
         (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['user', 'password'])
     ]
-    
+
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
         port = 0
         if server_type == 'pop':
             port = ssl and 995 or 110
         elif server_type == 'imap':
             port = ssl and 993 or 143
-        
+
         return {'value':{'port':port}}
-    
-    def _process_email(self, cr, uid, server, message, context={}):
-        context.update({
-            'server_id':server.id
-        })
-        history_pool = self.pool.get('mailgate.message')
-        msg_txt = email.message_from_string(message)
-        message_id = msg_txt.get('Message-ID', False)
-
-        msg = {}
-        if not message_id:
-            return False
-        
-        fields = msg_txt.keys()
-        
-        msg['id'] = message_id
-        msg['message-id'] = message_id
-
-        def _decode_header(txt):
-            txt = txt.replace('\r', '')
-            return ' '.join(map(lambda (x, y): unicode(x, y or 'ascii'), decode_header(txt)))
-        
-        if 'Subject' in fields:
-            msg['subject'] = _decode_header(msg_txt.get('Subject'))
-        
-        if 'Content-Type' in fields:
-            msg['content-type'] = msg_txt.get('Content-Type')
-        
-        if 'From' in fields:
-            msg['from'] = _decode_header(msg_txt.get('From'))
-        
-        if 'Delivered-To' in fields:
-            msg['to'] = _decode_header(msg_txt.get('Delivered-To'))
-        
-        if 'Cc' in fields:
-            msg['cc'] = _decode_header(msg_txt.get('Cc'))
-        
-        if 'Reply-To' in fields:
-            msg['reply'] = _decode_header(msg_txt.get('Reply-To'))
-        
-        if 'Date' in fields:
-            msg['date'] = msg_txt.get('Date')
-        
-        if 'Content-Transfer-Encoding' in fields:
-            msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
-        
-        if 'References' in fields:
-            msg['references'] = msg_txt.get('References')
-
-        if 'X-openerp-caseid' in fields:
-            msg['caseid'] = msg_txt.get('X-openerp-caseid')
-        
-        if 'X-Priority' in fields:
-            msg['priority'] = msg_txt.get('X-priority', '3 (Normal)').split(' ')[0]
-        
-        if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', None):
-            encoding = msg_txt.get_content_charset()
-            msg['body'] = msg_txt.get_payload(decode=True)
-            if encoding:
-                msg['body'] = msg['body'].decode(encoding).encode('utf-8')
-        
-        attachents = {}
-        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', None):
-            body = ""
-            counter = 1
-            for part in msg_txt.walk():
-                if part.get_content_maintype() == 'multipart':
-                    continue
-                
-                encoding = part.get_content_charset()
-
-                if part.get_content_maintype()=='text':
-                    content = part.get_payload(decode=True)
-                    filename = part.get_filename()
-                    if filename :
-                        attachents[filename] = content
-                    else:
-                        if encoding:
-                            content = unicode(content, encoding)
-                        if part.get_content_subtype() == 'html':
-                            body = html2plaintext(content)
-                        elif part.get_content_subtype() == 'plain':
-                            body = content
-                elif part.get_content_maintype()=='application' or part.get_content_maintype()=='image' or part.get_content_maintype()=='text':
-                    filename = part.get_filename();
-                    if filename :
-                        attachents[filename] = part.get_payload(decode=True)
-                    else:
-                        res = part.get_payload(decode=True)
-                        if encoding:
-                            res = res.decode(encoding).encode('utf-8')
-
-                        body += res
-
-            msg['body'] = body
-            msg['attachments'] = attachents
-
-
-        res_id = False
-        if msg.get('references', False):
-            id = False
-            ref = msg.get('references')
-            if '\r\n' in ref:
-                ref = msg.get('references').split('\r\n')
-            else:
-                ref = msg.get('references').split(' ')
-            if ref:
-                hids = history_pool.search(cr, uid, [('name','=',ref[0].strip())])
-                if hids:
-                    id = hids[0]
-                    history = history_pool.browse(cr, uid, id)
-                    model_pool = self.pool.get(server.object_id.model)
-                    context.update({
-                        'references_id':ref[0]
-                    })
-                    vals = {
-                    
-                    }
-                    if hasattr(model_pool, 'message_update'):
-                        model_pool.message_update(cr, uid, [history.res_id], vals, msg, context=context)
-                    else:
-                        logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_update is not define in model %s' % (model_pool._name))
-                        return False
-            res_id = id
-        else:
-            model_pool = self.pool.get(server.object_id.model)
-            if hasattr(model_pool, 'message_new'):
-                res_id = model_pool.message_new(cr, uid, msg, context)
-            else:
-                data = {
-                    'name': msg.get('subject'), 
-                    'email_from': msg.get('from'), 
-                    'email_cc': msg.get('cc'),
-                    'user_id': False, 
-                    'description': msg.get('body'), 
-                    'state' : 'draft',
-                }
-                res_id = model_pool.create(cr, uid, data, context=context)
-                logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s. Using default method' % (model_pool._name))
-
-            att_ids = []
-            if server.attach:
-                for attactment in attachents or []:
-                    data_attach = {
-                        'name': attactment,
-                        'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                        'datas_fname': attactment,
-                        'description': 'Mail attachment',
-                        'res_model': server.object_id.model,
-                        'res_id': res_id,
-                    }
-                    att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
-            
-            if server.action_id:
-                action_pool = self.pool.get('ir.actions.server')
-                action_pool.run(cr, uid, [server.action_id.id], {'active_id':res_id, 'active_ids':[res_id]})
-            res = {
-                'name': msg.get('subject', 'No subject'), 
-                'message_id': message_id,
-                'date': msg.get('date'),
-                'res_id': res_id, 
-                'email_from': msg.get('from'), 
-                'email_to': msg.get('to'), 
-                'email_cc': msg.get('cc'), 
-                'model': server.object_id.model, 
-                'server_id': server.id, 
-                'description': msg.get('body', msg.get('from')),
-                'ref_id':msg.get('references', msg.get('id')),
-                'type':server.type, 
-                'attachment_ids': [(6, 0, att_ids)]
-            }
-            his_id = history_pool.create(cr, uid, res)
-            
-        return res_id
 
     def set_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids , {'state':'draft'})
         return True
-        
+
     def button_fetch_mail(self, cr, uid, ids, context={}):
         self.fetch_mail(cr, uid, ids)
 #        sendmail_thread = threading.Thread(target=self.fetch_mail, args=(cr, uid, ids))
 #        sendmail_thread.start()
         return True
-        
+
     def _fetch_mails(self, cr, uid, ids=False, context={}):
         if not ids:
             ids = self.search(cr, uid, [])
         return self.fetch_mail(cr, uid, ids, context)
-    
-    def fetch_mail(self, cr, uid, ids, context={}):
 
+    def fetch_mail(self, cr, uid, ids, context={}):
+        email_tool = self.pool.get('email.server.tools')
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
-            
+
             count = 0
             try:
                 if server.type == 'imap':
@@ -379,17 +122,21 @@ class email_server(osv.osv):
                         imap_server = IMAP4_SSL(server.server, int(server.port))
                     else:
                         imap_server = IMAP4(server.server, int(server.port))
-                    
+
                     imap_server.login(server.user, server.password)
                     imap_server.select()
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        if self._process_email(cr, uid, server, data[0][1], context):
+                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, server_id=server.id, server_type=server.type, context=context)
+                        if res_id and server.action_id:
+                            action_pool = self.pool.get('ir.actions.server')
+                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+
                             imap_server.store(num, '+FLAGS', '\\Seen')
-                            count += 1
+                        count += 1
                     logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
-                    
+
                     imap_server.close()
                     imap_server.logout()
                 elif server.type == 'pop':
@@ -398,7 +145,7 @@ class email_server(osv.osv):
                         pop_server = POP3_SSL(server.server, int(server.port))
                     else:
                         pop_server = POP3(server.server, int(server.port))
-                   
+
                     #TODO: use this to remove only unread messages
                     #pop_server.user("recent:"+server.user)
                     pop_server.user(server.user)
@@ -409,72 +156,38 @@ class email_server(osv.osv):
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
-                        self._process_email(cr, uid, server, msg, context)
+                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, server_id=server.id, server_type=server.type, context=context)
+                        if res_id and server.action_id:
+                            action_pool = self.pool.get('ir.actions.server')
+                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+
                         pop_server.dele(num)
 
                     pop_server.quit()
-                    
+
                     logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
-                
+
                 self.write(cr, uid, [server.id], {'state':'done'})
             except Exception, e:
                 logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
-                
+
         return True
 
 email_server()
 
-class mail_server_history(osv.osv):
+class mailgate_message(osv.osv):
 
     _inherit = "mailgate.message"
-    
+
     _columns = {
-        'server_id': fields.many2one('email.server',"Mail Server", readonly=True, select=True),
+        'server_id': fields.many2one('email.server', "Mail Server", readonly=True, select=True), 
         'type':fields.selection([
-            ('pop','POP Server'),
-            ('imap','IMAP Server'),
-        ],'State', select=True, readonly=True),
+            ('pop', 'POP Server'), 
+            ('imap', 'IMAP Server'), 
+        ], 'State', select=True, readonly=True), 
     }
     _order = 'id desc'
-    
-mail_server_history()
 
-class fetchmail_tool(osv.osv):
+mailgate_message()
 
-    _name = 'email.server.tools'
-    _description = "Email Tools"
-    _auto = False
-    
-    def to_email(self, text):
-        _email = re.compile(r'.*<.*@.*\..*>', re.UNICODE)
-        def record(path):
-            eml = path.group()
-            index = eml.index('<')
-            eml = eml[index:-1].replace('<','').replace('>','')
-            return eml
-
-        bits = _email.sub(record, text)
-        return bits
-    
-    def get_partner(self, cr, uid, from_email, context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks
-        @param from_email: email address based on that function will search for the correct 
-        """
-        
-        res = {
-            'partner_address_id': False,
-            'partner_id': False
-        }
-        from_email = self.to_email(from_email)
-        address_ids = self.pool.get('res.partner.address').search(cr, uid, [('email', '=', from_email)])
-        if address_ids:
-            address = self.pool.get('res.partner.address').browse(cr, uid, address_ids[0])
-            res['partner_address_id'] = address_ids[0]
-            res['partner_id'] = address.partner_id.id
-        
-        return res
-        
-fetchmail_tool()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

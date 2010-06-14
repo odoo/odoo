@@ -511,7 +511,18 @@ class mrp_production(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
     _order = 'date_planned asc, priority desc';
-
+    
+    def _check_qty(self, cr, uid, ids):
+        orders = self.browse(cr, uid, ids)
+        for order in orders:
+            if order.product_qty <= 0:
+                return False
+        return True
+    
+    _constraints = [
+        (_check_qty, 'Order quantity cannot be negative or zero !', ['product_qty']),
+    ]
+    
     def unlink(self, cr, uid, ids, context=None):
         productions = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
