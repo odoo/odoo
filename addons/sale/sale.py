@@ -39,6 +39,7 @@ class sale_shop(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 sale_shop()
 
@@ -112,7 +113,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             LEFT JOIN
-                mrp_procurement mp on (mp.move_id=m.id)
+                procurement_order mp on (mp.move_id=m.id)
             WHERE
                 p.sale_id = ANY(%s) GROUP BY mp.state, p.sale_id''',(ids,))
         for oid, nbr, mp_state in cr.fetchall():
@@ -253,7 +254,7 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
             fnct_search=_invoiced_search, type='boolean'),
-        'note': fields.text('Notes', translate=True),
+        'note': fields.text('Notes'),
 
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Untaxed Amount',
             store = {
@@ -277,7 +278,7 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.many2one('res.company','Company',select=1),
+        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
@@ -422,7 +423,7 @@ class sale_order(osv.osv):
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
-            
+
         inv = {
             'name': order.client_order_ref or order.name,
             'origin': order.name,
@@ -644,6 +645,7 @@ class sale_order(osv.osv):
                         'picking_id': picking_id,
                         'product_id': line.product_id.id,
                         'date_planned': date_planned,
+                        'date_expected': date_planned,
                         'product_qty': line.product_uom_qty,
                         'product_uom': line.product_uom.id,
                         'product_uos_qty': line.product_uos_qty,
@@ -660,7 +662,7 @@ class sale_order(osv.osv):
                         'note': line.notes,
                         'company_id': order.company_id.id,
                     })
-                    proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+                    proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'name': order.name,
                         'origin': order.name,
                         'date_planned': date_planned,
@@ -678,10 +680,10 @@ class sale_order(osv.osv):
                         'company_id': order.company_id.id,
                     })
                     wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
                 elif line.product_id and line.product_id.product_tmpl_id.type == 'service':
-                    proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+                    proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'name': line.name,
                         'origin': order.name,
                         'date_planned': date_planned,
@@ -695,7 +697,7 @@ class sale_order(osv.osv):
                     })
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
                     wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 else:
                     #
                     # No procurement because no product in the sale.order.line.
@@ -809,7 +811,7 @@ class sale_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
-        'procurement_id': fields.many2one('mrp.procurement', 'Procurement'),
+        'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly',False)]}),
@@ -824,7 +826,7 @@ class sale_order_line(osv.osv):
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'discount': fields.float('Discount (%)', digits=(16, 2), readonly=True, states={'draft':[('readonly',False)]}),
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
-        'notes': fields.text('Notes', translate=True),
+        'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight'),
         'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
                 help=' * The \'Draft\' state is set automatically when sale order in draft state. \
@@ -858,7 +860,7 @@ class sale_order_line(osv.osv):
                     return line.product_uos_qty or 0.0
                 return line.product_uom_qty
             else:
-                return self.pool.get('mrp.procurement').quantity_get(cr, uid,
+                return self.pool.get('procurement.order').quantity_get(cr, uid,
                         line.procurement_id.id, context=context)
 
         def _get_line_uom(line):
@@ -867,7 +869,7 @@ class sale_order_line(osv.osv):
                     return line.product_uos.id
                 return line.product_uom.id
             else:
-                return self.pool.get('mrp.procurement').uom_get(cr, uid,
+                return self.pool.get('procurement.order').uom_get(cr, uid,
                         line.procurement_id.id, context=context)
 
         create_ids = []

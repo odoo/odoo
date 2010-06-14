@@ -66,7 +66,7 @@
         />
         <!-- End Passport Views -->
         
-        <!-- Contract View -->
+        <!-- Employee View -->
         <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
             <field name="model">hr.employee</field>
@@ -157,31 +157,44 @@
                     </page>
                     <page string="Salary Structure">
                         <field name="line_ids" nolabel="1" colspan="4" string="Salary Structure">
-                            <tree string="Slip/Salary Lines" editable="bottom">
+                            <tree string="Salary Structure" editable="bottom">
                                 <field name="sequence"/>
                                 <field name="analytic_account_id"/>
                                 <field name="name"/>
                                 <field name="code"/>
                                 <field name="amount_type"/>
                                 <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
-    <!--                                <field name="condition_id">-->
-    <!--                                    <form string="Condition">-->
-    <!--                                        <field name="name"/>-->
-    <!--                                        <field name="date_start"/>-->
-    <!--                                        <field name="date_end"/>-->
-    <!--                                        <field name="state"/>-->
-    <!--                                    </form>-->
-    <!--                                </field>-->
                                 <field name="type"/>
                                 <field name="category_id" on_change="onchange_category(category_id)"/>
                                 <field name="account_id"/>
                             </tree>
                         </field>
                     </page>
+                    <page string="Accounting">
+                        <field name="property_bank_account"/>
+                        <field name="salary_account"/>
+                        <field name="employee_account"/>
+                        <field name="analytic_account"/>
+                        <field name="slip_ids" colspan="4" nolabel="1"/>
+                    </page>
                 </notebook>
             </field>
         </record>
         
+        <record id="view_employee_passport_form" model="ir.ui.view">
+            <field name="name">hr.employee.passport.form</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="otherid" position="after">
+                    <field name="passport_id"/>
+                </field>
+            </field>
+        </record>
+        <!-- End Employee View -->
+        
+        <!-- Contract View -->
         <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
             <field name="model">hr.contract</field>
@@ -230,133 +243,9 @@
                 </form>
             </field>
         </record>
+        <menuitem action="hr_contract.action_hr_contract" id="hr_menu_contract" parent="payroll_configure" name="Contracts" sequence="4"/>
         <!-- End Contract View-->
         
-        <!--
-            <record id="hr_hr_employee_view_form3" model="ir.ui.view">
-            <field name="name">hr.hr.employee.view.form3</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
-            <field name="arch" type="xml">
-                <field name="contract_ids" position="replace">
-                    <field colspan="4" name="contract_ids" nolabel="1">
-                        <tree string="Contracts">
-                            <field name="name"/>
-                            <field name="function"/>
-                            <field name="date_start"/>
-                            <field name="date_end"/>
-                            <field name="working_hours_per_day"/>
-                            <field name="wage_type_id"/>
-                            <field name="wage"/>
-                        </tree>
-                        <form string="Contract">
-                            <separator colspan="4" string="Generalities"/>
-                            <field colspan="4" name="name" select="1"/>
-                            <newline/>
-                            <separator colspan="4" string="Contract Duration"/>
-                            <field name="function"/>
-                            <field name="working_hours_per_day"/>
-                            <field name="working_days_per_week"/>
-                            <newline/>
-                            <field name="date_start" select="1"/>
-                            <field name="date_end" select="1"/>
-                            <separator colspan="4" string="Salary"/>
-                            <field name="wage_type_id"/>
-                            <field name="wage"/>
-                            <separator colspan="4" string="Notes"/>
-                            <field colspan="4" name="notes" nolabel="1"/>
-                            <separator colspan="4" string="Passport and Visa"/>
-                            <field name="permit_no"/>
-                            <field name="passport_id"/>
-                            <field name="visa_no"/>
-                            <field name="visa_expire"/>
-                        </form>
-                    </field>
-                </field>
-            </field>
-        </record>
-        
-        <record id="hr_hr_employee_view_form4" model="ir.ui.view">
-            <field name="name">hr.hr.employee.view.form4</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr_hr_employee_view_form3"/>
-            <field name="arch" type="xml">
-                <page string="Miscelleanous" position="replace">
-                    <page string="Miscelleanous / Statutory" position="replace">
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="Miscelleanous"/>
-                            <field name="manager" select="1"/>
-                            <field name="medic_exam" select="1"/>
-                            <field name="audiens_num"/>
-                            <field name="place_of_birth"/>
-                            <field name="marital_status"/>
-                            <field name="children"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="Statutory Information"/>
-                            <field name="pan_no" select="1"/>
-                            <field name="esp_account" select="1"/>
-                            <field name="pf_account"/>
-                            <field name="pg_joining"/>
-                            <field name="esi_account"/>
-                            <field name="hospital_id"/>
-                        </group>
-                        <separator colspan="4" string="Special Allowance and Deductions for Employee"/>
-                        <field name="line_ids" nolabel="1" colspan="4">
-                            <tree string="Slip/Salary Lines" editable="bottom">
-                                <field name="sequence"/>
-                                <field name="analytic_account_id"/>
-                                <field name="name"/>
-                                <field name="code"/>
-                                <field name="amount_type"/>
-                                <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
-                                <field name="condition_id">
-                                    <form string="Condition">
-                                        <field name="name"/>
-                                        <field name="date_start"/>
-                                        <field name="date_end"/>
-                                        <field name="state"/>
-                                    </form>
-                                </field>
-                                <field name="type"/>
-                                <field name="category_id" on_change="onchange_category(category_id)"/>
-                                <field name="account_id"/>
-                            </tree>
-                        </field>
-                    </page>
-                </page>
-            </field>
-        </record>
-        
-        <record id="hr_hr_employee_view_form5" model="ir.ui.view">
-            <field name="name">hr.hr.employee.view.form5</field>
-            <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr_hr_employee_view_form4"/>
-            <field name="arch" type="xml">
-                <page string="Miscelleanous / Statutory" position="after">
-                    <page string="Accounting Information">
-                        <field name="property_bank_account"/>
-                        <field name="salary_account"/>
-                        <field name="employee_account"/>
-                        <field name="analytic_account"/>
-                        <field name="slip_ids" colspan="4" nolabel="1"/>
-                    </page>
-                </page>
-            </field>
-        </record>
-        
-        <record id="view_employee_form5" model="ir.ui.view">
-            <field name="name">hr.employee.form5</field>
-            <field name="model">hr.employee</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <field name="otherid" position="after">
-                    <field name="passport_id"/>
-                </field>
-            </field>
-        </record>
-        -->
         <!--
             Holiday Status inheritancy
         -->
@@ -369,7 +258,7 @@
                 <field name="color_name" position="after">
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Payroll Accounting"/>
-                        <field name="company_id" select="2"/>
+                        <field name="company_id" widget="selection" select="2"/>
                         <field name="code"/>
                         <field name="analytic_account_id"/>
                         <field name="account_id"/>
@@ -382,27 +271,28 @@
                 </field>
             </field>
         </record>
-        <!--
-            Employee Expanse
-        -->
-        <record id="view_expenses_form" model="ir.ui.view">
-            <field name="name">hr.expense.form</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr_expense.view_expenses_form"/>
-            <field name="model">hr.expense.expense</field>
-            <field name="arch" type="xml">
-                <field name="ref" position="after">
-                    <field name="category_id"/>
-                </field>
-            </field>
-        </record>
-        
+
+<!--            Employee Expanse-->
+<!--        -->
+<!--        <record id="view_expenses_form" model="ir.ui.view">-->
+<!--            <field name="name">hr.expense.form</field>-->
+<!--            <field name="type">form</field>-->
+<!--            <field name="inherit_id" ref="hr_expense.view_expenses_form"/>-->
+<!--            <field name="model">hr.expense.expense</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <field name="ref" position="after">-->
+<!--                    <field name="category_id"/>-->
+<!--                </field>-->
+<!--            </field>-->
+<!--        </record>-->
+<!--        -->
+
         <record id="view_hr_payslip_line_tree" model="ir.ui.view">
             <field name="name">hr.payslip.line.tree</field>
             <field name="model">hr.payslip.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Slip/Salary Lines" editable="bottom">
+                <tree string="Salary Structure" editable="bottom">
                     <field name="sequence"/>
                     <field name="analytic_account_id"/>
                     <field name="name"/>
@@ -573,10 +463,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_payslip_tree"/>
         </record>
-        
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
-        
-        
         
         <record id="view_hr_employee_grade_tree" model="ir.ui.view">
             <field name="name">hr.payroll.structure.tree</field>
@@ -618,7 +505,7 @@
         </record>
         
         <record id="action_view_hr_employee_grade_form" model="ir.actions.act_window">
-            <field name="name">Employee Functions</field>
+            <field name="name">Salary Structure</field>
             <field name="res_model">hr.payroll.structure</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_employee_grade_tree"/>
@@ -629,12 +516,13 @@
             parent="payroll_configure" 
         />
         
+        <!-- Payment Heads -->
         <record id="hr_allounce_deduction_categoty_form" model="ir.ui.view">
             <field name="name">hr.allounce.deduction.categoty.form</field>
             <field name="model">hr.allounce.deduction.categoty</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Allowance / Deduction Category">
+                <form string="Allowance / Deduction Heads">
                     <group col="6" colspan="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
@@ -645,38 +533,16 @@
                             <field name="condition"/>
                             <field name="sequence"/>
                         </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="Contributions Configuration"/>
-                            <field name="contribute"/>
-                            <field name="amount_type" attrs="{'required': [('contribute','=',True)]}"/>
-                            <field name="contribute_per" attrs="{'required': [('contribute','=',True)], 'readonly':[(('amount_type','=','func'))]}"/>
-                            <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
-                            <field name="include_in_salary" />
-                            <field name="account_id" attrs="{'required': [('contribute','=',True), ('include_in_salary','=',True)]}"/>
-                        </group>
                     </group>
                     <notebook colspan="4">
-                        <page string="Function" attrs="{'invisible': [('amount_type','!=','func')]}">
-                            <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Function Arguments" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="sequence"/>
-                                    <field name="from_val"/>
-                                    <field name="to_val"/>
-                                    <field name="amount_type"/>
-                                    <field name="value"/>
-                                </tree>
-                            </field>
-                        </page>
                         <page string="Description">
-                            <separator colspan="4" string="Description"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
-         <record id="hr_allounce_deduction_categoty_tree" model="ir.ui.view">
+        <record id="hr_allounce_deduction_categoty_tree" model="ir.ui.view">
             <field name="name">hr.allounce.deduction.categoty.tree</field>
             <field name="model">hr.allounce.deduction.categoty</field>
             <field name="type">tree</field>
@@ -699,6 +565,79 @@
             action="hr_allounce_deduction_tree" 
             parent="payroll_configure" 
         />
+        <!-- End Payment Heads -->
+        
+        <!-- Company Contribution -->
+        <record id="hr_company_contribution_form" model="ir.ui.view">
+            <field name="name">company.contribution.form</field>
+            <field name="model">company.contribution</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Company Contribution">
+                    <group col="6" colspan="6">
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="category_id"/>
+                        <field name="company_id" select="1"/>
+                        <field name="active" select="1"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Contributions"/>
+                        <field name="amount_type" attrs="{'required': [('contribute','=',True)]}"/>
+                        <field name="contribute_per" attrs="{'required': [('contribute','=',True)], 'readonly':[(('amount_type','=','func'))]}"/>
+                        <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator colspan="2" string="Accounts"/>
+                        <field name="include_in_salary" />
+                        <field name="account_id" attrs="{'required': [('contribute','=',True), ('include_in_salary','=',True)]}"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
+                            <field name="line_ids" colspan="4" nolabel="1">
+                                <tree string="Function Arguments" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="sequence"/>
+                                    <field name="from_val"/>
+                                    <field name="to_val"/>
+                                    <field name="amount_type"/>
+                                    <field name="value"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Description">
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id="hr_company_contribution_tree" model="ir.ui.view">
+            <field name="name">company.contribution.tree</field>
+            <field name="model">company.contribution</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Company Contribution">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="contribute_per"/>
+                    <field name="amount_type"/>
+                    <field name="register_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_hr_company_contribution_tree" model="ir.actions.act_window">
+            <field name="name">Company Contributions</field>
+            <field name="res_model">company.contribution</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_company_contribution_tree"/>
+        </record>
+        <menuitem 
+            id="menu_hr_company_contribution_tree" 
+            action="action_hr_company_contribution_tree" 
+            parent="payroll_configure" 
+        />
+        <!-- End Company Contribution -->
         
         <!-- Contract Form-->
 <!--        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">-->

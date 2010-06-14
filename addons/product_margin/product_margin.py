@@ -104,7 +104,7 @@ class product_product(osv.osv):
         'total_cost'  : fields.function(_product_margin, method=True, type='float', string='Total Cost', multi='purchase',help="Sum of Multification of Invoice price and quantity of Supplier Invoices "),
         'sale_expected' :  fields.function(_product_margin, method=True, type='float', string='Expected Sale', multi='sale',help="Sum of Multification of Sale Catalog price and quantity of Customer Invoices"),
         'normal_cost'  : fields.function(_product_margin, method=True, type='float', string='Normal Cost', multi='purchase',help="Sum of Multification of Cost price and quantity of Supplier Invoices"),
-        'total_margin' : fields.function(_product_margin, method=True, type='float', string='Total Margin', multi='total',help="Turnorder - Total Cost"),
+        'total_margin' : fields.function(_product_margin, method=True, type='float', string='Total Margin', multi='total',help="Turnorder - Standard price"),
         'expected_margin' : fields.function(_product_margin, method=True, type='float', string='Expected Margin', multi='total',help="Expected Sale - Normal Cost"),
         'total_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Total Margin (%)', multi='margin',help="Total margin * 100 / Turnover"),
         'expected_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Expected Margin (%)', multi='margin',help="Expected margin * 100 / Expected Sale"),

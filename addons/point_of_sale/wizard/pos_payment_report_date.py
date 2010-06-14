@@ -26,9 +26,6 @@ import time
 
 
 class pos_payment_report_date(osv.osv_memory):
-    '''
-    Open ERP Model
-    '''
     _name = 'pos.payment.report.date'
     _description = 'POS Payment Report according to date'
     def print_report(self, cr, uid, ids, context=None):

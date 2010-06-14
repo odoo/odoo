@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,14 +14,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields,osv
 import pooler
 from tools import config
-import time
 
 class sale_order_line(osv.osv):
     _name = "sale.order.line"
@@ -41,10 +40,12 @@ class sale_order_line(osv.osv):
         'margin': fields.function(_product_margin, method=True, string='Margin', store=True),
         'purchase_price': fields.float('Cost Price', digits=(16,2))
     }
+
 sale_order_line()
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
+
     def _product_margin(self, cr, uid, ids, field_name, arg, context):
         result = {}
         for sale in self.browse(cr, uid, ids, context=context):
@@ -56,6 +57,7 @@ class sale_order(osv.osv):
     _columns = {
         'margin': fields.function(_product_margin, method=True, string='Margin', store=True),
     }
+
 sale_order()
 
 class stock_picking(osv.osv):
@@ -76,6 +78,6 @@ class stock_picking(osv.osv):
         invoice_ids = res.values()
         picking_obj.write(cr, uid, ids,{'invoice_ids':[[6,0,invoice_ids]]})
         return True
+
 stock_picking()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,14 +14,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 {
-    "name":"Visible Discount",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Generic Modules/Sales & Purchases",
+    "name": "Visible Discount",
+    "version": "1.0",
+    "author": "Tiny",
+    "category": "Generic Modules/Sales & Purchases",
     "description": """
     This module lets you calculate discounts on Sale Order lines and Invoice lines base on the partner's pricelist.
     To this end, a new check box named "Visible Discount" is added to the pricelist form.
@@ -30,11 +30,11 @@
         If the check box is checked, we will have on the sale order line: Unit price=450, Discount=50,00, Net price=225
         If the check box is unchecked, we will have on Sale Order and Invoice lines: Unit price=225, Discount=0,00, Net price=225
     """,
-    "depends":["base","product","account","sale"],
-    "demo_xml":[],
-    "update_xml":['product_view.xml'],
-    "active":False,
-    "installable":True,
+    "depends": ["sale"],
+    "demo_xml": [],
+    "update_xml": ['product_view.xml'],
+    "active": False,
+    "installable": True,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

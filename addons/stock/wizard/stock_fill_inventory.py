@@ -34,21 +34,17 @@ class stock_fill_inventory(osv.osv_memory):
     _description = "Fill Inventory"
     _columns = {
             'location_id': fields.many2one('stock.location', 'Location', required=True),
-            'recursive': fields.boolean("Include all childs for the location"),
-            }
+            'recursive': fields.boolean("Include all children for the location"),
+    }
 
     def fill_inventory(self, cr, uid, ids, context):
-        """ 
-             To fill stock inventory according to products available in the selected locations..
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param context: A standard dictionary 
-             
-             @return:  
-        
+        """ To fill stock inventory according to products available in the selected locations.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID or list of IDs if we want more than one 
+        @param context: A standard dictionary 
+        @return:  
         """        
         inventory_line_obj = self.pool.get('stock.inventory.line')
         location_obj = self.pool.get('stock.location')

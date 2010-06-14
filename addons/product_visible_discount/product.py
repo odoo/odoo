@@ -22,20 +22,20 @@
 from osv import fields, osv
 import pooler
 from tools import config
-import time
 from osv.osv import except_osv
 from tools.translate import _
 
 class product_pricelist(osv.osv):
     _name = 'product.pricelist'
     _inherit = 'product.pricelist'
+
     _columns ={
         'visible_discount':fields.boolean('Visible Discount'),
     }
-
     _defaults = {
-         'visible_discount':lambda *a: True,
+         'visible_discount': True,
    }
+
 product_pricelist()
 
 class sale_order_line(osv.osv):
@@ -45,6 +45,7 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True,date_order=False,packaging=False,fiscal_position=False, flag=False):
+
         res=super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
             lang, update_tax,date_order,fiscal_position=fiscal_position,flag=flag)
@@ -76,13 +77,11 @@ class sale_order_line(osv.osv):
                         uid, old_uom.id, list_price, uom)
             if(len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price != 0):
                 discount=(new_list_price-price) / new_list_price * 100
-                result['price_unit']=new_list_price
-                result['discount']=discount
+                result['price_unit'] = new_list_price
+                result['discount'] = discount
             else:
-                result['discount']=0.0
+                result['discount'] = 0.0
         return res
-
-
 
 sale_order_line()
 
@@ -91,16 +90,15 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context={}):
-        res=super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context)
-
+        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context)
 
         def get_real_price(res_dict, product_id, pricelist):
             item_obj = self.pool.get('product.pricelist.item')
             price_type_obj = self.pool.get('product.price.type')
-            product_obj=self.pool.get('product.product')
-            template_obj=self.pool.get('product.template')
-            field_name= 'list_price'
-            
+            product_obj = self.pool.get('product.product')
+            template_obj = self.pool.get('product.template')
+            field_name = 'list_price'
+
             if res_dict.get('item_id',False) and res_dict['item_id'].get(pricelist,False):
                 item = res_dict['item_id'].get(pricelist,False)
                 item_base = item_obj.read(cr, uid, [item], ['base'])[0]['base']
@@ -108,16 +106,15 @@ class account_invoice_line(osv.osv):
                     field_name = price_type_obj.browse(cr, uid, item_base).field
 
             product_tmpl_id = product_obj.browse(cr, uid, product_id, context).product_tmpl_id.id
-                
+
             product_read = template_obj.read(cr, uid, product_tmpl_id, [field_name], context)
             return product_read[field_name]
 
-        
         if product:
+            pricelist_obj = self.pool.get('product.pricelist')
+            partner_obj = self.pool.get('res.partner')
             product = self.pool.get('product.product').browse(cr, uid, product, context=context)
-            pricelist_obj=self.pool.get('product.pricelist')
-            partner_obj=self.pool.get('res.partner')
-            result=res['value']
+            result = res['value']
             pricelist = False
             real_price = 0.00
             if type in ('in_invoice', 'in_refund'):
@@ -127,27 +124,26 @@ class account_invoice_line(osv.osv):
                         raise osv.except_osv(_('No Purchase Pricelist Found !'),_("You must first define a pricelist for Supplier !"))
                     price_unit_res = pricelist_obj.price_get(cr, uid, [pricelist], product.id, qty or 1.0, partner_id, {'uom': uom})[pricelist]
                     price_unit = price_unit_res[pricelist]
-                    real_price= get_real_price(price_unit_res, product.id, pricelist)
+                    real_price = get_real_price(price_unit_res, product.id, pricelist)
             else:
                 if partner_id:
-                    pricelist =partner_obj.browse(cr, uid, partner_id).property_product_pricelist.id
+                    pricelist = partner_obj.browse(cr, uid, partner_id).property_product_pricelist.id
                     if not pricelist:
                         raise osv.except_osv(_('No Sale Pricelist Found '),_("You must first define a pricelist for Customer !"))
                     price_unit_res = pricelist_obj.price_get(cr, uid, [pricelist], product.id, qty or 1.0, partner_id, {'uom': uom})
                     price_unit = price_unit_res[pricelist]
-                    
+
                     real_price = get_real_price(price_unit_res, product.id, pricelist)
             if pricelist:
                 pricelists=pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
                 if(len(pricelists)>0 and pricelists[0]['visible_discount'] and real_price != 0):
                     discount=(real_price-price_unit) / real_price * 100
-                    result['price_unit']=real_price
-                    result['discount']=discount
+                    result['price_unit'] = real_price
+                    result['discount'] = discount
                 else:
                     result['discount']=0.0
         return res
 
-
 account_invoice_line()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
