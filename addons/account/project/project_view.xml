@@ -312,23 +312,23 @@
             <field name="domain">[('journal_id','=',active_id)]</field>
         </record>
         <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_entries"/>
-        <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
+        <!-- <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
             <field name="name">Check Register</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('journal_id','=',active_id)]</field>
-        </record>
+        </record> -->
 <!--        <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_bank_and_cash"/>-->
-        <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
+         <!-- <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
             <field name="name">Checks Register</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('journal_id','=',active_id)]</field>
-        </record>
+        </record> -->
 <!--        <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_bank_and_cash"/>-->
-        
+
 <!--        <record id="ir_open_account_journal_analytic" model="ir.values">-->
 <!--            <field eval="'tree_but_open'" name="key2"/>-->
 <!--            <field eval="'account.analytic.journal'" name="model"/>-->

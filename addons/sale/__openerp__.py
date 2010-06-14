@@ -44,11 +44,11 @@
     * Top 10 sales of the month
     * Cases statistics
     * Graph of sales by product
-    * Graph of cases of the month        
+    * Graph of cases of the month
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['product', 'stock', 'mrp_procurement', 'process','board'],
+    'depends': ['product', 'stock', 'procurement', 'process','board'],
     'init_xml': [],
     'update_xml': [
         'wizard/sale_make_invoice_advance.xml',
@@ -72,6 +72,8 @@
              'test/shipping_manual_sale_order.yml',
              'test/prepaid_sale_order.yml',
              'test/advance_invoice.yml',
+             'test/so_make_line_invoice.yml',
+             'test/so_make_invoice.yml',
              'test/sale_procurement.yml',
             ],
     'installable': True,

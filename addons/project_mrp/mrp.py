@@ -22,9 +22,9 @@
 from osv import fields, osv, orm
 import tools
 
-class mrp_procurement(osv.osv):
-    _name = "mrp.procurement"
-    _inherit = "mrp.procurement"
+class procurement_order(osv.osv):
+    _name = "procurement.order"
+    _inherit = "procurement.order"
     
     def action_produce_assign_service(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
@@ -91,7 +91,7 @@ class mrp_procurement(osv.osv):
                 'project_id': project_id,
             },context=context)
         return task_id
-mrp_procurement()
+procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

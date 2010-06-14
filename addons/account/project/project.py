@@ -46,7 +46,7 @@ class account_journal(osv.osv):
     _inherit="account.journal"
 
     _columns = {
-        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal'),
+        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal',help="Journal for analytic entries"),
     }
 account_journal()
 

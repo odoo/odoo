@@ -24,16 +24,38 @@ from tools.translate import _
 
 
 class product_product(osv.osv):
-    _inherit = "product.product"    
+    _inherit = "product.product"
+
+    def get_product_accounts(self, cr, uid, product_id, context=None):
+        """ To get the stock input account, stock output account and stock journal related to product.
+        @param product_id: product id            
+        @return: dictionary which contains information regarding stock input account, stock output account and stock journal
+        """
+        product_obj = self.pool.get('product.product').browse(cr, uid, product_id, context)
+        
+        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False 
+        if not stock_input_acc:
+            stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
+        
+        stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
+        if not stock_output_acc:
+            stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
+
+        journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
+        account_variation = product_obj.categ_id.property_stock_variation and product_obj.categ_id.property_stock_variation.id or False
+        
+        return {
+            'stock_account_input': stock_input_acc, 
+            'stock_account_output': stock_output_acc, 
+            'stock_journal': journal_id, 
+            'property_stock_variation': account_variation
+        }  
 
     def do_change_standard_price(self, cr, uid, ids, datas, context={}):
-        """ 
-             Changes the Standard Price of Product and creates an account move accordingly.
-            
-             @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
-             @param context: A standard dictionary 
-             
-             @return:  
+        """ Changes the Standard Price of Product and creates an account move accordingly.
+        @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
+        @param context: A standard dictionary 
+        @return:  
         
         """        
         location_obj = self.pool.get('stock.location')
@@ -44,10 +66,12 @@ class product_product(osv.osv):
         stock_output_acc = datas.get('stock_output_account', False)
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
-
+        property_obj=self.pool.get('ir.property')
+        product_obj=self.browse(cr,uid,ids)[0]
+        account_variation = product_obj.categ_id.property_stock_variation
         move_ids = []        
+        loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
-            loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
             for location in location_obj.browse(cr, uid, loc_ids):
                 c = context.copy()
                 c.update({
@@ -60,7 +84,8 @@ class product_product(osv.osv):
                 diff = product.standard_price - new_price 
                 assert diff, _("Could not find any difference between standard price and new price!")
                 if qty:
-                    location_account = location.account_id and location.account_id.id or False
+                    location_account = account_variation and account_variation.id or False
+                    
                     company_id = location.company_id and location.company_id.id or False                    
                     assert location_account, _('Inventory Account is not specified for Location: %s' % (location.name))
                     assert company_id, _('Company is not specified in Location')
@@ -147,7 +172,10 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['location'], context).name
         return res
 
-    def get_product_available(self,cr,uid,ids,context=None):
+    def get_product_available(self, cr, uid, ids, context=None):
+        """ Finds whether product is available or not in particular warehouse.
+        @return: Dictionary of values
+        """
         if context is None:
             context = {}
         states = context.get('states',[])
@@ -173,6 +201,8 @@ class product_product(osv.osv):
         if context.get('location', False):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
+            elif type(context['location']) in (type(''), type(u'')):
+                location_ids = self.pool.get('stock.location').search(cr, uid, [('name','ilike',context['location'])], context=context)
             else:
                 location_ids = context['location']
         else:
@@ -252,22 +282,25 @@ class product_product(osv.osv):
         return res
 
     def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
+        """ Finds the incoming and outgoing quantity of product.
+        @return: Dictionary of values
+        """
         if not field_names:
-            field_names=[]
+            field_names = []
         res = {}
         for id in ids:
             res[id] = {}.fromkeys(field_names, 0.0)
         for f in field_names:
             c = context.copy()
-            if f=='qty_available':
-                c.update({ 'states':('done',), 'what':('in', 'out') })
-            if f=='virtual_available':
-                c.update({ 'states':('confirmed','waiting','assigned','done'), 'what':('in', 'out') })
-            if f=='incoming_qty':
-                c.update({ 'states':('confirmed','waiting','assigned'), 'what':('in',) })
-            if f=='outgoing_qty':
-                c.update({ 'states':('confirmed','waiting','assigned'), 'what':('out',) })
-            stock=self.get_product_available(cr,uid,ids,context=c)
+            if f == 'qty_available':
+                c.update({ 'states': ('done',), 'what': ('in', 'out') })
+            if f == 'virtual_available':
+                c.update({ 'states': ('confirmed','waiting','assigned','done'), 'what': ('in', 'out') })
+            if f == 'incoming_qty':
+                c.update({ 'states': ('confirmed','waiting','assigned'), 'what': ('in',) })
+            if f == 'outgoing_qty':
+                c.update({ 'states': ('confirmed','waiting','assigned'), 'what': ('out',) })
+            stock = self.get_product_available(cr, uid, ids, context=c)
             for id in ids:
                 res[id][f] = stock.get(id, 0.0)
         return res
@@ -280,8 +313,15 @@ class product_product(osv.osv):
         'track_production': fields.boolean('Track Production Lots' , help="Forces to use a Production Lot during production order"),
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to use a tracking lot during receptions"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to use a tracking lot during deliveries"),
-        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one', domain=[('usage','=','internal')]),
+        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
+        'valuation':fields.selection([('manual_periodic', 'Periodic (manual)'),
+                                        ('real_time','Real Time (automatized)'),], 'Stock Valuation', help="Decide if the system must automatically creates account moves based on stock moves", required=True),
     }
+
+    _defaults = {
+        'valuation': lambda *a: 'manual_periodic',
+    }
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if context == None:
@@ -367,7 +407,6 @@ class product_template(osv.osv):
             string='Stock Output Account', method=True, view_load=True,
             help='This account will be used, instead of the default one, to value output stock'),
     }
-
 product_template()
 
 
@@ -386,8 +425,13 @@ class product_category(osv.osv):
             type='many2one', relation='account.account',
             string='Stock Output Account', method=True, view_load=True,
             help='This account will be used to value the output stock'),
+        'property_stock_variation': fields.property('account.account', 
+            type='many2one',
+            relation='account.account',
+            string="Stock variation Account",
+            method=True, view_load=True,  
+            help="This account will be used in product when valuation type is real-time valuation ",),
     }
-
 product_category()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

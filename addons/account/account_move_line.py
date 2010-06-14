@@ -577,13 +577,16 @@ class account_move_line(osv.osv):
     # writeoff; entry generated for the difference between the lines
     #
 
-    def reconcile_partial(self, cr, uid, ids, type='auto', context={}):
+    def reconcile_partial(self, cr, uid, ids, type='auto', context=None):
         merges = []
         unmerge = []
         total = 0.0
         merges_rec = []
 
         company_list = []
+        if context is None:
+            context = {}
+
         for line in self.browse(cr, uid, ids, context=context):
             if company_list and not line.company_id.id in company_list:
                 raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
@@ -613,13 +616,15 @@ class account_move_line(osv.osv):
         self.pool.get('account.move.reconcile').reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
         return True
 
-    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
+    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
         credit = debit = 0.0
         currency = 0.0
         account_id = False
         partner_id = False
+        if context is None:
+            context = {}
 
         company_list = []
         for line in self.browse(cr, uid, ids, context=context):
