@@ -43,23 +43,7 @@ class account_report_general_ledger(osv.osv_memory):
             'amount_currency' : True,
     }
 
-    def check_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        data={}
-        data['ids'] = context.get('active_ids',[])
-        data['form'] = self.read(cr, uid, ids, )[0]
-        data['form']['Account_list'] = context.get('Account_list',[])
-        if data['form']['Account_list']:
-            data['model'] = 'ir.ui.menu'
-        else:
-            data['model'] = 'account.account'
-        data['form']['context'] = context
-        if data['form']['state'] == 'bydate':
-            return self._check_date(cr, uid, data, context)
-        elif  data['form']['state'] == 'byperiod':
-            if not data['form']['periods']:
-                raise osv.except_osv(_('Data Insufficient !'),_('Please select periods.'))
+    def _print_report(self, cr, uid, ids, context=None):
         if data['form']['landscape'] == True:
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True, }
         else:

@@ -82,8 +82,8 @@ class account_common_report(osv.osv_memory):
 
     _defaults = {
 #            'state' : 'none',
-#            'date_from' : time.strftime('%Y-01-01'),
-#            'date_to' : time.strftime('%Y-%m-%d'),
+            'date_from' : time.strftime('%Y-01-01'),
+            'date_to' : time.strftime('%Y-%m-%d'),
 #            'company_id' : _get_company,
 #            'display_account' : 'bal_all',
 #            'sortbydate' : 'sort_date',
@@ -95,84 +95,27 @@ class account_common_report(osv.osv_memory):
             'account_id': _get_account,
     }
 
-    def next_view(self, cr, uid, ids, context=None):
-        obj_model = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        data = self.read(cr, uid, ids, [])[0]
-        context.update({'Account_list': data['Account_list']})
-        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','account_general_ledger_report_view')])
-        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'account.general.ledger.report',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': context
-        }
+    def _build_context(self, cr, uid, ids, data, context = None):
+        result = {}
+        result['fiscalyear'] = data['form']['fiscalyear_id'] and data['form']['fiscalyear_id'] or False
+        if data['form']['filter'] == 'filter_date':
+            result['date_from'] = data['form']['date_from']
+            result['date_to'] = data['form']['date_to']
+        elif data['form']['filter'] == 'filter_period':
+            period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])[0]['date_start']
+            period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])[0]['date_stop']
+            cr.execute('SELECT id FROM account_period WHERE date_start >= %s AND date_stop <= %s', (period_date_start, period_date_stop))
+            result['periods'] = lambda x: x[0], cr.fetchall()
+        return result
 
-    def _check_date(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
-        sql = """
-            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql,(data['form']['date_from'],))
-        res = cr.dictfetchall()
-        if res:
-            if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
-                    raise  osv.except_osv(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
-            else:
-                if data['form']['landscape'] == True:
-                    return {
-                        'type': 'ir.actions.report.xml',
-                        'report_name': 'account.general.ledger_landscape',
-                        'datas': data,
-                        'nodestroy':True,
-                    }
-                else:
-                    return {
-                        'type': 'ir.actions.report.xml',
-                        'report_name': 'account.general.ledger',
-                        'datas': data,
-                        'nodestroy':True,
-                    }
-        else:
-            raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
+    def _print_report(self, cr, uid, ids, data, query_line, context):
+        raise _('not implemented')
 
     def check_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        data={}
-        data['ids'] = context.get('active_ids',[])
-        data['form'] = self.read(cr, uid, ids, ['date_from', 'sortbydate', 'company_id', 'soldeinit', 'state', 'periods', 'date_to', 'amount_currency', 'display_account', 'landscape', 'fiscalyear'])[0]
-        data['form']['Account_list'] = context.get('Account_list',[])
-        if data['form']['Account_list']:
-            data['model'] = 'ir.ui.menu'
-        else:
-            data['model'] = 'account.account'
-        data['form']['context'] = context
-        if data['form']['state'] == 'bydate':
-            return self._check_date(cr, uid, data, context)
-        elif  data['form']['state'] == 'byperiod':
-            if not data['form']['periods']:
-                raise osv.except_osv(_('Data Insufficient !'),_('Please select periods.'))
-        if data['form']['landscape'] == True:
-            return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'account.general.ledger_landscape',
-                'datas': data,
-                'nodestroy':True,
-            }
-        else:
-            return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'account.general.ledger',
-                'datas': data,
-                'nodestroy':True,
-            }
-
+        used_context = self._build_context(cr, uid, ids, data, context)
+        query_line = obj_acc_move_line._query_get(cr, uid,
+                obj='account_move_line', context=used_context)
+        return self._print_report(cr, uid, ids, data, query_line, context)
 account_common_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
