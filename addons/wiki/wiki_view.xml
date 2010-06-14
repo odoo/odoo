@@ -127,22 +127,26 @@
                     <group col="8" colspan="4">
                         <field name="name" select="1" colspan="6"/>
                         <button name="open_wiki_page" type="object"
-                        string="Basic Wiki Editing" icon="gtk-ok" />
+                        string="Basic Wiki Editing" icon="gtk-ok" groups="wiki.wiki_basic_group"/>
                     </group>
                     <group col="8" colspan="4">
-                        <field name="group_id" select="1" on_change="onchange_group_id(group_id, text_area)"/>
+                        <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/>
                         <field name="section" invisible="not context.get('section',False)"/>
-                        <field name="parent_id"/>
+<!--                        <field name="parent_id"/>-->
                     </group>
-					<separator colspan="4" string="Informations"/>
-                    <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
+                    <notebook colspan="4">
+                        <page string="Content">
+                        <separator colspan="4" string="Informations"/>
+                        <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
+                        </page>
+                    </notebook>
                     <separator colspan="4" string="Modifications"/>
-                    <group col="6" colspan="4">
+                    <group col="4" colspan="4">
                         <field name="write_date" readonly="1"/>
                         <field name="review" select="1"/>
-                        <field name="toc"/>
                         <field name="tags" select="1" groups="base.group_extended"/>
-                        <field name="summary" colspan="4" groups="base.group_extended"/>
+                        <field name="toc"/>
+<!--                        <field name="summary" colspan="4" groups="base.group_extended"/>-->
                     </group>
                 </form>
             </field>
@@ -156,13 +160,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wiki">
-                    <group col='8' colspan='4'>
-                        <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
-                        <field name="group_id" select="1"/>
-                        <field name="text_area" select="1"/>
-                        <field name="review" select="1"/>
-                        <field name="create_uid" widget="selection" select="1"/>
+                    <filter icon="terp-check" string="Need Review" domain="[('review','=',True)]"/>
+                    <separator orientation="vertical"/>
+                    <field name="section" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="group_id" select="1"/>
+                    <field name="write_uid" select="1"/>
+                    <field name="write_date" select="1"/>
+                    <field name="review" select="1"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="8" col="6">
+                        <filter icon="terp-check" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
+                        <filter icon="terp-personal" string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
+                        <filter icon="terp-personal-" string="Last Author" domain="[]" context="{'group_by':'write_uid'}"/>
                     </group>
                 </search>
             </field>
@@ -176,7 +186,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
-            <field name="context">{'section':'1','search_default_create_uid':uid}</field>
+<!--            <field name="context">{'section':'1','search_default_create_uid':uid}</field>-->
             <field name="search_view_id" ref="view_wiki_filter"/>
         </record>
 

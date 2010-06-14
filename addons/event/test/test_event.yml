@@ -66,10 +66,10 @@
     type: 'event_type_conference0'
     
 - |
-  we  set the limit of registrations to this event using "Minimum Registrations"  3 and "Maximum Registrations" 10
+  we  set the limit of registrations to this event using "Minimum Registrations"  2 and "Maximum Registrations" 10
 -   
   !python {model: event.event}: |
-    self.write(cr, uid, [ref('event_event_conference0')], {'register_max': 10, 'register_min': 3})
+    self.write(cr, uid, [ref('event_event_conference0')], {'register_max': 10, 'register_min': 2})
     
 - |
   We Check that the event is in "Draft" state.

@@ -21,26 +21,8 @@
 
 from osv import osv, fields
 import time
-import  base64
+import base64
 
-class one2many_domain(fields.one2many):
-    def set(self, cr, obj, id, field, values, user=None, context=None):
-        if not values:
-            return
-        return super(one2many_domain, self).set(cr, obj, id, field, values, 
-                                            user=user, context=context)
-
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if context is None:
-            context = {}
-        res = {}
-        msg_obj = obj.pool.get('mailgate.message')
-        for thread in obj.browse(cr, user, ids, context=context):
-            final = msg_obj.search(cr, user, self._domain + [('thread_id', '=', thread.id)], context=context)
-            res[thread.id] = final
-        return res
-        
-        
 class mailgate_thread(osv.osv):
     '''
     Mailgateway Thread
@@ -57,7 +39,7 @@ class mailgate_thread(osv.osv):
         'res_id': fields.integer('Resource ID'), 
         }
         
-    def __history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -71,11 +53,14 @@ class mailgate_thread(osv.osv):
         @param context: A standard dictionary for contextual values"""
         if context is None:
             context = {}
-        # The mailgate sends the ids of the cases and not the object list
-        if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
-            cases = self.pool.get(context['model']).browse(cr, uid, cases, context=context)
+        if attach is None:
+            attach = []
 
-        model_obj = self.pool.get('ir.model')
+        # The mailgate sends the ids of the cases and not the object list
+
+        if all(isinstance(case_id, (int, long)) for case_id in cases):
+            cases = self.browse(cr, uid, cases, context=context)
+
         att_obj = self.pool.get('ir.attachment')
         obj = self.pool.get('mailgate.message')
 
@@ -86,7 +71,7 @@ class mailgate_thread(osv.osv):
                 'model' : case._name, 
                 'res_id': case.id, 
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
-                'thread_id': case.thread_id.id, 
+                'thread_id': case.thread_id.id,
                 'message_id': message_id, 
             }
             attachments = []
@@ -114,10 +99,10 @@ class mailgate_thread(osv.osv):
                         'attachment_ids': [(6, 0, attachments)]
                         }
             res = obj.create(cr, uid, data, context)
+            case._table.log(cr, uid, case.id, case._description + " '" + case.name + "': " + keyword, context=context)
         return True
     
-    _history = __history
-    history = __history
+    __history = history = _history
     
 
 mailgate_thread()
@@ -129,10 +114,12 @@ class mailgate_message(osv.osv):
     _name = 'mailgate.message'
     _description = 'Mailgateway Message'
     _order = 'date desc'
+    _log_create=True
 
     _columns = {
         'name':fields.char('Message', size=64), 
         'thread_id':fields.many2one('mailgate.thread', 'Thread'), 
+        'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
         'date': fields.datetime('Date'), 
         'history': fields.boolean('Is History?', required=False), 
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 

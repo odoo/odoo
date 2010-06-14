@@ -3,7 +3,8 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-TODAY OpenERP S.A. (http://www.openerp.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,14 +23,18 @@
 
 import re
 import smtplib
-import email, mimetypes
+import email
+import mimetypes
 from email.Header import decode_header
 from email.MIMEText import MIMEText
 import xmlrpclib
 import os
 import binascii
-import time, socket
-
+import time
+import socket
+import logging
+import sys
+import optparse
 
 email_re = re.compile(r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6})")
 case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
@@ -89,7 +94,6 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace('<h2>', '**').replace('</h2>', '**')
     html = html.replace('<h1>', '**').replace('</h1>', '**')
     html = html.replace('<em>', '/').replace('</em>', '/')
-    
 
     # the only line breaks we respect is those of ending tags and 
     # breaks
@@ -101,14 +105,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = re.sub('<br\s*/>', '\n', html)
     html = html.replace(' ' * 2, ' ')
 
-
-    # for all other tags we failed to clean up, just remove then and 
-    # complain about them on the stderr
-    def desperate_fixer(g):
-        #print >>sys.stderr, "failed to clean up %s" % str(g.group())
-        return ' '
-
-    html = re.sub('<.*?>', desperate_fixer, html)
+    html = re.sub('<.*?>', ' ', html)
 
     # lstrip all lines
     html = '\n'.join([x.lstrip() for x in html.splitlines()])
@@ -177,13 +174,19 @@ class email_parser(object):
         s = decode_header(s.replace('\r', '')) 
         return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s or []))
     
-    def history(self, model, new_id, msg_id, subject, msg_to, msg_from, body, attach):
+    def history(self, model, new_id, msg_id, ref_id, subject, msg_to, msg_from, body, attach):
+        try:
+            thread_id = self.rpc(model, 'read', new_id, ['thread_id'])['thread_id'][0]
+        except Exception, e:
+            thread_id = None
         msg_data = {
                     'name': subject, 
                     'history': True, 
                     'model': model, 
                     'res_id': new_id, 
+                    'thread_id': thread_id, 
                     'message_id': msg_id, 
+                    'ref_id': ref_id or '', 
                     'user_id': self.rpc.user_id, 
                     'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                     'email_from': msg_from, 
@@ -228,7 +231,7 @@ class email_parser(object):
             try:
                 self.rpc(self.model, 'history', [new_id], 'Receive', True, msg_to, message['body'], msg_from, False, {'model' : self.model})
             except Exception, e:
-                self.history(self.model, new_id, msg['Message-Id'], msg_subject, msg_to, msg_from, message['body'], att_ids)
+                self.history(self.model, new_id, msg['Message-Id'], msg['References'], msg_subject, msg_to, msg_from, message['body'], att_ids)
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
                 e = '\n\nThe Specified user does not have an access to the Model.'
@@ -248,13 +251,12 @@ class email_parser(object):
 #   }
 
     def msg_body_get(self, msg):
-        message = {};
-        message['body'] = '';
-        message['attachment'] = {};
+        message = {
+            'body' : '',
+            'attachment' : {},
+        }
         attachment = message['attachment'];
         counter = 1;
-        def replace(match):
-            return ''
 
         for part in msg.walk():
             if part.get_content_maintype() == 'multipart':
@@ -264,52 +266,48 @@ class email_parser(object):
                 buf = part.get_payload(decode=True)
                 if buf:
                     txt = self._to_decode(buf, part.get_charsets())
-                    txt = re.sub("<(\w)>", replace, txt)
-                    txt = re.sub("<\/(\w)>", replace, txt)
+                    txt = re.sub("<\/?(\w)>", '', txt)
                 if txt and part.get_content_subtype() == 'plain':
                     message['body'] += txt 
-                elif txt and part.get_content_subtype() == 'html':                                                               
+                elif txt and part.get_content_subtype() == 'html':
                     message['body'] += html2plaintext(txt)  
-                
+
                 filename = part.get_filename();
                 if filename :
                     attachment[filename] = part.get_payload(decode=True);
-                    
-            elif part.get_content_maintype()=='application' or part.get_content_maintype()=='image' or part.get_content_maintype()=='text':
+
+            elif part.get_content_maintype() in ('application', 'image', 'text'):
                 filename = part.get_filename();
-                if filename :
-                    attachment[filename] = part.get_payload(decode=True);
-                else:
+                if not filename :
                     filename = 'attach_file'+str(counter);
                     counter += 1;
-                    attachment[filename] = part.get_payload(decode=True);
-                #end if
-            #end if
+
+                attachment[filename] = part.get_payload(decode=True);
             message['attachment'] = attachment
         #end for        
         return message
 
     def msg_send(self, msg, emails, priority=None):
-        if not len(emails):
+        if not emails:
             return False
-        del msg['To']
+
         msg['To'] = emails[0]
+        msg['Subject'] = 'OpenERP Record-id:' + msg['Subject']
         if len(emails)>1:
             if 'Cc' in msg:
                 del msg['Cc']
             msg['Cc'] = ','.join(emails[1:])
-        del msg['Reply-To']
         msg['Reply-To'] = self.email
-        s = smtplib.SMTP(self.smtp_server, self.smtp_port)
-        s.ehlo()
-        s.starttls()
-        s.ehlo()
-        
         if self.smtp_user and self.smtp_password:
+            s = smtplib.SMTP(self.smtp_server, self.smtp_port)
+            s.ehlo()
+            s.starttls()
+            s.ehlo()
             s.login(self.smtp_user, self.smtp_password)
             s.sendmail(self.email, emails, msg.as_string())
-        s.close()
-        return True
+            s.close()
+            return True
+        return False
 
 
     def parse(self, msg):
@@ -319,7 +317,7 @@ class email_parser(object):
         if msg.get('Subject', ''):
             del msg['Subject']
         msg['Subject'] = '['+str(res_id)+'] '+subject
-        msg['Message-Id'] = '<'+str(time.time())+'-openerpcrm-'+str(res_id)+'@'+socket.gethostname()+'>'
+#        msg['Message-Id'] = '<'+str(time.time())+'-openerpcrm-'+str(res_id)+'@'+socket.gethostname()+'>'
 
         mm = [self._decode_header(msg['From']), self._decode_header(msg['To'])]+self._decode_header(msg.get('Cc', '')).split(',')
         msg_mails = map(self.email_get, filter(None, mm))
@@ -334,7 +332,6 @@ class email_parser(object):
         return res_id, msg_mails
 
 if __name__ == '__main__':
-    import sys, optparse
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.0')
     group = optparse.OptionGroup(parser, "Note", 
         "This program parse a mail from standard input and communicate "

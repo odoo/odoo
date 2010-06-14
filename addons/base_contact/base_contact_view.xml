@@ -134,7 +134,8 @@
             <field name="address" mode="form,tree" colspan="4" nolabel="1" select="1" position="replace">
                 <field name="address" mode="form,tree" colspan="4" nolabel="1" select="1">
                     <form string="Address">
-                       <group string="Postal Address" colspan="2" col="2">
+                       <group  colspan="2" col="2">
+                           <separator string="Postal Address" colspan="2" col="2"/>
                            <field name="type" />
                            <field name="street"/>
                            <field name="street2"/>
@@ -143,7 +144,8 @@
                            <field name="country_id" completion="1"/>
                            <field name="state_id"/>
                         </group>
-                        <group string="Communication" colspan="2" col="2">
+                        <group colspan="2" col="2">
+                           <separator string="Communication" colspan="2" col="2"/>
                            <field name="phone"/>
                            <field name="fax"/>
                            <field name="email" widget="email"/>

@@ -181,7 +181,7 @@ class email_server(osv.osv):
         context.update({
             'server_id':server.id
         })
-        history_pool = self.pool.get('mail.server.history')
+        history_pool = self.pool.get('mailgate.message')
         msg_txt = email.message_from_string(message)
         message_id = msg_txt.get('Message-ID', False)
 
@@ -282,7 +282,6 @@ class email_server(osv.osv):
                 ref = msg.get('references').split('\r\n')
             else:
                 ref = msg.get('references').split(' ')
-                
             if ref:
                 hids = history_pool.search(cr, uid, [('name','=',ref[0].strip())])
                 if hids:
@@ -306,9 +305,18 @@ class email_server(osv.osv):
             if hasattr(model_pool, 'message_new'):
                 res_id = model_pool.message_new(cr, uid, msg, context)
             else:
-                logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s' % (model_pool._name))
-                return False
-            
+                data = {
+                    'name': msg.get('subject'), 
+                    'email_from': msg.get('from'), 
+                    'email_cc': msg.get('cc'),
+                    'user_id': False, 
+                    'description': msg.get('body'), 
+                    'state' : 'draft',
+                }
+                res_id = model_pool.create(cr, uid, data, context=context)
+                logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s. Using default method' % (model_pool._name))
+
+            att_ids = []
             if server.attach:
                 for attactment in attachents or []:
                     data_attach = {
@@ -319,19 +327,25 @@ class email_server(osv.osv):
                         'res_model': server.object_id.model,
                         'res_id': res_id,
                     }
-                    self.pool.get('ir.attachment').create(cr, uid, data_attach)
+                    att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
             
             if server.action_id:
                 action_pool = self.pool.get('ir.actions.server')
                 action_pool.run(cr, uid, [server.action_id.id], {'active_id':res_id, 'active_ids':[res_id]})
-            
             res = {
-                'name': message_id, 
+                'name': msg.get('subject', 'No subject'), 
+                'message_id': message_id,
+                'date': msg.get('date'),
                 'res_id': res_id, 
+                'email_from': msg.get('from'), 
+                'email_to': msg.get('to'), 
+                'email_cc': msg.get('cc'), 
+                'model': server.object_id.model, 
                 'server_id': server.id, 
-                'note': msg.get('body', msg.get('from')),
+                'description': msg.get('body', msg.get('from')),
                 'ref_id':msg.get('references', msg.get('id')),
-                'type':server.type
+                'type':server.type, 
+                'attachment_ids': [(6, 0, att_ids)]
             }
             his_id = history_pool.create(cr, uid, res)
             
@@ -412,17 +426,10 @@ email_server()
 
 class mail_server_history(osv.osv):
 
-    _name = "mail.server.history"
-    _description = "Mail Server History"
+    _inherit = "mailgate.message"
     
     _columns = {
-        'name': fields.char('Message Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
-        'ref_id': fields.char('Referance Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
-        'res_id': fields.integer("Resource ID", readonly=True, select=True),
         'server_id': fields.many2one('email.server',"Mail Server", readonly=True, select=True),
-        'model_id':fields.related('server_id', 'object_id', type='many2one', relation='ir.model', string='Model', readonly=True, select=True), 
-        'note': fields.text('Notes', readonly=True),
-        'create_date': fields.datetime('Created Date', readonly=True),
         'type':fields.selection([
             ('pop','POP Server'),
             ('imap','IMAP Server'),

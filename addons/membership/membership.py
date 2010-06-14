@@ -351,10 +351,11 @@ class Partner(osv.osv):
 
     def __get_membership_state(self, *args, **kwargs):
         return self._membership_state(*args, **kwargs)
-    
+
     _columns = {
         'associate_member': fields.many2one('res.partner', 'Associate member'),
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
+        'member': fields.boolean('Member'),
         'free_member': fields.boolean('Free member'),
         'membership_amount': fields.float(
                     'Membership amount', digits=(16, 2),
@@ -415,16 +416,16 @@ class Partner(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive associated members.', ['associate_member'])
     ]
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         if context is None:
-            context = {}    
+            context = {}
         default = default.copy()
         default['member_lines'] = []
         return super(Partner, self).copy(cr, uid, id, default, context)
-    
+
 Partner()
 
 class product_template(osv.osv):
@@ -485,7 +486,7 @@ Invoice()
 
 class account_invoice_line(osv.osv):
     _inherit='account.invoice.line'
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
             context={}

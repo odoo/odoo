@@ -83,19 +83,22 @@
                    <page string="Mailing">
                         <field name="reply_to"/>
                         <newline/>
-						<group col="3" colspan="2">
-                        	<separator string="Auto Registration Email" colspan="2"/>
+
+                        <group col="3" colspan="2">
+                            <separator string="Auto Registration Email" colspan="2"/>
                             <newline/>
-                        	<field name="mail_auto_registr"/>
-                        	<separator string="Registration Email" colspan="2"/>
-                        	<field name="mail_registr" colspan="2" nolabel="1"/>
+
+                            <field name="mail_auto_registr"/>
+                            <separator string="Registration Email" colspan="2"/>
+                            <field name="mail_registr" colspan="2" nolabel="1"/>
+
                         </group>
                         <group col="2" colspan="2">
- 	                       <separator string="Auto Confirmation Email" colspan="2"/>
-                        	<field name="mail_auto_confirm"/>
-                        	<newline/>
-                        	<separator string="Confirmation Email" colspan="2"/>
-                        	<field name="mail_confirm" colspan="2" nolabel="1"/>
+                            <separator string="Auto Confirmation Email" colspan="2"/>
+                            <field name="mail_auto_confirm"/>
+                            <newline/>
+                            <separator string="Confirmation Email" colspan="2"/>
+                            <field name="mail_confirm" colspan="2" nolabel="1"/>
                         </group>
                     </page>
                     <page string="Statistics">
@@ -138,23 +141,24 @@
                         <separator orientation="vertical"/>
                         <field name="name" string="Event" select="1"/>
                         <field name="user_id" widget="selection">
-                        	   <filter icon="terp-partner"
-                            		string="My Events"
-                            		help="My Events"
-                            		domain="[('user_id','=',uid)]"/>
-                        </field>    		
+
+                               <filter icon="terp-partner"
+                                    string="My Events"
+                                    help="My Events"
+                                    domain="[('user_id','=',uid)]"/>
+                        </field>            
                         <field name="date_begin" select="1"/>
                         <field name="state" select="1"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="12">
-					    <filter string="Responsible" name="user" icon="terp-partner" context="{'group_by': 'user_id'}"/>
-						<filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
-						<filter string="state" icon="terp-crm" context="{'group_by':'state'}"/>
-						<separator orientation="vertical"/>
-                    	<filter string="Creation" icon="terp-project"
-                        	domain="[]" context="{'group_by':'date_begin'}" />
-					</group>
+                        <filter string="Responsible" name="user" icon="terp-partner" context="{'group_by': 'user_id'}"/>
+                        <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
+                        <filter string="state" icon="terp-crm" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Creation" icon="terp-project"
+                            domain="[]" context="{'group_by':'date_begin'}" />
+                    </group>
                 </search>
             </field>
         </record>
@@ -211,90 +215,90 @@
                         <field name="unit_price"/>
                     </group>
                     <notebook colspan="4">
-	                    <page string="General">
-	                        <field name="contact_id" on_change="onchange_contact_id(contact_id, partner_id)" /><newline/>
-	                        <field name="email_from"/>
-	                        <button name="remind_partner" string="Send Reminder" states="open,pending" type="object" colspan="2" icon="gtk-go-forward"/>
-	                        <newline/>
-	                        <separator string="Badge" colspan="4"/>
-	                        <field name="badge_title"/>
-	                        <field name="badge_name" on_change="onchange_badge_name(badge_name)"/>
-	                        <field name="badge_partner"/>
-	                        <newline/>
-	                        <separator string="Status" colspan="4"/>
-	                        <group col="8" colspan="4">
-	                            <field name="state" select="1" colspan="2"/>
-	                            <button name="button_reg_close" string="Registration Invoiced" states="open" type="object" icon="gtk-print"/>
-	                            <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-	                            <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
-	                        </group>
-	                    </page>
-	                    <page string="Payments">
-	                        <field name="invoice_label" select="1"/>
-	                        <field name="tobe_invoiced" select="1"/>
-	                        <field name="invoice_id"/>
-	                    </page>
-	                    <page string="History">
-	                        <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-		                        <form string="Communication history">
-	                                    <group col="6" colspan="4">
-	                                        <field name="date"/>
-	                                        <field name="email_to"/>
-	                                        <field name="email_from"/>
-	                                    </group>
-	                                    <notebook colspan="4">
-	                                        <page string="Details">
-	                                            <field name="description" colspan="4" nolabel="1"/>
-	                                        </page>
-	                                        <page string="Attachments">
-	                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-	                                        </page>
-	                                    </notebook>
-	                                    <button colspan="4"
-	                                    string="Reply to Last Email"
-	                                    name="%(crm.action_crm_send_mail)d"
-	                                    context="{'mail':'reply', 'model': 'event.registration'}"
-	                                    icon="gtk-undo" type="action" />
-	                                </form>
-	                                <tree string="Communication history">
-	                                    <field name="date"/>
-	                                    <field name="email_from" />
-	                                    <field name="email_to"/>
-	                                    <field name="description"/>
-	                                </tree>
-	                            </field>
-	                        <field name="log_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
-	                            <tree string="Actions">
-	                                <separator string="Action Information" colspan="4"/>
-	                                <field name="name"/>
-	                                <field name="date"/>
-	                                <field name="user_id"/>
-	                            </tree>
-	                            <form string="Actions">
-	                                <separator string="Action Information" colspan="4"/>
-	                                <field name="name" colspan="4"/>
-	                                <field name="date"/>
-	                                <field name="user_id"/>
-	                            </form>
-	                        </field>
-	                    </page>
-	                    <page string="Extra Info">
-	                    	<group col="6" colspan="4">
-		                        <field name="name" select="1" colspan="6"/>
-		                        <newline/>
-		                        <field name="categ_id"/>
-		                        <field name="id" select="1"/>
-	    	                    <field name="active"/>
-	                        	<separator colspan="6" string="Watchers Emails" />
-	                        	<field name="email_cc" colspan="6" nolabel="1"/>
-	                        </group>
-	                        <separator colspan="4" string="Dates"/>
-	                        <field name="create_date"/>
-	                        <field name="date_closed"/>
-	                        <separator colspan="4" string="References"/>
-	                        <field name="ref" colspan="4"/>
-	                        <field name="ref2" colspan="4"/>
-	                    </page>
+                        <page string="General">
+                            <field name="contact_id" on_change="onchange_contact_id(contact_id, partner_id)" /><newline/>
+                            <field name="email_from"/>
+                            <button name="remind_partner" string="Send Reminder" states="open,pending" type="object" colspan="2" icon="gtk-go-forward"/>
+                            <newline/>
+                            <separator string="Badge" colspan="4"/>
+                            <field name="badge_title"/>
+                            <field name="badge_name" on_change="onchange_badge_name(badge_name)"/>
+                            <field name="badge_partner"/>
+                            <newline/>
+                            <separator string="Status" colspan="4"/>
+                            <group col="8" colspan="4">
+                                <field name="state" select="1" colspan="2"/>
+                                <button name="button_reg_close" string="Registration Invoiced" states="open" type="object" icon="gtk-print"/>
+                                <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
+                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
+                            </group>
+                        </page>
+                        <page string="Payments">
+                            <field name="invoice_label" select="1"/>
+                            <field name="tobe_invoiced" select="1"/>
+                            <field name="invoice_id"/>
+                        </page>
+                        <page string="History">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                                <form string="Communication history">
+                                        <group col="6" colspan="4">
+                                            <field name="date"/>
+                                            <field name="email_to"/>
+                                            <field name="email_from"/>
+                                        </group>
+                                        <notebook colspan="4">
+                                            <page string="Details">
+                                                <field name="description" colspan="4" nolabel="1"/>
+                                            </page>
+                                            <page string="Attachments">
+                                                <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                            </page>
+                                        </notebook>
+                                        <button colspan="4"
+                                        string="Reply to Last Email"
+                                        name="%(crm.action_crm_send_mail)d"
+                                        context="{'mail':'reply', 'model': 'event.registration'}"
+                                        icon="gtk-undo" type="action" />
+                                    </form>
+                                    <tree string="Communication history">
+                                        <field name="date"/>
+                                        <field name="email_from" />
+                                        <field name="email_to"/>
+                                        <field name="description"/>
+                                    </tree>
+                                </field>
+                            <field name="log_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
+                                <tree string="Actions">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </tree>
+                                <form string="Actions">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Extra Info">
+                            <group col="6" colspan="4">
+                                <field name="name" select="1" colspan="6"/>
+                                <newline/>
+                                <field name="categ_id"/>
+                                <field name="id" select="1"/>
+                                <field name="active"/>
+                                <separator colspan="6" string="Watchers Emails" />
+                                <field name="email_cc" colspan="6" nolabel="1"/>
+                            </group>
+                            <separator colspan="4" string="Dates"/>
+                            <field name="create_date"/>
+                            <field name="date_closed"/>
+                            <separator colspan="4" string="References"/>
+                            <field name="ref" colspan="4"/>
+                            <field name="ref2" colspan="4"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -320,10 +324,10 @@
                     <newline/>    
                     <group expand="1" string="Group By...">
                         <filter string="Event" icon="terp-crm" domain="[]" context="{'group_by':'event_id'}"/> 
-	                    <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
-	                    <separator orientation="vertical"/>
-						<filter string="Partner" icon="terp-crm" domain="[]" context="{'group_by':'partner_id'}"/>	                    
-	                    <filter string="Responsible" name="uid" icon="terp-partner" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="State" icon="terp-crm" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Partner" icon="terp-crm" domain="[]" context="{'group_by':'partner_id'}"/>                        
+                        <filter string="Responsible" name="uid" icon="terp-partner" domain="[]" context="{'group_by':'user_id'}"/>
                    </group>
                 </search>
             </field>

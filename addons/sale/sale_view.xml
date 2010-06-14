@@ -91,6 +91,15 @@
             </field>
         </record>
 
+        <act_window name="Partial Invoice"
+           res_model="sale.advance.payment.inv"
+           src_model="sale.order"
+           view_mode="form"
+           target="new"
+           key2="client_action_multi"
+           id="action_view_sale_advance_payment_inv"/> 
+
+
         <record id="view_order_form" model="ir.ui.view">
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
@@ -111,7 +120,7 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" widget="selection"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
                                 groups="base.group_extended"/>
@@ -130,6 +139,7 @@
                                                 name="product_uom_qty"
                                                 on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position, True)"
                                                 />
+                                                <field groups="product.group_uos" name="product_uos_qty"/>
                                             <field name="product_uom"
                                                 on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
                                             <field
@@ -146,7 +156,8 @@
                                             <field name="type" groups="base.group_extended"/>
                                             <field name="delay" groups="base.group_extended"/>
                                             <newline/>
-                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                            <separator colspan="5" string="Taxes"/>
+                                            <field colspan="4" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <group colspan="4" col="5" groups="base.group_extended">
                                                 <separator colspan="5" string="States"/>
                                                 <field name="state"/>
@@ -186,12 +197,12 @@
                                 </tree>
                             </field>
                             <newline/>
-                            <group col="8" colspan="10">
+                            <group col="13" colspan="10">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute"/>
+                                <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute"/>
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state"/>
@@ -257,7 +268,7 @@
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
-                    <field name="user_id" select="1" widget="selection"/>
+                    <field name="user_id" select="1"/>
                     <field name="date_order" select="1" string="Order date" />
                     <newline/>
                     <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
@@ -367,6 +378,7 @@
                             <field name="order_id"/>
                             <field name="order_partner_id" readonly="1" invisible="1"/>
                             <field name="product_uom_qty" readonly="1"/>
+                            <field groups="product.group_uos" name="product_uos_qty"/>
                             <field name="product_uom"/>
                             <field name="product_id" readonly="1"/>
                             <field name="invoiced"/>
@@ -424,7 +436,7 @@
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
-                    <field name="salesman_id" widget="selection">
+                    <field name="salesman_id">
                         <filter icon="terp-dolar" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
                         <filter icon="terp-personal+" domain="[('salesman_id','child_of',[uid])]" help="My Departments Sale Order Lines"/>
                     </field>
@@ -510,16 +522,16 @@
                   <attribute name="string">Sales Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-            	<attribute name="string"
+                <attribute name="string"
                        >Configure Sale Order Logistic</attribute>
-          		</separator>
-          		<xpath expr="//label[@string='description']" position="attributes">
-            		<attribute name="string">Setup your sales workflow and default values.</attribute>
-          		</xpath>
+                  </separator>
+                  <xpath expr="//label[@string='description']" position="attributes">
+                    <attribute name="string">Setup your sales workflow and default values.</attribute>
+                  </xpath>
                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
-          			<attribute name='rowspan'>15</attribute>
-          			<attribute name='string'></attribute>
-	      		</xpath>
+                      <attribute name='rowspan'>15</attribute>
+                      <attribute name='string'></attribute>
+                  </xpath>
                 <group string="res_config_contents" position="replace">
                   <field name="picking_policy" groups="base.group_extended"/>
                   <newline/>

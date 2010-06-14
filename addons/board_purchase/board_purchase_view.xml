@@ -2,13 +2,13 @@
 <openerp>
     <data>
 
-    	<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
         <menuitem
             id="menu_purchase_deshboard"
             name="Purchase"
             parent="base.dashboard"/>
 
-		<record id="purchase_draft" model="ir.actions.act_window">
+        <record id="purchase_draft" model="ir.actions.act_window">
             <field name="name">Draft Purchases</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
@@ -17,7 +17,7 @@
             <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','=','draft')]</field> 
             <field name="search_view_id" ref="purchase.purchase_order_tree"/>
         </record>
-		<record id="purchase_waiting" model="ir.actions.act_window">
+        <record id="purchase_waiting" model="ir.actions.act_window">
             <field name="name">Quotation Request</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
@@ -47,7 +47,7 @@
             </field>
         </record>
 
-		<record id="open_board_purchase" model="ir.actions.act_window">
+        <record id="open_board_purchase" model="ir.actions.act_window">
             <field name="name">Purchase Dashboard</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
@@ -55,7 +55,7 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_purchase_form"/>
         </record>
-		<menuitem
+        <menuitem
             action="open_board_purchase"
             icon="terp-graph"
             id="menu_board_purchase"

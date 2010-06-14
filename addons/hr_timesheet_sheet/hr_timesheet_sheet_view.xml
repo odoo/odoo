@@ -195,7 +195,7 @@
                         <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-gtk-go-back-rtl" string="To Validate" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
-                        <field name="user_id" select="1" widget="selection"/>
+                        <field name="user_id" select="1"/>
                         <field name="date_from"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-personal+"

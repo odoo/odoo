@@ -12,8 +12,8 @@
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
-                   <filter string="Can be sold" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
+                   <filter string="To Sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
                    <separator orientation="vertical"/>
                    <field name="default_code"/>
                    <field name="name"/>
@@ -65,6 +65,7 @@
                 <form string="Product">
                    <group colspan="4" col="6">
                     <group colspan="4" col="2">
+                        <separator string="Name" colspan="2"/>
                         <field name="name"/>
                         <field groups="product.group_product_variant" name="variants" />
                     </group>
@@ -74,10 +75,9 @@
                         <field name="ean13" groups="base.group_extended"/>
                     </group>
                     <group colspan="1" col="2">
-                        <separator string="Product Characteristics" colspan="2"/>
+                        <separator string="Characteristics" colspan="2"/>
                         <field name="sale_ok"/>
                         <field name="purchase_ok"/>
-                        <field groups="base.group_extended" name="rental"/>
                     </group>
                    </group>
 
@@ -426,7 +426,7 @@
             <field name="arch" type="xml">
                 <form string="Supplier Information">
                     <field name="name"/>
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence"/>
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>
                     <field name="delay"/>
@@ -451,7 +451,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Supplier Information">
-                    <field name="sequence" string="Seq" invisible="1"/>
+                    <field name="sequence" string="Seq"/>
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="qty"/>
@@ -466,8 +466,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Variant">
-                    <separator colspan="4" string="Description"/>
-                    <field name="product_tmpl_id" select="1"/>
+                     <field name="product_tmpl_id" select="1"/>                
                     <field name="active" select="1"/>
                     <field name="variants" select="1"/>
                     <field name="default_code" select="1"/>
@@ -521,7 +520,6 @@
                         <separator string="Product Type" colspan="2"/>
                         <field name="sale_ok"/>
                         <field name="purchase_ok"/>
-                        <field groups="base.group_extended" name="rental"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
@@ -607,7 +605,7 @@
             <field name="view_id" ref="product_template_tree_view"/>
         </record>
 
-		<record id="ir_ui_view_sc_product0" model="ir.ui.view_sc">
+        <record id="ir_ui_view_sc_product0" model="ir.ui.view_sc">
             <field name="name">Products</field>
             <field name="resource">ir.ui.menu</field>
             <field name="user_id" ref="base.user_root"/>

@@ -43,7 +43,7 @@
     'update_xml': [
         'wizard/event_confirm_registration_view.xml',
         'event_view.xml',
-        'report/report_event__registration_view.xml',
+        'report/report_event_registration_view.xml',
         'event_sequence.xml',
         'security/event_security.xml',
         'security/ir.model.access.csv',

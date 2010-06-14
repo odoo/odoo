@@ -123,7 +123,7 @@ class pos_make_payment(osv.osv_memory):
                     """                                   
         return result
 
-    def check(self, cr, uid, ids, context=None):
+    def check(self, cr, uid, ids, context):
         
         """Check the order:
         if the order is not paid: continue payment,
@@ -153,8 +153,11 @@ class pos_make_payment(osv.osv_memory):
                 return self.create_invoice(cr,uid,ids,context)
             else:
                 context.update({'flag': True})                
-                order_obj.action_paid(cr,uid,[active_id],context)                
-                order_obj.write(cr, uid, [active_id],{'state':'paid'})                            
+                order_obj.action_paid(cr,uid,[active_id],context)         
+                if context.get('return'):
+                    order_obj.write(cr, uid, [active_id],{'state':'done'})   
+                else:
+                     order_obj.write(cr, uid, [active_id],{'state':'paid'})    
                 return self.print_report(cr, uid, ids, context)  
         if order.amount_paid > 0.0:
             context.update({'flag': True})
@@ -166,6 +169,10 @@ class pos_make_payment(osv.osv_memory):
 
     
     def create_invoice(self, cr, uid, ids, context):
+        
+        """
+          Create  a invoice 
+        """        
         wf_service = netsvc.LocalService("workflow")
         active_ids = [context and context.get('active_id',False)]      
         for i in active_ids:
@@ -178,8 +185,6 @@ class pos_make_payment(osv.osv_memory):
         }            
                     
     def print_report(self, cr, uid, ids, context=None):
-        if not context:
-            context={}
         """ 
          @summary: To get the date and print the report           
          @param self: The object pointer.
@@ -187,7 +192,9 @@ class pos_make_payment(osv.osv_memory):
          @param uid: ID of the user currently logged in
          @param context: A standard dictionary 
          @return : retrun report
-        """        
+        """          
+        if not context:
+            context={}
         active_id=context.get('active_id',[])        
         datas = {'ids' : [active_id]}
         res =  {}        

@@ -16,6 +16,7 @@
         'email_template_view.xml',
         'email_template_mailbox_view.xml',
         'wizard/email_template_send_wizard_view.xml',
+        'security/ir.model.access.csv'
     ],
     "installable": True,
     "active": False,
