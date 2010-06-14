@@ -467,8 +467,8 @@ class marketing_campaign_workitem(osv.osv):
             else:
                 # manual states are not processed automatically
                 workitem_ids = []
-        if workitem_ids:
-            self.process(cr, uid, workitem_ids, context)
+            if workitem_ids:
+                self.process(cr, uid, workitem_ids, context)
 
 marketing_campaign_workitem()
 

@@ -89,7 +89,7 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _description = 'Partner'
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        query = self.pool.get('account.move.line')._query_get(cr, 1, context=context)
         cr.execute("""select
                 l.partner_id, a.type, sum(l.debit-l.credit)
             from

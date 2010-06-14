@@ -65,7 +65,6 @@ class purchase_order(osv.osv):
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
-            print res
         return res
 
     def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context):
@@ -168,7 +167,7 @@ class purchase_order(osv.osv):
         'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Waiting Supplier Ack'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)],'done':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
-        'notes': fields.text('Notes', translate=True),
+        'notes': fields.text('Notes'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
         'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
         'shipped':fields.boolean('Received', readonly=True, select=True),
@@ -428,6 +427,7 @@ class purchase_order(osv.osv):
                         'product_uom': order_line.product_uom.id,
                         'product_uos': order_line.product_uom.id,
                         'date_planned': order_line.date_planned,
+                        'date_expected': order_line.date_planned,
                         'location_id': loc_id,
                         'location_dest_id': dest,
                         'picking_id': picking_id,
@@ -591,7 +591,7 @@ class purchase_order_line(osv.osv):
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Purchase Price')),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Purchase Price')),
-        'notes': fields.text('Notes', translate=True),
+        'notes': fields.text('Notes'),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
         'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company'),
@@ -633,7 +633,7 @@ class purchase_order_line(osv.osv):
         prod= self.pool.get('product.product').browse(cr, uid,product)
         lang=False
         if partner_id:
-            lang=self.pool.get('res.partner').read(cr, uid, partner_id)['lang']
+            lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']
         context={'lang':lang}
         context['partner_id'] = partner_id
 
@@ -726,17 +726,16 @@ class procurement_order(osv.osv):
         po_obj = self.pool.get('purchase.order')
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
-            partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  procurement.product_id.seller_ids if partner_id])
-            partner_rec = partner_list and partner_list[0] and partner_list[0][1] or False
-            partner = partner_rec.name or False
-            partner_id = partner_rec.id or False
+            partner = procurement.product_id.seller_ids[0].name
+            partner_id = partner.id
+            partner_rec = procurement.product_id.seller_ids[0]
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
 
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
-            if partner_rec.qty:
+            if procurement.product_id.seller_ids[0].qty:
                 qty = max(qty,partner_rec.qty)
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]

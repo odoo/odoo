@@ -136,7 +136,6 @@ class account_automatic_reconcile(osv.osv_memory):
         return (reconciled, len(credits)+len(debits))
 
     def reconcile(self, cr, uid, ids, context=None):
-        service = netsvc.LocalService("object_proxy")
         move_line_obj = self.pool.get('account.move.line')
         obj_model = self.pool.get('ir.model.data')
         if context is None:

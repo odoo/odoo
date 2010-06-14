@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,31 +18,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-{
-    "name" : "Invoice Payment/Receipt by Vouchers.",
-    "version" : "1.0",
-    "author" : 'Tiny & Axelor',
-    "description": """This module includes :
-    * It reconcile the invoice (supplier, customer) while paying through 
-    Accounting Vouchers
-    """,
-    "category" : "Generic Modules/Indian Accounting",
-    "website" : "http://tinyerpindia.com",
-    "depends" : [
-        "base", 
-        "account",
-        "account_voucher",
-    ],
-    "init_xml" : [
-    ],
-    
-    "demo_xml" : [],
-    "update_xml" : [
-        "account_voucher_payment_view.xml",
-        "account_voucher_payment_wizard.xml"
-    ],
-    "active": False,
-    "installable": True,
-}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+{
+    'name': 'Partner Geo-Localisation',
+    'version': '1.0',
+    'category': 'Generic Modules/Production',
+    'description': """
+This is the module used by OpenERP SA to redirect customers to his partners,
+based on geolocalisation.
+    """,
+    'author': 'OpenERP SA',
+    'depends': ['crm'],
+    'update_xml': ['res_partner_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': False,
+}
