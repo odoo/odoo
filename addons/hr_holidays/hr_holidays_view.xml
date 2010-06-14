@@ -13,7 +13,7 @@
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"
                             default="context.get('report', False)"/>
                         <separator orientation="vertical"/>
-                        <field name="user_id" widget="selection"/>
+                        <field name="user_id"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-personal+" help="My Department Holidays"
                                 domain="[('department_id.manager_id','=',uid)]"

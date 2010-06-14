@@ -127,7 +127,7 @@
                     <group col="8" colspan="4">
                         <field name="name" select="1" colspan="6"/>
                         <button name="open_wiki_page" type="object"
-                        string="Basic Wiki Editing" icon="gtk-ok" />
+                        string="Basic Wiki Editing" icon="gtk-ok" groups="wiki.wiki_basic_group"/>
                     </group>
                     <group col="8" colspan="4">
                         <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/>
@@ -160,16 +160,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wiki">
-                        <filter icon="terp-check" string="Need Review" domain="[('review','=',True)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="section" select="1"/>
-                        <field name="name" select="1"/>
-                        <field name="group_id" select="1"/>
-                        <field name="write_uid" select="1"/>
-                        <field name="write_date" select="1"/>
-                        <field name="review" select="1"/>
-<!--                        <field name="create_uid" widget="selection" select="1"/>-->
-                        <newline/>
+                    <filter icon="terp-check" string="Need Review" domain="[('review','=',True)]"/>
+                    <separator orientation="vertical"/>
+                    <field name="section" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="group_id" select="1"/>
+                    <field name="write_uid" select="1"/>
+                    <field name="write_date" select="1"/>
+                    <field name="review" select="1"/>
+                    <newline/>
                     <group expand="0" string="Group By..." colspan="8" col="6">
                         <filter icon="terp-check" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
                         <filter icon="terp-personal" string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
