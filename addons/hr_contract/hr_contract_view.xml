@@ -69,47 +69,6 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Contracts">
-                        <field colspan="4" mode="form,tree" name="contract_ids" nolabel="1">
-                            <tree string="Contracts">
-                                <field name="name"/>
-                                <field name="job_id"/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
-                                <field name="working_hours"/>
-                                <field name="wage_type_id"/>
-                                <field name="wage"/>
-                            </tree>
-                            <form string="Contract">
-                                <group colspan="3" col="6">
-                                    <field name="name" select="1"/>
-                                    <field name="job_id"/>
-                                    <newline/>
-                                    <field name="wage"/>
-                                    <field name="wage_type_id" widget="selection"/>
-                                    <field name="type_id" widget="selection"/>
-                                </group>
-                                <notebook>
-                                <page string="Main Data">
-                                    <group col="2" colspan="2">
-                                        <separator colspan="2" string="Duration"/>
-                                        <field name="date_start" select="1"/>
-                                        <field name="date_end" select="1"/>
-                                        <field name="working_hours"/>
-                                    </group>
-                                    <group col="2" colspan="2">
-                                        <separator colspan="2" string="Advantages"/>
-                                        <field name="advantages_net"/>
-                                        <field name="advantages_gross"/>
-                                        <field name="advantages" nolabel="1" colspan="2"/>
-                                    </group>
-                                    <separator colspan="4" string="Notes"/>
-                                    <field colspan="4" name="notes" nolabel="1"/>
-                                </page>
-                                </notebook>
-                            </form>
-                        </field>
-                    </page>
                     <page string="Miscelleanous">
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
@@ -122,7 +81,6 @@
                             <field name="manager" select="1"/>
                             <field name="vehicle" select="1"/>
                             <field name="vehicle_distance" select="1"/>
-                            <field name="medic_exam" select="1"/>
                         </group>
                         <group colspan="2" col="2">
                             <separator string="Others Info" colspan="2"/>
@@ -133,22 +91,22 @@
             </field>
         </record>
 
-		<record id="hr_contract_view_search" model="ir.ui.view">
+        <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.view.search</field>
             <field name="model">hr.contract</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract">
                    <group col='15' colspan='4'>
-                   		<field name="name"/>
-                      	<field name="employee_id"/>
-                       	<field name="date_start"/>
-                       	<field name="date_end"/>
+                       <field name="name"/>
+                       <field name="employee_id"/>
+                       <field name="date_start"/>
+                       <field name="date_end"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Wage Type" icon="terp-project" domain="[]" context="{'group_by':'wage_type_id'}"/>
-                    </group>
+                   <group expand="0" string="Group By..." colspan="4" col="20">
+                       <filter string="Wage Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'wage_type_id'}"/>
+                   </group>
                </search>
             </field>
         </record>
@@ -217,7 +175,7 @@
             <field name="search_view_id" ref="hr_contract_view_search"/>
         </record>
 
-		<record id="hr_contract_type_view_form" model="ir.ui.view">
+        <record id="hr_contract_type_view_form" model="ir.ui.view">
             <field name="name">hr.contract.type.view.form</field>
             <field name="model">hr.contract.type</field>
             <field name="type">form</field>
@@ -228,7 +186,7 @@
             </field>
         </record>
 
-		 <record id="hr_contract_type_view_tree" model="ir.ui.view">
+         <record id="hr_contract_type_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.type.view.tree</field>
             <field name="model">hr.contract.type</field>
             <field name="type">tree</field>
@@ -246,11 +204,10 @@
         </record>
         <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56"/>
 
-        <!--<menuitem  id="hr_menu_contract_main" parent="hr.menu_hr_root" name="Contracts" sequence="3"/> -->
-        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_root" name="Contracts" sequence="4"/>
+        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4"/>
 
         <!-- Contracts Button on Employee Form -->
-		<act_window domain="[('employee_id', '=', active_id)]" id="act_hr_employee_2_hr_contract" name="Contracts" res_model="hr.contract" src_model="hr.employee"/>
+        <act_window domain="[('employee_id', '=', active_id)]" id="act_hr_employee_2_hr_contract" name="Contracts" res_model="hr.contract" src_model="hr.employee"/>
 
 
     </data>

@@ -13,8 +13,8 @@
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Group By..." groups="base.group_multi_company">
-                        <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}"/>
+                   <group expand="0" string="Group By..." groups="base.group_multi_company">
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
                </search>
             </field>
@@ -243,30 +243,30 @@
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
                    <group col='10' colspan='4'>
-                        <filter icon="terp-hr" string="Draft" domain="[('state','=','draft')]"/>
-                        <filter icon="terp-crm" string="In progress" domain="[('state','=','wait')]"/>
-                        <filter icon="terp-mrp" string="Final Step" domain="[('state','=','progress')]"/>
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
+                        <filter icon="terp-check" string="In progress" domain="[('state','=','wait')]"/>
+                        <filter icon="terp-dialog-close" string="Final Step" domain="[('state','=','progress')]"/>
                         <separator orientation="vertical"/>
-                        <filter icon="gtk-media-rewind" string="7 Days"
+                        <filter icon="terp-go-week" string="7 Days"
                             help="Evaluations to close within the next 7 days"
                             domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                         />
-                        <filter icon="gtk-media-rewind" string="Overpassed"
+                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Overpassed"
                             help="Evaluations that overpassed the deadline"
                             domain="[('date','&gt;=',(datetime.date.today()))]"
                         />
 
                         <separator orientation="vertical"/>
-                        <field name="employee_id" widget="selection" select="1"/>
+                        <field name="employee_id" select="1"/>
                         <field name="plan_id" widget="selection" select="1"/>
                         </group>
                         <newline/>
-                        <group expand='1' string='Group by...'>
-                        <filter string='Employee' icon="terp-stock" domain="[]" context="{'group_by' : 'employee_id'}" />
-                        <filter string='Plan' icon="terp-stock" domain="[]" context="{'group_by' : 'plan_id'}" />
-                        <filter string='State' icon="terp-stock" domain="[]" context="{'group_by' : 'state'}" />
+                        <group expand='0' string='Group by...'>
+                        <filter string='Employee' icon="terp-personal" domain="[]" context="{'group_by' : 'employee_id'}" />
+                        <filter string='Plan' icon="terp-stock_align_left_24" domain="[]" context="{'group_by' : 'plan_id'}" />
+                        <filter string='State' icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by' : 'state'}" />
                         <separator orientation="vertical"/>
-                        <filter string='Date' icon="terp-stock" domain="[]" context="{'group_by' : 'date'}" />
+                        <filter string='Date' icon="terp-go-month" domain="[]" context="{'group_by' : 'date'}" />
                    </group>
                </search>
             </field>
@@ -344,13 +344,13 @@
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
                    <group col='10' colspan='4'>
-                        <filter icon="terp-crm" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
+                        <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                         <separator orientation="vertical"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-stock" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
+                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                         <separator orientation="vertical"/>
-                        <field name="user_to_review_id" widget="selection"/>
-                        <field name="user_id" string="Interviewer" widget="selection"/>
+                        <field name="user_to_review_id"/>
+                        <field name="user_id" string="Interviewer"/>
                    </group>
                </search>
             </field>

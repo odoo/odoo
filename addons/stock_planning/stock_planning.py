@@ -899,7 +899,7 @@ class stock_planning(osv.osv):
                 raise osv.except_osv(_('Error !'), _('Incoming Left must be greater than 0 !'))
             uom_qty, uom, uos_qty, uos = self._qty_to_standard(cr, uid, obj, context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
-            proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+            proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'company_id' : obj.company_id.id,
                         'name': _('Manual planning for ') + obj.period_id.name,
                         'origin': _('MPS(') + str(user.login) +') '+ obj.period_id.name,
@@ -926,7 +926,7 @@ class stock_planning(osv.osv):
 
                             }, context=context)
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
             self.calculate_planning(cr, uid, ids, context)
             prev_text = obj.history or ""
             self.write(cr, uid, ids, {

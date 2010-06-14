@@ -153,7 +153,6 @@ class hr_expense_expense(osv.osv):
                 'address_contact_id': exp.employee_id.address_id.id,
                 'origin': exp.name,
                 'invoice_line': lines,
-                'price_type': 'tax_included',
                 'currency_id': exp.currency_id.id,
                 'payment_term': payment_term_id,
                 'fiscal_position': exp.employee_id.address_id.partner_id.property_account_position.id

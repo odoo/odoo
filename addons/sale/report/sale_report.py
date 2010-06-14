@@ -41,15 +41,19 @@ class sale_report(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
+
+        'uom_id': fields.many2one('product.uom', 'Default Unit Of Measure', readonly=True),
+        'product_qty':fields.float('# of Qty', readonly=True),
         'uom_name': fields.char('Default UoM', size=128, readonly=True),
         'product_uom_qty':fields.float('# of Qty', readonly=True),
+
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'shop_id':fields.many2one('sale.shop', 'Shop', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
         'delay':fields.float('Days to Close', digits=(16,2), readonly=True),
-        'price_average':fields.float('Average Price', readonly=True),
+        'price_average':fields.float('Average Price', readonly=True,group_operator="avg"),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
@@ -71,7 +75,8 @@ class sale_report(osv.osv):
         cr.execute("""
             create or replace view sale_report as (
             select el.*,
-            (select count(1) from sale_order_line where order_id = s.id) as nbr,
+                   -- (select count(1) from sale_order_line where order_id = s.id) as nbr,
+                    (select 1) as nbr,
                      s.date_order as date,
                      s.date_confirm as date_confirm,
                      to_char(s.date_order, 'YYYY') as year,
@@ -87,7 +92,7 @@ class sale_report(osv.osv):
                      s.shipped::integer as shipped_qty_1,
                      s.pricelist_id as pricelist_id,
                      s.project_id as analytic_account_id
-    from 
+    from
     sale_order s,
     (
         select l.id as id,
@@ -101,7 +106,7 @@ class sale_report(osv.osv):
                  sale_order_line l
                  left join product_uom u on (u.id=l.product_uom)
                  left join product_template pt on (pt.id=l.product_id)
-    group by l.id, l.order_id, l.product_id, u.name, pt.categ_id) el
+        group by l.id, l.order_id, l.product_id, u.name, pt.categ_id) el
     where s.id = el.order_id
             )
         """)

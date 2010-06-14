@@ -95,7 +95,7 @@
                 <form string="Stock and Sales Forecasts">
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
-                    <field name="period_id1" widget="selection"/>
+                    <field name="period_id1"/>
                     <newline/>
                     <field name="warehouse_id1" domain = "[('company_id','=',company_id)] "/>
                     <newline/>
@@ -132,7 +132,7 @@
             <field name="arch" type="xml">
                 <form string="Stock and Sales Forecast">
                     <group colspan = "4" col = "4">
-		        <group colspan = "2" col="2" >
+                <group colspan = "2" col="2" >
                             <field name="company_id" select="1"
                                         groups="base.group_multi_company"
                                         widget="selection"
@@ -140,20 +140,20 @@
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
                             <field name="period_id" />
                             <field name="product_id" on_change="product_id_change(product_id)" />
-			    <field name="product_uom_categ"  invisible = "True"/>
-			    <field name="product_uos_categ"  invisible = "True"/>
+                <field name="product_uom_categ"  invisible = "True"/>
+                <field name="product_uos_categ"  invisible = "True"/>
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom, product_qty, active_uom)"/>
                             <field name="active_uom" invisible = "True" />
-		         </group>
-		         <group colspan = "2" col="2" >
+                 </group>
+                 <group colspan = "2" col="2" >
                             <field name="user_id"/>
                             <field name="product_amt" on_change="product_amt_change( product_amt, product_uom)" />
                             <field name="product_qty"  />
                             <field name="state"/>
                             <button name="action_validate" string="Validate" states="draft" type="object" colspan = "2"/>
-		        </group>
+                </group>
                     </group>
                     <separator colspan ="4" string="Sales history"/>
                     <group colspan = "4" col = "5">
@@ -239,12 +239,12 @@
             <field name="arch" type="xml">
                 <search string="Search Stock and Sales Forecast">
                  <group col='10' colspan='4'>
-                    <filter icon="terp-purchase" string="Validated" domain="[('state','=','validated')]" separator="1"/>
-                    <field name="company_id" select="1" widget="selection"/>
-                    <field name="warehouse_id" select="1" widget="selection"/>
-                    <field name="period_id" select="1" widget="selection"/>
-                    <field name="product_id" select="1" widget="selection"/>
-                    <field name="create_uid" select="1" widget="selection"/>
+                    <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" separator="1"/>
+                    <field name="company_id" widget="selection"/>
+                    <field name="warehouse_id" widget="selection"/>
+                    <field name="period_id" widget="selection"/>
+                    <field name="product_id"/>
+                    <field name="create_uid"/>
                 </group>
               </search>
             </field>
@@ -275,7 +275,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Planning">
-		    <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
+            <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                     <newline/>
                     <field name="period_id2" widget="selection"/>
                     <newline/>
@@ -326,8 +326,8 @@
                             <field name="warehouse_id" domain = "[('company_id','=',company_id)] " />
                             <field name="period_id" />
                             <field name="product_id" on_change="product_id_change(product_id)"  />
-			    <field name="product_uom_categ"  invisible = "True"/>
-			    <field name="product_uos_categ"  invisible = "True"/>
+                <field name="product_uom_categ"  invisible = "True"/>
+                <field name="product_uos_categ"  invisible = "True"/>
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom)"/>
@@ -365,7 +365,7 @@
                             <button name="procure_incomming_left" string="Procure Incoming Left" type="object" colspan="2"/>
                             <field name="procure_to_stock"/>
                             <separator colspan ="2" string = "Internal Supply"/>
-			    <button name="internal_supply" string="Supply from Another Warehouse" type="object" colspan="2"/>
+                            <button name="internal_supply" string="Supply from Another Warehouse" type="object" colspan="2"/>
                             <field name="supply_warehouse_id" domain = "[('company_id','=',company_id)] "/>
                             <field name="stock_supply_location"/>
                         </group>
@@ -388,7 +388,7 @@
                     <field name="company_id" widget="selection"/>
                     <field name="warehouse_id" widget="selection"/>
                     <field name="period_id" widget="selection"/>
-                    <field name="product_id" widget="selection"/>
+                    <field name="product_id"/>
                  </group>
               </search>
             </field>

@@ -12,7 +12,7 @@
                 <search string="Search Resource">
                    <group col='15' colspan='4'>
                        <field name="name"/>
-                       <field name="user_id" string="User" widget="selection"/>
+                       <field name="user_id" string="User"/>
                        <field name="resource_type"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
@@ -35,7 +35,7 @@
                 <search string="Search Working Period">
                    <group col='15' colspan='4'>
                        <field name="name" string="Name"/>
-                       <field name="manager" widget="selection"/>
+                       <field name="manager"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                </search>
@@ -52,7 +52,7 @@
                        <field name="name" string="Name"/>
                        <field name="company_id" string="Company" widget="selection" />
                        <field name="calendar_id" string="Working Time" widget="selection"/>
-                       <field name="resource_id" string="Resource" widget="selection"/>
+                       <field name="resource_id" string="Resource"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">

@@ -13,8 +13,8 @@
         <field name="context">{'object_id':'crm.phonecall'}</field>
     </record>
 
-    <menuitem action="crm_phonecall_categ_action"
-        id="menu_crm_case_phonecall-act" parent="crm.menu_crm_case_categ" />
+    <menuitem action="crm_phonecall_categ_action" name="Categories"
+        id="menu_crm_case_phonecall-act" parent="menu_crm_config_phonecall" />
 
 <!-- ResourceType Form View -->
 
@@ -27,10 +27,9 @@
             <field name="context">{'object_id':'crm.phonecall'}</field>
         </record>
 
-    <menuitem action="crm_phonecall_resource_act"
-        id="menu_crm_phonecall_resource_act"
-        parent="crm.menu_crm_case_resource_type" />
-
+     <menuitem action="crm_phonecall_resource_act"
+        id="menu_crm_phonecall_resource_act" name="Resource Type"
+        parent="menu_crm_config_phonecall" />
 
 <!--  PhoneCalls Tree View -->
 
@@ -137,7 +136,7 @@
             </form>
         </field>
     </record>
-	
+
 	<!--Inbound Phonecalls Form View -->
 
 	<record model="ir.ui.view" id="crm_case_inbound_phone_form_view">
@@ -197,9 +196,9 @@
             </form>
         </field>
     </record>
-    
+
     <!--Inbound Phonecalls Tree View -->
-    
+
     <record model="ir.ui.view" id="crm_case_inbound_phone_tree_view">
         <field name="name">CRM - Inbound Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
@@ -248,12 +247,12 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <filter icon="gtk-home" string="Today"
+               <filter icon="terp-go-today" string="Today"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),\
                     ('date','&gt;=',datetime.strftime('%%Y-%%m-%%d 00:00:00'))]"
                    help="Todays's Phonecalls"
                />
-               <filter icon="gtk-media-rewind"
+               <filter icon="terp-go-week"
                    string="7 Days"
                    help="Phonecalls during last 7 days"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')),\
@@ -262,32 +261,32 @@
                <separator orientation="vertical"/>
                <field name="name" string="Call Summary"/>
                <field name="partner_id"/>
-               <field name="user_id" widget="selection">
-                   <filter icon="terp-partner"
+               <field name="user_id">
+                   <filter icon="terp-personal-"
                        domain="[('user_id','=',False)]"
                        help="Unassigned Phonecalls" />
                </field>
                <field name="section_id"
                    select="1" widget="selection" string="Sales Team">
-                   <filter icon="terp-crm"
+                   <filter icon="terp-personal+"
                        domain="[('section_id','=',context.get('section_id',False))]"
                        help="My Sale Team" />
                </field>
                <newline/>
                <group expand="0" string="Group By..." colspan="4">
-                   <filter string="Partner" icon="terp-crm" domain="[]"
+                   <filter string="Partner" icon="terp-personal" domain="[]"
                        context="{'group_by':'partner_id'}" />
-                   <filter string="Responsible" icon="terp-crm"
+                   <filter string="Responsible" icon="terp-personal"
                        domain="[]" context="{'group_by':'user_id'}" />
                    <separator orientation="vertical" />
-                   <filter string="Creation" icon="terp-project"
+                   <filter string="Creation" icon="terp-go-month"
                        domain="[]" context="{'group_by':'create_date'}" />
-                   <filter string="Date" icon="terp-project" domain="[]"
+                   <filter string="Date" icon="terp-go-month" domain="[]"
                        context="{'group_by':'date'}" />
                </group>
            </search>
         </field>
     </record>
-    
+
     </data>
 </openerp>
