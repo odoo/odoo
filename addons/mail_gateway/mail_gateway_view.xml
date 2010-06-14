@@ -181,7 +181,7 @@
             <field name="res_model">mailgate.message</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
-            <field name="view_type">[('history', '=', True)]</field>
+            <field name="domain">[('history', '=', True)]</field>
             <field name="view_id" ref="view_mailgate_message_tree"/>
         </record>
         

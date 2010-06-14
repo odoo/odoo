@@ -25,7 +25,7 @@ import  base64
 import re
 import tools
 import binascii
-
+import socket
 import email
 from email.header import decode_header
 import netsvc
@@ -154,7 +154,21 @@ class mailgate_tool(osv.osv):
     _name = 'email.server.tools'
     _description = "Email Tools"
     _auto = False
+    
+    def _to_decode(self, s, charsets):
+        for charset in charsets:
+            if charset:
+                try:
+                    return s.decode(charset)
+                except UnicodeError:
+                    pass
+        return s.decode('latin1')
 
+    def _decode_header(self, text):
+        if text:
+            text = decode_header(text.replace('\r', '')) 
+        return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), text or []))
+ 
     def to_email(self, cr, uid, text):
         _email = re.compile(r'.*<.*@.*\..*>', re.UNICODE)
         def record(path):
@@ -190,6 +204,31 @@ class mailgate_tool(osv.osv):
                     'attachment_ids': [(6, 0, attach)]
                     }
         msg_id = self.pool.get('mailgate.message').create(cr, uid, msg_data)
+        return True
+    
+    def email_send(self, cr, uid, model, res_id, msg, email_default ):
+        message = email.message_from_string(str(msg))
+        subject = '['+str(res_id)+'] '+ self._decode_header(message['Subject'])
+        message['Message-Id'] = '<' + str(time.time()) + '-openerp-' + \
+                model + '-' + str(res_id) + '@'+socket.gethostname() + '>'
+        msg_mails = []
+        mails = [self._decode_header(message['From']), self._decode_header(message['To'])]+self._decode_header(message.get('Cc', '')).split(',')
+        for mail in mails:
+            if mail:
+                msg_mails.append(self.to_email(cr, uid, mail))
+        encoding = message.get_content_charset()
+        message['body'] = message.get_payload(decode=True)
+        if encoding:
+            message['body'] = message['body'].decode(encoding).encode('utf-8')
+
+        try:
+            tools.email_send(email_default or tools.config.get('email_from', None), msg_mails, subject, message.get('body'))
+        except Exception, e:
+            if email_default:
+                temp_msg = '['+str(res_id)+'] ' + self._decode_header(message['Subject'])
+                del message['Subject']
+                message['Subject'] = '[OpenERP-FetchError] ' + temp_msg
+                tools.email_send(email_default, email_default, message.get('Subject'), message.get('body'))
         return True
 
     def process_email(self, cr, uid, model, message, attach=True, server_id=None, server_type=None, context=None):
@@ -229,7 +268,8 @@ class mailgate_tool(osv.osv):
                     att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
 
             if hasattr(model_pool, 'history'):
-                model_pool.history(cr, uid, [res_id], 'Receive', True, msg.get('to'), msg.get('body'), msg.get('from'), False, {'model' : model})
+                res = model_pool.browse(cr, uid, [res_id])
+                model_pool._history(cr, uid, res, 'Receive', True, msg.get('to'), msg.get('body'), msg.get('from'), False, {'model' : model})
             else:
                 self.history(cr, uid, model, res_id, msg, att_ids, server_id=server_id, server_type=server_type)
             
