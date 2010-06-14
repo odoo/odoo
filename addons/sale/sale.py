@@ -52,7 +52,6 @@ def _incoterm_get(self, cr, uid, context=None):
 
 class sale_order(osv.osv):
     _name = "sale.order"
-    _log_create = True
     _description = "Sale Order"
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -554,15 +553,21 @@ class sale_order(osv.osv):
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Quotation ') + " '" + name + "' "+ _("converted to sale order.")
-            self.log(cr, uid, id, message)
+        product=[]
+        product_obj=self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
+            for (id,name) in self.name_get(cr, uid, ids):
+                for line in o.order_line: 
+                    product.append(line.product_id.default_code)
+            params = ', '.join(map(lambda x : str(x),product))
+            message = _('Quotation ') + " '" + name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("converted to sale order.")
+            self.log(cr, uid, id, message)
+
 
     def procurement_lines_get(self, cr, uid, ids, *args):
         res = []

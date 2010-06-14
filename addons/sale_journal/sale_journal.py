@@ -22,6 +22,7 @@
 from osv import osv, fields
 import netsvc
 import time
+from tools.translate import _
 
 class sale_journal_invoice_type(osv.osv):
     _name = 'sale_journal.invoice.type'
@@ -62,6 +63,7 @@ class sale_journal(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'state': lambda self,cr,uid,context: 'draft',
     }
+    
     def button_sale_cancel(self, cr, uid, ids, context={}):
         for id in ids:
             sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
@@ -69,23 +71,36 @@ class sale_journal(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'cancel', cr)
         return True
+    
     def button_sale_confirm(self, cr, uid, ids, context={}):
         for id in ids:
             sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
             for saleid in sale_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'order_confirm', cr)
+            for (id,name) in self.name_get(cr, uid, ids):
+                message = _('Sale Journal') + " '" + name + "' "+ _("is confirmed")
+                self.log(cr, uid, id, message)    
         return True
 
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'})
+        for (id,name) in self.name_get(cr, uid, ids):
+                message = _('Sale Journal') + " '" + name + "' "+ _("is opened")
+                self.log(cr, uid, id, message)  
         return True
+    
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
+    
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done', 'date_validation':time.strftime('%Y-%m-%d')})
+        for (id,name) in self.name_get(cr, uid, ids):
+                message = _('Sale Journal') + " '" + name + "' "+ _("is closed")
+                self.log(cr, uid, id, message)  
         return True
+    
 sale_journal()
 
 class picking_journal(osv.osv):

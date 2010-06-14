@@ -546,7 +546,7 @@ class stock_picking(osv.osv):
         }
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         if not vals.get('auto_picking', False):
-            message = type_list.get(vals.get('type', False), _('Picking')) + " '" + (vals['name'] or "n/a") + "' "+ _("created.")
+            message = type_list.get(vals.get('type', False), _('Picking')) + " '" + (vals['name'] or "n/a") + _(" with origin")+" '" + (vals['origin'] or "n/a") + "' "+ _("is created.")
             self.log(cr, user, new_id, message)
         return new_id
 
@@ -1855,10 +1855,13 @@ class stock_move(osv.osv):
         for pick in picking_obj.browse(cr, uid, picking_ids):
             if all(move.state == 'done' for move in pick.move_lines):
                 picking_obj.action_done(cr, uid, [pick.id])
-
+            for (id,name) in picking_obj.name_get(cr, uid, [pick.id]):
+                message = _('Picking ') + " '" + name + "' "+ _("done")
+                self.log(cr, uid, id, message)    
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
+    
         return True
     
     def create_account_move(self, cr, uid, move,account_id,account_variation,amount, context=None):

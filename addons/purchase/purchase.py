@@ -59,9 +59,9 @@ class purchase_order(osv.osv):
             val = val1 = 0.0
             cur=order.pricelist_id.currency_id
             for line in order.order_line:
-                for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id)['taxes']:
+               for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id.id, order.partner_id)['taxes']:
                     val+= c['amount']
-                val1 += line.price_subtotal
+                    val1 += line.price_subtotal
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
@@ -212,7 +212,6 @@ class purchase_order(osv.osv):
     }
     _name = "purchase.order"
     _description = "Purchase Order"
-    _log_create = True
     _order = "name desc"
 
     def unlink(self, cr, uid, ids, context=None):
@@ -264,6 +263,7 @@ class purchase_order(osv.osv):
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context={}):
+        product=[]
         todo = []
         for po in self.browse(cr, uid, ids):
             if not po.order_line:
@@ -275,6 +275,12 @@ class purchase_order(osv.osv):
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
+        for (id,name) in self.name_get(cr, uid, id):
+            for line in po.order_line: 
+                product.append(line.product_id.default_code)
+                params = ', '.join(map(lambda x : str(x),product))
+            message = _('Purchase order ') + " '" + name + "' "+_('placed on')+ " '" + po.date_order + "' "+_('for')+" '" + params + "' "+ _("is confirmed")
+            self.log(cr, uid, id, message) 
         return True
 
     def wkf_warn_buyer(self, cr, uid, ids):
