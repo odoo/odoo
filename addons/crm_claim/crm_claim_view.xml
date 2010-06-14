@@ -295,5 +295,22 @@
            </field>
         </record>
 
+        <act_window
+            domain="[('partner_id', '=', active_id)]"
+            context="{'default_partner_id': active_id}"
+            id="act_claim_partner"
+            name="Report a Claim"
+            res_model="crm.claim"
+            src_model="res.partner"/>
+
+
+        <act_window
+            domain="[('partner_address_id', '=', active_id)]"
+            context="{'default_partner_address_id': active_id}"
+            id="act_claim_partner_address"
+            name="Report a Claim"
+            res_model="crm.claim"
+            src_model="res.partner.address"/>
+
      </data>
 </openerp>
