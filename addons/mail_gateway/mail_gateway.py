@@ -267,9 +267,15 @@ class mailgate_tool(osv.osv):
                     }
                     att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
 
-            if hasattr(model_pool, 'history'):
+            if hasattr(model_pool, '_history'):
                 res = model_pool.browse(cr, uid, [res_id])
-                model_pool._history(cr, uid, res, 'Receive', True, msg.get('to'), msg.get('body'), msg.get('from'), False, {'model' : model})
+                model_pool._history(cr, uid, res, 'Receive', True, 
+                                subject=msg.get('subject'), 
+                                email=msg.get('to'), details=msg.get('body'), 
+                                email_from=msg.get('from'), 
+                                message_id=msg.get('message-id'), 
+                                attach=msg.get('attachments', {}).items(), 
+                                context={'model' : model})
             else:
                 self.history(cr, uid, model, res_id, msg, att_ids, server_id=server_id, server_type=server_type)
             
