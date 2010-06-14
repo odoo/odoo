@@ -34,7 +34,7 @@ class account_common_report(osv.osv_memory):
 
         'filter': fields.selection([('filter_no','No filters'), ('filter_date','Date'), ('filter_period','Periods')],"Filter by:", required=True),
 
-        'period_from': fields.many2one('account.period' 'Start period'),
+        'period_from': fields.many2one('account.period', 'Start period'),
         'period_to': fields.many2one('account.period', 'End period'),
         'period_ids': fields.many2many('account.period', 'ledger_period_rel', 'ledger_id', 'period_id', 'Periods'),
 
