@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,35 +15,10 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-
-{
-    'name': 'Integrated FTP Server with Document Management System',
-    'version': '1.99',
-    'category': 'Generic Modules/Others',
-    'description': """This is a support FTP Interface with document management system.
-    With this module you would not only be able to access documents through open erp
-    but you would also be able to connect with them through the file system using the FTP protocol.
-""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['base', 'document'],
-    'init_xml': [],
-    'update_xml': [
-        'wizard/ftp_browse_view.xml',
-        'wizard/document_configuration_view.xml',
-        'security/ir.model.access.csv'
-    ],
-    'demo_xml': [],
-    'test': [
-        'test/document_ftp_test.yml',
-    ],
-    'installable': True,
-    'active': False,
-    'certificate': None,
-}
+import ftp_browse
+import document_configuration
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -111,7 +111,7 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" widget="selection"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" widget="selection"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
                                 groups="base.group_extended"/>
@@ -147,7 +147,8 @@
                                             <field name="type" groups="base.group_extended"/>
                                             <field name="delay" groups="base.group_extended"/>
                                             <newline/>
-                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                            <separator colspan="5" string="Taxes"/>
+                                            <field colspan="4" name="tax_id" nolabel="1" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <group colspan="4" col="5" groups="base.group_extended">
                                                 <separator colspan="5" string="States"/>
                                                 <field name="state"/>
