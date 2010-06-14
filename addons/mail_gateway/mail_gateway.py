@@ -21,26 +21,8 @@
 
 from osv import osv, fields
 import time
-import  base64
+import base64
 
-class one2many_domain(fields.one2many):
-    def set(self, cr, obj, id, field, values, user=None, context=None):
-        if not values:
-            return
-        return super(one2many_domain, self).set(cr, obj, id, field, values, 
-                                            user=user, context=context)
-
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if context is None:
-            context = {}
-        res = {}
-        msg_obj = obj.pool.get('mailgate.message')
-        for thread in obj.browse(cr, user, ids, context=context):
-            final = msg_obj.search(cr, user, self._domain + [('thread_id', '=', thread.id)], context=context)
-            res[thread.id] = final
-        return res
-        
-        
 class mailgate_thread(osv.osv):
     '''
     Mailgateway Thread
@@ -51,11 +33,11 @@ class mailgate_thread(osv.osv):
 
     _columns = {
         'thread': fields.char('Thread', size=32, required=False), 
-        'message_ids': one2many_domain('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
-        'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
+        'message_ids': fields.one2many('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
+        'log_ids': fields.one2many('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
     }
         
-    def __history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -118,8 +100,7 @@ class mailgate_thread(osv.osv):
             res = obj.create(cr, uid, data, context)
         return True
     
-    _history = __history
-    history = __history
+    __history = history = _history
     
 
 mailgate_thread()
