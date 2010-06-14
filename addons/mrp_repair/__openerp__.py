@@ -34,7 +34,7 @@
            * Notes for the technician and for the final customer           
 """,
     'author': 'Tiny',
-    'depends': ['base', 'sale', 'account'],
+    'depends': ['mrp', 'sale', 'account'],
     'update_xml': [
         'security/ir.model.access.csv',
         'mrp_repair_sequence.xml',        

@@ -127,7 +127,7 @@ class project_schedule_task(osv.osv_memory):
                 # Dynamic creation of tasks
                 i = 0
                 for each_task in tasks:
-                    hours = str(each_task.planned_hours / each_task.occupation_rate)+ 'H'
+                    hours = str(each_task.planned_hours )+ 'H'
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
                     if each_task.user_id:
