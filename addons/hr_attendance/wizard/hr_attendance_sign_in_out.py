@@ -170,7 +170,7 @@ class hr_sign_in_out(osv.osv_memory):
         return {} # To do: Return Success message
 
     def sign_out(self, cr, uid, data, context=None):
-        att_obj = self.pool.get('hr_attendance')
+        att_obj = self.pool.get('hr.attendance')
         emp_id = data['emp_id']
         if 'last_time' in data:
             if data['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):
