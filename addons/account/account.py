@@ -1060,6 +1060,7 @@ class account_move(osv.osv):
         return amount
 
     def _centralise(self, cr, uid, move, mode, context=None):
+        assert(mode in ('debit', 'credit'), 'Invalid Mode') #to prevent sql injection
         if context is None:
             context = {}
 
@@ -1106,11 +1107,8 @@ class account_move(osv.osv):
             line_id2 = res[0]
         else:
             line_id2 = 0
-
-        cr.execute('SELECT SUM(%s) '\
-                   'FROM account_move_line '\
-                   'WHERE move_id=%s AND id<>%s',
-                   (mode, move.id, line_id2))
+        
+        cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
         return True
