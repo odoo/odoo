@@ -642,6 +642,7 @@ class sale_order(osv.osv):
                         'picking_id': picking_id,
                         'product_id': line.product_id.id,
                         'date_planned': date_planned,
+                        'date_expected': date_planned,
                         'product_qty': line.product_uom_qty,
                         'product_uom': line.product_uom.id,
                         'product_uos_qty': line.product_uos_qty,
