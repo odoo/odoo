@@ -36,7 +36,7 @@ class hr_si_so_ask(osv.osv_memory):
         emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0].name
-            return employee['name']
+            return employee
         return ''
 
     def _get_empid(self, cr, uid, context=None):
@@ -164,6 +164,7 @@ class hr_sign_in_out(osv.osv_memory):
         return {} # To do: Return Success message
 
     def sign_out(self, cr, uid, data, context=None):
+
         emp_id = data['emp_id']
         if 'last_time' in data:
             if data['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):

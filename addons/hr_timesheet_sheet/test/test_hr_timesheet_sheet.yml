@@ -131,9 +131,9 @@
       - state == 'confirm'
 - |
   "Mark Johnson" check  timesheet and time spend on project by "francline" employee.
-   And then accept it request by click on "Accept" button.
-   If  "Maximal difference between timesheet and attendances" is  more than 1 then manage can "Refuse" his request.  
+   And then accept it request by click on "Accept" button.If "Maximal difference between timesheet and attendances" is  more than 1 then manage can "Refuse" his request.
+
+
 -
-  !python {model: hr_timesheet_sheet.sheet}: |
-     #self.write(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {'state': 'done'})              
-              
+   !python {model: hr_timesheet_sheet.sheet}: |
+      self.write(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {'state': 'done'})              
