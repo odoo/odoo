@@ -13,14 +13,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Periodical VAT Declaration" >
-					<group height="220" width="330">
+					<group height="250" width="330">
 						<group>
  							<separator string="Declare Periodical VAT" colspan="2" /><newline/>
 							<field name="period_id" /><newline/>
+							<field name="tax_code_id" string="Company" widget="selection"/><newline/>
 							<field name="ask_resitution" colspan="2" align="1"/><newline/>
 							<field name="ask_payment" colspan="2"/><newline/>
 							<field name="client_nihil" colspan="2" string="Is Last Declaration"/><newline/><label/>
-	            			
 	            		</group>
 						<newline/>
 					<group>

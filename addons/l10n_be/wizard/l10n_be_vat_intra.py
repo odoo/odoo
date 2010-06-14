@@ -51,6 +51,7 @@ class partner_vat_intra(osv.osv_memory):
     '''
     ),
         'period_ids': fields.many2many('account.period', 'account_period_rel', 'acc_id', 'period_id', 'Period (s)', help = 'Select here the period(s) you want to include in your intracom declaration'),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Code'),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id' : fields.char('MandataireId', size=14, required=True,  help="This identifies the representative of the sending company. This is a string of 14 characters"),
         'msg': fields.text('File created', size=14, readonly=True),
@@ -79,7 +80,10 @@ class partner_vat_intra(osv.osv_memory):
 
         if context is None:
             context = {}
-        data_cmpny = obj_user.browse(cursor, user, user).company_id
+        if self.browse(cursor, user, ids[0]).tax_code_id:
+            data_cmpny = self.browse(cursor, user, ids[0]).tax_code_id.company_id
+        else:
+            data_cmpny = obj_user.browse(cursor, user, user).company_id
         data  = self.read(cursor, user, ids)[0]
         company_vat = data_cmpny.partner_id.vat
         if not company_vat:
