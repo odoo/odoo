@@ -112,6 +112,8 @@ class account_common_report(osv.osv_memory):
         raise _('not implemented')
 
     def check_report(self, cr, uid, ids, context=None):
+        import pdb
+        pdb.set_trace()
         used_context = self._build_context(cr, uid, ids, data, context)
         query_line = obj_acc_move_line._query_get(cr, uid,
                 obj='account_move_line', context=used_context)

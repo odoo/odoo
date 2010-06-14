@@ -73,7 +73,7 @@ module named account_voucherss
         'wizard/account_validate_move_view.xml',
         'wizard/account_pay_invoice_view.xml',
         'wizard/account_unreconcile_view.xml',
-        'wizard/account_general_ledger_report_view.xml',
+        'wizard/account_report_general_ledger_view.xml',
         'wizard/account_invoice_state_view.xml',
         'wizard/account_partner_balance_report_view.xml',
         'wizard/account_balance_report_view.xml',

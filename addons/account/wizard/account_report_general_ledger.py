@@ -50,6 +50,6 @@ class account_report_general_ledger(osv.osv_memory):
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data, 'nodestroy':True, }
 
 
-account_general_ledger_report()
+account_report_general_ledger()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
