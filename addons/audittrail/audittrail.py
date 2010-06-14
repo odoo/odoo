@@ -131,22 +131,21 @@ class audittrail_log(osv.osv):
     _name = 'audittrail.log'
     _description = "Audittrail Log"
 
-#    def _name_get_resname(self, cr, uid, ids, *args):
-#        data = {}
-#        for resname in self.browse(cr, uid, ids,[]):
-#            model_object = resname.object_id.name
-#            res_id = resname.res_id
-#            if model_object and res_id:
-#            #    model_pool = self.pool.get(model_object)
-#                res = model_object.name_get(cr,uid,[res_id])
-#                data[resname.id] = res and res[0][1]
-#            else:
-#                 data[resname.id] = False
-#        return data
+    def _name_get_resname(self, cr, uid, ids, *args):
+        data = {}
+        for resname in self.browse(cr, uid, ids,[]):
+            model_object = resname.object_id
+            res_id = resname.res_id
+            if model_object and res_id:
+                model_pool = self.pool.get(model_object.model)
+                res = model_pool.read(cr, uid, res_id, ['name'])
+                data[resname.id] = res['name']
+            else:
+                 data[resname.id] = False
+        return data
 
     _columns = {
-        "name": fields.char("Name", size=32),
-     #   'name': fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
+        "name": fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
         "object_id": fields.many2one('ir.model', 'Object'),
         "user_id": fields.many2one('res.users', 'User'),
         "method": fields.char("Method", size=64),
