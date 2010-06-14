@@ -66,7 +66,7 @@ class mailgate_thread(osv.osv):
         'res_id': fields.integer('Resource ID'), 
         }
         
-    def __history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -80,9 +80,13 @@ class mailgate_thread(osv.osv):
         @param context: A standard dictionary for contextual values"""
         if context is None:
             context = {}
+        if attach is None:
+            attach = []
+
         # The mailgate sends the ids of the cases and not the object list
-        if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
-            cases = self.pool.get(context['model']).browse(cr, uid, cases, context=context)
+
+        if all(isinstance(case_id, (int, long)) for case_id in cases):
+            cases = self.browse(cr, uid, cases, context=context)
 
         att_obj = self.pool.get('ir.attachment')
         obj = self.pool.get('mailgate.message')
@@ -94,7 +98,7 @@ class mailgate_thread(osv.osv):
                 'model' : case._name, 
                 'res_id': case.id, 
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
-                'thread_id': case.thread_id.id, 
+                'thread_id': case.thread_id.id,
                 'message_id': message_id, 
             }
             attachments = []
@@ -125,8 +129,7 @@ class mailgate_thread(osv.osv):
             case._table.log(cr, uid, case.id, case._description + " '" + case.name + "': " + keyword, context=context)
         return True
     
-    _history = __history
-    history = __history
+    __history = history = _history
     
 
 mailgate_thread()

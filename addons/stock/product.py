@@ -24,8 +24,7 @@ from tools.translate import _
 
 
 class product_product(osv.osv):
-    _inherit = "product.product"    
-    
+    _inherit = "product.product"
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
@@ -71,8 +70,8 @@ class product_product(osv.osv):
         product_obj=self.browse(cr,uid,ids)[0]
         account_variation = product_obj.categ_id.property_stock_variation
         move_ids = []        
+        loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
-            loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
             for location in location_obj.browse(cr, uid, loc_ids):
                 c = context.copy()
                 c.update({
@@ -202,6 +201,8 @@ class product_product(osv.osv):
         if context.get('location', False):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
+            elif type(context['location']) in (type(''), type(u'')):
+                location_ids = self.pool.get('stock.location').search(cr, uid, [('name','ilike',context['location'])], context=context)
             else:
                 location_ids = context['location']
         else:
@@ -312,7 +313,7 @@ class product_product(osv.osv):
         'track_production': fields.boolean('Track Production Lots' , help="Forces to use a Production Lot during production order"),
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to use a tracking lot during receptions"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to use a tracking lot during deliveries"),
-        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one', domain=[('usage','=','internal')]),
+        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'valuation':fields.selection([('manual_periodic', 'Periodic (manual)'),
                                         ('real_time','Real Time (automatized)'),], 'Stock Valuation', help="Decide if the system must automatically creates account moves based on stock moves", required=True),
     }

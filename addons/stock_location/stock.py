@@ -58,7 +58,7 @@ stock_location_path()
 
 class product_pulled_flow(osv.osv):
     _name = 'product.pulled.flow'
-    _description = "Pulled Flows."
+    _description = "Pulled Flows"
     _columns = {
         'name': fields.char('Name', size=64, required=True, help="This field will fill the packing Origin and the name of its moves"),
         'cancel_cascade': fields.boolean('Cancel Cascade', help="Allow you to cancel moves related to the product pull flow"),

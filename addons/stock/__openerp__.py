@@ -64,7 +64,6 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "partner_view.xml",
         "report/report_stock_move_view.xml",
         "report/report_stock_view.xml",
-        "report/report_stock_picking_view.xml",
         "security/stock_security.xml",
         "security/ir.model.access.csv",
     ],
@@ -73,4 +72,3 @@ Thanks to the double entry management, the inventory controlling is powerful and
     'active': False,
     'certificate': '0055421559965',
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

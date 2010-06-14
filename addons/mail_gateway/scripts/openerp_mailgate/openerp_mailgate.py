@@ -3,7 +3,8 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-TODAY OpenERP S.A. (http://www.openerp.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -88,9 +89,9 @@ class email_parser(object):
         return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s or []))
 
     def msg_send(self, msg, emails, priority=None):
-        if not len(emails):
+        if not emails:
             return False
-        del msg['To']
+
         msg['To'] = emails[0]
         if len(emails)>1:
             if 'Cc' in msg:
@@ -141,7 +142,6 @@ class email_parser(object):
         return res_id, msg_mails
 
 if __name__ == '__main__':
-    import sys, optparse
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.0')
     group = optparse.OptionGroup(parser, "Note", 
         "This program parse a mail from standard input and communicate "

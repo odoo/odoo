@@ -39,14 +39,10 @@ def hour2str(h):
 
 class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, datas, context):
-        service = netsvc.LocalService('object_proxy')
-
         month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
-        
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
-        
         for employee_id in ids:
-            emp = service.execute(cr.dbname, uid, 'hr.employee', 'read', [employee_id])[0]
+            emp = self.pool.get('hr.employee').read(cr, uid, 'read', [employee_id], ['name'])[0]
             stop, days_xml = False, []
             user_repr = '''
             <user>
