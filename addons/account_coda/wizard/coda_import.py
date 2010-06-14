@@ -33,10 +33,12 @@ codawiz_form = """<?xml version="1.0"?>
 <separator colspan="4" string="Select your bank journal :" />
     <field name="journal_id" colspan="1" domain="[('type','=','cash')]" />
     <newline />
-    <field name="def_payable" />    <field name="def_receivable" />
+    <field name="def_payable" />
+    <newline />
+    <field name="def_receivable" />
     <newline />
     <field name="awaiting_account" />
-    <separator string="Clic on 'New' to select your file :" colspan="4"/>
+    <separator string="Click on 'New' to select your file :" colspan="4"/>
     <field name="coda"/>
 </form>
 """
@@ -122,7 +124,7 @@ def _coda_parsing(self, cr, uid, data, context):
             bank_statement['date'] = str2date(line[5:11])
             bank_statement['journal_id']=data['form']['journal_id']
             period_id = pool.get('account.period').search(cr,uid,[('date_start','<=',time.strftime('%Y-%m-%d',time.strptime(bank_statement['date'],"%y/%m/%d"))),('date_stop','>=',time.strftime('%Y-%m-%d',time.strptime(bank_statement['date'],"%y/%m/%d")))])
-            bank_statement['period_id'] = period_id[0]
+#            bank_statement['period_id'] = period_id and period_id[0] or False
             bank_statement['state']='draft'
         elif line[0] == '1':
             # old balance data
@@ -219,7 +221,7 @@ def _coda_parsing(self, cr, uid, data, context):
             bk_st_id = pool.get('account.bank.statement').create(cr,uid,{
                 'journal_id': statement['journal_id'],
                 'date':time.strftime('%Y-%m-%d',time.strptime(statement['date'],"%y/%m/%d")),
-                'period_id':statement['period_id'],
+#                'period_id':statement['period_id'],
                 'balance_start': statement["balance_start"],
                 'balance_end_real': statement["balance_end_real"],
                 'state': 'draft',
@@ -254,7 +256,7 @@ def _coda_parsing(self, cr, uid, data, context):
             std_log += "\nStatement : %s , Date  : %s, Starting Balance :  %.2f , Ending Balance : %.2f \n"\
                       %(statement['name'], statement['date'], float(statement["balance_start"]), float(statement["balance_end_real"]))
             bkst_list.append(bk_st_id)
-        
+
         except osv.except_osv, e:
             cr.rollback()
             nb_err+=1

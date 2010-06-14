@@ -33,7 +33,7 @@
                       in which various surveys can be created and it can be defined which
                       level of employee hierarchy fills what and final review and evaluation
                       is done by the manager.Every evaluation filled by the employees can be viewed
-                      in the form of   """,
+                      in the form of.Implements a dashboard for My Current Evaluations   """,
     "init_xml" : [],
     "demo_xml" : ["hr_evaluation_demo.xml",
                  ],
@@ -42,7 +42,7 @@
                     "wizard/hr_evaluation_mail_view.xml",
                     "hr_evaluation_view.xml",
                     "report/hr_evaluation_report_view.xml"],
-    "test": ["test/test_hr_evaluation.yml"],                
+    "test": ["test/test_hr_evaluation.yml"],
     "active": False,
     "installable": True
 }

@@ -112,7 +112,7 @@
         </assert>
 
         <!-- Run all schedulers -->
-        <function model="mrp.procurement" name="run_scheduler"/>
+        <function model="procurement.order" name="run_scheduler"/>
 
         <assert id="test_order_1" model="sale.order" string="the sale order is now done">
             <test expr="state">done</test>

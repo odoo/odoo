@@ -31,25 +31,25 @@ class stock_ups(osv.osv_memory):
     _description = "Stock ups"
 
     def ups_save(self, cr, uid, ids, context = {}):
-       
         return {
-                    'name': False, 
-                    'view_type': 'form', 
-                    'view_mode': 'form', 
-                    'res_model': 'stock.ups.final', 
-                    'type': 'ir.actions.act_window', 
-                    'target':'new',
-            }
+                'name': False, 
+                'view_type': 'form', 
+                'view_mode': 'form', 
+                'res_model': 'stock.ups.final', 
+                'type': 'ir.actions.act_window', 
+                'target':'new',
+        }
+        
     def ups_upload(self, cr, uid, ids, context = {}):
-         
         return {
-                    'name': False, 
-                    'view_type': 'form', 
-                    'view_mode': 'form', 
-                    'res_model': 'stock.ups.upload', 
-                    'type': 'ir.actions.act_window', 
-                    'target':'new',
-            }
+                'name': False, 
+                'view_type': 'form', 
+                'view_mode': 'form', 
+                'res_model': 'stock.ups.upload', 
+                'type': 'ir.actions.act_window', 
+                'target':'new',
+        }
+
     _columns = {
         'weight': fields.float('Lot weight', required=True), 
     }
@@ -64,6 +64,9 @@ class stock_ups_final(osv.osv_memory):
     _description = "Stock ups final"
 
     def create_xmlfile(self, cr, uid, ids, context = {}):
+        """ Creates xml report file.
+        @return: xml file
+        """
         report = netsvc._group['report']['report.stock.move.lot.ups_xml']
         data['report_type'] = 'raw'
         return {'xmlfile' : report.create(uid, context['active_id'], ids, {})}
@@ -79,6 +82,9 @@ class stock_ups_upload(osv.osv_memory):
     _description = "Stock ups upload"
 
     def upload_xmlfile(self, cr, uid, ids, context = {}):
+        """ Uploads xml report file.
+        @return: 
+        """
         report = netsvc._group['report']['report.stock.move.lot.ups_xml']
         data['report_type'] = 'raw'
 #FIXME: this seems unfinished   
