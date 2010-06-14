@@ -27,11 +27,11 @@ class hr_employee(osv.osv):
     _description = "Employee"
     _inherit = "hr.employee"
     _columns = {
-        'manager': fields.boolean('Manager'),
+        'manager': fields.boolean('Is a Manager'),
         'medic_exam': fields.date('Medical Examination Date'),
         'place_of_birth': fields.char('Place of Birth', size=30),
         'children': fields.integer('Number of Children'),
-        'vehicle': fields.integer('Company Vehicle'),
+        'vehicle': fields.char('Company Vehicle', size=64),
         'vehicle_distance': fields.integer('Home-Work Distance', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
     }

@@ -17,10 +17,10 @@ try:
     TEMPLATE_ENGINES.append(('mako', 'Mako Templates'))
 except:
     LOGGER.notifyChannel(
-                         _("Email Template"),
-                         netsvc.LOG_ERROR,
-                         _("Mako templates not installed")
-                         )
+         _("Email Template"),
+         netsvc.LOG_WARNING,
+         _("Mako templates not installed")
+    )
 try:
     from django.template import Context, Template as DjangoTemplate
     #Workaround for bug:
@@ -31,10 +31,10 @@ try:
     TEMPLATE_ENGINES.append(('django', 'Django Template'))
 except:
     LOGGER.notifyChannel(
-                         _("Email Template"),
-                         netsvc.LOG_ERROR,
-                         _("Django templates not installed")
-                         )
+         _("Email Template"),
+         netsvc.LOG_WARNING,
+         _("Django templates not installed")
+    )
 
 import email_template_engines
 import tools
@@ -468,7 +468,7 @@ class email_template(osv.osv):
                                context)
         return True
     
-    def generate_mailbox_item_from_template(self,
+    def _generate_mailbox_item_from_template(self,
                                       cursor,
                                       user,
                                       template,
@@ -559,6 +559,8 @@ class email_template(osv.osv):
             'folder':'drafts',
             'mail_type':'multipart/alternative' 
         }
+        if not mailbox_values['account_id']:
+            raise Exception("Unable to send the mail. No account linked to the template.")
         #Use signatures if allowed
         if template.use_sign:
             sign = self.pool.get('res.users').read(cursor,
@@ -570,13 +572,17 @@ class email_template(osv.osv):
                 mailbox_values['body_text'] += sign
             if mailbox_values['body_html']:
                 mailbox_values['body_html'] += sign
+        print 'Creating', mailbox_values
         mailbox_id = self.pool.get('email_template.mailbox').create(
                                                              cursor,
                                                              user,
                                                              mailbox_values,
                                                              context)
+
+        print 'Sending', mailbox_id
+        self.pool.get('email_template.mailbox').send_this_mail(cursor, user, [mailbox_id], context)
         return mailbox_id
-        
+
     def generate_mail(self,
                       cursor,
                       user,
@@ -588,6 +594,7 @@ class email_template(osv.osv):
         template = self.browse(cursor, user, template_id, context=context)
         if not template:
             raise Exception("The requested template could not be loaded")
+        print 'loaded', record_ids
         for record_id in record_ids:
             mailbox_id = self._generate_mailbox_item_from_template(
                                                                 cursor,
@@ -595,6 +602,7 @@ class email_template(osv.osv):
                                                                 template,
                                                                 record_id,
                                                                 context)
+            print 'loaded'
             mail = self.pool.get('email_template.mailbox').browse(
                                                         cursor,
                                                         user,
@@ -616,7 +624,7 @@ class email_template(osv.osv):
                                                 mailbox_id,
                                                 {'folder':'outbox'},
                                                 context=context
-                                                      )
+            )
         return True
 
 email_template()
