@@ -53,7 +53,7 @@ class sale_report(osv.osv):
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
         'delay':fields.float('Days to Close', digits=(16,2), readonly=True),
-        'price_average':fields.float('Average Price', readonly=True),
+        'price_average':fields.float('Average Price', readonly=True,group_operator="avg"),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
@@ -92,7 +92,7 @@ class sale_report(osv.osv):
                      s.shipped::integer as shipped_qty_1,
                      s.pricelist_id as pricelist_id,
                      s.project_id as analytic_account_id
-    from 
+    from
     sale_order s,
     (
         select l.id as id,

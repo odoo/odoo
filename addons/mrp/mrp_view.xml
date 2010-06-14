@@ -252,21 +252,29 @@
                         <field name="product_qty"/>
                         <field name="routing_id" groups="base.group_extended"/>
                         <newline/>
-                        <field name="product_uos" groups="product.group_uos,base.group_extended" widget="selection"/>
-                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended" />
+                        <field name="product_uos" groups="product.group_uos"/>
+                        <field name="product_uos_qty" groups="product.group_uos" />
                         <newline/>
-                        <field name="multi_level_bom"/>
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4" >
-                        <page string="Components" attrs="{'invisible': [('multi_level_bom','=',False)]}">
-                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list" />
+                        <page string="Components">
+                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list">
+                                <tree string="Components" editable="bottom">
+                                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                                    <field name="product_uom"/>
+                                    <field name="product_qty"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="date_start"/>
+                                    <field name="date_stop"/>
+                                </tree>
+                            </field>
                         </page>
-                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
+                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Properties" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
+                        <page string="Properties" groups="base.group_extended">
                             <field name="position"/>
                             <field name="active"/>
                             <field name="sequence"/>
@@ -499,15 +507,15 @@
                         <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
-                        <field name="product_uom" widget="selection"/>
+                        <field name="product_uom"/>
                         <button type="action"
                             name="%(mrp.action_change_production_qty)d"
                             string="Change Qty" states="ready,confirmed" />
                         </group>
                         <label string="" colspan="2"/>
-                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                        <group colspan="2" col="3" groups="product.group_uos,base.group_extended">
-                            <field name="product_uos" widget="selection"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <group colspan="2" col="3" groups="product.group_uos">
+                            <field name="product_uos"/>
                             <label string=""/>
                         </group>
                     </group>
@@ -800,8 +808,8 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
-                    <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                    <field name="product_uos" groups="product.group_uos,base.group_extended"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
                 </tree>
             </field>
         </record>
