@@ -329,7 +329,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="domain">[('bom_id','=',False)]</field>
+            <field name="domain">[('bom_id','=',False),('multi_level_bom','=',True)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
         </record>
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">

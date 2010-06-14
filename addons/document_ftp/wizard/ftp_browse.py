@@ -36,14 +36,13 @@ class document_ftp_browse(osv.osv_memory):
         if 'url' in fields:
             user_pool = self.pool.get('res.users')
             current_user = user_pool.browse(cr, uid, uid, context=context)
-            res['url'] = '%s@%s:%d'%(current_user.login, ftpserver.HOST, ftpserver.PORT)
+            res['url'] = 'ftp://%s@%s:%d'%(current_user.login, ftpserver.HOST, ftpserver.PORT)
         return res
 
     def browse_ftp(self, cr, uid, ids, context):
         data_id = ids and ids[0] or False
-        data = self.browse(cr, uid, data_id, context)
-        ftp_url = 'ftp://'
-        final_url = ftp_url + data.url
+        data = self.browse(cr, uid, data_id, context)        
+        final_url = data.url
         return {
         'type': 'ir.actions.act_url',
         'url':final_url,
