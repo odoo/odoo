@@ -1224,7 +1224,6 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
                         if not check_group(node):
-                            # the field is just invisible. default value must be in the selection
                             name = node.get('name')
                             default = self.default_get(cr, user, [name], context=context).get(name)
                             if default:
@@ -1244,7 +1243,7 @@ class orm_template(object):
                             search_context = dict(context)
                             if column._context and not isinstance(column._context, basestring):
                                 search_context.update(column._context)
-                            attrs['selection'] = relation._name_search(cr, user, '', dom, context=search_context, limit=None, name_get_uid=1)
+                            attrs['selection'] = relation._name_search(cr, 1, '', dom, context=search_context, limit=None, name_get_uid=1)
                             if (node.get('required') and not int(node.get('required'))) or not column.required:
                                 attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
@@ -2693,6 +2692,32 @@ class orm(orm_template):
                 res[col] = (table, self._inherits[table], self.pool.get(table)._inherit_fields[col][2])
         self._inherit_fields = res
         self._inherits_reload_src()
+
+    def __getattr__(self, name):
+        """
+        Proxies attribute accesses to the `inherits` parent so we can call methods defined on the inherited parent
+        (though inherits doesn't use Python inheritance).
+        Handles translating between local ids and remote ids.
+        Known issue: doesn't work correctly when using python's own super(), don't involve inherit-based inheritance
+                     when you have inherits.
+        """
+        for model, field in self._inherits.iteritems():
+            proxy = self.pool.get(model)
+            if hasattr(proxy, name):
+                attribute = getattr(proxy, name)
+                if not hasattr(attribute, '__call__'):
+                    return attribute
+                break
+        else:
+            return super(orm, self).__getattr__(name)
+
+        def _proxy(cr, uid, ids, *args, **kwargs):
+            objects = self.browse(cr, uid, ids, kwargs.get('context', None))
+            lst = [obj[field].id for obj in objects if obj[field]]
+            return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
+
+        return _proxy
+        
 
     def fields_get(self, cr, user, fields=None, context=None):
         """

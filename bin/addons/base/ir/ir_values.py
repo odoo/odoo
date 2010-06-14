@@ -233,7 +233,7 @@ class ir_values(osv.osv):
                         pos+=1
                 try:
                     datas = self.pool.get(model).read(cr, uid, [id], fields, context)
-                except except_orm:
+                except except_orm, e:
                     return False
                 datas= datas and datas[0] or None
                 if not datas:
@@ -260,9 +260,6 @@ class ir_values(osv.osv):
                                 res2.remove(r)
                             if r[1]=='Menuitem' and not res2:
                                   raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
-    #                else:
-    #                    #raise osv.except_osv('Error !','You have not permission to perform operation !!!')
-    #                    res2.remove(r)
         return res2
 ir_values()
 

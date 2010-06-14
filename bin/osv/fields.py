@@ -31,6 +31,7 @@
 #   required
 #   size
 #
+from collections import defaultdict
 import string
 import netsvc
 import sys
@@ -430,10 +431,10 @@ class one2many(_column):
         context.update(self._context)
         if not values:
             values = {}
-        res = {}
-        for id in ids:
-            res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
+
+        res = defaultdict(list)
+
+        ids2 = obj.pool.get(self._obj).search(cr, user, self._domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             res[r[self._fields_id]].append(r['id'])
         return res
@@ -779,7 +780,7 @@ class related(function):
         relation = obj._name
         res = {}.fromkeys(ids, False)
 
-        objlst = obj.browse(cr, uid, ids, context=context)
+        objlst = obj.browse(cr, 1, ids, context=context)
         for data in objlst:
             if not data:
                 continue
@@ -806,7 +807,7 @@ class related(function):
         if self._type=='many2one':
             ids = filter(None, res.values())
             if ids:
-                ng = dict(obj.pool.get(self._obj).name_get(cr, uid, ids, context=context))
+                ng = dict(obj.pool.get(self._obj).name_get(cr, 1, ids, context=context))
                 for r in res:
                     if res[r]:
                         res[r] = (res[r], ng[res[r]])
@@ -884,7 +885,7 @@ class property(function):
         default_value = prop.get_by_id(cr, uid, ids, context=context)
         if isinstance(default_value, browse_record):
             return default_value.id
-        return default_value
+        return default_value or False
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
