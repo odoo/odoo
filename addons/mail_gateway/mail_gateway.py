@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 import time
+import tools
 import base64
 
 class mailgate_thread(osv.osv):
