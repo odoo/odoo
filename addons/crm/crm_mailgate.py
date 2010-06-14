@@ -42,7 +42,7 @@ class mailgate_thread(osv.osv):
     _name = "mailgate.thread"
     _inherit = "mailgate.thread"    
 
-    def message_new(self, cr, uid, msg, context):
+    def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
         
