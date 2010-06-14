@@ -134,7 +134,7 @@ class email_server(osv.osv):
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                             imap_server.store(num, '+FLAGS', '\\Seen')
-                            count += 1
+                        count += 1
                     logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
 
                     imap_server.close()

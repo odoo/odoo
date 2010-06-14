@@ -25,7 +25,7 @@ import  base64
 import re
 import tools
 import binascii
-
+import socket
 import email
 from email.header import decode_header
 import netsvc
@@ -154,7 +154,21 @@ class mailgate_tool(osv.osv):
     _name = 'email.server.tools'
     _description = "Email Tools"
     _auto = False
+    
+    def _to_decode(self, s, charsets):
+        for charset in charsets:
+            if charset:
+                try:
+                    return s.decode(charset)
+                except UnicodeError:
+                    pass
+        return s.decode('latin1')
 
+    def _decode_header(self, text):
+        if text:
+            text = decode_header(text.replace('\r', '')) 
+        return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), text or []))
+ 
     def to_email(self, cr, uid, text):
         _email = re.compile(r'.*<.*@.*\..*>', re.UNICODE)
         def record(path):
@@ -167,13 +181,23 @@ class mailgate_tool(osv.osv):
         return bits
     
     def history(self, cr, uid, model, new_id, msg, attach, server_id=None, server_type=None):
+        """This function creates history for mails fetched
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param model: OpenObject Model
+        @param new_id: Id of the record of OpenObject model created from the Email details 
+        @param msg: Email details
+        @param attach: Email attachments
+        @param server_id: Id of the POP/IMAP Server if the mail is fetched using OpenERP interface 
+        @param server_type: Type of Fetchmail server"""
         try:
             thread_id = self.pool.get(model).read(cr, uid, new_id, ['thread_id'])['thread_id'][0]
         except Exception, e:
             thread_id = None
         msg_data = {
                     'name': msg.get('subject', 'No subject'), 
-                    'date': msg.get('date') , # or time.strftime('%Y-%m-%d %H:%M:%S')??
+                    'date': msg.get('date') , 
                     'description': msg.get('body', msg.get('from')), 
                     'history': True,
                     'model': model, 
@@ -191,8 +215,52 @@ class mailgate_tool(osv.osv):
                     }
         msg_id = self.pool.get('mailgate.message').create(cr, uid, msg_data)
         return True
+    
+    def email_send(self, cr, uid, model, res_id, msg, email_default ):
+        """This function Sends return email on submission of  Fetched email in OpenERP database
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param model: OpenObject Model
+        @param res_id: Id of the record of OpenObject model created from the Email details 
+        @param msg: Email details
+        @param email_default: Default Email address in case of any Problem
+        """
+        message = email.message_from_string(str(msg))
+        subject = '['+str(res_id)+'] '+ self._decode_header(message['Subject'])
+        message['Message-Id'] = '<' + str(time.time()) + '-openerp-' + \
+                model + '-' + str(res_id) + '@'+socket.gethostname() + '>'
+        msg_mails = []
+        mails = [self._decode_header(message['From']), self._decode_header(message['To'])]+self._decode_header(message.get('Cc', '')).split(',')
+        for mail in mails:
+            if mail:
+                msg_mails.append(self.to_email(cr, uid, mail))
+        encoding = message.get_content_charset()
+        message['body'] = message.get_payload(decode=True)
+        if encoding:
+            message['body'] = message['body'].decode(encoding).encode('utf-8')
+
+        try:
+            tools.email_send(email_default or tools.config.get('email_from', None), msg_mails, subject, message.get('body'))
+        except Exception, e:
+            if email_default:
+                temp_msg = '['+str(res_id)+'] ' + self._decode_header(message['Subject'])
+                del message['Subject']
+                message['Subject'] = '[OpenERP-FetchError] ' + temp_msg
+                tools.email_send(email_default, email_default, message.get('Subject'), message.get('body'))
+        return True
 
     def process_email(self, cr, uid, model, message, attach=True, server_id=None, server_type=None, context=None):
+        """This function Processes email and create record for given OpenERP model 
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param model: OpenObject Model
+        @param message: Email details
+        @param attach: Email attachments
+        @param server_id: Id of the POP/IMAP Server if the mail is fetched using OpenERP interface 
+        @param server_type: Type of Fetchmail server
+        @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
         context.update({
@@ -228,8 +296,15 @@ class mailgate_tool(osv.osv):
                     }
                     att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
 
-            if hasattr(model_pool, 'history'):
-                model_pool.history(cr, uid, [res_id], 'Receive', True, msg.get('to'), msg.get('body'), msg.get('from'), False, {'model' : model})
+            if hasattr(model_pool, '_history'):
+                res = model_pool.browse(cr, uid, [res_id])
+                model_pool._history(cr, uid, res, 'Receive', True, 
+                                subject=msg.get('subject'), 
+                                email=msg.get('to'), details=msg.get('body'), 
+                                email_from=msg.get('from'), 
+                                message_id=msg.get('message-id'), 
+                                attach=msg.get('attachments', {}).items(), 
+                                context={'model' : model})
             else:
                 self.history(cr, uid, model, res_id, msg, att_ids, server_id=server_id, server_type=server_type)
             
