@@ -131,21 +131,22 @@ class audittrail_log(osv.osv):
     _name = 'audittrail.log'
     _description = "Audittrail Log"
 
-    def _name_get_resname(self, cr, uid, ids, *args):
-        data = {}
-        for resname in self.browse(cr, uid, ids,[]):
-            model_object = resname.object_id
-            res_id = resname.res_id
-            if model_object and res_id:
-                model_pool = self.pool.get(model_object.model)
-                res = model_pool.read(cr, uid, res_id, ['name'])
-                data[resname.id] = res['name']
-            else:
-                 data[resname.id] = False
-        return data
+#    def _name_get_resname(self, cr, uid, ids, *args):
+#        data = {}
+#        for resname in self.browse(cr, uid, ids,[]):
+#            model_object = resname.object_id
+#            res_id = resname.res_id
+#            if model_object and res_id:
+#                model_pool = self.pool.get(model_object.model)
+#                res = model_pool.read(cr, uid, res_id, ['name'])
+#                data[resname.id] = res['name']
+#            else:
+#                 data[resname.id] = False
+#        return data
 
     _columns = {
-        "name": fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
+        "name": fields.char("Resource Name",size=64),
+   #     "name": fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
         "object_id": fields.many2one('ir.model', 'Object'),
         "user_id": fields.many2one('res.users', 'User'),
         "method": fields.char("Method", size=64),
@@ -405,7 +406,7 @@ class audittrail_objects_proxy(osv_pool):
             if type(res_ids) in (long, int):
                 res_ids = [res_ids]
             if res_ids:
-                for resource in resource_pool.read(cr, uid, res_ids, fields):
+                for resource in resource_pool.read(cr, uid, res_ids):
                     resource_id = resource['id']
                     if 'id' in resource:
                         del resource['id']
@@ -414,13 +415,13 @@ class audittrail_objects_proxy(osv_pool):
                     for field in resource.keys():
                         old_value[field] = resource[field]
                         old_values_text[field] = self.get_value_text(cr, uid, field, resource[field], model)
-                    old_values[resource_id] = {'text':old_values_text, 'value': old_value}
+                        old_values[resource_id] = {'text':old_values_text, 'value': old_value}
 
             res = fct_src(db, uid, model.model, method, *args)
             cr.commit()
 
             if res_ids:
-                for resource in resource_pool.read(cr, uid, res_ids, fields):
+                for resource in resource_pool.read(cr, uid, res_ids):
                     resource_id = resource['id']
                     if 'id' in resource:
                         del resource['id']
