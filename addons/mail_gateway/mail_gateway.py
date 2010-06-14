@@ -32,24 +32,7 @@ import netsvc
 
 logger = netsvc.Logger()
 
-class one2many_domain(fields.one2many):
-    def set(self, cr, obj, id, field, values, user=None, context=None):
-        if not values:
-            return
-        return super(one2many_domain, self).set(cr, obj, id, field, values, 
-                                            user=user, context=context)
 
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if context is None:
-            context = {}
-        res = {}
-        msg_obj = obj.pool.get('mailgate.message')
-        for thread in obj.browse(cr, user, ids, context=context):
-            final = msg_obj.search(cr, user, self._domain + [('thread_id', '=', thread.id)], context=context)
-            res[thread.id] = final
-        return res
-        
-        
 class mailgate_thread(osv.osv):
     '''
     Mailgateway Thread
@@ -59,9 +42,9 @@ class mailgate_thread(osv.osv):
     _rec_name = 'thread' 
 
     _columns = {
-        'thread': fields.char('Thread', size=124, required=False), 
-        'message_ids': one2many_domain('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
-        'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False),
+        'thread': fields.char('Thread', size=32, required=False), 
+        'message_ids': fields.one2many('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
+        'log_ids': fields.one2many('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
         'model': fields.char('Model Name', size=64, required=False),  
         'res_id': fields.integer('Resource ID'), 
         }
