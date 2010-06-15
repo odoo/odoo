@@ -987,7 +987,7 @@ class orm_template(object):
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
                 #Raising Uncaught exception
                 return (-1, res, 'Line ' + str(counter) +' : ' + str(e), '' )
-            
+
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
@@ -2108,8 +2108,7 @@ class orm(orm_template):
                    days = calendar.monthrange(dt.year, dt.month)[1]
 
                    d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
-                   if not context.get('group_by_no_leaf', False):
-                       d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
+                   d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
                                     (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
                 elif fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and ((type(d[groupby])==type(1)) and d[groupby] or d[groupby][1])  or ''
@@ -2717,7 +2716,7 @@ class orm(orm_template):
             return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
 
         return _proxy
-        
+
 
     def fields_get(self, cr, user, fields=None, context=None):
         """
