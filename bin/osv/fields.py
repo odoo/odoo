@@ -469,7 +469,7 @@ class one2many(_column):
             elif act[0] == 6:
                 obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
                 ids2 = act[2] or [0]
-                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL (%s)', (id,ids2))
+                cr.execute('select id from '+_table+' where '+self._fields_id+'=%s and id <> ALL %s', (id,tuple(ids2)))
                 ids3 = map(lambda x:x[0], cr.fetchall())
                 obj.write(cr, user, ids3, {self._fields_id:False}, context=context or {})
         return result
@@ -521,13 +521,24 @@ class many2many(_column):
         if d1:
             d1 = ' and ' + ' and '.join(d1)
         else: d1 = ''
-
-        cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' \
-                FROM '+self._rel+' , '+(','.join(tables))+' \
-                WHERE '+self._rel+'.'+self._id1+' = ANY (%s) \
-                    AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+d1
-                +limit_str+' order by '+obj._table+'.'+obj._order+' offset %s',
-                [ids,]+d2+[offset])
+        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
+                   FROM %(rel)s, %(tbl)s \
+                  WHERE %(rel)s.%(id1)s in %%s \
+                    AND %(rel)s.%(id2)s = %(tbl)s.id \
+                 %(d1)s  \
+                 %(limit)s \
+                  ORDER BY %(tbl)s.%(order)s \
+                 OFFSET %(offset)d' \
+            % {'rel': self._rel,
+               'tbl': obj._table,
+               'id1': self._id1,
+               'id2': self._id2,
+               'd1': d1,
+               'limit': limit_str,
+               'order': obj._order,
+               'offset': offset,
+              }
+        cr.execute(query, [tuple(ids)] + d2)
         for r in cr.fetchall():
             res[r[1]].append(r[0])
         return res

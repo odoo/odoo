@@ -30,7 +30,7 @@ class ir_attachment(osv.osv):
         ima = self.pool.get('ir.model.access')
         if isinstance(ids, (int, long)):
             ids = [ids]
-        cr.execute('select distinct res_model from ir_attachment where id = ANY (%s)', (ids,))
+        cr.execute('select distinct res_model from ir_attachment where id in %s', (tuple(ids),))
         for obj in cr.fetchall():
             if obj[0]:
                 ima.check(cr, uid, obj[0], mode, context=context)
@@ -84,7 +84,7 @@ class ir_attachment(osv.osv):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_attachment')
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
-        return self.pool.get('ir.actions.act_window').read(cr, uid, res_id, [], context)    
+        return self.pool.get('ir.actions.act_window').read(cr, uid, res_id, [], context)
 
     def _name_get_resname(self, cr, uid, ids, object,method, context):
         data = {}

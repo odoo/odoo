@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,7 +23,7 @@ import time, os
 
 import netsvc
 import report,pooler,tools
-
+from operator import itemgetter
 
 def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
     import pydot
@@ -56,7 +56,8 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
             graph.add_node(pydot.Node(n['id'], **args))
             actfrom[n['id']] = (n['id'],{})
             actto[n['id']] = (n['id'],{})
-    cr.execute('select * from wkf_transition where act_from in ('+','.join(map(lambda x: str(x['id']),nodes))+')')
+            node_ids = tuple(map(itemgetter('id'), nodes))
+    cr.execute('select * from wkf_transition where act_from in %s', (node_ids,))
     transitions = cr.dictfetchall()
     for t in transitions:
         args = {}
@@ -146,7 +147,7 @@ showpage'''
                 else:
                     inst_id = inst_id[0]
                     graph = pydot.Dot(fontsize='16', label="""\\\n\\nWorkflow: %s\\n OSV: %s""" % (wkfinfo['name'],wkfinfo['osv']),
-                                      size='7.3, 10.1', center='1', ratio='auto', rotate='0', rankdir='TB',                                      
+                                      size='7.3, 10.1', center='1', ratio='auto', rotate='0', rankdir='TB',
                                      )
                     graph_instance_get(cr, graph, inst_id, data.get('nested', False))
                     ps_string = graph.create(prog='dot', format='ps')
