@@ -42,46 +42,85 @@ class report_stock_move(osv.osv):
         'location_id': fields.many2one('stock.location', 'Source Location', readonly=True, select=True, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', readonly=True, select=True, help="Location where the system will stock the finished products."),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True),
-        'product_qty':fields.integer('Qty',readonly=True),
+        'product_qty_in':fields.integer('In Qty',readonly=True),
+        'product_qty_out':fields.integer('Out Qty',readonly=True),
         'value' : fields.float('Total Value', required=True),
         'day_diff2':fields.float('Delay (Days)',readonly=True, digits=(16,2), group_operator="avg"),
         'day_diff1':fields.float('Planned (Days)',readonly=True, digits=(16,2), group_operator="avg"),
         'day_diff':fields.float('Real (Days)',readonly=True, digits=(16,2), group_operator="avg"),
     }
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_move')
         cr.execute("""
             create or replace view report_stock_move as (
-               select min(m.id) as id,
-                    m.date_planned as date_planned,
-                    to_char(date_trunc('day',m.date_planned), 'YYYY') as year,
-                    to_char(date_trunc('day',m.date_planned), 'MM') as month,
-                    to_char(date_trunc('day',m.date_planned), 'YYYY-MM-DD') as day,
-                    avg(date(m.date_planned)-date(m.create_date)) as day_diff,
-                    avg(date(m.date_expected)-date(m.create_date)) as day_diff1,
-                    avg(date(m.date_planned)-date(m.date_expected)) as day_diff2,
-                    m.address_id as partner_id,
-                    m.picking_id as picking_id,
-                    m.company_id as company_id,
-                    p.type as type,
-                    m.location_id as location_id,
-                    m.location_dest_id as location_dest_id,
-                    m.product_id as product_id,
-                    m.state as state,
-                    m.product_uom as product_uom,
-                    sum(m.product_qty) as product_qty,
-                    pt.standard_price * sum(m.product_qty) as value
-               from
-                    stock_move m
-                    left join stock_picking p on (m.picking_id=p.id)
-                    left join product_product pp on (m.product_id=pp.id)
-                    left join product_template pt on (pp.product_tmpl_id=pt.id)
-               group by 
-                    m.id, m.product_id,m.address_id, m.location_id, m.location_dest_id,
-                    m.date_planned, m.state, m.product_uom,pt.standard_price,
-                    m.picking_id, p.type, m.company_id
+                select
+                        min(sm_id) as id,
+                        sum(value) as value,
+                        al.dp as date_planned,
+                        al.curr_year as year,
+                        al.curr_month as month,
+                        al.curr_day as day,
+                        al.curr_day_diff as day_diff,
+                        al.curr_day_diff1 as day_diff1,
+                        al.curr_day_diff2 as day_diff2,
+                        al.location_id as location_id,
+                        al.picking_id as picking_id,
+                        al.company_id as company_id,
+                        al.location_dest_id as location_dest_id,
+                        al.out_qty as product_qty_out,
+                        al.in_qty as product_qty_in,
+                        al.address_id as partner_id,
+                        al.product_id as product_id,
+                        al.state as state ,
+                        al.product_uom as product_uom,
+                        al.type as type
+                    FROM (SELECT
+
+                        CASE WHEN sp.type in ('out','delivery') THEN
+                            sum(sm.product_qty) END AS out_qty,
+                        CASE WHEN sp.type in ('in') THEN
+                            sum(sm.product_qty)  END AS in_qty,
+                        min(sm.id) as sm_id,
+                        sm.date_planned as dp,
+                        to_char(date_trunc('day',sm.date_planned), 'YYYY') as curr_year,
+                        to_char(date_trunc('day',sm.date_planned), 'MM') as curr_month,
+                        to_char(date_trunc('day',sm.date_planned), 'YYYY-MM-DD') as curr_day,
+                        avg(date(sm.date_planned)-date(sm.create_date)) as curr_day_diff,
+                        avg(date(sm.date_expected)-date(sm.create_date)) as curr_day_diff1,
+                        avg(date(sm.date_planned)-date(sm.date_expected)) as curr_day_diff2,
+                        sm.location_id as location_id,
+                        sm.location_dest_id as location_dest_id,
+                        pt.standard_price * sum(sm.product_qty) as value,
+                        sm.address_id as address_id,
+                        sm.product_id as product_id,
+                        sm.picking_id as picking_id,
+                            sm.company_id as company_id,
+                            sm.state as state,
+                            sm.product_uom as product_uom,
+                            sp.type as type
+                    from
+                        stock_move sm
+                        left join stock_picking sp on (sm.picking_id=sp.id)
+                        left join product_product pp on (sm.product_id=pp.id)
+                        left join product_template pt on (pp.product_tmpl_id=pt.id)
+                        left join stock_location sl on (sm.location_id = sl.id)
+
+                    group by
+                        sm.id,sp.type, sm.date_planned,sm.address_id,
+                        sm.product_id,sm.state,sm.product_uom,sm.date_expected,
+                        sm.product_id,pt.standard_price, sm.picking_id,
+                        sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id)
+                    as al
+
+                    group by
+                        al.out_qty,al.in_qty,al.curr_year,al.curr_month,
+                        al.curr_day,al.curr_day_diff,al.curr_day_diff1,al.curr_day_diff2,al.dp,al.location_id,al.location_dest_id,
+                        al.address_id,al.product_id,al.state,al.product_uom,
+                        al.picking_id,al.company_id,al.type
                )
         """)
+
 report_stock_move()
 
 
@@ -148,6 +187,5 @@ create or replace view report_stock_inventory as (
 );
         """)
 report_stock_inventory()
-
 
 

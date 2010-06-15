@@ -201,7 +201,7 @@
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
+                                <button name="button_dummy" states="draft" string="" type="object" icon="gtk-execute"/>
                                 <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute"/>
                             </group>
                             <group col="13" colspan="4">
@@ -288,7 +288,6 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
