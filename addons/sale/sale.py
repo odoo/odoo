@@ -52,7 +52,6 @@ def _incoterm_get(self, cr, uid, context=None):
 
 class sale_order(osv.osv):
     _name = "sale.order"
-    _log_create = True
     _description = "Sale Order"
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -332,6 +331,9 @@ class sale_order(osv.osv):
             # Deleting the existing instance of workflow for SO
             wf_service.trg_delete(uid, 'sale.order', inv_id, cr)
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Sale order ') + " '" + name + "' "+ _("is in draft state")
+            self.log(cr, uid, id, message) 
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part):
@@ -551,18 +553,25 @@ class sale_order(osv.osv):
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
         self.write(cr, uid, ids, {'state': 'cancel'})
+        message = _('Sale order') + " '" + sale.name + "' "+ _("created on")+" '" +sale.create_date + _(" is cancelled")
+        self.log(cr, uid, id, message)
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Quotation ') + " '" + name + "' "+ _("converted to sale order.")
-            self.log(cr, uid, id, message)
+        product=[]
+        product_obj=self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
+            for line in o.order_line: 
+                product.append(line.product_id.default_code)
+        params = ', '.join(map(lambda x : str(x),product))
+        message = _('Sale order ') + " '" + o.name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("is confirmed")
+        self.log(cr, uid, id, message)
+
 
     def procurement_lines_get(self, cr, uid, ids, *args):
         res = []
@@ -931,11 +940,16 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
                 raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced !'))
+        message = _('Sale order line') + " '" + line.name + "' "+_("is cancelled")
+        self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_confirm(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Sale order line') + " '" + name + "' "+ _("is confirmed")
+            self.log(cr, uid, id, message)  
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
     def button_done(self, cr, uid, ids, context=None):
@@ -945,7 +959,8 @@ class sale_order_line(osv.osv):
         res = self.write(cr, uid, ids, {'state': 'done'})
         for line in self.browse(cr, uid, ids, context=context):
             wf_service.trg_write(uid, 'sale.order', line.order_id.id, cr)
-
+        message = _('Sale order line') + " '" + line.name + "' "+_("is done")
+        self.log(cr, uid, id, message)
         return res
 
     def uos_change(self, cr, uid, ids, product_uos, product_uos_qty=0, product_id=None):
