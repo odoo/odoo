@@ -1392,7 +1392,8 @@ class stock_move(osv.osv):
                     move_list = self.pool.get('stock.move').read(cr, uid, context['move_line'][0], ['location_dest_id'])
                     return move_list and move_list['location_dest_id'][0] or False
         if context.get('address_out_id', False):
-            return self.pool.get('res.partner.address').browse(cr, uid, context['address_out_id'], context).partner_id.property_stock_customer.id
+            property_out = self.pool.get('res.partner.address').browse(cr, uid, context['address_out_id'], context).partner_id.property_stock_customer
+            return property_out and property_out.id or False
         return False
 
     def _default_location_source(self, cr, uid, context={}):
