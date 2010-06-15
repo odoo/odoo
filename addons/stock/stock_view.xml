@@ -636,6 +636,9 @@
                                     <button name="%(split_into)d" string="Split Stock Moves" type="action"
                                             icon="terp-stock_effects-object-colorize" 
                                             states="draft,assigned,confirmed,done"/>
+                                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                                        icon="terp-stock_effects-object-colorize" 
+                                        states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
@@ -787,6 +790,9 @@
                                     <field groups="base.group_extended" name="tracking_id"/>
                                     <button name="%(split_into)d" string="Split Stock Moves" type="action"
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                        states="draft,assigned,confirmed,done"/>
+                                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                                        icon="terp-stock_effects-object-colorize" 
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
@@ -985,6 +991,9 @@
                                   <button name="%(split_into)d" string="Split Stock Moves" type="action"
                                       icon="terp-stock_effects-object-colorize"
                                       states="draft,assigned,confirmed,done"/>
+                                <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                                    icon="terp-stock_effects-object-colorize" 
+                                    states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="date_planned"/>
                                     <field name="state"/>
@@ -1170,6 +1179,9 @@
                                     <field name="tracking_id" groups="base.group_extended"/>
                                     <button name="%(split_into)d" string="Split Stock Moves" type="action"
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                        states="draft,assigned,confirmed,done"/>
+                                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                                        icon="terp-stock_effects-object-colorize" 
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="state"/>
                                      <button name="%(stock.move_scrap)d"
@@ -1357,6 +1369,9 @@
                     <button name="%(split_into)d" string="Split Stock Moves" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                         states="draft,assigned,confirmed,done"/>
+                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                        icon="terp-stock_effects-object-colorize" 
+                        states="draft,assigned,confirmed,done"/>
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
                     <field name="date_planned"/>
@@ -1510,6 +1525,9 @@
                     <field name="tracking_id" groups="base.group_extended"/>
                     <button name="%(split_into)d" string="Split Stock Moves" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                        states="draft,assigned,confirmed,done"/>
+                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                        icon="terp-stock_effects-object-colorize" 
                         states="draft,assigned,confirmed,done"/>
                     <field name="date_planned"/>
                     <field name="backorder_id" groups="base.group_extended"/>

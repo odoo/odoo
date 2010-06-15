@@ -612,7 +612,7 @@ class stock_picking(osv.osv):
         'type': lambda *a: 'in',
         'invoice_state': lambda *a: 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock_picking', context=c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
 
     def copy(self, cr, uid, id, default=None, context={}):
@@ -1302,6 +1302,7 @@ stock_production_lot_revision()
 #   location_dest_id is only used for predicting futur stocks
 #
 class stock_move(osv.osv):
+
     def _getSSCC(self, cr, uid, context={}):
         cr.execute('select id from stock_tracking where create_uid=%s order by id desc limit 1', (uid,))
         res = cr.fetchone()
@@ -1572,6 +1573,7 @@ class stock_move(osv.osv):
 
         def create_chained_picking(self, cr, uid, moves, context):
             new_moves = []
+            res_obj =  self.pool.get('res.company')
             for picking, todo in self._chain_compute(cr, uid, moves, context).items():
                 ptype = todo[0][1][5] and todo[0][1][5] or self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
                 pick_name = ''
@@ -1585,8 +1587,9 @@ class stock_move(osv.osv):
                     'move_type': picking.move_type,
                     'auto_picking': todo[0][1][1] == 'auto',
                     'stock_journal_id': todo[0][1][3],
-                    'company_id': todo[0][1][4],
+                    'company_id': todo[0][1][4] or res_obj._company_default_get(cr, uid, 'stock.company', context),
                     'address_id': picking.address_id.id,
+
                     'invoice_state': 'none'
                 })
                 for move, (loc, auto, delay, journal, company_id, ptype) in todo:
@@ -1596,7 +1599,7 @@ class stock_move(osv.osv):
                         'date_moved': time.strftime('%Y-%m-%d'),
                         'picking_id': pickid,
                         'state': 'waiting',
-                        'company_id': company_id,
+                        'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context)  ,
                         'move_history_ids': [],
                         'date_planned': (datetime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
                         'move_history_ids2': []}
@@ -1681,6 +1684,17 @@ class stock_move(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
         return count
+
+    def setlast_tracking(self, cr, uid, ids, context=None):
+        new_move = []
+        update_val = {}
+        last_prod = [line.prodlot_id for line in self.browse(cr, uid, ids)[0].picking_id.move_lines if line.prodlot_id]
+        last_prod.sort(key=lambda p: p.date, reverse=True)
+        last_prod_id = last_prod and last_prod[0].id
+        update_val['prodlot_id'] = last_prod_id
+        self.write(cr, uid, ids, update_val)
+        return True
+    
 
     #
     # Cancel move => cancel others move and pickings

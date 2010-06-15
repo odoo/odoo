@@ -8,7 +8,8 @@
 	            <field name="type">form</field>
 	            <field name="arch" type="xml">
 	                <form string="Split Move">
-	                	<field name="quantity" colspan="4"/>
+                  <separator string="Set quantity to split your palets" colspan="4"/>
+	                	<field name="quantity"/>
 	                	<button icon='gtk-cancel' special="cancel"
 	                		string="Cancel" />
 	                	<button name="split" string="Ok"
