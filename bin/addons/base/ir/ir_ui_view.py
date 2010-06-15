@@ -66,7 +66,7 @@ class view(osv.osv):
         'field_parent': fields.char('Child Field',size=64),
     }
     _defaults = {
-        'arch': lambda *a: '<?xml version="1.0"?>\n<tree string="Unknwown">\n\t<field name="name"/>\n</tree>',
+        'arch': lambda *a: '<?xml version="1.0"?>\n<tree string="My View">\n\t<field name="name"/>\n</tree>',
         'priority': lambda *a: 16
     }
     _order = "priority"
