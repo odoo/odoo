@@ -420,6 +420,7 @@
                         <field name="chained_location_id"/>
                         <field name="chained_auto_packing"/>
                         <field name="chained_delay"/>
+                        <field name="chained_journal_id" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Localization" colspan="2"/>
@@ -603,15 +604,13 @@
             <field name="arch" type="xml">
                 <form string="Picking list">
                     <group colspan="4" col="6">
-
                         <field name="name" readonly="1"/>
-<!--                    <field name="address_id" context="{'contact_display' : 'partner'}" groups="base.group_extended"/>-->
                         <field name="origin"/>
-
                         <field name="backorder_id" groups="base.group_extended" readonly="1"/>
                         <field name="date"/>
                         <field name="min_date"/>
                         <field name="type"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
@@ -715,10 +714,9 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Order" domain="[('backorder_id', '&lt;&gt;', False)]" help="Has Back Order"  />
                         <separator orientation="vertical"/>
-                        <field name="location_id"/>
-                        <field name="location_dest_id"/>
                         <field name="name"/>
                         <field name="address_id"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
@@ -761,8 +759,9 @@
                         <field name="backorder_id" groups="base.group_extended" readonly="1"/>
                         <field name="date" />
                         <field name="min_date"/>
-                        <field name="type" invisible="1"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="type" invisible="1"/>
                     </group>
                         <notebook colspan="4">
                         <page string="General Information">
@@ -863,6 +862,7 @@
                         <field name="name"/>
                         <field name="address_id"/>
                         <field name="origin"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="10">
@@ -939,6 +939,7 @@
                         <field name="backorder_id" readonly="1"/>
                         <field name="origin" readonly="1"/>
                         <field name="type" invisible="1"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
@@ -1048,6 +1049,7 @@
                         <field name="name"/>
                         <field name="address_id" />
                         <field name="origin"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                     <newline/>
@@ -1125,6 +1127,7 @@
                         <field name="type"/>
                         <field name="min_date" readonly="1"/>
                         <field name="invoice_state" string="Invoice Control"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
@@ -1220,6 +1223,7 @@
                         <field name="name"/>
                         <field name="address_id"/>
                         <field name="origin"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company" />
                     </group>
                     <newline/>
@@ -1277,6 +1281,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="origin"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" widget="selection"/>
                     </group>
                     <newline/>
@@ -1799,5 +1804,52 @@
 
       <menuitem action="action_reception_picking_move" id="menu_action_pdct_in" parent="menu_stock_products_moves" sequence="1"/>
       <menuitem action="action_out_picking_move" id="menu_action_pdct_out" parent="menu_stock_products_moves" sequence="2"/>
+
+
+         <record id="view_stock_journal_filter" model="ir.ui.view">
+            <field name="name">stock.journal.filter</field>
+            <field name="model">stock.journal</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Stock Journal">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_stock_journal_tree">
+            <field name="name">Stock Journals</field>
+            <field name="model">stock.journal</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Stock Journal">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_stock_journal_form">
+            <field name="name">Stock Journals</field>
+            <field name="model">stock.journal</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock Journal">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                </form>
+            </field>
+        </record>
+        <record id="action_stock_journal_form" model="ir.actions.act_window">
+            <field name="name">Stock Journals</field>
+            <field name="res_model">stock.journal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+        </record>
+        <menuitem
+            action="action_stock_journal_form"
+            id="menu_action_stock_journal_form"
+            groups="base.group_extended"
+            parent="menu_stock_configuration" />
+
     </data>
 </openerp>
