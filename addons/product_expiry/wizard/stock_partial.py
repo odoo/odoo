@@ -62,3 +62,11 @@ class stock_partial_lot_picking(osv.osv_memory):
         return res
 stock_partial_lot_picking()
 
+class stock_move_split_lines_exist(osv.osv_memory):
+    _name = "stock.move.split.lines.exist"
+    _inherit = "stock.move.split.lines.exist"
+    _columns = {
+        'date': fields.date('Date'),
+    }
+
+stock_move_split_lines_exist()
