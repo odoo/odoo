@@ -1688,10 +1688,16 @@ class stock_move(osv.osv):
     def setlast_tracking(self, cr, uid, ids, context=None):
         new_move = []
         update_val = {}
+        ir_sequence_obj = self.pool.get('ir.sequence')
+        prodlot_obj = self.pool.get('stock.production.lot')
         last_prod = [line.prodlot_id for line in self.browse(cr, uid, ids)[0].picking_id.move_lines if line.prodlot_id]
         last_prod.sort(key=lambda p: p.date, reverse=True)
         last_prod_id = last_prod and last_prod[0].id
         update_val['prodlot_id'] = last_prod_id
+        if update_val.get('prodlot_id',[])==[]:
+            sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+            prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence}, {'product_id': self.browse(cr, uid, ids)[0].product_id.id})
+            update_val['prodlot_id'] = prodlot_id
         self.write(cr, uid, ids, update_val)
         return True
     
@@ -1843,10 +1849,12 @@ class stock_move(osv.osv):
         for pick in picking_obj.browse(cr, uid, picking_ids):
             if all(move.state == 'done' for move in pick.move_lines):
                 picking_obj.action_done(cr, uid, [pick.id])
-
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
+        for pick in picking_obj.browse(cr, uid, picking_ids):
+            if len([move.state == 'done' for move in pick.move_lines]) == len(pick.move_lines):
+                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
         return True
     
     def create_account_move(self, cr, uid, move,account_id,account_variation,amount, context=None):
