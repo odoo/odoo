@@ -258,7 +258,7 @@ class split_in_production_lot(osv.osv_memory):
                         prodlot_id = prodlot_obj.create(cr, uid, {'name': line.name},
                         # 'prefix' : line.name},
                                                  {'product_id': move.product_id.id})
-                    move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id})
+                    move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id, 'state':move.state})
                     prodlot = prodlot_obj.browse(cr, uid, prodlot_id)
                  #   ref = '%d' % (move.id)
                  #   if prodlot.ref:
@@ -269,6 +269,7 @@ class split_in_production_lot(osv.osv_memory):
                     if quantity_rest > 0:
                         update_val['product_qty'] = quantity_rest
                         update_val['product_uos_qty'] = uos_qty_rest
+                        update_val['state'] = move.state
                         move_obj.write(cr, uid, [move.id], update_val)
         return new_move
 split_in_production_lot()

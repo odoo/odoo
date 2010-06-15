@@ -66,7 +66,7 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _name = "stock.move.split.lines.exist"
     _inherit = "stock.move.split.lines.exist"
     _columns = {
-        'date': fields.date('Date'),
+        'date': fields.date('Expiry Date'),
     }
     def on_change_product(self, cr, uid, ids, product_id):
         if not product_id:
