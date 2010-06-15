@@ -602,7 +602,7 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not from Picking")], "Invoice Status",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
+        'company_id': fields.many2one('res.company', 'Company', select=1),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -1379,7 +1379,7 @@ class stock_move(osv.osv):
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
             digits_compute= dp.get_precision('Account')),
-        'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
+        'company_id': fields.many2one('res.company', 'Company', select=1),
         'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order"),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),

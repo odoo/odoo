@@ -244,7 +244,6 @@ class split_in_production_lot(osv.osv_memory):
                     }
                     if quantity_rest > 0:
                         current_move = move_obj.copy(cr, uid, move.id, default_val)
-                        move_obj.action_confirm(cr, uid, [current_move])
                         new_move.append(current_move)
                     if quantity_rest == 0:
                         current_move = move.id
