@@ -633,6 +633,18 @@ class email_template_preview(osv.osv_memory):
     _name = "email_template.preview"
     _description = "Email Template Preview"
     
+    def _get_model_recs(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+            #Fills up the selection box which allows records from the selected object to be displayed
+        self.context = context
+        if 'template_id' in context.keys():
+            ref_obj_id = self.pool.get('email.template').read(cr, uid, context['template_id'], ['object_name'], context)
+            ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
+            ref_obj_ids = self.pool.get(ref_obj_name).search(cr, uid, [], context=context)
+            ref_obj_recs = self.pool.get(ref_obj_name).name_get(cr, uid, ref_obj_ids, context)
+            return ref_obj_recs    
+        
     def _default_model(self, cursor, user, context=None):
         """
         Returns the default value for model field
@@ -643,7 +655,7 @@ class email_template_preview(osv.osv_memory):
         return self.pool.get('email.template').read(
                                                    cursor,
                                                    user,
-                                                   context['active_id'],
+                                                   context['template_id'],
                                                    ['object_name'],
                                                    context)['object_name']
         
@@ -652,6 +664,7 @@ class email_template_preview(osv.osv_memory):
                                        'email.template',
                                        'Template', readonly=True),
         'rel_model':fields.many2one('ir.model', 'Model', readonly=True),
+        'rel_model_ref':fields.selection(_get_model_recs, 'Referred Document'),
         'to':fields.char('To', size=250, readonly=True),
         'cc':fields.char('CC', size=250, readonly=True),
         'bcc':fields.char('BCC', size=250, readonly=True),
@@ -661,10 +674,9 @@ class email_template_preview(osv.osv_memory):
         'report':fields.char('Report Name', size=100, readonly=True),
     }
     _defaults = {
-        'ref_template': lambda self, cr, uid, ctx:ctx['active_id'],
+        'ref_template': lambda self, cr, uid, ctx:ctx['template_id'],
         'rel_model': _default_model
     }
-    # Need to check 
     def on_change_ref(self, cr, uid, ids, rel_model_ref, context=None):
         if context is None:
             context = {}
@@ -673,13 +685,13 @@ class email_template_preview(osv.osv_memory):
         vals = {}
         if context == {}:
             context = self.context
-        template = self.pool.get('email.template').browse(cr, uid, context['active_id'], context)
+        template = self.pool.get('email.template').browse(cr, uid, context['template_id'], context)
         #Search translated template
         lang = get_value(cr, uid, rel_model_ref, template.lang, template, context)
         if lang:
             ctx = context.copy()
             ctx.update({'lang':lang})
-            template = self.pool.get('email.template').browse(cr, uid, context['active_id'], ctx)
+            template = self.pool.get('email.template').browse(cr, uid, context['template_id'], ctx)
         vals['to'] = get_value(cr, uid, rel_model_ref, template.def_to, template, context)
         vals['cc'] = get_value(cr, uid, rel_model_ref, template.def_cc, template, context)
         vals['bcc'] = get_value(cr, uid, rel_model_ref, template.def_bcc, template, context)

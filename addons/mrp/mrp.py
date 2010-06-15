@@ -141,14 +141,14 @@ class mrp_bom(osv.osv):
             bom_id = ids[0]
         bom_parent = bom_obj.browse(cr, uid, bom_id)
         for bom in self.browse(cr, uid, ids, context=context):
-            if (bom_parent and bom_parent.multi_level_bom) or bom.id == bom_id:
+            if (bom_parent) or (bom.id == bom_id):
                 result[bom.id] = map(lambda x: x.id, bom.bom_lines)
             else:
                 result[bom.id] = []
             if bom.bom_lines:
                 continue
             ok = ((name=='child_complete_ids') and (bom.product_id.supply_method=='produce'))
-            if (bom.type=='phantom' or ok) and bom_parent.multi_level_bom:
+            if (bom.type=='phantom' or ok):
                 sids = bom_obj.search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
                 if sids:
                     bom2 = bom_obj.browse(cr, uid, sids[0], context=context)
@@ -204,7 +204,6 @@ class mrp_bom(osv.osv):
         'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
         'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
-        'multi_level_bom': fields.boolean('Multi-level BoM'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -213,7 +212,6 @@ class mrp_bom(osv.osv):
         'product_rounding': lambda *a: 1.0,
         'type': lambda *a: 'normal',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c),
-        'multi_level_bom': lambda *a: 0,
     }
     _order = "sequence"
     _sql_constraints = [
@@ -248,7 +246,7 @@ class mrp_bom(osv.osv):
                 v['name'] = prod.name
             return {'value': v}
         return {}
-   
+
     def _bom_find(self, cr, uid, product_id, product_uom, properties=[]):
         """ Finds BoM for particular product and product uom.
         @param product_id: Selected product.
@@ -511,7 +509,18 @@ class mrp_production(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
     _order = 'date_planned asc, priority desc';
-
+    
+    def _check_qty(self, cr, uid, ids):
+        orders = self.browse(cr, uid, ids)
+        for order in orders:
+            if order.product_qty <= 0:
+                return False
+        return True
+    
+    _constraints = [
+        (_check_qty, 'Order quantity cannot be negative or zero !', ['product_qty']),
+    ]
+    
     def unlink(self, cr, uid, ids, context=None):
         productions = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -961,7 +970,4 @@ class mrp_production_product_line(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True),
     }
 mrp_production_product_line()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

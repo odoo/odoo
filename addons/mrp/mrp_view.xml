@@ -252,21 +252,29 @@
                         <field name="product_qty"/>
                         <field name="routing_id" groups="base.group_extended"/>
                         <newline/>
-                        <field name="product_uos" groups="product.group_uos,base.group_extended" widget="selection"/>
-                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended" />
+                        <field name="product_uos" groups="product.group_uos"/>
+                        <field name="product_uos_qty" groups="product.group_uos" />
                         <newline/>
-                        <field name="multi_level_bom"/>
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4" >
-                        <page string="Components" attrs="{'invisible': [('multi_level_bom','=',False)]}">
-                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list" />
+                        <page string="Components">
+                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list">
+                                <tree string="Components" editable="bottom">
+                                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                                    <field name="product_uom"/>
+                                    <field name="product_qty"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="date_start"/>
+                                    <field name="date_stop"/>
+                                </tree>
+                            </field>
                         </page>
-                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
+                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Properties" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
+                        <page string="Properties" groups="base.group_extended">
                             <field name="position"/>
                             <field name="active"/>
                             <field name="sequence"/>
@@ -329,7 +337,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="domain">[('bom_id','=',False)]</field>
+            <field name="domain">[('bom_id','=',False),('multi_level_bom','=',True)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
         </record>
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
@@ -499,15 +507,15 @@
                         <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
-                        <field name="product_uom" widget="selection"/>
+                        <field name="product_uom"/>
                         <button type="action"
                             name="%(mrp.action_change_production_qty)d"
                             string="Change Qty" states="ready,confirmed" />
                         </group>
                         <label string="" colspan="2"/>
-                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                        <group colspan="2" col="3" groups="product.group_uos,base.group_extended">
-                            <field name="product_uos" widget="selection"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <group colspan="2" col="3" groups="product.group_uos">
+                            <field name="product_uos"/>
                             <label string=""/>
                         </group>
                     </group>
@@ -800,8 +808,8 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
-                    <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                    <field name="product_uos" groups="product.group_uos,base.group_extended"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
                 </tree>
             </field>
         </record>
@@ -848,5 +856,46 @@
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_mrp_configuration" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
 
+        <!-- Display the BoMs in the product form -->
+
+        <record model="ir.ui.view" id="view_product_form_expiry">
+            <field name="name">product.normal.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Bill of Materials">
+                        <field name="bom_ids" colspan="4" nolabel="1" widget="one2many_form">
+                            <group colspan="4" col="6">
+                                <field name="name" select="1" colspan="4"/>
+                                <field name="code" select="1" string="BoM Reference" groups="base.group_extended"/>
+                                <newline/>
+                                <field name="product_uom"/>
+                                <field name="product_qty"/>
+                                <field name="routing_id" groups="base.group_extended"/>
+                                <newline/>
+                                <field name="product_uos" groups="product.group_uos"/>
+                                <field name="product_uos_qty" groups="product.group_uos" />
+                                <newline/>
+                                <field name="type" groups="base.group_extended"/>
+                                <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                            </group>
+                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list">
+                                <tree string="Components" editable="bottom">
+                                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                                    <field name="product_uom"/>
+                                    <field name="product_qty"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="date_start"/>
+                                    <field name="date_stop"/>
+                                </tree>
+                            </field>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+ 
     </data>
 </openerp>

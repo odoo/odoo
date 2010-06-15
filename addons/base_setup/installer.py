@@ -75,6 +75,9 @@ class base_setup_installer(osv.osv_memory):
                  "OpenERP's report creation."),
         'thunderbird' :fields.boolean('Thunderbird'),
         # Vertical modules
+        'product_expiry':fields.boolean('Food Industry',
+            help="Installs a preselected set of OpenERP "
+                 "applications which will help you manage foods."),
         'profile_association':fields.boolean('Associations',
             help="Installs a preselected set of OpenERP "
                  "applications which will help you manage your association "
