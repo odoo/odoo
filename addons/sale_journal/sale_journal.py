@@ -92,6 +92,9 @@ class sale_journal(osv.osv):
     
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
+        for (id,name) in self.name_get(cr, uid, ids):
+                message = _('Sale Journal') + " '" + name + "' "+ _("is in draft state")
+                self.log(cr, uid, id, message)  
         return True
     
     def button_close(self, cr, uid, ids, context={}):

@@ -1856,7 +1856,7 @@ class stock_move(osv.osv):
             if all(move.state == 'done' for move in pick.move_lines):
                 picking_obj.action_done(cr, uid, [pick.id])
             for (id,name) in picking_obj.name_get(cr, uid, [pick.id]):
-                message = _('Picking ') + " '" + name + "' "+ _("done")
+                message = _('Picking ') + " '" + name + "' "+ _("is processed")
                 self.log(cr, uid, id, message)    
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
