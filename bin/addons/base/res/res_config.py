@@ -390,6 +390,8 @@ class res_config_installer(osv.osv_memory):
             cr, uid, fields, context, read_access)
 
         for module in self._already_installed(cr, uid, context=context):
+            if module.name not in fields:
+                continue
             fields[module.name].update(
                 readonly=True,
                 help=fields[module.name].get('help', '') +
