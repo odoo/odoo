@@ -94,8 +94,6 @@ class crm_send_new_email(osv.osv_memory):
             if context.get('mail', 'new') == 'new':
                 if len(case.message_ids):
                     message_id = case.message_ids[0].message_id
-                else:
-                    message_id = "<%s-openerp-@%s-%s-%d>" % (time.time(), cr.dbname, model, res_id)
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id
@@ -116,10 +114,10 @@ class crm_send_new_email(osv.osv_memory):
                                 subject=obj.subject, email_from=email_from, \
                                 message_id=message_id, attach=attach)
 
-            x_headers = dict()
-            #x_headers = {
-            #    'Reply-To':"%s" % case.section_id.reply_to,
-            #}
+            x_headers = {
+                     'model': model, 
+                     'resource-id': res_id
+                     }
             if message_id:
                 x_headers['References'] = "%s" % (message_id)
 

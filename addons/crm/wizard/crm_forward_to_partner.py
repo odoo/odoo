@@ -210,7 +210,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         message = []
         lead_proxy = self.pool.get('crm.lead')
         lead = lead_proxy.browse(cr, uid, lead_id, context=context)
-        if lead.type == 'lead':
+        if not lead.type or lead.type == 'lead':
                 field_names = [
                     'partner_name', 'title', 'function', 'street', 'street2', 
                     'zip', 'city', 'country_id', 'state_id', 'email_from', 

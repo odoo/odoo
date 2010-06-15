@@ -23,12 +23,8 @@ from osv import osv, fields
 import time
 import tools
 import binascii
-import socket
 import email
 from email.header import decode_header
-import netsvc
-
-logger = netsvc.Logger()
 import base64
 import re
 
@@ -228,8 +224,6 @@ class mailgate_tool(osv.osv):
         """
         message = email.message_from_string(str(msg))
         subject = '['+str(res_id)+'] '+ self._decode_header(message['Subject'])
-        message['Message-Id'] = '<' + str(time.time()) + '-openerp-' + \
-                model + '-' + str(res_id) + '@'+socket.gethostname() + '>'
         msg_mails = []
         mails = [self._decode_header(message['From']), self._decode_header(message['To'])]+self._decode_header(message.get('Cc', '')).split(',')
         for mail in mails:
@@ -239,15 +233,19 @@ class mailgate_tool(osv.osv):
         message['body'] = message.get_payload(decode=True)
         if encoding:
             message['body'] = message['body'].decode(encoding).encode('utf-8')
-
+        
+        x_headers = {
+                     'model': model, 
+                     'resource-id': res_id
+                     }
         try:
-            tools.email_send(email_default or tools.config.get('email_from', None), msg_mails, subject, message.get('body'))
+            tools.email_send(email_default or tools.config.get('email_from', None), msg_mails, subject, message.get('body'), x_headers=x_headers)
         except Exception, e:
             if email_default:
                 temp_msg = '['+str(res_id)+'] ' + self._decode_header(message['Subject'])
                 del message['Subject']
                 message['Subject'] = '[OpenERP-FetchError] ' + temp_msg
-                tools.email_send(email_default, email_default, message.get('Subject'), message.get('body'))
+                tools.email_send(email_default, email_default, message.get('Subject'), message.get('body'), x_headers=x_headers)
         return True
 
     def process_email(self, cr, uid, model, message, attach=True, server_id=None, server_type=None, context=None):
@@ -282,7 +280,7 @@ class mailgate_tool(osv.osv):
                 }
                 data.update(self.get_partner(cr, uid, msg.get('from'), context=context))
                 res_id = model_pool.create(cr, uid, data, context=context)
-                logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s. Using default method' % (model_pool._name))
+
             att_ids = []
             if attach:
                 for attachment in msg.get('attachments', []):
@@ -421,7 +419,6 @@ class mailgate_tool(osv.osv):
                     if hasattr(model_pool, 'message_update'):
                         model_pool.message_update(cr, uid, [history.res_id], vals, msg, context=context)
                     else:
-                        logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_update is not define in model %s' % (model_pool._name))
                         return False
                 else:
                     res_id = create_record(msg)
