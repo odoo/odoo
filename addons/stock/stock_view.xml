@@ -422,7 +422,9 @@
                         <field name="chained_location_id"/>
                         <field name="chained_auto_packing"/>
                         <field name="chained_delay"/>
-                        <field name="chained_journal_id" groups="base.group_extended"/>
+                        <field name="chained_journal_id"/>
+                        <field name="chained_picking_type"/>
+                        <field name="chained_company_id" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Localization" colspan="2"/>
@@ -664,7 +666,7 @@
                                                 domain="[('product_id','=?',product_id)]"
                                                 on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
                                             <field groups="base.group_extended" name="tracking_id"/>
-                                            
+
                                             <newline/>
                                             <label/>
                                             <button name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"/>
@@ -821,7 +823,7 @@
                                                 on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
                                             <field groups="base.group_extended" name="tracking_id"/>
                                             <button name="%(split_into)d" string="Split into" type="action"
-                                                icon="terp-stock_effects-object-colorize" 
+                                                icon="terp-stock_effects-object-colorize"
                                                 states="draft,assigned,confirmed,done"/>
                                             <separator colspan="4" string="Move State"/>
                                             <field name="state"/>
@@ -967,7 +969,7 @@
                                         icon="gtk-convert" context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" />
                                     <field name="prodlot_id" groups="base.group_extended"/>
-                                    <button name="%(track_line)d" string="Split in production lots" type="action" 
+                                    <button name="%(track_line)d" string="Split in production lots" type="action"
                                         icon="gtk-justify-fill" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
                                         states="assigned,confirmed,done"
                                         groups="base.group_extended"/>
@@ -1184,11 +1186,11 @@
                                             <field name="prodlot_id" groups="base.group_extended" context="{'location_id':location_id, 'product_id':product_id}" domain="[('product_id','=?',product_id)]" on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
                                             <field groups="base.group_extended" name="tracking_id"/>
                                             <newline/>
-                                          
+
                                             <newline/>
                                             <label/>
-                                          <button groups="base.group_extended" name="267" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"/>
-  <button name="275" string="Split Stock Moves" type="action" icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" states="draft,assigned,confirmed,done"/>
+                                          	<button groups="base.group_extended" name="267" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"/>
+  											<button name="275" string="Split Stock Moves" type="action" icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" states="draft,assigned,confirmed,done"/>
                                             <separator colspan="4" string="Move State"/>
                                             <field name="state"/>
                                             <group colspan="2">
@@ -1399,10 +1401,13 @@
                                     context="{'location_id':location_id, 'product_id':product_id}"
                                     domain="[('product_id','=?',product_id)]"
                                     on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
-                                <button name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
-                                <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                states="draft,assigned,confirmed,done"/>
+                                <newline/>
+                                <group colspan="4" col="4">
+                                	<button name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
+                                	<button name="%(split_into)d" string="Split Stock Moves" type="action"
+                                		icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                		states="draft,assigned,confirmed,done"/>
+                                </group>
                             </group>
                         </page>
                     </notebook>
@@ -1527,21 +1532,21 @@
                             <field name="priority"/>
                             <field name="address_id" context="{'contact_display':'partner'}"/>
                             <newline/>
-                            <field name="picking_id"/>
                             <newline/>
                             <field name="prodlot_id" groups="base.group_extended"
                                 context="{'location_id':location_id, 'product_id':product_id}"
                                 domain="[('product_id','=?',product_id)]"
                                 on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
                             <field groups="base.group_extended" name="tracking_id"/>
-                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                states="draft,assigned,confirmed,done"/>
+
                             <newline/>
+                            <field name="picking_id"/>
                             <group col="2" colspan="2">
-                                <label/>
-                                <button name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"/>
-                            </group>
+	                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
+	                            	icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+	                            	states="draft,assigned,confirmed,done"/>
+	                            <button name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"/>
+                        	</group>
                             <separator colspan="4" string="Move State"/>
                             <field name="state"/>
                             <group col="5" colspan="2">

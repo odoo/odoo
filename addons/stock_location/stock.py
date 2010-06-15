@@ -40,6 +40,7 @@ class stock_location_path(osv.osv):
             ("none", "Not from Picking")], "Invoice Status",
             required=True,),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
+        'chained_company_id': fields.many2one('res.company', 'Chained Company', help='Set here the belonging company of the chained move'),
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
             'Automatic Move',
@@ -54,6 +55,7 @@ class stock_location_path(osv.osv):
         'auto': lambda *arg: 'auto',
         'delay': lambda *arg: 1,
         'invoice_state': lambda *args: 'none',
+        'picking_type':lambda *args:'out',
     }
 stock_location_path()
 
@@ -71,6 +73,7 @@ class product_pulled_flow(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', help="Is used to know to which company belong packings and moves"),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Address'),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
+        'chained_company_id': fields.many2one('res.company', 'Chained Company', help='Set here the belonging company of the chained move'),
         'product_id':fields.many2one('product.product','Product'),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
@@ -117,7 +120,7 @@ class stock_location(osv.osv):
         if product:
             for path in product.path_ids:
                 if path.location_from_id.id == location.id:
-                    return path.location_dest_id, path.auto, path.delay, path.journal_id.id
+                    return path.location_dest_id, path.auto, path.delay, path.journal_id and path.journal_id.id or False, path.chained_company_id and path.chained_companyd_id.id or False, path.picking_type
         return super(stock_location, self).chained_location_get(cr, uid, location, partner, product, context)
 stock_location()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
