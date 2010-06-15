@@ -708,6 +708,9 @@ class purchase_order_line(osv.osv):
         return res
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Purchase order line') + " '" + name + "' "+ _("is confirmed")
+            self.log(cr, uid, id, message)  
         return True
 purchase_order_line()
 
