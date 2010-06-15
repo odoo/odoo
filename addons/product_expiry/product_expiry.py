@@ -21,6 +21,7 @@
 import datetime
 from osv import fields, osv
 import pooler
+import time
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'

@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -14,9 +15,15 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import claim_delivery
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+from osv import fields, osv
+
+class stock_picking(osv.osv):
+    _inherit = "stock.picking"
+    _columns = {
+        'partner_id': fields.related('address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
+        }
+stock_picking()

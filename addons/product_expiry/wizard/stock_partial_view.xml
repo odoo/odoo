@@ -9,6 +9,9 @@
              <field name="inherit_id" ref="stock.view_split_in_lots"/>
               <field name="arch" type="xml">
               <data>
+                <xpath expr="//form/group/field[@name='line_exist_ids']/tree/field[@name='prodlot_id']"  position="replace">
+                  <field name="prodlot_id" on_change="on_change_product(parent.product_id)"/>
+                </xpath>
                 <xpath expr="//form/group/field[@name='line_exist_ids']/tree/field[@name='quantity']"  position="after">
                   <field name="date"/>
                 </xpath>
