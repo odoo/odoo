@@ -68,8 +68,8 @@
         action="action_idea_category_tree"/>
 
     <menuitem name="Give Vote" parent="menu_ideas1"
-    	id="menu_give_vote"
-    	action="action_idea_select"/>
+        id="menu_give_vote"
+        action="action_idea_select"/>
 
 
     <!-- Open Ideas Action  -->
@@ -128,11 +128,11 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
         <form string="Votes">
-        	<group colspan="4">
-	            <field name="user_id" select="1" />
-	            <field name="date"/>
-	            <newline/>
-	            <field name="score"/>
+            <group colspan="4">
+                <field name="user_id" select="1" />
+                <field name="date"/>
+                <newline/>
+                <field name="score"/>
             </group>
             <separator string="Comments:" colspan="4"/>
             <field name="comment" colspan="4" nolabel="1"/>
@@ -147,18 +147,18 @@
         <field name="model">idea.vote</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
-	        <search string="Ideas vote">
-	        	<group col="10" colspan="4">
-		            <field name="idea_id" widget="selection"/>
-		            <field name="user_id" widget="selection"/>
-				</group>
-				<newline/>
-	            <group expand="0" string="Group By..." colspan="14">
-	            	<filter string="Vote date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
-	                <filter string="Idea" icon="terp-idea" domain="[]" context="{'group_by':'idea_id'}"/>
-	                <filter string="User" name="user" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-	            </group>
-	        </search>
+            <search string="Ideas vote">
+                <group col="10" colspan="4">
+                    <field name="idea_id" widget="selection"/>
+                    <field name="user_id"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By..." colspan="14">
+                    <filter string="Vote date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                    <filter string="Idea" icon="terp-idea" domain="[]" context="{'group_by':'idea_id'}"/>
+                    <filter string="User" name="user" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -270,7 +270,7 @@
                     <separator orientation="vertical"/>
                     <field name="title" select="1"/>
                     <field name="category_id" select="1"/>
-                    <field name="user_id" select="1" widget="selection"/>
+                    <field name="user_id" select="1"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="12" col="10">

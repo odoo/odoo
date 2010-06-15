@@ -29,7 +29,10 @@
     "description": "Menu for Marketing",
     'website': 'http://www.openerp.com',
     'init_xml': [],
-    'update_xml': ['marketing_view.xml'],
+    'update_xml': [
+                   'marketing_view.xml',
+                   'security/ir.model.access.csv'
+                   ],
     'demo_xml': [],
     'installable': True,
     'active': False,

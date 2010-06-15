@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -32,11 +32,11 @@ _info_form = '''<?xml version="1.0"?>
 def _trans_unrec(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     voucher = pool.get('account.voucher').browse(cr, uid, data.get('id'))
-    recs = None
+    recs = []
     for line in voucher.move_ids:
         if line.reconcile_id:
             recs = [line.reconcile_id.id]
-    
+
     for rec in recs:
         pool.get('account.move.reconcile').unlink(cr, uid, rec)
     return {}

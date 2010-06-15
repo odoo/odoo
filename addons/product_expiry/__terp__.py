@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
@@ -19,30 +18,22 @@
 #
 ##############################################################################
 {
-    "name" : "Invoice Payment/Receipt by Vouchers.",
+    "name" : "Products date of expiry",
     "version" : "1.0",
-    "author" : 'Tiny & Axelor',
-    "description": """This module includes :
-    * It reconcile the invoice (supplier, customer) while paying through 
-    Accounting Vouchers
-    """,
-    "category" : "Generic Modules/Indian Accounting",
-    "website" : "http://tinyerpindia.com",
-    "depends" : [
-        "base", 
-        "account",
-        "account_voucher",
-    ],
-    "init_xml" : [
-    ],
-    
-    "demo_xml" : [],
-    "update_xml" : [
-        "account_voucher_payment_view.xml",
-        "account_voucher_payment_wizard.xml"
-    ],
+    "author" : "Tiny",
+    "category" : "Enterprise Specific Modules/Food Industries",
+    "depends" : ["base", "account", "product", "stock"],
+    "init_xml" : [],
+    "demo_xml" : ["product_expiry_demo.xml"],
+    "description": '''Track different dates on products and production lots:
+ - end of life
+ - best before date
+ - removal date
+ - alert date
+Used, for example, in food industries.''',
+    "update_xml" : ["product_expiry_view.xml", "report/report_stock_view.xml"],
     "active": False,
-    "installable": True,
+    "installable": True
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

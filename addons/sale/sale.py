@@ -253,7 +253,7 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
             fnct_search=_invoiced_search, type='boolean'),
-        'note': fields.text('Notes', translate=True),
+        'note': fields.text('Notes'),
 
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Untaxed Amount',
             store = {
@@ -656,6 +656,7 @@ class sale_order(osv.osv):
                         'picking_id': picking_id,
                         'product_id': line.product_id.id,
                         'date_planned': date_planned,
+                        'date_expected': date_planned,
                         'product_qty': line.product_uom_qty,
                         'product_uom': line.product_uom.id,
                         'product_uos_qty': line.product_uos_qty,
@@ -836,7 +837,7 @@ class sale_order_line(osv.osv):
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'discount': fields.float('Discount (%)', digits=(16, 2), readonly=True, states={'draft':[('readonly',False)]}),
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
-        'notes': fields.text('Notes', translate=True),
+        'notes': fields.text('Notes'),
         'th_weight': fields.float('Weight'),
         'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
                 help=' * The \'Draft\' state is set automatically when sale order in draft state. \
