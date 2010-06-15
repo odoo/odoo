@@ -112,6 +112,33 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="view_purchase_order_qty_amount_graph">
+            <field name="name">purchase.order.qty.amount.graph</field>
+            <field name="model">purchase.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Total Qty and Amount by month" type="bar">
+                    <field name="month"/>
+                    <field name="quantity" operator="+"/>
+                    <field name="price_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+    <record model="ir.ui.view" id="view_purchase_order_by_user_graph">
+            <field name="name">purchase.order.by.user.graph</field>
+            <field name="model">purchase.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Total Orders Lines by User per month" orientation="vertical" type="bar">
+                    <field name="month" />
+                    <field name="nbr" operator="+"/>
+                    <field name="user_id" group="True" />
+                </graph>
+            </field>
+        </record>
+
+
     <record id="action_purchase_order_report_all" model="ir.actions.act_window">
         <field name="name">Purchase Orders</field>
         <field name="res_model">purchase.report</field>
@@ -119,6 +146,23 @@
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_month':1,'search_default_group_partner_id':1,'search_default_group_product_id': 1, 'search_default_orders': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
     </record>
+
+    <record id="action_purchase_order_report_graph" model="ir.actions.act_window">
+        <field name="name">Total Qty and Amount by month</field>
+        <field name="res_model">purchase.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_id" ref="view_purchase_order_qty_amount_graph"></field>
+    </record>
+
+    <record id="action_purchase_order_by_user_all" model="ir.actions.act_window">
+        <field name="name">Total Orders by User per month</field>
+        <field name="res_model">purchase.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_id" ref="view_purchase_order_by_user_graph"></field>
+    </record>
+
 
     <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"/>
     <menuitem action="action_purchase_order_report_all" id="menu_action_purchase_order_report_all" parent="base.next_id_73" sequence="3"/>
