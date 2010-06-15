@@ -566,9 +566,8 @@ class sale_order(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            for (id,name) in self.name_get(cr, uid, ids):
-                for line in o.order_line: 
-                    product.append(line.product_id.default_code)
+            for line in o.order_line: 
+                product.append(line.product_id.default_code)
         params = ', '.join(map(lambda x : str(x),product))
         message = _('Sale order ') + " '" + o.name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("is confirmed")
         self.log(cr, uid, id, message)
