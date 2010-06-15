@@ -637,7 +637,7 @@
                                             icon="terp-stock_effects-object-colorize" 
                                             states="draft,assigned,confirmed,done"/>
                                     <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                        attrs="{'invisible': [('tracking_id','=',False)]}" 
+                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
                                         icon="terp-stock_effects-object-colorize" 
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
@@ -793,7 +793,7 @@
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                                         states="draft,assigned,confirmed,done"/>
                                     <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                        attrs="{'invisible': [('tracking_id','=',False)]}" 
+                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
                                         icon="terp-stock_effects-object-colorize" 
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
@@ -994,14 +994,14 @@
                                       icon="terp-stock_effects-object-colorize"
                                       states="draft,assigned,confirmed,done"/>
                                 <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                    attrs="{'invisible': [('tracking_id','=',False)]}" 
+                                    attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
                                     icon="terp-stock_effects-object-colorize" 
                                     states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="date_planned"/>
                                     <field name="state"/>
                                     <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
-                                    <!--button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/-->
+                                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -1184,7 +1184,7 @@
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                                         states="draft,assigned,confirmed,done"/>
                                     <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','=',False)]}"
+                                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="state"/>
                                      <button name="%(stock.move_scrap)d"
@@ -1374,13 +1374,14 @@
                         states="draft,assigned,confirmed,done"/>
                     <button name="setlast_tracking" string="Set Last Tracking" type="object"
                         icon="terp-stock_effects-object-colorize" 
-                        attrs="{'invisible': [('tracking_id','=',False)]}" 
+                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
                         states="draft,assigned,confirmed,done"/>
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
                     <field name="date_planned"/>
                     <field name="date_expected"/>
                     <field name="state"/>
+                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
                 </tree>
             </field>
         </record>
@@ -1531,13 +1532,14 @@
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                         states="draft,assigned,confirmed,done"/>
                     <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                        attrs="{'invisible': [('tracking_id','=',False)]}" 
+                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
                         icon="terp-stock_effects-object-colorize" 
                         states="draft,assigned,confirmed,done"/>
                     <field name="date_planned"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="state"/>
                     <button name="%(action_partial_move)d" string="Partial" type="action" states="assigned" icon="gtk-justify-fill"/>
+                    <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
                 </tree>
             </field>
         </record>
