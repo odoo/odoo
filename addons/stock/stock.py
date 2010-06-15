@@ -759,6 +759,8 @@ class stock_picking(osv.osv):
             ids2 = [move.id for move in pick.move_lines]
             self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
         self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
+        message = _('Picking') + " '" + pick.name + "' "+_("is cancelled")
+        self.log(cr, uid, id, message)
         return True
 
     #
@@ -1815,9 +1817,9 @@ class stock_move(osv.osv):
         for pick in picking_obj.browse(cr, uid, picking_ids):
             if all(move.state == 'done' for move in pick.move_lines):
                 picking_obj.action_done(cr, uid, [pick.id])
-            for (id,name) in picking_obj.name_get(cr, uid, [pick.id]):
-                message = _('Picking ') + " '" + name + "' "+ _("is processed")
-                self.log(cr, uid, id, message)    
+        for (id,name) in picking_obj.name_get(cr, uid, picking_ids):
+            message = _('Picking ') + " '" + name + "' "+ _("is processed")
+            self.log(cr, uid, id, message)    
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
