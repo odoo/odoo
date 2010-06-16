@@ -2616,6 +2616,7 @@ class orm(orm_template):
             fld_def = ((f in self._columns) and self._columns[f]) \
                     or ((f in self._inherit_fields) and self._inherit_fields[f][2]) \
                     or False
+
             if isinstance(fld_def, fields.property):
                 property_obj = self.pool.get('ir.property')
                 prop_value = property_obj.get(cr, uid, f, self._name, context=context)
@@ -2625,7 +2626,8 @@ class orm(orm_template):
                     else:
                         value[f] = prop_value
                 else:
-                    value[f] = False
+                    if f not in value:
+                        value[f] = False
 
         # get the default values set by the user and override the default
         # values defined in the object
