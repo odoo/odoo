@@ -25,6 +25,7 @@ import re
 import urllib
 import os
 import imp
+import logging
 import tools
 from osv import fields, osv, orm
 import zipfile
@@ -445,17 +446,17 @@ class module(osv.osv):
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
 
     def check(self, cr, uid, ids, context=None):
-        logger = netsvc.Logger()
+        logger = logging.getLogger('init')
         for mod in self.browse(cr, uid, ids, context=context):
             if not mod.description:
-                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name,))
+                logger.warn('module %s: description is empty !', mod.name)
 
             if not mod.certificate or not mod.certificate.isdigit():
-                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: no quality certificate' % (mod.name,))
+                logger.info('module %s: no quality certificate', mod.name)
             else:
                 val = long(mod.certificate[2:]) % 97 == 29
                 if not val:
-                    logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module %s: invalid quality certificate: %s' % (mod.name, mod.certificate))
+                    logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
 
