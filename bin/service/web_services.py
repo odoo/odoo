@@ -534,7 +534,7 @@ GNU Public Licence.
                      %(platform.platform(), platform.os.name)
         if os.name == 'posix':
           if platform.system() == 'Linux':
-             lsbinfo = os.popen('lsb_release -a').read()
+             lsbinfo = os.popen('lsb_release -idrc').read()
              environment += '%s'%(lsbinfo)
           else:
              environment += 'Your System is not lsb compliant\n'
