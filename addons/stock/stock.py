@@ -2262,7 +2262,7 @@ class stock_inventory(osv.osv):
                         'prodlot_id': lot_id,
                         'date': inv.date,
                         'date_planned': inv.date,
-                        'state': 'assigned'
+                        'state': 'done'
                     }
                     if change > 0:
                         value.update( {
@@ -2282,9 +2282,6 @@ class stock_inventory(osv.osv):
                             'product_qty': line.product_qty
                         })
                     move_ids.append(self._inventory_line_hook(cr, uid, line, value))
-            if len(move_ids):
-                self.pool.get('stock.move').action_done(cr, uid, move_ids,
-                        context=context)
             self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S'), 'move_ids': [(6, 0, move_ids)]})
         return True
 
