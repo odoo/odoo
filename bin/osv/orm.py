@@ -3100,10 +3100,26 @@ class orm(orm_template):
 
         vals format for relational field type.
 
-            + many2many field : [(6, 0, list of ids)] (example: [(6, 0, [8, 5, 6, 4])])
+            + many2many field : 
+
+                For write operation on a many2many fields a list of tuple is
+                expected. The folowing tuples are accepted:
+                 (0, 0,  { fields })    create
+                 (1, ID, { fields })    update (write fields to ID)
+                 (2, ID)                remove (calls unlink on ID, that will also delete the relationship because of the ondelete)
+                 (3, ID)                unlink (delete the relationship between the two objects but does not delete ID)
+                 (4, ID)                link (add a relationship)
+                 (5, ID)                unlink all
+                 (6, 0, list of ids)    set a list of links
+
+                Example:
+
+                    [(6, 0, [8, 5, 6, 4])] set the many2many to ids [8, 5, 6, 4]
+
             + one2many field : [(0, 0, dictionary of values)] (example: [(0, 0, {'field_name':field_value, ...})])
             + many2one field : ID of related record
             + reference field :  model name, id (example: 'product.product, 5')
+
 
         """
         readonly = None
