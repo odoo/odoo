@@ -602,7 +602,7 @@ class stock_picking(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not from Picking")], "Invoice Status",
             select=True, required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'company_id': fields.many2one('res.company', 'Company', select=1),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=1),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -1380,7 +1380,7 @@ class stock_move(osv.osv):
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
             digits_compute= dp.get_precision('Account')),
-        'company_id': fields.many2one('res.company', 'Company', select=1),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=1),
         'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order"),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
@@ -1689,15 +1689,25 @@ class stock_move(osv.osv):
         new_move = []
         update_val = {}
         ir_sequence_obj = self.pool.get('ir.sequence')
-        prodlot_obj = self.pool.get('stock.production.lot')
-        last_prod = [line.prodlot_id for line in self.browse(cr, uid, ids)[0].picking_id.move_lines if line.prodlot_id]
-        last_prod.sort(key=lambda p: p.date, reverse=True)
-        last_prod_id = last_prod and last_prod[0].id
-        update_val['prodlot_id'] = last_prod_id
-        if update_val.get('prodlot_id',[])==[]:
-            sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-            prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence}, {'product_id': self.browse(cr, uid, ids)[0].product_id.id})
-            update_val['prodlot_id'] = prodlot_id
+        tracking_obj = self.pool.get('stock.tracking')
+        tracking = False
+        tracking = context.get('tracking', False)
+    #    import pdb; pdb.set_trace()
+        if tracking:
+            tracking_id = tracking_obj.search(cr, uid, ['name','=', tracking])
+            if prodlot_id:
+                update_val['prodlot_id'] = prodlot_id
+            else: 
+                tracking_id = tracking_obj.create(cr, uid, {'name': tracking}, {'product_id': self.browse(cr, uid, ids)[0].product_id.id})
+                update_val['tracking_id'] = tracking_id
+        else:
+            last_track = [line.tracking_id for line in self.browse(cr, uid, ids)[0].picking_id.move_lines if line.tracking_id]
+            if not last_track:
+                track_ids= tracking_obj.search(cr, uid, [])
+                last_track = [track for track in tracking_obj.browse(cr, uid, track_ids)]
+            last_track.sort(key=lambda p: p.date, reverse=True)
+            last_track_id = last_track and last_track[0].id
+            update_val['tracking_id'] = last_track_id
         self.write(cr, uid, ids, update_val)
         return True
     
