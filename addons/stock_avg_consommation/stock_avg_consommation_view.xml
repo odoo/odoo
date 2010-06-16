@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+       <record id="stock_avg_consommation_tree" model="ir.ui.view">
+            <field name="name">stock.avg.consommation.tree</field>
+            <field name="model">stock.avg.consommation</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+   				<field name="state" position="after">
+                        <field name="avg_consommation" />
+                </field>
+            </field>
+        </record>
+	</data>
+</openerp>
+
+
