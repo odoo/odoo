@@ -1630,6 +1630,10 @@
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" />
                     </group>
+                    <newline/>
+                    <group expand="0" string="Extended options..." groups="base.group_extended">
+                       <field name="tracking_id"  context="{'tracking': self}" domain="[]" />
+                    </group>
                 </search>
             </field>
         </record>

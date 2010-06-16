@@ -68,7 +68,7 @@ class procurement_order(osv.osv):
             origin = (proc.origin or proc.name or '').split(':')[0] +':'+line.name
             picking_id = self.pool.get('stock.picking').create(cr, uid, {
                 'origin': origin,
-                'company_id': line.chained_company_id and line.chained_company_id.id or False,
+                'company_id': line.company_id and line.company_id.id or False,
                 'type': line.picking_type,
                 'stock_journal_id': line.journal_id and line.journal_id.id or False,
                 'move_type': 'one',
@@ -79,7 +79,7 @@ class procurement_order(osv.osv):
             move_id = self.pool.get('stock.move').create(cr, uid, {
                 'name': line.name,
                 'picking_id': picking_id,
-                'company_id': line.chained_company_id and line.chained_company_id.id or False,
+                'company_id': line.company_id and line.company_id.id or False,
                 'product_id': proc.product_id.id,
                 'date_planned': proc.date_planned,
                 'product_qty': proc.product_qty,
