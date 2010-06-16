@@ -48,7 +48,8 @@ class sale_order_dates(osv.osv):
                 dt=DateTime.strptime(order.date_order, '%Y-%m-%d') + DateTime.RelativeDateTime(days=line.delay or 0.0)
                 dt_s = dt.strftime('%Y-%m-%d')
                 dates_list.append(dt_s)
-            res[order.id] = min(dates_list)
+            if dates_list:
+                res[order.id] = min(dates_list)
             return res
 
     _columns = {
