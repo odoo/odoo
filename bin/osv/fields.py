@@ -488,13 +488,10 @@ class one2many(_column):
 #         (6, ?, ids)            set a list of links
 #
 class many2many(_column):
-    """
-
     _classic_read = False
     _classic_write = False
     _prefetch = False
     _type = 'many2many'
-
     def __init__(self, obj, rel, id1, id2, string='unknown', limit=None, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
