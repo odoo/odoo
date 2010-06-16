@@ -3,11 +3,12 @@
     <data>
         <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" sequence="2"/>
         <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1"/>
-        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="5"/>
-        <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="4"/>
+        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="7"/>
+        <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15"/>
-        <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="3"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse mangement" parent="menu_stock_configuration" sequence="1"/>
+        <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
 
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
@@ -181,7 +182,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_tracking_tree"/>
         </record>
-        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="2"/>
+        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
             groups="base.group_extended"
             parent="menu_traceability"/>
@@ -481,7 +482,7 @@
             <field name="view_id" ref="view_location_tree2"/>
             <field name="context">{'full':1, 'search_default_in_location':1}</field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_stock_configuration" />
+        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config" />
 
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
@@ -541,7 +542,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_tree"/>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_stock_configuration"/>
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config"/>
 
         <record id="stock_picking_move_wizard_form" model="ir.ui.view">
             <field name="name">stock.picking.move.wizard.form</field>
@@ -933,7 +934,7 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree_delivery"/>
         </record>
-        <menuitem action="action_picking_tree_delivery" id="menu_action_picking_tree_delivery" parent="menu_stock_warehouse_mgmt" sequence="20"/>
+        <menuitem action="action_picking_tree_delivery" id="menu_action_picking_tree_delivery" parent="menu_stock_warehouse_mgmt" sequence="1"/>
 
         #
         # Sending Products
@@ -1126,7 +1127,7 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree"/>
         </record>
-        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="5"/>
+        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 
         <record id="view_picking_in_tree" model="ir.ui.view">
             <field name="name">stock.picking.in.tree</field>
@@ -1308,7 +1309,7 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree4"/>
         </record>
-        <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_warehouse_mgmt" sequence="1"/>
+        <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_warehouse_mgmt" sequence="2"/>
 
         <record id="view_picking_internal_search" model="ir.ui.view">
             <field name="name">stock.picking.internal.search</field>
@@ -1347,7 +1348,7 @@
             <field name="context">{'contact_display': 'partner',"search_default_confirmed":1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
-        <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="2"/>
+        <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="4"/>
 
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
@@ -1699,7 +1700,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-<!--        <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_stock_configuration"/>-->
+<!--        <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_warehouse_config"/>-->
 
         <act_window
             context="{'location': active_id}"
@@ -1923,7 +1924,7 @@
             action="action_stock_journal_form"
             id="menu_action_stock_journal_form"
             groups="base.group_extended"
-            parent="menu_stock_configuration" />
+            parent="menu_warehouse_config" />
 
     </data>
 </openerp>

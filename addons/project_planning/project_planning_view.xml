@@ -217,12 +217,12 @@
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="account_analytic_planning_view_search"/>
         </record>
-        <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main_pm" sequence="5"/>
-        <menuitem id="planning_main" name="Long Term Planning"
-            parent="base.menu_pm_planning" />
+<!--        <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main_pm" sequence="5"/>-->
+        <menuitem id="base.menu_project_long_term" name="Long Term Planning"
+            parent="base.menu_main_pm" />
 
         <menuitem action="action_account_analytic_planning_form"
-            id="menu_report_account_analytic_planning" parent="planning_main" />
+            id="menu_report_account_analytic_planning" parent="base.menu_project_long_term" sequence="3"/>
 
         <!--
             Planning statistics

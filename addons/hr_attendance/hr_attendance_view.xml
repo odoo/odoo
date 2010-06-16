@@ -77,9 +77,9 @@
         <menuitem
            id="menu_hr_time_tracking"
            name="Time Tracking"
-           parent="hr.menu_hr_root" sequence="7"/>
+           parent="hr.menu_hr_root" sequence="3"/>
         <menuitem action="open_view_attendance" id="menu_open_view_attendance"
-            parent="menu_hr_time_tracking" groups="hr.group_hr_manager"/>
+            parent="menu_hr_time_tracking" groups="hr.group_hr_manager" sequence="3"/>
 
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>
