@@ -61,7 +61,7 @@ class auction_total_rml(report_sxw.rml_parse):
         auc_date_ids = self.cr.fetchall()
         auct_dat=[]
         for ad_id in auc_date_ids:
-            auc_dates_fields = self.pool.get('auction.dates').read(self.cr,self.uid,ad_id[0],['name','auction1','id'])
+            auc_dates_fields = self.pool.get('auction.dates').read(self.cr, self.uid, ad_id[0], ['name','auction1','id'])
             auct_dat.append(auc_dates_fields)
         return auct_dat
 
@@ -71,7 +71,7 @@ class auction_total_rml(report_sxw.rml_parse):
             res = self.cr.fetchone()
             return res[0]
     def sold_item(self, object_id):
-        self.cr.execute("select count(1) from auction_lots where id IN %s and auction_id=%s and state in ('unsold') ", (tuple(self.total_obj),object_id,))
+        self.cr.execute("select count(1) from auction_lots where id IN %s and auction_id=%s and state IN ('unsold') ", (tuple(self.total_obj),object_id,))
         res = self.cr.fetchone()
         return str(res[0])
 

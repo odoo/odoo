@@ -287,10 +287,10 @@ class pos_order(osv.osv):
         'user_id': fields.many2one('res.users', 'Connected Salesman', readonly=True),
         'user_salesman_id': fields.many2one('res.users', 'Salesman', required=True),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
-        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_tax': fields.function(_amount_all, method=True, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
-        'amount_paid': fields.function(_amount_all, 'Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True,digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
-        'amount_return': fields.function(_amount_all, 'Returned', method=True,digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_paid': fields.function(_amount_all, 'Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_return': fields.function(_amount_all, 'Returned', method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True),
         'price_type': fields.selection([
             ('tax_excluded','Tax excluded')

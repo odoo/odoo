@@ -183,7 +183,7 @@ class account_analytic_account(osv.osv):
                         on (hr.id=a.to_invoice) \
                 where account_analytic_line.account_id IN %s \
                     and a.to_invoice IS NOT NULL \
-                    and account_analytic_journal.type in ('purchase','general')
+                    and account_analytic_journal.type IN ('purchase','general')
                 GROUP BY account_analytic_line.account_id""",(parent_ids,))
             for account_id, sum in cr.fetchall():
                 res2[account_id] = round(sum,2)
@@ -485,9 +485,9 @@ class account_analytic_account_summary_user(osv.osv):
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
-                    cr.execute('select %s from \"%s\" where id in (%s) ' \
-                            'and account_id in (%s) ' \
-                            'and "user" in (%s) and %s order by %s' % \
+                    cr.execute('select %s from \"%s\" where id IN (%s) ' \
+                            'and account_id IN (%s) ' \
+                            'and "user" IN (%s) and %s order by %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join([str(x) for x in sub_ids]),
                                 ','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
@@ -497,9 +497,9 @@ class account_analytic_account_summary_user(osv.osv):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % self._description)
                 else:
-                    cr.execute('select %s from \"%s\" where id in (%s) ' \
-                            'and account_id in (%s) ' \
-                            'and "user" in (%s) order by %s' % \
+                    cr.execute('select %s from \"%s\" where id IN (%s) ' \
+                            'and account_id IN (%s) ' \
+                            'and "user" IN (%s) order by %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join([str(x) for x in sub_ids]),
                                 ','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
@@ -661,9 +661,9 @@ class account_analytic_account_summary_month(osv.osv):
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
-                    cr.execute('select %s from \"%s\" where id in (%s) ' \
-                            'and account_id in (%s) ' \
-                            'and month_id in (%s) and %s order by %s' % \
+                    cr.execute('select %s from \"%s\" where id IN (%s) ' \
+                            'and account_id IN (%s) ' \
+                            'and month_id IN (%s) and %s order by %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join([str(x) for x in sub_ids]),
                                 ','.join([str(x)[:-6] for x in sub_ids]),
@@ -673,9 +673,9 @@ class account_analytic_account_summary_month(osv.osv):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % self._description)
                 else:
-                    cr.execute('select %s from \"%s\" where id in (%s) ' \
-                            'and account_id in (%s) ' \
-                            'and month_id in (%s) order by %s' % \
+                    cr.execute('select %s from \"%s\" where id IN (%s) ' \
+                            'and account_id IN (%s) ' \
+                            'and month_id IN (%s) order by %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
                                 ','.join([str(x) for x in sub_ids]),
                                 ','.join([str(x)[:-6] for x in sub_ids]),

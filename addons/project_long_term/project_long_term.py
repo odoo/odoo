@@ -45,7 +45,7 @@ class project_phase(osv.osv):
          next_ids = [rec.id for rec in next_ids]
          # iter prev_ids
          while prev_ids:
-             cr.execute('select distinct prv_phase_id from project_phase_rel where next_phase_id in ('+','.join(map(str, prev_ids))+')')
+             cr.execute('select distinct prv_phase_id from project_phase_rel where next_phase_id IN %s',(tuple(prev_ids),))
              prv_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
              if data_phase.id in prv_phase_ids:
                  return False
@@ -55,7 +55,7 @@ class project_phase(osv.osv):
              prev_ids = prv_phase_ids
          # iter next_ids
          while next_ids:
-             cr.execute('select distinct next_phase_id from project_phase_rel where prv_phase_id in ('+','.join(map(str, next_ids))+')')
+             cr.execute('select distinct next_phase_id from project_phase_rel where prv_phase_id IN %s',(tuple(next_ids),))
              next_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
              if data_phase.id in next_phase_ids:
                  return False

@@ -35,7 +35,7 @@ class account_open_closed_fiscalyear(osv.osv_memory):
         if not data_fyear.end_journal_period_id:
             raise osv.except_osv(_('Error'), _('No journal for ending writing has been defined for the fiscal year'))
         period_journal = data_fyear.end_journal_period_id
-        ids_move = self.pool.get('account.move').search(cr,uid,[('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
+        ids_move = self.pool.get('account.move').search(cr, uid, [('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
         if ids_move:
             cr.execute('delete from account_move where id IN %s', (tuple(ids_move),))
         return {}

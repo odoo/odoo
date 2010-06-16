@@ -120,7 +120,7 @@ class res_users(osv.osv):
         for arg in args:
             if arg[0] == 'parent_id':
                 parent = arg[2]
-        child_ids = self._child_compute(cr, uid, parent,name, args, {})
+        child_ids = self._child_compute(cr, uid, parent, name, args, {})
         if not child_ids:
             return [('id', 'in', [0])]
         return [('id', 'in', child_ids.get(uid,[]))]
@@ -155,14 +155,14 @@ class res_users(osv.osv):
         for arg in args:
             if arg[0] == 'child_ids':
                 parent = arg[2]
-        child_ids = self._child_compute(cr, uid, parent,name, args, {})
+        child_ids = self._child_compute(cr, uid, parent, name, args, {})
         if not child_ids:
             return [('id', 'in', [0])]
         return [('id', 'in', child_ids.get(uid,[]))]
 
     _columns = {
         'parent_id': fields.function(_parent_compute, relation='res.users',fnct_search=_parent_search, method=True, string="Managers", type='many2many'),
-        'child_ids': fields.function(_child_compute, relation='res.users', fnct_search=_child_search,method=True, string="Subordinates", type='many2many'),
+        'child_ids': fields.function(_child_compute, relation='res.users', fnct_search=_child_search, method=True, string="Subordinates", type='many2many'),
         'context_department_id': fields.many2one('hr.department', 'Departments'),
     }
 res_users()

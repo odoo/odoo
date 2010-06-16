@@ -30,11 +30,11 @@ class payment_type(osv.osv):
     _name= 'payment.type'
     _description= 'Payment Type'
     _columns= {
-        'name': fields.char('Name', size=64, required=True,help='Payment Type'),
-        'code': fields.char('Code', size=64, required=True,help='Specifies the Code for Payment Type'),
+        'name': fields.char('Name', size=64, required=True, help='Payment Type'),
+        'code': fields.char('Code', size=64, required=True, help='Specifies the Code for Payment Type'),
         'suitable_bank_types': fields.many2many('res.partner.bank.type',
             'bank_type_payment_type_rel',
-            'pay_type_id','bank_type_id',
+            'pay_type_id', 'bank_type_id',
             'Suitable bank types')
     }
 
@@ -45,15 +45,15 @@ class payment_mode(osv.osv):
     _name= 'payment.mode'
     _description= 'Payment Mode'
     _columns= {
-        'name': fields.char('Name', size=64, required=True,help='Mode of Payment'),
+        'name': fields.char('Name', size=64, required=True, help='Mode of Payment'),
         'bank_id': fields.many2one('res.partner.bank', "Bank account",
             required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
-            domain=[('type', '=', 'cash')],help='Cash Journal for the Payment Mode'),
-        'type': fields.many2one('payment.type','Payment type',required=True,help='Select the Payment Type for the Payment Mode.'),
+            domain=[('type', '=', 'cash')], help='Cash Journal for the Payment Mode'),
+        'type': fields.many2one('payment.type', 'Payment type', required=True, help='Select the Payment Type for the Payment Mode.'),
     }
 
-    def suitable_bank_types(self,cr,uid,payment_code=None,context={}):
+    def suitable_bank_types(self, cr, uid, payment_code=None, context={}):
         """Return the codes of the bank type that are suitable
         for the given payment type code"""
         if not payment_code:
@@ -101,10 +101,10 @@ class payment_order(osv.osv):
             ('cancel','Cancelled'),
             ('done','Done')], 'State', select=True,
             help='When an order is placed the state is \'Draft\'.\n Once the bank is confirmed the state is set to \'Confirmed\'.\n Then the order is paid the state is \'Done\'.'),
-        'line_ids': fields.one2many('payment.line','order_id','Payment lines',states={'done':[('readonly',True)]}),
+        'line_ids': fields.one2many('payment.line', 'order_id', 'Payment lines', states={'done':[('readonly',True)]}),
         'total': fields.function(_total, string="Total", method=True,
             type='float'),
-        'user_id': fields.many2one('res.users','User', required=True, states={'done':[('readonly',True)]}),
+        'user_id': fields.many2one('res.users', 'User', required=True, states={'done':[('readonly',True)]}),
         'date_prefered': fields.selection([
             ('now', 'Directly'),
             ('due', 'Due date'),
@@ -130,10 +130,10 @@ class payment_order(osv.osv):
         return True
 
     def action_open(self, cr, uid, ids, *args):
-        for order in self.read(cr,uid,ids,['reference']):
+        for order in self.read(cr, uid, ids, ['reference']):
             if not order['reference']:
                 reference = self.pool.get('ir.sequence').get(cr, uid, 'payment.order')
-                self.write(cr,uid,order['id'],{'reference':reference})
+                self.write(cr, uid, order['id'],{'reference':reference})
         return True
 
     def set_done(self, cr, uid, id, *args):
@@ -169,7 +169,7 @@ class payment_line(osv.osv):
                         st=ads.street and ads.street or ''
                         st1=ads.street2 and ads.street2 or ''
                         if 'zip_id' in ads:
-                            zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr,uid,[ads.zip_id.id])[0][1] or ''
+                            zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
                         else:
                             zip=ads.zip and ads.zip or ''
                             city= ads.city and ads.city or  ''
@@ -195,7 +195,7 @@ class payment_line(osv.osv):
                         st=ads.street and ads.street or ''
                         st1=ads.street2 and ads.street2 or ''
                         if 'zip_id' in ads:
-                            zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr,uid,[ads.zip_id.id])[0][1] or ''
+                            zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
                         else:
                             zip=ads.zip and ads.zip or ''
                             city= ads.city and ads.city or  ''
@@ -220,8 +220,8 @@ class payment_line(osv.osv):
 
         if name == 'partner_id':
             partner_name = {}
-            for p_id, p_name in partner_obj.name_get(cr,uid,
-                filter(lambda x:x and x != 0,res.values()),context=context):
+            for p_id, p_name in partner_obj.name_get(cr, uid,
+                filter(lambda x:x and x != 0,res.values()), context=context):
                 partner_name[p_id] = p_name
 
             for id in ids:
@@ -298,28 +298,28 @@ class payment_line(osv.osv):
 
     _columns = {
         'name': fields.char('Your Reference', size=64, required=True),
-        'communication': fields.char('Communication', size=64, required=True,help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
-        'communication2': fields.char('Communication 2', size=64,help='The successor message of Communication.'),
-        'move_line_id': fields.many2one('account.move.line','Entry line', domain=[('reconcile_id','=', False), ('account_id.type', '=','payable')],help='This Entry Line will be referred for the information of the ordering customer.'),
+        'communication': fields.char('Communication', size=64, required=True, help="Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"),
+        'communication2': fields.char('Communication 2', size=64, help='The successor message of Communication.'),
+        'move_line_id': fields.many2one('account.move.line', 'Entry line', domain=[('reconcile_id','=', False), ('account_id.type', '=','payable')], help='This Entry Line will be referred for the information of the ordering customer.'),
         'amount_currency': fields.float('Amount in Partner Currency', digits=(16,2),
             required=True, help='Payment amount in the partner currency'),
-        'currency': fields.many2one('res.currency','Partner Currency',required=True),
-        'company_currency': fields.many2one('res.currency','Company Currency',readonly=True),
+        'currency': fields.many2one('res.currency','Partner Currency', required=True),
+        'company_currency': fields.many2one('res.currency', 'Company Currency', readonly=True),
         'bank_id': fields.many2one('res.partner.bank', 'Destination Bank account'),
         'order_id': fields.many2one('payment.order', 'Order', required=True,
             ondelete='cascade', select=True),
-        'partner_id': fields.many2one('res.partner', string="Partner",required=True,help='The Ordering Customer'),
+        'partner_id': fields.many2one('res.partner', string="Partner", required=True, help='The Ordering Customer'),
         'amount': fields.function(_amount, string='Amount in Company Currency',
             method=True, type='float',
             help='Payment amount in the company currency'),
         'ml_date_created': fields.function(_get_ml_created_date, string="Effective Date",
-            method=True, type='date',help="Invoice Effective Date"),
+            method=True, type='date', help="Invoice Effective Date"),
         'ml_maturity_date': fields.function(_get_ml_maturity_date, method=True, type='date', string='Maturity Date'),
         'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='many2one', relation='account.invoice', string='Invoice Ref.'),
-        'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text",help='Address of the Main Partner'),
-        'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text",help='Address of the Ordering Customer.'),
-        'date': fields.date('Payment Date',help="If no payment date is specified, the bank will treat this payment line directly"),
-        'create_date': fields.datetime('Created' ,readonly=True),
+        'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text", help='Address of the Main Partner'),
+        'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text", help='Address of the Ordering Customer.'),
+        'date': fields.date('Payment Date', help="If no payment date is specified, the bank will treat this payment line directly"),
+        'create_date': fields.datetime('Created' , readonly=True),
         'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True)
     }
     _defaults = {
@@ -333,13 +333,13 @@ class payment_line(osv.osv):
         ('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
     ]
 
-    def onchange_move_line(self,cr,uid,ids,move_line_id,payment_type,date_prefered,date_planned,currency=False,company_currency=False,context=None):
+    def onchange_move_line(self, cr, uid, ids, move_line_id, payment_type, date_prefered, date_planned, currency=False, company_currency=False, context=None):
         data={}
 
         data['amount_currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=data['amount']=False
 
         if move_line_id:
-            line = self.pool.get('account.move.line').browse(cr,uid,move_line_id)
+            line = self.pool.get('account.move.line').browse(cr, uid, move_line_id)
             data['amount_currency']=line.amount_to_pay
 
             res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency,
@@ -355,7 +355,7 @@ class payment_line(osv.osv):
                 data['currency'] = temp
 
             # calling onchange of partner and updating data dictionary
-            temp_dict=self.onchange_partner(cr,uid,ids,line.partner_id.id,payment_type)
+            temp_dict=self.onchange_partner(cr, uid, ids, line.partner_id.id, payment_type)
             data.update(temp_dict['value'])
 
             data['reference']=line.ref
@@ -381,12 +381,12 @@ class payment_line(osv.osv):
         res['amount'] = company_amount
         return {'value': res}
 
-    def onchange_partner(self,cr,uid,ids,partner_id,payment_type,context=None):
+    def onchange_partner(self, cr, uid, ids, partner_id, payment_type, context=None):
         data={}
         data['info_partner']=data['bank_id']=False
 
         if partner_id:
-            part_obj=self.pool.get('res.partner').browse(cr,uid,partner_id)
+            part_obj=self.pool.get('res.partner').browse(cr, uid, partner_id)
             partner=part_obj.name or ''
 
             if part_obj.address:
@@ -396,7 +396,7 @@ class payment_line(osv.osv):
                         st1=ads.street2 and ads.street2 or ''
 
                         if 'zip_id' in ads:
-                            zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr,uid,[ads.zip_id.id])[0][1] or ''
+                            zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
                         else:
                             zip=ads.zip and ads.zip or ''
                             city= ads.city and ads.city or  ''

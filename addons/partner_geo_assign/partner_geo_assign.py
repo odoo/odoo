@@ -72,7 +72,7 @@ class crm_lead(osv.osv):
     _columns = {
         'partner_latitude': fields.float('Geo Latitude', digits=(16,2)),
         'partner_longitude': fields.float('Geo Longitude', digits=(16,2)),
-        'partner_assigned_id': fields.many2one('res.partner','Assigned Partner')
+        'partner_assigned_id': fields.many2one('res.partner','Assigned Partner'),
         'date_assign': fields.date('Assignation Date')
     }
     def assign_partner(self, cr, uid, ids, context=None):

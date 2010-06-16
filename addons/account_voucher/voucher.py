@@ -212,7 +212,7 @@ class account_voucher(osv.osv):
         self.write(cr, uid, ids, {'state':'posted'})
         return True
 
-    def cancel_voucher(self,cr,uid,ids,context={}):
+    def cancel_voucher(self, cr, uid, ids, context={}):
         self.action_cancel(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'cancel'})
         return True
@@ -406,7 +406,7 @@ class account_voucher(osv.osv):
                          'general_account_id':line.account_id.id,
                          'ref':ref
                      }
-                    self.pool.get('account.analytic.line').create(cr,uid,an_line)
+                    self.pool.get('account.analytic.line').create(cr, uid, an_line)
 
             self.write(cr, uid, [inv.id], {'move_id': move_id})
             obj=self.pool.get('account.move').browse(cr, uid, move_id)
@@ -568,7 +568,7 @@ class account_voucher_line(osv.osv):
             'value' : {'account_id' : account_id.id, 'type' : ttype, 'amount':balance}
         }
 
-    def onchange_amount(self, cr, uid, ids,partner_id,amount, type,type1):
+    def onchange_amount(self, cr, uid, ids, partner_id, amount, type, type1):
         if not amount:
             return {'value' : {}}
         if partner_id:
@@ -630,7 +630,7 @@ class account_voucher_line(osv.osv):
             'value' : { 'type' : type , 'amount':amount}
         }
 
-    def onchange_type(self, cr, uid, ids,partner_id,amount,type,type1):
+    def onchange_type(self, cr, uid, ids, partner_id, amount, type, type1):
         if partner_id:
             obj = self.pool.get('res.partner')
             if type1 in ('rec_voucher','bank_rec_voucher', 'journal_voucher'):

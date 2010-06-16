@@ -832,8 +832,8 @@ class sale_order_line(osv.osv):
                     \n* The \'Done\' state is set automatically when sale order is set as done. \
                     \n* The \'Cancelled\' state is set automatically when user cancel sale order.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
-        'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
+        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
     }
     _order = 'sequence, id'
     _defaults = {

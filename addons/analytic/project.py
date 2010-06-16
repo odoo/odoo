@@ -50,11 +50,11 @@ class account_analytic_account(osv.osv):
                     else:
                         res[id] += res.get(child, 0.0)
 
-        cur_obj = res_currency.browse(cr,uid,currency.values(),context)
+        cur_obj = res_currency.browse(cr, uid, currency.values(), context)
         cur_obj = dict([(o.id, o) for o in cur_obj])
         for id in ids:
             if id in ids2:
-                res[id] = res_currency.round(cr,uid,cur_obj[currency[id]],res.get(id,0.0))
+                res[id] = res_currency.round(cr, uid, cur_obj[currency[id]], res.get(id,0.0))
 
         return dict([(i, res[i]) for i in ids ])
 
@@ -216,9 +216,9 @@ class account_analytic_account(osv.osv):
         'type' : lambda *a : 'normal',
         'company_id': _default_company,
         'state' : lambda *a : 'open',
-        'user_id' : lambda self,cr,uid,ctx : uid,
-        'partner_id': lambda self,cr, uid, ctx: ctx.get('partner_id', False),
-        'contact_id': lambda self,cr, uid, ctx: ctx.get('contact_id', False),
+        'user_id' : lambda self, cr, uid, ctx : uid,
+        'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
+        'contact_id': lambda self, cr, uid, ctx: ctx.get('contact_id', False),
 		'date_start': lambda *a: time.strftime('%Y-%m-%d')
     }
 
@@ -323,13 +323,13 @@ class account_analytic_line(osv.osv):
         'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency',
                 store={
                     'account.analytic.account': (_get_account_line, ['company_id'], 50),
-                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
+                    'account.analytic.line': (lambda self, cr, uid, ids, c={}: ids, ['amount','unit_amount'],10),
                 },
                 help="The related account currency if not equal to the company one."),
         'amount_currency': fields.function(_amount_currency, method=True, digits_compute= dp.get_precision('Account'), string='Amount currency',
                 store={
                     'account.analytic.account': (_get_account_line, ['company_id'], 50),
-                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
+                    'account.analytic.line': (lambda self, cr, uid, ids, c={}: ids, ['amount','unit_amount'],10),
                 },
                 help="The amount expressed in the related account currency if not equal to the company one."),
 

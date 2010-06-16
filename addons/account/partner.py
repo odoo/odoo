@@ -116,26 +116,26 @@ class res_partner(osv.osv):
         return res
     
     def _asset_difference_search(self, cr, uid, obj, name, type, args, context=None):
-            if not len(args):
-                return []
-            having_values = tuple(map(itemgetter(2), args))
-            where = ' AND '.join(
-                map(lambda x: '(SUM(debit-credit) %(operator)s %%s)' % {
-                                    'operator':x[1]},args))
-            query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-            cr.execute(('SELECT partner_id FROM account_move_line l '\
-                        'WHERE account_id IN '\
-                            '(SELECT id FROM account_account '\
-                            'WHERE type=%s AND active) '\
-                        'AND reconcile_id IS NULL '\
-                        'AND '+query+' '\
-                        'AND partner_id IS NOT NULL '\
-                        'GROUP BY partner_id HAVING '+where),
-                       (type,) + having_values)
-            res = cr.fetchall()
-            if not len(res):
-                return [('id','=','0')]
-            return [('id','in',map(itemgetter(0), res))]
+        if not len(args):
+            return []
+        having_values = tuple(map(itemgetter(2), args))
+        where = ' AND '.join(
+            map(lambda x: '(SUM(debit-credit) %(operator)s %%s)' % {
+                                'operator':x[1]},args))
+        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+        cr.execute(('SELECT partner_id FROM account_move_line l '\
+                    'WHERE account_id IN '\
+                        '(SELECT id FROM account_account '\
+                        'WHERE type=%s AND active) '\
+                    'AND reconcile_id IS NULL '\
+                    'AND '+query+' '\
+                    'AND partner_id IS NOT NULL '\
+                    'GROUP BY partner_id HAVING '+where),
+                   (type,) + having_values)
+        res = cr.fetchall()
+        if not len(res):
+            return [('id','=','0')]
+        return [('id','in',map(itemgetter(0), res))]
     
     def _credit_search(self, cr, uid, obj, name, args, context):
         return self._asset_difference_search(cr, uid, obj, name, 'receivable', args, context=context)

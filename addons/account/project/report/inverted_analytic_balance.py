@@ -98,14 +98,14 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
         ids = map(lambda x: x.id, accounts)
         self.cr.execute("SELECT sum(amount) \
                 FROM account_analytic_line \
-                WHERE account_id in %s AND date>=%s AND date<=%s AND amount>0", (tuple(ids),date1, date2,))
+                WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0", (tuple(ids),date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
         self.cr.execute("SELECT -sum(amount) \
                 FROM account_analytic_line \
-                WHERE account_id in %s AND date>=%s AND date<=%s AND amount<0", (tuple(ids),date1, date2,))
+                WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0", (tuple(ids),date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_balance(self, accounts, date1, date2):
@@ -117,7 +117,7 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
         ids = map(lambda x: x.id, accounts)
         self.cr.execute("SELECT sum(unit_amount) \
                 FROM account_analytic_line \
-                WHERE account_id in %s AND date>=%s AND date<=%s", (tuple(ids),date1, date2,))
+                WHERE account_id IN %s AND date>=%s AND date<=%s", (tuple(ids),date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
 report_sxw.report_sxw('report.account.analytic.account.inverted.balance', 'account.analytic.account', 'addons/account/project/report/inverted_analytic_balance.rml',parser=account_inverted_analytic_balance, header=False)

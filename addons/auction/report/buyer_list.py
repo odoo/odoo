@@ -43,7 +43,7 @@ class buyer_list(report_sxw.rml_parse):
             'sum_lots':self.sum_lots
     })
 
-    def lines_lots_from_auction(self,objects):
+    def lines_lots_from_auction(self, objects):
 
         auc_lot_ids = []
         for lot_id  in objects:
@@ -54,12 +54,12 @@ class buyer_list(report_sxw.rml_parse):
         auc_date_ids = self.cr.fetchall()
         auct_dat=[]
         for ad_id in auc_date_ids:
-            auc_dates_fields = self.pool.get('auction.dates').read(self.cr,self.uid,ad_id[0],['name'])
+            auc_dates_fields = self.pool.get('auction.dates').read(self.cr, self.uid, ad_id[0], ['name'])
             self.cr.execute('select * from auction_buyer_taxes_rel abr,auction_dates ad where ad.id=abr.auction_id and ad.id=%s', (ad_id[0],))
             res=self.cr.fetchall()
             total=0
             for r in res:
-                buyer_rel_field = self.pool.get('account.tax').read(self.cr,self.uid,r[1],['amount'])
+                buyer_rel_field = self.pool.get('account.tax').read(self.cr, self.uid, r[1], ['amount'])
                 total = total + buyer_rel_field['amount']
             auc_dates_fields['amount']=total
             auct_dat.append(auc_dates_fields)
@@ -68,7 +68,7 @@ class buyer_list(report_sxw.rml_parse):
     def lines_lots_auct_lot(self,obj):
         auc_lot_ids = []
 
-        auc_date_ids = self.pool.get('auction.dates').search(self.cr,self.uid,([('name','like',obj['name'])]))
+        auc_date_ids = self.pool.get('auction.dates').search(self.cr, self.uid, ([('name','like',obj['name'])]))
 
         self.cr.execute('SELECT ach_login AS ach_uid, COUNT(1) AS no_lot, '\
                         'SUM(obj_price) AS adj_price, '\

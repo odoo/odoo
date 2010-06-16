@@ -65,7 +65,7 @@ class journal_print(report_sxw.rml_parse):
             ids_final = []
             for journal in journal_id:
                     for period in period_id:
-                        ids_journal_period = self.pool.get('account.journal.period').search(self.cr,self.uid, [('journal_id','=',journal),('period_id','=',period)])
+                        ids_journal_period = self.pool.get('account.journal.period').search(self.cr, self.uid, [('journal_id','=',journal),('period_id','=',period)])
                         if ids_journal_period:
                             ids_final.append(ids_journal_period[0])
             data_jour_period = self.pool.get('account.journal.period').browse(self.cr, self.uid, ids_final)
@@ -91,7 +91,7 @@ class journal_print(report_sxw.rml_parse):
             return lines_data
         if not self.journal_ids:
             return []
-        print " self.journal_ids >>. " , self.journal_ids
+
         self.cr.execute('SELECT j.code, j.name, '
                         'SUM(l.debit) AS debit, SUM(l.credit) AS credit '
                         'FROM account_move_line l '
@@ -103,7 +103,7 @@ class journal_print(report_sxw.rml_parse):
         res = self.cr.dictfetchall()
         return res
 
-    def _sum_debit_period(self, period_id,journal_id=None):
+    def _sum_debit_period(self, period_id, journal_id=None):
         journals = journal_id or self.journal_ids
         if not journals:
             return 0.0
@@ -113,7 +113,7 @@ class journal_print(report_sxw.rml_parse):
                         (period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
-    def _sum_credit_period(self, period_id,journal_id=None):
+    def _sum_credit_period(self, period_id, journal_id=None):
         journals = journal_id or self.journal_ids
         if not journals:
             return 0.0
@@ -123,7 +123,7 @@ class journal_print(report_sxw.rml_parse):
                         (period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
-    def _sum_debit(self,period_id=None,journal_id=None):
+    def _sum_debit(self, period_id=None, journal_id=None):
         journals = journal_id or self.journal_ids
         periods = period_id or self.period_ids
         if not (journals and periods):
@@ -135,7 +135,7 @@ class journal_print(report_sxw.rml_parse):
                         (tuple(periods), tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
-    def _sum_credit(self,period_id=None,journal_id=None):
+    def _sum_credit(self, period_id=None, journal_id=None):
         periods = period_id or self.period_ids
         journals = journal_id or self.journal_ids
         if not (periods and journals):

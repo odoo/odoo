@@ -27,7 +27,7 @@ class NhException(Exception):
 
 from subprocess import Popen, PIPE
 
-class indexer():
+class indexer(object):
     """ An indexer knows how to parse the content of some file.
     
         Typically, one indexer should be instantiated per file
@@ -43,7 +43,7 @@ class indexer():
     def _getExtensions(self):
         return []
     
-    def _getDefMime(self,ext):
+    def _getDefMime(self, ext):
         """ Return a mimetype for this document type, ideally the
             closest to the extension ext. """
         mts = self._getMimeTypes();
@@ -51,7 +51,7 @@ class indexer():
             return mts[0]
         return None
 
-    def indexContent(self,content,filename=None, realfile = None):
+    def indexContent(self, content, filename=None, realfile = None):
         """ Use either content or the real file, to index.
             Some parsers will work better with the actual
             content, others parse a file easier. Try the
@@ -111,7 +111,7 @@ def mime_match(mime, mdict):
     
     return (None, None)
 
-class contentIndex():
+class contentIndex(object):
     __logger = logging.getLogger('addons.document.content_index')
     def __init__(self):
         self.mimes = {}
@@ -132,7 +132,7 @@ class contentIndex():
         if not f:
             raise Exception("Your indexer should at least suport a mimetype or extension")
     
-    def doIndex(self,content, filename=None, content_type=None, realfname = None, debug=False):
+    def doIndex(self, content, filename=None, content_type=None, realfname = None, debug=False):
         fobj = None
         fname = None
         mime = None

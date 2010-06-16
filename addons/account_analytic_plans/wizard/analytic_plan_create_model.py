@@ -37,7 +37,7 @@ class analytic_plan_create_model(osv.osv_memory):
                 raise osv.except_osv(_('Error'), _('No analytic plan defined !'))
             plan_obj.write(cr, uid, [context['active_id']], {'plan_id':pids[0]})
 
-            model_data_ids = mod_obj.search(cr,uid,[('model', '=', 'ir.ui.view'),('name', '=', 'view_analytic_plan_create_model')], context=context)
+            model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'),('name', '=', 'view_analytic_plan_create_model')], context=context)
             resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
             return {
                 'name': _('Distribution Model Saved'),

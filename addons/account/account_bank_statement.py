@@ -32,7 +32,7 @@ class account_bank_statement(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
-        model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
+        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_statement_from_invoice')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context.update({'statement_id': ids[0]})
         return {

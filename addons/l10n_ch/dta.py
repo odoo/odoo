@@ -59,7 +59,7 @@ account_dta()
 
 class account_dta_line(osv.osv):
     """Class that represent a DTA order line, 
-    each lin corressponds to a payment instruction"""
+    each line corressponds to a payment instruction"""
     _name = "account.dta.line"
     _description = "DTA line"
     _columns = {

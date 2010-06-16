@@ -48,7 +48,7 @@ class partner_balance(report_sxw.rml_parse):
     #
     # Date Management
     #
-    def date_range(self,start,end):
+    def date_range(self, start, end):
         if not start or not end:
             return []
         start = datetime.date.fromtimestamp(time.mktime(time.strptime(start,"%Y-%m-%d")))
@@ -62,7 +62,7 @@ class partner_balance(report_sxw.rml_parse):
             full_str_date.append(str(date))
         return full_str_date
 
-    def transform_period_into_date_array(self,data):
+    def transform_period_into_date_array(self, data):
         ## Get All Period Date
         #
         # If we have no period we will take all perdio in the FiscalYear.
@@ -73,17 +73,17 @@ class partner_balance(report_sxw.rml_parse):
         date_array = []
         for period_id in periods_id:
             period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
-            date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
+            date_array = date_array + self.date_range(period_obj.date_start, period_obj.date_stop)
         self.date_lst = date_array
         self.date_lst.sort()
 
 
-    def transform_date_into_date_array(self,data):
-        return_array = self.date_range(data['form']['date1'],data['form']['date2'])
+    def transform_date_into_date_array(self, data):
+        return_array = self.date_range(data['form']['date1'], data['form']['date2'])
         self.date_lst = return_array
         self.date_lst.sort()
 
-    def transform_both_into_date_array(self,data):
+    def transform_both_into_date_array(self, data):
         final_date_array = []
         date_start_date = data['form']['date1']
         date_stop_date = data['form']['date2']
@@ -95,7 +95,7 @@ class partner_balance(report_sxw.rml_parse):
         if periods_id:
             for period_id in periods_id:
                 period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
-                date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
+                date_array = date_array + self.date_range(period_obj.date_start, period_obj.date_stop)
             period_start_date = date_array[0]
             period_stop_date = date_array[-1]
 
@@ -109,15 +109,15 @@ class partner_balance(report_sxw.rml_parse):
             else :
                 stop_date = date_stop_date
 
-            final_date_array = final_date_array + self.date_range(start_date,stop_date)
+            final_date_array = final_date_array + self.date_range(start_date, stop_date)
             self.date_lst = final_date_array
             self.date_lst.sort()
         else :
-            final_date_array = final_date_array + self.date_range(date_start_date,date_stop_date)
+            final_date_array = final_date_array + self.date_range(date_start_date, date_stop_date)
             self.date_lst = final_date_array
             self.date_lst.sort()
 
-    def transform_none_into_date_array(self,data):
+    def transform_none_into_date_array(self, data):
 
         sql = "SELECT min(date) as start_date from account_move_line"
         self.cr.execute(sql)
@@ -129,12 +129,12 @@ class partner_balance(report_sxw.rml_parse):
 
 
         array = []
-        array = array + self.date_range(start_date,stop_date)
+        array = array + self.date_range(start_date, stop_date)
         self.date_lst = array
         self.date_lst.sort()
 
 
-    def comma_me(self,amount):
+    def comma_me(self, amount):
         if  type(amount) is float :
             amount = str('%.2f'%amount)
         else :
@@ -182,7 +182,7 @@ class partner_balance(report_sxw.rml_parse):
                     "ON (a.type = t.code) " \
                 "WHERE a.company_id = %s " \
                     "AND a.type IN %s " \
-                    "AND a.active", (data['form']['company_id'],self.ACCOUNT_TYPE))
+                    "AND a.active", (data['form']['company_id'], self.ACCOUNT_TYPE))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
 
         super(partner_balance, self).set_context(objects, data, ids, report_type)
@@ -224,7 +224,7 @@ class partner_balance(report_sxw.rml_parse):
         ## We will now compute Total
         return self._add_subtotal(full_account)
 
-    def _add_subtotal(self,cleanarray):
+    def _add_subtotal(self, cleanarray):
         i=0
         completearray = []
         tot_debit = 0.0
@@ -343,7 +343,7 @@ class partner_balance(report_sxw.rml_parse):
         return completearray
 
 
-    def _sum_debit(self,data):
+    def _sum_debit(self, data):
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -361,7 +361,7 @@ class partner_balance(report_sxw.rml_parse):
 
         return result_tmp
 
-    def _sum_credit(self,data):
+    def _sum_credit(self, data):
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -380,7 +380,7 @@ class partner_balance(report_sxw.rml_parse):
 
         return result_tmp
 
-    def _sum_litige(self,data):
+    def _sum_litige(self, data):
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -399,7 +399,7 @@ class partner_balance(report_sxw.rml_parse):
 
         return result_tmp
 
-    def _sum_sdebit(self,data):
+    def _sum_sdebit(self, data):
         if not self.ids:
             return 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -425,7 +425,7 @@ class partner_balance(report_sxw.rml_parse):
 
         return result_tmp
 
-    def _sum_scredit(self,data):
+    def _sum_scredit(self, data):
 
         if not self.ids:
             return 0.0
@@ -454,11 +454,11 @@ class partner_balance(report_sxw.rml_parse):
 
         return result_tmp
 
-    def _solde_balance_debit(self,data):
+    def _solde_balance_debit(self, data):
         debit, credit = self._sum_debit(data), self._sum_credit(data)
         return debit > credit and debit - credit
 
-    def _solde_balance_credit(self,data):
+    def _solde_balance_credit(self, data):
         debit, credit = self._sum_debit(data), self._sum_credit(data)
         return credit > debit and credit - debit
 
