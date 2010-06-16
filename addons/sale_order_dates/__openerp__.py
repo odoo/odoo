@@ -21,20 +21,22 @@
 
 
 {
-    "name" : "",
-    "version" : "1.1",
-    "depends" : ['marketing_campaign'],
-    "author" : "Tiny",
-    "category": 'Generic Modules/Marketing',
-    "description": """
-    """,
+    'name': 'Customer & Sales',
+    'version': '1.0',
+    'category': 'Generic Modules/CRM & SRM',
+    'description': """Sale Orders Dates""",
+    'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        'marketing_campaign_mailchimp_view.xml',
-        'wizard/create_list_view.xml',
+    'depends': ["sale"],
+    'init_xml': [
     ],
-    'demo_xml': [],
+
+    'update_xml': [
+        'sale_view.xml',
+    ],
+    'demo_xml': [
+    ], 
+    'test': [], 
     'installable': True,
     'active': False,
 }

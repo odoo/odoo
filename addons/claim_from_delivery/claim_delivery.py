@@ -19,24 +19,11 @@
 #
 ##############################################################################
 
+from osv import fields, osv
 
-{
-    "name" : "",
-    "version" : "1.1",
-    "depends" : ['marketing_campaign'],
-    "author" : "Tiny",
-    "category": 'Generic Modules/Marketing',
-    "description": """
-    """,
-    'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        'marketing_campaign_mailchimp_view.xml',
-        'wizard/create_list_view.xml',
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class stock_picking(osv.osv):
+    _inherit = "stock.picking"
+    _columns = {
+        'partner_id': fields.related('address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
+        }
+stock_picking()

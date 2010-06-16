@@ -208,10 +208,7 @@ class marketing_campaign_activity(osv.osv):
         'start': fields.boolean('Start',help= "This activity is launched when the campaign starts."),
         'condition': fields.char('Condition', size=256, required=True,
                                  help="Python condition to know if the activity can be launched"),
-        'type': fields.selection([('email', 'E-mail'),
-                                  ('paper', 'Paper'),
-                                  ('action', 'Action'),
-                                  ('subcampaign', 'Sub-Campaign')],
+        'type': fields.selection(_actions_type,
                                   'Type', required=True,
                                   help="Describe type of action to be performed on the Activity.Eg : Send email,Send paper.."),
         'email_template_id': fields.many2one('email.template','Email Template'),
@@ -412,7 +409,10 @@ class marketing_campaign_workitem(osv.osv):
                             self.write(cr, uid, wi.id, {'state': 'done'})
                             self.process_chain(cr, uid, wi.id, context)
                         else:
-                            self.write(cr, uid, wi.id, {'state': 'exception'})
+                            vals = {'state': 'exception'}
+                            if type(result) == type({}) and 'error_msg' in result:
+                               vals['error_msg'] = result['error_msg']
+                            self.write(cr, uid, wi.id, vals)
                     except Exception,e:
                         self.write(cr, uid, wi.id, {'state': 'exception', 'error_msg': str(e)})
                 else :

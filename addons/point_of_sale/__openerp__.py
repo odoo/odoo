@@ -66,6 +66,7 @@ Main features :
         'pos_report.xml',
        # 'pos_wizard.xml',
         'pos_view.xml',
+        'report/report_pos_order_view.xml',
         'pos_sequence.xml',
         'posrule_data.xml',
         'pos_data.xml',

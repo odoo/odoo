@@ -24,7 +24,7 @@
             <field name="model">account.bank.statement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end)" string="Statement">
+                <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end);black:state in ('open');blue:state in ('draft')" string="Statement">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
@@ -34,6 +34,9 @@
                     <field name="balance_end"/>
                     <field name="user_id"/>
                     <field name="state"/>
+                    <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
+                    <button type="object" string="Confirm" name="button_confirm" states="open" icon="terp-gtk-go-back-rtl"/>
+                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="terp-gtk-stop"/>
                 </tree>
             </field>
         </record>
@@ -349,11 +352,43 @@
 
         <menuitem action="action_bank_statement_treenew" id="menu_statement_tree2" parent="menu_statement_tree_all" sequence="1"/>
 
+        <record id="view_account_bank_statment_filter" model="ir.ui.view">
+            <field name="name">account.bank.statment.select</field>
+            <field name="model">account.bank.statement</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Cashbox">
+                   <group col='9' colspan='4'>
+                       <filter icon="terp-camera_test" string="Open"
+                           domain="[('state','=','open')]"
+                           help="All open cashboxes"/>
+                       <filter icon="terp-dialog-close" string="To Close"
+                           domain="[('state','=','draft')]"
+                           help="All cashboxes to close"/>
+                       <filter icon="terp-go-today" name="Today" string="Today"
+                          domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d 23:59:59'))]"
+                           help="All cashboxes to opened today"/>
+                       <separator orientation="vertical"/>
+                       <field name="name"/>
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Group By..." colspan="4" col="20">
+                       <filter string="Journal" icon="terp-folder-blue" domain="[]" context="{'group_by':'journal_id'}"/>
+                       <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_pos_account_bank_statment">
             <field name="name">All Cashboxes</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
+            <field name="view_id" eval="False"/>
+            <field name="context">{'search_default_Today':1}</field>
+            <field name="search_view_id" ref="view_account_bank_statment_filter"/>
+
         </record>
         <record model="ir.actions.act_window.view" id="act_statement_a1">
                     <field name="sequence" eval="1"/>
@@ -367,7 +402,7 @@
                     <field name="view_id" ref="view_bank_statement_form3"/>
                     <field name="act_window_id" ref="action_pos_account_bank_statment"/>
         </record>
-        <menuitem name="All Cashboxes" parent="menu_point_report_register"
+        <menuitem name="All Cashboxes" parent="menu_statement_tree_all"
                  action="action_pos_account_bank_statment" id="menu_pos_bank_statment_tree" groups="base.group_extended" sequence="4"/>
 
         <record model="ir.actions.act_window" id="action_my_all_pos_account_bank_statment">
@@ -414,8 +449,8 @@
                     <field name="act_window_id" ref="action_cashboxes_to_close"/>
         </record>
 
-        <menuitem name="Cashboxes to Close" parent="menu_pos_bank_statment_tree"
-                 action="action_cashboxes_to_close" id="menu_cashboxes_to_close_tree" groups="base.group_extended"/>
+<!--        <menuitem name="Cashboxes to Close" parent="menu_statement_tree_all"-->
+<!--                 action="action_cashboxes_to_close" id="menu_cashboxes_to_close_tree" groups="base.group_extended"/>-->
 
 
         <menuitem

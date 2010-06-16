@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -30,6 +30,7 @@ class stock_location_path(osv.osv):
         'name': fields.char('Operation', size=64),
         'company_id': fields.many2one('res.company', 'Company'),
         'product_id' : fields.many2one('product.product', 'Products', ondelete='cascade', select=1),
+        'journal_id': fields.many2one('stock.journal','Journal'),
         'location_from_id' : fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1),
         'location_dest_id' : fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1),
         'delay': fields.integer('Delay (days)', help="Number of days to do this transition"),
@@ -39,6 +40,7 @@ class stock_location_path(osv.osv):
             ("none", "Not from Picking")], "Invoice Status",
             required=True,),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
+        'chained_company_id': fields.many2one('res.company', 'Chained Company', help='Set here the belonging company of the chained move'),
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
             'Automatic Move',
@@ -53,6 +55,7 @@ class stock_location_path(osv.osv):
         'auto': lambda *arg: 'auto',
         'delay': lambda *arg: 1,
         'invoice_state': lambda *args: 'none',
+        'picking_type':lambda *args:'out',
     }
 stock_location_path()
 
@@ -64,11 +67,13 @@ class product_pulled_flow(osv.osv):
         'cancel_cascade': fields.boolean('Cancel Cascade', help="Allow you to cancel moves related to the product pull flow"),
         'location_id': fields.many2one('stock.location','Location', required=True, help="Is the destination location that needs supplying"),
         'location_src_id': fields.many2one('stock.location','Location Source', help="Location used by Destination Location to supply"),
+        'journal_id': fields.many2one('stock.journal','Journal'),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
         'company_id': fields.many2one('res.company', 'Company', help="Is used to know to which company belong packings and moves"),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Address'),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
+        'chained_company_id': fields.many2one('res.company', 'Chained Company', help='Set here the belonging company of the chained move'),
         'product_id':fields.many2one('product.product','Product'),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
@@ -115,7 +120,7 @@ class stock_location(osv.osv):
         if product:
             for path in product.path_ids:
                 if path.location_from_id.id == location.id:
-                    return path.location_dest_id, path.auto, path.delay
+                    return path.location_dest_id, path.auto, path.delay, path.journal_id and path.journal_id.id or False, path.chained_company_id and path.chained_companyd_id.id or False, path.picking_type
         return super(stock_location, self).chained_location_get(cr, uid, location, partner, product, context)
 stock_location()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
