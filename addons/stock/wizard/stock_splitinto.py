@@ -69,13 +69,13 @@ class stock_split_into(osv.osv_memory):
             uos_qty = quantity / move_qty * move.product_uos_qty
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
             default_val = {
-                'product_qty': quantity,
+                'product_qty': quantity_rest,
                 'product_uos_qty': uos_qty,
                 'state': move.state
             }
             current_move = move_obj.copy(cr, uid, move.id, default_val)
             new_move.append(current_move)
-            update_val['product_qty'] = quantity_rest
+            update_val['product_qty'] = quantity
             update_val['tracking_id'] = tracking_id
             update_val['product_uos_qty'] = uos_qty_rest
             move_obj.write(cr, uid, [move.id], update_val)
