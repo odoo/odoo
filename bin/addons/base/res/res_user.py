@@ -22,6 +22,7 @@
 
 from osv import fields,osv
 from osv.orm import except_orm
+from osv.orm import browse_record
 import tools
 import pytz
 from tools.translate import _
@@ -229,7 +230,10 @@ class users(osv.osv):
         result = {}
         for k in self._columns.keys():
             if k.startswith('context_'):
-                result[k[8:]] = getattr(user,k)
+                res = getattr(user,k) or False
+                if isinstance(res, browse_record):
+                    res = res.id
+                result[k[8:]] = res
         return result
 
     def action_get(self, cr, uid, context={}):
