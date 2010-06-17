@@ -62,7 +62,7 @@ class stock_split_into(osv.osv_memory):
             move_qty = move.product_qty
             uos_qty_rest = move.product_uos_qty
             quantity_rest = move_qty - quantity
-            if quantity_rest == 0:
+            if (quantity_rest == 0) or (quantity <= 0) :
                 continue
             sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.tracking')
             tracking_id = track_obj.create(cr, uid, {'name': sequence}, {'product_id': move.product_id.id})
