@@ -20,9 +20,9 @@
 ##############################################################################
 
 from osv import fields,osv
-from osv.orm import except_orm, browse_record
+from osv.orm import browse_record
 import tools
-import operator
+from functools import partial
 import pytz
 import pooler
 from tools.translate import _
@@ -55,7 +55,6 @@ class groups(osv.osv):
                 raise osv.except_osv(_('Error'),
                         _('The name of the group can not start with "-"'))
         res = super(groups, self).write(cr, uid, ids, vals, context=context)
-        # Restart the cache on the company_get method
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
@@ -233,8 +232,13 @@ class users(osv.osv):
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
+
+        # Special behavior for this field: res.company.search() will only return the companies
+        # available to the current user (should be the user's companies?), when the user_preference
+        # context is set.
         'company_id': fields.many2one('res.company', 'Company', required=True,
-            help="The company this user is currently working for."),
+            help="The company this user is currently working for.", context={'user_preference': True}),
+
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
             help="Sets the language for the user's user interface, when UI "
@@ -277,7 +281,7 @@ class users(osv.osv):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
 
     _constraints = [
-        (_check_company, 'The chosen company is not in the allowed companies', ['company_id', 'company_ids']),
+        (_check_company, 'The chosen company is not in the allowed companies for this user', ['company_id', 'company_ids']),
     ]
 
     _sql_constraints = [
@@ -327,22 +331,28 @@ class users(osv.osv):
         'groups_id': _get_group,
         'address_id': False,
     }
-    def company_get(self, cr, uid, uid2, context={}):
-        return self._get_company(cr, uid, context=context, uid2=uid2)
-    company_get = tools.cache()(company_get)
 
-    def write(self, cr, uid, ids, values, *args, **argv):
-        if (ids == [uid]):
-            ok = True
-            for k in values.keys():
-                if k not in ('password','signature','action_id', 'context_lang', 'context_tz','company_id'):
-                    ok=False
-            if ok:
+    @tools.cache()
+    def company_get(self, cr, uid, uid2, context=None):
+        return self._get_company(cr, uid, context=context, uid2=uid2)
+
+    def write(self, cr, uid, ids, values, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        if ids == [uid]:
+            for key in values.keys():
+                if not (key in ('view', 'password','signature','action_id', 'company_id') or key.startswith('context_')):
+                    break
+            else:
                 uid = 1
-        res = super(users, self).write(cr, uid, ids, values, *args, **argv)
+        res = super(users, self).write(cr, uid, ids, values, context=context)
+
+        # clear caches linked to the users
         self.company_get.clear_cache(cr.dbname)
-        # Restart the cache on the company_get method
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
+        clear = partial(self.pool.get('ir.rule').clear_cache, cr)
+        map(clear, ids)
+
         return res
 
     def unlink(self, cr, uid, ids, context=None):

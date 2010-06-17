@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright P. Christeas <p_christ@hol.gr> 2008,2009
-#
+# A part of the code comes from the ganeti project:  http://www.mail-archive.com/ganeti-devel@googlegroups.com/msg00713.html#
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

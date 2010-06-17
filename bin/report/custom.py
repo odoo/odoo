@@ -24,6 +24,7 @@ import time
 import netsvc
 
 import tools
+from tools.safe_eval import safe_eval as eval
 import print_xml
 import render
 from interface import report_int

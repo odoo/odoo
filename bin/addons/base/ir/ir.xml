@@ -1244,11 +1244,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Record rules">
-                    <separator colspan="4" string="Combination of rules"/>
-                    <label align="0.0" angle="2" colspan="4" string="1. Global rules are combined together with a logical AND operator, and with the result of the following steps"/>
-                    <label align="0.0" angle="2" colspan="4" string="2. Group-specific rules are combined together with a logical AND operator"/>
-                    <label align="0.0" angle="2" colspan="4" string="3. If user belongs to several groups, the results from step 2 are combined with logical OR operator"/>
-                    <label align="0.0" angle="2" colspan="4" string="Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"/>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="General"/>
                         <field colspan="4" name="name"/>
@@ -1269,7 +1264,16 @@
                     <group colspan="4" expand="1">
                         <field name="global" select="1"/>
                         <field name="groups" select="1" nolabel="1" colspan="4"/>
-                       </group>
+                    </group>
+                    <separator colspan="4" string="Combination of rules"/>
+                    <label align="0.0" colspan="4"
+                        string="1. Global rules are combined together with a logical AND operator, and with the result of the following steps"/>
+                    <label align="0.0" colspan="4"
+                        string="2. Group-specific rules are combined together with a logical AND operator"/>
+                    <label align="0.0" colspan="4"
+                        string="3. If user belongs to several groups, the results from step 2 are combined with logical OR operator"/>
+                    <label align="0.0" colspan="4"
+                        string="Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"/>
                 </form>
             </field>
         </record>

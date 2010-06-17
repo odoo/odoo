@@ -56,7 +56,7 @@ from tools.translate import _
 
 import fields
 import tools
-
+from tools.safe_eval import safe_eval as eval
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
@@ -353,8 +353,8 @@ def get_pg_type(f):
             f_type = ('int4', 'INTEGER')
         else:
             f_type = ('varchar', 'VARCHAR(%d)' % f_size)
-    elif isinstance(f, fields.function) and eval('fields.'+(f._type)) in type_dict:
-        t = eval('fields.'+(f._type))
+    elif isinstance(f, fields.function) and eval('fields.'+(f._type),globals()) in type_dict:
+        t = eval('fields.'+(f._type), globals())
         f_type = (type_dict[t], type_dict[t])
     elif isinstance(f, fields.function) and f._type == 'float':
         if f.digits:
@@ -987,7 +987,7 @@ class orm_template(object):
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
                 #Raising Uncaught exception
                 return (-1, res, 'Line ' + str(counter) +' : ' + str(e), '' )
-            
+
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
@@ -1224,21 +1224,26 @@ class orm_template(object):
                     attrs = {'views': views}
                     if node.get('widget') and node.get('widget') == 'selection':
                         if not check_group(node):
-                            # the field is just invisible. default value must be in the selection
                             name = node.get('name')
                             default = self.default_get(cr, user, [name], context=context).get(name)
                             if default:
-                                attrs['selection'] = relation.name_get(cr, 1, default, context=context)
+                                attrs['selection'] = relation.name_get(cr, 1, [default], context=context)
                             else:
                                 attrs['selection'] = []
                         # We can not use the 'string' domain has it is defined according to the record !
                         else:
+                            # If domain and context are strings, we keep them for client-side, otherwise
+                            # we evaluate them server-side to consider them when generating the list of
+                            # possible values
+                            # TODO: find a way to remove this hack, by allow dynamic domains
                             dom = []
-                            if column._domain and not isinstance(column._domain, (str, unicode)):
+                            if column._domain and not isinstance(column._domain, basestring):
                                 dom = column._domain
                             dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
-                            context.update(eval(node.get('context','{}')))
-                            attrs['selection'] = relation._name_search(cr, user, '', dom, context=context, limit=None, name_get_uid=1)
+                            search_context = dict(context)
+                            if column._context and not isinstance(column._context, basestring):
+                                search_context.update(column._context)
+                            attrs['selection'] = relation._name_search(cr, 1, '', dom, context=search_context, limit=None, name_get_uid=1)
                             if (node.get('required') and not int(node.get('required'))) or not column.required:
                                 attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
@@ -1951,9 +1956,9 @@ class orm_memory(orm_template):
                 f = True
                 for arg in result:
                      if arg[1] =='=':
-                         val =eval('data[arg[0]]'+'==' +' arg[2]')
+                         val =eval('data[arg[0]]'+'==' +' arg[2]', locals())
                      elif arg[1] in ['<','>','in','not in','<=','>=','<>']:
-                         val =eval('data[arg[0]]'+arg[1] +' arg[2]')
+                         val =eval('data[arg[0]]'+arg[1] +' arg[2]', locals())
                      elif arg[1] in ['ilike']:
                          if str(data[arg[0]]).find(str(arg[2]))!=-1:
                              val= True
@@ -2103,8 +2108,7 @@ class orm(orm_template):
                    days = calendar.monthrange(dt.year, dt.month)[1]
 
                    d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
-                   if not context.get('group_by_no_leaf', False):
-                       d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
+                   d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
                                     (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
                 elif fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and ((type(d[groupby])==type(1)) and d[groupby] or d[groupby][1])  or ''
@@ -2612,6 +2616,7 @@ class orm(orm_template):
             fld_def = ((f in self._columns) and self._columns[f]) \
                     or ((f in self._inherit_fields) and self._inherit_fields[f][2]) \
                     or False
+
             if isinstance(fld_def, fields.property):
                 property_obj = self.pool.get('ir.property')
                 prop_value = property_obj.get(cr, uid, f, self._name, context=context)
@@ -2621,7 +2626,8 @@ class orm(orm_template):
                     else:
                         value[f] = prop_value
                 else:
-                    value[f] = False
+                    if f not in value:
+                        value[f] = False
 
         # get the default values set by the user and override the default
         # values defined in the object
@@ -2687,6 +2693,32 @@ class orm(orm_template):
                 res[col] = (table, self._inherits[table], self.pool.get(table)._inherit_fields[col][2])
         self._inherit_fields = res
         self._inherits_reload_src()
+
+    def __getattr__(self, name):
+        """
+        Proxies attribute accesses to the `inherits` parent so we can call methods defined on the inherited parent
+        (though inherits doesn't use Python inheritance).
+        Handles translating between local ids and remote ids.
+        Known issue: doesn't work correctly when using python's own super(), don't involve inherit-based inheritance
+                     when you have inherits.
+        """
+        for model, field in self._inherits.iteritems():
+            proxy = self.pool.get(model)
+            if hasattr(proxy, name):
+                attribute = getattr(proxy, name)
+                if not hasattr(attribute, '__call__'):
+                    return attribute
+                break
+        else:
+            return super(orm, self).__getattr__(name)
+
+        def _proxy(cr, uid, ids, *args, **kwargs):
+            objects = self.browse(cr, uid, ids, kwargs.get('context', None))
+            lst = [obj[field].id for obj in objects if obj[field]]
+            return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
+
+        return _proxy
+
 
     def fields_get(self, cr, user, fields=None, context=None):
         """
@@ -3068,10 +3100,26 @@ class orm(orm_template):
 
         vals format for relational field type.
 
-            + many2many field : [(6, 0, list of ids)] (example: [(6, 0, [8, 5, 6, 4])])
+            + many2many field : 
+
+                For write operation on a many2many fields a list of tuple is
+                expected. The folowing tuples are accepted:
+                 (0, 0,  { fields })    create
+                 (1, ID, { fields })    update (write fields to ID)
+                 (2, ID)                remove (calls unlink on ID, that will also delete the relationship because of the ondelete)
+                 (3, ID)                unlink (delete the relationship between the two objects but does not delete ID)
+                 (4, ID)                link (add a relationship)
+                 (5, ID)                unlink all
+                 (6, 0, list of ids)    set a list of links
+
+                Example:
+
+                    [(6, 0, [8, 5, 6, 4])] set the many2many to ids [8, 5, 6, 4]
+
             + one2many field : [(0, 0, dictionary of values)] (example: [(0, 0, {'field_name':field_value, ...})])
             + many2one field : ID of related record
             + reference field :  model name, id (example: 'product.product, 5')
+
 
         """
         readonly = None
@@ -3112,8 +3160,9 @@ class orm(orm_template):
             ids = [ids]
 
         self._check_concurrency(cr, ids, context)
-
         self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
+
+        result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
         # No direct update of parent_left/right
         vals.pop('parent_left', None)
@@ -3202,7 +3251,6 @@ class orm(orm_template):
             if c[0].startswith('default_'):
                 del rel_context[c[0]]
 
-        result = []
         for field in upd_todo:
             for id in ids:
                 result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
@@ -3273,8 +3321,19 @@ class orm(orm_template):
                         cr.execute('update '+self._table+' set parent_left=parent_left-%s, parent_right=parent_right-%s where parent_left>=%s and parent_left<%s', (pleft-position+distance,pleft-position+distance, pleft+distance, pright+distance))
 
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
+        result.sort()
+
+        done = {}
         for order, object, ids, fields in result:
-            self.pool.get(object)._store_set_values(cr, user, ids, fields, context)
+            key = (object,tuple(fields))
+            done.setdefault(key, {})
+            # avoid to do several times the same computation
+            todo = []
+            for id in ids:
+                if id not in done[key]:
+                    done[key][id] = True
+                    todo.append(id)
+            self.pool.get(object)._store_set_values(cr, user, todo, fields, context)
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -3537,6 +3596,8 @@ class orm(orm_template):
         return result2
 
     def _store_set_values(self, cr, uid, ids, fields, context):
+        if not ids:
+            return True
         field_flag = False
         field_dict = {}
         if self._log_access:

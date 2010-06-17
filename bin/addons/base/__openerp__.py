@@ -36,7 +36,6 @@
         'base_menu.xml',
         'res/res_security.xml',
         'res/res_config.xml',
-        'maintenance/maintenance_security.xml',
         'data/res.country.state.csv'
     ],
     'update_xml': [
@@ -58,7 +57,7 @@
         'res/partner/partner_wizard.xml',
         'res/bank_view.xml',
         'res/country_view.xml',
-        'res/res_currency_view.xml',
+        'res/res_currency_view.xml',        
         'res/partner/crm_view.xml',
         'res/partner/wizard/partner_sms_send_view.xml',
         'res/partner/partner_data.xml',
@@ -75,6 +74,7 @@
     ],
     'test': [
         'test/base_test.xml',
+        #'test/base_test.yml'
         'test/test_context.xml',
         'bug_lp541545.xml',
     ],

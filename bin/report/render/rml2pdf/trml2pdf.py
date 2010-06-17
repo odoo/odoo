@@ -34,6 +34,7 @@ import os
 from lxml import etree
 import base64
 from reportlab.platypus.doctemplate import ActionFlowable
+from tools.safe_eval import safe_eval as eval
 
 encoding = 'utf-8'
 
@@ -574,7 +575,7 @@ class _rml_flowable(object):
     def _illustration(self, node):
         class Illustration(platypus.flowables.Flowable):
             def __init__(self, node, localcontext, styles, self2):
-                self.localcontext = localcontext.copy()
+                self.localcontext = (localcontext or {}).copy()
                 self.node = node
                 self.styles = styles
                 self.width = utils.unit_get(node.get('width'))

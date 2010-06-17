@@ -159,6 +159,9 @@ class res_partner(osv.osv):
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
+    def do_share(self, cr, uid, ids, *args):
+        return True
+
     def _check_ean_key(self, cr, uid, ids):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
             thisean=partner_o['ean13']
@@ -275,7 +278,7 @@ class res_partner_address(osv.osv):
     _description ='Partner Addresses'
     _name = 'res.partner.address'
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Company Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
+        'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'function': fields.char('Function', size=64),
         'title': fields.selection(_contact_title_get, 'Title', size=32),

@@ -21,10 +21,14 @@
 
 from osv import fields,osv
 import time
+from operator import itemgetter
+from functools import partial
 import tools
+from tools.safe_eval import safe_eval as eval
 
 class ir_rule(osv.osv):
     _name = 'ir.rule'
+    _MODES = ['read', 'write', 'create', 'unlink']
 
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context={}):
         res = {}
@@ -44,13 +48,7 @@ class ir_rule(osv.osv):
         return res
 
     def _check_model_obj(self, cr, uid, ids, context={}):
-        model_obj = self.pool.get('ir.model')
-        for rule in self.browse(cr, uid, ids, context):
-            model = model_obj.browse(cr, uid, rule.model_id.id, context).model
-            obj = self.pool.get(model)
-            if isinstance(obj, osv.osv_memory):
-                return False
-        return True
+        return not any(isinstance(self.pool.get(rule.model_id.model), osv.osv_memory) for rule in self.browse(cr, uid, ids, context))
 
     _columns = {
         'name': fields.char('Name', size=128, select=1),
@@ -89,6 +87,8 @@ class ir_rule(osv.osv):
 
     @tools.cache()
     def _compute_domain(self, cr, uid, model_name, mode="read"):
+        if mode not in self._MODES:
+            raise ValueError('Invalid mode: %r' % (mode,))
         group_rule = {}
         global_rules = []
 
@@ -113,6 +113,24 @@ class ir_rule(osv.osv):
         for value in group_rule.values():
             dom += self.domain_create(cr, uid, value)
         return dom
+
+    def clear_cache(self, cr, uid):
+        cr.execute("""SELECT DISTINCT m.model
+                        FROM ir_rule r
+                        JOIN ir_model m
+                          ON r.model_id = m.id
+                       WHERE r.global
+                          OR EXISTS (SELECT 1
+                                       FROM rule_group_rel g_rel
+                                       JOIN res_groups_users_rel u_rel
+                                         ON g_rel.group_id = u_rel.gid
+                                      WHERE g_rel.rule_group_id = r.id
+                                        AND u_rel.uid = %s)
+                    """, (uid,))
+        models = map(itemgetter(0), cr.fetchall())
+        clear = partial(self._compute_domain.clear_cache, cr.dbname, uid)
+        [clear(model, mode) for model in models for mode in self._MODES]
+
 
     def domain_get(self, cr, uid, model_name, mode='read', context={}):
         dom = self._compute_domain(cr, uid, model_name, mode=mode)

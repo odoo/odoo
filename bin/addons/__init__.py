@@ -28,6 +28,7 @@ import zipimport
 import osv
 import tools
 import tools.osutil
+from tools.safe_eval import safe_eval as eval
 import pooler
 
 
@@ -663,6 +664,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             # TODO manage .csv file with noupdate == (kind == 'init')
             if ext == '.sql':
                 process_sql_file(cr, fp)
+            elif ext == '.csv':
+                noupdate = (kind == 'init')
+                tools.convert_csv_import(cr, module_name, file, id_map, mode, noupdate)
             elif ext == '.yml':
                 tools.convert_yaml_import(cr, module_name, file, id_map, mode, noupdate)
             else:
@@ -725,8 +729,12 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 load_demo_xml(cr, m, idref, mode)
                 load_demo(cr, m, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
-
-            load_test(cr, m, idref, mode)
+                
+                # launch tests only in demo mode, as most tests will depend
+                # on demo data. Other tests can be added into the regular
+                # 'data' section, but should probably not alter the data, 
+                # as there is no rollback.
+                load_test(cr, m, idref, mode)
 
             package_todo.append(package.name)
 

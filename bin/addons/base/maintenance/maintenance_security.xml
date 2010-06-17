@@ -2,13 +2,5 @@
 <openerp>
 <data noupdate="0">
 
-    <record model="res.groups" id="group_maintenance_manager">
-        <field name="name">Maintenance Manager</field>
-    </record>
-
-	<record model="ir.ui.menu" id="menu_maintenance_contract">
-		<field eval="[(6,0,[ref('group_maintenance_manager')])]" name="groups_id"/>
-	</record>
-
 </data>
 </openerp>

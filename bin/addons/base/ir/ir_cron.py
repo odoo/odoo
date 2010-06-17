@@ -25,6 +25,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import netsvc
 import tools
+from tools.safe_eval import safe_eval as eval
 import pooler
 from osv import fields, osv
 

@@ -22,6 +22,7 @@
 from report.interface import report_int
 import pooler
 import tools
+from tools.safe_eval import safe_eval as eval
 from lxml  import etree
 from report import render
 import locale
@@ -128,8 +129,7 @@ class report_printscreen_list(report_int):
         strmax = (pageSize[0]-40) * 2.8346
         temp = []
         tsum = []
-        count = len(fields_order)
-        for i in range(0, count):
+        for i in range(0, len(fields_order)):
             temp.append(0)
             tsum.append(0)
         ince = -1;
@@ -218,7 +218,7 @@ class report_printscreen_list(report_int):
                 else:
                      col.text = '/'
         node_line = etree.SubElement(lines, 'row')
-        for f in range(0, count+1):
+        for f in range(0, len(fields_order)):
             col = etree.SubElement(node_line, 'col', para='group', tree='no')
             if tsum[f] != None:
                if tsum[f] >= 0.01 :

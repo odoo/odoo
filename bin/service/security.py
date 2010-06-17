@@ -22,12 +22,11 @@
 import pooler
 import tools
 
-# When rejecting a password, we need to give as little info as possible
+# When rejecting a password, hide the traceback
 class ExceptionNoTb(Exception):
-    def __init__(self, msg ):
-        # self.message = msg # No need in Python 2.6
+    def __init__(self, msg):
+        super(ExceptionNoTb, self).__init__(msg)
         self.traceback = ('','','')
-        self.args = (msg, '')
 
 def login(db, login, password):
     pool = pooler.get_pool(db)
@@ -38,7 +37,7 @@ def check_super(passwd):
     if passwd == tools.config['admin_passwd']:
         return True
     else:
-        raise ExceptionNoTb('AccessDenied')
+        raise ExceptionNoTb('AccessDenied: Invalid super administrator password.')
 
 def check(db, uid, passwd):
     pool = pooler.get_pool(db)

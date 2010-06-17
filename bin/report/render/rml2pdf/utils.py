@@ -42,6 +42,7 @@ from lxml import etree
 import copy
 import locale
 import traceback, sys
+from tools.safe_eval import safe_eval as eval
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
@@ -54,7 +55,7 @@ def xml2str(s):
 def _child_get(node, self=None, tagname=None):
     for n in node:
         if self and self.localcontext and n.get('rml_loop'):
-            oldctx = self.localcontext
+            oldctx = dict(self.localcontext)
 
             for ctx in eval(n.get('rml_loop'),{}, self.localcontext):
                 self.localcontext.update(ctx)

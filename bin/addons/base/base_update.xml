@@ -19,7 +19,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Groups">
-                    <field colspan="4" name="name" select="1"/>
+                    <field name="name" select="1"/>
                     <notebook colspan="4">
                         <page string="Users">
                             <field colspan="4" name="users" nolabel="1"/>
@@ -78,18 +78,22 @@
                 <form string="Users">
                     <notebook colspan="4">
                         <page string="Current Activity">
-                            <field name="company_id" widget="selection" readonly="0" context="{'user_preference':True}"/>
+                            <field name="company_id" widget="selection" readonly="0"
+                                    context="{'user_id': self, 'user_preference': 1}"/>
+                            <field name="view" readonly="0"/>
                             <newline/>
                             <separator colspan="4" string="Preferences"/>
                         </page>
                          <page string="Preferences">
                             <field name="password" password="True" readonly="0"/>
-                            <label colspan="4" string="Please note that you will have to logout and relog if you change your password."/>
-                            <field name="context_lang" completion="1" readonly="0"/>
-                            <field name="context_tz" completion="1" readonly="0" colspan="4"/>
-                            <field name="view" colspan="4" readonly="0" />
                             <newline/>
-                            <field colspan="4" name="signature" readonly="0"/>
+                            <label string="" colspan="1"/>
+                            <label colspan="3" string="Please note that you will have to logout and relog if you change your password."/>
+                            <field name="context_lang" completion="1" readonly="0"/>
+                            <field name="context_tz" completion="1" readonly="0"/>
+                            <newline/>
+                            <separator string="Signature" colspan="4"/>
+                            <field colspan="4" name="signature" readonly="0" nolabel="1"/>
                           </page>
                     </notebook>
                 </form>
@@ -106,11 +110,12 @@
                     <field name="active"/>
                     <field name="login" select="1"/>
                     <field name="password" password="True"/>
+                    <newline/>
                     <notebook colspan="4">
                         <page string="User">
                             <field name="address_id" select="1"/>
                             <field name="user_email" widget="email"/>
-                            <field name="company_id" required="1"/>
+                            <field name="company_id" required="1" context="{'user_id': self, 'user_preference': 1}"/>
                             <field name="action_id" required="True"/>
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field name="context_lang"/>
@@ -286,22 +291,22 @@
                 <form position="attributes">
                   <attribute name="string">Choose Your Interface</attribute>
                 </form>
-				<xpath expr="//label[@string='description']"
-	                 position="attributes">
-	            <attribute name="string">Choose between the simplified interface and the extended one. We suggest you use the simplified interface. It has less options and fields but is easier to understand. You will be able to switch to the extended interface later.</attribute>
-	          </xpath>
-	          <xpath expr='//separator[@string="title"]' position='attributes'>
-	          	  <attribute name='string'>Choose Your Interface</attribute>
-	          </xpath>
-	          <xpath expr='//separator[@string="vsep"]' position='attributes'>
-	          	  <attribute name='string'></attribute>
-	          	  <attribute name='rowspan'>12</attribute>
-		      </xpath>
+                <xpath expr="//label[@string='description']"
+                     position="attributes">
+                <attribute name="string">Choose between the simplified interface and the extended one. We suggest you use the simplified interface. It has less options and fields but is easier to understand. You will be able to switch to the extended interface later.</attribute>
+              </xpath>
+              <xpath expr='//separator[@string="title"]' position='attributes'>
+                    <attribute name='string'>Choose Your Interface</attribute>
+              </xpath>
+              <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                    <attribute name='string'></attribute>
+                    <attribute name='rowspan'>12</attribute>
+              </xpath>
                <group string="res_config_contents" position="replace">
-	              	<group colspan="4">
-	              		<field colspan="4" name="view" nolabel="1"/>
-					</group>
-            	</group>
+                      <group colspan="4">
+                          <field colspan="4" name="view" nolabel="1"/>
+                    </group>
+                </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
                 <xpath expr='//button[@name="action_next"]' position='attributes'>
                   <attribute name='string'>Set</attribute>
