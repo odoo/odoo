@@ -47,7 +47,7 @@ class purchase_order(osv.osv):
                 res[order.id] += oline.price_unit * oline.product_qty
         return res
 
-    def _amount_all(self, cr, uid, ids, field_name, arg, context):
+    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids):
@@ -55,13 +55,13 @@ class purchase_order(osv.osv):
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
                 'amount_total': 0.0,
-            }
+                            }
             val = val1 = 0.0
-            cur=order.pricelist_id.currency_id
+            cur = order.pricelist_id.currency_id
             for line in order.order_line:
+               val1 += line.price_subtotal
                for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id.id, order.partner_id)['taxes']:
-                    val+= c['amount']
-                    val1 += line.price_subtotal
+                    val += c['amount']
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
