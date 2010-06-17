@@ -121,8 +121,8 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_stock_sale_forecast" name="Stock and Sales Forecasts" parent="base.menu_base_partner"/>
-
+        <menuitem id="menu_stock_sale_forecast" name="Stock and Sales Forecasts" 
+                parent="base.menu_base_partner" sequence="6"/>
         <menuitem id="menu_stock_sale_forecast_createlines" name="Create Stock and Sales Forecasts" parent="menu_stock_sale_forecast" action="action_stock_sale_forecast_createlines_form" sequence = "5"/>
 
         <record id="view_stock_sale_forecast_form" model="ir.ui.view">
@@ -267,7 +267,7 @@
 
 <!-- Create Planning section -->
 
-        <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root"/>
+        <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root" sequence="2"/>
 
        <record id="view_stock_planning_createlines_form" model="ir.ui.view">
             <field name="name">stock.planning.createlines.form</field>

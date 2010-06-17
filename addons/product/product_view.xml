@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="40"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="9"/>
 
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
@@ -194,7 +194,7 @@
             <field name="search_view_id" ref="product_search_form_view"/>
         </record>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="7"/>
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
         <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
