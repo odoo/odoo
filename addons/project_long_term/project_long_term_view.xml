@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-    <menuitem id="menu_project_long_term" name="Long Term Planning" parent="base.menu_main_pm" sequence="1"/>
+    <menuitem id="base.menu_project_long_term" name="Long Term Planning" parent="base.menu_main_pm" sequence="1"/>
 
     # ------------------------------------------------------
     # Project Resource Allocation
@@ -302,18 +302,18 @@
 
         <menuitem action="act_project_phase"
             groups="base.group_extended"
-            id="menu_project_phase" parent="menu_project_long_term" sequence="4"/>
+            id="menu_project_phase" parent="base.menu_project_long_term" sequence="1"/>
 
         <menuitem id="menu_resouce_allocation" action="act_resouce_allocation"
-            name="Resource Allocations" parent="menu_project_long_term" />
+            name="Resource Allocations" parent="base.menu_project_long_term" sequence="2"/>
 
         <!--<menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>-->
         <menuitem id="menu_pm_resources_project1"
             groups="base.group_extended"
-            name="Resources" parent="base.menu_main_pm" sequence="2"/>
+            name="Resources" parent="project.menu_definitions" sequence="3"/>
 
-        <menuitem id="menu_phase_schedule" name="Scheduling" parent="menu_project_long_term"/>
-        <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_resources_project1" sequence="1"/>
+        <menuitem id="menu_phase_schedule" name="Scheduling" parent="base.menu_project_long_term" sequence="4"/>
+        <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="project.menu_project_management" sequence="4"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves" parent="menu_pm_resources_project1" sequence="1"/>
 
