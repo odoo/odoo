@@ -174,8 +174,8 @@ class product_product(osv.osv):
         'incoming_qty': fields.function(_product_available, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available'),
         'outgoing_qty': fields.function(_product_available, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available'),
         'track_production' : fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
-        'track_incoming' : fields.boolean('Track Incomming Lots', help="Force to use a Production Lot during receptions"),
-        'track_outgoing' : fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),
+        'track_incoming' : fields.boolean('Track Incoming Lots', help="Force to use a Production Lot during receptions"),
+        'track_outgoing' : fields.boolean('Track Outgoing Lots', help="Force to use a Production Lot during deliveries"),
     }
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
         if not context:
