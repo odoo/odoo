@@ -44,9 +44,9 @@
     </record>
 
     <menuitem name="Configuration" parent="base.menu_tools"
-         id="base.menu_lunch_survey_root" sequence="6"/>
+         id="base.menu_lunch_survey_root" sequence="20"/>
 
-    <menuitem name="Ideas" parent="base.menu_lunch_survey_root" id="menu_ideas"/>
+    <menuitem name="Ideas" parent="base.menu_lunch_survey_root" id="menu_ideas" sequence="3"/>
 
     <menuitem name="Categories" parent="menu_ideas" id="menu_idea_category" action="action_idea_category" />
 
@@ -356,9 +356,9 @@
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
     </record>
-    <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="5"/>
+    <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="6"/>
 
-    <menuitem name="Idea" parent="base.menu_lunch_reporting" id="menu_idea_reporting"/>
+    <menuitem name="Idea" parent="base.menu_lunch_reporting" id="menu_idea_reporting" sequence="3"/>
 
     <menuitem name="Vote Statistics" parent="menu_idea_reporting"
         id="menu_idea_vote_stat" action="action_idea_vote_stat" />
