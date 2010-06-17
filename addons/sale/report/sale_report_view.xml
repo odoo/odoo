@@ -126,7 +126,7 @@
     </record>
 
     <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11"/>
-    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="3"/>
+    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1"/>
 
     <record id="action_stock_move_report_so" model="ir.actions.act_window">
         <field name="name">Shipments Analysis</field>
@@ -135,7 +135,7 @@
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_month':1, 'search_default_group_product':1, 'search_default_group_partner':1, 'search_default_done':1, 'search_default_out': 1, 'group_by':[], 'group_by_no_leaf':1}</field>
     </record>
-    <menuitem action="action_stock_move_report_so" id="menu_action_stock_move_report_so" parent="base.next_id_64" sequence="8"/>
+    <menuitem action="action_stock_move_report_so" id="menu_action_stock_move_report_so" parent="base.next_id_64" sequence="25"/>
 
 
     <!--This views used in board_sale module -->

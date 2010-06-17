@@ -1,6 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+	    <menuitem
+	        id="menu_hr_recruitment_recruitment"
+	        name="Recruitment"
+	        parent="hr.menu_hr_configuration"
+	        sequence="2"/>
+	    <menuitem
+	        id="menu_hr_config_applicant"
+	        name="Applicant"
+	        parent="menu_hr_recruitment_recruitment"
+	        sequence="2"/>
 
     # ------------------------------------------------------
     # Job Categories
@@ -313,16 +323,6 @@
         <field name="view_id" ref="hr_recruitment_stage_tree"/>
     </record>
 
-    <menuitem
-        id="menu_hr_recruitment_recruitment"
-        name="Recruitment"
-        parent="hr.menu_hr_configuration"
-        sequence="2"/>
-    <menuitem
-        id="menu_hr_config_applicant"
-        name="Applicant"
-        parent="menu_hr_recruitment_recruitment"
-        sequence="2"/>
     <menuitem
         id="menu_hr_recruitment_stage"
         name="Stages"
