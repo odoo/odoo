@@ -18,19 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
-import netsvc
-
-from osv import fields, osv
-import decimal_precision as dp
-
-from tools.misc import currency
-from tools.translate import _
-import pooler
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+import netsvc
+import pooler
+from osv import fields, osv
+import decimal_precision as dp
+from tools.misc import currency
+from tools.translate import _
 from tools import config
 
 class account_payment_term(osv.osv):

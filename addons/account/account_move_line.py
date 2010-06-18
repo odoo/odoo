@@ -18,13 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
+from datetime import datetime
+
 import netsvc
 from osv import fields, osv
 from tools.translate import _
-
-from datetime import datetime
 import decimal_precision as dp
 import tools
 

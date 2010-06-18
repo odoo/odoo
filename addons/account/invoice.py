@@ -772,11 +772,18 @@ class account_invoice(osv.osv):
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
-
+            
+            entry_type=''
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
+                entry_type = 'journal_pur_voucher'
+                if inv.type in ('in_refund'):
+                    entry_type = 'cont_voucher'
             else:
                 ref = self._convert_ref(cr, uid, inv.number)
+                entry_type = 'journal_sale_vou'
+                if inv.type in ('out_refund'):
+                    entry_type = 'cont_voucher'
 
             diff_currency_p = inv.currency_id.id <> company_currency
             # create one move line for the total and possibly adjust the other lines amount
@@ -847,7 +854,7 @@ class account_invoice(osv.osv):
 
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
-            move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date}
+            move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date, 'type': entry_type}
             period_id=inv.period_id and inv.period_id.id or False
             if not period_id:
                 period_ids= self.pool.get('account.period').search(cr,uid,[('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d'))])
@@ -1070,10 +1077,18 @@ class account_invoice(osv.osv):
         else:
             amount_currency = False
             currency_id = False
+        entry_type=''
         if invoice.type in ('in_invoice', 'in_refund'):
             ref = invoice.reference
+            entry_type = 'journal_pur_voucher'
+            if invoice.type in ('in_refund'):
+                entry_type = 'cont_voucher'
         else:
             ref = self._convert_ref(cr, uid, invoice.number)
+            entry_type = 'journal_sale_vou'
+            if invoice.type in ('out_refund'):
+                entry_type = 'cont_voucher'
+            
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
@@ -1104,7 +1119,7 @@ class account_invoice(osv.osv):
         l2['name'] = name
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
+        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date, 'type': entry_type}
         move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
