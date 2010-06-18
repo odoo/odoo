@@ -529,7 +529,7 @@ class payment_category(osv.osv):
     
     _name = 'hr.allounce.deduction.categoty'
     _description = 'Allowance Deduction Heads'
-        
+    
     _columns = {
         'name':fields.char('Categoty Name', size=64, required=True, readonly=False),
         'code':fields.char('Categoty Code', size=64, required=True, readonly=False),
@@ -538,13 +538,15 @@ class payment_category(osv.osv):
             ('deduction','Deduction'),
             ('other','Others'),
         ],'Type', select=True),
-        'base':fields.char('Based on', size=64, required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
+        'base': fields.text('Based on', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
+        #'base':fields.char('Based on', size=64, required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'note': fields.text('Description'),    
         'user_id':fields.char('User', size=64, required=False, readonly=False),
         'state':fields.char('Label', size=64, required=False, readonly=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
+        'contribute_ids':fields.one2many('company.contribution', 'category_id', 'Company Contribution', required=False),
     }
     _defaults = {
         'condition': lambda *a: 'True',
@@ -1257,50 +1259,50 @@ class hr_payslip(osv.osv):
                         line_ids += [movel_pool.create(cr, uid, ded_cre)]
 
                 #make an entry line to contribution register
-                if line.category_id.register_id:
-                    ctr = {
-                        'register_id':line.category_id.register_id.id,
-                        'name':line.name,
-                        'code':line.code,
-                        'employee_id':slip.employee_id.id,
-                        'period_id':period_id,
-                        'emp_deduction':amount,
-                    }
-                    if line.category_id.contribute:
-                        ctr['comp_deduction'] = amount
-                    
-                    company = 0.0
-                    employee = 0.0
-                    if line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'per':
-                        new_amount = (amount * (line.category_id.contribute_per / (1+line.category_id.contribute_per)))
-                        company = new_amount
-                        employee = amount - company
-                    
-                    elif line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'fix':
-                        company = line.category_id.contribute_per
-                        employee = amount - company
+#                if line.category_id.register_id:
+#                    ctr = {
+#                        'register_id':line.category_id.register_id.id,
+#                        'name':line.name,
+#                        'code':line.code,
+#                        'employee_id':slip.employee_id.id,
+#                        'period_id':period_id,
+#                        'emp_deduction':amount,
+#                    }
+#                    if line.category_id.contribute:
+#                        ctr['comp_deduction'] = amount
+#                    
+#                    company = 0.0
+#                    employee = 0.0
+#                    if line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'per':
+#                        new_amount = (amount * (line.category_id.contribute_per / (1+line.category_id.contribute_per)))
+#                        company = new_amount
+#                        employee = amount - company
+#                    
+#                    elif line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'fix':
+#                        company = line.category_id.contribute_per
+#                        employee = amount - company
 
-                    elif line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'func':
-                        company = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, line.slip_id.basic, context)
-                        employee = amount
-                    
-                    elif line.category_id.contribute and not line.category_id.include_in_salary and line.category_id.amount_type == 'per':
-                        company = amount * line.category_id.contribute_per
-                        employee = amount
-                    
-                    elif line.category_id.contribute and not line.category_id.include_in_salary and line.category_id.amount_type == 'fix':
-                        company = line.category_id.contribute_per
-                        employee = amount
+#                    elif line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'func':
+#                        company = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, line.slip_id.basic, context)
+#                        employee = amount
+#                    
+#                    elif line.category_id.contribute and not line.category_id.include_in_salary and line.category_id.amount_type == 'per':
+#                        company = amount * line.category_id.contribute_per
+#                        employee = amount
+#                    
+#                    elif line.category_id.contribute and not line.category_id.include_in_salary and line.category_id.amount_type == 'fix':
+#                        company = line.category_id.contribute_per
+#                        employee = amount
 
-                    elif line.category_id.contribute and not line.category_id.include_in_salary and line.category_id.amount_type == 'func':
-                        company = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, line.slip_id.basic, context)
-                        employee = amount
-                        
-                    ctr['emp_deduction'] = employee
-                    ctr['comp_deduction'] = company
-                        
-                    self.pool.get('hr.contibution.register.line').create(cr, uid, ctr)
-            
+#                    elif line.category_id.contribute and not line.category_id.include_in_salary and line.category_id.amount_type == 'func':
+#                        company = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, line.slip_id.basic, context)
+#                        employee = amount
+#                        
+#                    ctr['emp_deduction'] = employee
+#                    ctr['comp_deduction'] = company
+#                        
+#                    self.pool.get('hr.contibution.register.line').create(cr, uid, ctr)
+
             adj_move_id = False
             if total_deduct > 0:
                 move = {
@@ -1372,6 +1374,18 @@ class hr_payslip(osv.osv):
         return True
     
     def get_contract(self, cr, uid, employee, date, context={}):
+        """
+        Compute leaves for an employee
+        
+        @param cr: cursor to database
+        @param uid: id of current user
+        @param employee: object of the hr.employee model
+        @param date: date on which pay slip is creating
+        @param context: context arguments, like lang, time zone
+        
+        @return: return a current contract from the list of contract
+        """
+        
         sql_req= '''
             SELECT c.id as id, c.wage as wage, struct_id as function
             FROM hr_contract c
@@ -1398,7 +1412,6 @@ class hr_payslip(osv.osv):
         @param slip: object of the hr.payroll.slip model
         @param employee: object of the hr.employee model
         @param context: context arguments, like lang, time zone
-        
         @return: return a result
         """
         
@@ -1516,7 +1529,7 @@ class hr_payslip(osv.osv):
                     amt = eval(base, obj)
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
-                
+
                 if sal_type in ('gross', 'net'):
                     if line.amount_type == 'per':
                         percent = line.amount
@@ -1528,7 +1541,10 @@ class hr_payslip(osv.osv):
                         
                         if value > 0:
                             percent = 0.0
-                    
+
+                        for cline in line.category_id.contribute_ids:
+                            print 'XXXXXXXXXXXXXXX : ', cline.name
+                        
                     elif line.amount_type == 'fix':
                         value = line.amount
                     
@@ -1536,12 +1552,16 @@ class hr_payslip(osv.osv):
                         value = self.pool.get('hr.payslip.line').execute_function(cr, uid, line.id, amt, context)
                         line.amount = value
                 else:
-                    if line.amount_type in ('fix', 'per'):
-                        value = line.amount
-                    elif line.amount_type == 'func':
+                    if line.amount_type == 'func':
                         value = self.pool.get('hr.payslip.line').execute_function(cr, uid, line.id, amt, context)
                         line.amount = value
-                
+                    
+#                    for cline in line.category_id.contribute_ids:
+#                        if cline.amount_type == 'fix':
+#                            contribute = cline.contribute_per
+#                        elif cline.amount_type == 'func':
+#                            contribute = func_pool.execute_function(cr, uid, cline.id, line.amount, context)
+                    
                 if line.type == 'allowance':
                     all_per += percent
                     all_fix += value
