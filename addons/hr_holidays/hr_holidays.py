@@ -207,7 +207,7 @@ class hr_holidays(osv.osv):
         for record in self.browse(cr, uid, ids):
             if record.state=='validate':
                 if record.case_id:
-                    self.pool.get('crm.meeting').unlink(cr,uid,[record.case_id.id])
+                    self.pool.get('crm.meeting').unlink(cr, uid, [record.case_id.id])
                 if record.linked_request_ids:
                     list_ids = []
                     [list_ids.append(i) for id in record.linked_request_ids]
@@ -443,7 +443,7 @@ class hr_holidays(osv.osv):
                     'user_id' : record.user_id.id,
                     'date' : record.date_from,
                 }
-                case_id = self.pool.get('crm.meeting').create(cr,uid,vals)
+                case_id = self.pool.get('crm.meeting').create(cr, uid, vals)
                 self.write(cr, uid, ids, {'case_id':case_id})
 
         return True

@@ -66,14 +66,14 @@ class auction_transfer_unsold_object(osv.osv):
             bid_line_obj = self.pool.get('auction.bid_line')
             lots_obj = self.pool.get('auction.lots')
             lot_history_obj = self.pool.get('auction.lot.history')
-            line_ids= bid_line_obj.search(cr,uid,[('lot_id','in',context['active_ids'])])
+            line_ids= bid_line_obj.search(cr, uid, [('lot_id','in',context['active_ids'])])
             bid_line_obj.unlink(cr, uid, line_ids)
             
             res = self.browse(cr, uid, ids)        
             unsold_ids = lots_obj.search(cr,uid,[('auction_id','=',res[0].auction_id_from.id),('state','=','unsold')])
             for rec in lots_obj.browse(cr, uid, unsold_ids, context):
-                new_id = lot_history_obj.create(cr,uid,{'auction_id':rec.auction_id.id,'lot_id':rec.id,'price': rec.obj_ret, 'name': rec.auction_id.auction1})
-                up_auction = lots_obj.write(cr,uid,[rec.id],{'auction_id': res[0].auction_id_to.id,
+                new_id = lot_history_obj.create(cr, uid, {'auction_id':rec.auction_id.id,'lot_id':rec.id,'price': rec.obj_ret, 'name': rec.auction_id.auction1})
+                up_auction = lots_obj.write(cr, uid, [rec.id], {'auction_id': res[0].auction_id_to.id,
                                                                                                 'obj_ret':None,
                                                                                                 'obj_price':None,
                                                                                                 'ach_login':None,
