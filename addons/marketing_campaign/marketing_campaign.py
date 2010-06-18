@@ -27,6 +27,7 @@ from dateutil.relativedelta import relativedelta
 from osv import fields, osv
 import netsvc
 import tools
+from tools.translate import _
 
 _intervalTypes = {
     'hours': lambda interval: relativedelta(hours=interval),
@@ -207,10 +208,7 @@ class marketing_campaign_activity(osv.osv):
         'start': fields.boolean('Start',help= "This activity is launched when the campaign starts."),
         'condition': fields.char('Condition', size=256, required=True,
                                  help="Python condition to know if the activity can be launched"),
-        'type': fields.selection([('email', 'E-mail'),
-                                  ('paper', 'Paper'),
-                                  ('action', 'Action'),
-                                  ('subcampaign', 'Sub-Campaign')],
+        'type': fields.selection(_actions_type,
                                   'Type', required=True,
                                   help="Describe type of action to be performed on the Activity.Eg : Send email,Send paper.."),
         'email_template_id': fields.many2one('email.template','Email Template'),
@@ -277,41 +275,6 @@ class marketing_campaign_activity(osv.osv):
     def process_wi_email(self, cr, uid, activity, workitem, context=None):
         print 'Sending Email Init', activity.name
         return self.pool.get('email.template').generate_mail(cr, uid, activity.email_template_id.id, [workitem.res_id], context=context)
-
-        #if not template.enforce_from_account:
-        #    self.pool.get('marketing.campaign.workitem').write(cr, uid, [workitem.id], {
-        #        'error_msg': 'There is no account defined for the email',
-        #        'state': 'exception'
-        #    })
-        #    return False
-        #if not workitem.partner_id.email:
-        #    self.pool.get('marketing.campaign.workitem').write(cr, uid, [workitem.id], {
-        #        'error_msg': "There is no email defined for the partner",
-        #        'state': 'exception'
-        #    })
-        #    return False
-        #vals = {
-        #    'email_from': tools.ustr(accounts.name) + "<" + tools.ustr(accounts.email_id) + ">",
-        #    'email_to': template.email_to,
-        #    'email_cc': template.email_cc,
-        #    'email_bcc': template.email_bcc,
-        #    'subject': template.def_subject,
-        #    'body_text': template.def_body_text,
-        #    'body_html': template.def_body_html,
-        #    'account_id': accounts.id,
-        #    'state':'na',
-        #    'mail_type':'multipart/alternative' #Options:'multipart/mixed','multipart/alternative','text/plain','text/html'
-        #}
-#       #     if accounts.use_sign:
-#       #         signature = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
-#       #         if signature:
-#       #             vals['pem_body_text'] = tools.ustr(vals['pem_body_text'] or '') + signature
-#       #             vals['pem_body_html'] = tools.ustr(vals['pem_body_html'] or '') + signature
-
-        ##Create partly the mail and later update attachments
-        #print 'Sending Email', vals
-        #mail_id = self.pool.get('email_template.mailbox').create(cr, uid, vals, context)
-        return True
 
     def process_wi_action(self, cr, uid, activity, workitem, context={}):
         context = {}
@@ -446,7 +409,10 @@ class marketing_campaign_workitem(osv.osv):
                             self.write(cr, uid, wi.id, {'state': 'done'})
                             self.process_chain(cr, uid, wi.id, context)
                         else:
-                            self.write(cr, uid, wi.id, {'state': 'exception'})
+                            vals = {'state': 'exception'}
+                            if type(result) == type({}) and 'error_msg' in result:
+                               vals['error_msg'] = result['error_msg']
+                            self.write(cr, uid, wi.id, vals)
                     except Exception,e:
                         self.write(cr, uid, wi.id, {'state': 'exception', 'error_msg': str(e)})
                 else :
@@ -470,6 +436,42 @@ class marketing_campaign_workitem(osv.osv):
             if workitem_ids:
                 self.process(cr, uid, workitem_ids, context)
 
+    def preview(self, cr, uid, ids, context):
+        res = {}
+        wi_obj = self.browse(cr, uid, ids)[0]
+        if wi_obj.activity_id.type == 'email':
+            data_obj = self.pool.get('ir.model.data')
+            data_id = data_obj._get_id(cr, uid, 'email_template', 'email_template_preview_form')
+            if data_id:
+                view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
+            res = {
+                'name': _('Email Preview'),
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'email_template.preview',
+                'view_id': False,
+                'context': context,
+                'views': [(view_id, 'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy':True,
+                'context': "{'template_id':%d,'rel_model_ref':%d}"%
+                                (wi_obj.activity_id.email_template_id.id,
+                                 wi_obj.res_id)
+                                 
+            }
+
+        elif wi_obj.activity_id.type == 'paper':
+            datas = {'ids': [wi_obj.res_id],
+                     'model': wi_obj.object_id.model}
+            res = { 
+                'type' : 'ir.actions.report.xml',
+                'report_name': wi_obj.activity_id.report_id.report_name,
+                'datas' : datas,
+                'nodestroy': True, 
+                }
+        return res
+
 marketing_campaign_workitem()
 
 class email_template(osv.osv):
@@ -478,6 +480,21 @@ class email_template(osv.osv):
         'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
     }
 email_template()
+    
+class email_template_preview(osv.osv_memory):
+    _inherit = "email_template.preview"
+    
+    def _default_rel_model(self, cr, uid, context=None):
+        if 'rel_model_ref' in context :
+            return context['rel_model_ref']
+        else :
+            return False
+            
+    _defaults = {
+        'rel_model_ref' : _default_rel_model
+    }
+
+email_template_preview()
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'

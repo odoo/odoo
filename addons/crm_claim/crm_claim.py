@@ -75,7 +75,8 @@ class crm_claim(osv.osv, crm.crm_case):
         'company_id': fields.many2one('res.company', 'Company'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"), 
+                                # domain="[('partner_id','=',partner_id)]"
+                                 ), 
         'email_cc': fields.text('Watchers Emails', size=252, help="These people will receive a copy of the future communication between partner and users by email"), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."), 
         'partner_name': fields.char("Employee's Name", size=64), 

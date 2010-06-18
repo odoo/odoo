@@ -37,5 +37,6 @@ import pos_sales_user_today_current_user
 import pos_receipt_with_remboursment
 import pos_receipt_without_remboursment
 import point_of_sale_report
+import report_pos_order
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
