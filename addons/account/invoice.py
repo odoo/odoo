@@ -1077,16 +1077,18 @@ class account_invoice(osv.osv):
             amount_currency = False
             currency_id = False
 
+        pay_journal = self.pool.get('account.journal').read(cr, uid, pay_journal_id, ['type'], context=context)
+        if invoice.type in ('in_invoice', 'out_invoice'):
+            if pay_journal['type'] == 'bank':
+                entry_type = 'bank_pay_voucher' # Bank payment
+            else:
+                entry_type = 'pay_voucher' # Cash payment
+        else:
+            entry_type = 'cont_voucher'
         if invoice.type in ('in_invoice', 'in_refund'):
             ref = invoice.reference
-            entry_type = 'journal_pur_voucher'
-            if invoice.type == 'in_refund':
-                entry_type = 'cont_voucher'
         else:
             ref = self._convert_ref(cr, uid, invoice.number)
-            entry_type = 'journal_sale_vou'
-            if invoice.type == 'out_refund':
-                entry_type = 'cont_voucher'
 
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
