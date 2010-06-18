@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="board_mrp_procurement_form" model="ir.ui.view">
+            <field name="name">board.mrp.procurement.form</field>
+            <field name="model">board.board</field>
+			<field name="inherit_id" ref="stock.board_warehouse_form"/>              
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+      		<xpath expr="/form/hpaned/child1" position="inside"> 
+				<action colspan="4" name="%(procurement.procurement_action5)d" string="Procurement Exceptions" width="510" />
+			</xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

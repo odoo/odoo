@@ -43,7 +43,7 @@ class account_invoice_1(report_sxw.rml_parse):
         ids = self.pool.get('account.invoice.line').search(self.cr, self.uid, [('invoice_id', '=', invoice.id)])
         ids.sort()
         for id in range(0,len(ids)):
-            info = self.pool.get('account.invoice.line').browse(self.cr, self.uid,ids[id], self.context.copy())
+            info = self.pool.get('account.invoice.line').browse(self.cr, self.uid, ids[id], self.context.copy())
             list_in_seq[info]=info.sequence
         i=1
         j=0
@@ -80,7 +80,7 @@ class account_invoice_1(report_sxw.rml_parse):
                 if entry.uos_id.id==False:
                     res['uos']=''
                 else:
-                    uos_name = self.pool.get('product.uom').read(self.cr,self.uid,entry.uos_id.id,['name'],self.context.copy())
+                    uos_name = self.pool.get('product.uom').read(self.cr, self.uid, entry.uos_id.id, ['name'], self.context.copy())
                     res['uos'] = uos_name['name']
             else:
 

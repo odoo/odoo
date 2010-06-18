@@ -448,7 +448,6 @@ class survey_question_wiz(osv.osv_memory):
             fp.close();
 
         except Exception,e:
-            print 'Exception in create report:',e
             return (False, str(e))
 
         return (True, ret_file_name)

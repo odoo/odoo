@@ -43,7 +43,7 @@ class membership_invoice(osv.osv_memory):
             cr.execute('''
                         SELECT partner_id, id, type
                         FROM res_partner_address
-                        WHERE partner_id =ANY(%s)''',(partner_ids,))
+                        WHERE partner_id IN %s''',(tuple(partner_ids),))
             fetchal = cr.fetchall()
             if not fetchal:
                 raise osv.except_osv(_('Error !'), _('No Address defined for this partner'))

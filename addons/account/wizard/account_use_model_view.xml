@@ -7,15 +7,17 @@
             <field name="model">account.use.model</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Create Entries From Models">
-                	<group colspan="4" >
-	                	<field name="model"/>
-                	</group>
-                    <group colspan="4" col="6">
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button icon="gtk-execute" string="Create Entries" name="create_entries" type="object"/>
-                   </group>
-               </form>
+			<form string="Create Entries From Models">
+				<group height="240" width="510">
+					<separator string="This wizard will create entries from Models" colspan="4"/>
+					<field name="model"/>
+					<separator colspan="4"/>
+					<group colspan="4" col="2">
+						<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+						<button icon="gtk-execute" string="Create Entries" name="create_entries" type="object"/>
+					</group>
+				</group>
+			</form>
             </field>
         </record>
 
