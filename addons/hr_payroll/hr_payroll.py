@@ -27,6 +27,22 @@ from osv import fields
 from tools import config
 from tools.translate import _
 
+from datetime import date
+from datetime import datetime
+from datetime import timedelta
+
+def prev_bounds(cdate=False):
+    when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
+    this_first = date(when.year, when.month, 1)
+    month = when.month + 1
+    year = when.year
+    if month > 12:
+        month = 1
+        year += 1
+    next_month = date(year, month, 1)
+    prev_end = next_month - timedelta(days=1)
+    return this_first, prev_end
+
 class hr_contract_wage_type(osv.osv):
     """
     Wage types
@@ -123,6 +139,10 @@ class hr_contract(osv.osv):
         'visa_no':fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
         'struct_id' : fields.many2one('hr.payroll.structure', 'Salary Structure'),
+        'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee")
+    }
+    _defaults = {
+        'working_days_per_week': lambda *a: 5,
     }
 hr_contract()
 
@@ -382,19 +402,6 @@ class payroll_advice(osv.osv):
         return True
 
 payroll_advice()
-
-from datetime import date, datetime, timedelta
-def prev_bounds(cdate=False):
-    when = datetime.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
-    this_first = date(when.year, when.month, 1)
-    month = when.month + 1
-    year = when.year
-    if month > 12:
-        month = 1
-        year += 1
-    next_month = date(year, month, 1)
-    prev_end = next_month - timedelta(days=1)
-    return this_first, prev_end
 
 class payroll_advice_line(osv.osv):
     '''
@@ -1382,6 +1389,34 @@ class hr_payslip(osv.osv):
         
         return contract
     
+    def _get_leaves(self, cr, user, slip, employee, context={}):
+        """
+        Compute leaves for an employee
+        
+        @param cr: cursor to database
+        @param user: id of current user
+        @param slip: object of the hr.payroll.slip model
+        @param employee: object of the hr.employee model
+        @param context: context arguments, like lang, time zone
+        
+        @return: return a result
+        """
+        
+        result = []
+
+        dates = prev_bounds(slip.date)
+        sql = '''select id from hr_holidays
+                    where date_from >= '%s' and date_to <= '%s' 
+                    and employee_id = %s 
+                    and state = 'validate' ''' % (dates[0], dates[1], slip.employee_id.id)
+        cr.execute(sql)
+        res = cr.fetchall()
+
+        if res:
+            result = [x[0] for x in res]
+        
+        return result
+        
     def compute_sheet(self, cr, uid, ids, context={}):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
@@ -1390,6 +1425,15 @@ class hr_payslip(osv.osv):
         holiday_pool = self.pool.get('hr.holidays')
         
         date = self.read(cr, uid, ids, ['date'])[0]['date']
+        
+        #Check for the Holidays
+        def get_days(start, end, month, year, calc_day):
+            count = 0
+            import datetime
+            for day in range(start, end):
+                if datetime.date(year, month, day).weekday() == calc_day:
+                    count += 1
+            return count
         
         for slip in self.browse(cr, uid, ids):
             contracts = self.get_contract(cr, uid, slip.employee_id, date, context)
@@ -1496,6 +1540,7 @@ class hr_payslip(osv.osv):
                         value = line.amount
                     elif line.amount_type == 'func':
                         value = self.pool.get('hr.payslip.line').execute_function(cr, uid, line.id, amt, context)
+                        line.amount = value
                 
                 if line.type == 'allowance':
                     all_per += percent
@@ -1529,89 +1574,88 @@ class hr_payslip(osv.osv):
                 basic = (sal * 100) / final
             else:
                 basic = contract.wage
-
-            basic_before_leaves = basic
-
-#            #Check for the Holidays
-#            def get_days(start, end, month, year, calc_day):
-#                count = 0
-#                for day in range(start, end):
-#                    if date(year, month, day).weekday() == calc_day:
-#                        count += 1
-#                return count
-#            
-#            dates = prev_bounds(slip.date)
-#            sql = '''select id from hr_holidays
-#                        where date_from >= '%s' and date_to <= '%s' 
-#                        and employee_id = %s 
-#                        and state = 'validate' ''' % (dates[0], dates[1], slip.employee_id.id)
-#            cr.execute(sql)
-#            res = cr.fetchall()
-#            
-            working_day = 0
-            off_days = 0
-#            
-#            days_arr = [0, 1, 2, 3, 4, 5, 6]
-#            for dy in range(contract.working_days_per_week, 7):
-#                off_days += get_days(1, dates[1].day, dates[1].month, dates[1].year, days_arr[dy])
-
-#            total_off = off_days
-#            working_day = dates[1].day - total_off
-#            perday = basic / working_day
-            total = 0.0
-            leave = 0.0
-#            if res:
-#                holi_ids = [x[0] for x in res]
-#                total_leave = 0.0
-#                paid_leave = 0.0
-#                for hday in holiday_pool.browse(cr, uid, holi_ids):
-#                    res = {
-#                        'slip_id':slip.id,
-#                        'name':hday.holiday_status.name + '-%s' % (hday.number_of_days),
-#                        'code':hday.holiday_status.code,
-#                        'amount_type':'fix',
-#                        'category_id':hday.holiday_status.head_id.id,
-#                        'account_id':hday.holiday_status.account_id.id,
-#                        'analytic_account_id':hday.holiday_status.analytic_account_id.id
-#                    }
-#                    total_leave += hday.number_of_days
-#                    if hday.holiday_status.type == 'paid':
-#                        paid_leave += hday.number_of_days
-#                        continue
-#                    elif hday.holiday_status.type == 'halfpaid':
-#                        paid_leave += (hday.number_of_days / 2)
-#                        res['name'] = hday.holiday_status.name + '-%s/2' % (hday.number_of_days)
-#                        res['amount'] = perday * (hday.number_of_days/2)
-#                        total += perday * (hday.number_of_days/2)
-#                        leave += hday.number_of_days / 2
-#                        res['type'] = 'leaves'
-#                    else:
-#                        res['name'] = hday.holiday_status.name + '-%s' % (hday.number_of_days)
-#                        res['amount'] = perday * hday.number_of_days
-#                        res['type'] = 'leaves'
-#                        leave += hday.number_of_days
-#                        total += perday * hday.number_of_days
-#                    
-#                    slip_line_pool.create(cr, uid, res)
-#                basic = basic - total
-#                leaves = total
             
             number = self.pool.get('ir.sequence').get(cr, uid, 'salary.slip')
             ttyme = datetime.fromtimestamp(time.mktime(time.strptime(slip.date,"%Y-%m-%d")))
-
             update.update({
                 'deg_id':function,
                 'number':number, 
                 'basic': round(basic),
-                'basic_before_leaves': round(basic_before_leaves),
+                'basic_before_leaves': round(basic),
                 'name':'Salary Slip of %s for %s' % (slip.employee_id.name, ttyme.strftime('%B-%Y')), 
                 'state':'draft',
+                'contract_id':contract.id,
+                'company_id':slip.employee_id.company_id.id
+            })
+            self.write(cr, uid, [slip.id], update)
+        
+        
+        for slip in self.browse(cr, uid, ids):
+            basic_before_leaves = basic
+
+            working_day = 0
+            off_days = 0
+            dates = prev_bounds(slip.date)
+            
+            days_arr = [0, 1, 2, 3, 4, 5, 6]
+            for dy in range(contract.working_days_per_week, 7):
+                off_days += get_days(1, dates[1].day, dates[1].month, dates[1].year, days_arr[dy])
+        
+            total_off = off_days
+            working_day = dates[1].day - total_off
+            perday = slip.net / working_day
+            
+            total = 0.0
+            leave = 0.0
+            
+            leave_ids = self._get_leaves(cr, uid, slip, slip.employee_id, context)
+            
+            total_leave = 0.0
+            paid_leave = 0.0
+            for hday in holiday_pool.browse(cr, uid, leave_ids):
+                res = {
+                    'slip_id':slip.id,
+                    'name':hday.holiday_status_id.name + '-%s' % (hday.number_of_days),
+                    'code':hday.holiday_status_id.code,
+                    'amount_type':'fix',
+                    'category_id':hday.holiday_status_id.head_id.id,
+                    'account_id':hday.holiday_status_id.account_id.id,
+                    'analytic_account_id':hday.holiday_status_id.analytic_account_id.id
+                }
+                
+                days = hday.number_of_days
+                if hday.number_of_days < 0:
+                    days = hday.number_of_days * -1
+                
+                total_leave += days
+                if hday.holiday_status_id.type == 'paid':
+                    paid_leave += days
+                    continue
+                    
+                elif hday.holiday_status_id.type == 'halfpaid':
+                    paid_leave += (days / 2)
+                    res['name'] = hday.holiday_status_id.name + '-%s/2' % (days)
+                    res['amount'] = perday * (days/2)
+                    total += perday * (days/2)
+                    leave += days / 2
+                    res['type'] = 'deduction'
+                else:
+                    res['name'] = hday.holiday_status_id.name + '-%s' % (days)
+                    res['amount'] = perday * days
+                    res['type'] = 'deduction'
+                    leave += days
+                    total += perday * days
+                
+                slip_line_pool.create(cr, uid, res)
+            basic = basic - total
+            leaves = total
+
+            update.update({
+                'basic_before_leaves': round(basic_before_leaves),
                 'leaves':total,
                 'holiday_days':leave,
                 'worked_days':working_day - leave,
                 'working_days':working_day,
-                'contract_id':contract.id,
-                'company_id':slip.employee_id.company_id.id
             })
             self.write(cr, uid, [slip.id], update)
             
