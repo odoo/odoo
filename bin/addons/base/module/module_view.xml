@@ -104,12 +104,12 @@
                             <newline/>
                             <field name="state" readonly="1" select="1"/>
                             <group col="6" colspan="2">
-                                <button name="button_install" states="uninstalled" string="Schedule for Installation" type="object"/>
-                                <button name="button_install_cancel" states="to install" string="Cancel Install" type="object"/>
-                                <button name="button_uninstall" states="installed" string="Uninstall (beta)" type="object"/>
-                                <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object"/>
-                                <button name="button_upgrade" states="installed" string="Schedule Upgrade" type="object"/>
-                                <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object"/>
+                                <button name="button_install" states="uninstalled" string="Schedule for Installation" icon="terp-gtk-jump-to-ltr" type="object"/>
+                                <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
+                                <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"/>
+                                <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
+                                <button name="button_upgrade" states="installed" string="Schedule Upgrade" icon="terp-gtk-go-back-rtl" type="object"/>
+                                <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
                             </group>
                         </page>
                         <page string="Dependencies">
@@ -147,6 +147,10 @@
                     <field name="latest_version"/>
                     <field name="published_version"/>
                     <field name="state"/>
+                    <button name="button_install" states="uninstalled" string="Schedule for Installation" icon="terp-gtk-jump-to-ltr" type="object"/>
+                    <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
+                    <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"/>
+                    <button name="button_upgrade" states="installed" string="Schedule Upgrade" icon="terp-gtk-go-back-rtl" type="object"/>
                 </tree>
             </field>
         </record>
