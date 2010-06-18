@@ -36,7 +36,7 @@ class hr_si_so_ask(osv.osv_memory):
         emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0].name
-            return employee['name']
+            return employee
         return ''
 
     def _get_empid(self, cr, uid, context=None):

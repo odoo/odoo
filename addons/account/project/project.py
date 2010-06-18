@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -46,7 +46,7 @@ class account_journal(osv.osv):
     _inherit="account.journal"
 
     _columns = {
-        'analytic_journal_id':fields.many2one('account.analytic.journal', 'Analytic Journal'),
+        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal',help="Journal for analytic entries"),
     }
 account_journal()
 

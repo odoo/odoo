@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import time
+
 from report import report_sxw
 from osv import osv
 import pooler
@@ -71,4 +72,5 @@ class shipping(report_sxw.rml_parse):
 #        return True
 
 report_sxw.report_sxw('report.sale.shipping','stock.picking','addons/sale_delivery_report/report/shipping.rml',parser=shipping)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

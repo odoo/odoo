@@ -47,7 +47,7 @@ class purchase_order(osv.osv):
                 res[order.id] += oline.price_unit * oline.product_qty
         return res
 
-    def _amount_all(self, cr, uid, ids, field_name, arg, context):
+    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         cur_obj=self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids):
@@ -55,13 +55,13 @@ class purchase_order(osv.osv):
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
                 'amount_total': 0.0,
-            }
+                            }
             val = val1 = 0.0
-            cur=order.pricelist_id.currency_id
+            cur = order.pricelist_id.currency_id
             for line in order.order_line:
-                for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id)['taxes']:
-                    val+= c['amount']
-                val1 += line.price_subtotal
+               val1 += line.price_subtotal
+               for c in self.pool.get('account.tax').compute_all(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id.id, order.partner_id)['taxes']:
+                    val += c['amount']
             res[order.id]['amount_tax']=cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed']=cur_obj.round(cr, uid, cur, val1)
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
@@ -211,7 +211,6 @@ class purchase_order(osv.osv):
     }
     _name = "purchase.order"
     _description = "Purchase Order"
-    _log_create = True
     _order = "name desc"
 
     def unlink(self, cr, uid, ids, context=None):
@@ -259,10 +258,14 @@ class purchase_order(osv.osv):
 
     def wkf_approve_order(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
+        for (id,name) in self.name_get(cr, uid, ids):
+                message = _('Purchase order ') + " '" + name + "' "+_("is approved by the supplier")
+                self.log(cr, uid, id, message)
         return True
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context={}):
+        product = []
         todo = []
         for po in self.browse(cr, uid, ids):
             if not po.order_line:
@@ -274,6 +277,11 @@ class purchase_order(osv.osv):
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
+            for line in po.order_line:
+                product.append(line.product_id.default_code or '')
+                params = ', '.join(map(lambda x : str(x), product))
+            message = _('Purchase order ') + " '" + po.name + "' "+_('placed on')+ " '" + po.date_order + "' "+_('for')+" '" + params + "' "+ _("is confirmed")
+            self.log(cr, uid, id, message)
         return True
 
     def wkf_warn_buyer(self, cr, uid, ids):
@@ -315,6 +323,9 @@ class purchase_order(osv.osv):
             # Deleting the existing instance of workflow for PO
             wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
+        for (id,name) in self.name_get(cr, uid, ids):
+                message = _('Purchase order') + " '" + name + "' "+ _("is in the draft state")
+                self.log(cr, uid, id, message)
         return True
 
     def action_invoice_create(self, cr, uid, ids, *args):
@@ -394,6 +405,8 @@ class purchase_order(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
+        message = _('Purchase order ') + " '" + purchase.name + "' "+ _("is cancelled")
+        self.log(cr, uid, id, message)
         return True
 
     def action_picking_create(self,cr, uid, ids, *args):
@@ -695,6 +708,9 @@ class purchase_order_line(osv.osv):
         return res
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Purchase order line') + " '" + name + "' "+ _("is confirmed")
+            self.log(cr, uid, id, message)
         return True
 purchase_order_line()
 

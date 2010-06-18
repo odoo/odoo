@@ -777,8 +777,14 @@ class account_invoice(osv.osv):
 
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
+                entry_type = 'journal_pur_voucher'
+                if inv.type == 'in_refund':
+                    entry_type = 'cont_voucher'
             else:
                 ref = self._convert_ref(cr, uid, inv.number)
+                entry_type = 'journal_sale_vou'
+                if inv.type == 'out_refund':
+                    entry_type = 'cont_voucher'
 
             diff_currency_p = inv.currency_id.id <> company_currency
             # create one move line for the total and possibly adjust the other lines amount
@@ -849,7 +855,7 @@ class account_invoice(osv.osv):
 
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
-            move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date}
+            move = {'ref': inv.number, 'line_id': line, 'journal_id': journal_id, 'date': date, 'type': entry_type}
             period_id=inv.period_id and inv.period_id.id or False
             if not period_id:
                 period_ids= self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d'))])
@@ -1073,10 +1079,20 @@ class account_invoice(osv.osv):
         else:
             amount_currency = False
             currency_id = False
+
+        pay_journal = self.pool.get('account.journal').read(cr, uid, pay_journal_id, ['type'], context=context)
+        if invoice.type in ('in_invoice', 'out_invoice'):
+            if pay_journal['type'] == 'bank':
+                entry_type = 'bank_pay_voucher' # Bank payment
+            else:
+                entry_type = 'pay_voucher' # Cash payment
+        else:
+            entry_type = 'cont_voucher'
         if invoice.type in ('in_invoice', 'in_refund'):
             ref = invoice.reference
         else:
             ref = self._convert_ref(cr, uid, invoice.number)
+
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
@@ -1107,7 +1123,7 @@ class account_invoice(osv.osv):
         l2['name'] = name
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date}
+        move = {'ref': ref, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id, 'date': date, 'type': entry_type}
         move_id = self.pool.get('account.move').create(cr, uid, move, context=context)
 
         line_ids = []
@@ -1305,7 +1321,7 @@ class account_invoice_line(osv.osv):
             result['name'] = res.partner_ref
 
         domain = {}
-        result['uos_id'] = uom or res.uom_id.id or False
+        result['uos_id'] = res.uom_id.id or uom or False
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
             if res2 :
@@ -1328,7 +1344,21 @@ class account_invoice_line(osv.osv):
         if company.currency_id.id != currency.id:
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
+
+        if uom:
+            uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
+            if res.uom_id.category_id.id == uom.category_id.id:
+                new_price = res_final['value']['price_unit'] * uom.factor_inv
+                res_final['value']['price_unit'] = new_price
         return res_final
+
+    def uos_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
+        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context)
+        if 'uos_id' in res['value']:
+            del res['value']['uos_id']
+        if not uom:
+            res['value']['price_unit'] = 0.0
+        return res
 
     def move_line_get(self, cr, uid, invoice_id, context=None):
         res = []

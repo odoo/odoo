@@ -21,12 +21,12 @@
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
-from tools.translate import _
+from os.path import join as opj
 from operator import itemgetter
+from tools.translate import _
 from osv import fields, osv
 import netsvc
 import tools
-from os.path import join as opj
 
 class account_installer(osv.osv_memory):
     _name = 'account.installer'

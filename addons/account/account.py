@@ -18,26 +18,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
-from operator import itemgetter
-import netsvc
-
-from osv import fields, osv
-import decimal_precision as dp
-
-from tools.misc import currency
-from tools.translate import _
-import pooler
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from operator import itemgetter
 
+import netsvc
+import pooler
+from osv import fields, osv
+import decimal_precision as dp
+from tools.misc import currency
+from tools.translate import _
 from tools import config
 
 def check_cycle(self, cr, uid, ids):
     """ climbs the ``self._table.parent_id`` chains for 100 levels or
     until it can't find any more parent(s)
-    
+
     Returns true if it runs out of parents (no cycle), false if
     it can recurse 100 times without ending all chains
     """
@@ -82,7 +79,7 @@ class account_payment_term(osv.osv):
             elif line.value == 'balance':
                 amt = round(amount, prec)
             if amt:
-                next_date = datetime.strptime(date_ref, '%y-%m-%d') + relativedelta(days=line.days)
+                next_date = datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days)
                 if line.days2 < 0:
                     next_date += relativedelta(day=line.days2)
                 if line.days2 > 0:
@@ -249,7 +246,7 @@ class account_account(osv.osv):
         if ids3:
             ids3 = self._get_children_and_consol(cr, uid, ids3, context)
         return ids2 + ids3
-    
+
     def __compute(self, cr, uid, ids, field_names, arg=None, context=None,
                   query='', query_params=()):
             """ compute the balance, debit and/or credit for the provided
@@ -276,7 +273,7 @@ class account_account(osv.osv):
             accounts = {}
             if children_and_consolidated:
                 aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-    
+
                 wheres = [""]
                 if query.strip():
                     wheres.append(query.strip())
@@ -302,10 +299,10 @@ class account_account(osv.osv):
                 cr.execute(request, params)
                 self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
                                           'Status: %s'%cr.statusmessage)
-    
+
                 for res in cr.dictfetchall():
                     accounts[res['id']] = res
-    
+
             # consolidate accounts with direct children
             children_and_consolidated.reverse()
             brs = list(self.browse(cr, uid, children_and_consolidated, context=context))
@@ -554,8 +551,13 @@ class account_account(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
+
+        if 'company_id' in vals:
+            move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)])
+            if move_lines:
+                raise osv.except_osv(_('Warning !'), _('You cannot modify Company of account as its related record exist in Entry Lines'))
         if 'active' in vals and not vals['active']:
-            self._check_moves(cr, uid, ids, "write", context)
+            self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
@@ -602,42 +604,46 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
-        'name': fields.char('Journal Name', size=64, required=True, translate=True),
-        'code': fields.char('Code', size=16),
-        'type': fields.selection([('sale', 'Sale'), ('purchase', 'Purchase'), ('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
+        'name': fields.char('Journal Name', size=64, required=True, translate=True,help="Name of the journal"),
+        'code': fields.char('Code', size=16,required=True,help="Code of the journal"),
+        'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'),('expense', 'Expense'), ('cash', 'Cash'), ('bank', 'Bank'), ('general', 'General'), ('situation', 'Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
                                  " Select 'Cash' to be used at the time of making payment."\
                                  " Select 'General' to be used at the time of stock input/output."\
                                  " Select 'Situation' to be used at the time of making vouchers."),
         'refund_journal': fields.boolean('Refund Journal', help='Fill this if the journal is to be used for refunds of invoices.'),
-
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
-
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the journal without removing it."),
-        'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
-        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]"),
-        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]"),
+        'view_id': fields.many2one('account.journal.view', 'Display Mode', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
+        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]", help="It acts as a default account for credit amount"),
+        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]", help="It acts as a default account for debit amount"),
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
-        'update_posted': fields.boolean('Allow Cancelling Entries'),
+        'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
         'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=True),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
-        'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
             help="The sequence used for invoice numbers in this journal."),
         'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
     _defaults = {
-        'active': lambda *a: 1,
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+    def write(self, cr, uid, ids, vals, context=None):
+        obj=[]
+        if 'company_id' in vals:
+            move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
+            if move_lines:
+                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
+        return super(account_journal, self).write(cr, uid, ids, vals, context=context)
+
     def create(self, cr, uid, vals, context={}):
         journal_id = super(account_journal, self).create(cr, uid, vals, context)
 #       journal_name = self.browse(cr, uid, [journal_id])[0].code
@@ -662,6 +668,15 @@ class account_journal(osv.osv):
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
+
+    def onchange_type(self, cr, uid, ids, type):
+        res={}
+        for line in self.browse(cr, uid, ids):
+            if type == 'situation':
+                  res= {'value':{'centralisation': True}}
+            else:
+                  res= {'value':{'centralisation': False}}
+        return res
 
 account_journal()
 
@@ -756,7 +771,7 @@ class account_period(osv.osv):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
                                   help='When monthly periods are created. The state is \'Draft\'. At the end of monthly period it is in \'Done\' state.'),
-        'company_id': fields.many2one('res.company', 'Company', required=True)
+        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -829,6 +844,14 @@ class account_period(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        obj=[]
+        if 'company_id' in vals:
+            move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
+            if move_lines:
+                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this period as its related record exist in Entry Lines'))
+        return super(account_period, self).write(cr, uid, ids, vals, context=context)
+
 account_period()
 
 class account_journal_period(osv.osv):
@@ -854,7 +877,7 @@ class account_journal_period(osv.osv):
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
                                   help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
-        'company_id' : fields.many2one('res.company', 'Company')
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company')
     }
 
     def _check(self, cr, uid, ids, context={}):
@@ -1426,14 +1449,14 @@ class account_tax_code(osv.osv):
         'sign': lambda *args: 1.0,
         'notprintable': lambda *a: False,
     }
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default = default.copy()
         default.update({'line_ids': []})
         return super(account_tax_code, self).copy(cr, uid, id, default, context)
-    
+
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])

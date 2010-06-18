@@ -97,6 +97,8 @@ class account_analytic_plan_instance(osv.osv):
     }
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
         if context.get('journal_id', False):
             journal = self.pool.get('account.journal').browse(cr, user, [context['journal_id']], context=context)[0]
             analytic_journal = journal.analytic_journal_id and journal.analytic_journal_id.id or False

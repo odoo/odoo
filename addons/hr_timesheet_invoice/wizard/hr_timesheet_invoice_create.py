@@ -71,7 +71,6 @@ class hr_timesheet_invoice_create(osv.osv_memory):
 
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-
         data = self.read(cr, uid, ids, [], context)[0]
         account_ids = data['accounts']
         for account in analytic_account_obj.browse(cr, uid, account_ids, context):
@@ -119,11 +118,11 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     "GROUP BY product_id,to_invoice", (account.id,tuple(context['active_ids']),))
 
             for product_id,factor_id,qty in cr.fetchall():
-                product = pool.get('product.product').browse(cr, uid, product_id, context2)
+                product = self.pool.get('product.product').browse(cr, uid, product_id, context2)
                 if not product:
                     raise osv.except_osv(_('Error'), _('At least one line has no product !'))
                 factor_name = ''
-                factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
+                factor = self.pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
 
                 if not data['product']:
                     if factor.customer_name:
@@ -131,16 +130,16 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     else:
                         factor_name = product.name
                 else:
-                    factor_name = pool.get('product.product').name_get(cr, uid, [data['product']], context=context)[0][1]
+                    factor_name = self.pool.get('product.product').name_get(cr, uid, [data['product']], context=context)[0][1]
 
                 if account.pricelist_id:
                     pl = account.pricelist_id.id
-                    price = pool.get('product.pricelist').price_get(cr,uid,[pl], data['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
+                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pl], data['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
                 else:
                     price = 0.0
 
                 taxes = product.taxes_id
-                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
                 curr_line = {
                     'price_unit': price,
@@ -170,7 +169,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                         details.append(line['date'])
                     if data['time']:
                         if line['product_uom_id']:
-                            details.append("%s %s" % (line['unit_amount'], pool.get('product.uom').browse(cr, uid, [line['product_uom_id']])[0].name))
+                            details.append("%s %s" % (line['unit_amount'], self.pool.get('product.uom').browse(cr, uid, [line['product_uom_id']])[0].name))
                         else:
                             details.append("%s" % (line['unit_amount'], ))
                     if data['name']:
@@ -180,7 +179,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
 
                 curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
-                pool.get('account.invoice.line').create(cr, uid, curr_line)
+                self.pool.get('account.invoice.line').create(cr, uid, curr_line)
                 cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s" ,(last_invoice, account.id,tuple(data['ids'])))
 
         self.pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)

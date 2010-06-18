@@ -33,10 +33,12 @@ codawiz_form = """<?xml version="1.0"?>
 <separator colspan="4" string="Select your bank journal :" />
     <field name="journal_id" colspan="1" domain="[('type','=','cash')]" />
     <newline />
-    <field name="def_payable" />    <field name="def_receivable" />
+    <field name="def_payable" />
+    <newline />
+    <field name="def_receivable" />
     <newline />
     <field name="awaiting_account" />
-    <separator string="Clic on 'New' to select your file :" colspan="4"/>
+    <separator string="Click on 'New' to select your file :" colspan="4"/>
     <field name="coda"/>
 </form>
 """
@@ -254,7 +256,7 @@ def _coda_parsing(self, cr, uid, data, context):
             std_log += "\nStatement : %s , Date  : %s, Starting Balance :  %.2f , Ending Balance : %.2f \n"\
                       %(statement['name'], statement['date'], float(statement["balance_start"]), float(statement["balance_end_real"]))
             bkst_list.append(bk_st_id)
-        
+
         except osv.except_osv, e:
             cr.rollback()
             nb_err+=1
