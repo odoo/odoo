@@ -49,7 +49,8 @@
         'hr_expense_view.xml',
         'hr_expense_report.xml',
         'process/hr_expense_process.xml',
-        'report/hr_expense_report_view.xml'
+        'report/hr_expense_report_view.xml',
+        'board_hr_expense_view.xml',
     ],
     'demo_xml': ['hr_expense_demo.xml',
 #                'hr.expense.expense.csv'

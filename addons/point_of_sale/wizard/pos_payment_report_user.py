@@ -25,9 +25,6 @@ from osv import fields
 
 
 class pos_payment_report_user(osv.osv_memory):
-    '''
-    Open ERP Model
-    '''
     _name = 'pos.payment.report.user'
     _description = 'Sales lines by Users'
     def print_report(self, cr, uid, ids, context=None):

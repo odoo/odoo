@@ -103,21 +103,45 @@
 	            <field name="model">stock.move.split</field>
 	            <field name="type">form</field>
 	            <field name="arch" type="xml">
-	                <form string="Split in lots">
-	                	<field name="product_id" colspan="4" readonly="1"/>
-	                	<newline/>
+              <form string="Split in lots">
+                  <field name="product_id" colspan="4" readonly="1"/>
+                  <newline/>
+                  <group colspan="4" col="4">
+                      <group colspan="1" col="2">
+                          <field name="use_exist"/>
+                      </group>
+                      <group colspan="1" col="2">
+                          <field name="qty" readonly="1"/>
+                       </group>
+                      <group colspan="1" col="2">
+                          <field name="product_uom" readonly="1"/>
+                      </group>
+                  </group>
+
+                  <group colspan="4" attrs="{'invisible':[('use_exist','=',True)]}">
 	                	<field name="line_ids" colspan="4" nolabel="1">
-	                		<tree string="Lots Number" editable="top">
+	                		<tree string="Lots Number" editable="bottom">
 	                			<field name="name" string="Lots"/>
 	                			<field name="quantity" />
-                                <field name="use_exist" />
 	                		</tree>
 	                		<form string="Lots Number">
 	                			<field name="name" string="Lots"/>
 	                			<field name="quantity" />
-                                <field name="use_exist" />
 	                		</form>
 	                	</field>
+                    </group>
+                  <group colspan="4" attrs="{'invisible':[('use_exist','!=',True)]}">
+	                	<field name="line_exist_ids" colspan="4" nolabel="1">
+	                		<tree string="Lots Number" editable="bottom">
+	                			<field name="prodlot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
+	                			<field name="quantity" />
+	                		</tree>
+	                		<form string="Lots Number">
+	                			<field name="prodlot_id" string="Lots" domain="[('product_id','=',parent.product_id)]"/>
+	                			<field name="quantity" />
+	                		</form>
+	                	</field>
+                    </group>
 	                	<separator string="" colspan="4" />
 	                	<label string="" colspan="2" />
 	                	<button icon='gtk-cancel' special="cancel"

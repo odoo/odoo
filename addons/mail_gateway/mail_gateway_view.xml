@@ -165,8 +165,9 @@
             <field name="act_window_id" ref="action_view_mailgate_thread"/>
         </record>
 
-            <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
-           parent="base.menu_base_config"  sequence="100"/>
+        <menuitem id="base.menu_base_config_mail" name="Mail" parent="base.menu_base_config" sequence="10"/>
+        <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
+           parent="base.menu_base_config_mail" sequence="5"/>
 
         <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
             id="act_res_partner_emails" name="Emails"

@@ -48,7 +48,7 @@
                     <field name="date_deadline"/>
                     <button
                          name="convert_opportunity"
-                         string="Convert"
+                         string="Convert to Opportunity"
                          help="Convert to Opportunity"
                          icon="gtk-index"
                          type="object"/>
@@ -66,6 +66,7 @@
                             states="open,pending" type="object"
                             icon="gtk-go-forward" />
                     </group>
+                    <field name="type" invisible="1"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Lead">
@@ -297,7 +298,7 @@
                 <separator orientation="vertical"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
-                <field name="user_id" widget="selection">
+                <field name="user_id">
                     <filter icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />

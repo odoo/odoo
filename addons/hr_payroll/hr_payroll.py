@@ -27,6 +27,22 @@ from osv import fields
 from tools import config
 from tools.translate import _
 
+from datetime import date
+from datetime import datetime
+from datetime import timedelta
+
+def prev_bounds(cdate=False):
+    when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
+    this_first = date(when.year, when.month, 1)
+    month = when.month + 1
+    year = when.year
+    if month > 12:
+        month = 1
+        year += 1
+    next_month = date(year, month, 1)
+    prev_end = next_month - timedelta(days=1)
+    return this_first, prev_end
+
 class hr_contract_wage_type(osv.osv):
     """
     Wage types
@@ -65,9 +81,9 @@ hr_passport()
 class hr_payroll_structure(osv.osv):
     """
     Salary structure used to defined
-    * Basic
-    * Allowlance
-    * Deductions
+    - Basic
+    - Allowlance
+    - Deductions
     """
     
     _name = 'hr.payroll.structure'
@@ -123,13 +139,17 @@ class hr_contract(osv.osv):
         'visa_no':fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
         'struct_id' : fields.many2one('hr.payroll.structure', 'Salary Structure'),
+        'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee")
+    }
+    _defaults = {
+        'working_days_per_week': lambda *a: 5,
     }
 hr_contract()
 
 class payroll_register(osv.osv):
-    '''
+    """
     Payroll Register
-    '''
+    """
     _name = 'hr.payroll.register'
     _description = 'Payroll Register'
     
@@ -383,19 +403,6 @@ class payroll_advice(osv.osv):
 
 payroll_advice()
 
-from datetime import date, datetime, timedelta
-def prev_bounds(cdate=False):
-    when = datetime.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
-    this_first = date(when.year, when.month, 1)
-    month = when.month + 1
-    year = when.year
-    if month > 12:
-        month = 1
-        year += 1
-    next_month = date(year, month, 1)
-    prev_end = next_month - timedelta(days=1)
-    return this_first, prev_end
-
 class payroll_advice_line(osv.osv):
     '''
     Bank Advice Lines
@@ -514,28 +521,57 @@ class contrib_register_line(osv.osv):
 contrib_register_line()
 
 class payment_category(osv.osv):
-    '''
-    Open ERP Model
-    '''
-    _name = 'hr.allounce.deduction.categoty'
-    _description = 'Allowance Deduction Categoty'
+    """
+    Allowance, Deduction Heads
+    House Rent Allowance, Medical Allowance, Food Allowance
+    Professional Tax, Advance TDS, Providend Funds, etc    
+    """
     
+    _name = 'hr.allounce.deduction.categoty'
+    _description = 'Allowance Deduction Heads'
+        
     _columns = {
         'name':fields.char('Categoty Name', size=64, required=True, readonly=False),
         'code':fields.char('Categoty Code', size=64, required=True, readonly=False),
         'type':fields.selection([
-            ('allow','Allowance'),
-            ('deduct','Deduction'),
+            ('allowance','Allowance'),
+            ('deduction','Deduction'),
             ('other','Others'),
         ],'Type', select=True),
-        'contribute_per':fields.float('Contribution', digits=(16, int(config['price_accuracy'])), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
-        'contribute':fields.boolean('Contribe by Company ?', help='Is company contribute on this deduction, like Provident Fund'),
-        'include_in_salary':fields.boolean('Included in Salary ?', help='If company contribute on this deduction then should company contribution is also deducted from Employee Salary'),
-        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
-        'line_ids':fields.one2many('hr.allounce.deduction.categoty.line', 'category_id', 'Calculations', required=False),
         'base':fields.char('Based on', size=64, required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
+        'note': fields.text('Description'),    
+        'user_id':fields.char('User', size=64, required=False, readonly=False),
+        'state':fields.char('Label', size=64, required=False, readonly=False),
+        'company_id':fields.many2one('res.company', 'Company', required=False),
+    }
+    _defaults = {
+        'condition': lambda *a: 'True',
+        'base': lambda *a:'basic',
+        'sequence': lambda *a:5,
+        'company_id': lambda self, cr, uid, context: \
+                self.pool.get('res.users').browse(cr, uid, uid,
+                    context=context).company_id.id,
+    }
+payment_category()
+
+class company_contribution(osv.osv):
+    """
+    Company contribution
+    Allows to configure company contribution for some taxes
+    """
+    
+    _name = 'company.contribution'
+    _description = "Company Contribution"
+    
+    _columns = {
+        'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Heads', required=False),
+        'name':fields.char('Name', size=256, required=True, readonly=False),
+        'code':fields.char('Code', size=64, required=True, readonly=False),
+        'include_in_salary':fields.boolean('Included in Salary ?', help='If company contribute on this deduction then should company contribution is also deducted from Employee Salary'),
+        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
+        'line_ids':fields.one2many('company.contribution.line', 'contribution_id', 'Calculations', required=False),
         'register_id':fields.property(
             'hr.contibution.register',
             type='many2one',
@@ -546,15 +582,11 @@ class payment_category(osv.osv):
             help="Contribution register based on company",
             required=False
         ),
-        'note': fields.text('Description'),    
-        'user_id':fields.char('User', size=64, required=False, readonly=False),
-        'state':fields.char('Label', size=64, required=False, readonly=False),
-        'company_id':fields.many2one('res.company', 'Company', required=False),
         'amount_type':fields.selection([
-#            ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
             ('func','Function Calculation'),
         ],'Amount Type', select=True),
+        'contribute_per':fields.float('Contribution', digits=(16, int(config['price_accuracy'])), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
         'account_id':fields.property(
             'account.account',
             type='many2one',
@@ -565,12 +597,14 @@ class payment_category(osv.osv):
             help="Expanse account where company expanse will be encoded",
             required=False
         ),
+        'company_id':fields.many2one('res.company', 'Company', required=False),
+        'active':fields.boolean('Active', required=False),
+        'note': fields.text('Description'),
     }
+    
     _defaults = {
-        'condition': lambda *a: 'True',
-        'base': lambda *a:'basic',
-        'sequence': lambda *a:5,
         'amount_type': lambda *a:'fix',
+        'active': lambda *a:True,
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
@@ -583,7 +617,7 @@ class payment_category(osv.osv):
         uid: user id of current executer
         """
         
-        line_pool = self.pool.get('hr.allounce.deduction.categoty.line')
+        line_pool = self.pool.get('company.contribution.line')
         res = 0
         ids = line_pool.search(cr, uid, [('category_id','=',id), ('to_val','>=',value),('from_val','<=',value)])
         if not ids:
@@ -593,19 +627,20 @@ class payment_category(osv.osv):
         else:
             res = line_pool.browse(cr, uid, ids)[0].value
         return res
-        
-payment_category()
+    
+company_contribution()
 
-class payment_category_line(osv.osv):
-    '''
-    Allowance Deduction Categoty
-    '''
-    _name = 'hr.allounce.deduction.categoty.line'
+class company_contribution_line(osv.osv):
+    """
+    Company contribution lines
+    """
+    
+    _name = 'company.contribution.line'
     _description = 'Allowance Deduction Categoty'
     _order = 'sequence'
     
     _columns = {
-        'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Category', required=False),
+        'contribution_id':fields.many2one('company.contribution', 'Contribution', required=False),
         'name':fields.char('Name', size=64, required=False, readonly=False),
         'umo_id':fields.many2one('product.uom', 'Unite', required=False),
         'from_val': fields.float('From', digits=(16, int(config['price_accuracy']))),
@@ -616,7 +651,7 @@ class payment_category_line(osv.osv):
         'sequence':fields.integer('Sequence'),
         'value': fields.float('Value', digits=(16, int(config['price_accuracy']))),
     }
-payment_category_line()
+company_contribution_line()
 
 class hr_holidays_status(osv.osv):
     _inherit = "hr.holidays.status"
@@ -630,7 +665,7 @@ class hr_holidays_status(osv.osv):
             ], string='Payment'),
         'account_id': fields.many2one('account.account', 'Account', required=False),
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account', required=False),
-        'head_id': fields.many2one('hr.allounce.deduction.categoty', 'Payroll Head', domain=[('type','=','deduct')]),
+        'head_id': fields.many2one('hr.allounce.deduction.categoty', 'Payroll Head', domain=[('type','=','deduction')]),
         'code':fields.char('Code', size=64, required=False, readonly=False),
     }
     _defaults = {
@@ -663,13 +698,27 @@ class hr_payslip(osv.osv):
             deduct = 0.0
             others = 0.0
             
-            obj = {'basic':rs.basic}
+            obj = {
+                'basic':rs.basic
+            }
+            if rs.igross > 0:
+                obj.update({
+                    'gross':rs.igross
+                })
+            if rs.inet > 0:
+                obj.update({
+                    'net':rs.inet
+                })
             
             for line in rs.line_ids:
                 amount = 0.0
                 
                 if line.amount_type == 'per':
-                    amount = line.amount * eval(line.category_id.base, obj)
+                    try:
+                        amount = line.amount * eval(str(line.category_id.base), obj)
+                    except Exception, e:
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                    
                 elif line.amount_type in ('fix', 'func'):
                     amount = line.amount
 
@@ -677,10 +726,10 @@ class hr_payslip(osv.osv):
                 obj[cd] = amount
                 
                 contrib = 0.0
-                if line.category_id.include_in_salary:
-                    contrib = line.company_contrib
-                
-                if line.type == 'allounce':
+#                if line.category_id.include_in_salary:
+#                    contrib = line.company_contrib
+
+                if line.type == 'allowance':
                     allow += amount
                     others += contrib
                     amount -= contrib
@@ -698,12 +747,12 @@ class hr_payslip(osv.osv):
                 self.pool.get('hr.payslip.line').write(cr, uid, [line.id], {'total':amount})
                 
             record = {
-                'allounce': round(allow),
-                'deduction': round(deduct),
-                'grows': round(rs.basic + allow),
-                'net': round(rs.basic + allow - deduct),
+                'allounce':round(allow),
+                'deduction':round(deduct),
+                'grows':round(rs.basic + allow),
+                'net':round(rs.basic + allow - deduct),
                 'other_pay':others,
-                'total_pay': round(rs.basic + allow - deduct + others)
+                'total_pay':round(rs.basic + allow - deduct)
             }
             res[rs.id] = record
         
@@ -747,7 +796,10 @@ class hr_payslip(osv.osv):
         'working_days': fields.integer('Working Days', readonly=True),
         'paid':fields.boolean('Paid ? ', required=False),
         'note':fields.text('Description'),
-        'contract_id':fields.many2one('hr.contract', 'Contract', required=False)
+        'contract_id':fields.many2one('hr.contract', 'Contract', required=False),
+        
+        'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
+        'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
@@ -1319,6 +1371,52 @@ class hr_payslip(osv.osv):
             
         return True
     
+    def get_contract(self, cr, uid, employee, date, context={}):
+        sql_req= '''
+            SELECT c.id as id, c.wage as wage, struct_id as function
+            FROM hr_contract c
+              LEFT JOIN hr_employee emp on (c.employee_id=emp.id)
+              LEFT JOIN hr_contract_wage_type cwt on (cwt.id = c.wage_type_id)
+              LEFT JOIN hr_contract_wage_type_period p on (cwt.period_id = p.id)
+            WHERE
+              (emp.id=%s) AND
+              (date_start <= %s) AND
+              (date_end IS NULL OR date_end >= %s)
+            LIMIT 1
+            '''
+        cr.execute(sql_req, (employee.id, date, date))
+        contract = cr.dictfetchone()
+        
+        return contract
+    
+    def _get_leaves(self, cr, user, slip, employee, context={}):
+        """
+        Compute leaves for an employee
+        
+        @param cr: cursor to database
+        @param user: id of current user
+        @param slip: object of the hr.payroll.slip model
+        @param employee: object of the hr.employee model
+        @param context: context arguments, like lang, time zone
+        
+        @return: return a result
+        """
+        
+        result = []
+
+        dates = prev_bounds(slip.date)
+        sql = '''select id from hr_holidays
+                    where date_from >= '%s' and date_to <= '%s' 
+                    and employee_id = %s 
+                    and state = 'validate' ''' % (dates[0], dates[1], slip.employee_id.id)
+        cr.execute(sql)
+        res = cr.fetchall()
+
+        if res:
+            result = [x[0] for x in res]
+        
+        return result
+        
     def compute_sheet(self, cr, uid, ids, context={}):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
@@ -1326,42 +1424,34 @@ class hr_payslip(osv.osv):
         slip_line_pool = self.pool.get('hr.payslip.line')
         holiday_pool = self.pool.get('hr.holidays')
         
-        vals = self.read(cr, uid, ids)[0]
-        emp_ids = ids
+        date = self.read(cr, uid, ids, ['date'])[0]['date']
+        
+        #Check for the Holidays
+        def get_days(start, end, month, year, calc_day):
+            count = 0
+            import datetime
+            for day in range(start, end):
+                if datetime.date(year, month, day).weekday() == calc_day:
+                    count += 1
+            return count
         
         for slip in self.browse(cr, uid, ids):
-            allow = 0.0
-            #for emp in emp_pool.browse(cr, uid, [vals['employee_id'][0]]):
-            emp = slip.employee_id
-            sql_req= '''
-                SELECT c.id as id, c.wage as wage, function as function
-                FROM hr_contract c
-                  LEFT JOIN hr_employee emp on (c.employee_id=emp.id)
-                  LEFT JOIN hr_contract_wage_type cwt on (cwt.id = c.wage_type_id)
-                  LEFT JOIN hr_contract_wage_type_period p on (cwt.period_id = p.id)
-                WHERE
-                  (emp.id=%s) AND
-                  (date_start <= %s) AND
-                  (date_end IS NULL OR date_end >= %s)
-                LIMIT 1
-                '''
-            cr.execute(sql_req, (emp.id, vals['date'], vals['date']))
-            contract_id = cr.dictfetchone()
+            contracts = self.get_contract(cr, uid, slip.employee_id, date, context)
             
-            if not contract_id:
+            if contracts.get('id', False) == False:
                 continue
             
-            contract = self.pool.get('hr.contract').browse(cr, uid, contract_id['id'])
-            
+            contract = self.pool.get('hr.contract').browse(cr, uid, contracts.get('id'))
             sal_type = contract.wage_type_id.type
-            
-            function = contract.function.id
+            function = contract.struct_id.id
             
             lines = []
             if function:
                 func = func_pool.read(cr, uid, function, ['line_ids'])
                 lines = slip_line_pool.browse(cr, uid, func['line_ids'])
-
+            
+            lines += slip.employee_id.line_ids
+            
             old_slip_id = slip_line_pool.search(cr, uid, [('slip_id','=',slip.id)])
             slip_line_pool.unlink(cr, uid, old_slip_id)
             
@@ -1372,106 +1462,95 @@ class hr_payslip(osv.osv):
             all_fix = 0.0
             ded_fix = 0.0
             
-            obj = {'basic':0.0}
+            obj = {
+                'basic':0.0
+            }
+            update = {
+            
+            }
+            
             if contract.wage_type_id.type == 'gross':
                 obj['gross'] = contract.wage
+                update['igross'] = contract.wage
             if contract.wage_type_id.type == 'net':
                 obj['net'] = contract.wage
+                update['inet'] = contract.wage
             if contract.wage_type_id.type == 'basic':
                 obj['basic'] = contract.wage
+                update['basic'] = contract.wage
             
             c_type = {
             
             }
+
             for line in lines:
                 cd = line.code.lower()
-                obj[cd] = line.amount
+                obj[cd] = line.amount or 0.0
             
             for line in lines:
             
                 if line.category_id.code in ad:
                     continue
+                    
                 ad.append(line.category_id.code)
-                
                 cd = line.category_id.code.lower()
                 
-                goto_next = True
+                calculate = False
                 try:
                     exp = line.category_id.condition
                     calculate = eval(exp, obj)
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
-                    pass
 
                 if not calculate:
                     continue
                 
-                amt = 0.0
+                percent = 0.0
                 value = 0.0
                 base = False
                 company_contrib = 0.0
-                com_value = 0.0
+                base = line.category_id.base
+                
+                try:
+                    # Please have a look at the configuration guide for rules and restrictions
+                    amt = eval(base, obj)
+                except Exception, e:
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                
                 if sal_type in ('gross', 'net'):
-
                     if line.amount_type == 'per':
-                        base = line.category_id.base
-                        value = line.amount
-                        try:
-                            amt = eval(base, obj)
-                        except Exception, e:
-                            raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
+                        percent = line.amount
                         
                         if amt > 1:
-                            com_value = line.amount * amt
-                            amt = line.amount
-                        elif amt >= 0 and amt <= 1:
-                            amt =  line.amount + (amt * line.amount)
+                            value = percent * amt
+                        elif amt > 0 and amt <= 1:
+                            percent = percent * amt
                         
-                        if line.category_id.contribute and line.category_id.amount_type == 'fix':
-                            company_contrib = line.category_id.contribute_per
-                        elif line.category_id.contribute and line.category_id.amount_type == 'func':
-                            company_contrib = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, contract.wage, context)
-
+                        if value > 0:
+                            percent = 0.0
+                    
                     elif line.amount_type == 'fix':
-                    
                         value = line.amount
-                        if line.category_id.contribute and line.category_id.amount_type == 'fix':
-                            company_contrib = line.category_id.contribute_per
-                        elif line.category_id.contribute and line.category_id.amount_type == 'func':
-                            company_contrib = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, contract.wage, context)
-                            
-                    elif line.amount_type == 'func':
                     
-                        value = self.pool.get('hr.payslip.line').execute_function(cr, uid, line.id, contract.wage, context)
-                        if line.category_id.contribute and line.category_id.amount_type == 'fix':
-                            company_contrib = line.category_id.contribute_per
-                        elif line.category_id.contribute and line.category_id.amount_type == 'func':
-                            company_contrib = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, contract.wage, context)
-                        
+                    elif line.amount_type == 'func':
+                        value = self.pool.get('hr.payslip.line').execute_function(cr, uid, line.id, amt, context)
+                        line.amount = value
                 else:
                     if line.amount_type in ('fix', 'per'):
                         value = line.amount
                     elif line.amount_type == 'func':
-                        value = self.pool.get('hr.payslip.line').execute_function(cr, uid, line.id, contract.wage, context)
-                    
-                if line.type == 'allounce':
-                    all_per += amt
-                    all_fix += com_value
+                        value = self.pool.get('hr.payslip.line').execute_function(cr, uid, line.id, amt, context)
+                        line.amount = value
+                
+                if line.type == 'allowance':
+                    all_per += percent
                     all_fix += value
                 elif line.type == 'deduction':
-                    ded_per += amt
-                    ded_fix += com_value
+                    ded_per += percent
                     ded_fix += value
                 
-                if line.category_id.include_in_salary:
-                    if line.type == 'allounce':
-                        all_fix += company_contrib
-                    elif line.type == 'deduction':
-                        ded_fix += company_contrib
-                    
                 vals = {
-                    'company_contrib':company_contrib, 
-                    'amount':value, 
+                    'amount':line.amount, 
                     'slip_id':slip.id, 
                     'employee_id':False, 
                     'function_id':False,
@@ -1479,94 +1558,6 @@ class hr_payslip(osv.osv):
                 }
                 slip_line_pool.copy(cr, uid, line.id, vals, {})
 
-            for line in emp.line_ids:
-           
-                if line.category_id.code in ad:
-                    continue
-                ad.append(line.category_id.code)
-                
-                cd = line.category_id.code.lower()
-                
-                goto_next = True
-                try:
-                    exp = line.category_id.condition
-                    calculate = eval(exp, obj)
-                except Exception, e:
-                    raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
-                    pass
-
-                if not calculate:
-                    continue
-                
-                amt = 0.0
-                value = 0.0
-                base = False
-                company_contrib = 0.0
-                com_value = 0.0
-                if sal_type in ('gross', 'net'):
-
-                    if line.amount_type == 'per':
-                        base = line.category_id.base
-                        value = line.amount
-                        try:
-                            amt = eval(base, obj)
-                        except Exception, e:
-                            raise osv.except_osv(_('Variable Error !'), _('Variable Error : %s ' % (e)))
-                        
-                        if amt > 1:
-                            com_value = line.amount * amt
-                            amt = line.amount
-                        elif amt >= 0 and amt <= 1:
-                            amt =  line.amount + (amt * line.amount)
-                        
-                        if line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'fix':
-                            company_contrib = line.category_id.contribute_per
-                        elif line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'func':
-                            company_contrib = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, contract.wage, context)
-
-                    elif line.amount_type == 'fix':
-                    
-                        value = line.amount
-                        if line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'fix':
-                            company_contrib = line.category_id.contribute_per
-                        elif line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'func':
-                            company_contrib = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, contract.wage, context)
-                            
-                    elif line.amount_type == 'func':
-                    
-                        value = self.pool.get('hr.payslip.line').execute_function(cr, uid, line.id, contract.wage, context)
-                        if line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'fix':
-                            company_contrib = line.category_id.contribute_per
-                        elif line.category_id.contribute and line.category_id.include_in_salary and line.category_id.amount_type == 'func':
-                            company_contrib = self.pool.get('hr.allounce.deduction.categoty').execute_function(cr, uid, line.category_id.id, contract.wage, context)
-                        
-                else:
-                    if line.amount_type in ('fix', 'per'):
-                        value = line.amount
-                    elif line.amount_type == 'func':
-                        value = self.pool.get('hr.payslip.line').execute_function(cr, uid, line.id, contract.wage, context)
-                    
-                if line.type == 'allounce':
-                    all_per += amt
-                    all_fix += com_value
-                    all_fix += value
-                    all_fix += company_contrib
-                elif line.type == 'deduction':
-                    ded_per += amt
-                    ded_fix += com_value
-                    ded_fix += value
-                    ded_fix += company_contrib
-                
-                vals = {
-                    'company_contrib':company_contrib, 
-                    'amount':value, 
-                    'slip_id':slip.id, 
-                    'employee_id':False, 
-                    'function_id':False,
-                    'base':base
-                }
-                slip_line_pool.copy(cr, uid, line.id, vals, {})
-                
             if sal_type in ('gross', 'net'):
                 sal = contract.wage
                 if sal_type == 'net':
@@ -1583,91 +1574,90 @@ class hr_payslip(osv.osv):
                 basic = (sal * 100) / final
             else:
                 basic = contract.wage
-
+            
+            number = self.pool.get('ir.sequence').get(cr, uid, 'salary.slip')
+            ttyme = datetime.fromtimestamp(time.mktime(time.strptime(slip.date,"%Y-%m-%d")))
+            update.update({
+                'deg_id':function,
+                'number':number, 
+                'basic': round(basic),
+                'basic_before_leaves': round(basic),
+                'name':'Salary Slip of %s for %s' % (slip.employee_id.name, ttyme.strftime('%B-%Y')), 
+                'state':'draft',
+                'contract_id':contract.id,
+                'company_id':slip.employee_id.company_id.id
+            })
+            self.write(cr, uid, [slip.id], update)
+        
+        
+        for slip in self.browse(cr, uid, ids):
             basic_before_leaves = basic
 
-            #Check for the Holidays
-            def get_days(start, end, month, year, calc_day):
-                count = 0
-                for day in range(start, end):
-                    if date(year, month, day).weekday() == calc_day:
-                        count += 1
-                return count
-            
-            dates = prev_bounds(slip.date)
-            sql = '''select id from hr_holidays
-                        where date_from >= '%s' and date_to <= '%s' 
-                        and employee_id = %s 
-                        and state = 'validate' ''' % (dates[0], dates[1], slip.employee_id.id)
-            cr.execute(sql)
-            res = cr.fetchall()
-            
             working_day = 0
             off_days = 0
+            dates = prev_bounds(slip.date)
             
             days_arr = [0, 1, 2, 3, 4, 5, 6]
             for dy in range(contract.working_days_per_week, 7):
                 off_days += get_days(1, dates[1].day, dates[1].month, dates[1].year, days_arr[dy])
-
+        
             total_off = off_days
             working_day = dates[1].day - total_off
-            perday = basic / working_day
+            perday = slip.net / working_day
+            
             total = 0.0
             leave = 0.0
-            if res:
-                holi_ids = [x[0] for x in res]
-                total_leave = 0.0
-                paid_leave = 0.0
-                for hday in holiday_pool.browse(cr, uid, holi_ids):
-                    res = {
-                        'slip_id':slip.id,
-                        'name':hday.holiday_status.name + '-%s' % (hday.number_of_days),
-                        'code':hday.holiday_status.code,
-                        'amount_type':'fix',
-                        'category_id':hday.holiday_status.head_id.id,
-                        'account_id':hday.holiday_status.account_id.id,
-                        'analytic_account_id':hday.holiday_status.analytic_account_id.id
-                    }
-                    total_leave += hday.number_of_days
-                    if hday.holiday_status.type == 'paid':
-                        paid_leave += hday.number_of_days
-                        continue
-                    elif hday.holiday_status.type == 'halfpaid':
-                        paid_leave += (hday.number_of_days / 2)
-                        res['name'] = hday.holiday_status.name + '-%s/2' % (hday.number_of_days)
-                        res['amount'] = perday * (hday.number_of_days/2)
-                        total += perday * (hday.number_of_days/2)
-                        leave += hday.number_of_days / 2
-                        res['type'] = 'leaves'
-                    else:
-                        res['name'] = hday.holiday_status.name + '-%s' % (hday.number_of_days)
-                        res['amount'] = perday * hday.number_of_days
-                        res['type'] = 'leaves'
-                        leave += hday.number_of_days
-                        total += perday * hday.number_of_days
-                    
-                    slip_line_pool.create(cr, uid, res)
-                basic = basic - total
-                leaves = total
             
-            number = self.pool.get('ir.sequence').get(cr, uid, 'salary.slip')
-            ttyme = datetime.fromtimestamp(time.mktime(time.strptime(slip.date,"%Y-%m-%d")))
+            leave_ids = self._get_leaves(cr, uid, slip, slip.employee_id, context)
+            
+            total_leave = 0.0
+            paid_leave = 0.0
+            for hday in holiday_pool.browse(cr, uid, leave_ids):
+                res = {
+                    'slip_id':slip.id,
+                    'name':hday.holiday_status_id.name + '-%s' % (hday.number_of_days),
+                    'code':hday.holiday_status_id.code,
+                    'amount_type':'fix',
+                    'category_id':hday.holiday_status_id.head_id.id,
+                    'account_id':hday.holiday_status_id.account_id.id,
+                    'analytic_account_id':hday.holiday_status_id.analytic_account_id.id
+                }
+                
+                days = hday.number_of_days
+                if hday.number_of_days < 0:
+                    days = hday.number_of_days * -1
+                
+                total_leave += days
+                if hday.holiday_status_id.type == 'paid':
+                    paid_leave += days
+                    continue
+                    
+                elif hday.holiday_status_id.type == 'halfpaid':
+                    paid_leave += (days / 2)
+                    res['name'] = hday.holiday_status_id.name + '-%s/2' % (days)
+                    res['amount'] = perday * (days/2)
+                    total += perday * (days/2)
+                    leave += days / 2
+                    res['type'] = 'deduction'
+                else:
+                    res['name'] = hday.holiday_status_id.name + '-%s' % (days)
+                    res['amount'] = perday * days
+                    res['type'] = 'deduction'
+                    leave += days
+                    total += perday * days
+                
+                slip_line_pool.create(cr, uid, res)
+            basic = basic - total
+            leaves = total
 
-            updt = {
-                'deg_id':function,
-                'number':number, 
-                'basic': round(basic),
+            update.update({
                 'basic_before_leaves': round(basic_before_leaves),
-                'name':'Salary Slip of %s for %s' % (emp.name, ttyme.strftime('%B-%Y')), 
-                'state':'draft',
                 'leaves':total,
                 'holiday_days':leave,
                 'worked_days':working_day - leave,
                 'working_days':working_day,
-                'contract_id':contract.id,
-                'company_id':slip.employee_id.company_id.id
-            }
-            self.write(cr, uid, [slip.id], updt)
+            })
+            self.write(cr, uid, [slip.id], update)
             
         return True
         
@@ -1735,10 +1725,17 @@ class hr_payslip_line(osv.osv):
 
     def onchange_category(self, cr, uid, ids, category_id):
         seq = 0
+        res = {
+        }
         if category_id:
-            seq = self.pool.get('hr.allounce.deduction.categoty').browse(cr, uid, category_id).sequence
-            
-        return {'value':{'sequence':seq}}
+            category = self.pool.get('hr.allounce.deduction.categoty').browse(cr, uid, category_id)
+            res.update({
+                'sequence':category.sequence,
+                'name':category.name,
+                'code':category.code,
+                'type':category.type
+            })
+        return {'value':res}
     
     def onchange_amount(self, cr, uid, ids, amount, typ):
         amt = amount
@@ -1756,7 +1753,7 @@ class hr_payslip_line(osv.osv):
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
         'type':fields.selection([
-            ('allounce','Allowance'),
+            ('allowance','Allowance'),
             ('deduction','Deduction'),
             ('leaves','Leaves'),
             ('advance','Advance'),
@@ -1793,7 +1790,7 @@ class hr_payslip_line(osv.osv):
             ids = line_pool.search(cr, uid, [('slipline_id','=',id), ('from_val','<=',value)])
         
         if not ids:
-            return 0
+            return res
         
         res = line_pool.browse(cr, uid, ids)[-1].value
         return res

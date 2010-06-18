@@ -17,10 +17,10 @@ try:
     TEMPLATE_ENGINES.append(('mako', 'Mako Templates'))
 except:
     LOGGER.notifyChannel(
-                         _("Email Template"),
-                         netsvc.LOG_ERROR,
-                         _("Mako templates not installed")
-                         )
+         _("Email Template"),
+         netsvc.LOG_WARNING,
+         _("Mako templates not installed")
+    )
 try:
     from django.template import Context, Template as DjangoTemplate
     #Workaround for bug:
@@ -31,10 +31,10 @@ try:
     TEMPLATE_ENGINES.append(('django', 'Django Template'))
 except:
     LOGGER.notifyChannel(
-                         _("Email Template"),
-                         netsvc.LOG_ERROR,
-                         _("Django templates not installed")
-                         )
+         _("Email Template"),
+         netsvc.LOG_WARNING,
+         _("Django templates not installed")
+    )
 
 import email_template_engines
 import tools
@@ -102,9 +102,15 @@ class email_template(osv.osv):
                 }
 
     _columns = {
-        'name' : fields.char('Name of Template', size=100, required=True),
+        'name' : fields.char('Name', size=100, required=True),
         'object_name':fields.many2one('ir.model', 'Model'),
         'model_int_name':fields.char('Model Internal Name', size=200,),
+        'enforce_from_account':fields.many2one(
+                   'email_template.account',
+                   string="Enforce From Account",
+                   help="Emails will be sent only from this account."),
+        'from_email' : fields.related('enforce_from_account', 'email_id',
+                                                type='char', string='From',),        
         'def_to':fields.char(
                  'Recepient (To)',
                  size=250,
@@ -141,7 +147,7 @@ class email_template(osv.osv):
                     help="The text version of the mail",
                     translate=True),
         'use_sign':fields.boolean(
-                  'Use Signature',
+                  'Signature',
                   help="the signature from the User details" 
                   "will be appened to the mail"),
         'file_name':fields.char(
@@ -168,11 +174,6 @@ class email_template(osv.osv):
                   string="Allowed User Groups",
                   help="Only users from these groups will be"
                   " allowed to send mails from this Template"),
-        'enforce_from_account':fields.many2one(
-                   'email_template.account',
-                   string="Enforce From Account",
-                   help="Emails will be sent only from this account.",
-                   domain="[('company','=','yes')]"),
         'model_object_field':fields.many2one(
                  'ir.model.fields',
                  string="Field",
@@ -218,6 +219,7 @@ class email_template(osv.osv):
     }
 
     _defaults = {
+        'template_language' : lambda *a:'mako',
 
     }
     _sql_constraints = [
@@ -466,7 +468,7 @@ class email_template(osv.osv):
                                context)
         return True
     
-    def generate_mailbox_item_from_template(self,
+    def _generate_mailbox_item_from_template(self,
                                       cursor,
                                       user,
                                       template,
@@ -557,6 +559,8 @@ class email_template(osv.osv):
             'folder':'drafts',
             'mail_type':'multipart/alternative' 
         }
+        if not mailbox_values['account_id']:
+            raise Exception("Unable to send the mail. No account linked to the template.")
         #Use signatures if allowed
         if template.use_sign:
             sign = self.pool.get('res.users').read(cursor,
@@ -568,13 +572,17 @@ class email_template(osv.osv):
                 mailbox_values['body_text'] += sign
             if mailbox_values['body_html']:
                 mailbox_values['body_html'] += sign
+        print 'Creating', mailbox_values
         mailbox_id = self.pool.get('email_template.mailbox').create(
                                                              cursor,
                                                              user,
                                                              mailbox_values,
                                                              context)
+
+        print 'Sending', mailbox_id
+        self.pool.get('email_template.mailbox').send_this_mail(cursor, user, [mailbox_id], context)
         return mailbox_id
-        
+
     def generate_mail(self,
                       cursor,
                       user,
@@ -586,6 +594,7 @@ class email_template(osv.osv):
         template = self.browse(cursor, user, template_id, context=context)
         if not template:
             raise Exception("The requested template could not be loaded")
+        print 'loaded', record_ids
         for record_id in record_ids:
             mailbox_id = self._generate_mailbox_item_from_template(
                                                                 cursor,
@@ -593,6 +602,7 @@ class email_template(osv.osv):
                                                                 template,
                                                                 record_id,
                                                                 context)
+            print 'loaded'
             mail = self.pool.get('email_template.mailbox').browse(
                                                         cursor,
                                                         user,
@@ -614,7 +624,7 @@ class email_template(osv.osv):
                                                 mailbox_id,
                                                 {'folder':'outbox'},
                                                 context=context
-                                                      )
+            )
         return True
 
 email_template()
@@ -626,16 +636,15 @@ class email_template_preview(osv.osv_memory):
     def _get_model_recs(self, cr, uid, context=None):
         if context is None:
             context = {}
-        #Fills up the selection box which allows records from the selected object to be displayed
+            #Fills up the selection box which allows records from the selected object to be displayed
         self.context = context
-        if 'active_id' in context.keys():
-#            context['active_id'] = 5
-            ref_obj_id = self.pool.get('email.template').read(cr, uid, context['active_id'], ['object_name'], context)
-            ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id[0], ['model'], context)['model']
+        if 'template_id' in context.keys():
+            ref_obj_id = self.pool.get('email.template').read(cr, uid, context['template_id'], ['object_name'], context)
+            ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
             ref_obj_ids = self.pool.get(ref_obj_name).search(cr, uid, [], context=context)
             ref_obj_recs = self.pool.get(ref_obj_name).name_get(cr, uid, ref_obj_ids, context)
-            return ref_obj_recs
-    
+            return ref_obj_recs    
+        
     def _default_model(self, cursor, user, context=None):
         """
         Returns the default value for model field
@@ -646,7 +655,7 @@ class email_template_preview(osv.osv_memory):
         return self.pool.get('email.template').read(
                                                    cursor,
                                                    user,
-                                                   context['active_id'],
+                                                   context['template_id'],
                                                    ['object_name'],
                                                    context)['object_name']
         
@@ -665,10 +674,9 @@ class email_template_preview(osv.osv_memory):
         'report':fields.char('Report Name', size=100, readonly=True),
     }
     _defaults = {
-        'ref_template': lambda self, cr, uid, ctx:ctx['active_id'],
+        'ref_template': lambda self, cr, uid, ctx:ctx['template_id'],
         'rel_model': _default_model
     }
-
     def on_change_ref(self, cr, uid, ids, rel_model_ref, context=None):
         if context is None:
             context = {}
@@ -677,13 +685,13 @@ class email_template_preview(osv.osv_memory):
         vals = {}
         if context == {}:
             context = self.context
-        template = self.pool.get('email.template').browse(cr, uid, context['active_id'], context)
+        template = self.pool.get('email.template').browse(cr, uid, context['template_id'], context)
         #Search translated template
         lang = get_value(cr, uid, rel_model_ref, template.lang, template, context)
         if lang:
             ctx = context.copy()
             ctx.update({'lang':lang})
-            template = self.pool.get('email.template').browse(cr, uid, context['active_id'], ctx)
+            template = self.pool.get('email.template').browse(cr, uid, context['template_id'], ctx)
         vals['to'] = get_value(cr, uid, rel_model_ref, template.def_to, template, context)
         vals['cc'] = get_value(cr, uid, rel_model_ref, template.def_cc, template, context)
         vals['bcc'] = get_value(cr, uid, rel_model_ref, template.def_bcc, template, context)

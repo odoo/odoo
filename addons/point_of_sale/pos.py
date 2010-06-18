@@ -172,7 +172,8 @@ class pos_order(osv.osv):
         return res
 
     def _amount_all(self, cr, uid, ids, name, args, context=None):
-        tax_obj = self.pool.get('account.tax')        
+        tax_obj = self.pool.get('account.tax')    
+        cur_obj = self.pool.get('res.currency')     
         res={}
         for order in self.browse(cr, uid, ids):
             res[order.id] = {
@@ -180,6 +181,9 @@ class pos_order(osv.osv):
                 'amount_return':0.0,
                 'amount_tax':0.0,
             }            
+            val=0.0      
+            cur_obj = self.pool.get('res.currency')            
+            cur = order.pricelist_id.currency_id               
             for payment in order.statement_ids:
                  res[order.id]['amount_paid'] +=  payment.amount 
             for payment in order.payments:
@@ -192,11 +196,9 @@ class pos_order(osv.osv):
                             (1-(line.discount or 0.0)/100.0), line.qty),
                             res[order.id]['amount_tax'])
                 else:
-                    res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
-                        tax_obj.compute(cr, uid, line.product_id.taxes_id,
-                            line.price_unit * \
-                            (1-(line.discount or 0.0)/100.0), line.qty),
-                            res[order.id]['amount_tax'])                                                    
+                    for c in tax_obj.compute_all(cr, uid, line.product_id.taxes_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.qty,  line.product_id, line.order_id.partner_id)['taxes']:
+                        val += c['amount']                    
+                    res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
         return res
         
 
@@ -463,12 +465,13 @@ class pos_order(osv.osv):
         """Create a picking for each order and validate it."""
         
         picking_obj = self.pool.get('stock.picking')
-
+        pick_name=self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         orders = self.browse(cr, uid, ids, context)
         for order in orders:
             if not order.picking_id:
                 new = True
                 picking_id = picking_obj.create(cr, uid, {
+                    'name':pick_name,                                                          
                     'origin': order.name,
                     'type': 'out',
                     'state': 'draft',
@@ -504,7 +507,7 @@ class pos_order(osv.osv):
                     if line.qty < 0:
                         location_id, stock_dest_id = stock_dest_id, location_id
 
-                        self.pool.get('stock.move').create(cr, uid, {
+                    self.pool.get('stock.move').create(cr, uid, {
                             'name': 'Stock move (POS %d)' % (order.id, ),
                             'product_uom': line.product_id.uom_id.id,
                             'product_uos': line.product_id.uom_id.id,
@@ -788,8 +791,8 @@ class pos_order(osv.osv):
                 tax_amount = 0
                 taxes = [t for t in line.product_id.taxes_id]
                 if order.price_type=='tax_excluded':
-                    computed_taxes = account_tax_obj.compute(
-                        cr, uid, taxes, line.price_unit, line.qty)
+                    computed_taxes = account_tax_obj.compute_all(
+                        cr, uid, taxes, line.price_unit, line.qty)['taxes']
                 else:
                     computed_taxes = account_tax_obj.compute_inv(
                         cr, uid, taxes, line.price_unit, line.qty)
@@ -1057,7 +1060,7 @@ class pos_order_line(osv.osv):
         for line in self.browse(cr, uid, ids):
             tax_amount = 0.0
             taxes = [t for t in line.product_id.taxes_id]
-            computed_taxes = account_tax_obj.compute(cr, uid, taxes, line.price_unit, line.qty)
+            computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
             for tax in computed_taxes:
                 tax_amount += tax['amount']
             price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
@@ -1086,17 +1089,18 @@ class pos_order_line(osv.osv):
             raise osv.except_osv(_('No Pricelist !'),
                 _('You have to select a pricelist in the sale form !\n' \
                 'Please set one before choosing a product.'))
-        p_obj = self.pool.get('product.product').browse(cr,uid,product_id).list_price
+        p_obj = self.pool.get('product.product').browse(cr,uid,[product_id])[0]
+        uom_id=p_obj.uom_po_id.id 
         price = self.pool.get('product.pricelist').price_get(cr, uid,
-            [pricelist], product_id, qty or 1.0, partner_id)[pricelist]
-        # Todo need to check     
-#        if price is False:
-#            raise osv.except_osv(_('No valid pricelist line found !'),
-#                _("Couldn't find a pricelist line matching this product" \
-#                " and quantity.\nYou have to change either the product," \
-#                " the quantity or the pricelist."))
-        return price or p_obj
-
+            [pricelist], product_id, qty or 1.0, partner_id,{'uom': uom_id})[pricelist]
+        unit_price=price or p_obj.list_price
+        if unit_price is False:
+            raise osv.except_osv(_('No valid pricelist line found !'),
+                _("Couldn't find a pricelist line matching this product" \
+                " and quantity.\nYou have to change either the product," \
+                " the quantity or the pricelist."))
+        return unit_price 
+    
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
         price = self.price_by_product(cr, uid, ids, pricelist, product_id, qty, partner_id)
         self.write(cr,uid,ids,{'price_unit':price})
@@ -1329,4 +1333,13 @@ class product_product(osv.osv):
         'disc_controle': lambda *a: True,
 }
 product_product()
+
+class stock_picking(osv.osv):
+
+    _inherit = 'stock.picking'
+    _columns = {
+        'pos_order': fields.many2one('pos.order', 'Pos order'),
+    }
+stock_picking()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

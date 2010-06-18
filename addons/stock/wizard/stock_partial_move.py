@@ -30,10 +30,10 @@ class stock_partial_move(osv.osv_memory):
     _name = "stock.partial.move"    
     _description = "Partial Move"    
     _columns = {
-                'date': fields.datetime('Date', required=True),
-                'partner_id': fields.many2one('res.partner',string="Partner", required=True),
-                'address_id': fields.many2one('res.partner.address', 'Delivery Address', help="Address where goods are to be delivered", required=True),
-                               
+        'date': fields.datetime('Date', required=True),
+        'partner_id': fields.many2one('res.partner',string="Partner"),
+        'type': fields.char("Type", size=3),
+        'address_id': fields.many2one('res.partner.address', 'Delivery Address', help="Address where goods are to be delivered"),
      }
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -67,11 +67,14 @@ class stock_partial_move(osv.osv_memory):
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
                     	<field name="date" colspan="4" />
-                    	<field name="partner_id"/>
-                    	<field name="address_id"/>
+                     <group colspan="4" attrs="{'invisible':[('type','=','in')]}">
+                    	<field name="partner_id"  attrs="{'required':[('type','!=','in')]}" />
+                    	<field name="address_id"  attrs="{'required':[('type','!=','in')]}"/>
+                    	<field name="type" invisible="1"/>
                     	<newline/>
+                        </group>
                         <separator colspan="4" string="Move Detail"/>
-                    	"""
+                    	""" 
         _moves_fields = result['fields']
         if move_ids and view_type in ['form']:            
             for m in move_obj.browse(cr, uid, move_ids, context):                
@@ -140,35 +143,64 @@ class stock_partial_move(osv.osv_memory):
         return result
 
     def default_get(self, cr, uid, fields, context=None):
-        """ 
-             To get default values for the object.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
+        """ To get default values for the object.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values 
+        @param context: A standard dictionary 
+        @return: A dictionary which of fields with values. 
         """ 
 
         res = super(stock_partial_move, self).default_get(cr, uid, fields, context=context)
         move_obj = self.pool.get('stock.move')        
         if not context:
             context={}
-        moveids = []
+        moveids = address_delivery = address_default = []
         if 'date' in fields:
             res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        move_ids = context.get('active_ids', [])
+        move_ids = move_obj.search(cr, uid, [('id','in',move_ids)])
         for m in move_obj.browse(cr, uid, context.get('active_ids', [])):            
             if m.state in ('done', 'cancel'):
                 continue
+            res['type'] = m.picking_id and m.picking_id.type or ''
+            address_ids = list(set([(pick.address_id and pick.address_id.id, pick.address_id and pick.address_id.partner_id and  pick.address_id.partner_id.id) for pick in move_obj.browse(cr, uid, move_ids)]))
+            address_ids1 = list(set([(pick.address_id and pick.address_id.id, pick.address_id and pick.address_id.partner_id and  pick.address_id.partner_id.id) for pick in move_obj.browse(cr, uid, move_ids) if pick.address_id]))
+            if len(address_ids1) == 1:
+                if m.picking_id and m.picking_id.type=='out':
+                    res['address_id'] = address_ids[0][0] or False
+                    res['partner_id'] = address_ids[0][1] or False  
+            if  m.picking_id and m.picking_id.type=='in':
+                    res['partner_id'] = m.company_id.partner_id.id or False
+                    if  m.company_id.partner_id:
+                        address_default = [add.id for add in  m.company_id.partner_id.address if add.type=='default']
+                        address_delivery = [add.id for add in  m.company_id.partner_id.address if add.type=='delivery']
+                    if len(address_delivery):
+                        res['address_id'] =  address_delivery and address_delivery[0] or False
+                    else:
+                        res['address_id'] =  address_default and address_default[0] or False
+
             if 'move%s_product_id'%(m.id) in fields:
                 res['move%s_product_id'%(m.id)] = m.product_id.id
             if 'move%s_product_qty'%(m.id) in fields:
                 res['move%s_product_qty'%(m.id)] = m.product_qty
             if 'move%s_product_uom'%(m.id) in fields:
                 res['move%s_product_uom'%(m.id)] = m.product_uom.id
+
+            if (m.picking_id.type == 'out') and (m.product_id.cost_method == 'average'):
+                price = 0
+                if hasattr(m, 'sale_line_id') and m.sale_line_id:
+                    price = m.sale_line_id.price_unit
+
+                currency = False
+                if hasattr(m.picking_id, 'sale_id') and m.picking_id.sale_id:
+                    currency = m.picking_id.sale_id.pricelist_id.currency_id.id
+    
+                if 'move%s_product_price'%(m.id) in fields:
+                    res['move%s_product_price'%(m.id)] = price
+                if 'move%s_product_currency'%(m.id) in fields:
+                    res['move%s_product_currency'%(m.id)] = currency
 
             if (m.picking_id.type == 'in') and (m.product_id.cost_method == 'average'):
                 price = 0
@@ -185,7 +217,16 @@ class stock_partial_move(osv.osv_memory):
                     res['move%s_product_currency'%(m.id)] = currency
         return res   
 
-    def do_partial(self, cr, uid, ids, context):    
+    def do_partial(self, cr, uid, ids, context):
+        """ Makes partial moves and pickings done.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values 
+        @param context: A standard dictionary 
+        @return: A dictionary which of fields with values. 
+        """ 
+            
         rec_id = context and context.get('active_id', False)
         tracking_lot = context.get('tracking_lot', False)
         if tracking_lot:
@@ -218,5 +259,6 @@ class stock_partial_move(osv.osv_memory):
         return {}
  
 stock_partial_move()    
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

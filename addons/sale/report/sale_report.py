@@ -41,15 +41,19 @@ class sale_report(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
+
+        'uom_id': fields.many2one('product.uom', 'Default Unit Of Measure', readonly=True),
+        'product_qty':fields.float('# of Qty', readonly=True),
         'uom_name': fields.char('Default UoM', size=128, readonly=True),
         'product_uom_qty':fields.float('# of Qty', readonly=True),
+
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'shop_id':fields.many2one('sale.shop', 'Shop', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
         'delay':fields.float('Days to Close', digits=(16,2), readonly=True),
-        'price_average':fields.float('Average Price', readonly=True),
+        'price_average':fields.float('Average Price', readonly=True,group_operator="avg"),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'state': fields.selection([
@@ -88,7 +92,7 @@ class sale_report(osv.osv):
                      s.shipped::integer as shipped_qty_1,
                      s.pricelist_id as pricelist_id,
                      s.project_id as analytic_account_id
-    from 
+    from
     sale_order s,
     (
         select l.id as id,
@@ -96,7 +100,7 @@ class sale_report(osv.osv):
                      u.name as uom_name,
                      sum(l.product_uom_qty * u.factor) as product_uom_qty,
                      sum(l.product_uom_qty*l.price_unit) as price_total,
-                     (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty * u.factor))::decimal(16,2) as price_average,
+                     (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty * u.factor)*count(l.product_id))::decimal(16,2) as price_average,
                      pt.categ_id, l.order_id
         from
                  sale_order_line l

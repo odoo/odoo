@@ -260,8 +260,8 @@
                         <separator orientation="vertical"/>
                         <field name="title" select="1"/>
                         <field name="type" select="1" widget="selection"/>
-                        <field name="responsible_id" select="1" widget="selection" default="1">
-                        <filter string="MY" icon="terp-partner" domain="[('responsible_id','=',uid)]"/>
+                        <field name="responsible_id" select="1" default="1">
+                            <filter string="MY" icon="terp-partner" domain="[('responsible_id','=',uid)]"/>
                         </field>
                    </group>
                </search>

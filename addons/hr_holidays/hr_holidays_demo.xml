@@ -34,23 +34,19 @@
 			<field name="color_name">red</field>
 		</record>
 
-        <record model="hr.holidays" id="hr_holidays_employee1_allocation_sl">
-            <field name="name">Sick Leave for Fabien Pinckaers</field>
-            <field name="holiday_status_id" ref="holiday_status_sl"/>
-            <field name="type">add</field>
-            <field name="number_of_days_temp">7</field>
-            <field name="employee_id" ref="hr.employee1"/>
-        </record>
-
 		<record model="hr.holidays" id="hr_holidays_employee1_sl">
 			<field name="name">Doctor Appointment</field>
 			<field name="holiday_status_id" ref="holiday_status_sl"/>
 			<field name="date_from">2010-02-01 00:00</field>
 			<field name="date_to">2010-02-03 08:00</field>
 			<field name="type">remove</field>
+			<field name="state">draft</field>
 			<field name="number_of_days_temp">3</field>
 			<field name="employee_id" ref="hr.employee1"/>
 		</record>
+
+        <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
+        <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
 
 	</data>
 </openerp>

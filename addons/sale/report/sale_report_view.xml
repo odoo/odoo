@@ -19,7 +19,7 @@
                 <field name="product_id" invisible="1"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
-                <field name="product_uom_qty" avg="# of Qty"/>
+                <field name="product_uom_qty" sum="# of Qty"/>
                 <field name="shipped_qty_1"/>
                 <field name="uom_name" invisible="not context.get('set_visible',False)"/>
                 <field name="price_average" avg="Average Price"/>
@@ -78,7 +78,7 @@
 	                <field name="partner_id"/>
                     <field name="product_id"/>
 	                <field name="user_id" widget="selection">
-	                    <filter icon="terp-dolar"
+	                    <filter icon="terp-personal"
                             string="My Sales"
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
@@ -99,7 +99,7 @@
                     <filter string="Shop" icon="terp-go-home" context="{'group_by':'shop_id'}"/>
                     <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator orientation="vertical"/>
-                   <filter string="Day" icon="terp-go-month" context="{'group_by':'day'}"/>
+                   <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
@@ -125,8 +125,18 @@
         <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
     </record>
 
-    <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="8"/>
-    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="3"/>
+    <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11"/>
+    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1"/>
+
+    <record id="action_stock_move_report_so" model="ir.actions.act_window">
+        <field name="name">Shipments Analysis</field>
+        <field name="res_model">report.stock.move</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_month':1, 'search_default_group_product':1, 'search_default_group_partner':1, 'search_default_done':1, 'search_default_out': 1, 'group_by':[], 'group_by_no_leaf':1}</field>
+    </record>
+    <menuitem action="action_stock_move_report_so" id="menu_action_stock_move_report_so" parent="base.next_id_64" sequence="25"/>
+
 
     <!--This views used in board_sale module -->
     <record id="view_sale_order_by_clients_tree" model="ir.ui.view">

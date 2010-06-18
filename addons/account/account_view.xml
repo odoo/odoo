@@ -272,22 +272,19 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="active" select="1"/>
-                        <field name="type"/>
+                        <field name="type" on_change="onchange_type(type)"/>
                         <field name="refund_journal" attrs="{'readonly':[('type','=','general'),('type','=','cash'),('type','=','situation')]}"/>
                     </group>
-
-                    <notebook colspan="4">
+					    <notebook colspan="4">
                         <page string="General Information">
                             <group colspan="2" col="2">
                                 <separator string="Journal View" colspan="4"/>
-                                <field name="view_id"/>
+                                <field name="view_id" widget="selection"/>
                             </group>
 
                             <group colspan="2" col="2">
                                 <separator string="Sequence" colspan="4"/>
                                 <field name="sequence_id"/>
-                                <field name="invoice_sequence_id"/>
                             </group>
 
                             <group colspan="2" col="2">
@@ -296,7 +293,7 @@
                                 <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             </group>
 
-                            <group colspan="2" col="2">
+							<group colspan="2" col="2">
                                 <separator string="Validations" colspan="4"/>
                                 <field name="allow_date" groups="base.group_extended"/>
                             </group>
@@ -307,15 +304,19 @@
                                 <field name="user_id" groups="base.group_extended"/>
                                 <field name="currency"/>
                             </group>
+
                             <group colspan="2" col="2">
                                 <separator string="Other Configuration" colspan="4"/>
-                                <field name="centralisation"/>
-                                <field name="group_invoice_lines"/>
-                                <field name="update_posted"/>
+                                <field name="centralisation" groups="base.group_extended"/>
                                 <field name="entry_posted"/>
+	                            <group colspan="2" col="2">
+	                                <separator string="Invoicing Data" colspan="4"/>
+	                                <field name="invoice_sequence_id"/>
+	                                <field name="group_invoice_lines"/>
+	                            </group>
                             </group>
                         </page>
-                        <page string="Entry Controls">
+                        <page string="Entry Controls" groups="base.group_extended">
                             <separator colspan="4" string="Accounts Type Allowed (empty for no control)"/>
                             <field colspan="4" name="type_control_ids" nolabel="1"/>
                             <separator colspan="4" string="Accounts Allowed (empty for no control)"/>
@@ -407,9 +408,9 @@
                     <group col="7" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
-                        <button name="button_dummy" states="draft" string="Compute" icon="gtk-execute"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object"  icon="gtk-apply"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
                     </group>
                 </form>
             </field>
@@ -465,7 +466,7 @@
                         <field name="total_entry"/>
                         <field name="total_new"/>
                         <field name="total_balance"/>
-                        <button colspan="2" name="dummy" string="Compute" icon="gtk-execute"/>
+                        <button colspan="2" name="dummy" string="Compute" icon="terp-stock_format-scientific"/>
                     </group>
                 </form>
             </field>
@@ -956,8 +957,8 @@
                             <field name="narration" colspan="4" nolabel="1"/>
                             <field name="state" select="1"/>
                             <group col="2" colspan="2">
-                                <button name="button_validate" states="draft" string="Validate" type="object" icon="gtk-execute"/>
-                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
+                                <button name="button_validate" states="draft" string="Validate" type="object" icon="terp-camera_test"/>
+                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="terp-gtk-stop"/>
                             </group>
                         </page>
                         <page string="Other Information">
@@ -1017,11 +1018,11 @@
             <field name="domain">[('to_check','=',True)]</field>
         </record>
         <menuitem action="action_move_to_review" id="menu_action_move_to_review" parent="periodical_processing_journal_entries_validation"/>
-<!--        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_entries" sequence="40"/>-->
-<!--        <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>-->
+        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_entries" sequence="40"/>
+        <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
 
         <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
-            <field name="name">Journal Entries</field>
+            <field name="name">Journal Vouchers</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1032,7 +1033,7 @@
         <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
 
         <record id="action_account_moves_sale" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
+            <field name="name">Receivable Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1044,7 +1045,7 @@
         <menuitem action="action_account_moves_sale" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>
 
         <record id="action_account_moves_purchase" model="ir.actions.act_window">
-            <field name="name">Transaction Journals</field>
+            <field name="name">Payable Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1098,7 +1099,7 @@
         <menuitem action="action_move_line_search_view3" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"/>
         <menuitem action="action_move_line_search_view4" id="journal_bank_move_lines" parent="menu_finance_bank_and_cash"/>
 
-<!--        <menuitem action="action_move_line_search" id="menu_action_move_line_search" parent="account.next_id_29"/>-->
+        <menuitem action="action_move_line_search" id="menu_action_move_line_search" parent="account.next_id_29"/>
 
         <menuitem id="menu_finance_charts" name="Charts" parent="account.menu_finance" sequence="4"/>
     <!--    <wizard id="wizard_account_chart" menu="False" model="account.account" name="account.chart" string="Chart of Accounts"/>
@@ -1152,9 +1153,9 @@
                     <group col="7" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
-                        <button name="button_dummy" states="draft" string="Compute" icon="gtk-execute"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-camera_test"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
                     </group>
                 </form>
             </field>
@@ -1166,20 +1167,20 @@
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="view_bank_statement_reconcile_form"/>
         </record>
-<!--        <menuitem-->
-<!--            id="next_id_30"-->
-<!--            name="Bank Reconciliation"-->
-<!--            parent="account.menu_finance_periodical_processing"-->
-<!--            groups="group_account_user"/>-->
+        <menuitem
+            id="next_id_30"
+            name="Bank Reconciliation"
+            parent="menu_finance_periodical_processing"
+            groups="group_account_user"/>
 
 <!--        <menuitem action="action_bank_statement_reconciliation_form" id="menu_action_account_bank_reconcile_tree" parent="next_id_30"/>-->
   <!--        <wizard id="action_account_bank_reconcile_tree" menu="False" model="account.move.line" name="account.move.bank.reconcile" string="Bank reconciliation"/> -->
     <!--     <menuitem action="action_account_bank_reconcile_tree" id="menu_action_account_bank_reconcile_check_tree" parent="account.next_id_30" type="wizard"/>   -->
 
 <!--  bank reconsilation  -->
-<!--        <menuitem action="action_account_bank_reconcile_tree"-->
-<!--            id="menu_action_account_bank_reconcile_check_tree"-->
-<!--            parent="account.next_id_30" />-->
+        <menuitem action="action_account_bank_reconcile_tree"
+            id="menu_action_account_bank_reconcile_check_tree"
+            parent="account.next_id_30" />
 
 
         <act_window
@@ -1430,7 +1431,7 @@
                     <field name="period_type"/>
                     <field name="model_id"/>
                     <group col="2" colspan="2">
-                        <button name="compute" states="draft,running" string="Compute" type="object" icon="gtk-execute"/>
+                        <button name="compute" states="draft,running" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                     </group>
                     <separator colspan="4" string="Subscription Lines"/>
@@ -1554,7 +1555,7 @@
 
         <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 
-		<act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All Account Entries" res_model="account.move.line" src_model="res.partner"/>
+        <act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All Account Entries" res_model="account.move.line" src_model="res.partner"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Account Add wizard</field>
@@ -1577,7 +1578,7 @@
             res_model="account.addtmpl.wizard"
             context="{'tmpl_ids': active_id}"
             src_model="account.account.template"
-	    view_type="form" view_mode="form"/>
+            view_type="form" view_mode="form"/>
 
         <!-- Account Templates -->
         <menuitem
@@ -1820,17 +1821,17 @@
                   <attribute name="string">Generate Chart of Accounts from a Chart Template</attribute>
                 </form>
                 <separator string="title" position="attributes">
-            	<attribute name="string"
+                <attribute name="string"
                        >Generate Chart of Accounts from a Chart Template</attribute>
-          		</separator>
-          		<xpath expr="//label[@string='description']" position="attributes">
-            		<attribute name="string">This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template</attribute>
-            		<attribute name="width">150</attribute>
-          		</xpath>
-          		<xpath expr='//separator[@string="vsep"]' position='attributes'>
-              			<attribute name='rowspan'>15</attribute>
-              			<attribute name='string'></attribute>
-	      		</xpath>
+                  </separator>
+                  <xpath expr="//label[@string='description']" position="attributes">
+                    <attribute name="string">This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template</attribute>
+                    <attribute name="width">150</attribute>
+                  </xpath>
+                  <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                          <attribute name='rowspan'>15</attribute>
+                          <attribute name='string'></attribute>
+                  </xpath>
                 <group string="res_config_contents" position="replace">
                   <field name="company_id"  widget="selection"
                          />
