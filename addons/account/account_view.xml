@@ -407,9 +407,9 @@
                     <group col="7" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
-                        <button name="button_dummy" states="draft" string="Compute" icon="gtk-execute"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object"  icon="gtk-apply"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
                     </group>
                 </form>
             </field>
@@ -465,7 +465,7 @@
                         <field name="total_entry"/>
                         <field name="total_new"/>
                         <field name="total_balance"/>
-                        <button colspan="2" name="dummy" string="Compute" icon="gtk-execute"/>
+                        <button colspan="2" name="dummy" string="Compute" icon="terp-stock_format-scientific"/>
                     </group>
                 </form>
             </field>
@@ -956,8 +956,8 @@
                             <field name="narration" colspan="4" nolabel="1"/>
                             <field name="state" select="1"/>
                             <group col="2" colspan="2">
-                                <button name="button_validate" states="draft" string="Validate" type="object" icon="gtk-execute"/>
-                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="gtk-cancel"/>
+                                <button name="button_validate" states="draft" string="Validate" type="object" icon="terp-camera_test"/>
+                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="terp-gtk-stop"/>
                             </group>
                         </page>
                         <page string="Other Information">
@@ -1094,9 +1094,9 @@
                     <group col="7" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
-                        <button name="button_dummy" states="draft" string="Compute" icon="gtk-execute"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-camera_test"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
                     </group>
                 </form>
             </field>
@@ -1372,7 +1372,7 @@
                     <field name="period_type"/>
                     <field name="model_id"/>
                     <group col="2" colspan="2">
-                        <button name="compute" states="draft,running" string="Compute" type="object" icon="gtk-execute"/>
+                        <button name="compute" states="draft,running" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                     </group>
                     <separator colspan="4" string="Subscription Lines"/>

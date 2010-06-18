@@ -21,10 +21,22 @@
 import datetime
 from osv import fields, osv
 import pooler
+import time
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'
     _inherit = 'stock.production.lot'
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        result = []
+        for line in self.browse(cr, uid, ids, context):
+            if line.life_date:
+                result.append((line.id, (line.name or '')+' ('+line.life_date+')'))
+            else:
+                result.append((line.id, line.name))
+        return result
+
 
     def _get_date(dtype):
         """Return a function to compute the limit date for this type"""

@@ -18,16 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import fields, osv
-
+import urllib
 import urllib2
 import simplejson as json
+import time
+from datetime import datetime
 
+
+from osv import fields, osv
+from marketing_campaign.marketing_campaign import _intervalTypes
 mailchimp_url = 'http://%s.api.mailchimp.com/1.2'
 
-class marketing_campaign_mailchimp_account(osv.osv): #{{{
-    _name = "marketing.campaign.mailchimp.account"
+class mailchimp_account(osv.osv):
+    _name = "mailchimp.account"
     
     _columns = {
             'name': fields.char('Account Name', size=64),
@@ -52,12 +55,10 @@ class marketing_campaign_mailchimp_account(osv.osv): #{{{
                 params['password'] = mailchimp_account.password
         else :
                 params['apikey'] = mailchimp_account.apikey
-        params = '&'.join(map(lambda x : '%s=%s' %(x, params[x]), params))
         url = mailchimp_url%mailchimp_account.data_center+ '/?method=%s'%method
-        req = urllib2.Request(url, params)
-        handle = urllib2.urlopen(req)
-        response = json.loads(handle.read())
-        return response 
+        params = urllib.urlencode(params, doseq=True)
+        response = urllib2.urlopen(url, params)
+        return  json.loads(response.read())
     
     def button_approve(self, cr, uid, ids, context):
         acc_obj = self.browse(cr, uid, ids)[0]
@@ -80,33 +81,57 @@ class marketing_campaign_mailchimp_account(osv.osv): #{{{
     def button_cancel(self, cr, uid, ids, context):
         self.write(cr, uid, ids, {'state': 'cancelled'})
         return True
-    
-marketing_campaign_mailchimp_account() #}}}
+        
+    def add_partner_list(self, cr, uid, account_id, list_id,  partner_ids):
+        vals = {} # just dictionary with partner_id and updated in list or not
+        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids):
+            params = {'id' : list_id,
+                'email_address' : partner.email,
+                'email_type':'text',
+                'merge_vars[FNAME]':partner.name , 
+                'merge_vars[date]' : time.strftime('%Y-%m-%d'),
+                'merge_vars[phone]' : partner.phone,
+                'merge_vars[website]' : partner.website,
+                'merge_vars[address][country]' : partner.country.code,
+                'merge_vars[address][city]' : partner.city,
+                'double_optin':False}
+            vals[partner.id] = self.get_response(cr, uid, account_id,
+                                                         'listSubscribe', params)
+        return vals
+        
+mailchimp_account()
 
-#class marketing_campaign_mailchimp_list(osv.osv_memory): #{{{
-#    _name = "marketing.campaign.mailchimp.list"
-#    
-#    _columns = {
-#            'name': fields.char('Name', size=64),
-#            'mailchimp_account_id': fields.many2one('marketing.campaign.mailchimp.account', 'Account'),
-#            'list_id': fields.char('List Id', size=64,),
-#        }
-#    
-#    _defaults = {
-#            'state': lambda *a: 'draft'
-#        }
-#    
-#marketing_campaign_mailchimp_list() #}}}
+class mailchimp_list(osv.osv_memory):
+    _name = "mailchimp.list"
+    _description = "Mailchimp list"
 
-class marketing_campaign_segment(osv.osv): #{{{
-    _inherit = "marketing.campaign.segment"
-    
     _columns = {
-            'synchro': fields.boolean('Mailchimp Synchro'),
+        'mailchimp_account_id': fields.many2one('mailchimp.account',
+                                             'Mailchimp Account', required=True),
+        'name': fields.char('Name', size=64)
+    }
+
+mailchimp_list()
+
+class marketing_campaign(osv.osv):
+    _inherit = "marketing.campaign"
+
+    _columns = {
             'mailchimp_account_id': fields.many2one(
-                            'marketing.campaign.mailchimp.account', 'Account'),
+                            'mailchimp.account', 'Account'),
+            'mailchimp_campaign': fields.char('campaign', size=64),
+    }
+marketing_campaign()
+    
+
+class marketing_campaign_activity(osv.osv): 
+    _inherit = "marketing.campaign.activity"
+
+    _columns = {
+            'mailchimp_account_id': fields.many2one(
+                            'mailchimp.account', 'Account'),
             'mailchimp_list': fields.char('List', size=64),
-        }
+    }
     
     def onchange_mailchimp(self, cr, uid, ids, mailchimp_account_id):
         if mailchimp_account_id:
@@ -116,16 +141,70 @@ class marketing_campaign_segment(osv.osv): #{{{
     def onchange_mailchimp_list(self, cr, uid, ids, mailchimp_account_id, 
                                                                 mailchimp_list):
         if mailchimp_account_id and mailchimp_list:
-            lists = self.pool.get('marketing.campaign.mailchimp.account').get_response(cr,
+            lists = self.pool.get('mailchimp.account').get_response(cr,
                                              uid, mailchimp_account_id, 'lists')
-            list_names = [list['name'] for list in lists]
+            list_names = [l['name'] for l in lists]
             if mailchimp_list not in list_names:
                 raise osv.except_osv('Error!!!',"Lists doesn't exists")
         else :
             return {}
         return {'value':{}}
-marketing_campaign_segment() #}}}
 
+    def process_wi_mailchimp(self, cr, uid, activity, workitem, context={}):
+        mailchimp_account_id = activity.mailchimp_account_id.id
+        list_name = activity.mailchimp_list
+        mc_acc_obj = self.pool.get('mailchimp.account')
+        lists = mc_acc_obj.get_response(cr, uid, mailchimp_account_id, 'lists')
+        list_id = ''
+        for l in lists : 
+            if l['name'] == list_name:
+                list_id = l['id']
+                break;
+        res_model = workitem.object_id.model
+        res_id = workitem.res_id
+        model_obj = self.pool.get(res_model).browse(cr, uid, res_id)
+        params ={}
+        if res_model == 'res.partner' :
+            params.update({'email_address' : model_obj.email,
+                    'merge_vars[FNAME]':model_obj.name and model_obj.name or '', 
+                    'merge_vars[website]' : model_obj.website,
+                    'merge_vars[address][country]' : model_obj.country.code,
+                    })
+        elif res_model == 'crm.lead' :
+            params.update({'email_address' : model_obj.email_from,
+                    'merge_vars[FNAME]':model_obj.partner_name and \
+                                        model_obj.partner_name or '',
+                    'merge_vars[address][country]' : model_obj.country_id and \
+                                                model_obj.country_id.code or ''
+                    })
+        if params['email_address'] :
+            user = mc_acc_obj.get_response(cr, uid, mailchimp_account_id,
+                                     'listMemberInfo', 
+                                     {'id' : list_id,
+                                    'email_address': params['email_address']})
+            # if there s no user with the specify email it will return error code 
+            # and thus we add that user otherwise user is alredy subscribe and there
+            # is no need to subscribe user again
+            if 'error' in user:
+                params.update({'id' : list_id,
+                    'email_type':'text',
+                    'double_optin':False,
+                    'merge_vars[date]' : time.strftime('%Y-%m-%d'),
+                    'merge_vars[address][city]' : model_obj.city and model_obj.city or '',
+                    'merge_vars[phone]' : model_obj.phone and model_obj.phone or '',
+                    })
+                res = mc_acc_obj.get_response(cr, uid, mailchimp_account_id, 'listSubscribe', params)
+                # handle mailchimp error
+            return True
+        else : 
+            return {'error_msg' : "Invalid Email Address"}
+    
+    def __init__(self, *args):
+        res = super(marketing_campaign_activity, self).__init__(*args)
+        self._actions.update({'mailchimp' : self.process_wi_mailchimp})
+        self._actions_type.append(('mailchimp', 'Mailchimp'))
+        return res 
+    
 
-
+marketing_campaign_activity()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
