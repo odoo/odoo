@@ -20,19 +20,17 @@
                     <newline />
                     <field name="subject" />
                     <newline />
-                    <field name="body_text" />
-                    <newline />
-                    <!-- <field name="body_html" widget="text_html" />-->
-                    <!-- 
-                    Removed text_html because it doesnt work in GTK
-                    And TinyMCE messes up the HTML in Web Client
-                     -->
-                    <field name="body_html"/>
+                    <separator string= "Body(Text)" colspan="2"/>
+                    <newline/>
+                    <field name="body_text" nolabel="1" colspan="2"/>
+                    <newline/>
+                    <separator string= "Body(Html)" colspan="2"/>
+                    <newline/>
+                    <field name="body_html" nolabel="1" colspan="2"/>
                     <newline />
                     <field name="report" />
-                    <group>
-                        <button icon="gtk-ok" special="cancel" string="OK" />
-                    </group>
+                    <newline/>
+                    <button icon="gtk-ok" special="cancel" string="OK" colspan="2"/>
                 </form>
             </field>
         </record>
@@ -46,7 +44,7 @@
             <field name="view_mode">form</field>
             <field name="auto_refresh" eval="1" />
             <field name="target">new</field>
-            <field name="context">{'ids':active_id}</field>
+            <field name="context">{'template_id':active_id}</field>
         </record>
         <!--EMail client Form view  -->
 

@@ -289,7 +289,7 @@
                         <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
                     </group>
                     <group colspan="4" attrs="{'invisible':[('type','!=','paper')]}" >
-                        <field name="report_id" attrs="{'required':[('type','=','paper')]}"/>
+                        <field name="report_id" attrs="{'required':[('type','=','paper')]}" context="{'object_id':object_id}"/>
                         <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
                     </group>
                     <group colspan="4" attrs="{'invisible':[('type','!=','action')]}" >

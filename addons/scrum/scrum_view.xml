@@ -4,7 +4,7 @@
 
         <menuitem id="menu_scrum"
             name="Scrum"
-            parent="base.menu_main_pm"/>
+            parent="base.menu_main_pm" sequence="3"/>
 
         <!-- Scrum Project -->
 
@@ -176,7 +176,7 @@
         <menuitem
             action="action_product_backlog_form"
             id="menu_action_product_backlog_form"
-            sequence="20"
+            sequence="10"
             parent="menu_scrum"/>
 
         <!--
@@ -295,7 +295,7 @@
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
         </record>
         <menuitem
-            sequence="10"
+            sequence="30"
             action="action_sprint_all_tree" id="menu_action_sprint_all_tree" parent="menu_scrum"/>
 
         <!--
@@ -380,7 +380,7 @@
             <field name="context">{'search_default_scrum_daily':1}</field>
             <field name="search_view_id" ref="view_scrum_meeting_search"/>
         </record>
-        <menuitem sequence="30"
+        <menuitem sequence="20"
             action="action_meeting_form" id="menu_action_meeting_form" parent="menu_scrum"/>
 
         <!--

@@ -408,9 +408,9 @@
                     <group col="7" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
-                        <button name="button_dummy" states="draft" string="Compute" icon="gtk-execute"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object"  icon="gtk-apply"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
                     </group>
                 </form>
             </field>
@@ -466,7 +466,7 @@
                         <field name="total_entry"/>
                         <field name="total_new"/>
                         <field name="total_balance"/>
-                        <button colspan="2" name="dummy" string="Compute" icon="gtk-execute"/>
+                        <button colspan="2" name="dummy" string="Compute" icon="terp-stock_format-scientific"/>
                     </group>
                 </form>
             </field>
@@ -957,7 +957,8 @@
                             <field name="narration" colspan="4" nolabel="1"/>
                             <field name="state" select="1"/>
                             <group col="2" colspan="2">
-                                <button name="button_validate" states="draft" string="Validate" type="object" icon="gtk-execute"/>
+                                <button name="button_validate" states="draft" string="Validate" type="object" icon="terp-camera_test"/>
+                                <button name="button_cancel" states="posted" string="Cancel" type="object" icon="terp-gtk-stop"/>
                             </group>
                         </page>
                         <page string="Other Information">
@@ -1021,7 +1022,7 @@
         <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
 
         <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
-            <field name="name">Journal Entries</field>
+            <field name="name">Journal Vouchers</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1032,7 +1033,7 @@
         <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
 
         <record id="action_account_moves_sale" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
+            <field name="name">Receivable Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1044,7 +1045,7 @@
         <menuitem action="action_account_moves_sale" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>
 
         <record id="action_account_moves_purchase" model="ir.actions.act_window">
-            <field name="name">Transaction Journals</field>
+            <field name="name">Payable Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1152,9 +1153,9 @@
                     <group col="7" colspan="4">
                         <field name="state"/>
                         <field name="balance_end"/>
-                        <button name="button_dummy" states="draft" string="Compute" icon="gtk-execute"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
+                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
+                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-camera_test"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
                     </group>
                 </form>
             </field>
@@ -1166,20 +1167,20 @@
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="view_bank_statement_reconcile_form"/>
         </record>
-<!--        <menuitem-->
-<!--            id="next_id_30"-->
-<!--            name="Bank Reconciliation"-->
-<!--            parent="account.menu_finance_periodical_processing"-->
-<!--            groups="group_account_user"/>-->
+        <menuitem
+            id="next_id_30"
+            name="Bank Reconciliation"
+            parent="menu_finance_periodical_processing"
+            groups="group_account_user"/>
 
 <!--        <menuitem action="action_bank_statement_reconciliation_form" id="menu_action_account_bank_reconcile_tree" parent="next_id_30"/>-->
   <!--        <wizard id="action_account_bank_reconcile_tree" menu="False" model="account.move.line" name="account.move.bank.reconcile" string="Bank reconciliation"/> -->
     <!--     <menuitem action="action_account_bank_reconcile_tree" id="menu_action_account_bank_reconcile_check_tree" parent="account.next_id_30" type="wizard"/>   -->
 
 <!--  bank reconsilation  -->
-<!--        <menuitem action="action_account_bank_reconcile_tree"-->
-<!--            id="menu_action_account_bank_reconcile_check_tree"-->
-<!--            parent="account.next_id_30" />-->
+        <menuitem action="action_account_bank_reconcile_tree"
+            id="menu_action_account_bank_reconcile_check_tree"
+            parent="account.next_id_30" />
 
 
         <act_window
@@ -1430,7 +1431,7 @@
                     <field name="period_type"/>
                     <field name="model_id"/>
                     <group col="2" colspan="2">
-                        <button name="compute" states="draft,running" string="Compute" type="object" icon="gtk-execute"/>
+                        <button name="compute" states="draft,running" string="Compute" type="object" icon="terp-stock_format-scientific"/>
                         <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                     </group>
                     <separator colspan="4" string="Subscription Lines"/>

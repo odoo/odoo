@@ -172,7 +172,8 @@ class pos_order(osv.osv):
         return res
 
     def _amount_all(self, cr, uid, ids, name, args, context=None):
-        tax_obj = self.pool.get('account.tax')        
+        tax_obj = self.pool.get('account.tax')    
+        cur_obj = self.pool.get('res.currency')     
         res={}
         for order in self.browse(cr, uid, ids):
             res[order.id] = {
@@ -180,6 +181,9 @@ class pos_order(osv.osv):
                 'amount_return':0.0,
                 'amount_tax':0.0,
             }            
+            val=0.0      
+            cur_obj = self.pool.get('res.currency')            
+            cur = order.pricelist_id.currency_id               
             for payment in order.statement_ids:
                  res[order.id]['amount_paid'] +=  payment.amount 
             for payment in order.payments:
@@ -192,11 +196,9 @@ class pos_order(osv.osv):
                             (1-(line.discount or 0.0)/100.0), line.qty),
                             res[order.id]['amount_tax'])
                 else:
-                    res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
-                        tax_obj.compute_all(cr, uid, line.product_id.taxes_id,
-                            line.price_unit * \
-                            (1-(line.discount or 0.0)/100.0), line.qty)['taxes'],
-                            res[order.id]['amount_tax'])
+                    for c in tax_obj.compute_all(cr, uid, line.product_id.taxes_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.qty,  line.product_id, line.order_id.partner_id)['taxes']:
+                        val += c['amount']                    
+                    res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
         return res
         
 

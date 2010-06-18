@@ -84,7 +84,7 @@
 
 
     ],
-    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml','board_manufacturing_demo.xml'],
+    'demo_xml': ['mrp_demo.xml', 'board_manufacturing_demo.xml'],
     'test': [
              'test/mrp_phantom_bom.yml',
              'test/mrp_production_order.yml',
