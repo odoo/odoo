@@ -65,9 +65,9 @@ class account_move_line(osv.osv):
             #the query have to be build with no reference to periods but thanks to the creation date
             if context.get('periods',False):
                 #if one or more period are given, use them
-                fiscalperiod_ids = fiscalperiod_obj.search(cr,uid,[('id','in',context['periods'])])
+                fiscalperiod_ids = fiscalperiod_obj.search(cr, uid, [('id','in',context['periods'])])
             else:
-                fiscalperiod_ids = self.pool.get('account.period').search(cr,uid,[('fiscalyear_id','in',fiscalyear_ids)])
+                fiscalperiod_ids = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id','in',fiscalyear_ids)])
 
 
 
@@ -86,7 +86,7 @@ class account_move_line(osv.osv):
             #add to 'res' a new clause containing the creation date criterion
             count = 1
             res += " AND ("
-            periods = self.pool.get('account.period').read(cr,uid,p_ids,['date_start','date_stop'])
+            periods = self.pool.get('account.period').read(cr, uid, p_ids, ['date_start','date_stop'])
             for period in periods:
                 if count != 1:
                     res += " OR "
@@ -149,7 +149,7 @@ class account_move_line(osv.osv):
                     for item in i[2]:
                             data[item]=i[2][item]
             if context['journal']:
-                journal_obj=self.pool.get('account.journal').browse(cr,uid,context['journal'])
+                journal_obj=self.pool.get('account.journal').browse(cr, uid, context['journal'])
                 if journal_obj.type == 'purchase':
                     if total_new>0:
                         account = journal_obj.default_credit_account_id
@@ -297,9 +297,10 @@ class account_move_line(osv.osv):
         for line_id in ids:
             res[line_id] = False
         cursor.execute('SELECT l.id, i.id ' \
-                'FROM account_move_line l, account_invoice i ' \
-                'WHERE l.move_id = i.move_id ' \
-                    'AND l.id =ANY(%s)',(ids,))
+                        'FROM account_move_line l, account_invoice i ' \
+                        'WHERE l.move_id = i.move_id ' \
+                        'AND l.id IN %s',
+                        (tuple(ids),))
         invoice_ids = []
         for line_id, invoice_id in cursor.fetchall():
             res[line_id] = invoice_id
@@ -332,7 +333,7 @@ class account_move_line(osv.osv):
             return []
         where = ' and '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))
         cursor.execute('select id, sum(debit-credit) from account_move_line \
-                     group by id,debit,credit having '+where)
+                     group by id, debit, credit having '+where)
         res = cursor.fetchall()
         if not len(res):
             return [('id', '=', '0')]
@@ -432,8 +433,8 @@ class account_move_line(osv.osv):
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
 #TODO: remove this
-        'amount_taxed':fields.float("Taxed Amount",digits_compute=dp.get_precision('Account')),
-        'company_id': fields.related('account_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'amount_taxed':fields.float("Taxed Amount", digits_compute=dp.get_precision('Account')),
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
 
     }
 
@@ -468,7 +469,7 @@ class account_move_line(osv.osv):
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
     }
     _order = "date desc,id desc"
     _sql_constraints = [
@@ -647,10 +648,11 @@ class account_move_line(osv.osv):
         else:
             date = time.strftime('%Y-%m-%d')
 
-        cr.execute('SELECT account_id, reconcile_id \
-                FROM account_move_line \
-                WHERE id =ANY(%s) \
-                GROUP BY account_id,reconcile_id',(ids,))
+        cr.execute('SELECT account_id, reconcile_id '\
+                   'FROM account_move_line '\
+                   'WHERE id IN %s '\
+                   'GROUP BY account_id,reconcile_id',
+                   (tuple(ids),))
         r = cr.fetchall()
         #TODO: move this check to a constraint in the account_move_reconcile object
         if (len(r) != 1) and not context.get('fy_closing', False):
@@ -838,9 +840,9 @@ class account_move_line(osv.osv):
             else:
                 journal_id = context['journal_id']
                 period_id = context['period_id']
-            journal = self.pool.get('account.journal').browse(cr,uid,[journal_id])[0]
+            journal = self.pool.get('account.journal').browse(cr, uid, [journal_id])[0]
             if journal.allow_date:
-                period = self.pool.get('account.period').browse(cr,uid,[period_id])[0]
+                period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
                 if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
                     raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
         else:

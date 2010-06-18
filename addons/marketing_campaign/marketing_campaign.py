@@ -273,7 +273,6 @@ class marketing_campaign_activity(osv.osv):
         return True
 
     def process_wi_email(self, cr, uid, activity, workitem, context=None):
-        print 'Sending Email Init', activity.name
         return self.pool.get('email.template').generate_mail(cr, uid, activity.email_template_id.id, [workitem.res_id], context=context)
 
     def process_wi_action(self, cr, uid, activity, workitem, context={}):
@@ -284,10 +283,8 @@ class marketing_campaign_activity(osv.osv):
 
     def process(self, cr, uid, act_id, wi_id, context={}):
         activity = self.browse(cr, uid, act_id)
-        print 'Process', activity.name
         workitem_obj = self.pool.get('marketing.campaign.workitem')
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
-        print 'WI', workitem, activity.type
         return self._actions[activity.type](cr, uid, activity, workitem, context)
 
 marketing_campaign_activity()

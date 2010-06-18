@@ -100,7 +100,7 @@ class account_installer(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'account', 'configurable_chart_template')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-        obj_multi = self.pool.get('account.chart.template').browse(cr,uid, id)
+        obj_multi = self.pool.get('account.chart.template').browse(cr, uid, id)
 
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
@@ -109,7 +109,7 @@ class account_installer(osv.osv_memory):
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
-        company_id = self.pool.get('res.users').browse(cr,uid,[uid],context)[0].company_id
+        company_id = self.pool.get('res.users').browse(cr, uid, [uid], context)[0].company_id
         seq_journal = True
 
         # Creating Account
@@ -134,7 +134,7 @@ class account_installer(osv.osv_memory):
                 'company_id': company_id.id,
                 'sign': tax_code_template.sign,
             }
-            new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals)
+            new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals)
             #recording the new tax code to do the mapping
             tax_code_template_ref[tax_code_template.id] = new_tax_code
 
@@ -167,7 +167,7 @@ class account_installer(osv.osv_memory):
                 'company_id': company_id.id,
                 'type_tax_use': tax.type_tax_use
             }
-            new_tax = obj_acc_tax.create(cr,uid,vals_tax)
+            new_tax = obj_acc_tax.create(cr, uid, vals_tax)
             #as the accounts have not been created yet, we have to wait before filling these fields
             todo_dict[new_tax] = {
                 'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
@@ -205,7 +205,7 @@ class account_installer(osv.osv_memory):
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id.id,
             }
-            new_account = obj_acc.create(cr,uid,vals)
+            new_account = obj_acc.create(cr, uid, vals)
             acc_template_ref[account_template.id] = new_account
             if account_template.name == 'Bank Current Account':
                 view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Cash Journal View')])[0]
@@ -329,8 +329,8 @@ class account_installer(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Bank Journals
-        view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Cash Journal View')])[0]
-        view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Multi-Currency Cash Journal View')])[0]
+        view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Cash Journal View')])[0]
+        view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Multi-Currency Cash Journal View')])[0]
         ref_acc_bank = obj_multi.bank_account_view_id
 
 
@@ -427,7 +427,7 @@ class account_installer(osv.osv_memory):
                         'sign': 1,
                         'parent_id':sal_tax_parent_id
                         }
-                    new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals_tax_code)
+                    new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
                     sales_tax = obj_tax.create(cr, uid,
                                            {'name':'VAT%s%%'%(s_tax*100),
                                             'description':'VAT%s%%'%(s_tax*100),
@@ -446,7 +446,7 @@ class account_installer(osv.osv_memory):
                         'sign': 1,
                         'parent_id':pur_tax_parent_id
                         }
-                    new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals_tax_code)
+                    new_tax_code = self.pool.get('account.tax.code').create(cr, uid, vals_tax_code)
                     purchase_tax = obj_tax.create(cr, uid,
                                             {'name':'VAT%s%%'%(p_tax*100),
                                              'description':'VAT%s%%'%(p_tax*100),
@@ -458,7 +458,7 @@ class account_installer(osv.osv_memory):
                     tax_val.update({'supplier_taxes_id':[(6,0,[purchase_tax])]})
                     default_tax.append(('supplier_taxes_id',purchase_tax))
                 if len(tax_val):
-                    product_ids = obj_product.search(cr,uid, [])
+                    product_ids = obj_product.search(cr, uid, [])
                     for product in obj_product.browse(cr, uid, product_ids):
                         obj_product.write(cr, uid, product.id, tax_val)
                     for name, value in default_tax:

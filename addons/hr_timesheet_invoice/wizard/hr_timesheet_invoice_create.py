@@ -54,7 +54,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
             if obj_acc.invoice_id and obj_acc.invoice_id.state !='cancel':
                 raise osv.except_osv(_('Warning'),_('The analytic entry "%s" is already invoiced!')%(obj_acc.name,))
 
-        cr.execute("SELECT distinct(account_id) from account_analytic_line where id =ANY(%s)",(context['active_ids'],))
+        cr.execute("SELECT distinct(account_id) from account_analytic_line where id IN %s",(tuple(context['active_ids']),))
         account_ids = cr.fetchall()
         return [x[0] for x in account_ids]
 
@@ -72,7 +72,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
         data = self.read(cr, uid, ids, [], context)[0]
-        
+
         account_ids = data['accounts']
         for account in analytic_account_obj.browse(cr, uid, account_ids, context):
             partner = account.partner_id
@@ -115,8 +115,8 @@ class hr_timesheet_invoice_create(osv.osv_memory):
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
-                        "AND id =ANY(%s) AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id,to_invoice", (account.id,context['active_ids'],))
+                        "AND id IN %s AND to_invoice IS NOT NULL " \
+                    "GROUP BY product_id,to_invoice", (account.id,tuple(context['active_ids']),))
 
             for product_id,factor_id,qty in cr.fetchall():
                 product = self.pool.get('product.product').browse(cr, uid, product_id, context2)
@@ -159,7 +159,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                 #
                 # Compute for lines
                 #
-                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id = %s AND product_id=%s and to_invoice=%s", (account.id, data['id'], product_id, factor_id))
+                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s", (account.id, tuple(data['ids']), product_id, factor_id))
 
                 line_ids = cr.dictfetchall()
                 note = []
@@ -181,7 +181,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
 
                 curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
                 self.pool.get('account.invoice.line').create(cr, uid, curr_line)
-                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id =%s" ,(last_invoice, account.id,data['id']))
+                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s" ,(last_invoice, account.id,tuple(data['ids'])))
 
         self.pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)
 

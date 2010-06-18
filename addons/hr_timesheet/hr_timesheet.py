@@ -44,7 +44,7 @@ class hr_analytic_timesheet(osv.osv):
     _order = "id desc"
     _columns = {
         'line_id' : fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade'),
-        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id',relation='account.analytic.account',store=True),
+        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id', relation='account.analytic.account', store=True),
     }
 
     def unlink(self, cr, uid, ids, context={}):
@@ -123,7 +123,7 @@ class hr_analytic_timesheet(osv.osv):
 
     def on_change_date(self, cr, uid, ids, date):
         if ids:
-            new_date = self.read(cr,uid,ids[0],['date'])['date']
+            new_date = self.read(cr, uid, ids[0], ['date'])['date']
             if date != new_date:
                 warning = {'title':'User Alert!','message':'Changing the date will let this entry appear in the timesheet of the new date.'}
                 return {'value':{},'warning':warning}

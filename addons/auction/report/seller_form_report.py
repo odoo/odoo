@@ -28,7 +28,7 @@ from osv import osv
 class seller_form_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(seller_form_report, self).__init__(cr, uid, name, context=context)
-        lot=self.pool.get('auction.lots').browse(cr,uid,uid)
+        lot=self.pool.get('auction.lots').browse(cr, uid, uid)
         #address=lot.bord_vnd_id.address_get(self.cr,self.uid,[partner.id])
     #   partner=lot.bord_vnd_id.partner_id
     #   address=partner.address and partner.address[0] or ""
@@ -53,7 +53,7 @@ class seller_form_report(report_sxw.rml_parse):
             taxes.append(lot.bord_vnd_id.tax_id)
         elif lot.auction_id and lot.auction_id.seller_costs:
             taxes += lot.auction_id.seller_costs
-        tax=self.pool.get('account.tax').compute(self.cr,self.uid,taxes,lot.obj_price,1)
+        tax=self.pool.get('account.tax').compute(self.cr, self.uid, taxes, lot.obj_price, 1)
         for t in tax:
             amount+=t['amount']
         return amount

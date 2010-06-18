@@ -84,7 +84,7 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
         """
         rec_ids = context and context.get('active_ids',False) or False
         assert rec_ids, _('Active IDs not Found')
-        datas = self.read(cr, uid, ids[0],['ach_login','ach_uid'])
+        datas = self.read(cr, uid, ids[0], ['ach_login','ach_uid'])
         lots_obj = self.pool.get('auction.lots')
         recs = lots_obj.browse(cr, uid, rec_ids, context)
         for rec in recs:
