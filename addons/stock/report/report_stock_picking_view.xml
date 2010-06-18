@@ -83,7 +83,7 @@
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Invoice Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'invoice_state'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Day" icon="terp-go-month" domain="[]" context="{'group_by':'day'}"/>
+                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}"/>
                         <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'year'}"/>
                     </group>
@@ -129,7 +129,8 @@
 	        <field name="act_window_id" ref="action_report_report_stock_picking"/>
 	    </record>
 
-        <menuitem name="Picking" action="action_report_report_stock_picking" id="menu_report_report_stock_pickings_tree" parent="next_id_61"/>
+        <menuitem name="Picking" action="action_report_report_stock_picking" 
+                id="menu_report_report_stock_pickings_tree" parent="stock.next_id_61" sequence="5"/>
 
   </data>
 </openerp>

@@ -91,7 +91,7 @@
 	                    <separator orientation="vertical"/>
 	                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
 	                    <separator orientation="vertical"/>
-	                    <filter string="Day" icon="terp-go-month" context="{'group_by':'day'}"/>
+	                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
 	                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
 	                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                     </group>
@@ -121,6 +121,7 @@
             <field name="context">{'search_default_month':1,'search_default_User_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="search_view_id" ref="view_timesheet_report_search"/>
         </record>
-        <menuitem action="action_timesheet_report_stat_all" id="menu_timesheet_report_all" parent="hr.menu_hr_reporting"/>
+        <menuitem action="action_timesheet_report_stat_all" id="menu_timesheet_report_all" 
+                parent="hr_timesheet.menu_hr_reporting_timesheet" sequence="1"/>
     </data>
 </openerp>

@@ -57,26 +57,26 @@ class stock_split_into(osv.osv_memory):
         value_to_split = self.browse(cr, uid, data[0], context)
         quantity =  value_to_split.quantity or 0.0
         ir_sequence_obj = self.pool.get('ir.sequence')
-        prodlot_obj = self.pool.get('stock.production.lot')
+        track_obj = self.pool.get('stock.tracking')
         for move in move_obj.browse(cr, uid, rec_id):
             move_qty = move.product_qty
             uos_qty_rest = move.product_uos_qty
             quantity_rest = move_qty - quantity
-            if quantity_rest == 0:
+            if (quantity_rest == 0) or (quantity <= 0) :
                 continue
-            sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-            prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence}, {'product_id': move.product_id.id})
+            sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.tracking')
+            tracking_id = track_obj.create(cr, uid, {'name': sequence}, {'product_id': move.product_id.id})
             uos_qty = quantity / move_qty * move.product_uos_qty
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
             default_val = {
-                'product_qty': quantity,
+                'product_qty': quantity_rest,
                 'product_uos_qty': uos_qty,
                 'state': move.state
             }
             current_move = move_obj.copy(cr, uid, move.id, default_val)
             new_move.append(current_move)
-            update_val['product_qty'] = quantity_rest
-            update_val['prodlot_id'] = prodlot_id
+            update_val['product_qty'] = quantity
+            update_val['tracking_id'] = tracking_id
             update_val['product_uos_qty'] = uos_qty_rest
             move_obj.write(cr, uid, [move.id], update_val)
         return {}
