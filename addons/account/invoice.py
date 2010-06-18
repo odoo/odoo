@@ -50,11 +50,12 @@ class account_invoice(osv.osv):
         type_inv = context.get('type', 'out_invoice')
         user = self.pool.get('res.users').browse(cr, uid, uid)
         company_id = context.get('company_id', user.company_id.id)
-        type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
+        type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale_refund', 'in_refund': 'purchase_refund'}
         refund_journal = {'out_invoice': False, 'in_invoice': False, 'out_refund': True, 'in_refund': True}
         journal_obj = self.pool.get('account.journal')
         res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'sale')),
-                                            ('company_id', '=', company_id),('refund_journal', '=', refund_journal.get(type_inv, False))],
+                                            ('company_id', '=', company_id),
+                                            ('refund_journal', '=', refund_journal.get(type_inv, False))],
                                                 limit=1)
         if res:
             return res[0]
@@ -1011,7 +1012,7 @@ class account_invoice(osv.osv):
 
     def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
         invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id'])
-
+        
         new_ids = []
         for invoice in invoices:
             del invoice['id']
@@ -1030,6 +1031,10 @@ class account_invoice(osv.osv):
             tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
             tax_lines = filter(lambda l: l['manual'], tax_lines)
             tax_lines = self._refund_cleanup_lines(cr, uid, tax_lines)
+            if invoice['type'] == 'in_invoice':
+                refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase_refund')])
+            else:
+                refund_journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','sale_refund')])
             if not date :
                 date = time.strftime('%Y-%m-%d')
             invoice.update({
@@ -1038,7 +1043,8 @@ class account_invoice(osv.osv):
                 'state': 'draft',
                 'number': False,
                 'invoice_line': invoice_lines,
-                'tax_line': tax_lines
+                'tax_line': tax_lines,
+                'journal_id': refund_journal_ids
             })
             if period_id :
                 invoice.update({
