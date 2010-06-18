@@ -2,8 +2,9 @@
 <openerp>
     <data>
 
-        <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="15"/>
-        <menuitem name="Email Template" id="menu_email_template" parent="base.menu_tools"/>
+        <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
+        <menuitem name="Emails" id="base.menu_emails" parent="base.menu_tools" sequence="5"/>
+        <menuitem name="Email Template" id="menu_email_template" parent="base.menu_emails"/>
 
         <record model="ir.ui.view" id="email_template_account_form">
             <field name="name">email_template.account.form</field>
@@ -95,7 +96,7 @@
             <field name="search_view_id" ref="view_email_template_account_search"/>
         </record>
 
-        <menuitem name="Configuration" id="menu_email_template_configuration" parent="menu_email_template" />
+        <menuitem name="Emails" id="menu_email_template_configuration" parent="base.menu_lunch_survey_root" />
 
         <menuitem name="Email Accounts" id="menu_email_template_account_all" parent="menu_email_template_configuration" action="action_email_template_account_tree_all"/>
 
