@@ -681,10 +681,13 @@
 
                                             <newline/>
                                             <label/>
-                                            <button name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"
+                                            <button name="%(track_line)d" string="Split in production lots" 
+                                             states="draft,waiting,confirmed,assigned"
+                                            type="action" icon="terp-stock_effects-object-colorize"
                                               groups="base.group_extended" />
                                             <button name="%(move_scrap)d" string="Scrap Move Line" type="action" icon="gtk-justify-fill"/>
                                             <button name="%(split_into)d" string="Split Stock Moves" type="action"
+                                                states="draft,assigned,confirmed,done"
                                                 groups="base.group_extended" 
                                                 icon="terp-stock_effects-object-colorize" />
                                             <separator colspan="4" string="Move State"/>
@@ -798,8 +801,8 @@
                                     <field groups="base.group_extended" name="tracking_id"/>
                                     <button name="%(split_into)d" string="Split Stock Moves" type="action"
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                        groups="base.group_extended" 
-                                        states="draft,assigned,confirmed,done"/>
+                                        states="draft,assigned,confirmed,done"
+                                        groups="base.group_extended"/>
                                     <button name="setlast_tracking" string="Set Last Tracking" type="object"
                                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
                                         groups="base.group_extended" 
@@ -847,6 +850,7 @@
                                             <label/>
                                             <button name="%(track_line)d" string="Split in production lots" 
                                             groups="base.group_extended" 
+                                            states="draft,waiting,confirmed,assigned"
                                             type="action" icon="terp-stock_effects-object-colorize"/>
                                             <label/>
                                             <button name="%(split_into)d" string="Split Stock Moves" type="action"
@@ -999,7 +1003,7 @@
                                     <field name="prodlot_id" groups="base.group_extended"/>
                                     <button name="%(track_line)d" string="Split in production lots" type="action"
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
-                                        states="assigned,confirmed,done"
+                                        states="draft,assigned,confirmed,done"
                                         groups="base.group_extended"/>
                                     <field name="tracking_id" groups="base.group_extended"/>
                                   <button name="%(split_into)d" string="Split Stock Moves" type="action"
@@ -1041,6 +1045,7 @@
                                             <field groups="base.group_extended" name="tracking_id"/>
                                             <label/>
                                             <button name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"
+                                                states="draft,assigned,confirmed,done"
                                                 groups="base.group_extended" 
                                              />
                                             <label/>
@@ -1388,7 +1393,7 @@
                     <field name="prodlot_id" groups="base.group_extended"/>
                     <button name="%(track_line)d" string="Split in Production Lots" type="action"
                         icon="gtk-justify-fill" 
-                        states="assigned,confirmed"
+                       states="draft,waiting,confirmed,assigned"
                         groups="base.group_extended"/>
                     <field groups="base.group_extended" name="tracking_id"/>
                     <button name="%(split_into)d" string="Split Stock Moves" type="action"
@@ -1459,6 +1464,7 @@
                                   <label/>
                                 	<button name="%(track_line)d"
                                     groups="base.group_extended" 
+                                   states="draft,waiting,confirmed,assigned"
                                    string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
                                   <label/>
                                     <button name="%(split_into)d" string="Split Stock Moves" type="action"
@@ -1550,7 +1556,7 @@
                     <field name="prodlot_id" groups="base.group_extended"/>
                     <button name="%(track_line)d" string="Split in production lots" type="action"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('prodlot_id','&lt;&gt;',False)]}"
-                        states="assigned,confirmed,done"
+                       states="draft,waiting,confirmed,assigned"
                         context="{'default_use_exist': picking_id.type=='in'}"
                         groups="base.group_extended"/>
                     <field name="tracking_id" groups="base.group_extended"/>
@@ -1606,6 +1612,7 @@
                             <newline/>
                               <label/>
 	                            <button name="%(track_line)d" string="Split in production lots" 
+                               states="draft,waiting,confirmed,assigned"
                               groups="base.group_extended" 
                               type="action" icon="terp-stock_effects-object-colorize"/>
                               <label/>
