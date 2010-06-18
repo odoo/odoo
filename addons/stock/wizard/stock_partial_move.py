@@ -67,7 +67,7 @@ class stock_partial_move(osv.osv_memory):
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
                     	<field name="date"  />
-                    	<separator colspan="4">
+                    	<separator colspan="4"/>
                      <group colspan="4" attrs="{'invisible':[('type','=','in')]}">
                     	<field name="partner_id"  attrs="{'required':[('type','!=','in')]}" />
                     	<field name="address_id"  attrs="{'required':[('type','!=','in')]}"/>
