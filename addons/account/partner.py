@@ -89,7 +89,7 @@ class res_partner(osv.osv):
     _name = 'res.partner'
     _inherit = 'res.partner'
     _description = 'Partner'
-    
+
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
@@ -114,7 +114,7 @@ class res_partner(osv.osv):
             if val is None: val=0
             res[pid][maps[type]] = (type=='receivable') and val or -val
         return res
-    
+
     def _asset_difference_search(self, cr, uid, obj, name, type, args, context=None):
         if not len(args):
             return []
@@ -136,7 +136,7 @@ class res_partner(osv.osv):
         if not len(res):
             return [('id','=','0')]
         return [('id','in',map(itemgetter(0), res))]
-    
+
     def _credit_search(self, cr, uid, obj, name, args, context):
         return self._asset_difference_search(cr, uid, obj, name, 'receivable', args, context=context)
 
@@ -187,6 +187,7 @@ class res_partner(osv.osv):
             help="This payment term will be used instead of the default one for the current partner"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
+        'last_reconciliation_date': fields.datetime('Last Reconcilation Date', help='Date on which partner account entries reconciled last time')
     }
 res_partner()
 

@@ -577,6 +577,39 @@ class account_move_line(osv.osv):
     # writeoff; entry generated for the difference between the lines
     #
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+        if context and context.get('next_partner_only', False):
+            if not context.get('partner_id', False):
+                partner = self.get_next_partner_only(cr, uid, offset, context)
+            else:
+                partner = context.get('partner_id', False)
+            if not partner:
+                return []
+            args.append(('partner_id', '=', partner[0]))
+        return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
+
+    def get_next_partner_only(self, cr, uid, offset=0, context=None):
+        cr.execute(
+             """
+             SELECT p.id
+             FROM res_partner p
+             RIGHT JOIN (
+                SELECT l.partner_id as partner_id, SUM(l.debit) as debit, SUM(l.credit) as credit
+                FROM account_move_line l
+                LEFT JOIN account_account a ON (a.id = l.account_id)
+                    LEFT JOIN res_partner p ON (l.partner_id = p.id)
+                    WHERE a.reconcile IS TRUE
+                    AND l.reconcile_id IS NULL
+                    AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
+                    AND l.state <> 'draft'
+                    GROUP BY l.partner_id
+                ) AS s ON (p.id = s.partner_id)
+                ORDER BY p.last_reconciliation_date LIMIT 1 OFFSET %s""", (offset,)
+            )
+        return cr.fetchone()
+
     def reconcile_partial(self, cr, uid, ids, type='auto', context=None):
         merges = []
         unmerge = []
@@ -730,6 +763,11 @@ class account_move_line(osv.osv):
         # because of the way the line_id are defined: (4, x, False)
         for id in ids:
             wf_service.trg_trigger(uid, 'account.move.line', id, cr)
+
+        if lines and lines[0]:
+            partner_id = lines[0].partner_id.id
+            if context and context.get('stop_reconcile', False):
+                self.pool.get('res.partner').write(cr, uid, [partner_id], {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')})
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context):

@@ -122,10 +122,10 @@
                 </notebook>
             </field>
         </record>
-        
+
         <!--  Partners info tab view-->
 
-        <act_window 
+        <act_window
             id="action_analytic_open"
             name="Analytic Accounts"
             res_model="account.analytic.account"
@@ -133,6 +133,17 @@
             src_model="res.partner"
             view_type="form"
             view_mode="tree,form,graph,calendar"/>
+
+        <record id="view_res_partner_reconcile" model="ir.ui.view">
+            <field name="name">res.partner.form.reconcile</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="credit_limit" position="after">
+                    <field name="last_reconciliation_date"/>
+                </field>
+            </field>
+        </record>
 
     </data>
 </openerp>
