@@ -811,13 +811,14 @@ class account_move_line(osv.osv):
                 journal_id = m.journal_id.id
                 period_id = m.period_id.id
             else:
-                journal_id = context['journal_id']
-                period_id = context['period_id']
-            journal = self.pool.get('account.journal').browse(cr, uid, [journal_id])[0]
-            if journal.allow_date:
-                period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
-                if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
-                    raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
+                journal_id = context.get('journal_id',False)
+                period_id = context.get('period_id',False)
+            if journal_id:
+                journal = self.pool.get('account.journal').browse(cr, uid, [journal_id])[0]
+                if journal.allow_date and period_id:
+                    period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
+                    if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
+                        raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
         else:
             return True
 
