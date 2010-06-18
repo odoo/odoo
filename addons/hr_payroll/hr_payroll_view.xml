@@ -158,15 +158,15 @@
                     <page string="Salary Structure">
                         <field name="line_ids" nolabel="1" colspan="4" string="Salary Structure">
                             <tree string="Salary Structure" editable="bottom">
+                                <field name="category_id" on_change="onchange_category(category_id)"/>
                                 <field name="sequence"/>
-                                <field name="analytic_account_id"/>
                                 <field name="name"/>
                                 <field name="code"/>
+                                <field name="type"/>
                                 <field name="amount_type"/>
                                 <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
-                                <field name="type"/>
-                                <field name="category_id" on_change="onchange_category(category_id)"/>
                                 <field name="account_id"/>
+                                <field name="analytic_account_id"/>
                             </tree>
                         </field>
                     </page>
@@ -216,6 +216,7 @@
                                 <field name="date_start" select="1"/>
                                 <field name="date_end" select="1"/>
                                 <field name="working_hours"/>
+                                <field name="working_days_per_week" select="1"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Advantages"/>
@@ -246,9 +247,56 @@
         <menuitem action="hr_contract.action_hr_contract" id="hr_menu_contract" parent="payroll_configure" name="Contracts" sequence="4"/>
         <!-- End Contract View-->
         
-        <!--
-            Holiday Status inheritancy
-        -->
+        <!-- Salary structure -->
+        <record id="view_hr_employee_grade_tree" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.tree</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Function">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="line_ids"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_employee_grade_form" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.form</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Function">
+                    <group col="6" colspan="4">
+                        <field name="name" colspan="4" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="account_id" select="1"/>
+                        <field name="company_id"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Salary Structure">
+                            <field name="line_ids" nolabel="1" colspan="4"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_view_hr_employee_grade_form" model="ir.actions.act_window">
+            <field name="name">Salary Structure</field>
+            <field name="res_model">hr.payroll.structure</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_hr_employee_grade_tree"/>
+        </record>
+        <menuitem 
+            id="menu_hr_employee_function" 
+            action="action_view_hr_employee_grade_form" 
+            parent="payroll_configure" 
+        />
+        <!-- End Salary structure -->
+        
+        <!-- Holiday Status -->
         <record model="ir.ui.view" id="view_holiday_status_form1">
             <field name="name">hr.holidays.status.inherit</field>
             <field name="model">hr.holidays.status</field>
@@ -271,38 +319,24 @@
                 </field>
             </field>
         </record>
-
-<!--            Employee Expanse-->
-<!--        -->
-<!--        <record id="view_expenses_form" model="ir.ui.view">-->
-<!--            <field name="name">hr.expense.form</field>-->
-<!--            <field name="type">form</field>-->
-<!--            <field name="inherit_id" ref="hr_expense.view_expenses_form"/>-->
-<!--            <field name="model">hr.expense.expense</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <field name="ref" position="after">-->
-<!--                    <field name="category_id"/>-->
-<!--                </field>-->
-<!--            </field>-->
-<!--        </record>-->
-<!--        -->
-
+        <!-- End Holiday Status -->
+        
+        <!-- Payslip Line -->
         <record id="view_hr_payslip_line_tree" model="ir.ui.view">
             <field name="name">hr.payslip.line.tree</field>
             <field name="model">hr.payslip.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Salary Structure" editable="bottom">
+                    <field name="category_id" on_change="onchange_category(category_id)"/>
                     <field name="sequence"/>
-                    <field name="analytic_account_id"/>
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="type"/>
                     <field name="amount_type"/>
                     <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
-                    <field name="total"/>
-                    <field name="type"/>
-                    <field name="category_id" on_change="onchange_category(category_id)"/>
                     <field name="account_id"/>
+                    <field name="analytic_account_id"/>
                 </tree>
             </field>
         </record>
@@ -331,8 +365,6 @@
                         <separator colspan="4" string="Accounting Informations"/>
                         <field name="account_id"/>
                         <field name="analytic_account_id"/>
-                        <separator colspan="4" string="Reambusement Informations"/>
-                        <field name="expanse_id"/>
                         <separator colspan="4" string="Company contribution"/>
                         <field name="company_contrib"/>
                     </group>
@@ -391,8 +423,23 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Salary Detail">
-                            <field name="line_ids" colspan="4" nolabel="1"/>
+                            <field name="line_ids" colspan="4" nolabel="1">
+                                <tree string="Salary Structure" editable="bottom">
+                                    <field name="category_id" on_change="onchange_category(category_id)"/>
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="type"/>
+                                    <field name="amount_type"/>
+                                    <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
+                                    <field name="total"/>
+                                    <field name="account_id"/>
+                                    <field name="analytic_account_id"/>
+                                </tree>
+                            </field>
+                            
                             <group col="6" colspan="4">
+                                <separator string="Computation Overview" colspan="6"/>
                                 <field name="working_days"/>
                                 <field name="holiday_days"/>
                                 <field name="worked_days"/>
@@ -446,7 +493,8 @@
                     </notebook>
                     <group col="9" colspan="4">
                         <field name="state"/>
-                        <button string="Compute Sheet" name="compute_sheet" states="new" />
+                        <button string="Compute Sheet" name="compute_sheet" states="new"/>
+                        <button string="Recompute Sheet" name="compute_sheet" type="object" states="draft"/>
                         <button string="Verify Sheet" name="verify_sheet" states="draft"/>
                         <button string="Complete HR Checking" name="verify_twice_sheet" states="hr_check"/>
                         <button string="Complete Accountant Checking" name="final_verify_sheet" states="accont_check"/>
@@ -465,56 +513,7 @@
         </record>
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
         
-        <record id="view_hr_employee_grade_tree" model="ir.ui.view">
-            <field name="name">hr.payroll.structure.tree</field>
-            <field name="model">hr.payroll.structure</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Employee Function">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="line_ids"/>
-                    <field name="company_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_hr_employee_grade_form" model="ir.ui.view">
-            <field name="name">hr.payroll.structure.form</field>
-            <field name="model">hr.payroll.structure</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Employee Function">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
-                        <field name="account_id" select="1"/>
-                        <field name="company_id"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Salary Structure">
-                            <field name="line_ids" nolabel="1" colspan="4"/>
-                        </page>
-                        <page string="Job Profile">
-                            <separator colspan="4" string="Job Profile"/>
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
         
-        <record id="action_view_hr_employee_grade_form" model="ir.actions.act_window">
-            <field name="name">Salary Structure</field>
-            <field name="res_model">hr.payroll.structure</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_hr_employee_grade_tree"/>
-        </record>
-        <menuitem 
-            id="menu_hr_employee_function" 
-            action="action_view_hr_employee_grade_form" 
-            parent="payroll_configure" 
-        />
         
         <!-- Payment Heads -->
         <record id="hr_allounce_deduction_categoty_form" model="ir.ui.view">
@@ -522,7 +521,7 @@
             <field name="model">hr.allounce.deduction.categoty</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Allowance / Deduction Heads">
+                <form string="Salary Heads">
                     <group col="6" colspan="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
@@ -547,15 +546,18 @@
             <field name="model">hr.allounce.deduction.categoty</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Allowance / Deduction Category">
+                <tree string="Salary Heads">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="type"/>
+                    <field name="base"/>
+                    <field name="condition"/>
+                    <field name="sequence"/>
                 </tree>
             </field>
         </record>
         <record id="hr_allounce_deduction_tree" model="ir.actions.act_window">
-            <field name="name">Allowance/Deduction Heads</field>
+            <field name="name">Salary Heads</field>
             <field name="res_model">hr.allounce.deduction.categoty</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="hr_allounce_deduction_categoty_tree"/>
@@ -590,7 +592,7 @@
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Accounts"/>
                         <field name="include_in_salary" />
-                        <field name="account_id" attrs="{'required': [('contribute','=',True), ('include_in_salary','=',True)]}"/>
+                        <field name="account_id" attrs="{'required': [('include_in_salary','=',True)]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">

@@ -1039,7 +1039,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
-            <field name="domain">[('journal_id.type', '=', 'sale')]</field>
+            <field name="domain">[('journal_id.type', 'in', ['sale', 'sale_refund'])]</field>
         </record>
 
         <menuitem action="action_account_moves_sale" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>
@@ -1051,7 +1051,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
-            <field name="domain">[('journal_id.type', '=', 'purchase')]</field>
+            <field name="domain">[('journal_id.type', 'in', ['purchase', 'purchase_refund'])]</field>
         </record>
 
         <menuitem action="action_account_moves_purchase" id="menu_eaction_account_moves_purchase" parent="menu_finance_payables"/>
