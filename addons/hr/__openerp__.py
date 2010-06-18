@@ -34,7 +34,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process', 'resource'],
+    'depends': ['base', 'process', 'resource','board'],
     'init_xml': [],
     'update_xml': [
         'security/hr_security.xml',
@@ -43,10 +43,13 @@
         'hr_department_view.xml',
         'process/hr_process.xml',
         'hr_installer.xml',
-        'hr_data.xml'
+        'hr_data.xml',
+        'board_hr_view.xml',
     ],
     'demo_xml': ['hr_demo.xml',
         'hr_department_demo.xml'],
+        
+    'test': ['test/test_hr.yml'],    
     'installable': True,
     'active': False,
     'certificate': '0086710558965',

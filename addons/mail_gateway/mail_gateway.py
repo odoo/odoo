@@ -21,25 +21,9 @@
 
 from osv import osv, fields
 import time
+import tools
+import base64
 
-class one2many_domain(fields.one2many):
-    def set(self, cr, obj, id, field, values, user=None, context=None):
-        if not values:
-            return
-        return super(one2many_domain, self).set(cr, obj, id, field, values, 
-                                            user=user, context=context)
-
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = {}
-        res = {}
-        msg_obj = obj.pool.get('mailgate.message')
-        for thread in obj.browse(cr, user, ids, context=context):
-            final = msg_obj.search(cr, user, self._domain + [('thread_id', '=', thread.id)], context=context)
-            res[thread.id] = final
-        return res
-        
-        
 class mailgate_thread(osv.osv):
     '''
     Mailgateway Thread
@@ -49,12 +33,12 @@ class mailgate_thread(osv.osv):
     _rec_name = 'thread' 
 
     _columns = {
-        'thread': fields.char('Thread', size=32, required=False),  
-        'message_ids': one2many_domain('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
-        'log_ids': one2many_domain('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False),
-        }
+        'thread': fields.char('Thread', size=32, required=False), 
+        'message_ids': fields.one2many('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
+        'log_ids': fields.one2many('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
+    }
         
-    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -64,41 +48,60 @@ class mailgate_thread(osv.osv):
         @param history: Value True/False, If True it makes entry in case History otherwise in Case Log
         @param email: Email address if any
         @param details: Details of case history if any 
+        @param atach: Attachment sent in email
         @param context: A standard dictionary for contextual values"""
-        if not context:
+        if context is None:
             context = {}
+        if attach is None:
+            attach = []
+
         # The mailgate sends the ids of the cases and not the object list
-        if all(isinstance(case_id, (int, long)) for case_id in cases) and context.get('model'):
-            cases = self.pool.get(context['model']).browse(cr, uid, cases, context=context)
+
+        if all(isinstance(case_id, (int, long)) for case_id in cases):
+            cases = self.browse(cr, uid, cases, context=context)
 
         model_obj = self.pool.get('ir.model')
-        
+        att_obj = self.pool.get('ir.attachment')
         obj = self.pool.get('mailgate.message')
+
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
             data = {
-                'name': keyword,
-                'user_id': uid,
-                'model_id' : model_ids and model_ids[0] or False,
-                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'thread_id': case.thread_id.id,                
-                'message_id': message_id
+                'name': keyword, 
+                'user_id': uid, 
+                'model_id' : model_ids and model_ids[0] or False, 
+                'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
+                'thread_id': case.thread_id.id,
+                'message_id': message_id, 
             }
-
+            attachments = []
             if history:
-                data['history'] = True
-                data['description'] = details or case.description
-                data['email_to'] = email or \
-                        (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from', False)
-                data['email_from'] = email_from or \
-                        (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from', False)
+                for att in attach:
+                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
+                
+                data = {
+                    'name': subject or 'History', 
+                    'history': True, 
+                    'user_id': uid, 
+                    'model_id' : model_ids and model_ids[0] or False, 
+                    'res_id': case.id,
+                    'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
+                    'description': details or (hasattr(case, 'description') and case.description or False), 
+                    'email_to': email or \
+                        (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
+                         case.user_id.address_id.email) or tools.config.get('email_from', False), 
+                    'email_from': email_from or \
+                        (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
+                         case.user_id.address_id.email) or tools.config.get('email_from', False), 
+                    'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False, 
+                    'thread_id': case.thread_id.id, 
+                    'message_id': message_id, 
+                    'attachment_ids': [(6, 0, attachments)]
+                }
             res = obj.create(cr, uid, data, context)
         return True
     
-    _history = __history
-    history = __history
+    __history = history = _history
     
 
 mailgate_thread()
@@ -112,20 +115,22 @@ class mailgate_message(osv.osv):
     _order = 'date desc'
 
     _columns = {
-        'name':fields.char('Message', size=64),
-        'model_id': fields.many2one('ir.model', 'Model'),
-        'thread_id':fields.many2one('mailgate.thread', 'Thread'),
-        'date': fields.datetime('Date'),
+        'name':fields.char('Message', size=64), 
+        'model_id': fields.many2one('ir.model', 'Model'), 
+        'res_id': fields.integer('Resource ID'),
+        'thread_id':fields.many2one('mailgate.thread', 'Thread'), 
+        'date': fields.datetime('Date'), 
         'history': fields.boolean('Is History?', required=False), 
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'message': fields.text('Description'),
-        'email_from': fields.char('Email From', size=84),
-        'email_to': fields.char('Email To', size=84),
-        'email_cc': fields.char('Email From', size=84),
-        'email_bcc': fields.char('Email From', size=84),
-        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True),
+        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
+        'message': fields.text('Description'), 
+        'email_from': fields.char('Email From', size=84), 
+        'email_to': fields.char('Email To', size=84), 
+        'email_cc': fields.char('Email CC', size=84), 
+        'email_bcc': fields.char('Email BCC', size=84), 
+        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True), 
         'description': fields.text('Description'), 
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'partner_id': fields.many2one('res.partner', 'Partner', required=False), 
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'), 
     }
 
 mailgate_message()

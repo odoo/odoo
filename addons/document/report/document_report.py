@@ -44,7 +44,6 @@ class report_document_user(osv.osv):
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id':fields.integer('Owner', readonly=True),
         'user':fields.char('User',size=64,readonly=True),
-        'file_title': fields.char('File Name',size=64,readonly=True),
         'directory': fields.char('Directory',size=64,readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
         'change_date': fields.datetime('Modified Date', readonly=True),
@@ -66,7 +65,6 @@ class report_document_user(osv.osv):
                      d.name as directory,
                      f.create_date as create_date,
                      f.file_size as file_size,
-                     min(f.title) as file_title,
                      min(d.type) as type,
                      f.write_date as change_date
                  from ir_attachment f
@@ -83,7 +81,6 @@ class report_files_partner(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
-        'file_title': fields.char('File Name',size=64,readonly=True),
         'directory': fields.char('Directory',size=64,readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
         'change_date': fields.datetime('Modified Date', readonly=True),
@@ -101,7 +98,6 @@ class report_files_partner(osv.osv):
                 select min(f.id) as id,count(*) as nbr,
                        to_char(f.create_date,'YYYY') as name,
                        min(to_char(f.create_date,'MM')) as month,
-                       min(f.title) as file_title,
                        p.name as partner
                 from ir_attachment f
                 inner join res_partner p
@@ -145,7 +141,6 @@ class report_document_wall(osv.osv):
         'user_id':fields.many2one('res.users', 'Owner',readonly=True),
         'user':fields.char('User',size=64,readonly=True),
         'month': fields.char('Month', size=24,readonly=True),
-        'file_name':fields.char('Last Posted File Name',size=64,readonly=True),
         'last':fields.datetime('Last Posted Time', readonly=True),
              }
 
@@ -153,7 +148,6 @@ class report_document_wall(osv.osv):
          cr.execute("""
             create or replace view report_document_wall as (
                select max(f.id) as id,
-               min(title) as file_name,
                to_char(min(f.create_date),'YYYY-MM-DD HH24:MI:SS') as last,
                f.user_id as user_id, f.user_id as user,
                to_char(f.create_date,'Month') as month

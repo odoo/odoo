@@ -12,15 +12,15 @@
                 <search string="Search Resource">
                    <group col='15' colspan='4'>
                        <field name="name"/>
-                       <field name="user_id" string="User" widget="selection"/>
+                       <field name="user_id" string="User"/>
                        <field name="resource_type"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="20" groups="base.group_extended">
-                        <filter string="Type" icon="terp-project" domain="[]" context="{'group_by':'resource_type'}"/>
-                        <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}"/>
-                        <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
+                   <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     </group>
                </search>
             </field>
@@ -35,7 +35,7 @@
                 <search string="Search Working Period">
                    <group col='15' colspan='4'>
                        <field name="name" string="Name"/>
-                       <field name="manager" widget="selection"/>
+                       <field name="manager"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                </search>
@@ -52,12 +52,12 @@
                        <field name="name" string="Name"/>
                        <field name="company_id" string="Company" widget="selection" />
                        <field name="calendar_id" string="Working Time" widget="selection"/>
-                       <field name="resource_id" string="Resource" widget="selection"/>
+                       <field name="resource_id" string="Resource"/>
                    </group>
                    <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Resouce" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
-                        <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                   <group expand="0" string="Group By..." colspan="4" col="20">
+                        <filter string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                </search>
             </field>
@@ -162,12 +162,12 @@
             <field name="arch" type="xml">
                 <form string="Resource">
                     <field name="name" />
-                    <field name="active"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="calendar_id" widget="selection"/>
-                    <field name="resource_type" />
                     <field name="user_id" attrs="{'required':[('resource_type','=','user')]}"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="resource_type" />
+                    <field name="calendar_id" widget="selection"/>
                     <field name="time_efficiency" groups="base.group_extended"/>
+                    <field name="active"/>
                 </form>
             </field>
         </record>
@@ -178,11 +178,11 @@
             <field name="arch" type="xml">
                 <tree string="Resources">
                     <field name="name" />
+                    <field name="user_id" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="resource_type" />
                     <field name="calendar_id" />
                     <field name="time_efficiency" groups="base.group_extended"/>
-                    <field name="user_id" />
                 </tree>
             </field>
         </record>
@@ -201,9 +201,9 @@
             <field name="arch" type="xml">
                 <form string="Leave Detail">
                     <field name="name"/>
+                    <field name="resource_id"  on_change="onchange_resource(resource_id)"/>
                     <field name="company_id"  widget="selection" groups="base.group_multi_company"/>
                     <field name="calendar_id"/>
-                    <field name="resource_id"  on_change="onchange_resource(resource_id)"/>
                     <newline/>
                     <field name="date_from"/>
                     <field name="date_to"/>

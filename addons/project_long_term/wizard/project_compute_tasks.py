@@ -108,13 +108,13 @@ class project_compute_tasks(osv.osv_memory):
                 # Dynamic Creation of tasks
                 i = 0
                 for each_task in tasks:
-                    hours = str(each_task.planned_hours / each_task.occupation_rate)+ 'H'
+                    hours = str(each_task.planned_hours )+ 'H'
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
                     if each_task.user_id:
-                       for resource in resources:
-                            if resource.__name__ == each_task.user_id.name: # check me!!
-                               task = create_tasks(i, hours, priorty, resource)
+                       for resrce in resources:
+                            if resrce.__name__ == each_task.user_id.name: # check me!!
+                               task = create_tasks(i, hours, priorty, resrce)
                     else:
                         task = create_tasks(i, hours, priorty)
                     i += 1

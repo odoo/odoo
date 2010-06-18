@@ -558,8 +558,7 @@ class abstracted_fs:
                 
                 if dst_obj2:                    
                     ressource_type_id = pool.get('ir.model').search(cr, uid, [('model','=',dst_obj2._name)])[0]
-                    ressource_id = dst_obj2.id
-                    title = dst_obj2.name
+                    ressource_id = dst_obj2.id                    
                     ressource_model = dst_obj2._name                    
                     if dst_obj2._name == 'res.partner':
                         partner_id = dst_obj2.id
@@ -569,8 +568,7 @@ class abstracted_fs:
                     ressource_type_id = False
                     ressource_id = False
                     ressource_model = False
-                    partner_id = False
-                    title = False                
+                    partner_id = False                               
                 pool.get('document.directory').write(cr, uid, result['directory'], {
                     'name' : dst_basename,
                     'ressource_id': ressource_id,
@@ -579,8 +577,7 @@ class abstracted_fs:
                 })
                 val = {
                     'res_id': ressource_id,
-                    'res_model': ressource_model,
-                    'title': title,
+                    'res_model': ressource_model,                    
                     'partner_id': partner_id
                 }
                 pool.get('ir.attachment').write(cr, uid, result['attachment'], val)
@@ -603,7 +600,6 @@ class abstracted_fs:
                     'res_model': False,
                     'name': dst_basename,
                     'datas_fname': dst_basename,
-                    'title': dst_basename,
                 }
 
                 if (dst_obj and (dst_obj.type in ('directory','ressource'))) or not dst_obj2:
@@ -613,8 +609,7 @@ class abstracted_fs:
 
                 if dst_obj2:
                     val['res_model'] = dst_obj2._name
-                    val['res_id'] = dst_obj2.id
-                    val['title'] = dst_obj2.name
+                    val['res_id'] = dst_obj2.id                    
                     if dst_obj2._name == 'res.partner':
                         val['partner_id'] = dst_obj2.id
                     else:                        

@@ -498,9 +498,17 @@ class account_move_line(osv.osv):
                 return False
         return True
 
+    def _check_company_id(self, cr, uid, ids):
+        lines = self.browse(cr, uid, ids)
+        for l in lines:
+            if l.company_id != l.account_id.company_id or l.company_id != l.period_id.company_id:
+                return False
+        return True
+
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
+        (_check_company_id,'Company must be same for its related account and period.',['company_id'] ),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -530,9 +538,8 @@ class account_move_line(osv.osv):
             date = datetime.now().strftime('%Y-%m-%d')
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
 
-        if part.property_payment_term and part.property_payment_term.line_ids:
-            payterm = part.property_payment_term.line_ids[0]
-            res = self.pool.get('account.payment.term').compute(cr, uid, payterm.id, 100, date)
+        if part.property_payment_term:
+            res = self.pool.get('account.payment.term').compute(cr, uid, part.property_payment_term.id, 100, date)
             if res:
                 val['date_maturity'] = res[0][0]
         if not account_id:
@@ -540,10 +547,10 @@ class account_move_line(osv.osv):
             id2 =  part.property_account_receivable.id
             if journal:
                 jt = self.pool.get('account.journal').browse(cr, uid, journal).type
-                if jt=='sale':
+                if jt == 'sale':
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id2)
 
-                elif jt=='purchase':
+                elif jt == 'purchase':
                     val['account_id'] = self.pool.get('account.fiscal.position').map_account(cr, uid, part and part.property_account_position or False, id1)
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
@@ -570,11 +577,21 @@ class account_move_line(osv.osv):
     # writeoff; entry generated for the difference between the lines
     #
 
-    def reconcile_partial(self, cr, uid, ids, type='auto', context={}):
+    def reconcile_partial(self, cr, uid, ids, type='auto', context=None):
         merges = []
         unmerge = []
         total = 0.0
         merges_rec = []
+
+        company_list = []
+        if context is None:
+            context = {}
+
+        for line in self.browse(cr, uid, ids, context=context):
+            if company_list and not line.company_id.id in company_list:
+                raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
+            company_list.append(line.company_id.id)
+
         for line in self.browse(cr, uid, ids, context):
             if line.reconcile_id:
                 raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
@@ -588,6 +605,7 @@ class account_move_line(osv.osv):
             else:
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
+
         if not total:
             res = self.reconcile(cr, uid, merges+unmerge, context=context)
             return res
@@ -598,13 +616,22 @@ class account_move_line(osv.osv):
         self.pool.get('account.move.reconcile').reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
         return True
 
-    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
+    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
         lines = self.browse(cr, uid, ids, context=context)
         unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
         credit = debit = 0.0
         currency = 0.0
         account_id = False
         partner_id = False
+        if context is None:
+            context = {}
+
+        company_list = []
+        for line in self.browse(cr, uid, ids, context=context):
+            if company_list and not line.company_id.id in company_list:
+                raise osv.except_osv(_('Warning !'), _('To reconcile the entries company should be the same for all entries'))
+            company_list.append(line.company_id.id)
+
         for line in unrec_lines:
             if line.state <> 'valid':
                 raise osv.except_osv(_('Error'),
@@ -837,7 +864,7 @@ class account_move_line(osv.osv):
         if vals.get('date', False):
             todo_date = vals['date']
             del vals['date']
-            
+
         for line in self.browse(cr, uid, ids,context=context):
             ctx = context.copy()
             if ('journal_id' not in ctx):
@@ -849,8 +876,8 @@ class account_move_line(osv.osv):
                 if line.move_id:
                     ctx['period_id'] = line.move_id.period_id.id
                 else:
-                    ctx['period_id'] = line.period_id.id  
-            #Check for centralisation  
+                    ctx['period_id'] = line.period_id.id
+            #Check for centralisation
             journal = self.pool.get('account.journal').browse(cr, uid, ctx['journal_id'], context=ctx)
             if journal.centralisation:
                 self._check_moves(cr, uid, context=ctx)

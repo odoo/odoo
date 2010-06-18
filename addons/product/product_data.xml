@@ -13,6 +13,10 @@
         <record id="uom_categ_wtime" model="product.uom.categ">
             <field name="name">Working Time</field>
         </record>
+        <record id="uom_categ_length" model="product.uom.categ">
+            <field name="name">Length / Distance</field>
+        </record>
+
 
         <!--
 	Resource: product.uom
@@ -21,33 +25,39 @@
             <field name="category_id" ref="product_uom_categ_unit"/>
             <field name="name">PCE</field>
             <field name="factor">1.0</field>
-            <field name="factor_inv_data">1.0</field>
             <field name="rounding">1.0</field>
         </record>
         <record id="product_uom_kgm" model="product.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <field name="name">KGM</field>
             <field name="factor">1000.0</field>
-            <field name="factor_inv_data">1.0</field>
         </record>
         <record id="uom_hour" model="product.uom">
             <field name="name">Hour</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor">8.0</field>
-            <field name="factor_inv_data">1.0</field>
         </record>
         <record id="uom_day" model="product.uom">
             <field name="name">Day</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor">1.0</field>
-            <field name="factor_inv_data">1.0</field>
         </record>
         <record id="product_uom_ton" model="product.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <field name="name">TON</field>
             <field name="factor">1.0</field>
-            <field name="factor_inv_data">1.0</field>
         </record>
+        <record id="product_uom_meter" model="product.uom">
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="name">Meter</field>
+            <field name="factor">1.0</field>
+        </record>
+        <record id="product_uom_km" model="product.uom">
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="name">Kilometer</field>
+            <field name="factor">0.001</field>
+        </record>
+
 
         <!--
 ... to here, it should be in product_demo but we cant just move it
@@ -135,6 +145,6 @@ parameter) will see those record just disappear.
             <field name="name">Stock Weight</field>
             <field name="digits">2</field>
         </record>
-
+       
     </data>
 </openerp>

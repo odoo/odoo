@@ -23,10 +23,10 @@
 {
     "name" : "",
     "version" : "1.1",
-    "depends" : ["crm", 
+    "depends" : ["marketing",
+                "crm", 
                 "document",
-                "poweremail" # need to get this module form the branch 
-                # lp:poweremail  
+                "email_template"
                 ],
     "author" : "Tiny",
     "category": 'Generic Modules/Marketing',
@@ -39,6 +39,8 @@
         'marketing_campaign_data.xml',    
         'marketing_campaign_workflow.xml',    
         'report/campaign_analysis_view.xml',
+        "security/marketing_campaign_security.xml",
+        "security/ir.model.access.csv"
     ],
     'demo_xml': [
         'marketing_campaign_demo.xml',

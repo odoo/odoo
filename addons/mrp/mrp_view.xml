@@ -4,7 +4,7 @@
 
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager" sequence="3"/>
-        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
+        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
 <!--        <menuitem name="Control" id="menu_mrp_control" parent="base.menu_mrp_root"  sequence="3" />-->
@@ -41,7 +41,7 @@
             id="menu_mrp_configuration"
             name="Configuration"
             parent="base.menu_mrp_root"
-            groups="base.group_extended"
+            groups="group_mrp_manager"
             sequence="50" />
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
@@ -78,7 +78,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="Properties"
+        <menuitem name="Master Bill of Materials"
             id="menu_mrp_property"
             parent="menu_mrp_configuration"
             groups="base.group_extended"
@@ -230,8 +230,8 @@
         </record>
  <!--       <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="mrp.menu_mrp_bom" groups="base.group_extended"
                   sequence="100" />-->
-        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="40" />
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="30"/>
+        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="40" />
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="30"/>
 
         <!--
           Bill of Materials
@@ -248,25 +248,33 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1" string="Reference" groups="base.group_extended"/>
                         <newline/>
-                        <field name="product_uom" widget="selection"/>
+                        <field name="product_uom"/>
                         <field name="product_qty"/>
-                        <field name="routing_id" widget="selection" groups="base.group_extended"/>
+                        <field name="routing_id" groups="base.group_extended"/>
                         <newline/>
-                        <field name="product_uos" groups="product.group_uos,base.group_extended" widget="selection"/>
-                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended" />
+                        <field name="product_uos" groups="product.group_uos"/>
+                        <field name="product_uos_qty" groups="product.group_uos" />
                         <newline/>
-                        <field name="multi_level_bom" />
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4" >
-                        <page string="Components" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
-                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list" />
+                        <page string="Components">
+                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list">
+                                <tree string="Components" editable="bottom">
+                                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                                    <field name="product_uom"/>
+                                    <field name="product_qty"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="date_start"/>
+                                    <field name="date_stop"/>
+                                </tree>
+                            </field>
                         </page>
-                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
+                        <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Properties" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False),('multi_level_bom','=',False)]}">
+                        <page string="Properties" groups="base.group_extended">
                             <field name="position"/>
                             <field name="active"/>
                             <field name="sequence"/>
@@ -283,7 +291,7 @@
             </field>
         </record>
 
-		<record id="view_mrp_bom_filter" model="ir.ui.view">
+        <record id="view_mrp_bom_filter" model="ir.ui.view">
             <field name="name">mrp.bom.select</field>
             <field name="model">mrp.bom</field>
            <field name="type">search</field>
@@ -291,14 +299,14 @@
                 <search string="Search Bill Of Material">
                     <group col='4' colspan='4'>
                       <field name="name"/>
-	                    <field name="code" string="Reference"/>
-	                    <field name="product_id"/>
-	                    <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="code" string="Reference"/>
+                        <field name="product_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By" colspan="4" col="8" groups="base.group_extended">
-                        <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Routing" icon="terp-mrp" domain="[]" context="{'group_by':'routing_id'}"/>
+                    <group expand="0" string="Group By" colspan="4" col="8" groups="base.group_extended">
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}"/>
                    </group>
                 </search>
             </field>
@@ -402,26 +410,26 @@
             </field>
         </record>
 
-		<!--
+        <!--
         Procurement
         -->
 
-		<menuitem action="mrp_procurement.mrp_procurement_action" id="menu_mrp_procurement_action"
-        		  parent="mrp.menu_mrp_manufacturing" sequence="2" />
-<!--        <menuitem action="mrp_procurement.mrp_procurement_action5" id="menu_mrp_procurement_exception_action"-->
-<!--        		  parent="mrp.menu_mrp_control" sequence="1" />-->
+        <menuitem action="procurement.procurement_action" id="menu_mrp_procurement_action"
+                  parent="mrp.menu_mrp_manufacturing" sequence="3" />
+<!--        <menuitem action="procurement.procurement_action5" id="menu_mrp_procurement_exception_action"-->
+<!--                  parent="mrp.menu_mrp_control" sequence="1" />-->
 
-     	<menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="4"/>
-        <menuitem action="mrp_procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
-
-		<!--
-		Order Point
-		-->
-		<menuitem action="mrp_procurement.action_orderpoint_form" id="menu_action_orderpoint_form" parent="mrp.menu_mrp_reordering"/>
+         <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="3"/>
+        <menuitem action="procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
 
         <!--
-	    Production Management
-	    -->
+        Order Point
+        -->
+        <menuitem action="procurement.action_orderpoint_form" id="menu_action_orderpoint_form" parent="mrp.menu_mrp_reordering"/>
+
+        <!--
+        Production Management
+        -->
 
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
@@ -499,15 +507,15 @@
                         <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
-                        <field name="product_uom" widget="selection"/>
+                        <field name="product_uom"/>
                         <button type="action"
                             name="%(mrp.action_change_production_qty)d"
                             string="Change Qty" states="ready,confirmed" />
                         </group>
                         <label string="" colspan="2"/>
-                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                        <group colspan="2" col="3" groups="product.group_uos,base.group_extended">
-                            <field name="product_uos" widget="selection"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <group colspan="2" col="3" groups="product.group_uos">
+                            <field name="product_uos"/>
                             <label string=""/>
                         </group>
                     </group>
@@ -515,9 +523,9 @@
                     <notebook colspan="4">
                         <page string="Consumed Products">
                             <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)" />
-                            <field name="routing_id" groups="base.group_extended" select="1" widget="selection"/>
-                            <field name="location_src_id" domain="[('usage','=','internal')]" widget="selection" on_change="location_id_change(location_src_id,location_dest_id)"/>
-                            <field name="location_dest_id" domain="[('usage','=','internal')]" widget="selection"/>
+                            <field name="routing_id" groups="base.group_extended" select="1"/>
+                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <separator string="" colspan="4"/>
 
                             <field colspan="2" name="move_lines" nolabel="1" widget="one2many_list"
@@ -640,8 +648,6 @@
                             <field name="date_finnished"/>
                             <field name="picking_id" groups="base.group_extended"/>
                             <field name="move_prod_id" groups="base.group_extended"/>
-                            <field name="sale_name" groups="base.group_extended"/>
-                            <field name="sale_ref" groups="base.group_extended"/>
                         </page>
                     </notebook>
                 </form>
@@ -655,21 +661,21 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                    <group col='9' colspan='4'>
-                       <filter icon="terp-mrp" string="Draft"
+                       <filter icon="terp-document-new" string="Draft"
                            domain="[('state','=','draft')]"
                            help="Non confirmed manufacturing orders"/>
-                       <filter icon="terp-mrp" string="Current" name="Current"
+                       <filter icon="terp-check" string="Current" name="Current"
                            default="1"
                            domain="[('state','in',('confirmed','ready','exception'))]"
                            help="Manufacturing Orders which are waiting for raw materials"/>
-                       <filter icon="terp-mrp" string="Ready"
+                       <filter icon="terp-camera_test" string="Ready"
                            domain="[('state','=','ready')]"
                            help="Manufacturing Orders which are ready to produce" />
-                       <filter icon="terp-mrp" string="In Production"
+                       <filter icon="terp-check" string="In Production"
                            domain="[('state','=','in_production')]"
                            help="Manufacturing Orders which are in production" />
                        <separator orientation="vertical"/>
-                       <filter icon="terp-mrp" string="Late"
+                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                            help="Production started late" />
                        <separator orientation="vertical"/>
@@ -679,12 +685,12 @@
                        <field name="origin"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By" colspan="10" col="8">
-                        <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Routing" icon="terp-mrp" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
+                    <group expand="0" string="Group By" colspan="10" col="8">
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
-                        <filter string="Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
                     </group>
                </search>
             </field>
@@ -802,26 +808,26 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
-                    <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                    <field name="product_uos" groups="product.group_uos,base.group_extended"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
                 </tree>
             </field>
         </record>
 
         <!--
-        	Procurements
+            Procurements
         -->
 
         <record id="view_procurement_form_inherit" model="ir.ui.view">
-        	<field name="name">mrp.procurement.form.inherit</field>
-        	<field name="model">mrp.procurement</field>
-        	<field name="inherit_id" ref="mrp_procurement.mrp_procurement_form_view"/>
-        	<field name="type">form</field>
-        	<field name="arch" type="xml">
-        		<xpath expr="/form/notebook/page/field[@name='move_id']" position="before">
-        			<field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
-        		</xpath>
-        	</field>
+            <field name="name">procurement.order.form.inherit</field>
+            <field name="model">procurement.order</field>
+            <field name="inherit_id" ref="procurement.procurement_form_view"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/field[@name='move_id']" position="before">
+                    <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                </xpath>
+            </field>
         </record>
 
         <act_window
@@ -845,10 +851,11 @@
 
         <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
             groups="base.group_extended"
-            sequence="2"/>
+            sequence="4"/>
+        <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
-        <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_mrp_configuration" sequence="1"/>
-        <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
+        <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
+        <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
 
     </data>
 </openerp>

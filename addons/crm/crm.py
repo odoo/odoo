@@ -30,19 +30,19 @@ from tools.translate import _
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
-    ('draft', 'Draft'), 
-    ('open', 'Open'), 
-    ('cancel', 'Cancelled'), 
-    ('done', 'Closed'), 
+    ('draft', 'Draft'),
+    ('open', 'Open'),
+    ('cancel', 'Cancelled'),
+    ('done', 'Closed'),
     ('pending', 'Pending'),
 ]
 
 AVAILABLE_PRIORITIES = [
     ('1', 'Highest'),
-    ('2', 'High'), 
-    ('3', 'Normal'), 
-    ('4', 'Low'), 
-    ('5', 'Lowest'), 
+    ('2', 'High'),
+    ('3', 'Normal'),
+    ('4', 'Low'),
+    ('5', 'Lowest'),
 ]
 
 class crm_case(object):
@@ -107,10 +107,10 @@ class crm_case(object):
         """
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.context_section_id.id or False
-    
+
     def stage_next(self, cr, uid, ids, context=None):
         """This function computes next stage for case from its current stage
-             using available stage for that case type 
+             using available stage for that case type
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -120,8 +120,8 @@ class crm_case(object):
             context = {}
 
         s = self.get_stage_dict(cr, uid, ids, context=context)
+        section = self._name
         for case in self.browse(cr, uid, ids, context):
-            section = (case.section_id.id or False)
             if section in s:
                 st = case.stage_id.id  or False
                 if st in s[section]:
@@ -137,13 +137,13 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
-
-        sid = self.pool.get('crm.case.stage').search(cr, uid, \
+        stage_obj = self.pool.get('crm.case.stage')
+        sid = stage_obj.search(cr, uid, \
                             [('object_id.model', '=', self._name)], context=context)
         s = {}
         previous = {}
-        for stage in self.pool.get('crm.case.stage').browse(cr, uid, sid, context=context):
-            section = stage.section_id.id or False
+        section = self._name
+        for stage in stage_obj.browse(cr, uid, sid, context=context):
             s.setdefault(section, {})
             s[section][previous.get(section, False)] = stage.id
             previous[section] = stage.id
@@ -151,7 +151,7 @@ class crm_case(object):
 
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current stage
-             using available stage for that case type 
+             using available stage for that case type
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -161,9 +161,8 @@ class crm_case(object):
             context = {}
 
         s = self.get_stage_dict(cr, uid, ids, context=context)
+        section = self._name
         for case in self.browse(cr, uid, ids, context):
-            section = (case.section_id.id or False)
-
             if section in s:
                 st = case.stage_id.id or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
@@ -178,11 +177,11 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param part: Partner's id
-        @email: Partner's email ID 
+        @email: Partner's email ID
         """
         if not part:
-            return {'value': {'partner_address_id': False, 
-                            'email_from': False, 
+            return {'value': {'partner_address_id': False,
+                            'email_from': False,
                             }}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
@@ -196,17 +195,21 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param add: Id of Partner's address
-        @email: Partner's email ID 
+        @email: Partner's email ID
         """
         if not add:
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email}}
-    
-    def _history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
+
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool._history(cr, uid, cases, keyword, history=history, email=email, details=details, email_from=email_from, message_id=message_id, context=context)
-    
+        return mailgate_pool._history(cr, uid, cases, keyword, history=history,\
+                                       subject=subject, email=email, \
+                                       details=details, email_from=email_from,\
+                                       message_id=message_id, attach=attach, \
+                                       context=context)
+
     def case_open(self, cr, uid, ids, *args):
         """Opens Case
         @param self: The object pointer
@@ -262,7 +265,7 @@ class crm_case(object):
                 if case.section_id.parent_id.user_id:
                     data['user_id'] = case.section_id.parent_id.user_id.id
             else:
-                raise osv.except_osv(_('Error !'), _('You can not escalate this case.\nYou are already at the top level.'))
+                raise osv.except_osv(_('Error !'), _('You can not escalate, You are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
         cases = self.browse(cr, uid, ids)
         self._history(cr, uid, cases, _('Escalate'))
@@ -314,7 +317,7 @@ class crm_case(object):
         self.write(cr, uid, ids, {'state': 'draft', 'active': True})
         self._action(cr, uid, cases, 'draft')
         return True
-        
+
     def remind_partner(self, cr, uid, ids, context={}, attach=False):
 
         """
@@ -347,7 +350,7 @@ class crm_case(object):
                 src = case.email_from
                 dest = case.section_id.reply_to
                 body = ""
-                body = case.email_last or case.description               
+                body = case.email_last or case.description
                 if not destination:
                     src, dest = dest, src
                     if body and case.user_id.signature:
@@ -378,7 +381,7 @@ class crm_case(object):
                 #    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
                 #else:
                 #    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
-        return True    
+        return True
 
     def _check(self, cr, uid, ids=False, context={}):
         """
@@ -425,12 +428,12 @@ class crm_case_section(osv.osv):
     _order = "name"
 
     _columns = {
-        'name': fields.char('Sales Team', size=64, required=True, translate=True), 
-        'code': fields.char('Code', size=8), 
+        'name': fields.char('Sales Team', size=64, required=True, translate=True),
+        'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to \
-                        true, it will allow you to hide the sales team without removing it."), 
-        'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"), 
-        'user_id': fields.many2one('res.users', 'Responsible User'), 
+                        true, it will allow you to hide the sales team without removing it."),
+        'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
+        'user_id': fields.many2one('res.users', 'Responsible User'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put \
                         in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
@@ -438,11 +441,12 @@ class crm_case_section(osv.osv):
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
         'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
         'note': fields.text('Description'),
+        'working_hours': fields.float('Working Hours', digits=(16,2 )),
     }
 
     _defaults = {
-        'active': lambda *a: 1, 
-        'allow_unlink': lambda *a: 1, 
+        'active': lambda *a: 1,
+        'allow_unlink': lambda *a: 1,
     }
 
     _sql_constraints = [
@@ -459,7 +463,7 @@ class crm_case_section(osv.osv):
         @param ids: List of Sales team ids
         """
         level = 100
- 
+
         while len(ids):
             cr.execute('select distinct parent_id from crm_case_section where id =ANY(%s)', (ids,))
             ids = filter(None, map(lambda x: x[0], cr.fetchall()))
@@ -505,9 +509,9 @@ class crm_case_categ(osv.osv):
     _description = "Category of case"
 
     _columns = {
-        'name': fields.char('Case Category Name', size=64, required=True, translate=True), 
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
-        'object_id': fields.many2one('ir.model', 'Object Name'), 
+        'name': fields.char('Case Category Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'object_id': fields.many2one('ir.model', 'Object Name'),
     }
 
     def _find_object_id(self, cr, uid, context=None):
@@ -537,9 +541,9 @@ class crm_case_resource_type(osv.osv):
     _rec_name = "name"
 
     _columns = {
-        'name': fields.char('Case Resource Type', size=64, required=True, translate=True), 
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
-        'object_id': fields.many2one('ir.model', 'Object Name'), 
+        'name': fields.char('Case Resource Type', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'object_id': fields.many2one('ir.model', 'Object Name'),
     }
     def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object
@@ -568,14 +572,14 @@ class crm_case_stage(osv.osv):
     _order = "sequence"
 
     _columns = {
-        'name': fields.char('Stage Name', size=64, required=True, translate=True), 
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
+        'name': fields.char('Stage Name', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order \
-                        when displaying a list of case stages."), 
-        'object_id': fields.many2one('ir.model', 'Object Name'), 
-        'probability': fields.float('Probability (%)', required=True), 
+                        when displaying a list of case stages."),
+        'object_id': fields.many2one('ir.model', 'Object Name'),
+        'probability': fields.float('Probability (%)', required=True),
         'on_change': fields.boolean('Change Probability Automatically', \
-                         help="Change Probability on next and previous stages."), 
+                         help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements')
     }
     def _find_object_id(self, cr, uid, context=None):
@@ -590,8 +594,8 @@ class crm_case_stage(osv.osv):
         return ids and ids[0]
 
     _defaults = {
-        'sequence': lambda *args: 1, 
-        'probability': lambda *args: 0.0, 
+        'sequence': lambda *args: 1,
+        'probability': lambda *args: 0.0,
         'object_id' : _find_object_id
     }
 
@@ -615,7 +619,7 @@ class users(osv.osv):
     _inherit = 'res.users'
     _description = "Users"
     _columns = {
-        'context_section_id': fields.many2one('crm.case.section', 'Sales Team'), 
+        'context_section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 users()
 
@@ -623,7 +627,7 @@ users()
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 res_partner()
 
