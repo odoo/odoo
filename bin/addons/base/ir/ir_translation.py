@@ -88,7 +88,7 @@ class ir_translation(osv.osv):
                     'where lang=%s ' \
                         'and type=%s ' \
                         'and name=%s ' \
-                        'and res_id in %s',
+                        'and res_id IN %s',
                     (lang,tt,name,tuple(ids)))
             for res_id, value in cr.fetchall():
                 translations[res_id] = value
@@ -107,7 +107,7 @@ class ir_translation(osv.osv):
                 'where lang=%s ' \
                     'and type=%s ' \
                     'and name=%s ' \
-                    'and res_id in ('+','.join(map(str, ids))+')',
+                    'and res_id IN ('+','.join(map(str, ids))+')',
                 (lang,tt,name))
         cr.commit()
         for id in ids:

@@ -148,7 +148,7 @@ class GettextAlias(object):
         except:
             return source
 
-        cr.execute('select value from ir_translation where lang=%s and type in (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
+        cr.execute('select value from ir_translation where lang=%s and type IN (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
         res_trans = cr.fetchone()
         return res_trans and res_trans[0] or source
 _ = GettextAlias()

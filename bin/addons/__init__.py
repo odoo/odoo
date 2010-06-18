@@ -88,7 +88,7 @@ class Graph(dict):
         ## Then we get the values from the database
         cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
                    '  FROM ir_module_module'
-                   ' WHERE name in %s',(tuple(additional_data),)
+                   ' WHERE name IN %s',(tuple(additional_data),)
                    )
 
         ## and we update the default values with values from the database
@@ -728,10 +728,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 load_demo_xml(cr, m, idref, mode)
                 load_demo(cr, m, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
-                
+
                 # launch tests only in demo mode, as most tests will depend
                 # on demo data. Other tests can be added into the regular
-                # 'data' section, but should probably not alter the data, 
+                # 'data' section, but should probably not alter the data,
                 # as there is no rollback.
                 load_test(cr, m, idref, mode)
 
@@ -824,7 +824,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             loop_guardrail += 1
             if loop_guardrail > 100:
                 raise ProgrammingError()
-            cr.execute("SELECT name from ir_module_module WHERE state in %s" ,(tuple(STATES_TO_LOAD),))
+            cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(STATES_TO_LOAD),))
 
             module_list = [name for (name,) in cr.fetchall() if name not in graph]
             if not module_list:
@@ -877,11 +877,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.execute('''delete from
                         ir_ui_menu
                     where
-                        (id not in (select parent_id from ir_ui_menu where parent_id is not null))
+                        (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
                     and
-                        (id not in (select res_id from ir_values where model='ir.ui.menu'))
+                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
                     and
-                        (id not in (select res_id from ir_model_data where model='ir.ui.menu'))''')
+                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
                 cr.commit()
                 if not cr.rowcount:
                     break

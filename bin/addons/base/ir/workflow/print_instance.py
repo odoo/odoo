@@ -57,7 +57,7 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
             actfrom[n['id']] = (n['id'],{})
             actto[n['id']] = (n['id'],{})
             node_ids = tuple(map(itemgetter('id'), nodes))
-    cr.execute('select * from wkf_transition where act_from in %s', (node_ids,))
+    cr.execute('select * from wkf_transition where act_from IN %s', (node_ids,))
     transitions = cr.dictfetchall()
     for t in transitions:
         args = {}

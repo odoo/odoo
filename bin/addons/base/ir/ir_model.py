@@ -605,13 +605,13 @@ class ir_model_data(osv.osv):
             return True
         modules = list(modules)
         module_in = ",".join(["%s"] * len(modules))
-        cr.execute('select id,name,model,res_id,module from ir_model_data where module in (' + module_in + ') and noupdate=%s', modules + [False])
+        cr.execute('select id,name,model,res_id,module from ir_model_data where module IN (' + module_in + ') and noupdate=%s', modules + [False])
         wkf_todo = []
         for (id, name, model, res_id,module) in cr.fetchall():
             if (module,name) not in self.loads:
                 self.unlink_mark[(model,res_id)] = id
                 if model=='workflow.activity':
-                    cr.execute('select res_type,res_id from wkf_instance where id in (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
+                    cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                     wkf_todo.extend(cr.fetchall())
                     cr.execute("update wkf_transition set condition='True', role_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
                     cr.execute("delete from wkf_transition where act_to=%s", (res_id,))

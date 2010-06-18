@@ -231,9 +231,7 @@ class ir_values(osv.osv):
             if type(r[2])==type({}) and 'type' in r[2]:
                 groups = r[2].get('groups_id')
                 if groups:
-                        cr.execute('SELECT COUNT(1) FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',
-                                   (tuple(groups), uid)
-                                  )
+                        cr.execute('SELECT COUNT(1) FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',(tuple(groups), uid))
                         cnt = cr.fetchone()[0]
                         if cnt:
                             res2.remove(r)

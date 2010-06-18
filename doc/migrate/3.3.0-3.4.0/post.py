@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -33,11 +33,11 @@ parser = optparse.OptionParser(version="Tiny ERP server migration script " + __v
 parser.add_option("-c", "--config", dest="config", help="specify path to Tiny ERP config file")
 
 group = optparse.OptionGroup(parser, "Database related options")
-group.add_option("--db_host", dest="db_host", help="specify the database host") 
-group.add_option("--db_port", dest="db_port", help="specify the database port") 
+group.add_option("--db_host", dest="db_host", help="specify the database host")
+group.add_option("--db_port", dest="db_port", help="specify the database port")
 group.add_option("-d", "--database", dest="db_name", help="specify the database name")
 group.add_option("-r", "--db_user", dest="db_user", help="specify the database user name")
-group.add_option("-w", "--db_password", dest="db_password", help="specify the database password") 
+group.add_option("-w", "--db_password", dest="db_password", help="specify the database password")
 parser.add_option_group(group)
 
 options = optparse.Values()
@@ -94,7 +94,7 @@ for partner in partners:
     res_id = 'res.partner,%d' % partner['id']
     cr.execute(
         "insert into ir_property(name, value, res_id, company_id, fields_id) "\
-        "values(%s, %s, %s, %d, %d)", 
+        "values(%s, %s, %s, %d, %d)",
         ('property_payment_term', value, res_id, company_id, fields_id))
 
 # remove the field
@@ -116,7 +116,7 @@ registered_reports = cr.fetchall()
 reg_reports_ids = ','.join([str(id) for (id,) in registered_reports])
 
 for report in reports_wh_duplicates:
-    cr.execute("select id from ir_act_report_xml where model=%s and report_name=%s and id not in ("+reg_reports_ids+")", (report['model'], report['report_name']))
+    cr.execute("select id from ir_act_report_xml where model=%s and report_name=%s and id not IN ("+reg_reports_ids+")", (report['model'], report['report_name']))
     (id,) = cr.fetchone()
     cr.execute("delete from ir_act_report_xml where id=%d", (id,))
     cr.execute("delete from ir_values where value='ir.actions.report.xml,%d'", (id,))

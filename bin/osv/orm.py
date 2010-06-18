@@ -1985,7 +1985,7 @@ class orm_memory(orm_template):
             if id in self.datas:
                 del self.datas[id]
         if len(ids):
-            cr.execute('delete from wkf_instance where res_type=%s and res_id in %s', (self._name, tuple(ids)))
+            cr.execute('delete from wkf_instance where res_type=%s and res_id IN %s', (self._name, tuple(ids)))
         return True
 
     def perm_read(self, cr, user, ids, context=None, details=True):
@@ -2216,7 +2216,7 @@ class orm(orm_template):
         todo_end = []
         self._field_create(cr, context=context)
         if getattr(self, '_auto', True):
-            cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s" ,( self._table,))
+            cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s" ,( self._table,))
             if not cr.rowcount:
                 cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
                 cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'","''")))
@@ -2284,7 +2284,7 @@ class orm(orm_template):
                         if not res:
                             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY (%s) REFERENCES "%s" ON DELETE SET NULL' % (self._obj, f._fields_id, f._table))
                 elif isinstance(f, fields.many2many):
-                    cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (f._rel,))
+                    cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (f._rel,))
                     if not cr.dictfetchall():
                         if not self.pool.get(f._obj):
                             raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
@@ -2476,7 +2476,7 @@ class orm(orm_template):
                 todo_end.append((order, self._update_store, (f, k)))
 
         else:
-            cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (self._table,))
+            cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))
             create = not bool(cr.fetchone())
 
         cr.commit()     # start a new transaction
@@ -2830,7 +2830,7 @@ class orm(orm_template):
             fields_pre2 = map(convert_field, fields_pre)
             order_by = self._parent_order or self._order
             select_fields = ','.join(fields_pre2 + ['id'])
-            query = 'SELECT %s FROM "%s" WHERE id in %%s' % (select_fields, self._table)
+            query = 'SELECT %s FROM "%s" WHERE id IN %%s' % (select_fields, self._table)
             if d1:
                 query += " AND " + d1
             query += " ORDER BY " + order_by
@@ -2980,7 +2980,7 @@ class orm(orm_template):
         fields = 'id'
         if self._log_access:
             fields += ', create_uid, create_date, write_uid, write_date'
-        query = 'SELECT %s FROM "%s" WHERE id in %%s' % (fields, self._table)
+        query = 'SELECT %s FROM "%s" WHERE id IN %%s' % (fields, self._table)
         cr.execute(query, (tuple(ids),))
         res = cr.dictfetchall()
         for r in res:
@@ -3074,7 +3074,7 @@ class orm(orm_template):
         for order, object, store_ids, fields in result_store:
             if object != self._name:
                 obj =  self.pool.get(object)
-                cr.execute('select id from '+obj._table+' where id in %s',(tuple(store_ids),))
+                cr.execute('select id from '+obj._table+' where id IN %s',(tuple(store_ids),))
                 rids = map(lambda x: x[0], cr.fetchall())
                 if rids:
                     obj._store_set_values(cr, uid, rids, fields, context)
@@ -3102,7 +3102,7 @@ class orm(orm_template):
 
         vals format for relational field type.
 
-            + many2many field : 
+            + many2many field :
 
                 For write operation on a many2many fields a list of tuple is
                 expected. The folowing tuples are accepted:
@@ -3140,7 +3140,7 @@ class orm(orm_template):
                 for group in groups:
                     module = group.split(".")[0]
                     grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s" \
+                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s" \
                                (grp, module, 'res.groups', user))
                     readonly = cr.fetchall()
                     if readonly[0][0] >= 1:
@@ -3262,7 +3262,7 @@ class orm(orm_template):
             nids = []
             for sub_ids in cr.split_for_in_conditions(ids):
                 cr.execute('select distinct "'+col+'" from "'+self._table+'" ' \
-                           'where id in %s', (sub_ids,))
+                           'where id IN %s', (sub_ids,))
                 nids.extend([x[0] for x in cr.fetchall()])
 
             v = {}
@@ -3458,7 +3458,7 @@ class orm(orm_template):
                 for group in groups:
                     module = group.split(".")[0]
                     grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
                                (grp, module, 'res.groups', user))
                     readonly = cr.fetchall()
                     if readonly[0][0] >= 1:
@@ -3603,7 +3603,7 @@ class orm(orm_template):
         field_flag = False
         field_dict = {}
         if self._log_access:
-            cr.execute('select id,write_date from '+self._table+' where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select id,write_date from '+self._table+' where id IN ('+','.join(map(str, ids))+')')
             res = cr.fetchall()
             for r in res:
                 if r[1]:

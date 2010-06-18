@@ -57,7 +57,7 @@ class expression(object):
                     subids = ids[i:i+cr.IN_MAX]
                     cr.execute('SELECT "%s"'    \
                                '  FROM "%s"'    \
-                               '  WHERE "%s" in %%s' % (s, f, w),(tuple(subids),))
+                               '  WHERE "%s" IN %%s' % (s, f, w),(tuple(subids),))
                     res.extend([r[0] for r in cr.fetchall()])
         else:
             cr.execute('SELECT distinct("%s")'    \
