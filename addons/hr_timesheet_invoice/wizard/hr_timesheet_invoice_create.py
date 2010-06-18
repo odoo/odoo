@@ -72,7 +72,6 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
         data = self.read(cr, uid, ids, [], context)[0]
-
         account_ids = data['accounts']
         for account in analytic_account_obj.browse(cr, uid, account_ids, context):
             partner = account.partner_id

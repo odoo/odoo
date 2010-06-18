@@ -23,7 +23,6 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from os.path import join as opj
 from operator import itemgetter
-
 from tools.translate import _
 from osv import fields, osv
 import netsvc
