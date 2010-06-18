@@ -95,8 +95,8 @@ class report_timesheet_task_user(osv.osv):
         for record in self.browse(cr, uid, ids,context):
             last_date = mx.DateTime.strptime(record.name, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
             task_obj=self.pool.get('project.task.work')
-            task_ids = task_obj.search(cr,uid,[('user_id','=',record.user_id.id),('date','>=',record.name),('date','<=',last_date.strftime('%Y-%m-%d'))])
-            tsk_hrs = task_obj.read(cr,uid,task_ids,['hours','date','user_id'])
+            task_ids = task_obj.search(cr, uid, [('user_id','=',record.user_id.id),('date','>=',record.name),('date','<=',last_date.strftime('%Y-%m-%d'))])
+            tsk_hrs = task_obj.read(cr, uid, task_ids, ['hours','date','user_id'])
             total = 0.0
             for hrs in tsk_hrs:
                 total += hrs['hours']
@@ -109,8 +109,8 @@ class report_timesheet_task_user(osv.osv):
         for record in self.browse(cr, uid, ids, context):
             last_date = mx.DateTime.strptime(record.name, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
             obj=self.pool.get('hr_timesheet_sheet.sheet.day')
-            sheet_ids = obj.search(cr,uid,[('sheet_id.user_id','=',record.user_id.id),('name','>=',record.name),('name','<=',last_date.strftime('%Y-%m-%d'))])
-            data_days = obj.read(cr,uid,sheet_ids,['name','sheet_id.user_id','total_attendance'])
+            sheet_ids = obj.search(cr, uid, [('sheet_id.user_id','=',record.user_id.id),('name','>=',record.name),('name','<=',last_date.strftime('%Y-%m-%d'))])
+            data_days = obj.read(cr, uid, sheet_ids, ['name','sheet_id.user_id','total_attendance'])
             total = 0.0
             for day_attendance in data_days:
                 total += day_attendance['total_attendance']

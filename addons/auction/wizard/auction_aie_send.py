@@ -142,7 +142,7 @@ class auction_lots_send_aie(osv.osv_memory):
         for (ref,id) in ids:
             
     #       ids_attach = service.execute(db_name,uid, 'ir.attachment', 'search', [('res_model','=','auction.lots'), ('res_id', '=',id)])
-            datas = service.execute(cr.db_name,uid, 'auction.lots', 'read',[id], ['name','image'])
+            datas = service.execute(cr.db_name, uid, 'auction.lots', 'read', [id], ['name','image'])
             if len(datas):
                 bin = base64.decodestring(datas[0]['image'])
                 fname = datas[0]['name']

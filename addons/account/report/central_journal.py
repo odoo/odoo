@@ -40,7 +40,7 @@ class journal_print(report_sxw.rml_parse):
             ids_final = []
             for journal in journal_id:
                 for period in period_id:
-                    ids_journal_period = self.pool.get('account.journal.period').search(self.cr,self.uid, [('journal_id','=',journal),('period_id','=',period)])
+                    ids_journal_period = self.pool.get('account.journal.period').search(self.cr, self.uid, [('journal_id','=',journal),('period_id','=',period)])
                     if ids_journal_period:
                         self.cr.execute('select a.code, a.name, sum(debit) as debit, sum(credit) as credit from account_move_line l left join account_account a on (l.account_id=a.id) where l.period_id=%s and l.journal_id=%s and l.state<>\'draft\' group by a.id, a.code, a.name, l.journal_id, l.period_id', (period, journal))
                         res = self.cr.dictfetchall()

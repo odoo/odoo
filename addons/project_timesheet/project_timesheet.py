@@ -88,7 +88,7 @@ class project_work(osv.osv):
             prod_id, amount, unit, context=kwargs['context'])
 
         vals_line['amount'] = (-1) * vals['hours']* (amount_unit['value']['amount'] or 0.0)
-        obj_timesheet.write(cr, uid,[timeline_id], vals_line, {})
+        obj_timesheet.write(cr, uid, [timeline_id], vals_line, {})
         vals['hr_analytic_timesheet_id'] = timeline_id
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 

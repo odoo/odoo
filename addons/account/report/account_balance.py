@@ -68,14 +68,14 @@ class account_balance(report_sxw.rml_parse):
             result=''
             if form.has_key('periods') and form['periods']:
                 period_ids = form['periods']
-                per_ids = self.pool.get('account.period').browse(self.cr,self.uid,form['periods'])
+                per_ids = self.pool.get('account.period').browse(self.cr, self.uid, form['periods'])
                 for r in per_ids:
                     if r == per_ids[len(per_ids)-1]:
                         result+=r.name+". "
                     else:
                         result+=r.name+", "
             else:
-                fy_obj = self.pool.get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear'])
+                fy_obj = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear'])
                 res = fy_obj.period_ids
                 len_res = len(res)
                 for r in res:
@@ -118,7 +118,7 @@ class account_balance(report_sxw.rml_parse):
             child_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, ids, ctx)
             if child_ids:
                 ids = child_ids
-            accounts = self.pool.get('account.account').read(self.cr, self.uid, ids,['type','code','name','debit','credit','balance','parent_id'], ctx)
+            accounts = self.pool.get('account.account').read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id'], ctx)
             for account in accounts:
                 if account['id'] in done:
                     continue

@@ -69,7 +69,7 @@ class auction_catalog(report_rml):
         temp=self.post_process_xml_data(cr, uid, xml, context)
 
         return temp
-    def catalog_xml(self,cr,uid,ids,data,context,cwid="0"):
+    def catalog_xml(self, cr, uid, ids, data, context, cwid="0"):
         impl = minidom.getDOMImplementation()
 
         doc = impl.createDocument(None, "report", None)
@@ -84,10 +84,10 @@ class auction_catalog(report_rml):
         tab_no_photo=[]
         for id in ids:
             lot_ids=pooler.get_pool(cr.dbname).get('auction.lots').search(cr, uid, [('auction_id', '=', id)])
-            ab=pooler.get_pool(cr.dbname).get('auction.lots').read(cr,uid,lot_ids,['auction_id','name','lot_num','lot_est1','lot_est2'],context)
+            ab=pooler.get_pool(cr.dbname).get('auction.lots').read(cr, uid, lot_ids, ['auction_id','name','lot_num','lot_est1','lot_est2'], context)
             auction_dates_ids = [x["auction_id"][0] for x in ab]
 
-            res=pooler.get_pool(cr.dbname).get('auction.dates').read(cr,uid,ids,['name','auction1','auction2'],context)
+            res=pooler.get_pool(cr.dbname).get('auction.dates').read(cr, uid, ids, ['name','auction1','auction2'], context)
             # name emelment
             key = 'name'
             categ = doc.createElement(key)
@@ -126,7 +126,7 @@ class auction_catalog(report_rml):
             for test in ab:
                 if test.has_key('auction_id'):
                     auction_ids.append(test['auction_id'][0])
-            cr.execute('select * from auction_lots where auction_id =ANY(%s)',(auction_ids,))
+            cr.execute('select * from auction_lots where auction_id IN %s',(tuple(auction_ids),))
             res = cr.dictfetchall()
             for cat in res:
                 product =doc.createElement('product')
