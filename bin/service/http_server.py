@@ -120,10 +120,6 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
             self.server = ThreadedHTTPServer((interface, port), handler)
             self.server.vdirs = []
             self.server.logRequests = True
-            netsvc.Logger().notifyChannel(
-                "web-services", netsvc.LOG_INFO,
-                "starting HTTPS service at %s port %d" %
-                (interface or '0.0.0.0', port,))
         except Exception, e:
             netsvc.Logger().notifyChannel(
                 'httpd', netsvc.LOG_CRITICAL,
@@ -155,6 +151,10 @@ class HttpDaemon(BaseHttpDaemon):
     def __init__(self, interface, port):
         super(HttpDaemon, self).__init__(interface, port,
                                          handler=MultiHandler2)
+        netsvc.Logger().notifyChannel(
+            "web-services", netsvc.LOG_INFO,
+            "starting HTTP service at %s port %d" %
+            (interface or '0.0.0.0', port,))
 
 class HttpSDaemon(BaseHttpDaemon):
     def __init__(self, interface, port):
@@ -166,6 +166,10 @@ class HttpSDaemon(BaseHttpDaemon):
                 'httpd-ssl', netsvc.LOG_CRITICAL,
                 "Can not load the certificate and/or the private key files")
             raise
+        netsvc.Logger().notifyChannel(
+            "web-services", netsvc.LOG_INFO,
+            "starting HTTPS service at %s port %d" %
+            (interface or '0.0.0.0', port,))
 
 httpd = None
 httpsd = None

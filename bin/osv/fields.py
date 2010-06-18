@@ -246,7 +246,7 @@ class selection(_column):
 
 #
 # Values: (0, 0,  { fields })    create
-#         (1, ID, { fields })    modification
+#         (1, ID, { fields })    update
 #         (2, ID)                remove (delete)
 #         (3, ID)                unlink one (target id or target of relation)
 #         (4, ID)                link
@@ -480,10 +480,10 @@ class one2many(_column):
 
 #
 # Values: (0, 0,  { fields })    create
-#         (1, ID, { fields })    modification
-#         (2, ID)                remove
-#         (3, ID)                unlink
-#         (4, ID)                link
+#         (1, ID, { fields })    update (write fields to ID)
+#         (2, ID)                remove (calls unlink on ID, that will also delete the relationship because of the ondelete)
+#         (3, ID)                unlink (delete the relationship between the two objects but does not delete ID)
+#         (4, ID)                link (add a relationship)
 #         (5, ID)                unlink all
 #         (6, ?, ids)            set a list of links
 #
@@ -492,7 +492,6 @@ class many2many(_column):
     _classic_write = False
     _prefetch = False
     _type = 'many2many'
-
     def __init__(self, obj, rel, id1, id2, string='unknown', limit=None, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj

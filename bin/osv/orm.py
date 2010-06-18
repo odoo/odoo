@@ -2112,8 +2112,7 @@ class orm(orm_template):
                    days = calendar.monthrange(dt.year, dt.month)[1]
 
                    d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
-                   if not context.get('group_by_no_leaf', False):
-                       d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
+                   d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
                                     (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
                 elif fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and ((type(d[groupby])==type(1)) and d[groupby] or d[groupby][1])  or ''
@@ -2622,6 +2621,7 @@ class orm(orm_template):
             fld_def = ((f in self._columns) and self._columns[f]) \
                     or ((f in self._inherit_fields) and self._inherit_fields[f][2]) \
                     or False
+
             if isinstance(fld_def, fields.property):
                 property_obj = self.pool.get('ir.property')
                 prop_value = property_obj.get(cr, uid, f, self._name, context=context)
@@ -2631,7 +2631,8 @@ class orm(orm_template):
                     else:
                         value[f] = prop_value
                 else:
-                    value[f] = False
+                    if f not in value:
+                        value[f] = False
 
         # get the default values set by the user and override the default
         # values defined in the object
@@ -3101,10 +3102,26 @@ class orm(orm_template):
 
         vals format for relational field type.
 
-            + many2many field : [(6, 0, list of ids)] (example: [(6, 0, [8, 5, 6, 4])])
+            + many2many field : 
+
+                For write operation on a many2many fields a list of tuple is
+                expected. The folowing tuples are accepted:
+                 (0, 0,  { fields })    create
+                 (1, ID, { fields })    update (write fields to ID)
+                 (2, ID)                remove (calls unlink on ID, that will also delete the relationship because of the ondelete)
+                 (3, ID)                unlink (delete the relationship between the two objects but does not delete ID)
+                 (4, ID)                link (add a relationship)
+                 (5, ID)                unlink all
+                 (6, 0, list of ids)    set a list of links
+
+                Example:
+
+                    [(6, 0, [8, 5, 6, 4])] set the many2many to ids [8, 5, 6, 4]
+
             + one2many field : [(0, 0, dictionary of values)] (example: [(0, 0, {'field_name':field_value, ...})])
             + many2one field : ID of related record
             + reference field :  model name, id (example: 'product.product, 5')
+
 
         """
         readonly = None
