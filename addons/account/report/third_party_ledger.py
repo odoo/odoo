@@ -42,7 +42,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			'get_currency': self._get_currency,
 			'comma_me' : self.comma_me,
 		})
-	def date_range(self,start,end):
+	def date_range(self, start, end):
 		if not start or not end:
 			return []
 		start = datetime.date.fromtimestamp(time.mktime(time.strptime(start,"%Y-%m-%d")))
@@ -57,7 +57,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		return full_str_date
 
 	#
-	def transform_period_into_date_array(self,data):
+	def transform_period_into_date_array(self, data):
 		## Get All Period Date
 		if not data['form']['periods']:
 			periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
@@ -66,12 +66,12 @@ class third_party_ledger(rml_parse.rml_parse):
 		date_array = []
 		for period_id in periods_id:
 			period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
-			date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
+			date_array = date_array + self.date_range(period_obj.date_start, period_obj.date_stop)
 		self.date_lst = date_array
 		self.date_lst.sort()
 
 	def transform_date_into_date_array(self,data):
-		return_array = self.date_range(data['form']['date1'],data['form']['date2'])
+		return_array = self.date_range(data['form']['date1'], data['form']['date2'])
 		self.date_lst = return_array
 		self.date_lst.sort()
 
@@ -84,7 +84,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		date_array = []
 		for period_id in periods_id:
 			period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
-			date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
+			date_array = date_array + self.date_range(period_obj.date_start, period_obj.date_stop)
 
 		period_start_date = date_array[0]
 		date_start_date = data['form']['date1']
@@ -105,7 +105,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		self.date_lst = final_date_array
 		self.date_lst.sort()
 
-	def transform_none_into_date_array(self,data):
+	def transform_none_into_date_array(self, data):
 		sql = "SELECT min(date) as start_date from account_move_line"
 		self.cr.execute(sql)
 		start_date = self.cr.fetchone()[0]
@@ -118,7 +118,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		self.date_lst.sort()
 
 
-	def comma_me(self,amount):
+	def comma_me(self, amount):
 		if  type(amount) is float :
 			amount = str('%.2f'%amount)
 		else :
@@ -143,7 +143,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			## Si on imprime depuis les partenaires
 			if ids:
 				#PARTNER_REQUEST =  "AND line.partner_id IN (" + ','.join(map(str, ids)) + ")"
-				PARTNER_REQUEST =  "AND line.partner_id =ANY(%s)" %ids
+				PARTNER_REQUEST =  "AND line.partner_id IN %s",(tuple(ids),)
 		# Transformation des date
 		#
 		#
@@ -179,8 +179,8 @@ class third_party_ledger(rml_parse.rml_parse):
 			"LEFT JOIN account_account_type t " \
 				"ON (a.type=t.code) " \
 			"WHERE a.company_id = %s " \
-				'AND a.type =ANY(%s)' \
-				"AND a.active", (data['form']['company_id'],self.ACCOUNT_TYPE,))
+				'AND a.type IN %s' \
+				"AND a.active", (data['form']['company_id'],tuple(self.ACCOUNT_TYPE)))
 		self.account_ids = [a for (a,) in self.cr.fetchall()]
 
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -196,11 +196,11 @@ class third_party_ledger(rml_parse.rml_parse):
 					"AND line.date >= %s " \
 					"AND line.date <= %s " \
 					"AND line.reconcile_id IS NULL " \
-					"AND line.account_id =ANY(%s)" \
+					"AND line.account_id IN %s" \
 					" " + PARTNER_REQUEST + " " \
 					"AND account.company_id = %s " \
 					"AND account.active " ,
-				(self.date_lst[0],self.date_lst[len(self.date_lst)-1],self.account_ids,data['form']['company_id'],))
+				(self.date_lst[0],self.date_lst[len(self.date_lst)-1],tuple(self.account_ids),data['form']['company_id'],))
 #		else:
 #
 #			self.cr.execute(
@@ -261,11 +261,11 @@ class third_party_ledger(rml_parse.rml_parse):
 				"LEFT JOIN account_journal j " \
 					"ON (l.journal_id = j.id) " \
 				"WHERE l.partner_id = %s " \
-					"AND l.account_id =ANY(%s)"\
+					"AND l.account_id IN %s"\
 					"AND l.date IN (" + self.date_lst_string + ")"
 					" " + RECONCILE_TAG + " "\
 					"ORDER BY l.id",
-					(partner.id,self.account_ids,))
+					(partner.id, tuple(self.account_ids),))
 	    	res = self.cr.dictfetchall()
 	    	sum = 0.0
 	    	for r in res:
@@ -275,7 +275,7 @@ class third_party_ledger(rml_parse.rml_parse):
 
 		return full_account
 
-	def _sum_debit_partner(self, partner,data):
+	def _sum_debit_partner(self, partner, data):
 
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		result_tmp = 0.0
@@ -288,10 +288,10 @@ class third_party_ledger(rml_parse.rml_parse):
 				"SELECT sum(debit) " \
 				"FROM account_move_line " \
 				"WHERE partner_id = %s " \
-					"AND account_id =ANY(%s)" \
+					"AND account_id IN %s" \
 					"AND reconcile_id IS NULL " \
 					"AND date < %s " ,
-				(partner.id, self.account_ids,self.date_lst[0],))
+				(partner.id, tuple(self.account_ids), self.date_lst[0],))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -303,10 +303,10 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(debit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id = %s " \
-						"AND account_id =ANY(%s)" \
+						"AND account_id IN %s" \
 						" " + RECONCILE_TAG + " " \
 						"AND date IN (" + self.date_lst_string + ")" ,
-					(partner.id,self.account_ids,))
+					(partner.id,tuple(self.account_ids),))
 
 			contemp = self.cr.fetchone()
 			if contemp != None:
@@ -315,7 +315,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				result_tmp = result_tmp + 0.0
 		return result_tmp
 
-	def _sum_credit_partner(self, partner,data):
+	def _sum_credit_partner(self, partner, data):
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		result_tmp = 0.0
 		if data['form']['reconcil'] :
@@ -327,10 +327,10 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id=%s " \
-						"AND account_id =ANY(%s)" \
+						"AND account_id IN %s" \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
-					(partner.id,self.account_ids,self.date_lst[0],))
+					(partner.id, tuple(self.account_ids), self.date_lst[0],))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -342,10 +342,10 @@ class third_party_ledger(rml_parse.rml_parse):
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
 					"WHERE partner_id=%s " \
-						"AND account_id =ANY(%s)" \
+						"AND account_id IN %s" \
 						" " + RECONCILE_TAG + " " \
 						"AND date IN (" + self.date_lst_string + ")",
-					(partner.id,self.account_ids,))
+					(partner.id, tuple(self.account_ids),))
 
 			contemp = self.cr.fetchone()
 			if contemp != None:
@@ -354,7 +354,7 @@ class third_party_ledger(rml_parse.rml_parse):
 				result_tmp = result_tmp + 0.0
 		return result_tmp
 
-	def _sum_debit(self,data):
+	def _sum_debit(self, data):
 		if not self.ids:
 			return 0.0
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -367,11 +367,11 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 					"SELECT sum(debit) " \
 					"FROM account_move_line " \
-					"WHERE partner_id =ANY(%s)" \
-						"AND account_id =ANY(%s)" \
+					"WHERE partner_id IN %s" \
+						"AND account_id IN %s" \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
-					(self.partner_ids,self.account_ids,self.date_lst[0],))
+					(tuple(self.partner_ids), tuple(self.account_ids), self.date_lst[0],))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -382,10 +382,10 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 					"SELECT sum(debit) " \
 					"FROM account_move_line " \
-					"WHERE partner_id =ANY(%s)" \
-						"AND account_id =ANY(%s)" \
+					"WHERE partner_id IN %s" \
+						"AND account_id IN %s" \
 						" " + RECONCILE_TAG + " " \
-						"AND date IN (" + self.date_lst_string + ")",(self.partner_ids,self.account_ids,))
+						"AND date IN (" + self.date_lst_string + ")",(tuple(self.partner_ids), tuple(self.account_ids),))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -395,7 +395,7 @@ class third_party_ledger(rml_parse.rml_parse):
 		return result_tmp
 
 
-	def _sum_credit(self,data):
+	def _sum_credit(self, data):
 		if not self.ids:
 			return 0.0
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -408,11 +408,11 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
-					"WHERE partner_id =ANY(%s)" \
-						"AND account_id =ANY(%s)" \
+					"WHERE partner_id IN %s" \
+						"AND account_id IN %s" \
 						"AND reconcile_id IS NULL " \
 						"AND date < %s " ,
-					(self.partner_ids,self.account_ids,self.date_lst[0],))
+					(tuple(self.partner_ids), tuple(self.account_ids), self.date_lst[0],))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0
@@ -423,10 +423,10 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.cr.execute(
 					"SELECT sum(credit) " \
 					"FROM account_move_line " \
-					"WHERE partner_id  =ANY(%s)" \
-						"AND account_id =ANY(%s)" \
+					"WHERE partner_id  IN %s" \
+						"AND account_id IN %s" \
 						" " + RECONCILE_TAG + " " \
-						"AND date IN (" + self.date_lst_string + ")",(self.partner_ids,self.account_ids,))
+						"AND date IN (" + self.date_lst_string + ")",(tuple(self.partner_ids), tuple(self.account_ids),))
 			contemp = self.cr.fetchone()
 			if contemp != None:
 				result_tmp = contemp[0] or 0.0

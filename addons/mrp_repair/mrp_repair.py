@@ -147,7 +147,7 @@ class mrp_repair(osv.osv):
         'deliver_bool': lambda *a: True,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
-        'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr,uid,[('type','=','sale')])[0]
+        'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr, uid, [('type','=','sale')])[0]
     }
 
     def copy(self, cr, uid, id, default=None, context=None):

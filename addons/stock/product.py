@@ -242,11 +242,11 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id <> ANY(%s)'\
-                'and location_dest_id =ANY(%s)'\
-                'and product_id =ANY(%s)'\
-                'and state in %s' + (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
+                'where location_id NOT IN %s'\
+                'and location_dest_id IN %s'\
+                'and product_id IN %s'\
+                'and state IN %s' + (date_str and 'and '+date_str+' ' or '') +''\
+                'group by product_id,product_uom',(tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states),)
             )
             results = cr.fetchall()
         if 'out' in what:
@@ -254,11 +254,11 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id = ANY(%s)'\
-                'and location_dest_id <> ANY(%s) '\
-                'and product_id =ANY(%s)'\
+                'where location_id IN %s'\
+                'and location_dest_id NOT IN %s '\
+                'and product_id  IN %s'\
                 'and state in %s' + (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
+                'group by product_id,product_uom',(tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states),)
             )
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')

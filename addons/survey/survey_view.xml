@@ -2,13 +2,16 @@
 <openerp>
     <data>
 
-            <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="15"/>
+            <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
+            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" 
+                        groups="group_survey_manager,group_survey_user" sequence="2"/>
             <menuitem name="Define Surveys" id="menu_define_survey"
                  groups="group_survey_manager"
-                 parent="base.menu_tools" />
-            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="base.menu_tools" groups="group_survey_manager,group_survey_user"/>
+                 parent="menu_surveys" />
+            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="group_survey_manager,group_survey_user"/>
             <menuitem name="Reporting" parent="base.menu_tools"
-                id="menu_reporting" groups="group_survey_manager"/>
+                id="base.menu_lunch_reporting" groups="group_survey_manager" sequence="6"/>
+            <menuitem name="Surveys" id="menu_reporting" parent="base.menu_lunch_reporting" sequence="2"/>
         <!--
             Survey
         -->

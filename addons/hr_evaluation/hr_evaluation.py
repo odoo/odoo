@@ -49,7 +49,7 @@ class hr_evaluation_plan_phase(osv.osv):
     _columns = {
         'name': fields.char("Phase", size=64, required=True),
         'sequence': fields.integer("Sequence"),
-        'company_id': fields.related('plan_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'company_id': fields.related('plan_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
         'plan_id': fields.many2one('hr_evaluation.plan','Evaluation Plan', required=True, ondelete='cascade'),
         'action': fields.selection([
             ('top-down','Top-Down Appraisal Requests'),
@@ -68,7 +68,7 @@ class hr_evaluation_plan_phase(osv.osv):
         'wait': fields.boolean('Wait Previous Phases',
             help="Check this box if you want to wait that all preceeding phases " +
               "are finished before launching this phase."),
-        'mail_feature': fields.boolean('Send mail for this phase',help="Check this box if you want to send mail to employees"+
+        'mail_feature': fields.boolean('Send mail for this phase', help="Check this box if you want to send mail to employees"+
                                        "coming under this phase"),
         'mail_body': fields.text('Email'),
         'email_subject':fields.text('char')
@@ -105,11 +105,11 @@ class hr_employee(osv.osv):
     }
 
     def run_employee_evaluation(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
-        for id in self.browse(cr, uid, self.search(cr, uid, [],context=context),context=context):
+        for id in self.browse(cr, uid, self.search(cr, uid, [], context=context), context=context):
             if id.evaluation_plan_id and id.evaluation_date:
                 if (dt.ISO.ParseAny(id.evaluation_date) + dt.RelativeDateTime(months = int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d') <= time.strftime("%Y-%m-%d"):
-                    self.write(cr, uid, id.id, {'evaluation_date' : (dt.ISO.ParseAny(id.evaluation_date) + dt.RelativeDateTime(months =+ int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d')},context=context)
-                    self.pool.get("hr_evaluation.evaluation").create(cr, uid, {'employee_id' : id.id, 'plan_id': id.evaluation_plan_id},context)
+                    self.write(cr, uid, id.id, {'evaluation_date' : (dt.ISO.ParseAny(id.evaluation_date) + dt.RelativeDateTime(months =+ int(id.evaluation_plan_id.month_next))).strftime('%Y-%m-%d')}, context=context)
+                    self.pool.get("hr_evaluation.evaluation").create(cr, uid, {'employee_id' : id.id, 'plan_id': id.evaluation_plan_id}, context)
         return True
 
     def onchange_evaluation_plan_id(self, cr, uid, ids, evaluation_plan_id, evaluation_date, context={}):
@@ -117,7 +117,7 @@ class hr_employee(osv.osv):
         evaluation_plan_obj=self.pool.get('hr_evaluation.plan')
         if evaluation_plan_id:
             flag = False
-            evaluation_plan =  evaluation_plan_obj.browse(cr, uid, [evaluation_plan_id],context=context)[0]
+            evaluation_plan =  evaluation_plan_obj.browse(cr, uid, [evaluation_plan_id], context=context)[0]
             if not evaluation_date:
                evaluation_date=(dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d'))+ dt.RelativeDateTime(months=+evaluation_plan.month_first)).strftime('%Y-%m-%d')
                flag = True
@@ -126,13 +126,13 @@ class hr_employee(osv.osv):
                     evaluation_date=(dt.ISO.ParseAny(evaluation_date)+ dt.RelativeDateTime(months=+evaluation_plan.month_next)).strftime('%Y-%m-%d')
                     flag = True
             if ids and flag:
-                self.pool.get("hr_evaluation.evaluation").create(cr, uid, {'employee_id' : ids[0], 'plan_id': evaluation_plan_id},context=context)
+                self.pool.get("hr_evaluation.evaluation").create(cr, uid, {'employee_id' : ids[0], 'plan_id': evaluation_plan_id}, context=context)
         return {'value': {'evaluation_date':evaluation_date}}
 
     def create(self, cr, uid, vals, context={}):
         id = super(hr_employee, self).create(cr, uid, vals, context=context)
         if vals.get('evaluation_plan_id', False):
-            self.pool.get("hr_evaluation.evaluation").create(cr, uid, {'employee_id' : id, 'plan_id': vals['evaluation_plan_id']},context=context)
+            self.pool.get("hr_evaluation.evaluation").create(cr, uid, {'employee_id' : id, 'plan_id': vals['evaluation_plan_id']}, context=context)
         return id
 
 hr_employee()
@@ -163,7 +163,7 @@ class hr_evaluation(osv.osv):
             ('progress','Final Validation'),
             ('done','Done'),
             ('cancel','Cancelled'),
-        ], 'State', required=True,readonly=True),
+        ], 'State', required=True, readonly=True),
         'date_close': fields.date('Ending Date'),
         'progress' : fields.float("Progress"),
     }
@@ -172,19 +172,19 @@ class hr_evaluation(osv.osv):
         'state' : lambda *a: 'draft',
     }
 
-    def onchange_employee_id(self,cr,uid,ids,employee_id,context={}):
+    def onchange_employee_id(self, cr, uid, ids, employee_id, context={}):
         employee_obj=self.pool.get('hr.employee')
         evaluation_plan_id=''
         if employee_id:
-            for employee in employee_obj.browse(cr,uid,[employee_id],context=context):
+            for employee in employee_obj.browse(cr, uid, [employee_id], context=context):
                 if employee and employee.evaluation_plan_id and employee.evaluation_plan_id.id:
                     evaluation_plan_id=employee.evaluation_plan_id.id
-                employee_ids=employee_obj.search(cr,uid,[('parent_id','=',employee.id)],context=context)
+                employee_ids=employee_obj.search(cr, uid, [('parent_id','=',employee.id)], context=context)
         return {'value': {'plan_id':evaluation_plan_id}}
 
-    def button_plan_in_progress(self,cr, uid, ids, context={}):
+    def button_plan_in_progress(self, cr, uid, ids, context={}):
         apprai_id = []
-        for evaluation in self.browse(cr,uid,ids, context):
+        for evaluation in self.browse(cr, uid, ids, context):
             wait = False
             for phase in evaluation.plan_id.phase_ids:
                 childs = []
@@ -223,13 +223,13 @@ class hr_evaluation(osv.osv):
                         sub = phase.email_subject
                         dest = [child.work_email]
                         if dest:
-                           tools.email_send(src,dest,sub,body)
+                           tools.email_send(src, dest, sub, body)
 
-        self.write(cr,uid,ids,{'state':'wait'},context=context)
+        self.write(cr, uid, ids, {'state':'wait'}, context=context)
         return True
 
-    def button_final_validation(self,cr, uid, ids, context={}):
-        self.write(cr,uid,ids,{'state':'progress'})
+    def button_final_validation(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'progress'})
         request_obj = self.pool.get('hr.evaluation.interview')
         for id in self.browse(cr, uid ,ids,context=context):
             if len(id.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', id.id),('state', '=', 'done')],context=context)):
@@ -240,8 +240,8 @@ class hr_evaluation(osv.osv):
         self.write(cr,uid,ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
         return True
 
-    def button_cancel(self,cr, uid, ids, context={}):
-        self.write(cr,uid,ids,{'state':'cancel'}, context=context)
+    def button_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids,{'state':'cancel'}, context=context)
         return True
 
 hr_evaluation()

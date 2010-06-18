@@ -235,7 +235,7 @@ class report_account_analytic_planning_user(osv.osv):
         for line in self.browse(cr, uid, ids, context):
             if line.user_id:
                 cr.execute("""select COALESCE(sum(tasks.remaining_hours),0) from project_task tasks \
-                               where  tasks.planning_line_id in (select id from report_account_analytic_planning_line\
+                               where  tasks.planning_line_id IN (select id from report_account_analytic_planning_line\
                 where planning_id = %s and user_id=%s)""", (line.planning_id.id, line.user_id.id,))
 
                 result[line.id] = cr.fetchall()[0][0] / div * div2

@@ -142,7 +142,7 @@ class account_invoice_pay(osv.osv_memory):
         cur_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
-        data =  self.read(cr, uid, ids,context=context)[0]
+        data =  self.read(cr, uid, ids, context=context)[0]
         writeoff_account_id = False
         writeoff_journal_id = False
         comment = False

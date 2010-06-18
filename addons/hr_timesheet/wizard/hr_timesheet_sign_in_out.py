@@ -145,7 +145,7 @@ class hr_si_project(osv.osv_memory):
         in_out = res == 'sign_out' and 'out' or 'in'
         #TODO: invert sign_in et sign_out
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_timesheet_sign_%s' % in_out)])
-        resource_id = obj_model.read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
             'name': 'Sign in / Sign out',
             'view_type': 'form',

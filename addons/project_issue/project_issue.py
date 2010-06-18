@@ -182,7 +182,7 @@ class project_issue(osv.osv, crm.crm_case):
     }
 
     def _get_project(self, cr, uid, context):
-       user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
+       user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
        if user.context_project_id:
            return user.context_project_id.id
        return False

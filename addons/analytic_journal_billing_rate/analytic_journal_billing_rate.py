@@ -27,8 +27,8 @@ class analytic_journal_rate_grid(osv.osv):
     _name="analytic_journal_rate_grid"
     _description= "Relation table between journals and billing rates"
     _columns={
-        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal',required=True,),
-        'account_id': fields.many2one("account.analytic.account", "Analytic Account",required=True,),
+        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True,),
+        'account_id': fields.many2one("account.analytic.account", "Analytic Account", required=True,),
         'rate_id': fields.many2one("hr_timesheet_invoice.factor", "Invoicing Rate",),
         }
 
@@ -67,14 +67,14 @@ class hr_analytic_timesheet(osv.osv):
             #get the old values from super and add the value from the new relation analytic_journal_rate_grid
             r = self.pool.get('analytic_journal_rate_grid').browse(cr, uid, temp)[0]
             res.setdefault('value',{})
-            res['value']= super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids,account_id,user_id, unit_amount)['value']
+            res['value']= super(hr_analytic_timesheet, self).on_change_account_id(cr, uid, ids, account_id, user_id, unit_amount)['value']
             if r.rate_id.id:
                 res['value']['to_invoice'] = r.rate_id.id
     
         return res
 
 
-    def on_change_journal_id(self, cr, uid, ids,journal_id, account_id):
+    def on_change_journal_id(self, cr, uid, ids, journal_id, account_id):
         res = {}
         if not (journal_id and account_id):
             return res 
