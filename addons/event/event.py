@@ -200,7 +200,7 @@ class event_registration(osv.osv):
         return super(event_registration, self).write(cr, uid, *args, **argv)
 
     def mail_user_confirm(self, cr, uid, ids):
-        reg_ids = self.browse(cr,uid,ids)
+        reg_ids = self.browse(cr, uid, ids)
         for reg_id in reg_ids:
             src = reg_id.event_id.reply_to or False
             dest = []

@@ -76,7 +76,7 @@ class account_report_bs(osv.osv):
     def onchange_parent_id(self, cr, uid, ids, parent_id):
         v={}
         if parent_id:
-            acc=self.pool.get('account.report.report').browse(cr,uid,parent_id)
+            acc=self.pool.get('account.report.report').browse(cr, uid, parent_id)
             v['type']=acc.type
             if int(acc.style) < 6:
                 v['style'] = str(int(acc.style)+1)

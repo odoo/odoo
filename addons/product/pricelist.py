@@ -228,10 +228,9 @@ class product_pricelist(osv.osv):
                         if sinfo:
                             cr.execute('SELECT * ' \
                                     'FROM pricelist_partnerinfo ' \
-                                    'WHERE suppinfo_id IN (' + \
-                                        ','.join(map(str, sinfo)) + ') ' \
+                                    'WHERE suppinfo_id IN %s' \
                                         'AND min_quantity <= %s ' \
-                                    'ORDER BY min_quantity DESC LIMIT 1', (qty,))
+                                    'ORDER BY min_quantity DESC LIMIT 1', (tuple(sinfo),qty,))
                             res2 = cr.dictfetchone()
                             if res2:
                                 price = res2['price']

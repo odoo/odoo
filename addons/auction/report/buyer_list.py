@@ -43,22 +43,23 @@ class buyer_list(report_sxw.rml_parse):
             'sum_lots':self.sum_lots
     })
 
-    def lines_lots_from_auction(self,objects):
+    def lines_lots_from_auction(self, objects):
 
         auc_lot_ids = []
         for lot_id  in objects:
             auc_lot_ids.append(lot_id.id)
         self.auc_lot_ids=auc_lot_ids
-        self.cr.execute('select auction_id from auction_lots where id =ANY(%s) group by auction_id',(auc_lot_ids,))
+        self.cr.execute('SELECT auction_id FROM auction_lots WHERE id IN %s GROUP BY auction_id',
+                        (tuple(auc_lot_ids),))
         auc_date_ids = self.cr.fetchall()
         auct_dat=[]
         for ad_id in auc_date_ids:
-            auc_dates_fields = self.pool.get('auction.dates').read(self.cr,self.uid,ad_id[0],['name'])
+            auc_dates_fields = self.pool.get('auction.dates').read(self.cr, self.uid, ad_id[0], ['name'])
             self.cr.execute('select * from auction_buyer_taxes_rel abr,auction_dates ad where ad.id=abr.auction_id and ad.id=%s', (ad_id[0],))
             res=self.cr.fetchall()
             total=0
             for r in res:
-                buyer_rel_field = self.pool.get('account.tax').read(self.cr,self.uid,r[1],['amount'])
+                buyer_rel_field = self.pool.get('account.tax').read(self.cr, self.uid, r[1], ['amount'])
                 total = total + buyer_rel_field['amount']
             auc_dates_fields['amount']=total
             auct_dat.append(auc_dates_fields)
@@ -67,15 +68,18 @@ class buyer_list(report_sxw.rml_parse):
     def lines_lots_auct_lot(self,obj):
         auc_lot_ids = []
 
-        auc_date_ids = self.pool.get('auction.dates').search(self.cr,self.uid,([('name','like',obj['name'])]))
+        auc_date_ids = self.pool.get('auction.dates').search(self.cr, self.uid, ([('name','like',obj['name'])]))
 
-#       self.cr.execute('select ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where id in ('+','.join(map(str,self.auc_lot_ids))+') and  auction_id=%s  and ach_uid is not null group by ach_uid ', (auc_date_ids[0],))
-        self.cr.execute('select ach_login as ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where  id =ANY(%s) and  auction_id=%s and ach_login is not null  group by ach_login order by ach_login', (self.auc_lot_ids,auc_date_ids[0],))
+        self.cr.execute('SELECT ach_login AS ach_uid, COUNT(1) AS no_lot, '\
+                        'SUM(obj_price) AS adj_price, '\
+                        'SUM(buyer_price)-SUM(obj_price) AS buyer_cost, '\
+                        'SUM(buyer_price) AS to_pay '\
+                        'FROM auction_lots WHERE id IN %s '\
+                        'AND auction_id=%s AND ach_login IS NOT NULL '\
+                        'GROUP BY ach_login ORDER BY ach_login',
+                        (tuple(self.auc_lot_ids), auc_date_ids[0],))
         res = self.cr.dictfetchall()
         for r in res:
-#           if r['ach_uid']:
-#               tnm=self.pool.get('res.partner').read(self.cr,self.uid,[r['ach_uid']],['name'])#
-#               r.__setitem__('ach_uid',tnm[0]['name'])
                 self.sum_adj_price_val = self.sum_adj_price_val + r['adj_price']
                 self.sum_buyer_obj_price_val = self.sum_buyer_obj_price_val + r['buyer_cost']
                 self.sum_buyer_price_val = self.sum_buyer_price_val + r['to_pay']

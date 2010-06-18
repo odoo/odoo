@@ -52,9 +52,9 @@ class auction_catalog_flagey(osv.osv_memory):
         """
         lots_obj = self.pool.get('auction.lots')
         auc_dates_obj = self.pool.get('auction.dates')
-        current_auction = auc_dates_obj.browse(cr,uid,context.get('active_ids', []))
-        v_lots = lots_obj.search(cr,uid,[('auction_id','=',current_auction.id)])
-        v_ids = lots_obj.browse(cr,uid,v_lots)
+        current_auction = auc_dates_obj.browse(cr, uid, context.get('active_ids', []))
+        v_lots = lots_obj.search(cr, uid, [('auction_id','=',current_auction.id)])
+        v_ids = lots_obj.browse(cr, uid, v_lots)
         for ab in v_ids:
             if not ab.auction_id :
                 raise osv.except_osv('Error!','No Lots belong to this Auction Date')
