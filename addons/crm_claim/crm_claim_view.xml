@@ -4,7 +4,7 @@
 
     <menuitem id="menu_config_claim" name="Claim"
         groups="base.group_extended"
-        parent="base.menu_base_config" sequence="8" />
+        parent="base.menu_base_config" sequence="6" />
 
     <!-- Claims categories  -->
 
@@ -92,11 +92,18 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Claims">
-                <group colspan="4" col="4">
-                    <field name="name"/>
-                    <field name="date" string="Date of Claim"/>
-                    <field name="date_deadline" string="Deadline"/>
+
+             <group colspan="4" col="4">
+                <group colspan="1" col="2">
+                    <field name="name" />
                 </group>
+                <group colspan="1" col="2">
+                     <field name="date" string="Date of Claim"/>
+                 </group>
+                <group colspan="1" col="2">
+                    <field name="date_deadline" string="Deadline"/><newline/>
+                </group>
+              </group>
                 <group colspan="4" col="4">
 
                 <notebook>
@@ -258,16 +265,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <filter icon="gtk-new" string="Current" name="current"
+                   <filter icon="terp-check" string="Current" name="current"
                        domain="[('state','in',('draft', 'open'))]"
                        separator="1" help="Current Claims" default="1"
                    />
-                   <filter icon="gtk-execute"
+                   <filter icon="terp-camera_test"
                        string="In Progress"
                        domain="[('state','=','open')]"
                        separator="1" help="In Progress Claims"
                    />
-                   <filter icon="gtk-media-pause"
+                   <filter icon="terp-gtk-media-pause"
                        string="Pending"
                        domain="[('state','=','pending')]"
                        separator="1" help="All pending Claims"
@@ -276,24 +283,41 @@
                    <field name="name" select='1'/>
                    <field name="partner_id" select="1"/>
                    <field name="user_id" select="1" widget="selection">
-                           <filter icon="terp-partner"
+                           <filter icon="terp-personal-"
                                domain="[('user_id','=', False)]"
                                help="Unassigned Claims" />
                    </field>
                    <field name="section_id" select="1"
                        widget="selection"/>
                    <newline/>
-                   <group expand="1" string="Group By...">
-                       <filter string="Deadline" icon="terp-crm"
+                   <group expand="0" string="Group By...">
+                       <filter string="Deadline" icon="terp-go-month"
                            domain="[]"
                            context="{'group_by':'date_deadline'}" />
-                       <filter string="Closure" icon="terp-crm"
+                       <filter string="Closure" icon="terp-go-month"
                            domain="[]"
                            context="{'group_by':'date_closed'}" />
                    </group>
                </search>
            </field>
         </record>
+
+        <act_window
+            domain="[('partner_id', '=', active_id)]"
+            context="{'default_partner_id': active_id}"
+            id="act_claim_partner"
+            name="Report a Claim"
+            res_model="crm.claim"
+            src_model="res.partner"/>
+
+
+        <act_window
+            domain="[('partner_address_id', '=', active_id)]"
+            context="{'default_partner_address_id': active_id}"
+            id="act_claim_partner_address"
+            name="Report a Claim"
+            res_model="crm.claim"
+            src_model="res.partner.address"/>
 
      </data>
 </openerp>

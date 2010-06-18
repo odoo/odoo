@@ -58,7 +58,7 @@ class account_invoice_pay(osv.osv_memory):
         'amount': fields.float('Amount paid', required=True, digits_compute = dp.get_precision('Account')),
         'name': fields.char('Entry Name', size=64, required=True),
         'date': fields.date('Date payment', required=True),
-        'journal_id': fields.many2one('account.journal', 'Journal/Payment Mode', required=True),
+        'journal_id': fields.many2one('account.journal', 'Journal/Payment Mode', required=True, domain=[('type','=','cash')]),
         'period_id': fields.many2one('account.period', 'Period', required=True),
         }
 

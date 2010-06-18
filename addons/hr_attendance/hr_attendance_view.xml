@@ -48,16 +48,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Hr Attendance Search">
-                    <filter icon="terp-sale" string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
-                    <filter icon="terp-sale" string="Today" domain="[('name::date','=',current_date)]" />
+                    <filter icon="terp-stock_align_left_24" string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                    <filter icon="terp-go-today" string="Today" domain="[('name::date','=',current_date)]" />
                     <separator orientation="vertical"/>
                     <field name="employee_id" select="1" />
                     <field name="name" select="1"  />
                     <field name="action" select="1" />
                     <newline/>
-                    <group expand="1" string="Group By...">
-                        <filter name="employee" string="Employee" icon="terp-sale" domain="[]" context="{'group_by':'employee_id'}"/>
-                        <filter string="Day" icon="terp-sale" domain="[]" context="{'group_by':'day'}"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}"/>
                     </group>
                 </search>
             </field>
@@ -77,9 +77,9 @@
         <menuitem
            id="menu_hr_time_tracking"
            name="Time Tracking"
-           parent="hr.menu_hr_root" sequence="7"/>
+           parent="hr.menu_hr_root" sequence="3"/>
         <menuitem action="open_view_attendance" id="menu_open_view_attendance"
-            parent="menu_hr_time_tracking" groups="hr.group_hr_manager"/>
+            parent="menu_hr_time_tracking" groups="hr.group_hr_manager" sequence="3"/>
 
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>

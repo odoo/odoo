@@ -25,13 +25,22 @@
         <report id="account_move_line_list" model="account.tax.code" name="account.tax.code.entries" rml="account/report/account_tax_code.rml" string="All Entries"/>
 
         <report
-        	auto="False"
-        	id="account_vat_declaration"
-        	menu="False"
-        	model="account.tax.code"
-        	name="account.vat.declaration"
-        	rml="account/report/tax_report.rml"
-        	string="Taxes Report"/>
+            auto="False"
+            id="account_vat_declaration"
+            menu="False"
+            model="account.tax.code"
+            name="account.vat.declaration"
+            rml="account/report/tax_report.rml"
+            string="Taxes Report"/>
+
+        <report id="report_account_voucher_new"
+            string="Voucher"
+            model="account.move"
+            name="account.move.voucher"
+            rml="account/report/voucher_print.rml"
+            auto="False"
+            header = "False"
+            menu="True"/>
 
         <menuitem
             id="menu_tax_report"
@@ -68,20 +77,20 @@
 
 
         <report id="account_account_balance_compare"
-			string="Account balance"
-			model="account.account"
-			name="account.balance.account.balance"
-			rml="account/report/compare_account_balance.rml"
-			auto="False"
-			menu="False"/>
+            string="Account balance"
+            model="account.account"
+            name="account.balance.account.balance"
+            rml="account/report/compare_account_balance.rml"
+            auto="False"
+            menu="False"/>
 
-		<report id="account_account_balance_landscape"
-			string="Account balance"
-			model="account.account"
-			name="account.account.balance.landscape"
-			rml="account/report/account_balance_landscape.rml"
-			auto="False"
-			menu="False"/>
+        <report id="account_account_balance_landscape"
+            string="Account balance"
+            model="account.account"
+            name="account.account.balance.landscape"
+            rml="account/report/account_balance_landscape.rml"
+            auto="False"
+            menu="False"/>
 
         <!--
 

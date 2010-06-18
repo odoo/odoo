@@ -81,7 +81,8 @@
 	        <field name="context">{'search_default_journal': 1,'group_by_no_leaf':1,'group_by':[]}</field>
 	    </record>
 
-	    <menuitem name="Sales by Journal" id="menu_sale_journal_report_open_all" parent="base.next_id_64" action="action_sale_journal_report_open_menu_all"/>
+	    <menuitem name="Sales by Journal" id="menu_sale_journal_report_open_all" 
+	              parent="base.next_id_64" action="action_sale_journal_report_open_menu_all" sequence="2"/>
 
 	 <!-- picking by journal and invoice's tree view-->
 
@@ -181,7 +182,8 @@
 			<field name="context">{'search_default_month':1, 'group_by_no_leaf':1,'group_by':[]}</field>
 		</record>
 
-		<menuitem name="Picking journal" id="menu_invoice_type_picking_stats_open_all" parent="stock.next_id_61" action="action_sale_journal_picking_report_open_menu_all"/>
+		<menuitem name="Picking journal" id="menu_invoice_type_picking_stats_open_all" parent="stock.next_id_61" 
+		          action="action_sale_journal_picking_report_open_menu_all" sequence="8"/>
 
 	</data>
 </openerp>

@@ -40,7 +40,7 @@ class vat_listing_clients(osv.osv_memory):
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
-        return [(r['id'], r['name'] + ' - ' + r['vat']) \
+        return [(r['id'], r['name'] or '' + ' - ' + r['vat'] or '') \
                 for r in self.read(cr, uid, ids, ['name', 'vat'],
                     context, load='_classic_write')]
 
@@ -216,8 +216,7 @@ class partner_vat_list(osv.osv_memory):
         sum_tax = 0.00
         sum_turnover = 0.00
         if len(error_message):
-            msg ='Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
-            return msg
+            return 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
         for line in datas:
             if not line:
                 continue

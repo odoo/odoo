@@ -18,10 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import time
-import datetime
 import base64
+
 from osv import osv, fields
 from tools.translate import _
 
@@ -31,6 +29,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
     _description = "Vat Declaration"
 
     _columns = {
+        'name': fields.char('File Name', size=32),
         'period_id': fields.many2one('account.period','Period', required=True),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
@@ -38,12 +37,11 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'ask_payment': fields.boolean('Ask Payment'),
         'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
     }
-
     _defaults = {
-        'msg': lambda *a:'''Save the File with '".xml"' extension.''',
+        'msg': 'Save the File with '".xml"' extension.',
     }
 
-    def create_xml(self, cr, uid, ids, context={}):
+    def create_xml(self, cr, uid, ids, context=None):
         obj_fyear = self.pool.get('account.fiscalyear')
         obj_tax_code = self.pool.get('account.tax.code')
         obj_acc_period = self.pool.get('account.period')
@@ -51,10 +49,13 @@ class l10n_be_vat_declaration(osv.osv_memory):
         obj_comp = self.pool.get('res.company')
         obj_data = self.pool.get('ir.model.data')
 
+        if context is None:
+            context = {}
+
         list_of_tags=['00','01','02','03','44','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','88','91']
         obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         user_cmpny = obj_company.name
-        vat_no=obj_company.partner_id.vat
+        vat_no = obj_company.partner_id.vat
         if not vat_no:
             osv.except_osv(_('Data Insufficient'), _('No VAT  Number Associated with Main Company!'))
 
@@ -99,8 +100,8 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
         data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
         data['file_save'] = base64.encodestring(data_of_file)
-        self.write(cr, uid, ids, {'file_save':data['file_save']}, context=context)
-
+        self.write(cr, uid, ids, {'file_save': data['file_save'], 'name': 'vat_declare.xml'}, context=context)
+        return True
 l10n_be_vat_declaration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

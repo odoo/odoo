@@ -127,37 +127,37 @@
                 <search string="Expense">
                     <group>
                       <filter
-                        icon="terp-hr"
+                        icon="terp-document-new"
                         domain="[('state','=','draft')]"
                         string="Draft"
                         help="Draft Expense"/>
                       <separator orientation="vertical"/>
                       <filter
-                        icon="terp-hr"
+                        icon="terp-gtk-go-back-rtl"
                         domain="[('state','=','confirm')]"
                         string="To Validate"
                         help="Confirmed Expense"/>
                       <filter
-                        icon="terp-hr"
+                        icon="terp-gtk-go-back-rtl"
                         domain="[('state','=','accepted')]"
                         string="To Pay"
                         help="Expenses to Invoice"/>
                       <separator orientation="vertical"/>
                       <field name="name" select='1'/>
                       <field name="date" select='1'/>
-                      <field name="user_id" select="1" widget="selection" string="User">
-                      		<filter icon="terp-hr"
+                      <field name="user_id" select="1" string="User">
+                      <filter icon="terp-personal+"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
                       <field name="department_id" widget="selection" groups="base.group_extended"/>
                 </group>
                 <newline />
-                <group expand="1" string="Group By...">
-                    <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
-                    <filter string="User" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                    <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-sale" domain="[]" context="{'group_by':'date'}"/>
+                    <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                 </group>
                 </search>
             </field>
@@ -171,7 +171,7 @@
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
 
-        <menuitem id="next_id_49" name="Expenses" sequence="8"
+        <menuitem id="next_id_49" name="Expenses" sequence="4"
            parent="hr.menu_hr_root"/>
 
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses"
@@ -183,7 +183,7 @@
          <field name="inherit_id" ref="product.product_normal_form_view"/>
          <field name="type">form</field>
          <field name="arch" type="xml">
-            <field groups="base.group_extended" name="rental" position="after">
+            <field name="purchase_ok" position="after">
                <field name="hr_expense_ok"/>
             </field>
          </field>

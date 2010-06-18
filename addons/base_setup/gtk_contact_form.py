@@ -71,7 +71,6 @@ class base_gtkcontactform(osv.osv_memory):
              'other':fields.boolean('Other'),
              'ebook':fields.boolean('ebook'),
              'updates':fields.boolean('Updates'),
-             'contact_me':fields.boolean('Contact Me'),
              }
     def execute(self, cr, uid, ids, context=None):
         if context is None:
@@ -81,10 +80,10 @@ class base_gtkcontactform(osv.osv_memory):
         company_data = self.pool.get('base.setup.company').read(cr, uid, company_id, context=context)
         company_data = company_data and company_data[0] or {}
         country = ''
-        
+
         if company_data.get('country_id', False):
             country = self.pool.get('res.country').read(cr, uid, company_data['country_id'],['name'], context=context)['name']
-        
+
         for res in self.read(cr, uid, ids, context=context):
             email = res.get('email','')
             result = "\ncompany: "+ tools.ustr(company_data.get('name',''))

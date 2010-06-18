@@ -77,7 +77,6 @@ TODO :
         "base_vat", 
         "base_iban",
         "account_payment",
-        "account_tax_include", 
     ],
     "init_xml" : [
         "dta_data.xml",

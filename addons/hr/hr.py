@@ -18,7 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import os
+
 from osv import fields, osv
+import tools
 from tools.translate import _
 
 class hr_employee_category(osv.osv):
@@ -109,11 +112,19 @@ class hr_employee(osv.osv):
         'category_id' : fields.many2one('hr.employee.category', 'Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id','Subordinates'),
         'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
-        'coach_id':fields.many2one('res.users','Coach'),
-        'job_id':fields.many2one('hr.job', 'Job'),
+        'coach_id': fields.many2one('res.users','Coach'),
+        'job_id': fields.many2one('hr.job', 'Job'),
+        'photo': fields.binary('Photo')
     }
+
+    def _get_photo(self, cr, uid, context=None):
+        return open(os.path.join(
+            tools.config['addons_path'], 'hr/image', 'photo.png'),
+                    'rb') .read().encode('base64')
+
     _defaults = {
-        'active' : lambda *a: True,
+        'active' : 1,
+        'photo': _get_photo,
     }
 
     def _check_recursion(self, cr, uid, ids):

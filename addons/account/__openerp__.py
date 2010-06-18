@@ -121,6 +121,10 @@ module named account_voucherss
         'demo/account_minimal.xml',
         'account_unit_test.xml',
     ],
+    'test': [
+        'test/account_customer_invoice.yml',
+        'test/account_supplier_invoice.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0080331923549',

@@ -117,9 +117,9 @@ class mrp_bom(osv.osv):
     """
     Defines bills of material for a product.
     """
-    _name = 'mrp.bom'    
+    _name = 'mrp.bom'
     _description = 'Bill of Material'
-    
+
     def _child_compute(self, cr, uid, ids, name, arg, context={}):
         """ Gets child bom.
         @param self: The object pointer
@@ -140,14 +140,14 @@ class mrp_bom(osv.osv):
             bom_id = ids[0]
         bom_parent = bom_obj.browse(cr, uid, bom_id)
         for bom in self.browse(cr, uid, ids, context=context):
-            if (bom_parent and bom_parent.multi_level_bom) or bom.id == bom_id:
+            if (bom_parent) or (bom.id == bom_id):
                 result[bom.id] = map(lambda x: x.id, bom.bom_lines)
             else:
                 result[bom.id] = []
             if bom.bom_lines:
                 continue
             ok = ((name=='child_complete_ids') and (bom.product_id.supply_method=='produce'))
-            if (bom.type=='phantom' or ok) and bom_parent.multi_level_bom:
+            if (bom.type=='phantom' or ok):
                 sids = bom_obj.search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
                 if sids:
                     bom2 = bom_obj.browse(cr, uid, sids[0], context=context)
@@ -203,7 +203,6 @@ class mrp_bom(osv.osv):
         'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
         'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
-        'multi_level_bom': fields.boolean('Multi-level BoM'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -212,7 +211,6 @@ class mrp_bom(osv.osv):
         'product_rounding': lambda *a: 1.0,
         'type': lambda *a: 'normal',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c),
-        'multi_level_bom': lambda *a: 0,
     }
     _order = "sequence"
     _sql_constraints = [
@@ -460,18 +458,6 @@ class mrp_production(osv.osv):
             result[prod.id] = prod.date_planned[:10]
         return result
 
-    def _ref_calc(self, cr, uid, ids, field_names=None, arg=False, context={}):
-        """ Finds reference sale order for production order.
-        @param field_names: Names of fields.
-        @param arg: User defined arguments
-        @return: Dictionary of values.
-        """
-        res = {}
-        for f in field_names:
-            for order_id in ids:
-                res[order_id] = {f:False}
-        return res
-
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request."),
@@ -512,8 +498,6 @@ class mrp_production(osv.osv):
         'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
-        'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sale order.'),
-        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_ref', type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -823,7 +807,7 @@ class mrp_production(osv.osv):
         seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
-        proc_obj = self.pool.get('mrp.procurement')
+        proc_obj = self.pool.get('procurement.order')
         wf_service = netsvc.LocalService("workflow")
         for production in self.browse(cr, uid, ids):
             if not production.product_lines:
@@ -917,7 +901,7 @@ class mrp_production(osv.osv):
                     'move_id': move_id,
                     'company_id': production.company_id.id,
                 })
-                wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 proc_ids.append(proc_id)
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
@@ -967,7 +951,4 @@ class mrp_production_product_line(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True),
     }
 mrp_production_product_line()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

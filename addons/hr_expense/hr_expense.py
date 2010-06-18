@@ -120,9 +120,9 @@ class hr_expense_expense(osv.osv):
             for l in exp.line_ids:
                 tax_id = []
                 if l.product_id:
-                    acc = l.product_id.product_tmpl_id.property_account_expense.id
+                    acc = l.product_id.product_tmpl_id.property_account_expense
                     if not acc:
-                        acc = l.product_id.categ_id.property_account_expense_categ.id
+                        acc = l.product_id.categ_id.property_account_expense_categ
                     tax_id = [x.id for x in l.product_id.supplier_taxes_id]
                 else:
                     acc = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
@@ -131,7 +131,7 @@ class hr_expense_expense(osv.osv):
 
                 lines.append((0, False, {
                     'name': l.name,
-                    'account_id': acc,
+                    'account_id': acc.id,
                     'price_unit': l.unit_amount,
                     'quantity': l.unit_quantity,
                     'uos_id': l.uom_id.id,
@@ -153,7 +153,6 @@ class hr_expense_expense(osv.osv):
                 'address_contact_id': exp.employee_id.address_id.id,
                 'origin': exp.name,
                 'invoice_line': lines,
-                'price_type': 'tax_included',
                 'currency_id': exp.currency_id.id,
                 'payment_term': payment_term_id,
                 'fiscal_position': exp.employee_id.address_id.partner_id.property_account_position.id
@@ -177,7 +176,7 @@ class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
         'hr_expense_ok': fields.boolean('Can Constitute an Expense', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
-    }
+                }
 
 product_product()
 

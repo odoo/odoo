@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-hr" id="menu_hr_root" name="Human Resources" sequence="6"/>
-        <menuitem id="menu_hr_human_resources" sequence="2" name="Human Resources" parent="menu_hr_root"/>
+        <menuitem
+            id="menu_hr_root"
+            icon="terp-hr"
+            name="Human Resources"
+            sequence="6"/>
+        <menuitem
+            id="menu_hr_main"
+            parent="menu_hr_root"
+            name="Human Resources Management"
+            sequence="0"/>
         <menuitem
             id="menu_hr_configuration"
             name="Configuration"
             parent="hr.menu_hr_root"
+            groups="group_hr_manager"
             sequence="50" />
-      <menuitem id="menu_view_employee_category_configuration_form" parent="hr.menu_hr_configuration" name="Employees" sequence="1"/>
+        <menuitem
+            id="menu_hr_management"
+            name="Human Resources Management"
+            parent="hr.menu_hr_configuration"
+            groups="group_hr_manager"
+            sequence="1" />
+        <menuitem
+            id="menu_view_employee_category_configuration_form"
+            parent="hr.menu_hr_management"
+            name="Employees"
+            sequence="1"/>
 
         <!--
         ==========
@@ -21,14 +40,35 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="user_id"/>
-                        <field name="active" groups="base.group_extended"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <group colspan="4" col="8">
+                        <group colspan="6" col="6">
+                            <field colspan="6" name="name" select="1"/>
+                            <field name="user_id"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            <field name="active" groups="base.group_extended"/>
+                            <newline/>
+                            <field name="parent_id" />
+                            <field name="coach_id" />
+                        </group>
+                        <group colspan="2" col="1">
+                            <field name="photo" widget='image' nolabel="1"/>
+                        </group>
                     </group>
-                    <notebook colspan="4">
+                    <notebook colspan="6">
                         <page string="Personal Information">
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Social IDs"/>
+                                <field name="ssnid"/>
+                                <field name="sinid" groups="base.group_extended"/>
+                                <field name="otherid" groups="base.group_extended"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Status" colspan="2"/>
+                                <field name="gender"/>
+                                <field name="marital" widget="selection"/>
+                                <field name="country_id"/>
+                                <field name="birthday"/>
+                            </group>
                             <group col="2" colspan="2">
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="address_home_id" colspan="2"/>
@@ -38,29 +78,14 @@
                                 <field name="work_email" widget="email" />
                                 <field name="work_location"/>
                             </group>
-
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Social IDs"/>
-                                <field name="ssnid"/>
-                                <field name="sinid" groups="base.group_extended"/>
-                                <field name="otherid" groups="base.group_extended"/>
-                            </group>
-
                             <group col="2" colspan="2">
                                 <separator string="Position" colspan="2"/>
                                 <field name="job_id" widget="selection"/>
                                 <field name="department_id" widget="selection"/>
-                                <separator string="Managers" colspan="2"/>
-                                <field name="parent_id" select="1"/>
-                                <field name="coach_id" select="1"/>
-                            </group>
-
-                            <group col="2" colspan="2">
-                                <separator string="Status" colspan="2"/>
-                                <field name="gender"/>
-                                <field name="marital" widget="selection"/>
-                                <field name="country_id"/>
-                                <field name="birthday"/>
+                                <field name="category_id" />
+                                <!--<separator string="Managers" colspan="2"/>
+                                <field name="parent_id" />
+                                <field name="coach_id" />-->
                             </group>
                         </page>
                         <page string="Notes">
@@ -93,20 +118,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <filter icon="terp-partner" domain="[('active','=',False)]" string="Unactive"
+                    <filter icon="terp-personal-" domain="[('active','=',False)]" string="Unactive"
                         groups="base.group_extended"/>
                     <separator orientation="vertical" />
                     <field name="name"/>
                     <field name="department_id" widget="selection"/>
                     <field name="job_id" widget="selection"/>
-                    <field name="parent_id" widget="selection" />
+                    <field name="parent_id"/>
                     <newline />
-                    <group expand="1" string="Group By...">
-                        <filter string="Manager" icon="terp-sale" domain="[]" context="{'group_by':'parent_id'}"/>
-                        <filter string="Coach" icon="terp-sale" domain="[]" context="{'group_by':'coach_id'}" groups="base.group_extended"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}" groups="base.group_extended"/>
                         <separator orientation="vertical" />
-                        <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Job" icon="terp-sale" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                     </group>
                 </search>
              </field>
@@ -142,7 +167,7 @@
             action="open_view_employee_list_my"
             id="menu_open_view_employee_list_my"
             sequence="3"
-            parent="menu_hr_root"/>
+            parent="menu_hr_main"/>
 
 
         <!--
@@ -345,15 +370,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
-                    <filter icon="terp-crm"
+                    <filter icon="terp-check"
                         domain="[('state','in',('open','recruit'))]"
                         string="Current"
                         help="Open and in recruitment positions"/>
-                    <filter icon="terp-crm"
+                    <filter icon="terp-personal+"
                         domain="[('state','=','recruit')]"
                         string="Recruitment"
                         help="In Recruitment"/>
-                    <filter icon="terp-crm"
+                    <filter icon="terp-camera_test"
                         domain="[('state','=','open')]"
                         string="Open"
                         help="Open Positions"/>
@@ -361,7 +386,7 @@
                     <separator orientation="vertical"/>
                     <field name="name"/>
                      <field name="department_id" widget="selection">
-                            <filter icon="terp-crm"
+                            <filter icon="terp-gtk-select-all"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             help="My Departments Jobs"/>
                     </field>

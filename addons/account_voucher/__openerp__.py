@@ -36,7 +36,10 @@
     """,
     "category" : "Generic Modules/Accounting",
     "website" : "http://tinyerp.com",
-    "depends" : ["base", "account"],
+    "depends" : [
+        "base", 
+        "account"
+    ],
     "init_xml" : [
     ],
 
@@ -46,11 +49,12 @@
     "update_xml" : [
         "security/ir.model.access.csv",
         "voucher_sequence.xml",
-        "account_report.xml",
+        "voucher_workflow.xml",
+        "voucher_report.xml",
         "voucher_view.xml",
         "voucher_wizard.xml",
-        "account_view.xml",
         "wizard/account_voucher_open_view.xml",
+        
     ],
     'certificate': '0037580727101',
     "active": False,
