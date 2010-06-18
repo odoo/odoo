@@ -35,7 +35,7 @@ def _get_answers(cr, uid, ids):
     from profile_question_yes_rel
     where profile IN %s"""
 
-    cr.execute(query, (ids,))
+    cr.execute(query, (tuple(ids),))
     ans_yes = [x[0] for x in cr.fetchall()]
 
     query = """
