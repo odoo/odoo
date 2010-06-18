@@ -639,6 +639,9 @@ class stock_picking(osv.osv):
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
         for picking in self.browse(cr, uid, ids, context=context):
+            if not picking.move_lines:
+                raise osv.except_osv(_('Error !'),_('You can not confirm Picking without Move Lines.'))
+            
             for r in picking.move_lines:
                 if r.state == 'draft':
                     todo.append(r.id)
