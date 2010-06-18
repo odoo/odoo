@@ -81,7 +81,7 @@ class account_payment_term(osv.osv):
             if amt:
                 next_date = datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days)
                 if line.days2 < 0:
-                    next_date += relativedelta(day=line.days2)
+                    next_date += relativedelta(day=31)
                 if line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
