@@ -772,17 +772,16 @@ class account_invoice(osv.osv):
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
-            
-            entry_type=''
+
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
                 entry_type = 'journal_pur_voucher'
-                if inv.type in ('in_refund'):
+                if inv.type == 'in_refund':
                     entry_type = 'cont_voucher'
             else:
                 ref = self._convert_ref(cr, uid, inv.number)
                 entry_type = 'journal_sale_vou'
-                if inv.type in ('out_refund'):
+                if inv.type == 'out_refund':
                     entry_type = 'cont_voucher'
 
             diff_currency_p = inv.currency_id.id <> company_currency
@@ -1077,18 +1076,18 @@ class account_invoice(osv.osv):
         else:
             amount_currency = False
             currency_id = False
-        entry_type=''
+
         if invoice.type in ('in_invoice', 'in_refund'):
             ref = invoice.reference
             entry_type = 'journal_pur_voucher'
-            if invoice.type in ('in_refund'):
+            if invoice.type == 'in_refund':
                 entry_type = 'cont_voucher'
         else:
             ref = self._convert_ref(cr, uid, invoice.number)
             entry_type = 'journal_sale_vou'
-            if invoice.type in ('out_refund'):
+            if invoice.type == 'out_refund':
                 entry_type = 'cont_voucher'
-            
+
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
