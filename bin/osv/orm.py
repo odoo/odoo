@@ -2796,10 +2796,19 @@ class orm(orm_template):
 
         id_new = cr.fetchone()[0]
         for table in tocreate:
-            id = self.pool.get(table).create(cr, user, tocreate[table])
+            if self._inherits[table] in vals:
+                del vals[self._inherits[table]]
+
+            record_id = tocreate[table].pop('id', None)
+
+            if record_id is None or not record_id:
+                record_id = self.pool.get(table).create(cr, user, tocreate[table], context=context)
+            else:
+                self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=context)
+
             upd0 += ','+self._inherits[table]
             upd1 += ',%s'
-            upd2.append(id)
+            upd2.append(record_id)
         
         #Start : Set bool fields to be False if they are not touched(to make search more powerful) 
         bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
