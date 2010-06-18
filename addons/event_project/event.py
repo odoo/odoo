@@ -47,13 +47,13 @@ class one2many_mod_task(fields.one2many):
 class event(osv.osv):
     _inherit = 'event.event'
 
-    def write(self, cr, uid, ids,vals, *args, **kwargs):
+    def write(self, cr, uid, ids, vals, *args, **kwargs):
         if 'date_begin' in vals and vals['date_begin']:
             for eve in self.browse(cr, uid, ids):
                 if eve.project_id:
                     self.pool.get('project.project').write(cr, uid, [eve.project_id.id], {'date_end':eve.date_begin[:10]})
 
-        return super(event,self).write(cr, uid, ids,vals, *args, **kwargs)
+        return super(event,self).write(cr, uid, ids, vals, *args, **kwargs)
 
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', readonly=True),

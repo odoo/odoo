@@ -64,7 +64,7 @@ class product_product(osv.osv):
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
                 left join product_template product on (product.id=l.product_id)
-                where l.product_id = %s and i.state in %s and i.type in %s and i.date_invoice>=%s and i.date_invoice<=%s
+                where l.product_id = %s and i.state in %s and i.type IN %s and i.date_invoice>=%s and i.date_invoice<=%s
                 """,(val.id,states,invoice_types,date_from,date_to))
                 result=cr.fetchall()[0]
                 if 'sale_avg_price' in field_names or 'sale_num_invoiced' in field_names or 'turnover' in field_names or 'sale_expected' in field_names:

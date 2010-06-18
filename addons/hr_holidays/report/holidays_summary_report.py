@@ -42,12 +42,12 @@ def strToDate(dt):
         return
 
 
-def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
+def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, eom):
     display={}
     if dept==0:
         count=0
-        p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr,uid,[('employee_id','in',[empid,False]), ('type', '=', 'remove')])
-        ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr,uid,p_id,['date_from','date_to','holiday_status_id','state'])
+        p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr, uid, [('employee_id','in',[empid,False]), ('type', '=', 'remove')])
+        ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr, uid, p_id, ['date_from','date_to','holiday_status_id','state'])
 
         for index in range(1,61):
             diff=index-1
@@ -211,9 +211,9 @@ class report_custom(report_rml):
 
         if data['model']=='hr.employee':
             for id in data['form']['emp']:
-                 items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr,uid,id,['id','name'])
+                 items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr, uid, id, ['id','name'])
 
-                 emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,items['id'],items['name'],som, eom)
+                 emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
                  row_id = row_id +1
 
         elif data['model']=='ir.ui.menu':
@@ -234,19 +234,19 @@ class report_custom(report_rml):
                     continue
                 dept_done=0
                 for d in range(0,len(result)):
-                    emp_id[d]=pooler.get_pool(cr.dbname).get('hr.employee').search(cr,uid,[('user_id','=',result[d][0])])
-                    items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr,uid,emp_id[d],['id','name'])
+                    emp_id[d]=pooler.get_pool(cr.dbname).get('hr.employee').search(cr, uid, [('user_id','=',result[d][0])])
+                    items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr, uid, emp_id[d], ['id','name'])
                     for item in items:
 #                        if item['id'] in done:
 #                            continue
 #                        else:
                         if dept_done==0:
-                            emp_xml += emp_create_xml(self,cr,uid,1,holiday_type,row_id,dept.id,dept.name,som, eom)
+                            emp_xml += emp_create_xml(self, cr, uid, 1, holiday_type, row_id, dept.id, dept.name, som, eom)
                             row_id = row_id +1
                         dept_done=1
 
 #                        done[item['id']] = 1
-                        emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,item['id'],item['name'],som, eom)
+                        emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, item['id'], item['name'], som, eom)
                         row_id = row_id +1
 
         # Computing the xml

@@ -116,7 +116,7 @@ class purchase_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             WHERE
-                p.purchase_id = ANY(%s) GROUP BY m.state, p.purchase_id''',(ids,))
+                p.purchase_id IN %s GROUP BY m.state, p.purchase_id''',(tuple(ids),))
         for oid,nbr,state in cr.fetchall():
             if state=='cancel':
                 continue
@@ -630,7 +630,7 @@ class purchase_order_line(osv.osv):
         if not product:
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '',
                 'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
-        prod= self.pool.get('product.product').browse(cr, uid,product)
+        prod= self.pool.get('product.product').browse(cr, uid, product)
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, partner_id, ['lang'])['lang']

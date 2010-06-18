@@ -30,7 +30,7 @@ class hr_evaluation_report(osv.osv):
         'create_date': fields.date('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
-        'request_id': fields.many2one('survey.request','Request_id', readonly=True),
+        'request_id': fields.many2one('survey.request', 'Request_id', readonly=True),
         'closed': fields.date("closed", readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),

@@ -168,7 +168,6 @@ class email_template_send_wizard(osv.osv_memory):
         mail_ids = []
         template = self._get_template(cr, uid, context)
         for id in context['src_rec_ids']:
-            print "@22222222222222222222222",ids
             screen_vals = self.read(cr, uid, ids[0], [],context)
             account = self.pool.get('email_template.account').read(cr, uid, screen_vals['from'], context=context)
             vals = {

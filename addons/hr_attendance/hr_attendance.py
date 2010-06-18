@@ -104,7 +104,7 @@ class hr_employee(osv.osv):
                 LEFT JOIN hr_attendance \
                     ON (hr_attendance.employee_id = foo.employee_id \
                         AND hr_attendance.name = foo.name) \
-                WHERE hr_attendance.employee_id =ANY(%s)',(ids,))
+                WHERE hr_attendance.employee_id IN %s',(tuple(ids),))
         for res in cr.fetchall():
             result[res[1]] = res[0] == 'sign_in' and 'present' or 'absent'
         return result

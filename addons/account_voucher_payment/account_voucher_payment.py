@@ -33,7 +33,7 @@ account_move_line()
 class account_voucher(osv.osv):
     _inherit = 'account.voucher'
     _columns = {
-        'voucher_line_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=False, states={'proforma':[('readonly',True)]}),
+        'voucher_line_ids':fields.one2many('account.voucher.line', 'voucher_id', 'Voucher Lines', readonly=False, states={'proforma':[('readonly',True)]}),
     }
         
     def action_move_line_create(self, cr, uid, ids, *args):
@@ -192,7 +192,7 @@ class account_voucher(osv.osv):
                          'general_account_id':line.account_id.id,
                          'ref':ref
                      }
-                    self.pool.get('account.analytic.line').create(cr,uid,an_line)
+                    self.pool.get('account.analytic.line').create(cr, uid, an_line)
             if mline_ids:
                 self.pool.get('account.move.line').reconcile_partial(cr, uid, mline_ids, 'manual', context={})
             self.write(cr, uid, [inv.id], {'move_id': move_id})

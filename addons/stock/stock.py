@@ -539,9 +539,9 @@ class stock_picking(osv.osv):
             from
                 stock_move
             where
-                picking_id=ANY(%s)
+                picking_id IN %s
             group by
-                picking_id""",(ids,))
+                picking_id""",(tuple(ids),))
         for pick, dt1, dt2 in cr.fetchall():
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
@@ -1230,7 +1230,7 @@ class stock_production_lot(osv.osv):
                 from
                     stock_report_prodlots
                 where
-                    location_id =ANY(%s) and prodlot_id =ANY(%s) group by prodlot_id''',(locations,ids,))
+                    location_id IN %s and prodlot_id IN %s group by prodlot_id''',(tuple(locations),tuple(ids),))
             res.update(dict(cr.fetchall()))
         return res
 
@@ -1245,8 +1245,8 @@ class stock_production_lot(osv.osv):
             from
                 stock_report_prodlots
             where
-                location_id =ANY(%s) group by prodlot_id
-            having  sum(name) '''+ str(args[0][1]) + str(args[0][2]),(locations,))
+                location_id IN %s group by prodlot_id
+            having  sum(name) '''+ str(args[0][1]) + str(args[0][2]),(tuple(locations),))
         res = cr.fetchall()
         ids = [('id', 'in', map(lambda x: x[0], res))]
         return ids
