@@ -2194,17 +2194,17 @@ class stock_move(osv.osv):
 
         for move in complete:
             self.action_done(cr, uid, [move.id], context)
-
-            # TOCHECK : Done picking if all moves are done
-            cr.execute("""
-                SELECT move.id FROM stock_picking pick
-                RIGHT JOIN stock_move move ON move.picking_id = pick.id AND move.state = %s
-                WHERE pick.id = %s""",
-                        ('done', move.picking_id.id))
-            res = cr.fetchall()
-            if len(res) == len(move.picking_id.move_lines):
-                picking_obj.action_move(cr, uid, [move.picking_id.id])
-                wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
+            if  move.picking_id.id :
+                # TOCHECK : Done picking if all moves are done
+                cr.execute("""
+                    SELECT move.id FROM stock_picking pick
+                    RIGHT JOIN stock_move move ON move.picking_id = pick.id AND move.state = %s
+                    WHERE pick.id = %s""",
+                            ('done', move.picking_id.id))
+                res = cr.fetchall()
+                if len(res) == len(move.picking_id.move_lines):
+                    picking_obj.action_move(cr, uid, [move.picking_id.id])
+                    wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
 
         ref = {}
         done_move_ids = []
