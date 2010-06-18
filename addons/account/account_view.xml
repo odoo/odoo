@@ -842,7 +842,9 @@
                         <separator orientation="vertical"/>
                         <field name="date" select='1'/>
                         <field name="account_id" select='1'/>
-                        <field name="partner_id" select='1'/>
+                        <field name="partner_id" select='1'>
+                        	<filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-partner" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
+                        </field>
                         <field name="balance" string="Debit/Credit" select='1'/>
                     </group>
                 </search>
@@ -1181,6 +1183,18 @@
         <menuitem action="action_account_bank_reconcile_tree"
             id="menu_action_account_bank_reconcile_check_tree"
             parent="periodical_processing_reconciliation" groups="group_account_user" />
+
+		<act_window
+			context="{'search_default_next_partner':1}"
+            id="action_account_manual_reconcile" name="Entry Lines"
+            res_model="account.move.line"
+            />
+
+ 	   <menuitem
+ 	   		name="Manual Reconcilication" icon="STOCK_EXECUTE"
+ 	   		action="action_account_manual_reconcile"
+ 			id="menu_manual_reconcile"
+ 			parent="account.periodical_processing_reconciliation"/>
 
 
         <act_window
