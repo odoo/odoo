@@ -2928,7 +2928,7 @@ class orm(orm_template):
                     for group in groups:
                         module = group.split(".")[0]
                         grp = group.split(".")[1]
-                        cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s"  \
+                        cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s"  \
                                    (grp, module, 'res.groups', user))
                         readonly = cr.fetchall()
                         if readonly[0][0] >= 1:
@@ -3070,7 +3070,7 @@ class orm(orm_template):
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         for sub_ids in cr.split_for_in_conditions(ids):
             cr.execute('delete from ' + self._table + ' ' \
-                       'where id in %s', (sub_ids,))
+                       'where id IN %s', (sub_ids,))
         for order, object, store_ids, fields in result_store:
             if object != self._name:
                 obj =  self.pool.get(object)
@@ -3230,7 +3230,7 @@ class orm(orm_template):
             self.check_access_rule(cr, user, ids, 'write', context=context)
             for sub_ids in cr.split_for_in_conditions(ids):
                 cr.execute('update ' + self._table + ' set ' + ','.join(upd0) + ' ' \
-                           'where id in %s', upd1 + [sub_ids])
+                           'where id IN %s', upd1 + [sub_ids])
 
             if totranslate:
                 # TODO: optimize
@@ -3603,7 +3603,7 @@ class orm(orm_template):
         field_flag = False
         field_dict = {}
         if self._log_access:
-            cr.execute('select id,write_date from '+self._table+' where id IN ('+','.join(map(str, ids))+')')
+            cr.execute('select id,write_date from '+self._table+' where id IN %s',(tuple(ids),))
             res = cr.fetchall()
             for r in res:
                 if r[1]:

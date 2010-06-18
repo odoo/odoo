@@ -116,7 +116,7 @@ registered_reports = cr.fetchall()
 reg_reports_ids = ','.join([str(id) for (id,) in registered_reports])
 
 for report in reports_wh_duplicates:
-    cr.execute("select id from ir_act_report_xml where model=%s and report_name=%s and id not IN ("+reg_reports_ids+")", (report['model'], report['report_name']))
+    cr.execute("select id from ir_act_report_xml where model=%s and report_name=%s and id NOT IN ("+reg_reports_ids+")", (report['model'], report['report_name']))
     (id,) = cr.fetchone()
     cr.execute("delete from ir_act_report_xml where id=%d", (id,))
     cr.execute("delete from ir_values where value='ir.actions.report.xml,%d'", (id,))
@@ -129,7 +129,7 @@ cr.commit()
 
 # this removes all transitions which are not registered in ir_model_data
 
-cr.execute("delete from wkf_transition where id not in (select res_id from ir_model_data where model='workflow.transition')")
+cr.execute("delete from wkf_transition where id NOT IN (select res_id from ir_model_data where model='workflow.transition')")
 cr.commit()
 
 # -------------------------------- #
