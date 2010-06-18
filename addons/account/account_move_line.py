@@ -368,7 +368,7 @@ class account_move_line(osv.osv):
                 else:
                     qu1.append('(i.id %s %s)' % (x[1], '%s'))
                     qu2.append(x[2])
-            elif x[1] == 'IN':
+            elif x[1] == 'in':
                 if len(x[2]) > 0:
                     qu1.append('(i.id in (%s))' % (','.join(['%s'] * len(x[2]))))
                     qu2 += x[2]
