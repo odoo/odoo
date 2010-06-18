@@ -37,7 +37,6 @@
     'website':'http://www.openerp.com',
     'depends': [
         'hr',
-        'account',
         'hr_contract', 
         'hr_holidays',
         'hr_expense'
