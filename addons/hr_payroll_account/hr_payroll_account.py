@@ -101,7 +101,7 @@ class hr_payslip(osv.osv):
             partner_id = False
             exp_ids = []
             
-            partner = slip.employee_id.address_home_id.partner_id
+            partner = slip.employee_id.bank_account_id.partner_id
             partner_id = partner.id
             
             fiscal_year_ids = self.pool.get('account.fiscalyear').search(cr, uid, [])
@@ -255,14 +255,14 @@ class hr_payslip(osv.osv):
             partner = False
             partner_id = False
             
-            if not slip.employee_id.address_home_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please defined the Employee Home Address Along with Partners !!'))
+            if not slip.employee_id.bank_account_id:
+                raise osv.except_osv(_('Integrity Error !'), _('Please defined bank account for %s !' % (slip.employee_id.name)))
             
-            if not slip.employee_id.address_home_id.partner_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please defined the Partner in Home Address !!'))
+            if not slip.employee_id.bank_account_id.partner_id:
+                raise osv.except_osv(_('Integrity Error !'), _('Please defined partner in bank account for %s !' % (slip.employee_id.name)))
             
-            partner = slip.employee_id.address_home_id.partner_id
-            partner_id = slip.employee_id.address_home_id.partner_id.id
+            partner = slip.employee_id.bank_account_id.partner_id
+            partner_id = slip.employee_id.bank_account_id.partner_id.id
             
             period_id = False
             
