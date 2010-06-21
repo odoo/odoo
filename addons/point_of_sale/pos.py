@@ -575,7 +575,7 @@ class pos_order(osv.osv):
                 val=cr.fetchone()
                 val=val and val[0] or None
                 if val:
-                    cr.execute("Update pos_order set date_validation='%s' where id = %d"%(val, order.id))
+                    cr.execute("Update pos_order set date_validation='%s', state_2 ='%s' where id = %d"%(val, 'accepted', order.id))
         return True
 
 
