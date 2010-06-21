@@ -247,6 +247,7 @@
             <field name="count_comments" />
             <field name="count_votes" />
             <field name="state"/>
+             <button name="idea_open" string="Open" states="draft" icon="terp-gtk-go-back-rtl"/>
             <button name="%(idea.action_idea_post_vote)d" icon="gtk-execute" type="action" states="open" string="Submit Vote"/>
             <button name="idea_close" string="Accept" states="open" icon="gtk-jump-to"/>
             <button name="idea_cancel" string="Refuse" states="open"  icon="gtk-cancel"/>
@@ -372,7 +373,7 @@
         <field name="search_view_id" ref="view_idea_vote_search"/>
     </record>
 
-    <menuitem name="Votes" parent="menu_ideas" id="menu_idea_vote" action="action_idea_vote"/>
+    <menuitem name="Votes" parent="menu_idea_reporting" id="menu_idea_vote" action="action_idea_vote"/>
 
     </data>
 </openerp>
