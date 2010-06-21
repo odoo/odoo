@@ -1373,12 +1373,32 @@
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
                     <separator colspan="4" string="Description on invoices"/>
-                    <field colspan="4" name="note"/>
+                    <field colspan="4" name="note" nolabel="1"/>
                     <separator colspan="4" string="Computation"/>
-                    <field colspan="4" name="line_ids"/>
+                    <field colspan="4" name="line_ids" nolabel="1"/>
                 </form>
             </field>
         </record>
+<!--        <record id="view_account_move_line_filter" model="ir.ui.view">-->
+<!--            <field name="name">Payment Terms</field>-->
+<!--            <field name="model">account.payment.term</field>-->
+<!--            <field name="type">search</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <search string="Search Payment Terms">-->
+<!--                    <group col='10' colspan='4'>-->
+<!--                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Entry Lines"/>-->
+<!--                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>-->
+<!--                        <separator orientation="vertical"/>-->
+<!--                        <field name="date" select='1'/>-->
+<!--                        <field name="account_id" select='1'/>-->
+<!--                        <field name="partner_id" select='1'>-->
+<!--                        	<filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-partner" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>-->
+<!--                        </field>-->
+<!--                        <field name="balance" string="Debit/Credit" select='1'/>-->
+<!--                    </group>-->
+<!--                </search>-->
+<!--            </field>-->
+<!--        </record>-->
         <record id="action_payment_term_form" model="ir.actions.act_window">
             <field name="name">Payment Terms</field>
             <field name="res_model">account.payment.term</field>
@@ -1905,7 +1925,7 @@
                     <field name="name" select="1"/>
                     <field name="chart_template_id"/>
                     <newline/>
-                    <field name="tax_ids" colspan="4">
+                    <field name="tax_ids" colspan="4" nolabel="1">
                         <tree string="Taxes Mapping" editable="bottom">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
@@ -1915,7 +1935,7 @@
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </form>
                     </field>
-                    <field name="account_ids" colspan="4">
+                    <field name="account_ids" colspan="4" nolabel="1">
                         <tree string="Accounts Mapping" editable="bottom">
                             <field name="account_src_id"/>
                             <field name="account_dest_id"/>

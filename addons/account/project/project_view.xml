@@ -24,7 +24,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
             	<search string="Analytic Account">
-            		<group col="8" colspan="4">
+	           		<group col="8" colspan="4">
 	            		<filter icon="terp-check" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
 	            		<filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
 						<separator orientation="vertical"/>
@@ -32,7 +32,15 @@
 						<field name="code" select="1"/>
 						<field name="partner_id" select="1"/>
 						<field name="user_id" widget="selection"/>
-            		</group>
+	           		</group>
+	            	<newline/>
+	            	<group expand="0" string="Group By...">
+	                        <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
+	                        <filter string="Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
+	                        <separator orientation="vertical"/>
+	                        <filter string="Associated Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+	                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    </group>
             	</search>
             </field>
         </record>
@@ -277,7 +285,20 @@
                 </tree>
             </field>
         </record>
-
+		
+		<record id="view_analytic_journal_search" model="ir.ui.view">
+            <field name="name">account.analytic.journal.search</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="analytic Journals">
+	            	<group expand="0" string="Group By...">
+                        <filter string="Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+            	</search>
+            </field>
+        </record>
+        
         <record id="view_account_analytic_journal_form" model="ir.ui.view">
             <field name="name">account.analytic.journal.form</field>
             <field name="model">account.analytic.journal</field>
@@ -296,7 +317,7 @@
             <field name="name">Analytic Journals</field>
             <field name="res_model">account.analytic.journal</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,search</field>
         </record>
         <menuitem action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic"/>
 
