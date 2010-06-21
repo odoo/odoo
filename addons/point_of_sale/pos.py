@@ -195,7 +195,7 @@ class pos_order(osv.osv):
                             line.price_unit * \
                             (1-(line.discount or 0.0)/100.0), line.qty),
                             res[order.id]['amount_tax'])
-                else:
+                elif line.qty != 0.0:
                     for c in tax_obj.compute_all(cr, uid, line.product_id.taxes_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.qty,  line.product_id, line.order_id.partner_id)['taxes']:
                         val += c['amount']                    
                     res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
@@ -238,6 +238,7 @@ class pos_order(osv.osv):
             'invoice_id': False,
             'account_move': False,
             'picking_id': False,
+            'statement_ids':[],
             'nb_print': 0,
             'pickings': []
         })
@@ -1055,11 +1056,13 @@ class pos_order_line(osv.osv):
         return res
 
     def _amount_line_ttc(self, cr, uid, ids, field_name, arg, context):
-        res = {}
+        res = dict.fromkeys(ids, 0.0)
         account_tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids):
             tax_amount = 0.0
             taxes = [t for t in line.product_id.taxes_id]
+	    if line.qty == 0.0:
+		continue
             computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
             for tax in computed_taxes:
                 tax_amount += tax['amount']
