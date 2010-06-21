@@ -103,7 +103,8 @@
 	            <field name="model">stock.move.split</field>
 	            <field name="type">form</field>
 	            <field name="arch" type="xml">
-              <form string="Split in lots">
+				<form string="Split in lots">
+				<group width="660" height="300">
                   <field name="product_id" colspan="4" readonly="1"/>
                   <newline/>
                   <group colspan="4" col="4">
@@ -148,6 +149,7 @@
 	                		string="Cancel" />
 	                	<button name="split_lot" string="Ok"
 	                		type="object" icon="gtk-ok" />
+					</group>	                		
 	                </form>
 	            </field>
 	        </record>
