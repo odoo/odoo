@@ -32,7 +32,7 @@ class procurement_order(osv.osv):
     def check_buy(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids):
             for line in procurement.product_id.flow_pull_ids:
-                print line.location_src_id.name, line.location_id.name, line.type_proc
+                
                 if line.location_id==procurement.location_id:
                     return line.type_proc=='buy'
         return super(procurement_order, self).check_buy(cr, uid, ids)
