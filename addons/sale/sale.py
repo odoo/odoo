@@ -611,6 +611,7 @@ class sale_order(osv.osv):
         picking_id = False
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
+            proc_ids = []
             output_id = order.shop_id.warehouse_id.lot_output_id.id
             picking_id = False
             for line in order.order_line:
@@ -619,6 +620,7 @@ class sale_order(osv.osv):
                 date_planned = (date_planned - relativedelta(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
+                move_id = False
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     location_id = order.shop_id.warehouse_id.lot_stock_id.id
                     if not picking_id:
@@ -659,8 +661,9 @@ class sale_order(osv.osv):
                         'note': line.notes,
                         'company_id': order.company_id.id,
                     })
+                if line.product_id:
                     proc_id = self.pool.get('procurement.order').create(cr, uid, {
-                        'name': order.name,
+                        'name': line.name,
                         'origin': order.name,
                         'date_planned': date_planned,
                         'product_id': line.product_id.id,
@@ -676,35 +679,17 @@ class sale_order(osv.osv):
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
                         'company_id': order.company_id.id,
                     })
-                    wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+                    proc_ids.append(proc_id)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
-                elif line.product_id and line.product_id.product_tmpl_id.type == 'service':
-                    proc_id = self.pool.get('procurement.order').create(cr, uid, {
-                        'name': line.name,
-                        'origin': order.name,
-                        'date_planned': date_planned,
-                        'product_id': line.product_id.id,
-                        'product_qty': line.product_uom_qty,
-                        'product_uom': line.product_uom.id,
-                        'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
-                        'procure_method': line.type,
-                        'property_ids': [(6, 0, [x.id for x in line.property_ids])],
-                        'company_id': order.company_id.id,
-                    })
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
-                    wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                else:
-                    #
-                    # No procurement because no product in the sale.order.line.
-                    #
-                    pass
 
             val = {}
             if picking_id:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+
+            for proc_id in proc_ids:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'

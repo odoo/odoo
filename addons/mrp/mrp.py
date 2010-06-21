@@ -679,30 +679,28 @@ class mrp_production(osv.osv):
         raw_product_todo = []
         final_product_todo = []
 
+        produced_qty = 0
+        for produced_product in production.move_created_ids2:
+            if (produced_product.scraped) or (produced_product.product_id.id<>production.product_id.id):
+                continue
+            produced_qty += produced_product.product_qty
+
         if production_mode in ['consume','consume_produce']:
-            # To consume remaining qty of raw materials
             consumed_products = {}
-            produced_qty = 0
             for consumed_product in production.move_lines2:
                 if consumed_product.scraped:
                     continue
                 if not consumed_products.get(consumed_product.product_id.id, False):
                     consumed_products[consumed_product.product_id.id] = 0
-                consumed_products[consumed_product.product_id.id] += consumed_product.product_qty
-
-            for produced_product in production.move_created_ids2:
-                if produced_product.scraped:
-                    continue
-                produced_qty += produced_product.product_qty
+                consumed_products[consumed_product.product_id.id] -= consumed_product.product_qty
 
             for raw_product in production.move_lines:
-                consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
-                consumed_qty -= produced_qty
-                rest_qty = production_qty - consumed_qty
-                if rest_qty > production.product_qty:
-                   rest_qty = production.product_qty
-                if rest_qty > 0:
-                    stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
+                for f in production.product_lines:
+                    if f.product_id.id==raw_product.product_id.id:
+                        consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
+                        rest_qty = production_qty * f.product_qty / production.product_qty - consumed_qty
+                        if rest_qty > 0:
+                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
@@ -724,7 +722,6 @@ class mrp_production(osv.osv):
                    production_qty = rest_qty
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, production.location_dest_id.id, context=context)
-
 
         for raw_product in production.move_lines2:
             new_parent_ids = []
