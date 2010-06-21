@@ -47,7 +47,7 @@ class account_budget_report(osv.osv_memory):
              'form': data
             }
 
-        data_model = self.pool.get(datas['model']).browse(cr,uid,context['active_id'])
+        data_model = self.pool.get(datas['model']).browse(cr, uid, context['active_id'])
         if not data_model.dotation_ids:
             raise osv.except_osv(_('Insufficient Data!'),_('No Depreciation or Master Budget Expenses Found on Budget %s!') % data_model.name)
 

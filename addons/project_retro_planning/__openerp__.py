@@ -25,13 +25,16 @@
     'version': '0.1',
     'category': 'Generic Modules/Projects & Services',
     'description': """
-        - If deadline date of project is changed 
+        - If deadline date of project is changed
           then the deadline date for all the tasks will change to the same  """,
     'author': 'Tiny',
     'depends': ['base', 'project'],
     'init_xml': [],
     'update_xml': [],
     'demo_xml': [],
+    'test' : [
+              'test/deadline_change.yml'
+              ],
     'installable': True,
     'active': False,
     'certificate': '0057235475485',

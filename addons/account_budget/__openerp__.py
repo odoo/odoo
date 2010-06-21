@@ -62,6 +62,10 @@ Three reports are available:
         'wizard/account_budget_crossovered_report_view.xml',
     ],
     'demo_xml': ['crossovered_budget_demo.xml'],
+    'test':[
+#            'test/account_budget_spread.yml',
+            'test/account_budget.yml',
+            ],
     'installable': True,
     'active': False,
     'certificate': '0043819694157',

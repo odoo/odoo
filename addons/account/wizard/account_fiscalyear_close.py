@@ -160,10 +160,10 @@ class account_fiscalyear_close(osv.osv_memory):
                             'WHERE b.account_id = %s ' \
                                 'AND b.reconcile_id is NOT NULL ' \
                                 'AND a.reconcile_id = b.reconcile_id ' \
-                                'AND b.period_id =ANY(%s)'\
-                                'AND a.period_id =ANY(%s)' \
+                                'AND b.period_id IN %s'\
+                                'AND a.period_id IN %s' \
                             'ORDER BY id ' \
-                            'LIMIT %s OFFSET %s', (account.id,period_ids,periods_fy2,limit, offset))
+                            'LIMIT %s OFFSET %s', (account.id,tuple(period_ids),tuple(periods_fy2),limit, offset))
                     result = cr.dictfetchall()
                     if not result:
                         break

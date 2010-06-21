@@ -47,7 +47,7 @@ class pos_make_payment(osv.osv_memory):
         active_id = context and context.get('active_id',False) 
         if active_id: 
             j_obj = self.pool.get('account.journal')
-            company_id = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
+            company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
             journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
             
             if journal:
@@ -141,7 +141,7 @@ class pos_make_payment(osv.osv_memory):
             invoice_wanted = data['invoice_wanted']
             jrnl_used=False
             if data.get('journal',False):
-                jrnl_used=jrnl_obj.browse(cr,uid,data['journal'])
+                jrnl_used=jrnl_obj.browse(cr, uid, data['journal'])
             order_obj.write(cr, uid, [active_id], {'invoice_wanted': invoice_wanted})
             order_obj.add_payment(cr, uid, active_id, data, context=context)            
         # Todo need to check
@@ -150,10 +150,10 @@ class pos_make_payment(osv.osv_memory):
 #            order_obj.action_paid(cr,uid,[active_id],context)
         if order_obj.test_paid(cr, uid, [active_id]):
             if order.partner_id and order.invoice_wanted:
-                return self.create_invoice(cr,uid,ids,context)
+                return self.create_invoice(cr, uid, ids, context)
             else:
                 context.update({'flag': True})                
-                order_obj.action_paid(cr,uid,[active_id],context)         
+                order_obj.action_paid(cr, uid, [active_id], context)         
                 if context.get('return'):
                     order_obj.write(cr, uid, [active_id],{'state':'done'})   
                 else:

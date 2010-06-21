@@ -32,7 +32,7 @@ class account_statement(report_sxw.rml_parse):
                 'time': time,
                 'get_total':self._get_total,
                 })
-    def _get_total(self,statement_line_ids):
+    def _get_total(self, statement_line_ids):
         total = 0.0
         for line in statement_line_ids:
             total += line.amount

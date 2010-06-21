@@ -92,10 +92,10 @@ class project(osv.osv):
                 FROM
                     project_task
                 WHERE
-                    project_id =ANY(%s) AND
+                    project_id IN %s AND
                     state<>'cancelled'
                 GROUP BY
-                    project_id''',(ids2,))
+                    project_id''',(tuple(ids2),))
             progress = dict(map(lambda x: (x[0], (x[1], x[2], x[3])), cr.fetchall()))
         for project in self.browse(cr, uid, ids, context=context):
             s = [0.0, 0.0, 0.0]
@@ -196,7 +196,7 @@ class project(osv.osv):
         res = super(project, self).copy(cr, uid, id, default, context)
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
         if ids:
-            cr.execute('update project_task set active=True where project_id =ANY(%s)',(ids,))
+            cr.execute('update project_task set active=True where project_id IN %s',(tuple(ids),))
         return res
 
     def duplicate_template(self, cr, uid, ids, context={}):
@@ -272,7 +272,7 @@ class task(osv.osv):
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
         res = {}
-        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id =ANY(%s) GROUP BY task_id",(ids,))
+        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
@@ -343,7 +343,6 @@ class task(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
-        'user_id': lambda obj, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'priority': lambda *a: '2',
         'progress': lambda *a: 0,

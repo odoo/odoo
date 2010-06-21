@@ -27,7 +27,7 @@ class auction_invoice(report_int):
         report_int.__init__(self, name)
 
     def create(self,cr, uid, ids, datas, context):
-        lots = self.pool.get('auction.lots').read(cr,uid, ids, ['ach_inv_id'], context=context)
+        lots = self.pool.get('auction.lots').read(cr, uid, ids, ['ach_inv_id'], context=context)
 
         invoices = {}
         for l in lots:
@@ -40,7 +40,7 @@ class auction_invoice(report_int):
         datas['ids'] = new_ids
 
         self._obj_invoice = netsvc.LocalService('report.account.invoice')
-        return self._obj_invoice.create(cr,uid, new_ids, datas, context)
+        return self._obj_invoice.create(cr, uid, new_ids, datas, context)
 
     def result(self):
         return self._obj_invoice.result()
