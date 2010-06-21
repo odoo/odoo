@@ -77,8 +77,8 @@ class ir_ui_menu(osv.osv):
         ids = super(ir_ui_menu, self).search(cr, uid, args, super_offset,
             super_limit, order, context=context, count=super_count)
 
-        if uid == 1:
-            return ids
+        #if uid == 1:
+        #    return ids
 
         if not ids:
             if count:
