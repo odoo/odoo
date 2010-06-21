@@ -362,7 +362,6 @@
                     <field name="product_uom" string="UoM"/>
                     <field name="salesman_id"/>
                     <field name="price_subtotal"/>
-                    <field name="th_weight"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -439,7 +438,6 @@
                     <field name="product_id"/>
                     <field name="salesman_id">
                         <filter icon="terp-dolar" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
-                        <filter icon="terp-personal+" domain="[('salesman_id','child_of',[uid])]" help="My Departments Sale Order Lines"/>
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
@@ -473,7 +471,9 @@
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
-                    <field name="state"/>
+                    <field name="salesman_id">
+                        <filter icon="terp-dolar" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
+                    </field>
                     <newline />
                     <group expand="0" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
