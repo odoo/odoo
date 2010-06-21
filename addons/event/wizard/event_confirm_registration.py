@@ -20,7 +20,8 @@
 ##############################################################################
 
 from osv import fields, osv
-
+from tools.translate import _
+ 
 class event_confirm_registration(osv.osv_memory):
     """
     Confirm Event Registration
@@ -37,10 +38,13 @@ class event_confirm_registration(osv.osv_memory):
 
     def confirm(self, cr, uid, ids, context):
         registration_obj = self.pool.get('event.registration')
+        
         reg_id = context.get('reg_id', False) or context.get('active_id', False)
+        reg_ids = registration_obj.browse(cr, uid, [reg_id])
+        
         if reg_id:
             registration_obj.write(cr, uid, [reg_id], {'state':'open', })
-            registration_obj._history(cr, uid, [reg_id], 'Open', history=True)
+            registration_obj._history(cr, uid, reg_ids, _('Open'))
             registration_obj.mail_user(cr, uid, [reg_id])
         return {}
 

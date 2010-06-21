@@ -83,6 +83,11 @@ class event(osv.osv):
                     self.pool.get('event.registration').mail_user_confirm(cr, uid, reg_ids)
                     
         return self.write(cr, uid, ids, {'state': 'confirm'})
+    
+    
+    
+    
+    
 
     def _get_register(self, cr, uid, ids, name, args, context=None):
         
@@ -126,9 +131,10 @@ class event(osv.osv):
         @param vals: dictionary with values to update.
         @return: True
         """
-        
         res = super(event, self).write(cr, uid, ids, vals, *args, **kwargs)
+        
         if 'date_begin' in vals and vals['date_begin']:
+            
             for eve in self.browse(cr, uid, ids):
                 #change the deadlines of the registration linked to this event
                 reg_ids = self.pool.get('event.registration').search(cr, uid, 
@@ -169,12 +175,13 @@ class event(osv.osv):
         'mail_auto_confirm': fields.boolean('Mail Auto Confirm', help='Check this box if you want ot use the automatic confirmation emailing or the reminder'), 
         'mail_registr': fields.text('Registration Email', help='This email will be sent when someone subscribes to the event.'), 
         'mail_confirm': fields.text('Confirmation Email', help="This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."), 
-        'product_id': fields.many2one('product.product', 'Product', required=True), 
+        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'note': fields.text('Notes')
     }
 
     _defaults = {
         'state': lambda *args: 'draft', 
-        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'event.event'), 
+#        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'event.event'), 
         'user_id': lambda self, cr, uid, ctx: uid, 
     }
 
@@ -183,6 +190,98 @@ event()
 class event_registration(osv.osv):
     
     """Event Registration"""
+
+    def _make_invoice(self, cr, uid, reg, lines, context=None):
+        
+        if context is None:
+            context = {}
+        inv_obj = self.pool.get('account.invoice')
+
+        obj_lines = self.pool.get('account.invoice.line')
+        
+        val_invoice = inv_obj.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
+            
+        val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
+        partner_address_id = val_invoice['value']['address_invoice_id']
+        value = obj_lines.product_id_change(cr, uid, [], reg.event_id.product_id.id, uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
+        
+        l = obj_lines.read(cr, uid, lines)
+        
+        val_invoice['value'].update({
+                'origin': reg.event_product, 
+                'reference': False, 
+                'invoice_line': [(6, 0, lines)], 
+                'comment': "", 
+            })
+        inv_id = inv_obj.create(cr, uid, val_invoice['value'])
+        
+        self._history(cr, uid, [reg], _('Invoiced'))
+#
+        inv_obj.button_compute(cr, uid, [inv_id])
+        return inv_id
+
+    def action_invoice_create(self, cr, uid, ids, grouped=False, date_inv = False):
+
+        res = False
+        invoices = {}
+        tax_ids=[]
+        
+        obj_reg = self.pool.get('event.registration')
+        obj_lines = self.pool.get('account.invoice.line')
+        inv_obj = self.pool.get('account.invoice')
+
+        context = {}
+        # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
+        # last day of the last month as invoice date
+        if date_inv:
+            context['date_inv'] = date_inv
+       
+        obj_event_reg = self.pool.get('event.registration')
+        obj_lines = self.pool.get('account.invoice.line')
+        inv_obj = self.pool.get('account.invoice')
+        data_event_reg = obj_event_reg.browse(cr, uid, ids, context=context)
+
+        for reg in data_event_reg:
+            
+            val_invoice = inv_obj.onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
+            
+            val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
+            partner_address_id = val_invoice['value']['address_invoice_id']
+                
+            if not partner_address_id:
+               raise osv.except_osv(_('Error !'),
+                        _("Registered partner doesn't have an address to make the invoice."))
+                                
+            value = obj_lines.product_id_change(cr, uid, [], reg.event_id.product_id.id, uom =False, partner_id=reg.partner_invoice_id.id, fposition_id=reg.partner_invoice_id.property_account_position.id)
+            data_product = self.pool.get('product.product').browse(cr, uid, [reg.event_id.product_id.id])
+            for tax in data_product[0].taxes_id:
+                tax_ids.append(tax.id)
+
+            vals = value['value']
+            c_name = reg.contact_id and ('-' + self.pool.get('res.partner.contact').name_get(cr, uid, [reg.contact_id.id])[0][1]) or ''
+            vals.update({
+                'name': reg.event_product + '-' + c_name, 
+                'price_unit': reg.unit_price, 
+                'quantity': reg.nb_register, 
+                'product_id':reg.event_id.product_id.id, 
+                'invoice_line_tax_id': [(6, 0, tax_ids)], 
+            })
+            inv_line_ids = obj_event_reg._create_invoice_lines(cr, uid, [reg.id], vals)
+            invoices.setdefault(reg.partner_id.id, []).append((reg, inv_line_ids))
+           
+        for val in invoices.values():
+            if grouped:
+                res = self._make_invoice(cr, uid, val[0][0], [v for k , v in val], context=context)
+                
+                for k , v in val:
+                    self.write(cr, uid, [k.id], {'state': 'done', 'invoice_id': res})
+                    
+            else:
+               for k , v in val:
+                   res = self._make_invoice(cr, uid, k, [v], context=context)
+                   self.write(cr, uid, [k.id], {'state': 'done', 'invoice_id': res})
+                #res = self._make_invoice(cr, uid, val[0][0], m, context=context)       
+        return res
 
     def check_confirm(self, cr, uid, ids, context):
         
@@ -194,61 +293,56 @@ class event_registration(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary value which open Confirm registration form.
         """
-        
+        registration_obj = self.browse(cr, uid, ids)
+        self._history(cr, uid, registration_obj, _('Open'))
         mod_obj = self.pool.get('ir.model.data')
-        current_registration = self.browse(cr, uid, [ids[0]])[0]
-        total_confirmed = current_registration.event_id.register_current + current_registration.nb_register
-        if total_confirmed <= current_registration.event_id.register_max or current_registration.event_id.register_max == 0:
-            self.write(cr, uid, [ids[0]], {'state': 'open'}, context=context)
-            self._history(cr, uid, [ids[0]], 'Open', history=True)
-            self.mail_user(cr, uid, [ids[0]])
-            return True
-        else:
-            model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_event_confirm_registration')], context=context)
-            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-            context.update({'reg_id': ids[0]})
-            return {
-                'name': _('Confirm Registration'), 
-                'context': context, 
-                'view_type': 'form', 
-                'view_mode': 'tree,form', 
-                'res_model': 'event.confirm.registration', 
-                'views': [(resource_id, 'form')], 
-                'type': 'ir.actions.act_window', 
-                'target': 'new', 
-                'nodestroy': True
-            }
+        
+        for current_registration in registration_obj: 
+            
+            total_confirmed = current_registration.event_id.register_current + current_registration.nb_register
+            if total_confirmed <= current_registration.event_id.register_max or current_registration.event_id.register_max == 0:
+                self.write(cr, uid, ids, {'state': 'open'}, context=context)
+                self.mail_user(cr, uid, ids)
+            
+                return True
+            else:
+                model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_event_confirm_registration')], context=context)
+                resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+                for id in ids:
+                    context.update({'reg_id': id})
+                
+                return {
+                    'name': _('Confirm Registration'), 
+                    'context': context, 
+                    'view_type': 'form', 
+                    'view_mode': 'tree,form', 
+                    'res_model': 'event.confirm.registration', 
+                    'views': [(resource_id, 'form')], 
+                    'type': 'ir.actions.act_window', 
+                    'target': 'new', 
+                    'nodestroy': True
+                }
 
-    def _history(self, cr, uid, ids, keyword, history=False, email=False, context={}):
-        
-        """
-        Create value in mailgateway.message model.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Event registration's IDs
-        @param context: A standard dictionary for contextual values
-        @return: True
-        """
-        
-        for case in self.browse(cr, uid, ids):
-            data = {
-                'name': keyword, 
-                'som': case.som.id, 
-                'canal_id': case.canal_id.id, 
-                'user_id': uid, 
-            }
-            obj = self.pool.get('mailgate.message')
-            obj.create(cr, uid, data, context=context)
-        return True
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
+        mailgate_pool = self.pool.get('mailgate.thread')
+        return mailgate_pool._history(cr, uid, cases, keyword, history=history,\
+                                       subject=subject, email=email, \
+                                       details=details, email_from=email_from,\
+                                       message_id=message_id, attach=attach, \
+                                       context=context)
 
     def button_reg_close(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'done', })
-        self._history(cr, uid, ids, 'Done', history=True)
+        
+        cases = self.browse(cr, uid, ids) 
+        self._history(cr, uid, cases, _('Done'))
+        self.write(cr, uid, ids, {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
-
+    
     def button_reg_cancel(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'cancel', })
-        self._history(cr, uid, ids, 'Cancel', history=True)
+        
+        cases = self.browse(cr, uid, ids)
+        self._history(cr, uid, cases, _('Cancel'))
+        self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
     def create(self, cr, uid, *args, **argv):
@@ -265,9 +359,8 @@ class event_registration(osv.osv):
         args[0]['date_deadline']= event.date_begin
         args[0]['description']= event.mail_confirm
         res = super(event_registration, self).create(cr, uid, *args, **argv)
-        
-        self._history(cr, uid, [res], 'Created', history=True)
-        
+        cases = self.browse(cr, uid, [res])
+        self._history(cr, uid, cases, _('Created'))
         return res
 
     def write(self, cr, uid, *args, **argv):
@@ -278,6 +371,75 @@ class event_registration(osv.osv):
             args[1]['date_deadline']= event.date_begin
             args[1]['description']= event.mail_confirm
         return super(event_registration, self).write(cr, uid, *args, **argv)
+    
+
+    def remind_partner(self, cr, uid, ids, context={}, attach=False):
+
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Remind Partner's IDs
+        @param context: A standard dictionary for contextual values
+
+        """
+        return self.remind_user(cr, uid, ids, context, attach,
+                destination=False)
+        
+            
+    def remind_user(self, cr, uid, ids, context={}, attach=False,destination=True):
+
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Remind user's IDs
+        @param context: A standard dictionary for contextual values
+        """
+        
+        for case in self.browse(cr, uid, ids):
+            
+            if not case.event_id.reply_to:
+                raise osv.except_osv(_('Error!'), ("Reply To is not specified for selected Event"))
+            if not case.email_from:
+                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Registration"))
+            if case.event_id.reply_to and case.email_from:
+                src = case.email_from
+                dest = case.event_id.reply_to
+                body = ""
+                body = case.description
+                if not destination:
+                    src, dest = dest, src
+                    if body and case.user_id.signature:
+                        body += '\n\n%s' % (case.user_id.signature)
+
+                body = self.format_body(body)
+                dest = [dest]
+
+                attach_to_send = None
+
+                if attach:
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'mailgate.thread'), ('res_id', '=', case.id)])
+                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
+                    attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
+
+                # Send an email
+                flag = tools.email_send(
+                    src,
+                    dest,
+                    "Reminder: [%s] %s" % (str(case.id), case.name,),
+                    body,
+                    reply_to = case.event_id.reply_to,
+                    openobject_id=str(case.id),
+                    attach=attach_to_send
+                )
+                self._history(cr, uid, [case], _('Send'), history=True, email=dest, details=body, email_from=src)
+                
+                #if flag:
+                #    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
+                #else:
+                #    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
+        return True     
 
     def mail_user_confirm(self, cr, uid, ids):
         """
@@ -287,7 +449,6 @@ class event_registration(osv.osv):
         @param ids: List of Event Registration's Id.
         @return : False
         """
-       
         reg_ids = self.browse(cr, uid, ids)
         for reg_id in reg_ids:
             src = reg_id.event_id.reply_to or False
@@ -297,9 +458,10 @@ class event_registration(osv.osv):
             if reg_id.email_cc:
                 dest += [reg_id.email_cc]
             if dest and src:
-                tools.email_send(src, dest, 'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, openobject_id = str(reg_id.id))
+                    tools.email_send(src, dest, 'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, openobject_id = str(reg_id.id))
             if not src:
                 raise osv.except_osv(_('Error!'), _('You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering'))
+
         return False
 
     def mail_user(self, cr, uid, ids):
@@ -347,7 +509,7 @@ class event_registration(osv.osv):
     _inherit = 'crm.meeting'
 
     _columns = {
-        'email_cc': fields.text('Watchers Emails', size=252 , help="These \
+        'email_cc': fields.text('CC', size=252 , help="These \
 people will receive a copy of the future communication between partner \
 and users by email"), 
         'nb_register': fields.integer('Number of Registration', readonly=True, states={'draft': [('readonly', False)]}), 
@@ -358,7 +520,7 @@ and users by email"),
         "badge_title": fields.char('Badge Title', size=128), 
         "badge_name": fields.char('Badge Name', size=128), 
         "badge_partner": fields.char('Badge Partner', size=128), 
-        "invoice_label": fields.char("Label Invoice", size=128, required=True), 
+        "event_product": fields.char("Product Name", size=128, required=True), 
         "tobe_invoiced": fields.boolean("To be Invoiced"), 
         "invoice_id": fields.many2one("account.invoice", "Invoice"), 
         'date_closed': fields.datetime('Closed', readonly=True), 
@@ -390,7 +552,7 @@ and users by email"),
         data ={}
         if not contact:
             return data
-        
+
         contact_id = self.pool.get('res.partner.contact').browse(cr, uid, contact)
         data['badge_name'] = contact_id.name
         data['badge_title'] = contact_id.title
@@ -401,26 +563,24 @@ and users by email"),
                 data['email_from'] = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0]).email
         d = self.onchange_badge_name(cr, uid, ids, data['badge_name'])
         data.update(d['value'])
-
         return {'value': data}
 
     def onchange_event(self, cr, uid, ids, event_id, partner_invoice_id):
         context={}
         if not event_id:
-            return {'value': {'unit_price': False, 'invoice_label': False}}
+            return {'value': {'unit_price': False, 'event_product': False}}
         data_event =  self.pool.get('event.event').browse(cr, uid, event_id)
         
         if data_event.product_id:
             if not partner_invoice_id:
                 unit_price=self.pool.get('product.product').price_get(cr, uid, [data_event.product_id.id], context=context)[data_event.product_id.id]
-                return {'value': {'unit_price': unit_price, 'invoice_label': data_event.product_id.name}}
+                return {'value': {'unit_price': unit_price, 'event_product': data_event.product_id.name}}
             data_partner = self.pool.get('res.partner').browse(cr, uid, partner_invoice_id)
             context.update({'partner_id': data_partner})
             unit_price = self.pool.get('product.product')._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': data_partner.property_product_pricelist.id})[data_event.product_id.id]
-            return {'value': {'unit_price': unit_price, 'invoice_label': data_event.product_id.name}}
+            return {'value': {'unit_price': unit_price, 'event_product': data_event.product_id.name}}
         
-        return {'value': {'unit_price': False, 'invoice_label': False}}
-
+        return {'value': {'unit_price': False, 'event_product': False}}
 
     def onchange_partner_id(self, cr, uid, ids, part, event_id, email=False):
         
@@ -463,7 +623,6 @@ and users by email"),
             data['unit_price'] = self.pool.get('product.product')._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': data_partner.property_product_pricelist.id})[data_event.product_id.id]
             return {'value': data}
         return {'value': data}
-
 
 event_registration()
 
