@@ -315,14 +315,6 @@
             auto="False"
             menu="False"/>-->
 
-        <!--Menu for project management-->
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
-        <menuitem id="base.menu_pm_invoicing" name="Billing" parent="base.menu_main_pm" sequence="7"/>
-        <menuitem id="menu_pm_budget" name="Budgets" parent="base.menu_pm_invoicing"/>
-        <menuitem action="open_budget_post_form" id="menu_pm_budget_post_form" parent="menu_pm_budget"/>
-        <menuitem parent="menu_pm_budget"
-             id="menu_act_pm_crossovered_budget_view"
-             action="act_crossovered_budget_view" />
     </data>
 </openerp>
 
