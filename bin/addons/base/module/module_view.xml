@@ -147,10 +147,12 @@
                     <field name="latest_version"/>
                     <field name="published_version"/>
                     <field name="state"/>
-                    <button name="button_install" states="uninstalled" string="Schedule for Installation" icon="terp-gtk-jump-to-ltr" type="object"/>
-                    <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
-                    <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"/>
-                    <button name="button_upgrade" states="installed" string="Schedule Upgrade" icon="terp-gtk-go-back-rtl" type="object"/>
+                    <button name="button_install" states="uninstalled" string="Schedule for Installation" icon="terp-gtk-jump-to-ltr" type="object" help="Schedule for Installation"/>
+                    <button name="%(base.wizard_upgrade)d" states="to install,installed,to upgrade,to remove" string="Apply Scheduled Upgrades" icon="gtk-execute" type="action" help="Apply Scheduled Upgrades"/>
+                    <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object" help="Cancel Install"/>
+                    <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object" help="Uninstall"/>
+                    <button name="button_upgrade" states="installed" string="Schedule Upgrade" icon="terp-gtk-go-back-rtl" type="object" help="Schedule Upgrade"/>
+                    <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object" help="Cancel Upgrade"/>
                 </tree>
             </field>
         </record>
