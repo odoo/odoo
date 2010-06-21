@@ -1868,6 +1868,7 @@ class stock_move(osv.osv):
                                     'partner_id': partner_id,
                                     })]
         return lines
+
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
