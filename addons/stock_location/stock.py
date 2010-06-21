@@ -85,6 +85,7 @@ class product_pulled_flow(osv.osv):
         'type_proc': lambda *args: 'move',
         'picking_type':lambda *args:'out',
         'invoice_state': lambda *args: 'none',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),        
     }
 product_pulled_flow()
 
