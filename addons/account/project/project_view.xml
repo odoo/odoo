@@ -203,6 +203,14 @@
                         <field name="date" select="1"/>
                         <field name="user_id" widget="selection"/>
             		</group>
+            		<separator orientation="vertical"/>
+            		<newline/>
+            		<group string="Group By..." expand="0">
+            			<filter string="General Account" context="{'group_by':'general_account_id'}"/>
+                    	<filter string="Analytic Account" context="{'group_by':'account_id'}"/>
+                    	<filter string="Analytic Journal" context="{'group_by':'journal_id'}"/>
+                    	<filter string="Product" context="{'group_by':'product_id'}"/>
+            		</group>
             	</search>
             </field>
         </record>

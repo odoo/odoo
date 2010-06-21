@@ -936,13 +936,13 @@ class account_invoice(osv.osv):
         account_move_obj = self.pool.get('account.move')
         invoices = self.read(cr, uid, ids, ['move_id', 'payment_ids'])
         for i in invoices:
-             if i['move_id']:
+            if i['move_id']:
                 account_move_obj.button_cancel(cr, uid, [i['move_id'][0]])
                 # delete the move this invoice was pointing to
                 # Note that the corresponding move_lines and move_reconciles
                 # will be automatically deleted too
                 account_move_obj.unlink(cr, uid, [i['move_id'][0]])
-             if i['payment_ids']:
+            if i['payment_ids']:
                 account_move_line_obj = self.pool.get('account.move.line')
                 pay_ids = account_move_line_obj.browse(cr, uid , i['payment_ids'])
                 for move_line in pay_ids:

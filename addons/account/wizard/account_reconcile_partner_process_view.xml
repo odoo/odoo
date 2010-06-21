@@ -4,7 +4,7 @@
 
 
            <record id="account_partner_reconcile_view" model="ir.ui.view">
-             <field name="name">Account Partner Reconcile</field>
+             <field name="name">Partner Reconcilation Process</field>
              <field name="model">account.partner.reconcile.process</field>
              <field name="type">form</field>
              <field name="arch" type="xml">
@@ -17,14 +17,14 @@
                   <newline/>
                   <group colspan="4" col="4">
      	             <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                     <button name="next_partner" icon="gtk-execute" type="object" string="Go to next partner" />
+                     <button name="next_partner" icon="gtk-go-forward" type="object" string="Go to next partner" />
                   </group>
                </form>
              </field>
            </record>
 
         <record id="action_account_partner_reconcile" model="ir.actions.act_window">
-             <field name="name">Manual Reconciliation</field>
+             <field name="name">Reconciliation: Go to Next Partner</field>
              <field name="res_model">account.partner.reconcile.process</field>
              <field name="type">ir.actions.act_window</field>
              <field name="view_type">form</field>

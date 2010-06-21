@@ -616,17 +616,17 @@ class account_journal(osv.osv):
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
         'view_id': fields.many2one('account.journal.view', 'Display Mode', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
-        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]",help="It acts as a default account for credit amount"),
-        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]",help="It acts as a default account for debit amount"),
+        'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]", help="It acts as a default account for credit amount"),
+        'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]", help="It acts as a default account for debit amount"),
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
-        'update_posted': fields.boolean('Allow Cancelling Entries',help="Check this box if you want to cancel the entries related to this journal or want to cancel the invoice related to this journal"),
+        'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
         'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=True),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want new account moves to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation.'),
-        'company_id': fields.many2one('res.company', 'Company', required=True,select=1,help="Company associated with a journal"),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
         'invoice_sequence_id': fields.many2one('ir.sequence', 'Invoice Sequence', \
             help="The sequence used for invoice numbers in this journal."),
         'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
@@ -677,7 +677,6 @@ class account_journal(osv.osv):
             else:
                   res= {'value':{'centralisation': False}}
         return res
-
 
 account_journal()
 
@@ -772,7 +771,7 @@ class account_period(osv.osv):
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True,
                                   help='When monthly periods are created. The state is \'Draft\'. At the end of monthly period it is in \'Done\' state.'),
-        'company_id': fields.related('fiscalyear_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -878,7 +877,7 @@ class account_journal_period(osv.osv):
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
                                   help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
-        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company')
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company')
     }
 
     def _check(self, cr, uid, ids, context={}):
@@ -2122,7 +2121,7 @@ class account_tax_code_template(osv.osv):
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
-        'sign': fields.float('Sign for parent', required=True),
+        'sign': fields.float('Sign for parent', required=True, help="Choose 1.00 to add the total to the parent account or -1.00 to subtract it"),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
@@ -2154,7 +2153,7 @@ class account_chart_template(osv.osv):
 
     _columns={
         'name': fields.char('Name', size=64, required=True),
-        'account_root_id': fields.many2one('account.account.template','Root Account',required=True,domain=[('parent_id','=',False)]),
+        'account_root_id': fields.many2one('account.account.template','Root Account',required=True,domain=[('parent_id','=',False)], help=""),
         'tax_code_root_id': fields.many2one('account.tax.code.template','Root Tax Code',required=True,domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
         'bank_account_view_id': fields.many2one('account.account.template','Bank Account',required=True),

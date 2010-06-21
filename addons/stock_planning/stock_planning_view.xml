@@ -105,7 +105,7 @@
                     <separator colspan ="4" string="Forecast lines creation"/>
                     <label  colspan ="4" string="Creates forecast lines for selected warehouse and period. Doesn't duplicate existing lines created by you."/>
                     <group colspan="4">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-cancel"  special="cancel" string="Cancel"/>
                         <button icon="gtk-execute" name="create_forecast" string="Create Forecasts" type="object" />
                     </group>
                 </form>
@@ -152,7 +152,7 @@
                             <field name="product_amt" on_change="product_amt_change( product_amt, product_uom)" />
                             <field name="product_qty"  />
                             <field name="state"/>
-                            <button name="action_validate" string="Validate" states="draft" type="object" colspan = "2"/>
+                            <button name="action_validate" icon="gtk-apply" string="Validate" states="draft" type="object" colspan = "2"/>
                 </group>
                     </group>
                     <separator colspan ="4" string="Sales history"/>
@@ -209,11 +209,13 @@
             <field name="arch" type="xml">
                 <tree string="Stock and Sales Forecasts" editable="bottom">
                     <field name="warehouse_id"/>
+                    <field name ="company_id"/>
                     <field name="user_id"/>
                     <field name="period_id"/>
                     <field name="product_id" on_change="product_id_change(product_id)" />
                     <field name="product_qty"/>
                     <field name="product_uom" />
+                    
                 </tree>
             </field>
         </record>
@@ -238,14 +240,20 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Stock and Sales Forecast">
-                 <group col='10' colspan='4'>
                     <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" separator="1"/>
-                    <field name="company_id" widget="selection"/>
-                    <field name="warehouse_id" widget="selection"/>
-                    <field name="period_id" widget="selection"/>
+                    <field name="company_id"/>
+                    <field name="warehouse_id" />
+                    <field name="period_id" />
                     <field name="product_id"/>
                     <field name="create_uid"/>
-                </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="8">
+                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Warehouse " icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
+                       <separator orientation="vertical"/>
+                       <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
+                    </group>
               </search>
             </field>
         </record>
@@ -351,7 +359,7 @@
                             <field name="to_procure"/>
                             <field name="incoming"/>
                             <field name="incoming_left"/>
-                            <button name="calculate_planning" string="Calculate Planning" type="object" colspan="2"/>
+                            <button name="calculate_planning" string="Calculate Planning" type="object" icon="gtk-execute" colspan="2"/>
                             <field name="stock_only"/>
                         </group>
                         <group colspan ="2" col="2">
@@ -362,10 +370,10 @@
                             <field name="outgoing_before"/>
                             <field name="incoming_before"/>
                             <field name="stock_simulation"/>
-                            <button name="procure_incomming_left" string="Procure Incoming Left" type="object" colspan="2"/>
+                            <button name="procure_incomming_left" icon="gtk-convert" string="Procure Incoming Left" type="object" colspan="2"/>
                             <field name="procure_to_stock"/>
                             <separator colspan ="2" string = "Internal Supply"/>
-                            <button name="internal_supply" string="Supply from Another Warehouse" type="object" colspan="2"/>
+                            <button name="internal_supply" string="Supply from Another Warehouse" icon="gtk-convert"  type="object" colspan="2"/>
                             <field name="supply_warehouse_id" domain = "[('company_id','=',company_id)] "/>
                             <field name="stock_supply_location"/>
                         </group>
@@ -382,14 +390,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Stock Planning">
-                 <group col='10' colspan='4'>
-<!--  Doesn't work !       <filter icon="terp-purchase" string="Current" domain="[('line_time','=','Future')]" separator="1"/>  -->
                     <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" separator="1"/>
                     <field name="company_id" widget="selection"/>
                     <field name="warehouse_id" widget="selection"/>
                     <field name="period_id" widget="selection"/>
                     <field name="product_id"/>
-                 </group>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="8">
+                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Warehouse " icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
+                       <separator orientation="vertical"/>
+                    </group>                 
               </search>
             </field>
         </record>
