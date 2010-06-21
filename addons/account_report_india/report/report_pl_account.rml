@@ -201,7 +201,7 @@
           </para>
         </td>
          <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(abs(a.balance)) ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ a.balance and formatLang(abs(a.balance)) or 0.0 ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -214,7 +214,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit C.F.B.L.' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['type'] == 'Net Profit C.F.B.L.' and  formatLang(abs(final_result()['balance'])) or '' ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit C.F.B.L.' and  formatLang(abs(final_result()['balance'])) or 0.0 ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -224,7 +224,7 @@
           <para style="terp_default_Bold_9">Total:([[ get_currency(data['form']) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr())) ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ sum_dr() and formatLang(abs(sum_dr())) or 0.0 ]]</u></para>
         </td>
       </tr>
     </blockTable>
@@ -256,7 +256,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(abs(a.balance)) ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ a.balance and formatLang(abs(a.balance)) or 0.0 ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -269,7 +269,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Loss C.F.B.L.' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(abs(final_result()['balance'])) or '' ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss C.F.B.L.' and  formatLang(abs(final_result()['balance'])) or 0.0 ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -279,7 +279,7 @@
           <para style="terp_default_Bold_9">Total:([[ get_currency(data['form']) ]])</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_cr())) ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ sum_cr() and formatLang(abs(sum_cr())) or 0.0 ]]</u></para>
         </td>
       </tr>
     </blockTable>

@@ -4,7 +4,7 @@
 
         <menuitem id="menu_scrum"
             name="Scrum"
-            parent="base.menu_main_pm"/>
+            parent="base.menu_main_pm" sequence="3"/>
 
         <!-- Scrum Project -->
 
@@ -40,7 +40,7 @@
                     <field name="sprint_id"/>
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar"/>
-                    <field name="expected_hours" sum="Expected hours" widget="float_time"/>
+                    <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
@@ -57,10 +57,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product backlog">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="8">
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
+      					<button name="button_postpone" string="Post Pone" type="object"                  
+						help="Post Pone backlog" colspan="2"
+                         icon="gtk-convert"  attrs="{'invisible':[('state','=','done')]}"/>
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>
                         <field name="create_date"/>
@@ -71,6 +74,7 @@
                             <group colspan="6" col="8">
                                 <field name="expected_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time"/>
+                                <field name="task_hours" widget="float_time"/>
                             </group>
                             <separator string="Feature Description" colspan="4"/>
                             <field colspan="4" name="note" nolabel="1"/>
@@ -172,7 +176,7 @@
         <menuitem
             action="action_product_backlog_form"
             id="menu_action_product_backlog_form"
-            sequence="20"
+            sequence="10"
             parent="menu_scrum"/>
 
         <!--
@@ -192,8 +196,7 @@
                     <field name="date_start"/>
                     <field name="progress" widget="progressbar"/>
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
-                    <field name="planned_hours" sum="Planned hours" widget="float_time"/>
-                    <field name="expected_hours" sum="Expected hours" widget="float_time"/>
+                    <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
@@ -226,7 +229,6 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Planning" colspan="2"/>
-                                <field name="planned_hours" widget="float_time"/>
                                 <field name="expected_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time"/>
                                 <field name="progress" widget="progressbar"/>
@@ -293,7 +295,7 @@
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
         </record>
         <menuitem
-            sequence="10"
+            sequence="30"
             action="action_sprint_all_tree" id="menu_action_sprint_all_tree" parent="menu_scrum"/>
 
         <!--
@@ -329,6 +331,9 @@
                             <field colspan="4" name="question_today" nolabel="1"/>
                             <separator colspan="4" string="Are there anything blocking you?"/>
                             <field colspan="4" name="question_blocks" nolabel="1"/>
+                            <separator colspan="4" string=""/>
+							<button name="button_send_to_master" type="object" string="Send to Scrum Master" icon="gtk-ok"/>
+                            <button name="button_send_product_owner" type="object" string="Send to Product Owner" icon="gtk-ok"/>
                         </page>
                         <page string="Optional Info">
                             <separator colspan="4" string="Are your Sprint Backlog estimate accurate ?"/>
@@ -375,7 +380,7 @@
             <field name="context">{'search_default_scrum_daily':1}</field>
             <field name="search_view_id" ref="view_scrum_meeting_search"/>
         </record>
-        <menuitem sequence="30"
+        <menuitem sequence="20"
             action="action_meeting_form" id="menu_action_meeting_form" parent="menu_scrum"/>
 
         <!--

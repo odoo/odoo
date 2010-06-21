@@ -27,7 +27,7 @@ class account_budget_spread(osv.osv_memory):
     _name = 'account.budget.spread'
     _description = 'Account Budget spread '
     _columns = {
-        'fiscalyear': fields.many2one('account.fiscalyear','Fiscal Year', required=True),
+        'fiscalyear': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         }
 

@@ -3,9 +3,9 @@
 <data>
         <menuitem id="menu_stock_period_main"
                   name="Stock and Sales Periods"
-                  parent="base.menu_base_config"/>
+                  parent="base.menu_base_config" sequence="20"/>
 
-<!-- Creating periods section -->
+    <!-- Creating periods section -->
 
     <record id="view_stock_period_createlines_form" model="ir.ui.view">
             <field name="name">stock.period.createlines.form</field>
@@ -18,9 +18,9 @@
                     <field name="date_stop"/>
                     <separator colspan="4" string=""/>
                     <group col="3" colspan="4">
-                        <button name="create_period" string="Create Daily Periods" type="object"/>
-                        <button name="create_period_weekly" string="Create Weekly Periods" type="object"/>
-                        <button name="create_period_monthly" string="Create Monthly Periods" type="object"/>
+                        <button name="create_period"  icon="gtk-execute" string="Create Daily Periods" type="object"/>
+                        <button name="create_period_weekly" icon="gtk-execute"  string="Create Weekly Periods" type="object"/>
+                        <button name="create_period_monthly"  icon="gtk-execute" string="Create Monthly Periods" type="object"/>
                     </group>
                 </form>
             </field>
@@ -121,8 +121,8 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem id="menu_stock_sale_forecast" name="Stock and Sales Forecasts" parent="base.menu_base_partner"/>
-
+        <menuitem id="menu_stock_sale_forecast" name="Stock and Sales Forecasts" 
+                parent="base.menu_base_partner" sequence="6"/>
         <menuitem id="menu_stock_sale_forecast_createlines" name="Create Stock and Sales Forecasts" parent="menu_stock_sale_forecast" action="action_stock_sale_forecast_createlines_form" sequence = "5"/>
 
         <record id="view_stock_sale_forecast_form" model="ir.ui.view">
@@ -267,7 +267,7 @@
 
 <!-- Create Planning section -->
 
-        <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root"/>
+        <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root" sequence="2"/>
 
        <record id="view_stock_planning_createlines_form" model="ir.ui.view">
             <field name="name">stock.planning.createlines.form</field>

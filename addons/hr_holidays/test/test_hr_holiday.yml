@@ -1,6 +1,5 @@
 - |
-  In order to test the hr_holiday in OpenERP, I will  Manage leaves for employee,
-  Leave requests.
+  In order to test the hr_holiday in OpenERP, I will  Allocate leaves for Employee and manage leaves and leaves requests.
 - |
   For that First I create new user "user1" to make leave request.
 - 
@@ -15,7 +14,7 @@
     name: user1
     password: user1
 - |
-  Now, I create a new employee “Mark Johnshon” as Manager to validate employee leave.
+  I create a new employee “Mark Johnshon” as Manager to validate employee leave.
 -
   !record {model: hr.employee, id: hr_employee_employee0}:
     address_home_id: base.res_partner_address_1
@@ -24,11 +23,11 @@
     name: Mark Johnson
     user_id: base.user_root
 - |
-  create another employee "Brijesh Patel" as "user1" who make leave request.
+  Create another employee "Phil Graves" as "user1" who make leave request.
 - 
-  !record {model: hr.employee, id: hr_employee_brijeshpatel0}:
+  !record {model: hr.employee, id: hr_employee_philgraves0}:
     address_home_id: base.res_partner_address_8
-    name: Brijesh Patel
+    name: Phil Graves
     parent_id: 'hr_employee_employee0'
     user_id: 'res_users_user0'
 - |
@@ -40,11 +39,11 @@
     limit: 1
 
 - |
-  After that I allocate leave request for employee "Brijesh Patel".
+  After that I allocate leave request for employee "Phil Graves".
 - 
   !record {model: hr.holidays, id: hr_holidays_allocateleaveforuser0}:
     allocation_type: employee
-    employee_id: 'hr_employee_brijeshpatel0'
+    employee_id: 'hr_employee_philgraves0'
     holiday_status_id: hr_holidays_status_fullleave0
     name: Allocate leave for user1
     number_of_days_temp: 12.0
@@ -62,13 +61,13 @@
   !workflow {model: hr.holidays, action: validate,  ref: hr_holidays_allocateleaveforuser0}  
 
 - |
-  Now employee "Brijesh Patel" want to leave. so, I connect as user1 which is username of this employee and want to make leave request.     
+  Now employee "Phil Graves" want to leave. so, I connect as user1 which is username of this employee and want to make leave request.     
 - 
   !record {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
     allocation_type: employee
     date_from: '2010-05-20 11:48:00'
     date_to: '2010-05-21 11:48:00'
-    employee_id: 'hr_employee_brijeshpatel0'
+    employee_id: 'hr_employee_philgraves0'
     holiday_status_id: 'hr_holidays_status_fullleave0'
     name: I want to leave for go to hospital
     notes: I want to leave for go to hospital. so please accept my leave.
@@ -82,12 +81,12 @@
     - state == 'draft'  
        
 - |
-  Now I confirm my leave Request by click on "Confirm" button.
+  I confirm my leave Request by click on "Confirm" button.
 - 
   !workflow {model: hr.holidays, action: confirm, ref: hr_holidays_iwanttoleaveforgotohospital0}
   
 - |
-  Now I connect as Admin user and Open Leave request of "Brijesh Patel".
+  I connect as Admin user and Open Leave request of "Phil Graves".
   and "validate" it by click on "validate" button.
 - 
   !workflow {model: hr.holidays, action: validate,  ref: hr_holidays_iwanttoleaveforgotohospital0}

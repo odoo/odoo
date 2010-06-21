@@ -72,7 +72,6 @@ class account_partner_balance(osv.osv_memory):
             'model': 'res.partner',
             'form': self.read(cr, uid, ids, [])[0],
             }
-
         if data['form']['state'] == 'bydate'  :
            return self._check_date(cr, uid, data, context)
         if data['form']['state'] == 'byperiod':
@@ -89,7 +88,7 @@ class account_partner_balance(osv.osv_memory):
     def _check_date(self, cr, uid, data, context):
         sql = """
             SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql,(data['form']['date1'],))
+        cr.execute(sql, (data['form']['date1'],))
         res = cr.dictfetchall()
         if res:
             if (data['form']['date2'] > res[0]['date_stop'] or data['form']['date2'] < res[0]['date_start']):

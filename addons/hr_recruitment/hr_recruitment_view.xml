@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-       <menuitem
-        id="menu_hr_config_applicant"
-        name="Applicant"
-        parent="hr.menu_hr_configuration"
-        />
+	    <menuitem
+	        id="menu_hr_recruitment_recruitment"
+	        name="Recruitment"
+	        parent="hr.menu_hr_configuration"
+	        sequence="2"/>
+	    <menuitem
+	        id="menu_hr_config_applicant"
+	        name="Applicant"
+	        parent="menu_hr_recruitment_recruitment"
+	        sequence="2"/>
 
     # ------------------------------------------------------
     # Job Categories
@@ -75,26 +79,22 @@
         <field name="arch" type="xml">
             <form string="Jobs - Recruitment Form">
                 <group colspan="4" col="8">
-                     <group colspan="3" col="6">
                         <field name="name" string="Subject"/>
+                        <field name="partner_name"/>
+                        <field name="job_id" on_change="onchange_job(job_id)"/>
+                        <button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
+                        <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
+                    <newline/>
+                    <group colspan="2" col="4">
                         <field name="stage_id"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
-                    <newline/>
-                    <group colspan="3" col="6">
-                          <field name="partner_name"/>
-                           <field name="job_id" on_change="onchange_job(job_id)"/>
-                           <button string="Schedule a Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="gtk-redo" type="action"/>
-                     </group>
-                    <newline/>
-                    <group colspan="3" col="6">
                         <field name="user_id"/>
                         <field name="department_id" widget="selection"/>
                         <button name="action_makeMeeting" type="object" string="Schedule Meeting" icon="terp-hr"/>
-                    </group>
-                    <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                        <button name="action_print_survey" string="Print Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
+                        <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
@@ -116,6 +116,7 @@
                             <separator colspan="2" string="Qualification"/>
                             <field name="type_id" domain="[('object_id.model', '=', 'hr.applicant')]"/>
                             <field name="priority" string="Appreciation"/>
+                            <field name="reference"/>
                         </group>
                         <group col="2" colspan="2">
                            <separator colspan="2" string="Dates"/>
@@ -236,7 +237,7 @@
                <field name="partner_name"/>
                <field name="email_from"/>
                <field name="job_id" widget="selection"/>
-               <field name="user_id">
+               <field name="user_id" widget="selection">
                     <filter domain="[('user_id','=',False)]" help="Unassigned Recruitements" icon="terp-personal-" separator="1"/>
                </field>
                <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
@@ -318,12 +319,6 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="hr_recruitment_stage_tree"/>
     </record>
-
-    <menuitem
-        id="menu_hr_recruitment_recruitment"
-        name="Recruitment"
-        parent="hr.menu_hr_configuration"
-        />
 
     <menuitem
         id="menu_hr_recruitment_stage"

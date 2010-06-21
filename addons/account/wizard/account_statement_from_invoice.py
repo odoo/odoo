@@ -41,7 +41,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
         currency_obj = self.pool.get('res.currency')
         statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
 
-        data =  self.read(cr, uid, ids,context=context)[0]
+        data =  self.read(cr, uid, ids, context=context)[0]
         line_ids = data['line_ids']
         line_date = time.strftime('%Y-%m-%d')
 
@@ -98,8 +98,8 @@ class account_statement_from_invoice(osv.osv_memory):
     _description = "Entries by Statement from Invoices"
     _columns = {
         'date': fields.date('Date payment',required=True),
-        'journal_ids': fields.many2many('account.journal','account_journal_relation','account_id','journal_id','Journal'),
-        'line_ids': fields.many2many('account.move.line','account_move_line_relation','move_id','line_id','Invoices'),
+        'journal_ids': fields.many2many('account.journal', 'account_journal_relation', 'account_id', 'journal_id', 'Journal'),
+        'line_ids': fields.many2many('account.move.line', 'account_move_line_relation', 'move_id', 'line_id', 'Invoices'),
         }
     _defaults = {
         'date':lambda *a: time.strftime('%Y-%m-%d'),
@@ -113,7 +113,7 @@ class account_statement_from_invoice(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         statement_id = 'statement_id' in context and context['statement_id']
 
-        data =  self.read(cr, uid, ids,context=context)[0]
+        data =  self.read(cr, uid, ids, context=context)[0]
         statement = statement_obj.browse(cr, uid, statement_id, context=context)
         args_move_line = []
         repeated_move_line_ids = []
@@ -126,7 +126,7 @@ class account_statement_from_invoice(osv.osv_memory):
                 args_move_line.append(('partner_id','=',st_line.partner_id.id))
             args_move_line.append(('account_id','=',st_line.account_id.id))
 
-            move_line_id = line_obj.search(cr, uid, args_move_line,context=context)
+            move_line_id = line_obj.search(cr, uid, args_move_line, context=context)
             if move_line_id:
                 repeated_move_line_ids += move_line_id
 

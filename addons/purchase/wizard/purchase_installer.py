@@ -29,3 +29,4 @@ class purchase_installer(osv.osv_memory):
         }
 purchase_installer()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

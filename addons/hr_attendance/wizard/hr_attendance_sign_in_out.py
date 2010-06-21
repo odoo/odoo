@@ -36,7 +36,7 @@ class hr_si_so_ask(osv.osv_memory):
         emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0].name
-            return employee['name']
+            return employee
         return ''
 
     def _get_empid(self, cr, uid, context=None):
@@ -119,7 +119,7 @@ class hr_sign_in_out(osv.osv_memory):
         if last_att:
             last_att = last_att[0]
         if not att_id and not last_att:
-            model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_attendance_message')], context=context)
+            model_data_ids = obj_model.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_hr_attendance_message')], context=context)
             resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
             return {
                 'name': _('Sign in / Sign out'),
@@ -135,7 +135,7 @@ class hr_sign_in_out(osv.osv_memory):
         if cond:
             return self.sign_out(cr, uid, data, context)
         else:
-            model_data_ids = self.pool.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_attendance_si_ask')], context=context)
+            model_data_ids = self.pool.get('ir.model.data').search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_hr_attendance_si_ask')], context=context)
             resource_id = self.pool.get('ir.model.data').read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
             return {
                 'name': _('Sign in / Sign out'),

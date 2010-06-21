@@ -38,7 +38,7 @@ class hr_expense_expense(osv.osv):
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context)
 
     def _amount(self, cr, uid, ids, field_name, arg, context):
-        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id =ANY(%s) GROUP BY s.id ",(ids,))
+        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN %s GROUP BY s.id ",(tuple(ids),))
         res = dict(cr.fetchall())
         return res
 
@@ -187,7 +187,7 @@ class hr_expense_line(osv.osv):
     def _amount(self, cr, uid, ids, field_name, arg, context):
         if not len(ids):
             return {}
-        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id =ANY(%s) GROUP BY l.id ",(ids,))
+        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id IN %s GROUP BY l.id ",(tuple(ids),))
         res = dict(cr.fetchall())
         return res
 
@@ -216,13 +216,13 @@ class hr_expense_line(osv.osv):
             context = {}
         v = {}
         if product_id:
-            product=self.pool.get('product.product').browse(cr,uid,product_id, context=context)
+            product=self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v['name']=product.name
 
             # Compute based on pricetype of employee company
-            pricetype_id = self.pool.get('hr.employee').browse(cr,uid,employee_id).user_id.company_id.property_valuation_price_type.id
-            context['currency_id']=self.pool.get('hr.employee').browse(cr,uid,employee_id).user_id.company_id.currency_id.id
-            pricetype=self.pool.get('product.price.type').browse(cr,uid,pricetype_id)
+            pricetype_id = self.pool.get('hr.employee').browse(cr, uid, employee_id).user_id.company_id.property_valuation_price_type.id
+            context['currency_id']=self.pool.get('hr.employee').browse(cr, uid, employee_id).user_id.company_id.currency_id.id
+            pricetype=self.pool.get('product.price.type').browse(cr, uid, pricetype_id)
             amount_unit=product.price_get(pricetype.field, context)[product.id]
 
             v['unit_amount']=amount_unit

@@ -67,7 +67,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code" parent="base.menu_product"/>
+        <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code" 
+                parent="base.menu_config_address_book" sequence="2"/>
 
 
         <record id="view_report_intrastat_tree" model="ir.ui.view">
@@ -119,6 +120,7 @@
             <field name="search_view_id" ref="view_report_intrastat_search"/>
         </record>
 
-        <menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" parent="stock.next_id_61"/>
+        <menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" 
+                parent="stock.next_id_61" sequence="6"/>
     </data>
 </openerp>

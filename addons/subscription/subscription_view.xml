@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="15"/>
-        <menuitem id="next_id_45" name="Recurring Events" parent="base.menu_tools" sequence="2"/>
+        <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
+        <menuitem id="next_id_45" name="Recurring Events" parent="base.menu_tools" sequence="4"/>
 
         <!--
         =======================================================
@@ -152,6 +152,9 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="document_tree"/>
         </record>
-        <menuitem action="action_document_form" id="menu_action_document_form" parent="subscription.next_id_45"/>
+        <menuitem name="Configuration" parent="base.menu_tools"
+              id="base.menu_lunch_survey_root" sequence="20" />
+        <menuitem id="config_recuuring_event" name="Recurring Events" parent="base.menu_lunch_survey_root" sequence="4"/>
+        <menuitem action="action_document_form" id="menu_action_document_form" parent="config_recuuring_event"/>
     </data>
 </openerp>

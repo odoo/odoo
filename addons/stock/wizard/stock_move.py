@@ -183,6 +183,8 @@ class split_in_production_lot(osv.osv_memory):
             res.update({'product_uom': move.product_uom.id})
         if 'qty' in fields:
             res.update({'qty': move.product_qty})
+        if 'use_exist' in fields:
+            res.update({'use_exist': (move.picking_id and move.picking_id.type=='out' and True) or False})
         return res
 
     _columns = {

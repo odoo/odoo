@@ -43,11 +43,11 @@ class auction_lots_cancel(osv.osv):
 
             lots_obj = self.pool.get('auction.lots')
             invoice_obj = self.pool.get('account.invoice')
-            lot = lots_obj.browse(cr,uid,context['active_id'],context)
+            lot = lots_obj.browse(cr, uid, context['active_id'], context)
             if lot.ach_inv_id:
-                    supplier_refund_inv_id = invoice_obj.refund(cr, uid,[lot.ach_inv_id.id])
+                    supplier_refund_inv_id = invoice_obj.refund(cr, uid, [lot.ach_inv_id.id])
             if lot.sel_inv_id:
-                    customer_refund_inv_id = invoice_obj.refund(cr, uid,[lot.sel_inv_id.id])
+                    customer_refund_inv_id = invoice_obj.refund(cr, uid, [lot.sel_inv_id.id])
             return {}
                 
         _columns = {

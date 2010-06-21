@@ -73,7 +73,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
         tables_id = map(lambda x: str(tables[x]),tables)
         cols={}
         if tables_id:
-            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) +')')
+            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id IN (' + ','.join(tables_id) +')')
         else:
             cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -120,7 +120,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 INFORMATION_schema.key_column_usage
             where
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from INFORMATION_SCHEMA .table_constraints
                             where
                                 constraint_type = 'PRIMARY KEY')""")
@@ -138,7 +138,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 INFORMATION_schema.constraint_column_usage
             where
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from INFORMATION_SCHEMA.table_constraints
                             where
                                 constraint_type = 'FOREIGN KEY')""")
@@ -149,7 +149,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
                  from
                      INFORMATION_schema.key_column_usage
                  where
-                     constraint_name in (
+                     constraint_name IN (
                                  select constraint_name from INFORMATION_SCHEMA.table_constraints
                                  where
                                      constraint_type = 'FOREIGN KEY')""")
@@ -181,7 +181,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
         tables_id = map(lambda x: str(tables[x]),tables)
         cols={}
         if tables_id:
-            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) +')')
+            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id IN (' + ','.join(tables_id) +')')
         else:
             cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -228,10 +228,10 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 INFORMATION_schema.key_column_usage
             where table_schema= %s and
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from INFORMATION_SCHEMA .table_constraints
                             where
-                                constraint_type in('PRIMARY KEY','FOREIGN KEY'))
+                                constraint_type IN ('PRIMARY KEY','FOREIGN KEY'))
                             """,(db_name))
 
         for constraint in cr_db.fetchall():
@@ -267,7 +267,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
         tables_id = map(lambda x: str(tables[x]),tables)
         cols={}
         if tables_id:
-            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) +')')
+            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id IN (' + ','.join(tables_id) +')')
         else:
             cr.execute('select column_db_name,id,table_id from olap_database_columns')
 
@@ -323,7 +323,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 all_cons_columns
             where
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from all_constraints
                             where
                                 constraint_type = 'P' and owner= %s)
@@ -353,7 +353,7 @@ def olap_db_connect(self,cr,uid,part,context={}):
             from
                 all_cons_columns
             where
-                constraint_name in (
+                constraint_name IN (
                             select constraint_name from all_constraints
                             where
                                 constraint_type = 'R' and owner = %s)

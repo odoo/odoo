@@ -40,9 +40,10 @@ class stock_split_into(osv.osv_memory):
 
         quantity = self.browse(cr, uid, data[0], context).quantity or 0.0
         for move in move_obj.browse(cr, uid, rec_id):
-            if quantity == 0:
-                tracking_id = track_obj.create(cr, uid, {})
-                move_obj.write(cr, uid, [move.id], {'tracking_id': tracking_id})
+            move_qty = move.product_qty
+            uos_qty_rest = move.product_uos_qty
+            quantity_rest = move_qty - quantity
+            if (quantity_rest == 0) or (quantity <= 0) :
                 continue
             move_obj.setlast_tracking(cr, uid, [move.id], context=context)
             move_obj.write(cr, uid, [move.id], {
@@ -60,6 +61,11 @@ class stock_split_into(osv.osv_memory):
                 'product_uos': move.product_uom.id
             }
             current_move = move_obj.copy(cr, uid, move.id, default_val)
+            new_move.append(current_move)
+            update_val['product_qty'] = quantity
+            update_val['tracking_id'] = tracking_id
+            update_val['product_uos_qty'] = uos_qty_rest
+            move_obj.write(cr, uid, [move.id], update_val)
         return {}
 stock_split_into()
 

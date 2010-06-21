@@ -48,8 +48,10 @@ to set up a management by affair.
         'wizard/hr_timesheet_print_employee_view.xml',
         'wizard/hr_timesheet_print_users_view.xml',
         'wizard/hr_timesheet_sign_in_out_view.xml',
+       
     ],
     'demo_xml': ['hr_timesheet_demo.xml'],
+    'test': ['test/test_hr_timesheet.yml'],
     'installable': True,
     'active': False,
     'certificate': '0071405533469',

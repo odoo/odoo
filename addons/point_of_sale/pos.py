@@ -96,7 +96,7 @@ class pos_order(osv.osv):
                 ) AS amount
         FROM pos_order p
             LEFT OUTER JOIN pos_order_line l ON (p.id=l.order_id)
-        WHERE p.id =ANY(%s) GROUP BY p.id """,(ids,))
+        WHERE p.id IN %s GROUP BY p.id """,(tuple(ids),))
         res = dict(cr.fetchall())
         for rec in self.browse(cr, uid, ids, context):
             if rec.partner_id \
@@ -172,7 +172,8 @@ class pos_order(osv.osv):
         return res
 
     def _amount_all(self, cr, uid, ids, name, args, context=None):
-        tax_obj = self.pool.get('account.tax')        
+        tax_obj = self.pool.get('account.tax')    
+        cur_obj = self.pool.get('res.currency')     
         res={}
         for order in self.browse(cr, uid, ids):
             res[order.id] = {
@@ -180,6 +181,9 @@ class pos_order(osv.osv):
                 'amount_return':0.0,
                 'amount_tax':0.0,
             }            
+            val=0.0      
+            cur_obj = self.pool.get('res.currency')            
+            cur = order.pricelist_id.currency_id               
             for payment in order.statement_ids:
                  res[order.id]['amount_paid'] +=  payment.amount 
             for payment in order.payments:
@@ -191,12 +195,10 @@ class pos_order(osv.osv):
                             line.price_unit * \
                             (1-(line.discount or 0.0)/100.0), line.qty),
                             res[order.id]['amount_tax'])
-                else:
-                    res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
-                        tax_obj.compute_all(cr, uid, line.product_id.taxes_id,
-                            line.price_unit * \
-                            (1-(line.discount or 0.0)/100.0), line.qty)['taxes'],
-                            res[order.id]['amount_tax'])
+                elif line.qty != 0.0:
+                    for c in tax_obj.compute_all(cr, uid, line.product_id.taxes_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.qty,  line.product_id, line.order_id.partner_id)['taxes']:
+                        val += c['amount']                    
+                    res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
         return res
         
 
@@ -287,10 +289,10 @@ class pos_order(osv.osv):
         'user_id': fields.many2one('res.users', 'Connected Salesman', readonly=True),
         'user_salesman_id': fields.many2one('res.users', 'Salesman', required=True),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
-        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_tax': fields.function(_amount_all, method=True, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
-        'amount_paid': fields.function(_amount_all, 'Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True,digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
-        'amount_return': fields.function(_amount_all, 'Returned', method=True,digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_paid': fields.function(_amount_all, 'Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_return': fields.function(_amount_all, 'Returned', method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True),
         'price_type': fields.selection([
             ('tax_excluded','Tax excluded')
@@ -573,7 +575,7 @@ class pos_order(osv.osv):
                 val=cr.fetchone()
                 val=val and val[0] or None
                 if val:
-                    cr.execute("Update pos_order set date_validation='%s' where id = %d"%(val, order.id))
+                    cr.execute("Update pos_order set date_validation='%s', state_2 ='%s' where id = %d"%(val, 'accepted', order.id))
         return True
 
 
@@ -1053,11 +1055,13 @@ class pos_order_line(osv.osv):
         return res
 
     def _amount_line_ttc(self, cr, uid, ids, field_name, arg, context):
-        res = {}
+        res = dict.fromkeys(ids, 0.0)
         account_tax_obj = self.pool.get('account.tax')
         for line in self.browse(cr, uid, ids):
             tax_amount = 0.0
             taxes = [t for t in line.product_id.taxes_id]
+	    if line.qty == 0.0:
+		continue
             computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
             for tax in computed_taxes:
                 tax_amount += tax['amount']
