@@ -8,9 +8,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Create Entries From Models">
-				<group height="240" width="510">
+				<group height="250" width="470">
 					<separator string="This wizard will create entries from Models" colspan="4"/>
-					<field name="model"/>
+					<separator string="Account Models" colspan="4"/>
+					<field name="model" nolabel="1"/>
 					<separator colspan="4"/>
 					<group colspan="4" col="2">
 						<button icon="gtk-cancel" special="cancel" string="Cancel"/>

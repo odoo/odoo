@@ -44,7 +44,9 @@ class stock_partial_move(osv.osv_memory):
         moveids = []
         for m in move_obj.browse(cr, uid, context.get('active_ids', [])):            
             if m.state in ('done', 'cancel'):
-                continue
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delivery products  which are already delivered !'))
+
+            
             if 'move%s_product_id'%(m.id) not in self._columns:
                 self._columns['move%s_product_id'%(m.id)] = fields.many2one('product.product',string="Product")
             if 'move%s_product_qty'%(m.id) not in self._columns:
@@ -66,7 +68,8 @@ class stock_partial_move(osv.osv_memory):
         move_ids = move_obj.search(cr, uid, [('id','in',move_ids)])
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
-                    	<field name="date" colspan="4" />
+                    	<field name="date"  />
+                    	<separator colspan="4"/>
                      <group colspan="4" attrs="{'invisible':[('type','=','in')]}">
                     	<field name="partner_id"  attrs="{'required':[('type','!=','in')]}" />
                     	<field name="address_id"  attrs="{'required':[('type','!=','in')]}"/>

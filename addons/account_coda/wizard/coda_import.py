@@ -124,7 +124,7 @@ def _coda_parsing(self, cr, uid, data, context):
             bank_statement['date'] = str2date(line[5:11])
             bank_statement['journal_id']=data['form']['journal_id']
             period_id = pool.get('account.period').search(cr, uid, [('date_start','<=',time.strftime('%Y-%m-%d',time.strptime(bank_statement['date'],"%y/%m/%d"))),('date_stop','>=',time.strftime('%Y-%m-%d',time.strptime(bank_statement['date'],"%y/%m/%d")))])
-            bank_statement['period_id'] = period_id[0]
+            bank_statement['period_id'] = period_id and period_id[0] or False
             bank_statement['state']='draft'
         elif line[0] == '1':
             # old balance data

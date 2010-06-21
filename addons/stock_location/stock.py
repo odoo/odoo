@@ -80,18 +80,19 @@ class product_pulled_flow(osv.osv):
             required=True,),
     }
     _defaults = {
-        'cancel_cascade': lambda *arg: False,
-        'procure_method': lambda *args: 'make_to_stock',
-        'type_proc': lambda *args: 'move',
-        'picking_type':lambda *args:'out',
-        'invoice_state': lambda *args: 'none',
+        'cancel_cascade': False,
+        'procure_method': 'make_to_stock',
+        'type_proc': 'move',
+        'picking_type': 'out',
+        'invoice_state': 'none',
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.pulled.flow', context=c),
     }
 product_pulled_flow()
 
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'flow_pull_ids': fields.one2many('product.pulled.flow', 'product_id', 'Pulled Flows'),        
+        'flow_pull_ids': fields.one2many('product.pulled.flow', 'product_id', 'Pulled Flows'),
         'path_ids': fields.one2many('stock.location.path', 'product_id',
             'Pushed Flow',
             help="These rules set the right path of the product in the "\
