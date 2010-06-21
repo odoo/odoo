@@ -221,7 +221,7 @@ def _coda_parsing(self, cr, uid, data, context):
             bk_st_id = pool.get('account.bank.statement').create(cr,uid,{
                 'journal_id': statement['journal_id'],
                 'date':time.strftime('%Y-%m-%d',time.strptime(statement['date'],"%y/%m/%d")),
-#                'period_id':statement['period_id'],
+                'period_id':statement['period_id'],
                 'balance_start': statement["balance_start"],
                 'balance_end_real': statement["balance_end_real"],
                 'state': 'draft',

@@ -20,36 +20,25 @@
 #
 ##############################################################################
 {
-    'name': 'Human Resource Payroll',
+    'name': 'Human Resource Payroll Accounting',
     'version': '1.0',
     'category': 'Generic Modules/Human Resources',
-    'description': """Generic Payroll system
-    * Employee Details
-    * Employee Contracts
-    * Passport based Contract
-    * Allowances / Deductions
-    * Allow to configure Basic / Grows / Net Salary
-    * Employee Payslip
-    * Monthly Payroll Register
-    * Integrated with Holiday Management
+    'description': """Generic Payroll system Integrated with Accountings
+    * Expanse Encoding
+    * Payment Encoding
+    * Comany Contribution Managemet
     """,
     'author':'Tiny/Axelor',
     'website':'http://www.openerp.com',
     'depends': [
-        'hr',
-        'hr_contract', 
-        'hr_holidays',
-        'hr_expense'
+        'hr_payroll',
+        'account',
     ],
     'init_xml': [
     ],
     'update_xml': [
-        'hr_payroll_view.xml',
-        'hr_payroll_workflow.xml',
-        'hr_payroll_sequence.xml',
-        'hr_paroll_report.xml',
-        'hr_payroll_data.xml',
-        'hr_payroll_wizard.xml'
+        "hr_payroll_account_view.xml",
+        "hr_payroll_account_workflow.xml"
     ],
     'demo_xml': [
     ],

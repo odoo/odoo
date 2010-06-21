@@ -19,40 +19,5 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Human Resource Payroll',
-    'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
-    'description': """Generic Payroll system
-    * Employee Details
-    * Employee Contracts
-    * Passport based Contract
-    * Allowances / Deductions
-    * Allow to configure Basic / Grows / Net Salary
-    * Employee Payslip
-    * Monthly Payroll Register
-    * Integrated with Holiday Management
-    """,
-    'author':'Tiny/Axelor',
-    'website':'http://www.openerp.com',
-    'depends': [
-        'hr',
-        'hr_contract', 
-        'hr_holidays',
-        'hr_expense'
-    ],
-    'init_xml': [
-    ],
-    'update_xml': [
-        'hr_payroll_view.xml',
-        'hr_payroll_workflow.xml',
-        'hr_payroll_sequence.xml',
-        'hr_paroll_report.xml',
-        'hr_payroll_data.xml',
-        'hr_payroll_wizard.xml'
-    ],
-    'demo_xml': [
-    ],
-    'installable': True,
-    'active': False,
-}
+
+import hr_payroll_account

@@ -131,7 +131,7 @@
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
                             <field name="pan_no" select="1"/>
-                            <field name="bank_account"/>
+                            <field name="bank_account_id"/>
                             <field name="place_of_birth"/>
                             <field name="children"/>
                         </group>
@@ -458,23 +458,8 @@
                             </group>
                         </page>
                         <page string="Accounting Details">
-                            <group col="2" colspan="3">
-                                <separator colspan="4" string="Accounting Informations"/>
-                                <field name="move_ids" colspan="2" nolabel="1" readonly="1">
-                                    <tree string="Accounting Vouchers">
-                                        <field name="sequence"/>
-                                        <field name="name"/>
-                                        <field name="move_id"/>
-                                    </tree>
-                                    <form string="Accounting Vouchers">
-                                        <field name="sequence"/>
-                                        <field name="name"/>
-                                        <field name="move_id"/>
-                                    </form>
-                                </field>
-                            </group>
-                            <group col="2" colspan="1">
-                                <separator colspan="4" string="Other Informations"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Other Informations"/>
                                 <field name="paid" readonly="1"/>
                                 <field name="company_id"/>
                                 <field name="register_id"/>
@@ -483,12 +468,6 @@
                             </group>
                             <separator colspan="4" string="Description"/>
                             <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Account Lines">
-                            <field name="move_line_ids" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Payment Lines">
-                            <field name="move_payment_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
                     <group col="9" colspan="4">
@@ -526,14 +505,22 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="type" select="1"/>
-                        <group col="2" colspan="4">
-                            <separator colspan="4" string="Dynamic Computation"/>
-                            <field name="base"/>
+                        
+                        <group col="4" colspan="4">
+                            <separator colspan="2" string="Based on"/>
+                            <field name="base" colspan="4" nolabel="1"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Dynamic Computation"/>
                             <field name="condition"/>
                             <field name="sequence"/>
                         </group>
                     </group>
+                    
                     <notebook colspan="4">
+                        <page string="Contribution">
+                            <field name="contribute_ids" colspan="4" nolabel="1" height="300"/>
+                        </page>
                         <page string="Description">
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
