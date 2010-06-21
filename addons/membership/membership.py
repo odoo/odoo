@@ -201,10 +201,10 @@ class membership_line(osv.osv):
     _name = 'membership.membership_line'
     _columns = {
             'partner': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=1),
-            'date_from': fields.date('From'),
-            'date_to': fields.date('To'),
+            'date_from': fields.date('From', readonly=True),
+            'date_to': fields.date('To', readonly=True),
             'date_cancel' : fields.date('Cancel date'),
-            'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line'),
+            'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
             'state': fields.function(_state, method=True, string='State', type='selection', selection=STATE),
             }
     _rec_name = 'partner'
