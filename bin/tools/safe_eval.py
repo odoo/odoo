@@ -53,7 +53,7 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'STORE_MAP', 'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
     'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'JUMP_ABSOLUTE',
-    'DELETE_NAME', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE',
+    'DELETE_NAME', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE','MAKE_FUNCTION',
     ] if x in opmap))
 
 
@@ -246,6 +246,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'dict': dict,
                 'list': list,
                 'tuple': tuple,
+                'map' : map,
             }
     )
 
