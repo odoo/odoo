@@ -640,7 +640,7 @@ class stock_picking(osv.osv):
         todo = []
         for picking in self.browse(cr, uid, ids, context=context):
             if not picking.move_lines:
-                raise osv.except_osv(_('Error !'),_('You can not confirm Picking without Move Lines.'))
+                raise osv.except_osv(_('Error !'),_('You can not confirm Picking without Stock Move .'))
             
             for r in picking.move_lines:
                 if r.state == 'draft':
@@ -690,6 +690,8 @@ class stock_picking(osv.osv):
         """
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
+            if not pick.move_lines:
+                raise osv.except_osv(_('Error !'),_('You can not done Picking without Move .'))            
             wf_service.trg_validate(uid, 'stock.picking', pick.id,
                 'button_confirm', cr)
             #move_ids = [x.id for x in pick.move_lines]
