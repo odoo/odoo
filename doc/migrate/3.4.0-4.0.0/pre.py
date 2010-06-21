@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -33,11 +33,11 @@ parser = optparse.OptionParser(version="Tiny ERP server migration script " + __v
 parser.add_option("-c", "--config", dest="config", help="specify path to Tiny ERP config file")
 
 group = optparse.OptionGroup(parser, "Database related options")
-group.add_option("--db_host", dest="db_host", help="specify the database host")
-group.add_option("--db_port", dest="db_port", help="specify the database port")
+group.add_option("--db_host", dest="db_host", help="specify the database host") 
+group.add_option("--db_port", dest="db_port", help="specify the database port") 
 group.add_option("-d", "--database", dest="db_name", help="specify the database name")
 group.add_option("-r", "--db_user", dest="db_user", help="specify the database user name")
-group.add_option("-w", "--db_password", dest="db_password", help="specify the database password")
+group.add_option("-w", "--db_password", dest="db_password", help="specify the database password") 
 parser.add_option_group(group)
 
 options = optparse.Values()
@@ -78,7 +78,7 @@ def change_column(cr, table, column, new_type, copy):
     ]
     if copy:
         commands.insert(
-            2,
+            2, 
             "UPDATE %s SET %s=temp_column::%s" % (table, column, new_type))
 
     for command in commands:
@@ -102,10 +102,10 @@ if not cr.rowcount:
 # --------------- #
 
 while True:
-    cr.execute("select id from ir_ui_menu where id NOT IN (select parent_id from ir_ui_menu where parent_id is not null) and id NOT IN (select res_id from ir_model_data where model='ir.ui.menu')")
+    cr.execute("select id from ir_ui_menu where id not in (select parent_id from ir_ui_menu where parent_id is not null) and id not in (select res_id from ir_model_data where model='ir.ui.menu')")
     if not cr.rowcount:
         break
-    cr.execute("delete from ir_ui_menu where id NOT IN (select parent_id from ir_ui_menu where parent_id is not null) and id NOT IN (select res_id from ir_model_data where model='ir.ui.menu')")
+    cr.execute("delete from ir_ui_menu where id not in (select parent_id from ir_ui_menu where parent_id is not null) and id not in (select res_id from ir_model_data where model='ir.ui.menu')")
 cr.commit()
 
 # ----------------------------------------------------- #

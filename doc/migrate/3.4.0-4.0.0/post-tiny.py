@@ -70,7 +70,7 @@ cr = db.cursor()
 # remove old menu #
 # --------------- #
 
-cr.execute("delete from ir_ui_menu where (id NOT IN (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
+cr.execute("delete from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
 cr.commit()
 
 # --------------- #

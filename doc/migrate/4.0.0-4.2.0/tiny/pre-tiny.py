@@ -79,7 +79,7 @@ for c in res:
     res2 = cr.fetchone()
     cr.execute('SELECT id from res_country where code = %s', (c[0],))
     ids = ','.join(map(lambda x: str(x[0]), cr.fetchall()))
-    cr.execute('UPDATE res_partner_address set country_id = %d where country_id IN ('+ids+')', (res2[0],))
+    cr.execute('UPDATE res_partner_address set country_id = %d where country_id in ('+ids+')', (res2[0],))
     cr.execute('DELETE FROM res_country WHERE code = %s and id <> %d', (c[0], res2[0],))
 cr.commit()
 
