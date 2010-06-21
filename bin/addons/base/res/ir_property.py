@@ -165,7 +165,7 @@ class ir_property(osv.osv):
 
         return False
 
-    def get(self, cr, uid, name, model, res_id=False, context=None):
+    def get(self, cr, uid, name, model, res_id=False, context={}):
         domain = self._get_domain(cr, uid, name, model, context=context)
         if domain is not None:
             domain = [('res_id', '=', res_id)] + domain
@@ -180,6 +180,7 @@ class ir_property(osv.osv):
         return ['&', ('res_id', '=', False)] + domain
 
     def _get_domain(self, cr, uid, prop_name, model, context=None):
+        context = context or {}
         cr.execute('select id from ir_model_fields where name=%s and model=%s', (prop_name, model))
         res = cr.fetchone()
         if not res:
@@ -189,8 +190,7 @@ class ir_property(osv.osv):
             cid = context['force_company']
         else:
             company = self.pool.get('res.company')
-            cid = company._company_default_get(cr, uid, model, res[0],
-                                           context=context)
+            cid = company._company_default_get(cr, uid, model, res[0], context=context)
 
         domain = ['&', ('fields_id', '=', res[0]),
                   '|', ('company_id', '=', cid), ('company_id', '=', False)]
