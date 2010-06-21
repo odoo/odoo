@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,7 +27,7 @@ class account_coda(osv.osv):
     _description = "coda for an Account"
     _columns = {
         'name': fields.binary('Coda file', readonly=True),
-        'statement_ids': fields.one2many('account.bank.statement','coda_id','Generated Bank Statement', readonly=True),
+        'statement_ids': fields.one2many('account.bank.statement','coda_id','Generated Bank Statements', readonly=True),
         'note': fields.text('Import log', readonly=True),
         'journal_id': fields.many2one('account.journal','Bank Journal', readonly=True, select=True),
         'date': fields.date('Import Date', readonly=True, select=True),

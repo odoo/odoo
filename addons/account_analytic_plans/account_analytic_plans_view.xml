@@ -168,7 +168,7 @@
             <form string="Analytic Plan">
                 <field name="name" select="1"/>
                 <field name="default_instance_id"/>
-                <field name="plan_ids" colspan="4"/>
+                <field name="plan_ids" colspan="4" nolabel="1"/>
             </form>
         </field>
     </record>
@@ -192,7 +192,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-	
+
 	<menuitem
         parent="account.menu_analytic"
         name="Multi Plans"
@@ -201,7 +201,7 @@
      <menuitem
          parent="menu_account_analytic_multi_plan_action"
          id="menu_account_analytic_plan_action"
-         action="account_analytic_plan_form_action"/>	
+         action="account_analytic_plan_form_action"/>
 
     <record model="ir.ui.view" id="account_analytic_plan_line_form">
         <field name="name">account.analytic.plan.line.form</field>
