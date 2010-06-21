@@ -50,6 +50,10 @@ class event_make_invoice(osv.osv_memory):
             if event_reg.state == 'draft':
                      raise osv.except_osv(_('Warning !'),
                         _("Invoice cannot be created if the registration is in draft state."))
+            if event_reg.state == 'done':
+                     raise osv.except_osv(_('Warning !'),
+                        _("Invoice cannot be created if the registration is in done state."))
+                              
             if (not event_reg.tobe_invoiced):
                     raise osv.except_osv(_('Warning !'),
                         _("Registration is set as Cannot be invoiced"))
@@ -71,17 +75,15 @@ class event_make_invoice(osv.osv_memory):
         newinv = []
         
         for data in self.browse(cr, uid, ids):
-            reg_obj.action_invoice_create(cr, uid, context.get(('active_ids'),[]), data.grouped, date_inv = data.invoice_date)
-        
-   #     reg_id =  reg_obj.browse(cr, uid, ids)[0]
+            res = reg_obj.action_invoice_create(cr, uid, context.get(('active_ids'),[]), data.grouped, date_inv = data.invoice_date)
 
         mod_obj =self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         
         id = mod_obj.read(cr, uid, result, ['res_id'])  
-                      
+           
         return {
-           # 'domain': "[('id','in', ["+','.join(map(str,newinv))+"])]",
+            'domain': "[('id','=',%s)]" % res, 
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',
