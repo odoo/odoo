@@ -559,7 +559,7 @@ class stock_picking(osv.osv):
         }
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         if not vals.get('auto_picking', False):
-            message = type_list.get(vals.get('type', False), _('Picking')) + " '" + (vals.get('name', 'n/a')) + _(" with origin")+" '" + vals.get('origin', 'n/a') + "' "+ _("is created.")
+            message = type_list.get(vals.get('type', ''), _('Picking') + " '" + vals.get('name', 'n/a') + _(" with origin")+" '" + (vals.get('origin', '') or 'n/a') + "' "+ _("is created."))
             self.log(cr, user, new_id, message)
         return new_id
 
