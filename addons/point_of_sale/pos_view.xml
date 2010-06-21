@@ -47,8 +47,8 @@
                             <group colspan="4" col="7">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="%(action_pos_discount)d" string="D_iscount" type="action" states="draft"/>
-                                <button name="dummy_button" string="Compute" type="object" />
+                                <button name="%(action_pos_discount)d" string="D_iscount" icon="gtk-execute" type="action" states="draft"/>
+                                <button name="dummy_button" string="Compute" icon="gtk-execute" type="object" />
                             </group>
 
                             <group colspan="4" col="9" groups="base.group_extended">
@@ -95,8 +95,8 @@
                                 <field name="sale_journal" domain="[('type','=','sale'),('company_id','=',company_id)]"/>
                                 <field name="pricelist_id" domain="[('type','=','sale')]"/>
                                 <field name="invoice_id"/>
-                                <group colspan="2" col="3">
-                                    <button name="invoice" string="Create _Invoice" states="paid"/>
+                                <group colspan="2" col="4">
+                                    <button name="invoice" icon="gtk-execute" string="Create _Invoice" states="paid"/>
                                 </group>
                             </group>
 
