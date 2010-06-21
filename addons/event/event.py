@@ -83,11 +83,7 @@ class event(osv.osv):
                     self.pool.get('event.registration').mail_user_confirm(cr, uid, reg_ids)
                     
         return self.write(cr, uid, ids, {'state': 'confirm'})
-    
-    
-    
-    
-    
+
 
     def _get_register(self, cr, uid, ids, name, args, context=None):
         
@@ -353,7 +349,6 @@ class event_registration(osv.osv):
         @param *args: Fields value
         @return : New created record Id.
         """
-
         event = self.pool.get('event.event').browse(cr, uid, args[0]['event_id'], None)
         
         args[0]['date_deadline']= event.date_begin
@@ -439,7 +434,7 @@ class event_registration(osv.osv):
                 #    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
                 #else:
                 #    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
-        return True     
+        return True  
 
     def mail_user_confirm(self, cr, uid, ids):
         """
