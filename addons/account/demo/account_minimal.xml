@@ -169,7 +169,7 @@ your own chart of account.
         <record id="refund_sales_journal" model="account.journal">
             <field name="name">x Sales Credit Note Journal</field>
             <field name="code">SCNJ</field>
-            <field name="type">sale</field>
+            <field name="type">sale_refund</field>
             <field name="refund_journal">True</field>
             <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
@@ -191,7 +191,7 @@ your own chart of account.
         <record id="refund_expenses_journal" model="account.journal">
             <field name="name">x Expenses Credit Notes Journal</field>
             <field name="code">ECNJ</field>
-            <field name="type">purchase</field>
+            <field name="type">purchase_refund</field>
             <field name="refund_journal">True</field>
             <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
