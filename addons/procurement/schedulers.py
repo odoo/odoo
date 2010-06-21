@@ -37,9 +37,7 @@ class procurement_order(osv.osv):
             context = {}
 
         if use_new_cursor:
-            print 'Cursor New', cr,
-            cr = pooler.get_db(use_new_cursor).cursor()
-            print cr
+            cr = pooler.get_db(use_new_cursor).cursor()            
         wf_service = netsvc.LocalService("workflow")
 
         procurement_obj = self.pool.get('procurement.order')
@@ -124,7 +122,6 @@ class procurement_order(osv.osv):
                 })
         if use_new_cursor:
             cr.commit()
-            print 'Cursor Close', cr
             cr.close()
         return {}
 
@@ -175,9 +172,7 @@ class procurement_order(osv.osv):
         if not context:
             context = {}
         if use_new_cursor:
-            print 'Cursor New', cr,
-            cr = pooler.get_db(use_new_cursor).cursor()
-            print cr
+            cr = pooler.get_db(use_new_cursor).cursor()           
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
         location_obj = self.pool.get('stock.location')
         procurement_obj = self.pool.get('procurement.order')
@@ -241,7 +236,6 @@ class procurement_order(osv.osv):
                 })
         if use_new_cursor:
             cr.commit()
-            print 'Cursor Close', cr
             cr.close()
         return {}
 procurement_order()

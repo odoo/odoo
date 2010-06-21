@@ -168,7 +168,7 @@
                                                     states="confirmed"
                                                     string="Make Invoice"
                                                     type="action"
-                                                    icon="gtk-print" />
+                                                    icon="terp-document-new" />
                                             </group>
                                         </page>
                                         <page groups="base.group_extended" string="Extra Info">
@@ -202,7 +202,7 @@
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="button_dummy" states="draft" string="" type="object" icon="gtk-execute"/>
+                                <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
                                 <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute"/>
                             </group>
                             <group col="13" colspan="4">
@@ -212,7 +212,7 @@
                                 <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="gtk-apply"/>
                                 <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
                                 <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
-                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="gtk-print"/>
+                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="terp-document-new"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
@@ -220,7 +220,7 @@
                                 <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
                             </group>
                         </page>
-                        <page string="Other data">
+                        <page string="Other Information">
                             <group colspan="2" col="2" groups="base.group_extended" name="logistic">
                                 <separator string="Logistic" colspan="2"/>
                                 <field name="incoterm"/>
@@ -248,7 +248,7 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="History" groups="base.group_extended">
-                            <separator colspan="4" string="Related invoices"/>
+                            <separator colspan="4" string="Related Invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
@@ -263,9 +263,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
-                    <filter icon="terp-check" string="Running" domain="[('state','in',('manual','progress'))]"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="Sales To Invoice" domain="[('state','=','manual')]"/>
+                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]" help="Sales order which are in draft state"/>
+                    <filter icon="terp-check" string="Running" domain="[('state','in',('manual','progress'))]" help="Sales order which are confirmed"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="Sales To Invoice" domain="[('state','=','manual')]" help="Sales order to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
@@ -399,7 +399,7 @@
                               name="%(action_view_sale_order_line_make_invoice)d"
                               string="Make Invoice"
                               type="action"
-                              icon="gtk-print" />
+                              icon="terp-document-new" />
                             <group col="2" colspan="2">
                                 <button name="button_done"
                                     states="confirmed,exception"
