@@ -151,16 +151,13 @@ class hr_timesheet_sheet(osv.osv):
         raise osv.except_osv(_('Error !'), _('You can not duplicate a timesheet !'))
 
     def button_confirm(self, cr, uid, ids, context=None):
-        
         if context is None:
             context = {}
         for sheet in self.browse(cr, uid, ids, context=context):
             di = sheet.user_id.company_id.timesheet_max_difference
-            
             if (abs(sheet.total_difference) < di) or not di:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'confirm', cr)
-                
             else:
                 raise osv.except_osv(_('Warning !'), _('Please verify that the total difference of the sheet is lower than %.2f !') %(di,))
         return True
