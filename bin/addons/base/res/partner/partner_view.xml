@@ -393,8 +393,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('supplier','=',1)]</field>
-            <field name="context">{'default_customer':0, 'default_supplier':1}</field>
+            <field name="domain">[]</field>
+            <field name="context">{'default_customer':0, 'search_default_supplier': 1, 'default_supplier':1}</field>
             <field name="filter" eval="True"/>
         </record>
 

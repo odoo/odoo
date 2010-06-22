@@ -51,7 +51,6 @@
         'res/res_request_view.xml',
         'res/res_lang_view.xml',
         'res/res_log_view.xml',
-        'res/res_company_view.xml',
         'res/partner/partner_report.xml',
         'res/partner/partner_view.xml',
         'res/partner/partner_wizard.xml',
