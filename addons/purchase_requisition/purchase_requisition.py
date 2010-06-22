@@ -35,11 +35,11 @@ class purchase_requisition(osv.osv):
         'date_start': fields.datetime('Requisition Date'),
         'date_end': fields.datetime('Requisition Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', help="If the requisition is exclusive, it will cancel all purchase orders when you confirm one of them", required=True),
+        'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', required=True, help="Purchase Tender (exclusive):On the confirmation of a purchase order, it cancels the remaining purchase order.Multiple Requisitions:It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders'),
-        'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase'),
+        'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }
     _defaults = {
@@ -64,6 +64,9 @@ class purchase_requisition(osv.osv):
                     self.log(cr, uid, id, message) 
         return True
     def tender_in_progress(self, cr, uid, ids, context={}):
+        for quotations in self.browse(cr, uid, ids):
+            if not quotations.purchase_ids:
+                raise osv.except_osv(_('Purchase order required'),('You should have atleast one purchase order line defined for this tender'))
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
         for (id,name) in self.name_get(cr, uid, ids):
                     message = _('Tender') + " '" + name + "' "+ _(" is In Progress")
@@ -109,7 +112,7 @@ class purchase_requisition_line(osv.osv):
         value = {'product_uom_id': ''}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
-            value = {'product_uom_id': prod.uom_id.id}
+            value = {'product_uom_id': prod.uom_id.id,'product_qty':1.0}
         return {'value': value}
 
     _defaults = {

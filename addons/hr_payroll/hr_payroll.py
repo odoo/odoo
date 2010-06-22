@@ -1153,27 +1153,6 @@ class hr_payslip_line(osv.osv):
     _name = 'hr.payslip.line'
     _description = 'Payslip Line'
     
-#    def _calculate(self, cr, uid, ids, field_names, arg, context):
-#        res = {}
-#        obj = {}
-#        for line in self.browse(cr, uid, ids, context):
-#            obj['basic'] = line.slip_id.basic
-#            amount = 0.0
-#            
-#            if line.amount_type == 'per' and line.base:
-#                print 'XXXXXXXXXXXXXXXX : ', obj
-#                amount = line.amount * eval(line.base, obj)
-#            elif line.amount_type in ('fix', 'func'):
-#                amount = line.amount
-
-#            cd = line.category_id.code.lower()
-#            obj[cd] = amount
-#            print 'XXXXXXXXXXXXXXXXXX : ', cd
-#            
-#            res[line.id] = amount
-#        print 'XXXXXXXXXXXX : ', obj
-#        return res
-
     def onchange_category(self, cr, uid, ids, category_id):
         seq = 0
         res = {

@@ -67,7 +67,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                    	<filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/> 
+                    	<filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
             </field>
@@ -138,7 +138,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                    	<filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/> 
+                    	<filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
          	</field>
@@ -324,7 +324,7 @@
             <field name="arch" type="xml">
                 <tree string="Search Account Journal">
                 	<group>
-					<filter domain="[('type', '=', 'sale')]" string="Sale Journals" icon="terp-sale"/>                	
+					<filter domain="[('type', '=', 'sale')]" string="Sale Journals" icon="terp-sale"/>
 					<filter domain="[('type', '=', 'purchase')]" string="Purchase Journals" icon="terp-purchase"/>
 					<filter domain="[('centralisation', '=', 'True')]" string="Centralized Journals" icon="terp-stock"/>
 					<separator orientation="vertical"/>
@@ -1204,7 +1204,7 @@
             <field name="act_window_id" ref="action_move_line_search"/>
         </record>
         <record id="action_move_line_search_view3" model="ir.actions.act_window">
-            <field name="name">Cash Register</field>
+            <field name="name">Cash Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
@@ -1214,7 +1214,7 @@
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
         </record>
         <record id="action_move_line_search_view4" model="ir.actions.act_window">
-            <field name="name">Checks Register</field>
+            <field name="name">Check Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
@@ -1799,7 +1799,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_account_template_search" model="ir.ui.view">
             <field name="name">account.account.template.search</field>
             <field name="model">account.account.template</field>
@@ -1995,7 +1995,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="action_account_tax_template_form" model="ir.actions.act_window">
             <field name="name">Tax Templates</field>
             <field name="res_model">account.tax.template</field>
@@ -2018,7 +2018,7 @@
                 </tree>
             </field>
         </record>
-		
+
 		<record id="view_tax_code_template_search" model="ir.ui.view">
             <field name="name">account.tax.code.template.search</field>
             <field name="model">account.tax.code.template</field>
@@ -2037,7 +2037,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="view_tax_code_template_form" model="ir.ui.view">
             <field name="name">account.tax.code.template.form</field>
             <field name="model">account.tax.code.template</field>

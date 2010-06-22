@@ -25,7 +25,7 @@ from osv import fields,osv
 
 class report_stock_move(osv.osv):
     _name = "report.stock.move"
-    _description = "Stock Statistics"
+    _description = "Moves Statistics"
     _auto = False
     _columns = {
         'date_planned': fields.date('Date', readonly=True),

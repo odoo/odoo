@@ -53,6 +53,8 @@ class sale_journal(osv.osv):
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
+            ('cancel','Cancel'),
+            ('confirm','Confirm'),
             ('done','Done'),
         ], 'State', required=True, readonly=True),
         'note': fields.text('Note'),
@@ -65,6 +67,7 @@ class sale_journal(osv.osv):
     }
     
     def button_sale_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'cancel'})
         for id in ids:
             sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
             for saleid in sale_ids:
@@ -76,6 +79,7 @@ class sale_journal(osv.osv):
         return True
     
     def button_sale_confirm(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'confirm'})
         for id in ids:
             sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
             for saleid in sale_ids:
