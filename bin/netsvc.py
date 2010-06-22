@@ -213,6 +213,11 @@ def init_logger():
     # add the handler to the root logger
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
+    
+    # By default, don't log db connections, even at debug.
+    if int(tools.config['log_level'] or '0') <= logging.DEBUG:
+        logging.getLogger('db.connection').setLevel(logging.INFO)
+        logging.getLogger('db.connection_pool').setLevel(logging.INFO)
 
 
 
