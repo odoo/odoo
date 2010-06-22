@@ -34,6 +34,7 @@ condition/math builtins.
 
 from opcode import HAVE_ARGUMENT, opmap, opname
 from types import CodeType
+import logging
 
 __all__ = ['test_expr', 'literal_eval', 'safe_eval', 'const_eval', 'ext_eval' ]
 
@@ -56,6 +57,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'DELETE_NAME', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE','MAKE_FUNCTION',
     ] if x in opmap))
 
+_logger = logging.getLogger('safe_eval')
 
 def _get_opcodes(codeobj):
     """_get_opcodes(codeobj) -> [opcodes]
@@ -83,17 +85,19 @@ def test_expr(expr, allowed_codes, mode="eval"):
 
     Test that the expression contains only the allowed opcodes.
     If the expression is valid and contains only allowed codes,
-    return the compiled code object. Otherwise raise a ValueError.
+    return the compiled code object.
+    Otherwise raise a ValueError, a Syntax Error or TypeError accordingly.
     """
     try:
         if mode == 'eval':
+            # eval() does not like leading/trailing whitespace
             expr = expr.strip()
         code_obj = compile(expr, "", mode)
-    except SyntaxError:
+    except (SyntaxError, TypeError):
+        _logger.debug('Invalid eval expression', exc_info=True)
         raise
-    except TypeError:
-        raise
-    except Exception, e:
+    except Exception:
+        _logger.debug('Disallowed or invalid eval expression', exc_info=True)
         raise ValueError("%s is not a valid expression" % expr)
     for code in _get_opcodes(code_obj):
         if code not in allowed_codes:
@@ -211,6 +215,8 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
 
     This can be used to e.g. evaluate
     an OpenERP domain expression from an untrusted source.
+
+    Throws TypeError, SyntaxError or ValueError (not allowed) accordingly.
 
     >>> safe_eval("__import__('sys').modules")
     Traceback (most recent call last):
