@@ -86,8 +86,14 @@ def test_expr(expr, allowed_codes, mode="eval"):
     return the compiled code object. Otherwise raise a ValueError.
     """
     try:
+        if mode == 'eval':
+            expr = expr.strip()
         code_obj = compile(expr, "", mode)
-    except:
+    except SyntaxError:
+        raise
+    except TypeError:
+        raise
+    except Exception, e:
         raise ValueError("%s is not a valid expression" % expr)
     for code in _get_opcodes(code_obj):
         if code not in allowed_codes:

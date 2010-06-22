@@ -63,7 +63,10 @@ def _child_get(node, self=None, tagname=None):
                     if n.get('rml_except', False):
                         try:
                             eval(n.get('rml_except'), {}, self.localcontext)
+                        except GeneratorExit:
+                            continue
                         except:
+                            logging.getLogger('report').exception()
                             continue
                     if n.get('rml_tag'):
                         try:
@@ -72,7 +75,10 @@ def _child_get(node, self=None, tagname=None):
                             n2.tag = tag
                             n2.attrib.update(attr)
                             yield n2
+                        except GeneratorExit:
+                            yield n
                         except:
+                            logging.getLogger('report').exception()
                             yield n
                     else:
                         yield n
@@ -81,7 +87,10 @@ def _child_get(node, self=None, tagname=None):
         if self and self.localcontext and n.get('rml_except'):
             try:
                 eval(n.get('rml_except'), {}, self.localcontext)
+            except GeneratorExit:
+                continue
             except:
+                logging.getLogger('report').exception()
                 continue
         if self and self.localcontext and n.get('rml_tag'):
             try:
@@ -91,7 +100,10 @@ def _child_get(node, self=None, tagname=None):
                 n2.attrib.update(attr or {})
                 yield n2
                 tagname = ''
+            except GeneratorExit:
+                pass
             except:
+                logging.getLogger('report').exception()
                 pass
         if (tagname is None) or (n.tag==tagname):
             yield n
