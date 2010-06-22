@@ -208,7 +208,7 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
             except AuthRequiredExc,ae:
                 if self.request_version != 'HTTP/1.1':
                     self.log_error("Cannot require auth at %s",self.request_version)
-                    self.send_error(401)
+                    self.send_error(403)
                     return
                 self._get_ignore_body(fore) # consume any body that came, not loose sync with input
                 self.send_response(401,'Authorization required')
@@ -221,7 +221,7 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
                 return
             except AuthRejectedExc,e:
                 self.log_error("Rejected auth: %s" % e.args[0])
-                self.send_error(401,e.args[0])
+                self.send_error(403,e.args[0])
                 self.close_connection = 1
                 return
         mname = 'do_' + fore.command
