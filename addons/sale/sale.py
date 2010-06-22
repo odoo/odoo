@@ -571,6 +571,7 @@ class sale_order(osv.osv):
         params = ', '.join(map(lambda x : str(x),product))
         message = _('Sale order ') + " '" + o.name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("is confirmed")
         self.log(cr, uid, id, message)
+        return True
 
 
     def procurement_lines_get(self, cr, uid, ids, *args):
