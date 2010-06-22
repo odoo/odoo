@@ -78,11 +78,11 @@ class sale_order(osv.osv):
         return val
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
+        cur_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
         res = {}
-        cur_obj = self.pool.get('res.currency')
-        for order in self.browse(cr, uid, ids, context):
+        for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
@@ -282,13 +282,13 @@ class sale_order(osv.osv):
     }
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
-        'picking_policy': lambda *a: 'direct',
-        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
-        'order_policy': lambda *a: 'manual',
-        'state': lambda *a: 'draft',
+        'picking_policy': 'direct',
+        'date_order': time.strftime('%Y-%m-%d'),
+        'order_policy': 'manual',
+        'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
-        'invoice_quantity': lambda *a: 'order',
+        'invoice_quantity': 'order',
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
@@ -457,12 +457,14 @@ class sale_order(osv.osv):
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}
         invoice_ids = []
+        picking_obj = self.pool.get('stock.picking')
 
-        context = {}
+        if context is None:
+            context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
         if date_inv:
@@ -481,7 +483,6 @@ class sale_order(osv.osv):
                 for i in o.invoice_ids:
                     if i.state == 'draft':
                         return i.id
-        picking_obj = self.pool.get('stock.picking')
         for val in invoices.values():
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []), context=context)
@@ -562,7 +563,7 @@ class sale_order(osv.osv):
 
     def action_wait(self, cr, uid, ids, *args):
         product=[]
-        product_obj=self.pool.get('product.product')
+        product_obj = self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
@@ -574,7 +575,7 @@ class sale_order(osv.osv):
         params = ', '.join(map(lambda x : str(x),product))
         message = _('Sale order ') + " '" + o.name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("is confirmed")
         self.log(cr, uid, id, message)
-
+        return True
 
     def procurement_lines_get(self, cr, uid, ids, *args):
         res = []
@@ -776,10 +777,10 @@ sale_order()
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        context = context or {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
+        res = {}
+        context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
             price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
             taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty)
@@ -837,15 +838,15 @@ class sale_order_line(osv.osv):
     }
     _order = 'sequence, id'
     _defaults = {
-        'discount': lambda *a: 0.0,
-        'delay': lambda *a: 0.0,
-        'product_uom_qty': lambda *a: 1,
-        'product_uos_qty': lambda *a: 1,
-        'sequence': lambda *a: 10,
-        'invoiced': lambda *a: 0,
-        'state': lambda *a: 'draft',
-        'type': lambda *a: 'make_to_stock',
-        'product_packaging': lambda *a: False
+        'discount': 0.0,
+        'delay': 0.0,
+        'product_uom_qty': 1,
+        'product_uos_qty': 1,
+        'sequence':  10,
+        'invoiced': 0,
+        'state': 'draft',
+        'type': 'make_to_stock',
+        'product_packaging': False
     }
 
     def invoice_line_create(self, cr, uid, ids, context=None):
@@ -1180,3 +1181,4 @@ class sale_config_picking_policy(osv.osv_memory):
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
 sale_config_picking_policy()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
