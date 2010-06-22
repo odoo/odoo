@@ -81,7 +81,7 @@ class account_payment_term(osv.osv):
             if amt:
                 next_date = datetime.strptime(date_ref, '%Y-%m-%d') + relativedelta(days=line.days)
                 if line.days2 < 0:
-                    next_date += relativedelta(day=line.days2)
+                    next_date += relativedelta(day=31)
                 if line.days2 > 0:
                     next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
@@ -2121,7 +2121,7 @@ class account_tax_code_template(osv.osv):
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Child Codes'),
-        'sign': fields.float('Sign for parent', required=True),
+        'sign': fields.float('Sign for parent', required=True, help="Choose 1.00 to add the total to the parent account or -1.00 to subtract it"),
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
@@ -2153,7 +2153,7 @@ class account_chart_template(osv.osv):
 
     _columns={
         'name': fields.char('Name', size=64, required=True),
-        'account_root_id': fields.many2one('account.account.template','Root Account',required=True,domain=[('parent_id','=',False)]),
+        'account_root_id': fields.many2one('account.account.template','Root Account',required=True,domain=[('parent_id','=',False)], help=""),
         'tax_code_root_id': fields.many2one('account.tax.code.template','Root Tax Code',required=True,domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
         'bank_account_view_id': fields.many2one('account.account.template','Bank Account',required=True),

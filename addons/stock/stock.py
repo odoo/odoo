@@ -410,22 +410,6 @@ class stock_tracking(osv.osv):
     _name = "stock.tracking"
     _description = "Stock Tracking Lots"
 
-    def get_create_tracking_lot(self, cr, uid, ids, tracking_lot):
-        """
-        @param tracking_lot: Name of tracking lot
-        @return:
-        """
-        tracking_lot_list = self.search(cr, uid, [('name', '=', tracking_lot)],
-                                            limit=1)
-        if tracking_lot_list:
-            tracking_lot = tracking_lot_list[0]
-        tracking_obj = self.browse(cr, uid, tracking_lot)
-        if not tracking_obj:
-            tracking_lot_vals = {
-                'name': tracking_lot
-                }
-            tracking_lot = self.create(cr, uid, tracking_lot_vals)
-        return tracking_lot
     def checksum(sscc):
         salt = '31' * 8 + '3'
         sum = 0
@@ -445,7 +429,6 @@ class stock_tracking(osv.osv):
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves Tracked'),
         'date': fields.datetime('Created Date', required=True),
     }
-
     _defaults = {
         'active': lambda *a: 1,
         'name': make_sscc,
@@ -1378,9 +1361,7 @@ class stock_move(osv.osv):
         'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History'),
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History'),
         'picking_id': fields.many2one('stock.picking', 'Picking List', select=True),
-
         'note': fields.text('Notes'),
-
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
                                   help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
@@ -1657,7 +1638,7 @@ class stock_move(osv.osv):
         done = []
         count = 0
         pickings = {}
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             if move.product_id.type == 'consu':
                 if move.state in ('confirmed', 'waiting'):
                     done.append(move.id)
@@ -1692,31 +1673,16 @@ class stock_move(osv.osv):
         return count
 
     def setlast_tracking(self, cr, uid, ids, context=None):
-        new_move = []
-        update_val = {}
-        ir_sequence_obj = self.pool.get('ir.sequence')
         tracking_obj = self.pool.get('stock.tracking')
-        tracking = False
         tracking = context.get('tracking', False)
-    #    import pdb; pdb.set_trace()
-        if tracking:
-            tracking_id = tracking_obj.search(cr, uid, ['name','=', tracking])
-            if prodlot_id:
-                update_val['prodlot_id'] = prodlot_id
-            else:
-                tracking_id = tracking_obj.create(cr, uid, {'name': tracking}, {'product_id': self.browse(cr, uid, ids)[0].product_id.id})
-                update_val['tracking_id'] = tracking_id
+        last_track = [line.tracking_id.id for line in self.browse(cr, uid, ids)[0].picking_id.move_lines if line.tracking_id]
+        if not last_track:
+            last_track = tracking_obj.create(cr, uid, {}, context=context)
         else:
-            last_track = [line.tracking_id for line in self.browse(cr, uid, ids)[0].picking_id.move_lines if line.tracking_id]
-            if not last_track:
-                track_ids= tracking_obj.search(cr, uid, [])
-                last_track = [track for track in tracking_obj.browse(cr, uid, track_ids)]
-            last_track.sort(key=lambda p: p.date, reverse=True)
-            last_track_id = last_track and last_track[0].id
-            update_val['tracking_id'] = last_track_id
-        self.write(cr, uid, ids, update_val)
+            last_track.sort()
+            last_track = last_track[-1]
+        self.write(cr, uid, ids, {'tracking_id': last_track})
         return True
-
 
     #
     # Cancel move => cancel others move and pickings
@@ -1802,7 +1768,8 @@ class stock_move(osv.osv):
         product_obj=self.pool.get('product.product')
         move_obj = self.pool.get('account.move')
         for move in self.browse(cr, uid, ids):
-            if move.picking_id: picking_ids.append(move.picking_id.id)
+            if move.picking_id:
+                picking_ids.append(move.picking_id.id)
             if move.move_dest_id.id and (move.state != 'done'):
                 cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
@@ -1852,32 +1819,31 @@ class stock_move(osv.osv):
                         'line_id': line,
                         'ref': move.picking_id and move.picking_id.name,
                         })
-        tracking_lot = False
-        if context:
-            tracking_lot = context.get('tracking_lot', False)
-            if tracking_lot:
-                rec_id = context and context.get('active_id', False)
-                tracking = self.pool.get('stock.tracking')
-                tracking_lot = tracking.get_create_tracking_lot(cr, uid,[rec_id], tracking_lot)
 
-        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S'), 'tracking_id': tracking_lot or False})
-        picking_obj = self.pool.get('stock.picking')
+        # This can be removed
+        #tracking_lot = False
+        #if context:
+        #    tracking_lot = context.get('tracking_lot', False)
+        #    if tracking_lot:
+        #        rec_id = context and context.get('active_id', False)
+        #        tracking = self.pool.get('stock.tracking')
+        #        tracking_lot = tracking.get_create_tracking_lot(cr, uid,[rec_id], tracking_lot)
 
-        for pick in picking_obj.browse(cr, uid, picking_ids):
-            if all(move.state == 'done' for move in pick.move_lines):
-                picking_obj.action_done(cr, uid, [pick.id])
-
-        for (id,name) in picking_obj.name_get(cr, uid, picking_ids):
-            message = _('Picking ') + " '" + name + "' "+ _("is processed")
-            self.log(cr, uid, id, message)
-
+        self.write(cr, uid, ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
+        # We should remove this
+        picking_obj = self.pool.get('stock.picking')
         for pick in picking_obj.browse(cr, uid, picking_ids):
-            if len([move.state == 'done' for move in pick.move_lines]) == len(pick.move_lines):
-                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
+            if len([(move.state in ('done','cancelled')) for move in pick.move_lines]) == len(pick.move_lines):
+                picking_obj.action_done(cr, uid, [pick.id])
+
+        for (id,name) in picking_obj.name_get(cr, uid, picking_ids):
+            message = _('Document') + " '" + name + "' "+ _("is processed")
+            self.log(cr, uid, id, message)
+
         return True
 
     def create_account_move(self, cr, uid, move,account_id,account_variation,amount, context=None):
@@ -1904,6 +1870,7 @@ class stock_move(osv.osv):
                                     'partner_id': partner_id,
                                     })]
         return lines
+
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -1919,18 +1886,8 @@ class stock_move(osv.osv):
         @return: Production lot id
         """
         prodlot_obj = self.pool.get('stock.production.lot')
-        ir_sequence_obj = self.pool.get('ir.sequence')
-        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-        if not sequence:
-            raise osv.except_osv(_('Error!'), _('No production sequence defined'))
-        prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix': prefix}, {'product_id': product_id})
-        prodlot = prodlot_obj.browse(cr, uid, prodlot_id)
-        ref = ','.join(map(lambda x:str(x),ids))
-        if prodlot.ref:
-            ref = '%s, %s' % (prodlot.ref, ref)
-        prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
+        prodlot_id = prodlot_obj.create(cr, uid, {'prefix': prefix, 'product_id': product_id})
         return prodlot_id
-
 
     def action_scrap(self, cr, uid, ids, quantity, location_id, context=None):
         """ Move the scrap/damaged product into scrap location
@@ -2107,7 +2064,6 @@ class stock_move(osv.osv):
         partner_id = partial_datas.get('partner_id', False)
         address_id = partial_datas.get('address_id', False)
         delivery_date = partial_datas.get('delivery_date', False)
-        tracking_lot = context.get('tracking_lot', False)
 
         new_moves = []
 
@@ -2124,10 +2080,6 @@ class stock_move(osv.osv):
             product_price = partial_data.get('product_price',0.0)
             product_currency = partial_data.get('product_currency',False)
             if move.product_qty == product_qty:
-                self.write(cr, uid, move.id,
-                {
-                    'tracking_id': tracking_lot
-                })
                 complete.append(move)
             elif move.product_qty > product_qty:
                 too_few.append(move)
@@ -2172,7 +2124,7 @@ class stock_move(osv.osv):
                         'state': 'assigned',
                         'move_dest_id': False,
                         'price_unit': move.price_unit,
-                        'tracking_id': tracking_lot,
+                        #'tracking_id': tracking_lot,
                     })
                 complete.append(self.browse(cr, uid, new_move))
             self.write(cr, uid, move.id,
@@ -2187,7 +2139,7 @@ class stock_move(osv.osv):
                     {
                         'product_qty': move.product_qty,
                         'product_uos_qty': move.product_qty,
-                        'tracking_id': tracking_lot
+                        #'tracking_id': tracking_lot
                     })
             complete.append(move)
 

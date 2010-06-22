@@ -62,6 +62,7 @@ class partner_vat(osv.osv_memory):
         obj_vat_lclient = self.pool.get('vat.listing.clients')
         obj_model_data = self.pool.get('ir.model.data')
         data  = self.read(cursor, user, ids)[0]
+        context['test_xml'] = data['test_xml']
         period = obj_period.search(cursor, user, [('fiscalyear_id', '=', data['fyear'])], context=context)
         p_id_list = obj_partner.search(cursor, user, [('vat_subjected', '!=', False)], context=context)
         if not p_id_list:
@@ -196,7 +197,7 @@ class partner_vat_list(osv.osv_memory):
 
         data_file = '<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="'+ str(company_vat) + '"'
         data_file +=' ControlRef="'+ cref + '" MandataireId="'+ tools.ustr(context['mand_id']) + '" SenderDate="'+ str(sender_date)+ '"'
-        if ['test_xml']:
+        if context['test_xml']:
             data_file += ' Test="0"'
         data_file += ' VersionTech="1.2">'
         data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+tools.ustr(obj_cmpny.name)+'</Name>\n\t\t<Street>'+ tools.ustr(street) +'</Street>\n\t\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>'
@@ -225,7 +226,7 @@ class partner_vat_list(osv.osv_memory):
             seq +=1
             sum_tax +=line['amount']
             sum_turnover +=line['turnover']
-            data_clientinfo +='\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>'+tools.ustr(line['country']) +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(line['amount'] * 100)) +'</Amount>\n\t<TurnOver>'+str(int(line['turnover'] * 100)) +'</TurnOver>\n</ClientList>'
+            data_clientinfo +='\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(line['vat']) +'</VATNum>\n\t\t<Country>'+tools.ustr(line['country']) +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(line['amount'] * 100)) +'</Amount>\n\t<TurnOver>'+str(int(line['turnover'] * 100)) +'</TurnOver>\n</ClientList>'
 
         data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(sum_turnover * 100)) +'" TaxSum="'+ str(int(sum_tax * 100)) +'" />'
         data_file += tools.ustr(data_decl) + tools.ustr(data_comp) + tools.ustr(data_period) + tools.ustr(data_clientinfo) + '\n</VatList>'

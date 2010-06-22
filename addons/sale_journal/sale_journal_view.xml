@@ -78,10 +78,10 @@
                     <field name="state"/>
                         <group col="6" colspan="2">
                             <button name="button_open" string="Open Journal" states="draft" type="object" icon="gtk-open"/>
-                            <button name="button_close" string="Close Journal" states="open" type="object" icon="gtk-close"/>
-                            <button name="button_draft" string="Set to Draft" states="close,open" type="object" icon="gtk-convert"/>
+                            <button name="button_close" string="Close Journal" states="open,confirm" type="object" icon="gtk-close"/>
+                            <button name="button_draft" string="Set to Draft" states="close,open,cancel" type="object" icon="gtk-convert"/>
                             <button string="Confirm Sales" name="button_sale_confirm" states="draft,open" type="object" icon="gtk-execute"/>
-                            <button string="Cancel Sales" name="button_sale_cancel" states="draft,open" type="object" icon="gtk-cancel"/>
+                            <button string="Cancel Sales" name="button_sale_cancel" states="draft,open,confirm" type="object" icon="gtk-cancel"/>
                         </group>
                 </form>
             </field>

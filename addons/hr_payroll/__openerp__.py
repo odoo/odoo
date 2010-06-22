@@ -39,7 +39,8 @@
         'hr',
         'hr_contract', 
         'hr_holidays',
-        'hr_expense'
+        'hr_expense',
+        'account'
     ],
     'init_xml': [
     ],
@@ -52,6 +53,7 @@
         'hr_payroll_wizard.xml'
     ],
     'demo_xml': [
+        'hr_payroll_demo.xml'
     ],
     'installable': True,
     'active': False,

@@ -412,7 +412,7 @@ class stock_sale_forecast(osv.osv):
                     dept_id =  obj.analyzed_dept_id.id and [obj.analyzed_dept_id.id] or []
                     dept_ids = dept_obj.search(cr,uid,[('parent_id','child_of',dept_id)])
                     dept_ids_set = ','.join(map(str,dept_ids))
-                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN (%s))" %(dept_ids_set,))
+                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN %s)" %(tuple(dept_ids_set),))
                     dept_users = [x for x, in cr.fetchall()]
                     dept_users_set =  ','.join(map(str,dept_users))
                 else:
