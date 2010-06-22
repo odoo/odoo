@@ -42,6 +42,9 @@ def OpenDAVConfig(**kw):
     class OpenDAV:
         def __init__(self, **kw):
             self.__dict__.update(**kw)
+            
+        def getboolean(self, word):
+            return self.__dict__.get(word, False)
 
     class Config:
         DAV = OpenDAV(**kw)

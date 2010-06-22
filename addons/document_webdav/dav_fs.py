@@ -223,7 +223,7 @@ class openerp_dav_handler(dav_interface):
             return None
         return pool.get('document.directory').get_object(cr, uid, uri)
 
-    def get_data(self,uri):    
+    def get_data(self,uri, rrange=None):
         self.parent.log_message('GET: %s' % uri)
         if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
@@ -234,6 +234,9 @@ class openerp_dav_handler(dav_interface):
             if not node:
                 raise DAV_NotFound(uri2)
             try:
+                if rrange:
+                    self.parent.log_error("Doc get_data cannot use range")
+                    raise DAV_Error(409)
                 datas = node.get_data(cr)
             except TypeError,e:
                 import traceback                
