@@ -409,8 +409,16 @@ class sale_order(osv.osv):
         return {}
 
     def _make_invoice(self, cr, uid, order, lines, context=None):
+        journal_obj = self.pool.get('account.journal')
+        inv_obj = self.pool.get('account.invoice')
+
         if context is None:
             context = {}
+
+        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
+        if not journal_ids:
+            raise osv.except_osv(_('Error !'),
+                _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
         a = order.partner_id.property_account_receivable.id
         if order.payment_term:
             pay_term = order.payment_term.id
@@ -421,11 +429,6 @@ class sale_order(osv.osv):
                 for preline in preinv.invoice_line:
                     inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
-        journal_obj = self.pool.get('account.journal')
-        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
-        if not journal_ids:
-            raise osv.except_osv(_('Error !'),
-                _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
 
         inv = {
             'name': order.client_order_ref or order.name,
@@ -446,7 +449,6 @@ class sale_order(osv.osv):
             'company_id' : order.company_id.id,
             'user_id':order.user_id and order.user_id.id or False
         }
-        inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))
         inv_id = inv_obj.create(cr, uid, inv, context=context)
         data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], pay_term, time.strftime('%Y-%m-%d'))
