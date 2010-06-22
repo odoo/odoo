@@ -94,15 +94,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Period">
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="fiscalyear_id"/>
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
-                    <field name="state"/>
+                    <field name="state" select="1"/>
                     <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert"/>
                 </form>
             </field>
@@ -122,32 +122,11 @@
                 </tree>
             </field>
         </record>
-        <record id="view_account_period_search" model="ir.ui.view">
-            <field name="name">account.period.search</field>
-            <field name="model">account.period</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-        		<search string="Search Periods">
-                	<group>
-                		<filter string="Done" domain="[('state','=','done')]" icon="terp-dolar_ok!"/>
-                		<filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
-                		<separator orientation="vertical"/>
-	                    <field name="code"/>
-	                    <field name="name"/>
-	                    <field name="state"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By...">
-                    	<filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
-                    </group>
-                </search>
-         	</field>
-        </record>
         <record id="action_account_period_form" model="ir.actions.act_window">
             <field name="name">Periods</field>
             <field name="res_model">account.period</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23"/>
 
