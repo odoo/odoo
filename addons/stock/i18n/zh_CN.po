@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-05-07 04:02+0000\n"
+"X-Launchpad-Export-Date: 2010-06-22 03:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -141,7 +141,7 @@ msgstr "业务伙伴"
 #. module: stock
 #: help:product.product,track_incoming:0
 msgid "Force to use a Production Lot during receptions"
-msgstr "在接收时强制使用生产批号"
+msgstr "入库时指定批次"
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -490,7 +490,7 @@ msgstr "盘存库位"
 #. module: stock
 #: help:product.product,track_production:0
 msgid "Force to use a Production Lot during production order"
-msgstr "在录入生产单时强制使用生产批号"
+msgstr "生产单指定生产批次"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -530,7 +530,7 @@ msgstr "送货日程表"
 #. module: stock
 #: field:product.product,track_incoming:0
 msgid "Track Incomming Lots"
-msgstr "跟踪进入库批次"
+msgstr "跟踪入库批次"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
@@ -680,7 +680,7 @@ msgstr "业务伙伴库位"
 #: help:stock.move,tracking_id:0
 msgid ""
 "Tracking lot is the code that will be put on the logistical unit/pallet"
-msgstr "跟踪批次号是帖在货运包装或托板上的代码"
+msgstr "跟踪批次号是帖在包装或垫板上的代码"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -1732,7 +1732,7 @@ msgstr "仓库"
 #. module: stock
 #: help:product.product,track_outgoing:0
 msgid "Force to use a Production Lot during deliveries"
-msgstr "在运输时强制使用生产批次"
+msgstr "出库时指定批次"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2230,7 +2230,7 @@ msgstr "生产批次"
 #: model:ir.ui.menu,name:stock.menu_traceability
 #: model:ir.ui.menu,name:stock.next_id_62
 msgid "Traceability"
-msgstr "可追踪"
+msgstr "可跟踪的"
 
 #. module: stock
 #: field:stock.picking,date:0
@@ -2395,30 +2395,3 @@ msgstr "物理库位"
 
 #~ msgid "Stock Management"
 #~ msgstr "库存管理"
-
-#~ msgid ""
-#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "系统库存管理模块能管理多仓库多和结构化仓库库位\n"
-#~ "\t使用复式记录管理提供灵活和强大库存控制:\n"
-#~ "\t*调拨历史和计划\n"
-#~ "\t*不同的库存管理方法(FIFO, LIFO, ...)\n"
-#~ "\t*存货估计(标准和平均估价)\n"
-#~ "\t*自动重开单规则(库存级别,jit)\n"
-#~ "\t*存货清单不同的鲁棒性\n"
-#~ "\t*条码支持\n"
-#~ "\t*通过复式录入系统实现快速检测错误\n"
-#~ "\t*跟踪能力(上游,下游,产品批号,序列号)\n"
-#~ "    "

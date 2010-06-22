@@ -3,7 +3,7 @@
     <data>
 
             <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
-            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" 
+            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools"
                         groups="group_survey_manager,group_survey_user" sequence="2"/>
             <menuitem name="Define Surveys" id="menu_define_survey"
                  groups="group_survey_manager"
@@ -40,8 +40,9 @@
                                     <field name="title" select="1"/>
                                     <field name="sequence" groups="base.group_extended"/>
                                     <field name="note" colspan="4" nolabel="1"/>
-                                    <field name="question_ids" colspan="4" nolabel="1" context="{'line_order': question_ids}">
-                                        <form string="Survey Question">
+                                    <field name="question_ids" height="200" width="200" colspan="4" nolabel="1" context="{'line_order': question_ids}">
+                                        <form string="Survey Question" >
+                                            <group col="6" colspan="6" height="600" width="200">
                                             <field name="question" colspan="4" select="1"/>
                                             <field name="sequence"/>
                                             <field name="tot_resp"/>
@@ -170,6 +171,7 @@
                                                     </group>
                                                 </page>
                                             </notebook>
+                                            </group>
                                         </form>
                                         <tree string="Survey Question">
                                             <field name="sequence" string="Seq"/>
@@ -230,11 +232,11 @@
             <field name="model">survey</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Survey">
+                <tree colors="gray:state in ('close')" string="Survey">
                     <field name="title" select="1"/>
                     <field name="type" select="1"/>
-                    <field name="date_open" select="1" string="Open Date"/>
                     <field name="responsible_id"/>
+                    <field name="date_open" select="1" string="Open Date"/>
                     <field name="tot_start_survey" string="Started"/>
                     <field name="tot_comp_survey" string="Completed"/>
                     <field name="state" select="1"/>
@@ -266,6 +268,12 @@
                         <field name="responsible_id" select="1" default="1">
                             <filter string="MY" icon="terp-partner" domain="[('responsible_id','=',uid)]"/>
                         </field>
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Group By..." colspan="4" col="20">
+	                   <filter string="Type" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'type'}"/>
+	                   <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'responsible_id'}"/>
+	                   <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
                    </group>
                </search>
             </field>
@@ -454,6 +462,22 @@
                     <field name="survey_id"/>
                     <field name="question_ids" string="#Questions"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_survey_page_filter" model="ir.ui.view">
+            <field name="name">survey.page.list.select</field>
+            <field name="model">survey.page</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Survey Page">
+                    <field name="title"/>
+                    <field name="survey_id"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="20">
+                        <filter string="Survey" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'survey_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -668,9 +692,9 @@
              <field name="search_view_id" ref="survey_question_search"/>
         </record>
 
-        <!--menuitem name="Survey Question" id="menu_survey_question_form1"
-            action="action_survey_question_form" parent='menu_defination'
-            groups="group_survey_manager"/-->
+<!--        <menuitem name="Survey Question" id="menu_survey_question_form1"-->
+<!--            action="action_survey_question_form" parent='menu_define_survey'-->
+<!--            groups="group_survey_manager"/>-->
 
         <record model="ir.ui.view" id="survey_question_wizard_test">
             <field name="name">survey_question_wizard_test</field>
