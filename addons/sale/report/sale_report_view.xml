@@ -139,137 +139,112 @@
 
 
     <!--This views used in board_sale module -->
-    <record id="view_sale_order_by_clients_tree" model="ir.ui.view">
-        <field name="name">sale.order.by.clients.tree</field>
-        <field name="model">sale.order.by.clients</field>
+    <record id="view_sales_by_partner_tree" model="ir.ui.view">
+        <field name="name">sales.by.partner.tree</field>
+        <field name="model">sale.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Sales order by clients">
+            <tree string="Sales By Partner">
                 <field name="partner_id"/>
-                <field name="total_orders"/>
+                <field name="price_total"/>
             </tree>
         </field>
     </record>
 
-    <record id="view_sale_order_by_clients_graph" model="ir.ui.view">
-         <field name="name">sale.order.by.clients.graph</field>
-         <field name="model">sale.order.by.clients</field>
+    <record id="view_sales_by_partner_graph" model="ir.ui.view">
+         <field name="name">sales.by.partner.graph</field>
+         <field name="model">sale.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Sales order by clients" type="bar">
+             <graph string="Sales By Partner" type="bar">
                  <field name="partner_id" />
-                 <field name="total_orders" operator="+"/>
+                 <field name="price_total" operator="+"/>
              </graph>
          </field>
     </record>
 
-   <record id="action_sale_order_by_clients" model="ir.actions.act_window">
-        <field name="name">Sales Orders</field>
-        <field name="res_model">sale.order.by.clients</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
-        <field name="view_id" ref="view_sale_order_by_clients_tree"/>
-    </record>
-
-   <record id="view_uninvoiced_lines_per_month_tree" model="ir.ui.view">
-        <field name="name">uninvoiced.lines.per.month.tree</field>
-        <field name="model">uninvoiced.lines.per.month</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Uninvoiced lines per month">
-                <field name="year"/>
-                <field name="month"/>
-                <field name="number_of_lines"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_uninvoiced_lines_per_month_graph" model="ir.ui.view">
-         <field name="name">uninvoiced.lines.per.month.graph</field>
-         <field name="model">uninvoiced.lines.per.month</field>
-         <field name="type">graph</field>
-         <field name="arch" type="xml">
-             <graph string="Uninvoiced lines per month" type="bar">
-                 <field name="month" />
-                 <field name="number_of_lines" operator="+"/>
-             </graph>
-         </field>
-    </record>
-
-   <record id="action_suninvoiced_lines_per_month" model="ir.actions.act_window">
-        <field name="name">Uninvoiced Lines</field>
-        <field name="res_model">uninvoiced.lines.per.month</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
-        <field name="view_id" ref="view_uninvoiced_lines_per_month_tree"/>
-    </record>
-
-    <record id="view_product_bought_by_sale_order_tree" model="ir.ui.view">
-        <field name="name">product.bought.by.sale.order.tree</field>
-        <field name="model">product.bought.by.sale.order</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Product bought by sale order">
-                <field name="product_id"/>
-                 <field name="month"/>
-                 <field name="year"/>
-                <field name="total_products"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_product_bought_by_sale_order_graph" model="ir.ui.view">
-         <field name="name">product.bought.by.sale.order.graph</field>
-         <field name="model">product.bought.by.sale.order</field>
-         <field name="type">graph</field>
-         <field name="arch" type="xml">
-             <graph string="Product bought by sale order" type="bar">
-                 <field name="product_id" select="1"/>
-                 <field name="total_products" select="1"/>
-                 <field name="month" group = "True"/>
-             </graph>
-         </field>
-    </record>
-
-   <record id="action_product_bought_by_sale_order" model="ir.actions.act_window">
-        <field name="name">Product bought by sale order</field>
-        <field name="res_model">product.bought.by.sale.order</field>
+   <record id="action_sales_by_partner" model="ir.actions.act_window">
+        <field name="name">Sales By Partner</field>
+        <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
-        <field name="domain">[('year','=', time.strftime('%Y'))]</field>
-        <field name="view_id" ref="view_product_bought_by_sale_order_tree"/>
+        <field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
+        <field name="view_id" ref="view_sales_by_partner_graph"/>
     </record>
 
-   <record id="view_sales_by_regions_tree" model="ir.ui.view">
-        <field name="name">sales.by.regions.tree</field>
-        <field name="model">sales.by.regions</field>
+    <record id="view_sales_by_salesman_tree" model="ir.ui.view">
+        <field name="name">sales.by.salesman.tree</field>
+        <field name="model">sale.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Sales by regions">
-                <field name="name"/>
-                <field name="total_sales"/>
+            <tree string="Sales By Salesman">
+                <field name="user_id"/>
+                <field name="price_total"/>
             </tree>
         </field>
     </record>
 
-    <record id="view_sales_by_regions_graph" model="ir.ui.view">
-         <field name="name">sales.by.regions.graph</field>
-         <field name="model">sales.by.regions</field>
+    <record id="view_sales_by_salesman_graph" model="ir.ui.view">
+         <field name="name">sales.by.salesman.graph</field>
+         <field name="model">sale.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Sales by regions" type="bar">
-                 <field name="name"/>
-                 <field name="total_sales" operator="+"/>
+             <graph string="Sales By Salesman" type="bar">
+                 <field name="user_id" />
+                 <field name="price_total" operator="+"/>
              </graph>
          </field>
     </record>
 
-   <record id="action_sales_by_regions" model="ir.actions.act_window">
-        <field name="name">Sales by regions</field>
-        <field name="res_model">sales.by.regions</field>
+   <record id="action_sales_by_salesman" model="ir.actions.act_window">
+        <field name="name">Sales By Salesman</field>
+        <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
-        <field name="view_id" ref="view_sales_by_regions_tree"/>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
+        <field name="view_id" ref="view_sales_by_salesman_graph"/>
+    </record>
+
+    <record id="view_sales_product_total_price_tree" model="ir.ui.view">
+        <field name="name">sold.product.total.price.tree</field>
+        <field name="model">sale.report</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sold products and Total Price">
+                <field name="product_id"/>
+                <field name="price_total"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sales_product_total_price_graph" model="ir.ui.view">
+         <field name="name">sold.product.total.price.graph</field>
+         <field name="model">sale.report</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Sold products and Total Price" type="bar">
+                 <field name="product_id" />
+                 <field name="price_total" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_sales_product_total_price_graph" model="ir.actions.act_window">
+        <field name="name">Sold product and Total Price</field>
+        <field name="res_model">sale.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
+        <field name="view_id" ref="view_sales_product_total_price_graph"/>
+    </record>
+
+    <record id="action_quotatio_for_sale" model="ir.actions.act_window">
+        <field name="name">Quotation For Sale</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','draft'),('date_order','&lt;=', time.strftime('%Y-%m-%d')),('date_order','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
+   		<field name="view_id" ref="sale.view_order_tree"/>
     </record>
 
 </data>
