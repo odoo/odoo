@@ -20,7 +20,7 @@
                     <field name="online"/>
                     <field name="readonly"/>
                 </group>
-                <group colspan="2" attrs="{'invisible':[('type','!=','realstore')]}">
+                <group colspan="2" attrs="{'invisible':[('type','=','db')]}">
                     <field name="path"/>
                 </group>
             </form>
@@ -260,7 +260,7 @@
         <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree colors="blue:type in ('url')" string="Documents">
+            <tree colors="blue:type in ('url')" string="Documents"> *-*
                 <field name="name"/>
                 <field name="type"/>
                 <field name="datas_fname"/>
