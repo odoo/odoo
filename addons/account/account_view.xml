@@ -31,8 +31,8 @@
                         </form>
                     </field>
                     <separator colspan="4" string="States"/>
-                    <field name="state" select="1" readonly="1"/>
-                    <group col="2" colspan="2">
+                    <group>
+                    	<field name="state" select="1" readonly="1"/>
                         <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="gtk-dnd"/>
                         <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="gtk-dnd"/>
                     </group>
@@ -202,14 +202,15 @@
                         <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
                         <filter icon="terp-purchase" string="Purchase Accounts" domain="[('type','=','purchase')]"/>
                         <separator orientation="vertical"/>
-	                    <field name="code" select="1"/>
-	                    <field name="name" select="1"/>
-	                    <field name="user_type" select="1"/>
-	                    <field name="type" select="1"/>
+	                    <field name="code"/>
+	                    <field name="name"/>
+	                    <field name="user_type"/>
+	                    <field name="type"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
                     	<filter string="Parent Account" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
+                    	<separator orientation="vertical"/>
                     	<filter string="User Type" icon="terp-folder-blue" domain="" context="{'group_by':'user_type'}"/>
                     	<filter string="Internal Type" icon="terp-folder-yellow" domain="" context="{'group_by':'type'}"/>
                     </group>
@@ -236,6 +237,8 @@
                 <tree string="Chart of accounts" toolbar="1" colors="blue:type in ('view');black:type not in ('view')">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="user_type" invisible="1"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
@@ -313,6 +316,8 @@
                 <tree string="Account Journal">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="type" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -696,7 +701,8 @@
                     <field name="sum"/>
                     <field name="sum_period"/>
                     <newline/>
-                    <field colspan="4" name="info"/>
+                    <separator string="Description" colspan="4"/>
+                    <field colspan="4" name="info" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -724,6 +730,7 @@
                     <field name="name"/>
                     <field name="price_include" groups="base.group_extended"/>
                     <field name="description"/>
+                    <field name="tax_group" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -742,7 +749,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Tax Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Tax Group" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'tax_group'}"/>
                     </group>
                 </search>
             </field>
@@ -1796,6 +1803,8 @@
                 <tree string="Account Template">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="type" invisible="1"/>
+                    <field name="user_type" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1896,6 +1905,10 @@
                     <field name="account_root_id"/>
                     <field name="tax_code_root_id"/>
                     <field name="bank_account_view_id"/>
+                    <field name="property_account_receivable" invisible="1"/>
+                    <field name="property_account_payable" invisible="1"/>
+                    <field name="property_account_expense_categ" invisible="1"/>
+                    <field name="property_account_income_categ" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -2015,6 +2028,7 @@
                 <tree string="Account Tax Code Template" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -2026,9 +2040,9 @@
             <field name="arch" type="xml">
                 <search string="Search tax template">
                 	<group>
-	                	<field name="name" select="1"/>
-	                    <field name="code" select="1"/>
-	                    <field name="parent_id" select="1"/>
+	                	<field name="name"/>
+	                    <field name="code"/>
+	                    <field name="parent_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
