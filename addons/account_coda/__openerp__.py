@@ -30,7 +30,9 @@
     "depends":["base", "account"],
     "demo_xml":["coda_demo.xml"],
     "init_xml":[],
-    "update_xml" : ["security/ir.model.access.csv","coda_wizard.xml","coda_view.xml"],
+    "update_xml" : ["security/ir.model.access.csv",
+                    "wizard/account_coda_import.xml",
+                    "account_coda_view.xml"],
     "active":False,
     "installable":True,
 
