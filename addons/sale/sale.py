@@ -20,10 +20,11 @@
 ##############################################################################
 
 import time
+from dateutil.relativedelta import relativedelta
+
 import netsvc
 from osv import fields, osv
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from tools import config
 from tools.translate import _
 
@@ -41,8 +42,8 @@ class sale_shop(osv.osv):
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
-sale_shop()
 
+sale_shop()
 
 def _incoterm_get(self, cr, uid, context=None):
     if context is None:
@@ -333,7 +334,7 @@ class sale_order(osv.osv):
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
         for (id,name) in self.name_get(cr, uid, ids):
             message = _('Sale order ') + " '" + name + "' "+ _("is in draft state")
-            self.log(cr, uid, id, message) 
+            self.log(cr, uid, id, message)
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part):
@@ -566,7 +567,7 @@ class sale_order(osv.osv):
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            for line in o.order_line: 
+            for line in o.order_line:
                 product.append(line.product_id.default_code)
         params = ', '.join(map(lambda x : str(x),product))
         message = _('Sale order ') + " '" + o.name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("is confirmed")
@@ -934,7 +935,7 @@ class sale_order_line(osv.osv):
             context = {}
         for (id,name) in self.name_get(cr, uid, ids):
             message = _('Sale order line') + " '" + name + "' "+ _("is confirmed")
-            self.log(cr, uid, id, message)  
+            self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
     def button_done(self, cr, uid, ids, context=None):
