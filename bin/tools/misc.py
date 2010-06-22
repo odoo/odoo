@@ -1159,6 +1159,11 @@ def extract_zip_file(zip_file, outdirectory):
     zf.close()
 
 def detect_ip_addr():
+    """Try a very crude method to figure out a valid external
+       IP or hostname for the current machine. Don't rely on this
+       for binding to an interface, but it could be used as basis
+       for constructing a remote URL to the server.
+    """
     def _detect_ip_addr():
         from array import array
         import socket
