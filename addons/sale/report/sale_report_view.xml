@@ -238,6 +238,27 @@
         <field name="view_id" ref="view_sales_product_total_price_graph"/>
     </record>
 
+
+	<record id="view_product_category_total_price_tree" model="ir.ui.view">
+		<field name="name">sales.category.product.price.tree</field>
+		<field name="model">sale.report</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Total Price By Product Category">
+				<field name="categ_id"/>
+				<field name="price_total"/>
+			</tree>
+		</field>
+	</record>
+	<record id="action_view_product_category_total_price_graph" model="ir.actions.act_window">
+		<field name="name">Total Price By Product Category</field>
+		<field name="res_model">sale.report</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree</field>
+		<field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
+		<field name="view_id" ref="view_product_category_total_price_tree"/>
+    </record>
+
     <record id="action_quotatio_for_sale" model="ir.actions.act_window">
         <field name="name">Quotation For Sale</field>
         <field name="res_model">sale.order</field>
