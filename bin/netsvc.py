@@ -268,8 +268,11 @@ class Logger(object):
             # better ignore the exception and carry on..
             pass
 
-    def set_loglevel(self, level):
-        log = logging.getLogger()
+    def set_loglevel(self, level, *args):
+        if args and args[0]:
+            log = logging.getLogger(str(args[0]))
+        else:
+            log = logging.getLogger()
         log.setLevel(logging.INFO) # make sure next msg is printed
         log.info("Log level changed to %s" % logging.getLevelName(level))
         log.setLevel(level)

@@ -556,9 +556,9 @@ GNU Public Licence.
     def exp_login_message(self):
         return tools.config.get('login_message', False)
 
-    def exp_set_loglevel(self,loglevel):
+    def exp_set_loglevel(self, loglevel, *args):
         l = netsvc.Logger()
-        l.set_loglevel(int(loglevel))
+        l.set_loglevel(int(loglevel), *args)
         return True
 
     def exp_get_stats(self):
