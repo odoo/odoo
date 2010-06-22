@@ -52,7 +52,7 @@ class sale_report(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
-        'delay':fields.float('Days to Close', digits=(16,2), readonly=True),
+        'delay':fields.float('Commitment Delay', digits=(16,2), readonly=True),
         'price_average':fields.float('Average Price', readonly=True,group_operator="avg"),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),

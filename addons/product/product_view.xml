@@ -251,6 +251,11 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
         </record>
+        <menuitem
+            action="product_category_action"
+            id="product.menu_products_category"
+            parent="base.menu_product"
+            sequence="0"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Products Categories</field>
             <field name="type">ir.actions.act_window</field>
