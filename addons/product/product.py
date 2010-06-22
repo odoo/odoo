@@ -552,6 +552,7 @@ class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
     _rec_name = 'ean'
+    _order = "sequence"
     _columns = {
         'sequence': fields.integer('Sequence'),
         'name' : fields.char('Description', size=64),
