@@ -101,6 +101,8 @@ def _coda_parsing(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     codafile = data['form']['coda']
     journal_code = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context).code
+    account_period_obj = pool.get('account.period')
+    period = account_period_obj.find(cr, uid, context=context)[0]
     def_pay_acc = data['form']['def_payable']
     def_rec_acc = data['form']['def_receivable']
 
@@ -113,12 +115,13 @@ def _coda_parsing(self, cr, uid, data, context):
     str_not1=''
 
     bank_statements=[]
+    bank_statement = {}
     recordlist = base64.decodestring(codafile).split('\n')
     recordlist.pop()
     for line in recordlist:
         if line[0] == '0':
             # header data
-            bank_statement = {}
+           
             bank_statement["bank_statement_line"]={}
             bank_statement_lines = {}
             bank_statement['date'] = str2date(line[5:11])
@@ -213,6 +216,7 @@ def _coda_parsing(self, cr, uid, data, context):
 
         elif line[0]=='9':
             # footer record
+            
             bank_statements.append(bank_statement)
     #end for
     bkst_list=[]
@@ -221,7 +225,7 @@ def _coda_parsing(self, cr, uid, data, context):
             bk_st_id = pool.get('account.bank.statement').create(cr,uid,{
                 'journal_id': statement['journal_id'],
                 'date':time.strftime('%Y-%m-%d',time.strptime(statement['date'],"%y/%m/%d")),
-                'period_id':statement['period_id'],
+                'period_id':statement['period_id'] or period,
                 'balance_start': statement["balance_start"],
                 'balance_end_real': statement["balance_end_real"],
                 'state': 'draft',
