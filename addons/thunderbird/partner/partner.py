@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -85,7 +85,7 @@ class tinythunderbird_partner(osv.osv):
         dictcreate = dict(vals)
         import email
         header_name = email.Header.decode_header(dictcreate['name'])
-        dictcreate['name'] = header_name and header_name[0] and header_name[0][0] 
+        dictcreate['name'] = header_name and header_name[0] and header_name[0][0]
         add_obj=self.pool.get('res.partner.address')
         case_pool=self.pool.get(dictcreate.get('object','crm.case'))
         partner_ids=add_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
@@ -198,7 +198,7 @@ class tinythunderbird_partner(osv.osv):
         return super(tinythunderbird_partner, self).unlink(cr, uid, ids,context)
 
     def thunderbird_objectsearch(self,cr,user,vals):
-        obj_list= [('crm.claim', 'Claim'), ('crm.lead','Lead'), ('crm.meeting','Metting'), ('crm.opportunity','Opportunity'), ('crm.phonecall','Phonecall'), ('crm.fundraising','Fund raising'), ('crm.helpdesk','Helpdesk')]
+        obj_list= [('crm.claim', 'Claim'), ('crm.lead','Lead'), ('crm.meeting','Meeting'), ('crm.opportunity','Opportunity'), ('crm.phonecall','Phonecall'), ('crm.fundraising','Fund raising'), ('crm.helpdesk','Helpdesk')]
         object=[]
         model_obj = self.pool.get('ir.model')
         for obj in obj_list:
