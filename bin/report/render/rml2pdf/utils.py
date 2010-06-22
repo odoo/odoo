@@ -65,7 +65,7 @@ def _child_get(node, self=None, tagname=None):
                             eval(n.get('rml_except'), {}, self.localcontext)
                         except GeneratorExit:
                             continue
-                        except:
+                        except Exception:
                             logging.getLogger('report').exception()
                             continue
                     if n.get('rml_tag'):
@@ -77,7 +77,7 @@ def _child_get(node, self=None, tagname=None):
                             yield n2
                         except GeneratorExit:
                             yield n
-                        except:
+                        except Exception:
                             logging.getLogger('report').exception()
                             yield n
                     else:
@@ -89,7 +89,7 @@ def _child_get(node, self=None, tagname=None):
                 eval(n.get('rml_except'), {}, self.localcontext)
             except GeneratorExit:
                 continue
-            except:
+            except Exception:
                 logging.getLogger('report').exception()
                 continue
         if self and self.localcontext and n.get('rml_tag'):
@@ -102,7 +102,7 @@ def _child_get(node, self=None, tagname=None):
                 tagname = ''
             except GeneratorExit:
                 pass
-            except:
+            except Exception:
                 logging.getLogger('report').exception()
                 pass
         if (tagname is None) or (n.tag==tagname):
@@ -150,7 +150,7 @@ def unit_get(size):
             decimal_point = '.'
             try:
                 decimal_point = locale.nl_langinfo(locale.RADIXCHAR)
-            except:
+            except Exception:
                 decimal_point = locale.localeconv()['decimal_point']
 
             size = size.replace(decimal_point, '.')
