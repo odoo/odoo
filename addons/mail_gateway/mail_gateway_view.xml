@@ -182,11 +182,25 @@
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
             <field name="domain">[('history', '=', True)]</field>
-            <field name="view_id" ref="view_mailgate_message_tree"/>
+            <field name="view_id" ref="view_mailgate_thread_tree"/>
         </record>
-        
-        <menuitem id="menu_mailgate_message" name="Mailgateway Messages" action="action_view_mailgate_message"
-        	parent="base.menu_base_config"  sequence="20"/>
+
+        <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view1">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_mailgate_thread_tree"/>
+            <field name="act_window_id" ref="action_view_mailgate_thread"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view2">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mailgate_thread_form"/>
+            <field name="act_window_id" ref="action_view_mailgate_thread"/>
+        </record>
+
+        <menuitem id="base.menu_base_config_mail" name="Mail" parent="base.menu_base_config" sequence="10"/>
+        <menuitem id="menu_mailgate_thread" name="Mailgateway Threads" action="action_view_mailgate_thread"
+           parent="base.menu_base_config_mail" sequence="5"/>
 
         <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
             id="act_res_partner_emails" name="Emails"

@@ -17,7 +17,7 @@
 				    <label string="All draft account entries in this journal and period will be validated. It means you won't be able to modify their accouting fields." colspan="4"/>
                     <group colspan="4" col="6">
                     	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button icon="gtk-open" string="Validate" name="validate_move" type="object"/>
+                    	<button icon="terp-camera_test" string="Validate" name="validate_move" type="object"/>
                    </group>
                </form>
             </field>
@@ -34,7 +34,7 @@
 
         <menuitem
 	        name="Validate Ledger Postings"
-	        parent="account.menu_finance_periodical_processing"
+	        parent="periodical_processing_journal_entries_validation"
 	        action="action_validate_account_move"
 	        id="menu_validate_account_moves"
 	       />

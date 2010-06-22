@@ -24,7 +24,11 @@
         <field eval="[(6,0,[ref('group_account_manager')])]" name="groups_id"/>
     </record>
 
-    <record id="menu_finance_invoice" model="ir.ui.menu">
+    <record id="menu_finance_receivables" model="ir.ui.menu">
+        <field eval="[(6,0,[ref('group_account_invoice')])]" name="groups_id"/>
+    </record>
+
+    <record id="menu_finance_payables" model="ir.ui.menu">
         <field eval="[(6,0,[ref('group_account_invoice')])]" name="groups_id"/>
     </record>
 

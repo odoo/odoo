@@ -37,7 +37,7 @@
     "category" : "Generic Modules/Accounting",
     "website" : "http://tinyerp.com",
     "depends" : [
-        "base", 
+        "base",
         "account"
     ],
     "init_xml" : [
@@ -54,8 +54,12 @@
         "voucher_view.xml",
         "voucher_wizard.xml",
         "wizard/account_voucher_open_view.xml",
-        
+
     ],
+    "test" : [
+         "test/account_voucher.yml",
+    ],
+
     'certificate': '0037580727101',
     "active": False,
     "installable": True,

@@ -43,8 +43,12 @@ def OpenDAVConfig(**kw):
         def __init__(self, **kw):
             self.__dict__.update(**kw)
 
+        def getboolean(self, name):
+            return (str(getattr(self, name, 0)) in ('1', "yes", "true", "on", "True"))
+
     class Config:
         DAV = OpenDAV(**kw)
+
 
     return Config()
 
@@ -53,7 +57,6 @@ class DAVHandler(FixSendError,DAVRequestHandler):
     verbose = False
     
     def get_userinfo(self,user,pw):
-        print "get_userinfo"
         return False
     def _log(self, message):
         netsvc.Logger().notifyChannel("webdav",netsvc.LOG_DEBUG,message)
@@ -74,15 +77,15 @@ class DAVHandler(FixSendError,DAVRequestHandler):
 
     def setup(self):
         davpath = '/'+config.get_misc('webdav','vdir','webdav')
-        self.baseuri = "http://%s:%d/"% (self.server.server_name,self.server.server_port)
+        self.baseuri = "http://%s:%d/"% (self.server.server_name, self.server.server_port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
         
     
     def log_message(self, format, *args):
-        netsvc.Logger().notifyChannel('webdav',netsvc.LOG_DEBUG_RPC,format % args)
+        netsvc.Logger().notifyChannel('webdav', netsvc.LOG_DEBUG_RPC, format % args)
 
     def log_error(self, format, *args):
-        netsvc.Logger().notifyChannel('xmlrpc',netsvc.LOG_WARNING,format % args)
+        netsvc.Logger().notifyChannel('xmlrpc', netsvc.LOG_WARNING, format % args)
 
     def do_PUT(self):
         dc=self.IFACE_CLASS        
@@ -179,7 +182,7 @@ try:
         conf = OpenDAVConfig(**_dc)
         handler._config = conf
         reg_http_service(HTTPDir(directory,DAVHandler,OpenERPAuthProvider()))
-        netsvc.Logger().notifyChannel('webdav',netsvc.LOG_INFO,"WebDAV service registered at path: %s/ "% directory)
+        netsvc.Logger().notifyChannel('webdav', netsvc.LOG_INFO, "WebDAV service registered at path: %s/ "% directory)
 except Exception, e:
     logger = netsvc.Logger()
     logger.notifyChannel('webdav', netsvc.LOG_ERROR, 'Cannot launch webdav: %s' % e)

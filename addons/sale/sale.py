@@ -39,6 +39,7 @@ class sale_shop(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 sale_shop()
 
@@ -51,7 +52,6 @@ def _incoterm_get(self, cr, uid, context=None):
 
 class sale_order(osv.osv):
     _name = "sale.order"
-    _log_create = True
     _description = "Sale Order"
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -114,7 +114,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 procurement_order mp on (mp.move_id=m.id)
             WHERE
-                p.sale_id = ANY(%s) GROUP BY mp.state, p.sale_id''',(ids,))
+                p.sale_id IN %s GROUP BY mp.state, p.sale_id''',(tuple(ids),))
         for oid, nbr, mp_state in cr.fetchall():
             if mp_state == 'cancel':
                 continue
@@ -277,7 +277,7 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.many2one('res.company','Company',select=1),
+        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
@@ -322,7 +322,7 @@ class sale_order(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):
             return False
-        cr.execute('select id from sale_order_line where order_id = ANY(%s) and state=%s',(ids,'cancel'))
+        cr.execute('select id from sale_order_line where order_id IN %s and state=%s',(tuple(ids),'cancel'))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
@@ -331,6 +331,9 @@ class sale_order(osv.osv):
             # Deleting the existing instance of workflow for SO
             wf_service.trg_delete(uid, 'sale.order', inv_id, cr)
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Sale order ') + " '" + name + "' "+ _("is in draft state")
+            self.log(cr, uid, id, message) 
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part):
@@ -422,6 +425,7 @@ class sale_order(osv.osv):
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
+
         inv = {
             'name': order.client_order_ref or order.name,
             'origin': order.name,
@@ -439,6 +443,7 @@ class sale_order(osv.osv):
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice' : context.get('date_invoice',False),
             'company_id' : order.company_id.id,
+            'user_id':order.user_id and order.user_id.id or False
         }
         inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))
@@ -548,18 +553,25 @@ class sale_order(osv.osv):
             sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
                     {'state': 'cancel'})
         self.write(cr, uid, ids, {'state': 'cancel'})
+        message = _('Sale order') + " '" + sale.name + "' "+ _("created on")+" '" +sale.create_date + _(" is cancelled")
+        self.log(cr, uid, id, message)
         return True
 
     def action_wait(self, cr, uid, ids, *args):
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Quotation ') + " '" + name + "' "+ _("converted to sale order.")
-            self.log(cr, uid, id, message)
+        product=[]
+        product_obj=self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
+            for line in o.order_line: 
+                product.append(line.product_id.default_code)
+        params = ', '.join(map(lambda x : str(x),product))
+        message = _('Sale order ') + " '" + o.name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("is confirmed")
+        self.log(cr, uid, id, message)
+
 
     def procurement_lines_get(self, cr, uid, ids, *args):
         res = []
@@ -832,8 +844,8 @@ class sale_order_line(osv.osv):
                     \n* The \'Done\' state is set automatically when sale order is set as done. \
                     \n* The \'Cancelled\' state is set automatically when user cancel sale order.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
-        'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
+        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
     }
     _order = 'sequence, id'
     _defaults = {
@@ -928,11 +940,16 @@ class sale_order_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
                 raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced !'))
+        message = _('Sale order line') + " '" + line.name + "' "+_("is cancelled")
+        self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_confirm(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Sale order line') + " '" + name + "' "+ _("is confirmed")
+            self.log(cr, uid, id, message)  
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
     def button_done(self, cr, uid, ids, context=None):
@@ -942,7 +959,8 @@ class sale_order_line(osv.osv):
         res = self.write(cr, uid, ids, {'state': 'done'})
         for line in self.browse(cr, uid, ids, context=context):
             wf_service.trg_write(uid, 'sale.order', line.order_id.id, cr)
-
+        message = _('Sale order line') + " '" + line.name + "' "+_("is done")
+        self.log(cr, uid, id, message)
         return res
 
     def uos_change(self, cr, uid, ids, product_uos, product_uos_qty=0, product_id=None):

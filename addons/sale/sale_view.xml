@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="sale.group_sale_user"/> 
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="4"/>
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
         <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
 
         <record id="view_shop_form" model="ir.ui.view">
@@ -14,6 +15,7 @@
                 <form string="Sale Shop">
                     <field name="name" select="1"/>
                     <field name="warehouse_id" required="1" select="1" widget="selection"/>
+                    <field name="company_id" widget='selection'/>
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
                     <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>
@@ -97,7 +99,7 @@
            view_mode="form"
            target="new"
            key2="client_action_multi"
-           id="action_view_sale_advance_payment_inv"/> 
+           id="action_view_sale_advance_payment_inv"/>
 
 
         <record id="view_order_form" model="ir.ui.view">
@@ -114,7 +116,7 @@
                         <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
                         <field name="invoiced"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook colspan="5">
                         <page string="Sale Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
@@ -506,7 +508,7 @@
 
         <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product" groups="base.group_extended"/>
 
-        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="6"/>
+        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="5"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2"/>
         <!-- configartion view -->
 

@@ -1,8 +1,8 @@
 <openerp>
     <data>
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
-        <menuitem id="next_id_71" name="Financial Project Management" parent="base.menu_main_pm" groups="account.group_account_invoice" sequence="20"/>
-        <menuitem id="menu_invoicing" name="Billing" parent="next_id_71" sequence="20"/>
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
+<!--        <menuitem id="next_id_71" name="Financial Project Management" parent="base.menu_main_pm" groups="account.group_account_invoice" sequence="20"/>-->
+        <menuitem id="menu_invoicing" name="Billing" parent="base.menu_main_pm" sequence="4"/>
 
         <record id="action_hr_tree_invoiced_all" model="ir.actions.act_window">
             <field name="name">All Uninvoiced Entries</field>
@@ -23,7 +23,7 @@
             <field name="search_view_id" ref="account.view_account_analytic_account_search"/>
             <field name="domain">[]</field>
         </record>
-        <menuitem name="Analytic Accounts" action="action_account_analytic_all" id="menu_action_account_analytic_all" parent="next_id_71"/>
+<!--        <menuitem name="Analytic Accounts" action="action_account_analytic_all" id="menu_action_account_analytic_all" parent="next_id_71"/>-->
 
         <record id="action_account_analytic_managed_overpassed" model="ir.actions.act_window">
             <field name="name">Overpassed Accounts</field>

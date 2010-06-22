@@ -49,7 +49,7 @@ class backlog_sprint_assign(osv.osv_memory):
                     'description': backlog.note,
                     'project_id': backlog.project_id.id,
                     'user_id': False,
-                    'planned_hours':backlog.planned_hours,
+                    'planned_hours':backlog.expected_hours,
                     'remaining_hours':backlog.expected_hours,
                 })
             if data['state_open'] and backlog.state == "draft":

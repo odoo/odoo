@@ -41,7 +41,7 @@ class pos_sales_user(report_sxw.rml_parse):
         self.cr.execute("select po.name as pos,po.date_order,ru.name as user,po.state,rc.name " \
                         "from pos_order as po,res_users as ru,res_company as rc " \
                         "where po.date_order >= %s and po.date_order <= %s " \
-                        "and po.company_id=rc.id and po.user_id=ru.id and po.user_id in %s " \
+                        "and po.company_id=rc.id and po.user_id=ru.id and po.user_id IN %s " \
                             ,(dt1,dt2,tuple(form['user_id'])))
 
         data = self.cr.dictfetchall()

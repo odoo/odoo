@@ -311,7 +311,7 @@ class document_storage(osv.osv):
             if not fname:
                 return None
             path = storage_bo.path
-            return ( storage_bo.id, 'file', os.path.join(path,fname))
+            return ( storage_bo.id, 'file', os.path.join(path, fname))
         else:
             raise TypeError("No %s storage" % boo.type)
 

@@ -3,8 +3,8 @@
     <data>
 
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager" sequence="3"/>
-        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
+            groups="group_mrp_user,group_mrp_manager" sequence="8"/>
+        <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="5"/>
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
 <!--        <menuitem name="Control" id="menu_mrp_control" parent="base.menu_mrp_root"  sequence="3" />-->
@@ -78,7 +78,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="Properties"
+        <menuitem name="Master Bill of Materials"
             id="menu_mrp_property"
             parent="menu_mrp_configuration"
             groups="base.group_extended"
@@ -230,8 +230,8 @@
         </record>
  <!--       <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="mrp.menu_mrp_bom" groups="base.group_extended"
                   sequence="100" />-->
-        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="40" />
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="30"/>
+        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="40" />
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="30"/>
 
         <!--
           Bill of Materials
@@ -337,7 +337,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="domain">[('bom_id','=',False),('multi_level_bom','=',True)]</field>
+            <field name="domain">[('bom_id','=',False)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
         </record>
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
@@ -415,11 +415,11 @@
         -->
 
         <menuitem action="procurement.procurement_action" id="menu_mrp_procurement_action"
-                  parent="mrp.menu_mrp_manufacturing" sequence="2" />
+                  parent="mrp.menu_mrp_manufacturing" sequence="3" />
 <!--        <menuitem action="procurement.procurement_action5" id="menu_mrp_procurement_exception_action"-->
 <!--                  parent="mrp.menu_mrp_control" sequence="1" />-->
 
-         <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="4"/>
+         <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="base.menu_mrp_root" sequence="3"/>
         <menuitem action="procurement.action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
 
         <!--
@@ -851,51 +851,11 @@
 
         <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
             groups="base.group_extended"
-            sequence="2"/>
+            sequence="4"/>
+        <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
-        <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_mrp_configuration" sequence="1"/>
-        <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
+        <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
+        <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_config" sequence="1"/>
 
-        <!-- Display the BoMs in the product form -->
-
-        <record model="ir.ui.view" id="view_product_form_expiry">
-            <field name="name">product.normal.form</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view" />
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Bill of Materials">
-                        <field name="bom_ids" colspan="4" nolabel="1" widget="one2many_form">
-                            <group colspan="4" col="6">
-                                <field name="name" select="1" colspan="4"/>
-                                <field name="code" select="1" string="BoM Reference" groups="base.group_extended"/>
-                                <newline/>
-                                <field name="product_uom"/>
-                                <field name="product_qty"/>
-                                <field name="routing_id" groups="base.group_extended"/>
-                                <newline/>
-                                <field name="product_uos" groups="product.group_uos"/>
-                                <field name="product_uos_qty" groups="product.group_uos" />
-                                <newline/>
-                                <field name="type" groups="base.group_extended"/>
-                                <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                            </group>
-                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list">
-                                <tree string="Components" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
-                                    <field name="product_uom"/>
-                                    <field name="product_qty"/>
-                                    <field name="name" invisible="1"/>
-                                    <field name="date_start"/>
-                                    <field name="date_stop"/>
-                                </tree>
-                            </field>
-                        </field>
-                    </page>
-                </notebook>
-            </field>
-        </record>
- 
     </data>
 </openerp>

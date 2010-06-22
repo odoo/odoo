@@ -45,9 +45,9 @@ class account_move_line_reconcile(osv.osv_memory):
     _description = 'Account move line reconcile'
     _columns = {
         'trans_nbr': fields.integer('# of Transaction', readonly=True),
-        'credit': fields.float('Credit amount',readonly=True),
-        'debit': fields.float('Debit amount',readonly=True),
-        'writeoff': fields.float('Write-Off amount',readonly=True),
+        'credit': fields.float('Credit amount', readonly=True),
+        'debit': fields.float('Debit amount', readonly=True),
+        'writeoff': fields.float('Write-Off amount', readonly=True),
         }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -56,11 +56,11 @@ class account_move_line_reconcile(osv.osv_memory):
         if 'trans_nbr' in fields:
             res.update({'trans_nbr':data['trans_nbr']})
         if 'credit' in fields:
-            res.update({'trans_nbr':data['credit']})
+            res.update({'credit':data['credit']})
         if 'debit' in fields:
-            res.update({'trans_nbr':data['debit']})
+            res.update({'debit':data['debit']})
         if 'writeoff' in fields:
-            res.update({'trans_nbr':data['writeoff']})
+            res.update({'writeoff':data['writeoff']})
         return res
 
     def partial_check(self, cr, uid, ids, context=None):

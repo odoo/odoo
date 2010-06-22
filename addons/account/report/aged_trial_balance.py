@@ -80,13 +80,13 @@ class aged_trial_report(rml_parse.rml_parse):
 		self.cr.execute("""SELECT partner_id, SUM(debit-credit)
 					FROM account_move_line AS line, account_account
 				    WHERE (line.account_id = account_account.id)
-					AND (account_account.type =ANY(%s))
-					AND (partner_id =ANY (%s))
+					AND (account_account.type IN %s)
+					AND (partner_id IN %s)
 					AND ((reconcile_id IS NULL)
 					OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
 					AND (account_account.company_id = %s)
 					AND account_account.active
-					GROUP BY partner_id""" , (self.ACCOUNT_TYPE, partner_ids,form['date1'],form['company_id'],))
+					GROUP BY partner_id""" , (tuple(self.ACCOUNT_TYPE), tuple(partner_ids),form['date1'],form['company_id'],))
 		t = self.cr.fetchall()
 		for i in t:
 			totals[i[0]] = i[1]
@@ -97,14 +97,14 @@ class aged_trial_report(rml_parse.rml_parse):
 			self.cr.execute("""SELECT partner_id, SUM(debit-credit)
 						FROM account_move_line AS line, account_account
 						WHERE (line.account_id=account_account.id)
-						AND (account_account.type =ANY (%s))
+						AND (account_account.type IN %s)
 						AND (COALESCE(date_maturity,date) < %s)
-						AND (partner_id =ANY (%s))
+						AND (partner_id IN %s)
 						AND ((reconcile_id IS NULL)
 						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
 						AND (account_account.company_id = %s)
 						AND account_account.active
-						GROUP BY partner_id""", (self.ACCOUNT_TYPE, form['date1'], partner_ids,form['date1'], form['company_id'],))
+						GROUP BY partner_id""", (tuple(self.ACCOUNT_TYPE), form['date1'], tuple(partner_ids),form['date1'], form['company_id'],))
 			t = self.cr.fetchall()
 			for i in t:
 				future_past[i[0]] = i[1]
@@ -112,14 +112,14 @@ class aged_trial_report(rml_parse.rml_parse):
 			self.cr.execute("""SELECT partner_id, SUM(debit-credit)
 					FROM account_move_line AS line, account_account
 					WHERE (line.account_id=account_account.id)
-						AND (account_account.type =ANY (%s))
+						AND (account_account.type IN %s)
 						AND (COALESCE(date_maturity,date) > %s)
-						AND (partner_id =ANY (%s))
+						AND (partner_id IN %s)
 						AND ((reconcile_id IS NULL)
 						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
 						AND (account_account.company_id = %s)
 						AND account_account.active
-						GROUP BY partner_id""" , (self.ACCOUNT_TYPE, form['date1'], partner_ids, form['date1'], form['company_id'],))
+						GROUP BY partner_id""" , (tuple(self.ACCOUNT_TYPE), form['date1'], tuple(partner_ids), form['date1'], form['company_id'],))
 			t = self.cr.fetchall()
 			for i in t:
 				future_past[i[0]] = i[1]
@@ -131,14 +131,14 @@ class aged_trial_report(rml_parse.rml_parse):
 			self.cr.execute("""SELECT partner_id, SUM(debit-credit)
 					FROM account_move_line AS line, account_account
 					WHERE (line.account_id=account_account.id)
-						AND (account_account.type =ANY (%s))
+						AND (account_account.type IN %s)
 						AND (COALESCE(date_maturity,date) BETWEEN %s AND %s)
-						AND (partner_id =ANY (%s))
+						AND (partner_id IN %s)
 						AND ((reconcile_id IS NULL)
 						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
 						AND (account_account.company_id = %s)
 						AND account_account.active
-					GROUP BY partner_id""" , (self.ACCOUNT_TYPE, form[str(i)]['start'], form[str(i)]['stop'],partner_ids ,form['date1'] ,form['company_id'],))
+					GROUP BY partner_id""" , (tuple(self.ACCOUNT_TYPE), form[str(i)]['start'], form[str(i)]['stop'], tuple(partner_ids) ,form['date1'] ,form['company_id'],))
 
 			t = self.cr.fetchall()
 			d = {}

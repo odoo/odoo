@@ -53,7 +53,7 @@
                     <notebook>
                         <page string="Line">
                             <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
-                            <field name="uos_id"/>
+                            <field name="uos_id"  widget="selection" on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
                             <field name="quantity"/>
                             <field name="price_unit"/>
                             <field name="discount"/>
@@ -193,7 +193,7 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="gtk-apply"/>
+                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific"/>
                                 <field name="amount_untaxed"/>
                                 <label string="" colspan="2"/>
                                 <field name="amount_tax"/>
@@ -202,12 +202,12 @@
                                 <field name="state"/>
                                 <field name="residual"/>
                                 <group col="3" colspan="4">
-                                    <button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-apply"/>
+                                    <button name="invoice_open" states="draft,proforma2" string="Validate" icon="terp-camera_test"/>
                                     <button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-ok"/>
-                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
-                                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="terp-gtk-stop"/>
+                                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="stock_effects-object-colorize"/>
                                     <button name="%(action_account_state_open)d" type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
-                                    <button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='paid' icon="gtk-execute"/>
+                                    <button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='paid' icon="terp-dolar"/>
                                 </group>
                             </group>
                         </page>
@@ -220,7 +220,8 @@
                             <field name="name"/>
                             <newline/>
                             <field name="origin" groups="base.group_extended"/>
-                            <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id" groups="base.group_extended"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="address_contact_id" groups="base.group_extended"/>
+                            <field name="user_id"/>
                             <field name="move_id"/>
                             <separator colspan="4" string="Additional Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
@@ -256,7 +257,7 @@
                     <field name="number"/>
                     <field name="type" invisible="1"/>
                     <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
-                    <button name="%(action_account_change_currency)d" type="action" icon="gtk-apply" string="Change Currency"/>
+                    <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change Currency"/>
                     <newline/>
                     <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" groups="base.group_user"/>
                     <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
@@ -286,7 +287,7 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" groups="base.group_user" icon="gtk-apply"/>
+                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific"/>
                                 <field name="amount_untaxed"/>
                                 <label string="" colspan="2"/>
                                 <field name="amount_tax"/>
@@ -295,11 +296,11 @@
                                 <field name="state"/>
                                 <field name="residual"/>
                                 <group col="4" colspan="4" groups="base.group_user">
-                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="gtk-print"/>
-                                    <button name="invoice_open" states="draft,proforma2" string="Create" icon="gtk-execute"/>
+                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-check"/>
+                                    <button name="invoice_open" states="draft,proforma2" string="Create" icon="terp-document-new"/>
                                     <button name="%(action_account_invoice_pay)d" type='action' string='Pay Invoice' states='open' icon="gtk-ok"/>
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
-                                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
+                                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                                     <button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Credit Note' states='paid' icon="gtk-execute"/>
                                 </group>
@@ -404,7 +405,7 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree"/>
         </record>
-        <menuitem name="Invoices" id="menu_finance_invoice" parent="account.menu_finance" sequence="2"/>
+<!--        <menuitem name="Invoices" id="menu_finance_invoice" parent="account.menu_finance" sequence="2"/>-->
 
         <record id="action_invoice_tree1" model="ir.actions.act_window">
             <field name="name">Customer Invoices</field>
@@ -427,10 +428,10 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
-        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="account.menu_finance_invoice"/>
+        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
-            <field name="name">Supplier Invoices</field>
+            <field name="name">Vendor Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -439,7 +440,7 @@
             <field name="context">{'type':'in_invoice'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
-        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="account.menu_finance_invoice"/>
+        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
 
         <record id="action_invoice_tree3" model="ir.actions.act_window">
             <field name="name">Customer Refunds</field>
@@ -465,10 +466,10 @@
             <field name="act_window_id" ref="action_invoice_tree3"/>
         </record>
 
-        <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="account.menu_finance_invoice"/>
+        <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree4" model="ir.actions.act_window">
-            <field name="name">Supplier Refunds</field>
+            <field name="name">Vendor Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -477,7 +478,7 @@
             <field name="context">{'type':'in_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
         </record>
-        <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="account.menu_finance_invoice"/>
+        <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 
         <act_window domain="[('partner_id','=',active_id)]" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
