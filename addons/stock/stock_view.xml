@@ -213,7 +213,8 @@
                     <newline/>
                     <field name="author_id" readonly="1"/>
                     <newline/>
-                    <field name="description"/>
+					<separator string="Description" colspan="4"/>
+                    <field colspan="4" name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -550,12 +551,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Entry Lines">
+                	<group height="200" width="500">
                     <field name="address_id" invisible="True" context="{'contact_display':'partner'}"/>
                     <field name="picking_id" invisible="True"/>
-                    <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('picking_id.address_id','=',address_id)]" name="move_ids" nolabel="1"/><newline/>
+                    <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('picking_id.address_id','=',address_id)]" name="move_ids" nolabel="1"  height="100" width="500"/><newline/>
                     <group colspan="4">
                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
                         <button name="action_move" string="Add" type="object" icon="gtk-add"/>
+                    </group>
                     </group>
                 </form>
                </field>
