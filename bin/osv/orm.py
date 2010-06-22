@@ -2552,14 +2552,15 @@ class orm(orm_template):
             # The parent_left/right computation may take up to
             # 5 seconds. No need to recompute the values if the
             # parent is the same. Get the current value of the parent
-            base_query = 'SELECT id FROM "%s" WHERE id IN %%s AND %s' % \
-                            (self._table, self._parent_name)
-            params = (tuple(ids),)
             parent_val = vals[self._parent_name]
             if parent_val:
-                cr.execute(base_query + " != %s", params + (parent_val,))
+                query = "SELECT id FROM %s WHERE id IN %%s AND (%s != %%s OR %s IS NULL)" % \
+                                (self._table, self._parent_name, self._parent_name)
+                cr.execute(query, (tuple(ids), parent_val))
             else:
-                cr.execute(base_query + " IS NULL", params)
+                query = "SELECT id FROM %s WHERE id IN %%s AND (%s IS NOT NULL)" % \
+                                (self._table, self._parent_name)
+                cr.execute(query, (tuple(ids),))
             parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
         upd0 = []
