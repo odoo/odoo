@@ -93,7 +93,7 @@
                             <group colspan="4">
                                 <separator string="Invoicing" colspan="4"/>
                                 <field name="sale_journal" domain="[('type','=','sale'),('company_id','=',company_id)]"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection"/>
                                 <field name="invoice_id"/>
                                 <group colspan="2" col="3">
                                     <button name="invoice" string="Create _Invoice" states="paid"/>

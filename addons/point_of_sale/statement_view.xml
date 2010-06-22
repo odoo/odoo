@@ -204,7 +204,7 @@
        <!-- <menuitem action="action_bank_statement_tree_all" id="menu_statement_tree_all" parent="point_of_sale.menu_point_root" sequence="2"/-->
 <!--        <menuitem action="action_bank_statement_tree_all" id="menu_statement_tree_all" parent="point_of_sale.menu_point_root" sequence="2"/>
 -->
-        <menuitem name="Cashboxes" parent="point_of_sale.menu_point_root" id="menu_statement_tree_all" sequence="3"/>
+        <menuitem name="Cash Register" parent="point_of_sale.menu_point_root" id="menu_statement_tree_all" sequence="3"/>
 
         <record id="action_bank_statement_tree1" model="ir.actions.act_window">
             <field name="name">My Cashboxes to Close</field>
@@ -328,7 +328,7 @@
             </field>
         </record>
         <record id="action_bank_statement_treenew" model="ir.actions.act_window">
-            <field name="name">Open a CashBox</field>
+            <field name="name">Open a Cash Register</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_bank_statement_form2"/>
@@ -381,7 +381,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_pos_account_bank_statment">
-            <field name="name">All Cashboxes</field>
+            <field name="name">All Cash Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
@@ -402,7 +402,7 @@
                     <field name="view_id" ref="view_bank_statement_form3"/>
                     <field name="act_window_id" ref="action_pos_account_bank_statment"/>
         </record>
-        <menuitem name="All Cashboxes" parent="menu_statement_tree_all"
+        <menuitem name="All Cash Registers" parent="menu_statement_tree_all"
                  action="action_pos_account_bank_statment" id="menu_pos_bank_statment_tree" groups="base.group_extended" sequence="4"/>
 
         <record model="ir.actions.act_window" id="action_my_all_pos_account_bank_statment">

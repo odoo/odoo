@@ -287,7 +287,7 @@ class pos_order(osv.osv):
         'date_payment': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date',  store=True),
         'date_validity': fields.date('Validity Date', required=True),
         'user_id': fields.many2one('res.users', 'Connected Salesman', readonly=True),
-        'user_salesman_id': fields.many2one('res.users', 'Salesman', required=True),
+        'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_all, method=True, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
