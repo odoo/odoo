@@ -61,6 +61,10 @@
                     <field name="balance"/>
                     <field name="quantity"/>
                     <field name="quantity_max"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="partner_id" invisible="1"/> 
+                    <field name="user_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -293,7 +297,7 @@
                 </tree>
             </field>
         </record>
-		
+
 		<record id="view_analytic_journal_search" model="ir.ui.view">
             <field name="name">account.analytic.journal.search</field>
             <field name="model">account.analytic.journal</field>
@@ -306,7 +310,7 @@
             	</search>
             </field>
         </record>
-        
+
         <record id="view_account_analytic_journal_form" model="ir.ui.view">
             <field name="name">account.analytic.journal.form</field>
             <field name="model">account.analytic.journal</field>
@@ -350,7 +354,7 @@
         </record> -->
 <!--        <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_bank_and_cash"/>-->
          <!-- <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
-            <field name="name">Checks Register</field>
+            <field name="name">Check Registers</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

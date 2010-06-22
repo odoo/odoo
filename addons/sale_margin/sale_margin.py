@@ -25,7 +25,8 @@ from tools import config
 class sale_order_line(osv.osv):
     _name = "sale.order.line"
     _inherit = "sale.order.line"
-    def _product_margin(self, cr, uid, ids, field_name, arg, context):
+
+    def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for line in self.browse(cr, uid, ids):
             res[line.id] = 0
@@ -46,7 +47,7 @@ sale_order_line()
 class sale_order(osv.osv):
     _inherit = "sale.order"
 
-    def _product_margin(self, cr, uid, ids, field_name, arg, context):
+    def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for sale in self.browse(cr, uid, ids, context=context):
             result[sale.id] = 0.0
@@ -69,14 +70,13 @@ class stock_picking(osv.osv):
 
     def create_invoice(self, cr, uid, ids, *args):
         # need to carify with new requirement
-        res = False
         invoice_ids = []
         margin_deduce = 0.0
         picking_obj = self.pool.get('stock.picking')
         picking_obj.write(cr, uid, ids, {'invoice_state' : '2binvoiced'})
         res = picking_obj.action_invoice_create(cr, uid, ids, type='out_invoice', context={})
         invoice_ids = res.values()
-        picking_obj.write(cr, uid, ids,{'invoice_ids':[[6,0,invoice_ids]]})
+        picking_obj.write(cr, uid, ids,{'invoice_ids': [[6,0,invoice_ids]]})
         return True
 
 stock_picking()
