@@ -9,10 +9,10 @@
              <field name="inherit_id" ref="stock.view_split_in_lots"/>
               <field name="arch" type="xml">
               <data>
-                <xpath expr="//form/group/field[@name='line_ids']/tree/field[@name='name']"  position="replace">
+                <xpath expr="//form/group/group/field[@name='line_ids']/tree/field[@name='name']"  position="replace">
                   <field name="name" on_change="on_change_product(parent.product_id)"/>
                 </xpath>
-                <xpath expr="//form/group/field[@name='line_ids']/tree/field[@name='quantity']"  position="after">
+                <xpath expr="//form//group/group/field[@name='line_ids']/tree/field[@name='quantity']"  position="after">
                   <field name="date"/>
                 </xpath>
               </data>
