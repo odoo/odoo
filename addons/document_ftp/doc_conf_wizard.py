@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
 
@@ -23,6 +23,7 @@ import base64
 
 from osv import osv, fields
 from osv.orm import except_orm
+from tools import config
 import urlparse
 
 import os
@@ -35,45 +36,12 @@ class document_configuration_wizard(osv.osv_memory):
     _rec_name = 'host'
     _columns = {
         'host': fields.char('Address', size=64,
-                            help="Server address or IP.", required=True),
+                            help="Server address or IP and port to which users should connect to for DMS access", 
+                            required=True),
     }
 
-    def detect_ip_addr(self, cr, uid, context=None):
-        def _detect_ip_addr(self, cr, uid, context=None):
-            from array import array
-            import socket
-            from struct import pack, unpack
-
-            try:
-                import fcntl
-            except ImportError:
-                fcntl = None
-
-            if not fcntl: # not UNIX:
-                host = socket.gethostname()
-                ip_addr = socket.gethostbyname(host)
-            else: # UNIX:
-                # get all interfaces:
-                nbytes = 128 * 32
-                s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-                names = array('B', '\0' * nbytes)
-                outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
-                namestr = names.tostring()
-                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
-
-                for ifname in [iface for iface in ifaces if iface != 'lo']:
-                    ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
-                    break
-            return ip_addr
-
-        try:
-            ip_addr = _detect_ip_addr(self, cr, uid, context)
-        except:
-            ip_addr = 'localhost'
-        return ip_addr
-
     _defaults = {
-        'host': detect_ip_addr,
+        'host': config.get('ftp_server_host', 'localhost') + ':' + config.get('ftp_server_port', '8021'),
     }
 
     def execute(self, cr, uid, ids, context=None):
@@ -145,5 +113,5 @@ class document_configuration_wizard(osv.osv_memory):
         # Update the action for FTP browse.
         aid = objid._get_id(cr, uid, 'document_ftp', 'action_document_browse')
         aid = objid.browse(cr, uid, aid, context=context).res_id
-        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost')+':8021/'})
+        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/'})
 document_configuration_wizard()
