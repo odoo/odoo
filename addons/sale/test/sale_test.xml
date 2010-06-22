@@ -288,10 +288,10 @@
         <function model="account.invoice" name="pay_and_reconcile">
             <value eval="[obj(ref('smoke_test_sale_order_chained')).invoice_ids[0].id]" model="sale.order"/>
             <value eval="obj(ref('smoke_test_sale_order_chained')).amount_total" model="sale.order"/>
-            <value model="account.account" search="[('user_type.name', '=', 'Cash')]"/>
+            <value eval="ref('account.cash')"/>
             <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
             <value eval="ref('account.bank_journal')"/>
-            <value model="account.account" search="[('user_type.name', '=', 'Cash')]"/>
+            <value eval="ref('account.cash')"/>
             <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
             <value eval="ref('account.bank_journal')"/>
         </function>
