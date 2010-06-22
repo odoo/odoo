@@ -20,11 +20,11 @@
 ##############################################################################
 
 import time
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import netsvc
 from osv import fields, osv
-from datetime import datetime
 from tools import config
 from tools.translate import _
 
