@@ -48,7 +48,7 @@ class account_coda_import(osv.osv_memory):
     _columns = {
             'journal_id': fields.many2one('account.journal', 'Bank Journal', required=True),
             'def_payable': fields.many2one('account.account', 'Default Payable Account',domain=[('type','=','payable')],required=True,help= 'Set here the payable account that will be used, by default, if the partner is not found'),
-            'def_receivable': fields.many2one('account.account', 'Default receivable Account',domain=[('type','=','receivable')],required=True,help= 'Set here the receivable account that will be used, by default, if the partner is not found',),
+            'def_receivable': fields.many2one('account.account', 'Default Receivable Account',domain=[('type','=','receivable')],required=True,help= 'Set here the receivable account that will be used, by default, if the partner is not found',),
             'awaiting_account': fields.many2one('account.account', 'Default Account for Unrecognized Movement',required=True,help= 'Set here the default account that will be used, if the partner is found but does not have the bank account , or if he is domiciled',),
             'coda': fields.binary('Coda File', required=True),   
             'note':fields.text('Log'),       

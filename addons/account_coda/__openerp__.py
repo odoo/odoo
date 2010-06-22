@@ -28,7 +28,7 @@
     bank statements from coda files.
     """,
     "depends":["base", "account"],
-    "demo_xml":["coda_demo.xml"],
+    "demo_xml":["account_coda_demo.xml"],
     "init_xml":[],
     "update_xml" : ["security/ir.model.access.csv",
                     "wizard/account_coda_import.xml",

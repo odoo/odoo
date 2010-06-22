@@ -7,7 +7,7 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
 				<form string="Import Coda Statement">
-				<separator colspan="4" string="Select your bank journal :" />
+				<separator colspan="4" string="Select your Bank journal :" />
 				    <field name="journal_id" colspan="1" domain="[('type','=','cash')]" />
 				    <newline />
 				    <field name="def_payable" />
@@ -52,15 +52,6 @@
             <field name="target">new</field>
    			<field name="view_id" ref="account_coda_import_view"/>            
         </record>
-<!--       	 
-       	 <record id="action_account_coda_import" model="ir.actions.act_window">
-            <field name="name">Import Coda Statement</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.coda.import</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-   			<field name="view_id" ref="account_coda_note_view"/>            
-        </record>-->
+
 </data>
 </openerp>
