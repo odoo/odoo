@@ -174,7 +174,7 @@
 
         <menuitem name="Point of Sale" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
         <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
-        <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="29" />
+        <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
         <menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale_product" sequence="2" name="Products"/>
 
@@ -743,7 +743,7 @@
         </record>
 
         <menuitem name="Configuration" parent="menu_point_root"
-            id="menu_point_config_product" sequence="6"/>
+            id="menu_point_config_product" sequence="25"/>
 
         <record model="ir.actions.act_window" id="action_product_input">
             <field name="name">Products</field>
@@ -860,7 +860,7 @@
         </record>
 
         <!--  Miscelleanous Operations/Reporting -->
-        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="30"/>
+        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20"/>
         <menuitem name="Registers" parent="menu_point_rep" id="menu_point_report_register" sequence="0" />
         <menuitem name="Sales" parent="menu_point_rep" id="menu_point_report_sale" sequence="1" />
 

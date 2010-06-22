@@ -1174,7 +1174,18 @@ class pos_order_line(osv.osv):
         'notice': lambda *a: 'No Discount',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         }
-
+    
+    def _check_qty(self, cr, uid, ids):
+        lines = self.browse(cr, uid, ids)
+        for line in lines:
+            if line.qty <= 0:
+                return False
+        return True
+    
+    _constraints = [
+        (_check_qty, 'Order quantity cannot be negative or zero !', ['qty']),
+    ]
+    
     def create(self, cr, user, vals, context={}):
         if vals.get('product_id'):
             return super(pos_order_line, self).create(cr, user, vals, context)
