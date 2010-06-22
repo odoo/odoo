@@ -37,7 +37,6 @@ class stock_production_lot(osv.osv):
                 result.append((line.id, line.name))
         return result
 
-
     def _get_date(dtype):
         """Return a function to compute the limit date for this type"""
         def calc_date(self, cr, uid, context=None):

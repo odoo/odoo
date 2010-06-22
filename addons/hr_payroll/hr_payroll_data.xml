@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="HRA" model="hr.allounce.deduction.categoty">
+        <!-- Wages Type-->
+        <record model="hr.contract.wage.type" id="wage_basic">
+            <field name="name">Monthly Basic Wage</field>
+            <field name="period_id" ref="hr_contract.hr_contract_wage_type_period_monthly"/>
+            <field name="type">basic</field>
+            <field name="factor_type">1.80</field>
+        </record>
+        
+        <!-- Payroll Heads -->
+        <record id="hra" model="hr.allounce.deduction.categoty">
             <field name="code">HRA</field>
             <field name="type">allowance</field>
             <field name="name">House Rant Allowance</field>
@@ -108,5 +117,6 @@
             <field name="type">allowance</field>
             <field name="name">Other Taxable Allowance</field>
         </record>
+        
     </data>
 </openerp>
