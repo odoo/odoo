@@ -26,9 +26,7 @@ import time
 
 class product_product(osv.osv):
     _inherit = "product.product"
-
-
-    def _product_margin(self, cr, uid, ids, field_names, arg, context):
+    def _product_margin(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
         for val in self.browse(cr, uid, ids,context=context):
             res[val.id] = {}
@@ -64,7 +62,7 @@ class product_product(osv.osv):
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
                 left join product_template product on (product.id=l.product_id)
-                where l.product_id = %s and i.state in %s and i.type in %s and i.date_invoice>=%s and i.date_invoice<=%s
+                where l.product_id = %s and i.state in %s and i.type IN %s and i.date_invoice>=%s and i.date_invoice<=%s
                 """,(val.id,states,invoice_types,date_from,date_to))
                 result=cr.fetchall()[0]
                 if 'sale_avg_price' in field_names or 'sale_num_invoiced' in field_names or 'turnover' in field_names or 'sale_expected' in field_names:
@@ -81,7 +79,7 @@ class product_product(osv.osv):
                     res[val.id]['purchase_gap']=res[val.id]['normal_cost']-res[val.id]['total_cost']
 
             if 'total_margin' in field_names:
-                res[val.id]['total_margin']=val.turnover-val.total_cost
+                res[val.id]['total_margin']=val.turnover-val.standard_price
             if 'expected_margin' in field_names:
                 res[val.id]['expected_margin']=val.sale_expected-val.normal_cost
             if 'total_margin_rate' in field_names:
@@ -106,7 +104,7 @@ class product_product(osv.osv):
         'total_cost'  : fields.function(_product_margin, method=True, type='float', string='Total Cost', multi='purchase',help="Sum of Multification of Invoice price and quantity of Supplier Invoices "),
         'sale_expected' :  fields.function(_product_margin, method=True, type='float', string='Expected Sale', multi='sale',help="Sum of Multification of Sale Catalog price and quantity of Customer Invoices"),
         'normal_cost'  : fields.function(_product_margin, method=True, type='float', string='Normal Cost', multi='purchase',help="Sum of Multification of Cost price and quantity of Supplier Invoices"),
-        'total_margin' : fields.function(_product_margin, method=True, type='float', string='Total Margin', multi='total',help="Turnorder - Total Cost"),
+        'total_margin' : fields.function(_product_margin, method=True, type='float', string='Total Margin', multi='total',help="Turnorder - Standard price"),
         'expected_margin' : fields.function(_product_margin, method=True, type='float', string='Expected Margin', multi='total',help="Expected Sale - Normal Cost"),
         'total_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Total Margin (%)', multi='margin',help="Total margin * 100 / Turnover"),
         'expected_margin_rate' : fields.function(_product_margin, method=True, type='float', string='Expected Margin (%)', multi='margin',help="Expected margin * 100 / Expected Sale"),

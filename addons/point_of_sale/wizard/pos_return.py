@@ -181,7 +181,7 @@ class pos_return(osv.osv_memory):
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-                val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
+                val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
                 cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
@@ -191,7 +191,7 @@ class pos_return(osv.osv_memory):
                                                                                     'move_lines':[], 'state':'draft', 'type':'in',
                                                                                     'type':'in',
                                                                                     'date':date_cur})
-                new_order=order_obj.copy(cr,uid,order_id.id, {'name': 'Refund %s'%order_id.name,
+                new_order=order_obj.copy(cr, uid, order_id.id, {'name': 'Refund %s'%order_id.name,
                                                               'lines':[],
                                                               'statement_ids':[],
                                                               'picking_id':[]})
@@ -203,7 +203,7 @@ class pos_return(osv.osv_memory):
                             qty= line.qty
                         new_move=stock_move_obj.create(cr, uid,{
                             'product_qty': qty ,
-                            'product_uos_qty': uom_obj._compute_qty(cr, uid,qty ,line.product_id.uom_id.id),
+                            'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
                             'picking_id':new_picking,
                             'product_uom':line.product_id.uom_id.id,
                             'location_id':location_id,
@@ -217,7 +217,7 @@ class pos_return(osv.osv_memory):
                         })
                 order_obj.write(cr,uid, active_id, {'state':'done'})
                 order_obj.write(cr,uid, new_order, {'state':'done'})
-                wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
+                wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
             act = {
                 'domain': "[('id', 'in', ["+str(new_order)+"])]",
@@ -247,7 +247,8 @@ class add_product(osv.osv_memory):
         """               
     
         active_id=context.get('active_id', False)
-        data =  self.read(cr, uid, ids)[0] 
+        data =  self.read(cr, uid, ids)
+        data = data and data[0] or False
         if active_id:               
             order_obj = self.pool.get('pos.order')
             lines_obj = self.pool.get('pos.order.line')
@@ -263,20 +264,20 @@ class add_product(osv.osv_memory):
             prod_obj=self.pool.get('product.product')
             wf_service = netsvc.LocalService("workflow")
             return_boj=self.pool.get('pos.return')
-            order_obj.add_product(cr, uid, active_id,data['product_id'],data['quantity'], context=context)
+            order_obj.add_product(cr, uid, active_id, data['product_id'], data['quantity'], context=context)
               
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prod=data['product_id']
                 qty=data['quantity']
-                prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-                val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
+                prop_ids = property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
+                val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
                 cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
                 stock_dest_id = val.id
         
-                prod_id=prod_obj.browse(cr,uid,prod)
-                new_picking=picking_obj.create(cr,uid,{
+                prod_id=prod_obj.browse(cr, uid, prod)
+                new_picking=picking_obj.create(cr, uid,{
                                         'name':'%s (Added)' %order_id.name,
                                         'move_lines':[],
                                         'state':'draft',
@@ -284,7 +285,7 @@ class add_product(osv.osv_memory):
                                         'date':date_cur,   })
                 new_move=stock_move_obj.create(cr, uid,{
                                 'product_qty': qty,
-                                'product_uos_qty': uom_obj._compute_qty(cr, uid,prod_id.uom_id.id, qty, prod_id.uom_id.id),
+                                'product_uos_qty': uom_obj._compute_qty(cr, uid, prod_id.uom_id.id, qty, prod_id.uom_id.id),
                                 'picking_id':new_picking,
                                 'product_uom':prod_id.uom_id.id,
                                 'location_id':location_id,
@@ -294,7 +295,7 @@ class add_product(osv.osv_memory):
                                 'date':date_cur,
                                 'date_planned':date_cur,})
         
-                wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
+                wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 picking_obj.force_assign(cr, uid, [new_picking], context)
                 order_obj.write(cr,uid,active_id,{'picking_id':new_picking})
                 
@@ -327,11 +328,10 @@ class add_product(osv.osv_memory):
         return_boj=self.pool.get('pos.return')
         return_id=return_boj.search(cr,uid,[])
         data=return_boj.read(cr,uid,return_id,[])[0]
-                        
         wf_service = netsvc.LocalService("workflow")
         for order_id in order_obj.browse(cr, uid, active_ids, context=context):
-            prop_ids =property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-            val = property_obj.browse(cr, uid,prop_ids[0]).value_reference
+            prop_ids =property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
+            val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
             cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order_id.shop_id.warehouse_id.id))
             res=cr.fetchone()
             location_id=res and res[0] or None
@@ -339,8 +339,8 @@ class add_product(osv.osv_memory):
     
             order_obj.write(cr,uid,[order_id.id],{'type_rec':'Exchange'})
             if order_id.invoice_id:
-                invoice_obj.refund(cr, uid, [order_id.invoice_id.id],time.strftime('%Y-%m-%d'), False, order_id.name)
-            new_picking=picking_obj.create(cr,uid,{
+                invoice_obj.refund(cr, uid, [order_id.invoice_id.id], time.strftime('%Y-%m-%d'), False, order_id.name)
+            new_picking=picking_obj.create(cr, uid,{
                                     'name':'%s (return)' %order_id.name,
                                     'move_lines':[], 'state':'draft',
                                     'type':'in',
@@ -350,7 +350,7 @@ class add_product(osv.osv_memory):
                 if line.id  and  data.has_key(key):
                     new_move=stock_move_obj.create(cr, uid,{
                         'product_qty': data['return%s' %line.id ],
-                        'product_uos_qty': uom_obj._compute_qty(cr, uid,data['return%s' %line.id] ,line.product_id.uom_id.id),
+                        'product_uos_qty': uom_obj._compute_qty(cr, uid, data['return%s' %line.id], line.product_id.uom_id.id),
                         'picking_id':new_picking,
                         'product_uom':line.product_id.uom_id.id,
                         'location_id':location_id,

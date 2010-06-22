@@ -27,7 +27,7 @@ class sale_order(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
-    def _get_section(self, cr, uid, context):
+    def _get_section(self, cr, uid, context=None):
        return context.get('context_section_id',False)
 
     _defaults = {

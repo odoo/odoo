@@ -68,11 +68,11 @@ class idea_idea(osv.osv):
 
         sql = """SELECT i.id, avg(v.score::integer)
            FROM idea_idea i LEFT OUTER JOIN idea_vote v ON i.id = v.idea_id
-            WHERE i.id = ANY(%s)
+            WHERE i.id IN %s
             GROUP BY i.id
         """
 
-        cr.execute(sql, (ids,))
+        cr.execute(sql, (tuple(ids),))
         return dict(cr.fetchall())
 
     def _vote_count(self, cr, uid, ids, name, arg, context=None):
@@ -88,11 +88,11 @@ class idea_idea(osv.osv):
 
         sql = """SELECT i.id, COUNT(1)
            FROM idea_idea i LEFT OUTER JOIN idea_vote v ON i.id = v.idea_id
-            WHERE i.id = ANY(%s)
+            WHERE i.id IN %s
             GROUP BY i.id
         """
 
-        cr.execute(sql, (ids,))
+        cr.execute(sql, (tuple(ids),))
         return dict(cr.fetchall())
 
     def _comment_count(self, cr, uid, ids, name, arg, context=None):
@@ -108,11 +108,11 @@ class idea_idea(osv.osv):
 
         sql = """SELECT i.id, COUNT(1)
            FROM idea_idea i LEFT OUTER JOIN idea_comment c ON i.id = c.idea_id
-            WHERE i.id = ANY(%s)
+            WHERE i.id IN %s
             GROUP BY i.id
         """
 
-        cr.execute(sql, (ids,))
+        cr.execute(sql, (tuple(ids),))
         return dict(cr.fetchall())
 
     def _vote_read(self, cr, uid, ids, name, arg, context = None):

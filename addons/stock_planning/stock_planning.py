@@ -374,21 +374,21 @@ class stock_sale_forecast(osv.osv):
 
     def _sales_per_users(self, cr, uid, so, so_line, company, users):
         cr.execute("SELECT sum(sol.product_uom_qty) FROM sale_order_line AS sol LEFT JOIN sale_order AS s ON (s.id = sol.order_id) " \
-                   "WHERE (sol.id IN (%s)) AND (s.state NOT IN (\'draft\',\'cancel\')) AND (s.id IN (%s)) AND (s.company_id=%s) " \
-                    "AND (s.user_id IN (%s)) " %(so_line, so, company, users))
+                   "WHERE (sol.id IN %s) AND (s.state NOT IN (\'draft\',\'cancel\')) AND (s.id IN %s) AND (s.company_id=%s) " \
+                    "AND (s.user_id IN %s) " %(tuple(so_line), tuple(so), company, tuple(users)))
         ret = cr.fetchone()[0] or 0.0
         return ret
 
     def _sales_per_warehouse(self, cr, uid, so, so_line, company, shops):        
         cr.execute("SELECT sum(sol.product_uom_qty) FROM sale_order_line AS sol LEFT JOIN sale_order AS s ON (s.id = sol.order_id) " \
-                   "WHERE (sol.id IN (%s)) AND (s.state NOT IN (\'draft\',\'cancel\')) AND (s.id IN (%s))AND (s.company_id=%s) " \
-                    "AND (s.shop_id IN (%s))" %(so_line, so, company, shops))
+                   "WHERE (sol.id IN %s) AND (s.state NOT IN (\'draft\',\'cancel\')) AND (s.id IN %s)AND (s.company_id=%s) " \
+                    "AND (s.shop_id IN %s)" %(tuple(so_line), tuple(so), company, tuple(shops)))
         ret = cr.fetchone()[0] or 0.0
         return ret
 
     def _sales_per_company(self, cr, uid, so, so_line, company, ):
         cr.execute("SELECT sum(sol.product_uom_qty) FROM sale_order_line AS sol LEFT JOIN sale_order AS s ON (s.id = sol.order_id) " \
-                   "WHERE (sol.id IN (%s)) AND (s.state NOT IN (\'draft\',\'cancel\')) AND (s.id IN (%s)) AND (s.company_id=%s)"%(so_line, so, company))
+                   "WHERE (sol.id IN %s) AND (s.state NOT IN (\'draft\',\'cancel\')) AND (s.id IN %s) AND (s.company_id=%s)"%(tuple(so_line), tuple(so), company))
         ret = cr.fetchone()[0] or 0.0
         return ret
     
@@ -411,7 +411,7 @@ class stock_sale_forecast(osv.osv):
                     dept_id =  obj.analyzed_dept_id.id and [obj.analyzed_dept_id.id] or []
                     dept_ids = dept_obj.search(cr,uid,[('parent_id','child_of',dept_id)])
                     dept_ids_set = ','.join(map(str,dept_ids))
-                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN (%s))" %(dept_ids_set))
+                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN %s)" %(tuple(dept_ids_set),))
                     dept_users = [x for x, in cr.fetchall()]
                     dept_users_set =  ','.join(map(str,dept_users))
                 else:

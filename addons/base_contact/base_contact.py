@@ -60,18 +60,18 @@ class res_partner_contact(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Last Name', size=30,required=True),
+        'name': fields.char('Last Name', size=30, required=True),
         'first_name': fields.char('First Name', size=30),
-        'mobile': fields.char('Mobile',size=30),
+        'mobile': fields.char('Mobile', size=30),
         'title': fields.selection(_title_get, 'Title'),
-        'website': fields.char('Website',size=120),
-        'lang_id': fields.many2one('res.lang','Language'),
-        'job_ids': fields.one2many('res.partner.job','contact_id','Functions and Addresses'),
+        'website': fields.char('Website', size=120),
+        'lang_id': fields.many2one('res.lang', 'Language'),
+        'job_ids': fields.one2many('res.partner.job', 'contact_id', 'Functions and Addresses'),
         'country_id': fields.many2one('res.country','Nationality'),
         'birthdate': fields.date('Birth Date'),
         'active': fields.boolean('Active', help="If the active field is set to true,\
                  it will allow you to hide the partner contact without removing it."),
-        'partner_id': fields.related('job_ids','address_id','partner_id',type='many2one',\
+        'partner_id': fields.related('job_ids', 'address_id', 'partner_id', type='many2one',\
                          relation='res.partner', string='Main Employer'),
         'function': fields.related('job_ids', 'function', type='char', \
                                  string='Main Function'),

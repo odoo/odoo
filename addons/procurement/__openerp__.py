@@ -43,6 +43,7 @@
         'procurement_workflow.xml',
         'process/procurement_process.xml',
         "company_view.xml",
+        'board_mrp_procurement_view.xml',
     ],
     'demo_xml': ['stock_orderpoint.xml'],
     'installable': True,

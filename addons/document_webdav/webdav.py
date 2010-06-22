@@ -35,7 +35,7 @@ from http://pywebdav.googlecode.com')
 
 
 super_mk_prop_response = PROPFIND.mk_prop_response
-def mk_prop_response(self,uri,good_props,bad_props,doc):        
+def mk_prop_response(self, uri, good_props, bad_props, doc):        
     """ make a new <prop> result element 
 
     We differ between the good props and the bad ones for

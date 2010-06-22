@@ -43,9 +43,9 @@ class external_pdf(render):
 def burndown_chart(cr, uid, tasks_id, date_start, date_stop):
     latest = False
 
-    cr.execute('select id,date_start,state,planned_hours from project_task where id = ANY(%s) order by date_start'(tasks_id,))
+    cr.execute('select id,date_start,state,planned_hours from project_task where id IN %s order by date_start'(tuple(tasks_id),))
     tasks = cr.fetchall()
-    cr.execute('select id,date_end,state,planned_hours*progress/100 from project_task where id =ANY(%s)  and state in (%s,%s) order by date_end', (tasks_id,'progress','done',))
+    cr.execute('select id,date_end,state,planned_hours*progress/100 from project_task where id IN %s  and state in (%s,%s) order by date_end', (tuple(tasks_id),'progress','done',))
     tasks2 = cr.fetchall()
     current_date = date_start
     total = 0
@@ -72,14 +72,14 @@ class report_tasks(report_int):
         io = StringIO.StringIO()
 
         if 'date_start' not in datas:
-            cr.execute('select min(date_start) from project_task where id = ANY(%s)',(ids,))
+            cr.execute('select min(date_start) from project_task where id IN %s',(tuple(ids),))
             dt = cr.fetchone()[0]
             if dt:
                 datas['date_start'] = dt[:10]
             else:
                 datas['date_start'] = time.strftime('%Y-%m-%d')
         if 'date_stop' not in datas:
-            cr.execute('select max(date_start),max(date_end) from project_task where id = ANY(%s)',(ids,))
+            cr.execute('select max(date_start),max(date_end) from project_task where id IN %s',(tuple(ids),))
             res = cr.fetchone()
             datas['date_stop'] = (res[0] and res[0][:10]) or time.strftime('%Y-%m-%d')
             if res[1] and datas['date_stop']<res[1]:

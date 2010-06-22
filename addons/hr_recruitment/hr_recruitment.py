@@ -61,9 +61,9 @@ class hr_applicant(osv.osv, crm.crm_case):
 
     _columns = {
         'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False),
-        'name': fields.char('Name', size=128, required=True), 
-        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."), 
-        'description': fields.text('Description'), 
+        'name': fields.char('Name', size=128, required=True),
+        'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
+        'description': fields.text('Description'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
@@ -77,6 +77,9 @@ class hr_applicant(osv.osv, crm.crm_case):
                                  domain="[('partner_id','=',partner_id)]"),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Update Date' , readonly=True),
+#        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
+#                         domain="[('section_id','=',section_id),\
+#                        ('object_id.model', '=', 'crm.opportunity')]"),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', \
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.opportunity')]"),
@@ -92,8 +95,8 @@ class hr_applicant(osv.osv, crm.crm_case):
         'date': fields.datetime('Date'),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
         'job_id': fields.many2one('hr.job', 'Applied Job'),
-        'salary_proposed': fields.float('Proposed Salary'),
-        'salary_expected': fields.float('Expected Salary'),
+        'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
+        'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
         'availability': fields.integer('Availability (Days)'),
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
@@ -103,16 +106,25 @@ class hr_applicant(osv.osv, crm.crm_case):
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response' : fields.integer("Response"),
+        'reference': fields.char('Reference', size=128),
     }
-    
+
+    def _get_stage(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [], context=context)
+        return ids and ids[0] or False
+
     _defaults = {
-        'active': lambda *a: 1, 
-        'user_id': crm.crm_case._get_default_user, 
-        'email_from': crm.crm_case. _get_default_email, 
+        'active': lambda *a: 1,
+        'stage_id': _get_stage,
+        'user_id':  lambda self, cr, uid, context: uid,
+#        'user_id': crm.crm_case._get_default_user,
+        'email_from': crm.crm_case. _get_default_email,
         'state': lambda *a: 'draft',
-        'section_id': crm.crm_case. _get_section, 
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c), 
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
+        'section_id': crm.crm_case. _get_section,
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
     def onchange_job(self,cr, uid, ids, job, context={}):

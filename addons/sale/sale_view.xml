@@ -15,6 +15,7 @@
                 <form string="Sale Shop">
                     <field name="name" select="1"/>
                     <field name="warehouse_id" required="1" select="1" widget="selection"/>
+                    <field name="company_id" widget='selection'/>
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
                     <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>
@@ -98,7 +99,7 @@
            view_mode="form"
            target="new"
            key2="client_action_multi"
-           id="action_view_sale_advance_payment_inv"/> 
+           id="action_view_sale_advance_payment_inv"/>
 
 
         <record id="view_order_form" model="ir.ui.view">
@@ -109,13 +110,13 @@
                 <form string="Sales order">
                     <group col="6" colspan="4">
                         <field name="name"/>
-                        <field name="client_order_ref"/>
-                        <field name="shipped"/>
                         <field name="date_order"/>
-                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
+                        <field name="shipped"/>
+                        <field name="client_order_ref"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
                         <field name="invoiced"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook colspan="5">
                         <page string="Sale Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
@@ -264,8 +265,9 @@
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
-                    <filter icon="terp-check" string="Running" domain="[('state','in',('manual','progress'))]"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="Sales To Invoice" domain="[('state','=','manual')]"/>
+                    <filter icon="terp-check" string="Sales" domain="[('state','in',('manual','progress'))]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="To Invoice" domain="[('state','=','manual')]"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
@@ -361,7 +363,6 @@
                     <field name="product_uom" string="UoM"/>
                     <field name="salesman_id"/>
                     <field name="price_subtotal"/>
-                    <field name="th_weight"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -438,7 +439,6 @@
                     <field name="product_id"/>
                     <field name="salesman_id">
                         <filter icon="terp-dolar" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
-                        <filter icon="terp-personal+" domain="[('salesman_id','child_of',[uid])]" help="My Departments Sale Order Lines"/>
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
@@ -472,7 +472,9 @@
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
-                    <field name="state"/>
+                    <field name="salesman_id">
+                        <filter icon="terp-dolar" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
+                    </field>
                     <newline />
                     <group expand="0" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>

@@ -101,6 +101,7 @@ class idea_post_vote(osv.osv_memory):
         """
 
         vote_ids = context and context.get('active_ids', []) or []
+        vote_id = context['active_ids'][0]
         vote_pool = self.pool.get('idea.vote')
         idea_pool = self.pool.get('idea.idea')
         comment_pool = self.pool.get('idea.comment')
