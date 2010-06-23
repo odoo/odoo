@@ -29,7 +29,7 @@ class crm_fundraising(osv.osv, crm.crm_case):
     _description = "Fund Raising Cases"
     _order = "id desc"
     _inherits = {'mailgate.thread': 'thread_id'}
-    _log_create=True
+    
 
     _columns = {
             'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 

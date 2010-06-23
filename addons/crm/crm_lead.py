@@ -36,7 +36,6 @@ class crm_lead(osv.osv, crm_case):
     _order = "priority, id desc"
     _inherit = ['res.partner.address']
     _inherits = {'mailgate.thread': 'thread_id'}
-    _log_create=True
 
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """

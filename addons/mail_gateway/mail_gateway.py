@@ -36,7 +36,7 @@ class mailgate_thread(osv.osv):
     _name = 'mailgate.thread'
     _description = 'Mailgateway Thread'
     _rec_name = 'thread' 
-
+    
     _columns = {
         'thread': fields.char('Thread', size=32, required=False), 
         'message_ids': fields.one2many('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
@@ -120,8 +120,7 @@ class mailgate_message(osv.osv):
     _name = 'mailgate.message'
     _description = 'Mailgateway Message'
     _order = 'date desc'
-    _log_create=True
-
+    
     _columns = {
         'name':fields.char('Message', size=64), 
         'thread_id':fields.many2one('mailgate.thread', 'Thread'), 

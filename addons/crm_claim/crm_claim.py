@@ -30,7 +30,7 @@ class crm_claim(osv.osv, crm.crm_case):
     _description = "Claim Cases"
     _order = "id desc"
     _inherits = {'mailgate.thread': 'thread_id'}
-    _log_create=True
+   
 
     _columns = {
         'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
