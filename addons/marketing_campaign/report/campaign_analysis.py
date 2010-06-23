@@ -49,7 +49,7 @@ class campaign_analysis(osv.osv): #{{{
                     ('07','July'), ('08','August'), ('09','September'),
                     ('10','October'), ('11','November'), ('12','December')], 
                     'Month', readonly=True),
-        'date': fields.date('Date', readonly=True),
+        'date': fields.datetime('Date', readonly=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign', 
                                                                 readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity', 'Activity',
@@ -61,36 +61,34 @@ class campaign_analysis(osv.osv): #{{{
                     type='many2one', relation='res.country',string='Country'),
         'total_cost' : fields.function(_total_cost, string='Cost', method=True, 
                                     type="float" ),
-        'revenue': fields.float('Revenue',readonly=True),
-#        'case_id': fields.many2one('crm.lead', 'Opportunity', readonly=True),
-#        'count' : fields.integer('Count', readonly=True),
+        'revenue': fields.float('Revenue',digits=(16,2),readonly=True),
+        'count' : fields.integer('# of Actions', readonly=True),
     }
     
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'campaign_analysis')
         
         cr.execute("""
-                create or replace view campaign_analysis as (
-                select
-                    wi.id as id,
-                    to_char(wi.date, 'YYYY') as year,
-                    to_char(wi.date, 'MM') as month,
-                    wi.date as date,
-                    s.campaign_id as campaign_id,
-                    wi.activity_id as activity_id,
-                    wi.segment_id as segment_id,
-                    wi.partner_id as partner_id ,
-                    act.revenue as revenue
-                from
-                    marketing_campaign_workitem wi
-                    left join res_partner p on (p.id=wi.partner_id)
-                    left join marketing_campaign_segment s on (s.id=wi.segment_id)
-                    left join marketing_campaign_activity act on (act.id= wi.activity_id)
-                group by
-                    to_char(wi.date, 'YYYY'),to_char(wi.date, 'MM'),
-                    s.campaign_id,wi.activity_id,wi.segment_id,wi.partner_id,revenue,
-                    wi.date,wi.id
-                )
-            """)
-    
+            create or replace view campaign_analysis as (
+            select
+                min(wi.id) as id,
+                to_char(wi.date::date, 'YYYY') as year,
+                to_char(wi.date::date, 'MM') as month,
+                wi.date::date as date,
+                s.campaign_id as campaign_id,
+                wi.activity_id as activity_id,
+                wi.segment_id as segment_id,
+                wi.partner_id as partner_id ,
+                sum(act.revenue) as revenue,
+                count(*) as count
+            from
+                marketing_campaign_workitem wi
+                left join res_partner p on (p.id=wi.partner_id)
+                left join marketing_campaign_segment s on (s.id=wi.segment_id)
+                left join marketing_campaign_activity act on (act.id= wi.activity_id)
+            group by
+                s.campaign_id,wi.activity_id,wi.segment_id,wi.partner_id,
+                wi.date::date
+            )
+        """)
 campaign_analysis() #}}}
