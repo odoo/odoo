@@ -63,11 +63,11 @@
             </field>
         </record>
         
-        <record model="ir.ui.view" id="view_voucher_form">
+        <record model="ir.ui.view" id="view_voucher_form_one">
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="account_voucher.view_voucher_form"/>
+            <field name="inherit_id" ref="view_voucher_form"/>
             <field name="arch" type="xml">
                 <button name="cancel_to_draft" position="before">
                     <button name="%(wizard_unreconcile_voucher)d" string="Unreconcile" type="action" states="posted" icon="terp-stock_effects-object-colorize"/>
