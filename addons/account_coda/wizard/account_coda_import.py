@@ -20,12 +20,16 @@
 #
 ##############################################################################
 
-import netsvc
-from osv import osv,fields
-from tools.translate import _
-from mx import DateTime
 import time
+from mx import DateTime
 import base64
+
+from osv import fields
+from osv import osv
+from tools.translate import _
+
+
+
 
 def str2date(date_str):
     return time.strftime("%y/%m/%d",time.strptime(date_str,"%d%m%y"))
