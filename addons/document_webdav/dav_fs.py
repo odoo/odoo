@@ -140,13 +140,19 @@ class openerp_dav_handler(dav_interface):
         result = s.exp_list()
         self.db_name_list=[]
         for db_name in result:
-            db = pooler.get_db_only(db_name)
-            cr = db.cursor()
-            cr.execute("select id from ir_module_module where name = 'document' and state='installed' ")
-            res=cr.fetchone()
-            if res and len(res):
-                self.db_name_list.append(db_name)
-            cr.close()
+            cr = None
+            try:
+                db = pooler.get_db_only(db_name)
+                cr = db.cursor()
+                cr.execute("SELECT id FROM ir_module_module WHERE name = 'document' AND state='installed' ")
+                res=cr.fetchone()
+                if res and len(res):
+                    self.db_name_list.append(db_name)
+            except Exception, e:
+                self.parent.log_error("Exception in db list: %s" % e)
+            finally:
+                if cr:
+                    cr.close()
         return self.db_name_list
 
     def get_childs(self, uri, filters=None):
