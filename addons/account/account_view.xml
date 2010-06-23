@@ -799,7 +799,6 @@
 
 <!--       <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries by Line"/-->
 
-
         <!--
     Entries lines
     -->
@@ -1004,7 +1003,6 @@
                 </tree>
             </field>
         </record>
-
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">account.move.form</field>
             <field name="model">account.move</field>
@@ -2200,6 +2198,23 @@
             action="action_account_fiscal_position_template_form"
             id="menu_action_account_fiscal_position_form_template"
             parent="account_template_folder" sequence="20"/>
+
+        <record id="action_move_journal_line" model="ir.actions.act_window">
+            <field name="name">Journal Entries</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_account_move_filter"/>
+        </record>
+
+        <menuitem
+            icon="STOCK_JUSTIFY_FILL"
+            action="action_move_journal_line"
+            id="menu_action_move_journal_line_form"
+            parent="account.menu_finance_entries"
+            sequence="5"/>
+
 
     </data>
 </openerp>
