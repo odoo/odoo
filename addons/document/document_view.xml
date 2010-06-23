@@ -205,7 +205,7 @@
 
     <record model="ir.actions.act_window" id="action_document_directory_tree">
         <field name="type">ir.actions.act_window</field>
-        <field name="name">Directorie's Structure</field>
+        <field name="name">Directories' Structure</field>
         <field name="res_model">document.directory</field>
         <field name="view_type">tree</field>
         <field name="view_id" ref="document.view_document_directory_tree"/>
@@ -321,6 +321,7 @@
     <record model="ir.actions.act_window" id="action_document_file_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
+        <field name="name">Document</field>
         <field name="view_type">form</field>
     </record>
     <menuitem name="Documents" id="menu_document_doc" parent="base.menu_document" sequence="5"/>
@@ -333,6 +334,7 @@
     <record model="ir.actions.act_window" id="action_document_file_directory_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
+        <field name="name">Directory</field>
         <field name="view_type">form</field>
         <field name="domain">[('parent_id','child_of',active_id)]</field>
         <field name="context">{'parent_id':'active_id'}</field>
