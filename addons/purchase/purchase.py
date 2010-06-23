@@ -20,18 +20,16 @@
 ##############################################################################
 
 from mx import DateTime
-from osv import fields
-from osv import osv
 import time
-import netsvc
-
-import ir
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+from osv import osv, fields
+import netsvc
+import ir
 import pooler
 from tools import config
 from tools.translate import _
-
 import decimal_precision as dp
 from osv.orm import browse_record, browse_null
 
@@ -67,7 +65,7 @@ class purchase_order(osv.osv):
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
-    def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context):
+    def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context=None):
         if not value: return False
         if type(ids)!=type([]):
             ids=[ids]
@@ -79,7 +77,7 @@ class purchase_order(osv.osv):
                     (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
         return True
 
-    def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context):
+    def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context=None):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
@@ -132,7 +130,7 @@ class purchase_order(osv.osv):
                 res[r] = 100.0 * res[r][0] / res[r][1]
         return res
 
-    def _get_order(self, cr, uid, ids, context={}):
+    def _get_order(self, cr, uid, ids, context=None):
         result = {}
         for line in self.pool.get('purchase.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
@@ -201,12 +199,12 @@ class purchase_order(osv.osv):
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
     }
     _defaults = {
-        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'date_order': time.strftime('%Y-%m-%d'),
+        'state': 'draft',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
-        'shipped': lambda *a: 0,
-        'invoice_method': lambda *a: 'order',
-        'invoiced': lambda *a: 0,
+        'shipped': 0,
+        'invoice_method': 'order',
+        'invoiced': 0,
         'partner_address_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['default'])['default'],
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
@@ -629,6 +627,7 @@ class purchase_order_line(osv.osv):
     _table = 'purchase_order_line'
     _name = 'purchase.order.line'
     _description = 'Purchase Order Line'
+
     def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
@@ -708,12 +707,14 @@ class purchase_order_line(osv.osv):
         if not uom:
             res['value']['price_unit'] = 0.0
         return res
+
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
         for (id,name) in self.name_get(cr, uid, ids):
             message = _('Purchase order line') + " '" + name + "' "+ _("is confirmed")
             self.log(cr, uid, id, message)
         return True
+
 purchase_order_line()
 
 class procurement_order(osv.osv):
@@ -796,7 +797,7 @@ class procurement_order(osv.osv):
             res[procurement.id] = purchase_id
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': purchase_id})
         return res
+
 procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
