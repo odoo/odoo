@@ -96,7 +96,7 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Dynamic context">
+                <page string="Dynamic context" groups="base.group_extended">
                     <field name="dctx_ids" nolabel="1" colspan="4">
                         <tree string="Fields" editable="bottom">
                             <field name="field"/>
@@ -131,12 +131,35 @@
         </field>
     </record>
 
+    <record id="view_document_directory_filter" model="ir.ui.view">
+            <field name="name">Search View: Document Directory</field>
+            <field name="model">document.directory</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Document Directory">
+                    <filter string="Static" domain="[('type','=','directory')]"/>
+                    <filter string="Resources" domain="[('type','=','ressource')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="storage_id" />
+                    <newline/>
+                    <group expand="0" string="Group By..." groups="base.group_extended">
+                        <filter string="Type"  domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Storage" domain="[]" context="{'group_by':'storage_id'}"/>                        
+                    </group>
+               </search>
+            </field>
+        </record>
+
     <record model="ir.actions.act_window" id="action_document_directory_form">
         <field name="name">Directories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.directory</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_document_directory_filter"/>
     </record>
 
     <record id="action_dir_view1" model="ir.actions.act_window.view">
@@ -349,6 +372,9 @@
         id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
         src_model="document.directory"/>
+
+
+    
 
 </data>
 </openerp>
