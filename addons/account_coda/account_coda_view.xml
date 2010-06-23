@@ -61,7 +61,7 @@
         </record>
 
 	<record model="ir.actions.act_window" id="action_account_coda">
-		<field name="name">Coda import</field>
+		<field name="name">Coda Statements</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">account.coda</field>
 		<field name="view_type">form</field>
@@ -74,7 +74,7 @@
 	
 	<menuitem name="Coda Statements" parent="menu_account_coda" id="menu_account_coda_statement" action="action_account_coda" sequence="15"/>
 
-	<menuitem name="Coda Statements" action="action_account_coda_import" parent="menu_account_coda"
+	<menuitem name="Import Coda Statements" action="action_account_coda_import" parent="menu_account_coda"
 	 id="menu_account_coda_import" sequence="13"/>
 
 	<act_window name="Coda File"
