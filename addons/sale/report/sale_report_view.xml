@@ -171,6 +171,18 @@
         <field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_by_partner_graph"/>
     </record>
+	<record id="open_view_sales_by_partner_graph" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_sales_by_partner_graph"/>
+            <field name="act_window_id" ref="action_sales_by_partner"/>
+   </record>
+   <record id="open_view_sales_by_partner_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_sales_by_partner_tree"/>
+            <field name="act_window_id" ref="action_sales_by_partner"/>
+   </record>
 
     <record id="view_sales_by_salesman_tree" model="ir.ui.view">
         <field name="name">sales.by.salesman.tree</field>
@@ -204,7 +216,18 @@
         <field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_by_salesman_graph"/>
     </record>
-
+   <record id="open_view_sales_by_salesman_graph" model="ir.actions.act_window.view">
+            <field eval="7" name="sequence"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_sales_by_salesman_graph"/>
+            <field name="act_window_id" ref="action_sales_by_salesman"/>
+   </record>
+    <record id="open_view_sales_by_salesman_tree" model="ir.actions.act_window.view">
+            <field eval="9" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_sales_by_salesman_tree"/>
+            <field name="act_window_id" ref="action_sales_by_salesman"/>
+   </record>
     <record id="view_sales_product_total_price_tree" model="ir.ui.view">
         <field name="name">sold.product.total.price.tree</field>
         <field name="model">sale.report</field>
@@ -237,7 +260,18 @@
         <field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_product_total_price_graph"/>
     </record>
-
+    <record id="open_view_sales_product_total_price_graph" model="ir.actions.act_window.view">
+            <field eval="3" name="sequence"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_sales_product_total_price_graph"/>
+            <field name="act_window_id" ref="action_sales_product_total_price_graph"/>
+    </record>
+    <record id="open_view_sales_product_total_price_tree" model="ir.actions.act_window.view">
+            <field eval="4" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_sales_product_total_price_tree"/>
+            <field name="act_window_id" ref="action_sales_product_total_price_graph"/>
+   </record>
 
 	<record id="view_product_category_total_price_tree" model="ir.ui.view">
 		<field name="name">sales.category.product.price.tree</field>
@@ -259,7 +293,7 @@
 		<field name="view_id" ref="view_product_category_total_price_tree"/>
     </record>
 
-    <record id="action_quotatio_for_sale" model="ir.actions.act_window">
+    <record id="action_quotation_for_sale" model="ir.actions.act_window">
         <field name="name">Quotation For Sale</field>
         <field name="res_model">sale.order</field>
         <field name="view_type">form</field>
