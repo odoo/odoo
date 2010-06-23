@@ -20,7 +20,7 @@
 {
     "name" : "Products date of expiry",
     "version" : "1.0",
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category" : "Enterprise Specific Modules/Food Industries",
     "depends" : ["base", "account", "product", "stock"],
     "init_xml" : [],
@@ -31,7 +31,7 @@
  - removal date
  - alert date
 Used, for example, in food industries.''',
-    "update_xml" : ["product_expiry_view.xml", "report/report_stock_view.xml", "wizard/stock_partial_view.xml"],
+    "update_xml" : ["product_expiry_view.xml"],
     "active": False,
     "installable": True
 }

@@ -1,1 +1,0 @@
-import stock_partial
