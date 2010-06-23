@@ -20,15 +20,19 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import pooler
-from tools import config
 import time
-import netsvc
 import math
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
+
+from osv import fields
+from osv import osv
+import netsvc
+
 from tools.translate import _
+import tools
+from tools import config
+
 
 def rounding(fl, round_value):
     if not round_value:
