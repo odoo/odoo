@@ -31,7 +31,11 @@
  - removal date
  - alert date
 Used, for example, in food industries.''',
-    "update_xml" : ["product_expiry_view.xml", "report/report_stock_view.xml", "wizard/stock_partial_view.xml"],
+    "update_xml" : [
+                    'security/ir.model.access.csv',
+                     "product_expiry_view.xml",
+                     "report/report_stock_view.xml", 
+                     "wizard/stock_partial_view.xml"],
     "active": False,
     "installable": True
 }
