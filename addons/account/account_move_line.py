@@ -529,6 +529,7 @@ class account_move_line(osv.osv):
         return result
 
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
+        print 'XXXXXXXXXXXXXXXXXXXXXXXXXXX : ', move_id, partner_id, account_id, debit, credit, date, journal
         val = {}
         val['date_maturity'] = False
 
@@ -788,57 +789,81 @@ class account_move_line(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False, submenu=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar, submenu=submenu)
-        if view_type=='tree' and 'journal_id' in context:
-            title = self.view_header_get(cr, uid, view_id, view_type, context)
-            journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
-
-            # if the journal view has a state field, color lines depending on
-            # its value
-            state = ''
+        if view_type != 'tree':
+            return result
+       
+        fld = []
+        fields = {}
+        flds = []
+        title = self.view_header_get(cr, uid, view_id, view_type, context)
+        xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
+        journal_pool = self.pool.get('account.journal')
+        
+        ids = journal_pool.search(cr, uid, [])
+        journals = journal_pool.browse(cr, uid, ids)
+        all_journal = []
+        for journal in journals:
+            all_journal.append(journal.id)
             for field in journal.view_id.columns_id:
-                if field.field=='state':
-                    state = ' colors="red:state==\'draft\'"'
-
-            #xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5"%s>\n\t''' % (title, state)
-            xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write"%s>\n\t''' % (title, state)
-            fields = []
-
-            widths = {
-                'ref': 50,
-                'statement_id': 50,
-                'state': 60,
-                'tax_code_id': 50,
-                'move_id': 40,
-            }
-            for field in journal.view_id.columns_id:
-                fields.append(field.field)
-                attrs = []
-                if field.field=='debit':
-                    attrs.append('sum="Total debit"')
-                elif field.field=='credit':
-                    attrs.append('sum="Total credit"')
-                elif field.field=='account_tax_id':
-                    attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
-                elif field.field=='account_id' and journal.id:
-                    attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
-                elif field.field == 'partner_id':
-                    attrs.append('on_change="onchange_partner_id(move_id,partner_id,account_id,debit,credit,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
-                if field.readonly:
-                    attrs.append('readonly="1"')
-                if field.required:
-                    attrs.append('required="1"')
+                if not field.field in fields:
+                    fields[field.field] = [journal.id]
+                    fld.append((field.field, field.sequence))
+                    flds.append(field.field)
                 else:
-                    attrs.append('required="0"')
-                if field.field in ('amount_currency','currency_id'):
-                    attrs.append('on_change="onchange_currency(account_id,amount_currency,currency_id,date,((\'journal_id\' in context) and context[\'journal_id\']) or {})"')
+                    fields.get(field.field).append(journal.id)
+        
+        fld.append(('period_id', 3))
+        fld.append(('journal_id', 10))
+        flds.append('period_id')
+        flds.append('journal_id')
+        fields['period_id'] = all_journal
+        fields['journal_id'] = all_journal
+        
+        from operator import itemgetter
+        fld = sorted(fld, key=itemgetter(1))
 
-                if field.field in widths:
-                    attrs.append('width="'+str(widths[field.field])+'"')
-                xml += '''<field name="%s" %s/>\n''' % (field.field,' '.join(attrs))
+        widths = {
+            'ref': 50,
+            'statement_id': 50,
+            'state': 60,
+            'tax_code_id': 50,
+            'move_id': 40,
+        }
 
-            xml += '''</tree>'''
-            result['arch'] = xml
-            result['fields'] = self.fields_get(cr, uid, fields, context)
+        for field_it in fld:
+            field = field_it[0]
+            if field=='state':
+                state = 'colors="red:state==\'draft\'"'
+            
+            attrs = []
+            if field == 'debit':
+                attrs.append('sum="Total debit"')
+            elif field == 'credit':
+                attrs.append('sum="Total credit"')
+            elif field == 'account_tax_id':
+                attrs.append('domain="[(\'parent_id\',\'=\',False)]"')
+            elif field == 'account_id' and journal.id:
+                attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
+            elif field == 'partner_id':
+                attrs.append('on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"')
+#            if field.readonly:
+#                attrs.append('readonly="1"')
+#            if field.required:
+#                attrs.append('required="1"')
+#            else:
+#                attrs.append('required="0"')
+            if field in ('amount_currency','currency_id'):
+                attrs.append('on_change="onchange_currency(account_id, amount_currency,currency_id, date, journal_id)"')
+
+            if field in widths:
+                attrs.append('width="'+str(widths[field])+'"')
+            
+            attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
+            xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
+
+        xml += '''</tree>'''
+        result['arch'] = xml
+        result['fields'] = self.fields_get(cr, uid, flds, context)
         return result
 
     def _check_moves(self, cr, uid, context):
