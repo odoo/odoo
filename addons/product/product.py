@@ -586,6 +586,7 @@ class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
     _rec_name = 'ean'
+    _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
         'name' : fields.text('Description', size=64),
@@ -609,7 +610,6 @@ class product_packaging(osv.osv):
         'length': fields.float('Length', help='The length of the package'),
     }
 
-    _order = 'sequence'
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):

@@ -307,7 +307,7 @@ class idea_vote(osv.osv):
     _log_create = True
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'By user', readonly="True"),
+        'user_id': fields.many2one('res.users', 'User', readonly="True"),
         'idea_id': fields.many2one('idea.idea', 'Idea', readonly="True", ondelete='cascade'),
         'score': fields.selection(VoteValues, 'Vote Status', readonly="True"),
         'date': fields.datetime('Date', readonly="True"),
