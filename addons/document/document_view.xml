@@ -41,11 +41,33 @@
         </field>
     </record>
 
+    <record id="view_document_storage_filter" model="ir.ui.view">
+            <field name="name">Search View: Document Storage</field>
+            <field name="model">document.storage</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Document storage">
+                    <filter string="Database Storage" domain="[('type','=','db')]"/>
+                    <filter string="Internal File storage" domain="[('type','=','filestore')]"/>
+                    <filter string="External File storage" domain="[('type','=','realstore')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name" />
+                    <field name="user_id" />                    
+                    <newline/>
+                    <group expand="0" string="Group By..." groups="base.group_extended">
+                        <filter string="Type"  domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>                                               
+                    </group>
+               </search>
+            </field>
+        </record>
+
     <record model="ir.actions.act_window" id="action_document_storage_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.storage</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_document_storage_filter"/>
     </record>
    <menuitem
         name="Storage Media"
