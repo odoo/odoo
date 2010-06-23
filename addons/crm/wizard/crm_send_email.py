@@ -178,7 +178,7 @@ class crm_send_new_email(osv.osv_memory):
                              "%s <%s>" % (case.user_id.name, case.user_id.address_id.email)) or \
                             tools.config.get('email_from',False)})
             if 'subject' in fields:
-                res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')})
+                res.update({'subject': '[%s] %s' % (str(case.id), context.get('subject', case.name) or '')})
             if 'email_cc' in fields:
                 res.update({'email_cc': case.email_cc or ''})
             if 'text' in fields:

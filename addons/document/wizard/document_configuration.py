@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,23 +15,31 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
 from osv import osv, fields
-from document_ftp import ftpserver
-class document_configuration(osv.osv_memory):
+from osv.orm import except_orm
+from tools import config
+import urlparse
 
-    _name='document.configuration'
+import os
+
+class document_configuration_wizard(osv.osv_memory):
+
+    _name='document.configuration.wizard'
     _description = 'Auto Directory Configuration'
     _inherit = 'res.config'   
 
     _columns = {
-        'sale_order' : fields.boolean('Sale Order', help="Auto directory configuration for Sale Orders and Quotation with report."),
-        'product' : fields.boolean('Product', help="Auto directory configuration for Products."),
-        'project': fields.boolean('Project', help="Auto directory configuration for Projects."),
+        'host': fields.char('Address', size=64,
+                            help="Server address or IP and port to which users should connect to for DMS access", 
+                            required=True),
     }
-    
+
+    _defaults = {
+        'host': config.get('ftp_server_host', 'localhost') + ':' + config.get('ftp_server_port', '8021'),
+    }
 
     def execute(self, cr, uid, ids, context=None):
         conf_id = ids and ids[0] or False
@@ -117,5 +125,10 @@ class document_configuration(osv.osv_memory):
                 'ressource_type_id': mid[0],
                 'domain': '[]',
                 'ressource_tree': 1
-        })        
-document_configuration()
+        })
+
+        # Update the action for FTP browse.
+        aid = objid._get_id(cr, uid, 'document_ftp', 'action_document_browse')
+        aid = objid.browse(cr, uid, aid, context=context).res_id
+        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/'})
+document_configuration_wizard()
