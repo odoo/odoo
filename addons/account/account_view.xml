@@ -799,21 +799,7 @@
 
 <!--       <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries by Line"/-->
 
-        <record id="action_move_journal_line" model="ir.actions.act_window">
-            <field name="name">Journal Entries</field>
-            <field name="res_model">account.move</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_tree"/>
-            <field name="search_view_id" ref="view_account_move_filter"/>
-        </record>
 
-        <menuitem
-            icon="STOCK_JUSTIFY_FILL"
-            action="action_move_journal_line"
-            id="menu_action_move_journal_line_form"
-            parent="account.menu_finance_entries"
-            sequence="5"/>
         <!--
     Entries lines
     -->
@@ -1123,6 +1109,23 @@
                 </search>
             </field>
         </record>
+
+
+       <record id="action_move_journal_line" model="ir.actions.act_window">
+            <field name="name">Journal Entries</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_account_move_filter"/>
+        </record>
+
+        <menuitem
+            icon="STOCK_JUSTIFY_FILL"
+            action="action_move_journal_line"
+            id="menu_action_move_journal_line_form"
+            parent="account.menu_finance_entries"
+            sequence="5"/>
 
         <record id="action_move_line_form" model="ir.actions.act_window">
             <field name="name">Entries</field>
