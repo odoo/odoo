@@ -63,7 +63,10 @@ def _child_get(node, self=None, tagname=None):
                     if n.get('rml_except', False):
                         try:
                             eval(n.get('rml_except'), {}, self.localcontext)
-                        except:
+                        except GeneratorExit:
+                            continue
+                        except Exception:
+                            logging.getLogger('report').exception()
                             continue
                     if n.get('rml_tag'):
                         try:
@@ -72,7 +75,10 @@ def _child_get(node, self=None, tagname=None):
                             n2.tag = tag
                             n2.attrib.update(attr)
                             yield n2
-                        except:
+                        except GeneratorExit:
+                            yield n
+                        except Exception:
+                            logging.getLogger('report').exception()
                             yield n
                     else:
                         yield n
@@ -81,7 +87,10 @@ def _child_get(node, self=None, tagname=None):
         if self and self.localcontext and n.get('rml_except'):
             try:
                 eval(n.get('rml_except'), {}, self.localcontext)
-            except:
+            except GeneratorExit:
+                continue
+            except Exception:
+                logging.getLogger('report').exception()
                 continue
         if self and self.localcontext and n.get('rml_tag'):
             try:
@@ -91,7 +100,10 @@ def _child_get(node, self=None, tagname=None):
                 n2.attrib.update(attr or {})
                 yield n2
                 tagname = ''
-            except:
+            except GeneratorExit:
+                pass
+            except Exception:
+                logging.getLogger('report').exception()
                 pass
         if (tagname is None) or (n.tag==tagname):
             yield n
@@ -138,7 +150,7 @@ def unit_get(size):
             decimal_point = '.'
             try:
                 decimal_point = locale.nl_langinfo(locale.RADIXCHAR)
-            except:
+            except Exception:
                 decimal_point = locale.localeconv()['decimal_point']
 
             size = size.replace(decimal_point, '.')
