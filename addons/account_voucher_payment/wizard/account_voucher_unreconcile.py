@@ -18,37 +18,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    "name" : "Invoice Payment/Receipt by Vouchers.",
-    "version" : "1.0",
-    "author" : 'Tiny & Axelor',
-    "description": """This module includes :
-    * It reconcile the invoice (supplier, customer) while paying through
-    Accounting Vouchers
-    """,
-    "category" : "Generic Modules/Indian Accounting",
-    "website" : "http://tinyerpindia.com",
-    "depends" : [
-        "base",
-        "account",
-        "account_voucher",
-    ],
-    "init_xml" : [
-    ],
+from osv import fields, osv
 
-    "demo_xml" : [],
-    "update_xml" : [
-        "wizard/account_voucher_unreconcile_view.xml",
-        "account_voucher_payment_view.xml",
+class account_voucher_unreconcile(osv.osv_memory):
+    _name = "account.voucher.unreconcile"
+    _description = "Account voucher unreconcile"
+    
+    def trans_unrec(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        obj_voucher = self.pool.get('account.voucher')
+        obj_reconcile = self.pool.get('account.move.reconcile')
+        if context.get('active_id'):
+            voucher = obj_voucher.browse(cr, uid, context.get('active_id'), context=context)
+            recs = []
+            for line in voucher.move_ids:
+                if line.reconcile_id:
+                    recs = [line.reconcile_id.id]
+        
+            for rec in recs:
+                obj_reconcile.unlink(cr, uid, rec)
+                
+        return {}
 
-    ],
-    "test" : [
-#        "test/account_voucher.yml",
-        "test/account_voucher_payment.yml",
-    ],
-
-    "active": False,
-    "installable": True,
-}
+account_voucher_unreconcile()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
