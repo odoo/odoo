@@ -31,8 +31,8 @@
                         </form>
                     </field>
                     <separator colspan="4" string="States"/>
-                    <field name="state" select="1" readonly="1"/>
-                    <group col="2" colspan="2">
+                    <group>
+                    	<field name="state" select="1" readonly="1"/>
                         <button name="create_period" states="draft" string="Create Monthly Periods" type="object" icon="gtk-dnd"/>
                         <button name="create_period3" states="draft" string="Create 3 Months Periods" type="object" icon="gtk-dnd"/>
                     </group>
@@ -67,7 +67,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                    	<filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/> 
+                    	<filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
             </field>
@@ -94,15 +94,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Period">
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="fiscalyear_id"/>
                     <field name="special"/>
                     <separator colspan="4" string="States"/>
-                    <field name="state"/>
+                    <field name="state" select="1"/>
                     <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert"/>
                 </form>
             </field>
@@ -122,32 +122,11 @@
                 </tree>
             </field>
         </record>
-        <record id="view_account_period_search" model="ir.ui.view">
-            <field name="name">account.period.search</field>
-            <field name="model">account.period</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-        		<search string="Search Periods">
-                	<group>
-                		<filter string="Done" domain="[('state','=','done')]" icon="terp-dolar_ok!"/>
-                		<filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
-                		<separator orientation="vertical"/>
-	                    <field name="code"/>
-	                    <field name="name"/>
-	                    <field name="state"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By...">
-                    	<filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/> 
-                    </group>
-                </search>
-         	</field>
-        </record>
         <record id="action_account_period_form" model="ir.actions.act_window">
             <field name="name">Periods</field>
             <field name="res_model">account.period</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,search</field>
+            <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23"/>
 
@@ -202,14 +181,15 @@
                         <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
                         <filter icon="terp-purchase" string="Purchase Accounts" domain="[('type','=','purchase')]"/>
                         <separator orientation="vertical"/>
-	                    <field name="code" select="1"/>
-	                    <field name="name" select="1"/>
-	                    <field name="user_type" select="1"/>
-	                    <field name="type" select="1"/>
+	                    <field name="code"/>
+	                    <field name="name"/>
+	                    <field name="user_type"/>
+	                    <field name="type"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
                     	<filter string="Parent Account" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
+                    	<separator orientation="vertical"/>
                     	<filter string="User Type" icon="terp-folder-blue" domain="" context="{'group_by':'user_type'}"/>
                     	<filter string="Internal Type" icon="terp-folder-yellow" domain="" context="{'group_by':'type'}"/>
                     </group>
@@ -236,6 +216,8 @@
                 <tree string="Chart of accounts" toolbar="1" colors="blue:type in ('view');black:type not in ('view')">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="user_type" invisible="1"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
@@ -313,6 +295,8 @@
                 <tree string="Account Journal">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="type" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
@@ -324,7 +308,7 @@
             <field name="arch" type="xml">
                 <tree string="Search Account Journal">
                 	<group>
-					<filter domain="[('type', '=', 'sale')]" string="Sale Journals" icon="terp-sale"/>                	
+					<filter domain="[('type', '=', 'sale')]" string="Sale Journals" icon="terp-sale"/>
 					<filter domain="[('type', '=', 'purchase')]" string="Purchase Journals" icon="terp-purchase"/>
 					<filter domain="[('centralisation', '=', 'True')]" string="Centralized Journals" icon="terp-stock"/>
 					<separator orientation="vertical"/>
@@ -696,7 +680,8 @@
                     <field name="sum"/>
                     <field name="sum_period"/>
                     <newline/>
-                    <field colspan="4" name="info"/>
+                    <separator string="Description" colspan="4"/>
+                    <field colspan="4" name="info" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -724,6 +709,7 @@
                     <field name="name"/>
                     <field name="price_include" groups="base.group_extended"/>
                     <field name="description"/>
+                    <field name="tax_group" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -742,7 +728,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Tax Type" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Tax Group" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'tax_group'}"/>
                     </group>
                 </search>
             </field>
@@ -811,9 +797,8 @@
         </record>
         <menuitem action="action_tax_form" id="menu_action_tax_form" parent="next_id_27"/>
 
-<!--       <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries by Line"/>
-        <menuitem icon="STOCK_JUSTIFY_FILL" action="action_move_journal_line_form" id="menu_action_move_journal_line_form" parent="account.menu_finance_entries" type="wizard" sequence="5"/>
--->
+<!--       <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries by Line"/-->
+
         <!--
     Entries lines
     -->
@@ -831,7 +816,7 @@
                     <field name="ref"/>
                     <field name="invoice"/>
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
                     <field name="account_id" domain="[('journal_id','=',journal_id)]"/>
                     <field name="journal_id"/>
                     <field name="debit" sum="Total debit"/>
@@ -961,16 +946,14 @@
                         <field name="date" select='1'/>
                         <field name="account_id" select='1'/>
                         <field name="partner_id" select='1'>
-                        	<filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-partner" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
+                            <filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-partner" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
                         </field>
                         <field name="balance" string="Debit/Credit" select='1'/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By...">
-                    	<filter string="Account" context="{'group_by':'account_id'}" icon="terp-folder-blue"/>
-                    	<filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
-                    	<filter string="Partner" context="{'group_by':'partner_id'}" icon="terp-personal"/>
-                    	<filter string="state" context="{'group_by':'state'}"/>
+                    <group col="10" colspan="4">
+                        <field name="journal_id" widget="selection" context="{'journal_id':self, 'visible_id':self or 0}"/>
+                        <field name="period_id" widget="selection" context="{'period_id':self}"/>
                     </group>
                 </search>
             </field>
@@ -1020,7 +1003,6 @@
                 </tree>
             </field>
         </record>
-
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">account.move.form</field>
             <field name="model">account.move</field>
@@ -1126,6 +1108,23 @@
             </field>
         </record>
 
+
+       <record id="action_move_journal_line" model="ir.actions.act_window">
+            <field name="name">Journal Entries</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_account_move_filter"/>
+        </record>
+
+        <menuitem
+            icon="STOCK_JUSTIFY_FILL"
+            action="action_move_journal_line"
+            id="menu_action_move_journal_line_form"
+            parent="account.menu_finance_entries"
+            sequence="5"/>
+
         <record id="action_move_line_form" model="ir.actions.act_window">
             <field name="name">Entries</field>
             <field name="type">ir.actions.act_window</field>
@@ -1160,24 +1159,24 @@
         <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
 
         <record id="action_account_moves_sale" model="ir.actions.act_window">
-            <field name="name">Receivable Entries</field>
-            <field name="res_model">account.move</field>
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_tree"/>
-            <field name="search_view_id" ref="view_account_move_filter"/>
+            <field name="view_id" ref="view_move_line_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="domain">[('journal_id.type', 'in', ['sale', 'sale_refund'])]</field>
         </record>
 
         <menuitem action="action_account_moves_sale" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>
 
         <record id="action_account_moves_purchase" model="ir.actions.act_window">
-            <field name="name">Payable Entries</field>
-            <field name="res_model">account.move</field>
+            <field name="name">Transaction Journal</field>
+            <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_tree"/>
-            <field name="search_view_id" ref="view_account_move_filter"/>
+            <field name="view_id" ref="view_move_line_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="domain">[('journal_id.type', 'in', ['purchase', 'purchase_refund'])]</field>
         </record>
 
@@ -1204,7 +1203,7 @@
             <field name="act_window_id" ref="action_move_line_search"/>
         </record>
         <record id="action_move_line_search_view3" model="ir.actions.act_window">
-            <field name="name">Cash Register</field>
+            <field name="name">Cash Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
@@ -1214,7 +1213,7 @@
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
         </record>
         <record id="action_move_line_search_view4" model="ir.actions.act_window">
-            <field name="name">Checks Register</field>
+            <field name="name">Check Registers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
@@ -1796,10 +1795,12 @@
                 <tree string="Account Template">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="type" invisible="1"/>
+                    <field name="user_type" invisible="1"/>
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_account_template_search" model="ir.ui.view">
             <field name="name">account.account.template.search</field>
             <field name="model">account.account.template</field>
@@ -1896,6 +1897,10 @@
                     <field name="account_root_id"/>
                     <field name="tax_code_root_id"/>
                     <field name="bank_account_view_id"/>
+                    <field name="property_account_receivable" invisible="1"/>
+                    <field name="property_account_payable" invisible="1"/>
+                    <field name="property_account_expense_categ" invisible="1"/>
+                    <field name="property_account_income_categ" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1995,7 +2000,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="action_account_tax_template_form" model="ir.actions.act_window">
             <field name="name">Tax Templates</field>
             <field name="res_model">account.tax.template</field>
@@ -2015,10 +2020,11 @@
                 <tree string="Account Tax Code Template" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
-		
+
 		<record id="view_tax_code_template_search" model="ir.ui.view">
             <field name="name">account.tax.code.template.search</field>
             <field name="model">account.tax.code.template</field>
@@ -2026,9 +2032,9 @@
             <field name="arch" type="xml">
                 <search string="Search tax template">
                 	<group>
-	                	<field name="name" select="1"/>
-	                    <field name="code" select="1"/>
-	                    <field name="parent_id" select="1"/>
+	                	<field name="name"/>
+	                    <field name="code"/>
+	                    <field name="parent_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -2037,7 +2043,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="view_tax_code_template_form" model="ir.ui.view">
             <field name="name">account.tax.code.template.form</field>
             <field name="model">account.tax.code.template</field>
@@ -2192,6 +2198,23 @@
             action="action_account_fiscal_position_template_form"
             id="menu_action_account_fiscal_position_form_template"
             parent="account_template_folder" sequence="20"/>
+
+        <record id="action_move_journal_line" model="ir.actions.act_window">
+            <field name="name">Journal Entries</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_tree"/>
+            <field name="search_view_id" ref="view_account_move_filter"/>
+        </record>
+
+        <menuitem
+            icon="STOCK_JUSTIFY_FILL"
+            action="action_move_journal_line"
+            id="menu_action_move_journal_line_form"
+            parent="account.menu_finance_entries"
+            sequence="5"/>
+
 
     </data>
 </openerp>

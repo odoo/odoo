@@ -18,10 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
 
 from osv import osv, fields
 import netsvc
-import time
 from tools.translate import _
 
 class sale_journal_invoice_type(osv.osv):
@@ -34,8 +34,8 @@ class sale_journal_invoice_type(osv.osv):
         'invoicing_method': fields.selection([('simple','Non grouped'),('grouped','Grouped')], 'Invoicing method', required=True),
     }
     _defaults = {
-        'active': lambda *a: True,
-        'invoicing_method': lambda *a:'simple'
+        'active': True,
+        'invoicing_method': 'simple'
     }
 sale_journal_invoice_type()
 
@@ -53,18 +53,21 @@ class sale_journal(osv.osv):
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
+            ('cancel','Cancel'),
+            ('confirm','Confirm'),
             ('done','Done'),
         ], 'State', required=True, readonly=True),
         'note': fields.text('Note'),
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
+        'date_created': time.strftime('%Y-%m-%d'),
         'user_id': lambda self,cr,uid,context: uid,
         'state': lambda self,cr,uid,context: 'draft',
     }
-    
+
     def button_sale_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'cancel'})
         for id in ids:
             sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
             for saleid in sale_ids:
@@ -72,10 +75,11 @@ class sale_journal(osv.osv):
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'cancel', cr)
             for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale order of Journal') + " '" + name + "' "+ _("is cancelled")
-                self.log(cr, uid, id, message)  
+                self.log(cr, uid, id, message)
         return True
-    
+
     def button_sale_confirm(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'confirm'})
         for id in ids:
             sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
             for saleid in sale_ids:
@@ -83,30 +87,30 @@ class sale_journal(osv.osv):
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'order_confirm', cr)
             for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is confirmed")
-                self.log(cr, uid, id, message)    
+                self.log(cr, uid, id, message)
         return True
 
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'})
         for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is opened")
-                self.log(cr, uid, id, message)  
+                self.log(cr, uid, id, message)
         return True
-    
+
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
         for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is in draft state")
-                self.log(cr, uid, id, message)  
+                self.log(cr, uid, id, message)
         return True
-    
+
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done', 'date_validation':time.strftime('%Y-%m-%d')})
         for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is closed")
-                self.log(cr, uid, id, message)  
+                self.log(cr, uid, id, message)
         return True
-    
+
 sale_journal()
 
 class picking_journal(osv.osv):

@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
-<openerp>	
-	<data>
+<openerp>    
+    <data>
 
         <record id="view_split_in_lots" model="ir.ui.view">
-	            <field name="name">Split in lots</field>
-	            <field name="model">stock.move.split</field>
-	            <field name="type">form</field>
+                <field name="name">Split in lots</field>
+                <field name="model">stock.move.split</field>
+                <field name="type">form</field>
              <field name="inherit_id" ref="stock.view_split_in_lots"/>
               <field name="arch" type="xml">
               <data>
-                <xpath expr="//form/group/field[@name='line_exist_ids']/tree/field[@name='prodlot_id']"  position="replace">
-                  <field name="prodlot_id" on_change="on_change_product(parent.product_id)"/>
+                <xpath expr="//form/group/group/field[@name='line_ids']/tree/field[@name='name']"  position="replace">
+                  <field name="name" on_change="on_change_product(parent.product_id)"/>
                 </xpath>
-                <xpath expr="//form/group/field[@name='line_exist_ids']/tree/field[@name='quantity']"  position="after">
+                <xpath expr="//form//group/group/field[@name='line_ids']/tree/field[@name='quantity']"  position="after">
                   <field name="date"/>
                 </xpath>
               </data>
             </field>
         </record>
-	</data>
-</openerp>	
+    </data>
+</openerp>    

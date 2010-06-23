@@ -26,55 +26,45 @@ from tools.translate import _
 import netsvc
 import pooler
 import time
-import datetime
+import datetime, time
 import wizard
 
-class stock_partial_lot_picking(osv.osv_memory):
-    _inherit = "stock.partial.picking"
-    _name = "stock.partial.picking"
-    _description = "Partial Picking"
-
-    def do_partial(self, cr, uid, ids, context):
-        res = super(stock_partial_lot_picking, self).do_partial(cr, uid, ids, context=context)
+class stock_production_lot(osv.osv):
+    _inherit = "stock.production.lot"
+    def create(self, cr, uid, vals, context={}):
+        new_id = super(stock_production_lot, self).create(cr, uid, vals, context=context)
         prodlot_obj = self.pool.get('stock.production.lot')
-        pick_obj = self.pool.get('stock.picking')
-        picking_ids = context.get('active_ids', False)
-        partial = self.browse(cr, uid, ids[0], context)
-        for pick in pick_obj.browse(cr, uid, picking_ids):
-            for m in pick.move_lines:
-                for pick in pick_obj.browse(cr, uid, picking_ids):
-                        for m in pick.move_lines:
-                            res = {}
-                            if (pick.type == 'in') and m.prodlot_id:
-                                if not m.prodlot_id.life_date:
-                                    date_life = (datetime.datetime.strptime(partial.date, '%Y-%m-%d %H:%M:%S')  + datetime.timedelta(days=m.product_id.life_time))
-                                    res['life_date'] = date_life.strftime('%Y-%m-%d')
-                                if not m.prodlot_id.use_date:
-                                    date_use = (datetime.datetime.strptime(partial.date, '%Y-%m-%d %H:%M:%S')  + datetime.timedelta(days=m.product_id.use_time))
-                                    res['use_date'] = date_use.strftime('%Y-%m-%d')
-                                if not m.prodlot_id.removal_date:
-                                    date_removal = (datetime.datetime.strptime(partial.date, '%Y-%m-%d %H:%M:%S')  + datetime.timedelta(days=m.product_id.removal_time))
-                                    res['removal_date'] = date_removal.strftime('%Y-%m-%d')
-                                if not m.prodlot_id.alert_date:
-                                    date_alert = (datetime.datetime.strptime(partial.date, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(days=m.product_id.alert_time))
-                                    res['alert_date'] = date_alert.strftime('%Y-%m-%d')
-                                prodlot_obj.write(cr, uid, [m.prodlot_id.id], res)
-        return res
-stock_partial_lot_picking()
+        prod = prodlot_obj.browse(cr, uid, new_id, context=context)
+        res = {}
+        current_date = time.strftime('%Y-%m-%d %H:%M:%S')
+        if not prod.life_date:
+            date_life = (datetime.datetime.strptime(current_date, '%Y-%m-%d %H:%M:%S')  + datetime.timedelta(days=prod.product_id.life_time))
+            res['life_date'] = date_life.strftime('%Y-%m-%d')
+        if not prod.use_date:
+            date_use = (datetime.datetime.strptime(current_date, '%Y-%m-%d %H:%M:%S')  + datetime.timedelta(days=prod.product_id.use_time))
+            res['use_date'] = date_use.strftime('%Y-%m-%d')
+        if not prod.removal_date:
+            date_removal = (datetime.datetime.strptime(current_date, '%Y-%m-%d %H:%M:%S')  + datetime.timedelta(days=prod.product_id.removal_time))
+            res['removal_date'] = date_removal.strftime('%Y-%m-%d')
+        if not prod.alert_date:
+            date_alert = (datetime.datetime.strptime(current_date, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(days=prod.product_id.alert_time))
+            res['alert_date'] = date_alert.strftime('%Y-%m-%d')
+        prodlot_obj.write(cr, uid, [prod.id], res)
+        return new_id
+stock_production_lot()
 
 class stock_move_split_lines_exist(osv.osv_memory):
-    _name = "stock.move.split.lines.exist"
-    _inherit = "stock.move.split.lines.exist"
+    _inherit = "stock.move.split.lines"
     _columns = {
         'date': fields.date('Expiry Date'),
     }
+    # TODO: use this date instead of default one
     def on_change_product(self, cr, uid, ids, product_id):
         if not product_id:
             return {'value':{'date': False}}
         day_life = self.pool.get('product.product').browse(cr, uid, product_id).life_time
         date_life = (datetime.datetime.now() + datetime.timedelta(days=day_life))
-        return {'value':{'date': date_life.strftime('%Y-%m-%d')
-}}
-
-
+        return {'value':
+            {'date': date_life.strftime('%Y-%m-%d')}
+        }
 stock_move_split_lines_exist()

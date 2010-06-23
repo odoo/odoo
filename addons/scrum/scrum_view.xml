@@ -43,7 +43,7 @@
                     <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-execute"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                     <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
@@ -61,7 +61,7 @@
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
-      					<button name="button_postpone" string="Post Pone" type="object"                  
+      					<button name="button_postpone" string="Post Pone" type="object"
 						help="Post Pone backlog" colspan="2"
                          icon="gtk-convert"  attrs="{'invisible':[('state','=','done')]}"/>
                         <field name="user_id" select="1"/>
@@ -198,7 +198,7 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-execute"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>

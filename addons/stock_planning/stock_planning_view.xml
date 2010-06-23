@@ -152,7 +152,9 @@
                             <field name="product_amt" on_change="product_amt_change( product_amt, product_uom)" />
                             <field name="product_qty"  />
                             <field name="state"/>
-                            <button name="action_validate" icon="gtk-apply" string="Validate" states="draft" type="object" colspan = "2"/>
+                            <label string = ""/>
+                            <button name="action_validate" icon="gtk-apply" string="Validate" states="draft" type="object" colspan = "1"/>
+
                 </group>
                     </group>
                     <separator colspan ="4" string="Sales history"/>
@@ -161,7 +163,7 @@
                         <label string = "Per User :"/>
                         <label string = "Per Department :"/>
                         <label string = "Per Warehouse :"/>
-                        <label string = "Per Company :"/>
+                        <label string = ""/>
                         <label string = "Periods :"/>
                         <field name="analyzed_user_id" nolabel = "1" domain = "[('company_id','=',company_id)] "/>
                         <field name="analyzed_dept_id" nolabel = "1" domain = "[('company_id','=',company_id)] " />
