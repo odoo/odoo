@@ -529,7 +529,6 @@ class account_move_line(osv.osv):
         return result
 
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
-        print 'XXXXXXXXXXXXXXXXXXXXXXXXXXX : ', move_id, partner_id, account_id, debit, credit, date, journal
         val = {}
         val['date_maturity'] = False
 
