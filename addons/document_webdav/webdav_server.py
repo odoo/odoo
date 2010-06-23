@@ -67,18 +67,17 @@ class DAVHandler(FixSendError,DAVRequestHandler):
         pass
 
     def get_db_from_path(self, uri):
-        if uri or uri == '/':
-            dbs = self.IFACE_CLASS.db_list()
-            res = len(dbs) and dbs[0] or False
-        else:
-            res =  self.IFACE_CLASS.get_db(uri)        
+        # interface class will handle all cases.
+        res =  self.IFACE_CLASS.get_db(uri, allow_last=True)
         return res
 
     def setup(self):
-        davpath = '/'+config.get_misc('webdav','vdir','webdav')
+        self.davpath = '/'+config.get_misc('webdav','vdir','webdav')
         self.baseuri = "http://%s:%d/"% (self.server.server_name, self.server.server_port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
         
+    def get_davpath(self):
+        return self.davpath
     
     def log_message(self, format, *args):
         netsvc.Logger().notifyChannel('webdav', netsvc.LOG_DEBUG_RPC, format % args)
@@ -164,8 +163,18 @@ class DAVHandler(FixSendError,DAVRequestHandler):
         self.send_body(None, '201', 'Created', '', headers=headers)
 
 
+from service.http_server import reg_http_service,OpenERPAuthProvider
+
+class DAVAuthProvider(OpenERPAuthProvider):
+    def authenticate(self, db, user, passwd, client_address):
+        """ authenticate, but also allow the False db, meaning to skip
+            authentication when no db is specified.
+        """
+        if db is False and user is None and passwd is None:
+            return True
+        return OpenERPAuthProvider.authenticate(self, db, user, passwd, client_address)
+
 try:
-    from service.http_server import reg_http_service,OpenERPAuthProvider   
 
     if (config.get_misc('webdav','enable',True)):
         directory = '/'+config.get_misc('webdav','vdir','webdav') 
@@ -180,7 +189,7 @@ try:
 
         conf = OpenDAVConfig(**_dc)
         handler._config = conf
-        reg_http_service(HTTPDir(directory,DAVHandler,OpenERPAuthProvider()))
+        reg_http_service(HTTPDir(directory,DAVHandler,DAVAuthProvider()))
         netsvc.Logger().notifyChannel('webdav', netsvc.LOG_INFO, "WebDAV service registered at path: %s/ "% directory)
 except Exception, e:
     logger = netsvc.Logger()
