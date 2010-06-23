@@ -85,6 +85,7 @@
                 <field name="user_id"/>
                 <field name="parent_id"/>
                 <field name="storage_id" />
+                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 <notebook colspan="4">
                 <page string="Definition">
                     <separator string="Directory Type" colspan="4"/>
@@ -226,7 +227,8 @@
                 <group colspan="4" col="6">
                     <field name="name" select="1" />
                     <field name="type"/>
-                     <field name="parent_id"/>
+                    <field name="parent_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Attachment">
@@ -291,11 +293,15 @@
                         help="Filter on my Attachment" />
                  </field>
                 <field name="partner_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Partner" icon="terp-personal" domain="[]"
                        context="{'group_by':'partner_id'}" />
                     <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
+                    <filter string="Type"  domain="[]" context="{'group_by':'type'}"/>
+                    <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 </group>
               </search>
              </field>
@@ -319,6 +325,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_document_file_form">
+        <field name="name">Documents</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
