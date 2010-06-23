@@ -99,7 +99,7 @@
 
                             <group colspan="2" col="2" name="status">
                                 <separator string="Status" colspan="2"/>
-                                <field name="categ_id" select="1" groups="base.group_extended"/>
+                                <field name="categ_id" select="1"/>
                                 <field name="state"/>
                                 <field groups="base.group_extended" name="product_manager"/>
                             </group>
@@ -471,7 +471,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product Variant">
-                     <field name="product_tmpl_id" select="1"/>                
+                     <field name="product_tmpl_id" select="1"/>
                     <field name="active" select="1"/>
                     <field name="variants" select="1"/>
                     <field name="default_code" select="1"/>
