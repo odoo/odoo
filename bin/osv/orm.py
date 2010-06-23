@@ -3898,6 +3898,11 @@ class orm(orm_template):
 
         del data['id']
 
+        # make sure we don't break the current parent_store structure and
+        # force a clean recompute!
+        for parent_column in ['parent_left', 'parent_right']:
+            data.pop(parent_column, None)
+
         for v in self._inherits:
             del data[self._inherits[v]]
         return data
