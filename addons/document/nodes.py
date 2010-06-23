@@ -668,7 +668,7 @@ class node_file(node_class):
         self.file_id = fil.id
         #todo: more info from ir_attachment
         if fil.file_type and '/' in fil.file_type:
-            self.mimetype = fil.file_type
+            self.mimetype = str(fil.file_type)
         self.create_date = fil.create_date
         self.write_date = fil.write_date or fil.create_date
         self.content_length = fil.file_size
@@ -810,7 +810,7 @@ class node_content(node_class):
                 (self.extension,))
         res = cr.fetchall()
         if res and res[0][0]:
-            self.mimetype = res[0][0]
+            self.mimetype = str(res[0][0])
 
 
     def get_data(self, cr, fil_obj = None):

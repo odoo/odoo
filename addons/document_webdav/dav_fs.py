@@ -388,7 +388,7 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound(uri2)
-            result = node.mimetype
+            result = str(node.mimetype)
             return result
             #raise DAV_NotFound, 'Could not find %s' % path
         finally:
