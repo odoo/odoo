@@ -26,13 +26,13 @@ class campaign_analysis(osv.osv): #{{{
     _description = "Campaign Analysis"
     _auto = False
     _rec_name = 'date'
-    
     def _total_cost(self, cr, uid, ids, field_name, arg, context={}):
-
-        """ @param cr: the current row, from the database cursor,
+        """
+            @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param ids: List of case and section Data’s IDs
-            @param context: A standard dictionary for contextual values """
+            @param context: A standard dictionary for contextual values
+        """
         result = {}
         for ca_obj in self.browse(cr, uid, ids, context):
             wi_ids = self.pool.get('marketing.campaign.workitem').search(cr, uid,
@@ -41,7 +41,6 @@ class campaign_analysis(osv.osv): #{{{
                                 (ca_obj.campaign_id.fixed_cost / len(wi_ids))
             result[ca_obj.id] = total_cost
         return result
-            
     _columns = {
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), 
@@ -49,7 +48,7 @@ class campaign_analysis(osv.osv): #{{{
                     ('07','July'), ('08','August'), ('09','September'),
                     ('10','October'), ('11','November'), ('12','December')], 
                     'Month', readonly=True),
-        'date': fields.datetime('Date', readonly=True),
+        'date': fields.date('Date', readonly=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign', 
                                                                 readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity', 'Activity',
@@ -64,10 +63,8 @@ class campaign_analysis(osv.osv): #{{{
         'revenue': fields.float('Revenue',digits=(16,2),readonly=True),
         'count' : fields.integer('# of Actions', readonly=True),
     }
-    
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'campaign_analysis')
-        
         cr.execute("""
             create or replace view campaign_analysis as (
             select
@@ -79,6 +76,7 @@ class campaign_analysis(osv.osv): #{{{
                 wi.activity_id as activity_id,
                 wi.segment_id as segment_id,
                 wi.partner_id as partner_id ,
+                wi.state as state,
                 sum(act.revenue) as revenue,
                 count(*) as count
             from
@@ -87,7 +85,7 @@ class campaign_analysis(osv.osv): #{{{
                 left join marketing_campaign_segment s on (s.id=wi.segment_id)
                 left join marketing_campaign_activity act on (act.id= wi.activity_id)
             group by
-                s.campaign_id,wi.activity_id,wi.segment_id,wi.partner_id,
+                s.campaign_id,wi.activity_id,wi.segment_id,wi.partner_id,wi.state,
                 wi.date::date
             )
         """)
