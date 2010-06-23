@@ -421,7 +421,7 @@ class stock_sale_forecast(osv.osv):
                 factor, round_value = self._from_default_uom_factor(cr, uid, obj, obj.product_uom.id, context=context)
                 for i, period in enumerate(periods):
                     if period:
-                        so_period_ids = so_obj.search(cr, uid, [('date_order','>=',period.date_start), ], context = context)
+                        so_period_ids = so_obj.search(cr, uid, [('date_order','>=',period.date_start),('date_order','<=',period.date_stop) ], context = context)
                         if so_period_ids:
                            # so_period_set = ','.join(map(str,so_period_ids))
                             if obj.analyzed_user_id:
