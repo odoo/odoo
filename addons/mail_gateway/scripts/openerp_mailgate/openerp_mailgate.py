@@ -127,13 +127,11 @@ class rpc_proxy(object):
         return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request, **kwargs)
 
 class email_parser(object):
-    def __init__(self, uid, password, model, email, email_default, dbname, host, port):        
+    def __init__(self, uid, password, model, email, email_default, dbname, host, port):
         self.rpc = rpc_proxy(uid, password, host=host, port=port, dbname=dbname)
         try:
-            self.model_id = int(model)
             self.model = str(model)
         except:
-            self.model_id = self.rpc('ir.model', 'search', [('model', '=', model)])[0]
             self.model = str(model)
         self.email = email
         self.email_default = email_default
@@ -188,7 +186,7 @@ class email_parser(object):
         values = {
             'message_ids' : [
                 (0, 0, {
-                 'model_id' : self.rpc('ir.model', 'search', [('name', '=', self.model)])[0],
+                 'res_model' : self.model,
                  'date' : time.strftime('%Y-%m-%d %H:%M:%S'),
                  'description' : message['body'],
                  'email_from' : msg_from,
@@ -200,8 +198,6 @@ class email_parser(object):
                 )
             ]
         }
-        thread_id = self.rpc('mailgate.thread', 'create', values)
-        data['thread_id'] = thread_id
         oid = self.rpc(self.model, 'create', data)
 
         attachments = message['attachment']        
@@ -216,7 +212,7 @@ class email_parser(object):
             }
             self.rpc('ir.attachment', 'create', data_attach)
 
-        return (oid, thread_id,)
+        return (oid, )
 
     def msg_body_get(self, msg):
         message = {
@@ -320,8 +316,7 @@ class email_parser(object):
         > create_message(id, msg['From'], msg['To'], 'Send', message['body'])
         """
         values = {
-            'thread_id' : self.rpc(self.model, 'read', [oid], ['thread_id'])[0]['thread_id'][0],
-            'model_id' : self.rpc('ir.model', 'search', [('name', '=', self.model)])[0],
+            'res_model' : self.model,
             'res_id' : oid,
             'date' : time.strftime('%Y-%m-%d %H:%M:%S'),
             'description' : body,
@@ -390,13 +385,7 @@ class email_parser(object):
 
         logging.info("email: %s -> %s -- %s", msg['From'], self.email, msg['Subject'])
         (case_id, emails) = self.msg_test(msg, case_str)
-        thread_id = None
         if case_id:
-            values = self.rpc(self.model, 'read', [case_id], ['thread_id'])
-            if values:
-                thread_id = values[0]['thread_id'][0]
-                emails = emails[str(thread_id)]
-
             user_email = filter(None, emails['user_email'])[0]
             
             if user_email and self.email_get(user_email) == self.email_get(self._decode_header(msg['From'])):
@@ -404,13 +393,12 @@ class email_parser(object):
             else:
                 self.msg_partner(msg, case_id)
         else:
-            case_id, thread_id = self.msg_new(msg)
+            case_id = self.msg_new(msg)
             subject = self._decode_header(msg['Subject'])
             msg['Subject'] = "[%s] %s" % (case_id, subject,)
             msg['Message-Id'] = "<%s-openerpcrm-%s@%s>" % (time.time(), case_id, socket.gethostname(),)
 
         logging.info("  case: %r", case_id)
-        logging.info("  thread: %r", thread_id)
 
         values = self.rpc(self.model, 'emails_get', [case_id])
 
@@ -431,7 +419,7 @@ class email_parser(object):
                 a = self._decode_header(msg['Subject'])
                 msg['Subject'] = '[OpenERP-CaseError] ' + a
                 self.msg_send(msg, self.email_default.split(','))
-        return case_id, thread_id, emails
+        return case_id, emails
 
 if __name__ == '__main__':
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.0')

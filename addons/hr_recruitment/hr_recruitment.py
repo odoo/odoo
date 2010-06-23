@@ -57,11 +57,11 @@ class hr_applicant(osv.osv, crm.crm_case):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread']
     _columns = {
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False),
         'name': fields.char('Name', size=128, required=True),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('res_model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('res_model','=',_name)]),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
