@@ -339,7 +339,8 @@ class node_dir(node_database):
         fil_id = fil_obj.create(cr, uid, val, context=ctx)
         fil = fil_obj.browse(cr, uid, fil_id, context=ctx)
         fnode = node_file(path, self, self.context, fil)
-        fnode.set_data(cr, data, fil)
+        if data is not None:
+            fnode.set_data(cr, data, fil)
         return fnode
 
     def get_etag(self, cr):
