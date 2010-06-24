@@ -32,16 +32,6 @@ class calendar_event_export(osv.osv_memory):
     """
     Export Calendar Event.
     """
-    def process_export_ics(self, cr, uid, ids, context):
-        """
-        Get Default value for file_path field.
-        """
-        model = context.get('model', 'basic.calendar')
-        model_obj = self.pool.get(model)
-
-        calendar = model_obj.export_cal(cr, uid, context['active_ids'], context)
-        self.write(cr, uid, ids, {'file_path': base64.encodestring(calendar)})
-        return False
 
     def default_get(self, cr, uid, fields, context):
         """
@@ -54,6 +44,9 @@ class calendar_event_export(osv.osv_memory):
         name = 'OpenERP %s.ics' % (model_obj._description)
         if 'name' in fields:
             res.update({'name': name})
+        if 'file_path' in fields:
+            calendar = model_obj.export_cal(cr, uid, context['active_ids'], context)
+            res.update({'file_path': base64.encodestring(calendar)})
         return  res
 
     _name = "calendar.event.export"

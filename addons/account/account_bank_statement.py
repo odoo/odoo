@@ -45,7 +45,7 @@ class account_bank_statement(osv.osv):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'nodestroy': True
-                }
+        }
 
     def _default_journal_id(self, cr, uid, context={}):
         if context.get('journal_id', False):
@@ -556,9 +556,9 @@ account_bank_statement_reconcile_line()
 
 class account_bank_statement_line(osv.osv):
 
-    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id,
-            context={}):
+    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context={}):
         res = {'value': {}}
+        
         if not partner_id:
             return res
         line = self.browse(cursor, user, line_id)
@@ -591,6 +591,10 @@ class account_bank_statement_line(osv.osv):
             balance = res_currency_obj.compute(cursor, user, company_currency_id,
                 currency_id, balance, context=context)
             res['value']['amount'] = balance
+        
+        if context.get('amount', 0) > 0:
+            res['value']['amount'] = context.get('amount')
+            
         return res
 
     def _reconcile_amount(self, cursor, user, ids, name, args, context=None):

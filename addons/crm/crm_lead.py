@@ -30,12 +30,10 @@ from crm import crm_case
 
 class crm_lead(osv.osv, crm_case):
     """ CRM Lead Case """
-
     _name = "crm.lead"
     _description = "Lead"
     _order = "priority, id desc"
-    _inherit = ['res.partner.address']
-    _inherits = {'mailgate.thread': 'thread_id'}
+    _inherit = ['mailgate.thread','res.partner.address']
 
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
@@ -112,7 +110,6 @@ and users by email"),
         'write_date': fields.datetime('Update Date' , readonly=True), 
 
         # Lead fields
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'categ_id': fields.many2one('crm.case.categ', 'Lead Source', \
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
@@ -142,6 +139,8 @@ and users by email"),
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('res_model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('res_model','=',_name)]),
     }
 
     _defaults = {

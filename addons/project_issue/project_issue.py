@@ -36,7 +36,7 @@ class project_issue(osv.osv, crm.crm_case):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
+    _inherit = ['mailgate.thread']
 
     def case_open(self, cr, uid, ids, *args):
         """
@@ -121,7 +121,6 @@ class project_issue(osv.osv, crm.crm_case):
         return res
 
     _columns = {
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False),
         'id': fields.integer('ID'),
         'name': fields.char('Name', size=128, required=True),
         'active': fields.boolean('Active', required=False),
@@ -179,6 +178,8 @@ class project_issue(osv.osv, crm.crm_case):
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
                                 method=True, multi='working_days_close', type="float", store=True),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('res_model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('res_model','=',_name)]),
     }
 
     def _get_project(self, cr, uid, context):

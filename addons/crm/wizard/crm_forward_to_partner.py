@@ -185,23 +185,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         email_from = this.email_from or False
         case_pool._history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, details=body, email_from=email_from)
 
-        flag = False
-        if case.section_id and case.section_id.server_id:
-            flag = smtp_pool.send_email(
-                cr=cr, 
-                uid=uid, 
-                server_id=case.section_id.server_id.id, 
-                emailto=emails, 
-                subject=this.subject, 
-                body="<pre>%s</pre>" % body, 
-            )
-        else:
-            flag = tools.email_send(
-                email_from, 
-                emails, 
-                this.subject, 
-                body, 
-            )
+        flag = tools.email_send(
+            email_from, 
+            emails, 
+            this.subject, 
+            body, 
+        )
         if this.add_cc:
             case_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc + ', ' + this.email_to or this.email_to})
         return {}

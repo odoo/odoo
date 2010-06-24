@@ -241,10 +241,7 @@
                         <group col="2" colspan="2" attrs="{'invisible':[('type','=','binary')]}">
                         <field name="url" widget="url"/>
                         </group>
-
                     </group>
-
-
                     <group col="2" colspan="2">
                         <separator string="Relation" colspan="2"/>
                          <field name="res_name" readonly="1"/>
@@ -267,7 +264,9 @@
                 <page string="Security">
                     <field name="group_ids" colspan="4" nolabel="1"/>
                 </page>
-
+                <page string="Indexed Content" groups="base.group_extended">
+                    <field name="index_content" colspan="4" nolabel="1"/>
+                </page>
                 <page string="Notes">
                     <field colspan="4" name="description" nolabel="1"/>
                 </page>

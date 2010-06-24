@@ -114,7 +114,7 @@ class document_directory(osv.osv):
             while d2 and d2.parent_id:
                 s = d2.name + (s and ('/' + s) or '')
                 d2 = d2.parent_id
-            res.append((d.id, s))
+            res.append((d.id, s or d.name))
         return res
 
     def get_full_path(self, cr, uid, dir_id, context=None):
