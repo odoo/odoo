@@ -170,8 +170,8 @@ class report_pl_account_horizontal(rml_parse.rml_parse):
         return comp_obj.name
 
 report_sxw.report_sxw('report.pl.account.horizontal', 'account.account',
-    'addons/account_report_india/report/report_pl_account_horizontal.rml',parser=report_pl_account_horizontal, header=False)
+    'addons/account/report/report_pl_account_horizontal.rml',parser=report_pl_account_horizontal, header=False)
 
 report_sxw.report_sxw('report.pl.account', 'account.account',
-    'addons/account_report_india/report/report_pl_account.rml',parser=report_pl_account_horizontal, header=False)
+    'addons/account/report/report_pl_account.rml',parser=report_pl_account_horizontal, header=False)
 
