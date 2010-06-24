@@ -1173,7 +1173,15 @@
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
-
+        
+        <act_window
+            domain="[('move_id','=',active_id)]"
+            id="act_account_move_to_account_move_line_open"
+            name="Journal Items"
+            context="{'move_id':active_id}"
+            res_model="account.move.line"
+            src_model="account.move"/>
+            
         <record id="action_move_to_review" model="ir.actions.act_window">
             <field name="name">Journal Entries to Review</field>
             <field name="type">ir.actions.act_window</field>
@@ -1350,17 +1358,17 @@
             id="menu_action_account_bank_reconcile_check_tree"
             parent="periodical_processing_reconciliation" groups="group_account_user" />
 
-		<act_window
-			context="{'search_default_next_partner':1}"
+        <act_window
+            context="{'search_default_next_partner':1}"
             id="action_account_manual_reconcile" name="Entry Lines"
             res_model="account.move.line"
             />
 
- 	   <menuitem
- 	   		name="Manual Reconcilication" icon="STOCK_EXECUTE"
- 	   		action="action_account_manual_reconcile"
- 			id="menu_manual_reconcile"
- 			parent="account.periodical_processing_reconciliation"/>
+        <menuitem
+                name="Manual Reconcilication" icon="STOCK_EXECUTE"
+                action="action_account_manual_reconcile"
+             id="menu_manual_reconcile"
+             parent="account.periodical_processing_reconciliation"/>
 
 
         <act_window
