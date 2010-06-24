@@ -117,9 +117,9 @@ msgid "Journal Voucher"
 msgstr ""
 
 #. module: account
-#: field:account.invoice,residual:0
+#: field:report.invoice.created,residual:0
 msgid "Residual"
-msgstr ""
+msgstr "Preostali"
 
 #. module: account
 #: field:account.tax,base_sign:0 field:account.tax,ref_base_sign:0
@@ -290,9 +290,9 @@ msgid "Select period"
 msgstr ""
 
 #. module: account
-#: field:account.invoice,origin:0 field:account.invoice.line,origin:0
+#: field:report.invoice.created,origin:0
 msgid "Origin"
-msgstr ""
+msgstr "Porijeklo"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -412,11 +412,9 @@ msgid "Contra"
 msgstr ""
 
 #. module: account
-#: field:account.analytic.account,state:0 field:account.bank.statement,state:0
-#: field:account.invoice,state:0 view:account.move:0 view:account.move.line:0
-#: view:account.subscription:0
+#: field:report.invoice.created,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree13
@@ -661,9 +659,9 @@ msgid "Additional Information"
 msgstr ""
 
 #. module: account
-#: selection:account.invoice,type:0
+#: selection:report.invoice.created,type:0
 msgid "Customer Refund"
-msgstr ""
+msgstr "Povrat novca  kupcu"
 
 #. module: account
 #: wizard_view:account.analytic.account.chart,init:0
@@ -1006,11 +1004,9 @@ msgid "Amount paid"
 msgstr ""
 
 #. module: account
-#: selection:account.invoice,type:0
-#: model:process.transition,name:account.process_transition_customerinvoice0
-#: model:process.transition,name:account.process_transition_suppliercustomerinvoice0
+#: selection:report.invoice.created,type:0
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Račun Stranke"
 
 #. module: account
 #: wizard_view:account.open_closed_fiscalyear,init:0
@@ -1562,9 +1558,9 @@ msgid "Total quantity"
 msgstr ""
 
 #. module: account
-#: field:account.invoice,date_due:0
+#: field:report.invoice.created,date_due:0
 msgid "Due Date"
-msgstr ""
+msgstr "Datum dospijeća"
 
 #. module: account
 #: wizard_view:account.period.close,init:0
@@ -1786,12 +1782,9 @@ msgid "x Expenses Credit Notes Journal"
 msgstr ""
 
 #. module: account
-#: field:account.analytic.journal,type:0
-#: field:account.bank.statement.line,type:0 field:account.invoice,type:0
-#: field:account.journal,type:0 field:account.move,type:0
-#: field:account.move.reconcile,type:0 xsl:account.transfer:0
+#: field:report.invoice.created,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tip"
 
 #. module: account
 #: view:account.journal:0
@@ -1903,7 +1896,7 @@ msgstr ""
 #. module: account
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Neispravan XML za Arhitekturu Prikaza!"
 
 #. module: account
 #: wizard_field:account.partner.balance.report,init,date1:0
@@ -1950,15 +1943,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: field:account.bank.statement.line,partner_id:0
-#: field:account.bank.statement.reconcile,partner_id:0
-#: rml:account.general.ledger:0 field:account.invoice,partner_id:0
-#: field:account.move,partner_id:0
-#: wizard_field:account.partner.balance.report,init,result_selection:0
-#: wizard_field:account.third_party_ledger.report,init,result_selection:0
-#: field:wizard.company.setup,partner_id:0
+#: field:report.invoice.created,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: account
 #: help:account.invoice,number:0
@@ -2020,16 +2007,9 @@ msgid "Past"
 msgstr ""
 
 #. module: account
-#: field:account.analytic.account,company_currency_id:0
-#: field:account.bank.accounts.wizard,currency_id:0
-#: field:account.bank.statement,currency:0
-#: field:account.bank.statement.reconcile,total_currency:0
-#: field:account.bank.statement.reconcile,total_second_currency:0
-#: rml:account.general.ledger:0 field:account.invoice,currency_id:0
-#: field:account.journal,currency:0 field:account.model.line,currency_id:0
-#: field:account.move.line,currency_id:0
+#: field:report.invoice.created,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -2174,9 +2154,9 @@ msgid "Customer Taxes"
 msgstr ""
 
 #. module: account
-#: field:account.invoice,date_invoice:0
+#: field:report.invoice.created,date_invoice:0
 msgid "Date Invoiced"
-msgstr ""
+msgstr "Datum izrade računa"
 
 #. module: account
 #: help:account.account.balance.report,checktype,periods:0
@@ -2613,9 +2593,9 @@ msgid "Select Period and Journal for Validation"
 msgstr ""
 
 #. module: account
-#: field:account.invoice,number:0
+#: field:report.invoice.created,number:0
 msgid "Invoice Number"
-msgstr ""
+msgstr "Broj računa"
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -2628,9 +2608,9 @@ msgid "O_k"
 msgstr ""
 
 #. module: account
-#: field:account.invoice,amount_untaxed:0
+#: field:report.invoice.created,amount_untaxed:0
 msgid "Untaxed"
-msgstr ""
+msgstr "Bez poreza"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_analytic_account_inverted_balance
@@ -3309,12 +3289,9 @@ msgid "Parent Tax Account"
 msgstr ""
 
 #. module: account
-#: field:account.account,user_type:0
-#: field:account.account.template,user_type:0 view:account.account.type:0
-#: field:account.analytic.account,type:0
-#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
 msgid "Account Type"
-msgstr ""
+msgstr "Tip Tvrtke Kupca"
 
 #. module: account
 #: view:res.partner:0
@@ -3805,19 +3782,9 @@ msgid "Secondary Currency"
 msgstr ""
 
 #. module: account
-#: field:account.account,credit:0 rml:account.account.balance:0
-#: field:account.analytic.account,credit:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.cost_ledger:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.central.journal:0 rml:account.journal.period.print:0
-#: field:account.model.line,credit:0 field:account.move.line,credit:0
-#: rml:account.partner.balance:0 rml:account.tax.code.entries:0
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
-#: rml:account.vat.declaration:0
-#: field:report.hr.timesheet.invoice.journal,cost:0
+#: field:report.account.receivable,credit:0
 msgid "Credit"
-msgstr ""
+msgstr "Kredit"
 
 #. module: account
 #: help:account.tax.template,child_depend:0
@@ -3936,11 +3903,9 @@ msgid "Journal Column"
 msgstr ""
 
 #. module: account
-#: selection:account.fiscalyear,state:0 selection:account.invoice,state:0
-#: selection:account.journal.period,state:0 selection:account.period,state:0
-#: selection:account.subscription,state:0
+#: selection:report.invoice.created,state:0
 msgid "Done"
-msgstr ""
+msgstr "Gotovo"
 
 #. module: account
 #: wizard_field:account.account.balance.report,checktype,periods:0
@@ -3965,12 +3930,9 @@ msgid "Invoice"
 msgstr ""
 
 #. module: account
-#: selection:account.analytic.account,state:0
-#: selection:account.invoice,state:0
-#: wizard_button:account.open_closed_fiscalyear,init,open:0
-#: wizard_button:account_use_models,create,open_move:0
+#: selection:report.invoice.created,state:0
 msgid "Open"
-msgstr ""
+msgstr "Otvori"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_29
@@ -3993,6 +3955,7 @@ msgstr ""
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
+"Naziv objekta mora početi sa x_ i ne smije sadržavati specijalne znakove !"
 
 #. module: account
 #: help:account.account.type,sign:0
@@ -4294,13 +4257,9 @@ msgid "Date Start"
 msgstr ""
 
 #. module: account
-#: rml:account.analytic.account.analytic.check:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.analytic.account.quantity_cost_ledger:0
-#: field:account.invoice,amount_total:0 field:account.invoice,check_total:0
+#: field:report.invoice.created,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Ukupno"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -4537,9 +4496,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: selection:account.invoice,state:0
+#: selection:report.invoice.created,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Poništeno"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -4678,9 +4637,9 @@ msgid "Analytic account"
 msgstr ""
 
 #. module: account
-#: rml:account.invoice:0 selection:account.invoice,type:0
+#: selection:report.invoice.created,type:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Račun Dobavljača"
 
 #. module: account
 #: selection:account.move.line,state:0
@@ -4902,15 +4861,9 @@ msgid "Manually"
 msgstr ""
 
 #. module: account
-#: view:account.invoice:0 view:account.tax:0 view:account.tax.template:0
-#: selection:account.vat.declaration,init,based_on:0
-#: model:ir.actions.act_window,name:account.act_res_partner_2_account_invoice_opened
-#: model:ir.actions.act_window,name:account.action_invoice_tree
-#: model:ir.actions.report.xml,name:account.account_invoices
-#: model:ir.ui.menu,name:account.menu_finance_invoice
-#: wizard_field:populate_statement_from_inv,go,lines:0
+#: view:report.invoice.created:0
 msgid "Invoices"
-msgstr ""
+msgstr "računi"
 
 #. module: account
 #: selection:account.partner.balance.report,init,result_selection:0
@@ -5014,14 +4967,9 @@ msgid "Choose Journal and Payment Date"
 msgstr ""
 
 #. module: account
-#: selection:account.analytic.account,state:0
-#: selection:account.bank.statement,state:0
-#: selection:account.fiscalyear,state:0 selection:account.invoice,state:0
-#: selection:account.journal.period,state:0 selection:account.move,state:0
-#: selection:account.move.line,state:0 selection:account.period,state:0
-#: selection:account.subscription,state:0
+#: selection:report.invoice.created,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Nacrt"
 
 #. module: account
 #: rml:account.overdue:0
@@ -5184,20 +5132,10 @@ msgid "General Journal"
 msgstr ""
 
 #. module: account
-#: field:account.account,balance:0 rml:account.account.balance:0
-#: selection:account.account.type,close_method:0
-#: field:account.analytic.account,balance:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.cost_ledger:0
-#: rml:account.analytic.account.inverted.balance:0
-#: field:account.bank.statement,balance_end:0
-#: field:account.bank.statement.reconcile,total_balance:0
-#: rml:account.general.ledger:0 field:account.move.line,balance:0
-#: rml:account.partner.balance:0 selection:account.payment.term.line,value:0
-#: selection:account.tax,type:0 rml:account.third_party_ledger:0
-#: rml:account.third_party_ledger_other:0
+#: field:report.account.receivable,balance:0
+#: field:report.aged.receivable,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Saldo"
 
 #. module: account
 #: rml:account.invoice:0
@@ -5267,9 +5205,9 @@ msgid "Moves"
 msgstr ""
 
 #. module: account
-#: selection:account.invoice,state:0
+#: selection:report.invoice.created,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "Pro-forma"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_form
@@ -5368,16 +5306,9 @@ msgid "IntraCom"
 msgstr ""
 
 #. module: account
-#: view:account.analytic.account:0
-#: field:account.analytic.account,description:0
-#: field:account.analytic.line,name:0
-#: field:account.bank.statement.reconcile.line,name:0 rml:account.invoice:0
-#: field:account.invoice,name:0 field:account.invoice.line,name:0
-#: wizard_field:account.invoice.refund,init,description:0
-#: rml:account.overdue:0 field:account.payment.term,note:0
-#: field:account.tax.code,info:0 field:account.tax.code.template,info:0
+#: field:report.invoice.created,name:0
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: account
 #: help:product.template,property_account_income:0
@@ -5541,9 +5472,9 @@ msgid "Keep empty for all open fiscal year"
 msgstr ""
 
 #. module: account
-#: rml:account.invoice:0 selection:account.invoice,type:0
+#: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Namirenje dobavljača"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
@@ -5939,3 +5870,80 @@ msgstr ""
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Customize Report"
 msgstr ""
+
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr "Raspon Mjeseci"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr "Računi kreirani u zadnjih 15 dana"
+
+#. module: account
+#: model:ir.model,name:account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr "Izvještaj o računima kreiranima u zadnjih 15 dana"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr "Ukupni iznos"
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "Tvrtke kupci po tipu"
+
+#. module: account
+#: model:ir.model,name:account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr "Stara potraživanja do danas"
+
+#. module: account
+#: model:ir.model,name:account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr "Konta Potraživanja"
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr "Raspon"
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr "Modul koji dodaje nove izvještaje na osnovi ACCOUNT Modula"
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr "Izvještavanje o tvrtki Kupcu - Izvještavanje"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_receivable_graph
+#: model:ir.ui.menu,name:account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "Saldo po tipu konta"
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr "Tjedan"
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr "Kreiraj datum"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr "Stara potraživanja"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr "Iznos bez poreza"

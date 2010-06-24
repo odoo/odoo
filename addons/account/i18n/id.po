@@ -5208,20 +5208,10 @@ msgid "General Journal"
 msgstr ""
 
 #. module: account
-#: field:account.account,balance:0 rml:account.account.balance:0
-#: selection:account.account.type,close_method:0
-#: field:account.analytic.account,balance:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.cost_ledger:0
-#: rml:account.analytic.account.inverted.balance:0
-#: field:account.bank.statement,balance_end:0
-#: field:account.bank.statement.reconcile,total_balance:0
-#: rml:account.general.ledger:0 field:account.move.line,balance:0
-#: rml:account.partner.balance:0 selection:account.payment.term.line,value:0
-#: selection:account.tax,type:0 rml:account.third_party_ledger:0
-#: rml:account.third_party_ledger_other:0
+#: field:report.account.receivable,balance:0
+#: field:report.aged.receivable,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Saldo"
 
 #. module: account
 #: rml:account.invoice:0
@@ -5963,3 +5953,80 @@ msgstr ""
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Customize Report"
 msgstr "Mengatur Laporan"
+
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr ""
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr ""
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "Akun berdasarkan tipe"
+
+#. module: account
+#: model:ir.model,name:account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr "Akun Piutang"
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_receivable_graph
+#: model:ir.ui.menu,name:account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "Saldo berdasarkan Jenis Akun"
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr "Minggu dalam setahun"
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr ""
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr ""

@@ -3743,19 +3743,9 @@ msgid "Secondary Currency"
 msgstr ""
 
 #. module: account
-#: field:account.account,credit:0 rml:account.account.balance:0
-#: field:account.analytic.account,credit:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.cost_ledger:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.central.journal:0 rml:account.journal.period.print:0
-#: field:account.model.line,credit:0 field:account.move.line,credit:0
-#: rml:account.partner.balance:0 rml:account.tax.code.entries:0
-#: rml:account.third_party_ledger:0 rml:account.third_party_ledger_other:0
-#: rml:account.vat.declaration:0
-#: field:report.hr.timesheet.invoice.journal,cost:0
+#: field:report.account.receivable,credit:0
 msgid "Credit"
-msgstr ""
+msgstr "대변"
 
 #. module: account
 #: help:account.tax.template,child_depend:0
@@ -4609,19 +4599,9 @@ msgid "Valid"
 msgstr ""
 
 #. module: account
-#: field:account.account,debit:0 rml:account.account.balance:0
-#: field:account.analytic.account,debit:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.cost_ledger:0
-#: rml:account.analytic.account.inverted.balance:0
-#: rml:account.central.journal:0 rml:account.general.ledger:0
-#: rml:account.journal.period.print:0 field:account.model.line,debit:0
-#: field:account.move.line,debit:0 rml:account.partner.balance:0
-#: rml:account.tax.code.entries:0 rml:account.third_party_ledger:0
-#: rml:account.third_party_ledger_other:0 rml:account.vat.declaration:0
-#: field:report.hr.timesheet.invoice.journal,revenue:0
+#: field:report.account.receivable,debit:0
 msgid "Debit"
-msgstr ""
+msgstr "차변"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_42
@@ -5113,20 +5093,10 @@ msgid "General Journal"
 msgstr ""
 
 #. module: account
-#: field:account.account,balance:0 rml:account.account.balance:0
-#: selection:account.account.type,close_method:0
-#: field:account.analytic.account,balance:0
-#: rml:account.analytic.account.balance:0
-#: rml:account.analytic.account.cost_ledger:0
-#: rml:account.analytic.account.inverted.balance:0
-#: field:account.bank.statement,balance_end:0
-#: field:account.bank.statement.reconcile,total_balance:0
-#: rml:account.general.ledger:0 field:account.move.line,balance:0
-#: rml:account.partner.balance:0 selection:account.payment.term.line,value:0
-#: selection:account.tax,type:0 rml:account.third_party_ledger:0
-#: rml:account.third_party_ledger_other:0
+#: field:report.account.receivable,balance:0
+#: field:report.aged.receivable,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "밸런스"
 
 #. module: account
 #: rml:account.invoice:0
@@ -5871,6 +5841,83 @@ msgstr "적어도 1년 이상의 회계년도를 선택하십시오."
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Customize Report"
 msgstr "리포트 커스터마이즈"
+
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr ""
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr ""
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "타입 별 계정"
+
+#. module: account
+#: model:ir.model,name:account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr ""
+
+#. module: account
+#: model:ir.model,name:account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr "채권 계정"
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr ""
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_receivable_graph
+#: model:ir.ui.menu,name:account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "계정 타입 별 밸런스"
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr ""
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr ""
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr ""
 
 #~ msgid "Code"
 #~ msgstr "코드"

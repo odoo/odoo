@@ -271,8 +271,10 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
-"如果你使用付款条件，到期日期将在生成会计分录时自动计算。如果付款条件和到期日\r\n"
-"期为空，则意味着直接付款。使用付款条件可能计算出几个到期日，例如现在先付50%，然\r\n"
+"如果你使用付款条件，到期日期将在生成会计分录时自动计算。如果付款条件和到期日"
+"\r\n"
+"期为空，则意味着直接付款。使用付款条件可能计算出几个到期日，例如现在先付50%，"
+"然\r\n"
 "后在一个月内支付余下的50%。"
 
 #. module: account
@@ -5996,6 +5998,83 @@ msgstr "你至少要选择一个会计年度再试"
 msgid "Customize Report"
 msgstr "自定义报表"
 
+#. module: account
+#: field:report.aged.receivable,name:0
+msgid "Month Range"
+msgstr "月度"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
+msgid "Invoices Created Within Past 15 Days"
+msgstr "发票建立在15天前"
+
+#. module: account
+#: model:ir.model,name:account.model_report_invoice_created
+msgid "Report of Invoices Created within Last 15 days"
+msgstr "最近15天创建的发票报表"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Total Amount"
+msgstr "金额合计"
+
+#. module: account
+#: view:report.account.receivable:0
+msgid "Accounts by type"
+msgstr "科目类型"
+
+#. module: account
+#: model:ir.model,name:account.model_report_aged_receivable
+msgid "Aged Receivable Till Today"
+msgstr "到今天旧的应收款"
+
+#. module: account
+#: model:ir.model,name:account.model_report_account_receivable
+msgid "Receivable accounts"
+msgstr "应收款科目"
+
+#. module: account
+#: field:temp.range,name:0
+msgid "Range"
+msgstr "范围"
+
+#. module: account
+#: model:ir.module.module,description:account.module_meta_information
+msgid "A module that adds new reports based on the account module."
+msgstr "在基础账户模块里增加新的报表模块"
+
+#. module: account
+#: model:ir.module.module,shortdesc:account.module_meta_information
+msgid "Account Reporting - Reporting"
+msgstr "科目报表-报表"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_receivable_graph
+#: model:ir.ui.menu,name:account.menu_account_receivable_graph
+msgid "Balance by Type of Account"
+msgstr "科目余额"
+
+#. module: account
+#: field:report.account.receivable,name:0
+msgid "Week of Year"
+msgstr "年里的周"
+
+#. module: account
+#: field:report.invoice.created,create_date:0
+msgid "Create Date"
+msgstr "建立日期"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_aged_receivable_graph
+#: view:report.aged.receivable:0
+msgid "Aged Receivable"
+msgstr "旧的应收款"
+
+#. module: account
+#: view:report.invoice.created:0
+msgid "Untaxed Amount"
+msgstr "未完税金额"
+
 #~ msgid "           Start date"
 #~ msgstr "           开始日期"
 
@@ -6051,3 +6130,6 @@ msgstr "自定义报表"
 #~ "    *费用发票图表\n"
 #~ "    *旧的收入图表\n"
 #~ "    "
+
+#~ msgid "A Temporary table used for Dashboard view"
+#~ msgstr "控制台视图使用的临时表"
