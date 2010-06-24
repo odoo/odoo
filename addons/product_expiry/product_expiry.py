@@ -21,21 +21,10 @@
 import datetime
 from osv import fields, osv
 import pooler
-import time
 
 class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'
     _inherit = 'stock.production.lot'
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        result = []
-        for line in self.browse(cr, uid, ids, context):
-            if line.life_date:
-                result.append((line.id, (line.name or '')+' ('+line.life_date+')'))
-            else:
-                result.append((line.id, line.name))
-        return result
 
     def _get_date(dtype):
         """Return a function to compute the limit date for this type"""
@@ -52,24 +41,36 @@ class stock_production_lot(osv.osv):
                 # set date to False when no expiry time specified on the product
                 date = duration and (datetime.datetime.today()
                     + datetime.timedelta(days=duration))
-            return date and date.strftime('%Y-%m-%d')
+            return date and date.strftime('%Y-%m-%d %H:%M:%S')
         return calc_date
 
     _columns = {
-        'life_date': fields.date('End of Life Date',
+        'life_date': fields.datetime('End of Life Date',
             help='The date the lot may become dangerous and should not be consumed.'),
-        'use_date': fields.date('Best before Date',
+        'use_date': fields.datetime('Best before Date',
             help='The date the lot starts deteriorating without becoming dangerous.'),
-        'removal_date': fields.date('Removal Date',
+        'removal_date': fields.datetime('Removal Date',
             help='The date the lot should be removed.'),
-        'alert_date': fields.date('Alert Date'),
+        'alert_date': fields.datetime('Alert Date'),
     }
+    # Assign dates according to products data
+    def create(self, cr, uid, vals, context=None):
+        newid = super(stock_production_lot, self).create(cr, uid, vals, context=context)
+        obj = self.browse(cr, uid, newid, context=context)
+        towrite = []
+        for f in ('life_date','use_date','removal_date','alert_date'):
+            if not getattr(obj, f):
+                towrite.append(f)
+        context = context or {}
+        context['product_id'] = obj.product_id.id
+        self.write(cr, uid, [obj.id], self.default_get(cr, uid, towrite, context=context))
+        return newid
 
     _defaults = {
-   #     'life_date': _get_date('life_time'),
-   #     'use_date': _get_date('use_time'),
-   #     'removal_date': _get_date('removal_time'),
-   #     'alert_date': _get_date('alert_time'),
+        'life_date': _get_date('life_time'),
+        'use_date': _get_date('use_time'),
+        'removal_date': _get_date('removal_time'),
+        'alert_date': _get_date('alert_time'),
     }
 stock_production_lot()
 
