@@ -39,14 +39,14 @@ def _to_unicode(s):
 class TxtIndex(indexer):
     def _getMimeTypes(self):
         return ['text/plain','text/html','text/diff','text/xml', 'text/*', 
-        'application/xml']
+            'application/xml']
     
     def _getExtensions(self):
         return ['.txt', '.py']
 
     def _doIndexContent(self, content):
         return content
-        
+
 cntIndex.register(TxtIndex())
 
 class PptxIndex(indexer):
@@ -131,21 +131,41 @@ class ImageNoIndex(indexer):
 
 cntIndex.register(ImageNoIndex())
 
-#class Doc(indexer):
-    #def _getDefMime(self,ext):
+# other opendocument formats:
+#vnd.oasis.opendocument.chart-template
+#vnd.oasis.opendocument.chart
+#vnd.oasis.opendocument.database
+#vnd.oasis.opendocument.formula-template
+#vnd.oasis.opendocument.formula
+#vnd.oasis.opendocument.graphics-template
+#vnd.oasis.opendocument.graphics
+#vnd.oasis.opendocument.image
+#vnd.oasis.opendocument.presentation-template
+#vnd.oasis.opendocument.presentation
+#vnd.oasis.opendocument.spreadsheet-template
+#vnd.oasis.opendocument.spreadsheet
 
-#def content_index(content, filename=None, content_type=None):
-    #fname,ext = os.path.splitext(filename)
-    #result = ''
-    #elif ext in ('.xls','.ods','.odt','.odp'):
-        #s = StringIO.StringIO(content)
-        #o = odt2txt.OpenDocumentTextFile(s)
-        #result = _to_unicode(o.toString())
-        #s.close()
-    #elif ext in ('.txt','.py','.patch','.html','.csv','.xml'):
-        #result = content
-    #else:
-        #result = content
-    #return result
+class OpenDoc(indexer):
+    """ Index OpenDocument files.
+    
+        Q: is it really worth it to index spreadsheets, or do we only get a
+        meaningless list of numbers (cell contents) ?
+        """
+    def _getMimeTypes(self):
+        otypes = [ 'text', 'text-web', 'text-template', 'text-master' ]
+        return map(lambda a: 'application/vnd.oasis.opendocument.'+a, otypes)
+    
+    def _getExtensions(self):
+        return ['.odt', '.ott', ] # '.ods'
+
+    def _doIndexContent(self, content):
+        s = StringIO.StringIO(content)
+        o = odt2txt.OpenDocumentTextFile(s)
+        result = _to_unicode(o.toString())
+        s.close()
+        return result
+
+cntIndex.register(OpenDoc())
+
 
 #eof
