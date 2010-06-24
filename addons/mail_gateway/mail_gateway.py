@@ -22,7 +22,11 @@
 from osv import osv, fields
 import time
 import tools
+import binascii
+import email
+from email.header import decode_header
 import base64
+import re
 
 class mailgate_thread(osv.osv):
     '''
@@ -30,10 +34,16 @@ class mailgate_thread(osv.osv):
     '''
     _name = 'mailgate.thread'
     _description = 'Mailgateway Thread'
+    _rec_name = 'thread' 
+
     _columns = {
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False)]),
-    }
+        'thread': fields.char('Thread', size=32, required=False), 
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True)], readonly=True), 
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False)], readonly=True), 
+        'model': fields.char('Model Name', size=64, required=False),  
+        'res_id': fields.integer('Resource ID'), 
+        }
+        
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
         """
         @param self: The object pointer
@@ -63,8 +73,8 @@ class mailgate_thread(osv.osv):
             data = {
                 'name': keyword, 
                 'user_id': uid, 
-                'res_model' : case._name, 
-                'res_id': case.id,
+                'model' : case._name, 
+                'res_id': case.id, 
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                 'message_id': message_id, 
             }
@@ -77,7 +87,7 @@ class mailgate_thread(osv.osv):
                     'name': subject or 'History', 
                     'history': True, 
                     'user_id': uid, 
-                    'res_model' : case._name, 
+                    'model' : case._name, 
                     'res_id': case.id,
                     'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                     'description': details or (hasattr(case, 'description') and case.description or False), 
@@ -104,8 +114,9 @@ class mailgate_message(osv.osv):
     _order = 'id desc'
     _columns = {
         'name':fields.char('Message', size=64), 
-        'res_model': fields.char('Object Name', size=128), 
+        'model': fields.char('Object Name', size=128), 
         'res_id': fields.integer('Resource ID'),
+        'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
         'date': fields.datetime('Date'), 
         'history': fields.boolean('Is History?'),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
