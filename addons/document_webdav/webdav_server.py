@@ -33,6 +33,7 @@ from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
 from service.websrv_lib import HTTPDir,FixSendError
+from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
 from string import atoi,split
@@ -54,6 +55,7 @@ def OpenDAVConfig(**kw):
 
 class DAVHandler(FixSendError,DAVRequestHandler):
     verbose = False
+    protocol_version = 'HTTP/1.1'
     
     def get_userinfo(self,user,pw):
         return False
@@ -84,6 +86,17 @@ class DAVHandler(FixSendError,DAVRequestHandler):
 
     def log_error(self, format, *args):
         netsvc.Logger().notifyChannel('xmlrpc', netsvc.LOG_WARNING, format % args)
+
+    def send_response(self, code, message=None):
+        # the BufferingHttpServer will send Connection: close , while
+        # the BaseHTTPRequestHandler will only accept int code.
+        # workaround both of them.
+        BaseHTTPRequestHandler.send_response(self, int(code), message)
+
+    def send_header(self, key, value):
+        if key == 'Connection' and value == 'close':
+            self.close_connection = 1
+        DAVRequestHandler.send_header(self, key, value)
 
     def do_PUT(self):
         dc=self.IFACE_CLASS        
