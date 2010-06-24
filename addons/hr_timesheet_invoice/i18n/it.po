@@ -1,6 +1,6 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* hr_timesheet_invoice
+# 	* hr_timesheet_invoice
 #
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr "Forza per usare un prodotto specifico"
 #. module: hr_timesheet_invoice
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome di modulo non valido nella definizione dell'azione."
 
 #. module: hr_timesheet_invoice
 #: rml:account.analytic.profit:0
@@ -494,3 +494,50 @@ msgstr "Contabilità Fatturabile non Chiusa"
 #: wizard_field:hr.timesheet.invoice.create,init,price:0
 msgid "Cost"
 msgstr "Costo"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
+msgid "Analytic account to close"
+msgstr "Contabilità Analitica da Chiudere"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity_max:0
+msgid "Max. Quantity"
+msgstr "Quantità Massima"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,name:0
+msgid "Analytic account"
+msgstr "Conto analitico"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,state:0
+msgid "State"
+msgstr "Stato"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,date_deadline:0
+msgid "Deadline"
+msgstr "Scadenza"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Analytic Account Reporting"
+msgstr "Relatório de Conta Analítica"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_analytic_account_tree
+#: view:report.analytic.account.close:0
+msgid "Expired analytic accounts"
+msgstr "Contabilità Analitiche Scadute"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity:0
+msgid "Quantity"
+msgstr "Quantità"

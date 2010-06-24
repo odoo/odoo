@@ -1,6 +1,6 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* hr_timesheet_invoice
+# 	* hr_timesheet_invoice
 #
 msgid ""
 msgstr ""
@@ -91,7 +91,9 @@ msgid ""
 "Check this field if you plan to automatically generate invoices based on the "
 "costs in this analytic account: timesheets, expenses, ...You can configure "
 "an automatic invoice rate on analytic accounts."
-msgstr "如果你计划自动生成发票基于成本在辅助核算项目:时间表、费用....选择这字段你能设定自动发票的辅助核算项目"
+msgstr ""
+"如果你计划自动生成发票基于成本在辅助核算项目:时间表、费用....选择这字段你能设"
+"定自动发票的辅助核算项目"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,name:0
@@ -486,10 +488,57 @@ msgstr "未关闭的可开票项目"
 msgid "Cost"
 msgstr "成本"
 
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
+msgid "Analytic account to close"
+msgstr "辅助核算项关闭"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity_max:0
+msgid "Max. Quantity"
+msgstr "最大数量"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,name:0
+msgid "Analytic account"
+msgstr "辅助核算项"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,state:0
+msgid "State"
+msgstr "状态"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,date_deadline:0
+msgid "Deadline"
+msgstr "截止期限"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Analytic Account Reporting"
+msgstr "辅助核算项报表"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,partner_id:0
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_analytic_account_tree
+#: view:report.analytic.account.close:0
+msgid "Expired analytic accounts"
+msgstr "过期的辅助核算项"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity:0
+msgid "Quantity"
+msgstr "数量"
+
 #~ msgid ""
 #~ "\n"
-#~ "Module to generate invoices based on costs (human resources, expenses, "
-#~ "...).\n"
+#~ "Module to generate invoices based on costs (human resources, "
+#~ "expenses, ...).\n"
 #~ "You can define price lists in analytic account, make some theoretical "
 #~ "revenue\n"
 #~ "reports, eso."

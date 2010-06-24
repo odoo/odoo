@@ -1,6 +1,6 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* hr_timesheet_invoice
+# 	* hr_timesheet_invoice
 #
 msgid ""
 msgstr ""
@@ -500,37 +500,76 @@ msgstr "Ανοικτοί Λογαριασμοί προς Τιμολόγηση"
 msgid "Cost"
 msgstr "Κόστος"
 
-#, python-format
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
+msgid "Analytic account to close"
+msgstr "Αναλυτικός λογαριασμός προς κλείσιμο"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity_max:0
+msgid "Max. Quantity"
+msgstr "Μέγιστη Ποσότητα"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,name:0
+msgid "Analytic account"
+msgstr "Αναλυτικός λογαριασμός"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,state:0
+msgid "State"
+msgstr "Κατάσταση"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,date_deadline:0
+msgid "Deadline"
+msgstr "Χρονικό Όριο"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Analytic Account Reporting"
+msgstr "Αναφορές Αναλυτικού Λογαριασμού"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,partner_id:0
+msgid "Partner"
+msgstr "Συνεργάτης"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_analytic_account_tree
+#: view:report.analytic.account.close:0
+msgid "Expired analytic accounts"
+msgstr "Ληγμένοι αναλυτικοί λογαριασμοί"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity:0
+msgid "Quantity"
+msgstr "Ποσότητα"
+
 #~ msgid "Analytic account incomplete"
 #~ msgstr "Ο Αναλυτικός Λογαριασμός είναι ημιτελής"
 
 #~ msgid "Timesheet profit"
 #~ msgstr "Κέρδος Xρόνου Eργασίας"
 
-#, python-format
 #~ msgid "Partner incomplete"
 #~ msgstr "Συνεργάτης ημιτελής"
 
-#, python-format
 #~ msgid "Error !"
 #~ msgstr "Σφάλμα!"
 
-#, python-format
 #~ msgid "You can not modify an invoiced analytic line!"
 #~ msgstr "Δεν μπορείτε να τροποποιήσετε μια τιμολογημένη αναλυτική γραμμή!"
 
-#, python-format
 #~ msgid "Invoices"
 #~ msgstr "Τιμολόγια"
 
-#, python-format
 #~ msgid "Error"
 #~ msgstr "Σφάλμα"
 
-#, python-format
 #~ msgid "Balance product needed"
 #~ msgstr "Χρειάζεται προϊόν υπολοίπου"
 
-#, python-format
 #~ msgid "Please fill a Balance product in the wizard"
 #~ msgstr "Παρακαλώ συμπληρώστε ένα Εξισορροποιητικό Προϊόν"
