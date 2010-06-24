@@ -33,7 +33,8 @@
     'depends': ['base', 'document'],
     'init_xml': [],
     'update_xml': [
-        'document_ftp_view.xml',
+        'wizard/ftp_configuration_view.xml',  
+        'wizard/ftp_browse_view.xml',        
         'security/ir.model.access.csv'
     ],
     'demo_xml': [],

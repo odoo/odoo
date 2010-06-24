@@ -40,5 +40,7 @@ import account_account_report
 import account_entries_report
 import account_analytic_entries_report
 import voucher_print
+import report_bs
+import report_pl
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

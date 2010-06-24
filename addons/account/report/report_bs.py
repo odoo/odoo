@@ -24,7 +24,7 @@ import time
 import mx.DateTime
 import rml_parse
 from report import report_sxw
-from account_report_india.report import report_pl
+from account.report import report_pl
 
 class report_balancesheet_horizontal(rml_parse.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -195,9 +195,9 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
         return comp_obj.name 
 
 report_sxw.report_sxw('report.account.balancesheet.horizontal', 'account.account',
-    'addons/account_report_india/report/report_balance_sheet_horizontal.rml',parser=report_balancesheet_horizontal,
+    'addons/account/report/report_balance_sheet_horizontal.rml',parser=report_balancesheet_horizontal,
     header=False)
 
 report_sxw.report_sxw('report.account.balancesheet', 'account.account',
-    'addons/account_report_india/report/report_balance_sheet.rml',parser=report_balancesheet_horizontal,
+    'addons/account/report/report_balance_sheet.rml',parser=report_balancesheet_horizontal,
     header=False)
