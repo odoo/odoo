@@ -48,7 +48,7 @@ class sale_order_line(osv.osv):
         return res
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store={}),
+        'margin': fields.function(_product_margin, method=True, string='Margin', store=True),
         'purchase_price': fields.float('Cost Price', digits=(16,2))
     }
 
