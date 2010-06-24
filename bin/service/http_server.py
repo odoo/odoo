@@ -260,7 +260,7 @@ class OerpAuthProxy(AuthProxy):
             if not db:
                 db = handler.get_db_from_path(path)
             print "Got db:",db
-        except:
+        except Exception:
             if path.startswith('/'):
                 path = path[1:]
             psp= path.split('/')
