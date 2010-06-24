@@ -157,8 +157,7 @@ msgid "File Information"
 msgstr "Πληροφορίες Αρχείου"
 
 #. module: document
-#: field:document.directory,file_ids:0
-#: view:ir.attachment:0
+#: field:document.directory,file_ids:0 view:ir.attachment:0
 msgid "Files"
 msgstr "Αρχεία"
 
@@ -168,8 +167,7 @@ msgid "Stored Filename"
 msgstr "Αποθηκευμένο Όνομα Αρχείου"
 
 #. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Τελευταίος Χρήστης Τροποποίησης"
 
@@ -228,8 +226,7 @@ msgid "Directory Type"
 msgstr "Τύπος Φακέλου"
 
 #. module: document
-#: field:document.directory,group_ids:0
-#: field:ir.attachment,group_ids:0
+#: field:document.directory,group_ids:0 field:ir.attachment,group_ids:0
 msgid "Groups"
 msgstr "Ομάδες"
 
@@ -267,8 +264,7 @@ msgid "Notes"
 msgstr "Σημειώσεις"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
+#: view:ir.attachment:0 field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Αρχειοθετημένα Περιεχόμενα"
 
@@ -338,8 +334,7 @@ msgid "Directory"
 msgstr "Φάκελος"
 
 #. module: document
-#: field:document.directory,user_id:0
-#: field:ir.attachment,user_id:0
+#: field:document.directory,user_id:0 field:ir.attachment,user_id:0
 msgid "Owner"
 msgstr "Κάτοχος"
 
@@ -366,8 +361,7 @@ msgid "Content Type"
 msgstr "Τύπος Περιεχόμενου"
 
 #. module: document
-#: view:document.directory:0
-#: view:ir.attachment:0
+#: view:document.directory:0 view:ir.attachment:0
 msgid "Security"
 msgstr "Ασφάλεια"
 
@@ -407,8 +401,7 @@ msgid "Domain"
 msgstr "Τομέας"
 
 #. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Ημερομηνία Τροποποίησης"
 
@@ -493,10 +486,70 @@ msgstr "Υποκατηγορίες"
 msgid "Contents"
 msgstr "Περιεχόμενα"
 
-#, python-format
+#. module: document
+#: view:board.board:0
+msgid "New Files"
+msgstr "Νέα Αρχεία"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.open_board_document_manager
+#: model:ir.ui.menu,name:document.menu_board_document_manager
+msgid "Document Dashboard"
+msgstr "Πίνακας Εγγραφών"
+
+#. module: document
+#: view:board.board:0
+msgid "Wall of Shame"
+msgstr "Τείχος της Ντροπής"
+
+#. module: document
+#: view:board.board:0
+msgid "File Size by Month"
+msgstr "Μέγεθος Αρχείων ανά Μήνα"
+
+#. module: document
+#: view:board.board:0
+msgid "Files by Month"
+msgstr "Αρχεία ανά Μήνα"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.open_board_document_manager1
+#: model:ir.ui.menu,name:document.menu_board_document_manager1
+msgid "Statistics by User"
+msgstr "Στατιστικά ανά Χρήστη"
+
+#. module: document
+#: view:board.board:0
+msgid "Files by Resource Type"
+msgstr "Αρχεία ανά Τύπο Προέλευσης"
+
+#. module: document
+#: model:ir.module.module,shortdesc:document.module_meta_information
+msgid "Dashboard for Document Management"
+msgstr "Πίνακας Διαχείρισης Εγγραφών"
+
+#. module: document
+#: view:board.board:0
+msgid "Files by Partner"
+msgstr "Αρχεία ανά Συνεργάτη"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_board_document
+msgid "Document"
+msgstr "Έγγραφο"
+
+#. module: document
+#: view:board.board:0
+msgid "Files by Users"
+msgstr "Αρχεία ανά Χρήστη"
+
+#. module: document
+#: view:board.board:0
+msgid "Document board"
+msgstr "Πίνακας εγγράφου"
+
 #~ msgid "Directory name contains special characters!"
 #~ msgstr "Το όνομα του φακέλλου περιέχει ειδικούς χαρακτήρες!"
 
-#, python-format
 #~ msgid "Directory name must be unique!"
 #~ msgstr "Το όνομα του φακέλου θα πρέπει να είναι μοναδικό!"
