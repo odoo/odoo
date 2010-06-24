@@ -1754,6 +1754,10 @@ class orm_memory(orm_template):
         self.check_id = 0
         cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
 
+    def _check_access(self, uid, object_id, mode):
+        if uid != 1 and self.datas[object_id]['internal.create_uid'] != uid:
+            raise except_orm(_('AccessError'), '%s access is only allowed on your own records for osv_memory objects' % mode.capitalize())
+
     def vaccum(self, cr, uid):
         self.check_id += 1
         if self.check_id % self._check_time:
@@ -1774,7 +1778,6 @@ class orm_memory(orm_template):
     def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         if not fields_to_read:
             fields_to_read = self._columns.keys()
         result = []
@@ -1785,8 +1788,10 @@ class orm_memory(orm_template):
             for id in ids:
                 r = {'id': id}
                 for f in fields_to_read:
-                    if id in self.datas:
-                        r[f] = self.datas[id].get(f, False)
+                    record = self.datas.get(id)
+                    if record:
+                        self._check_access(user, id, 'read')
+                        r[f] = record.get(f, False)
                         if r[f] and isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                             r[f] = len(r[f])
                 result.append(r)
@@ -1804,7 +1809,6 @@ class orm_memory(orm_template):
     def write(self, cr, user, ids, vals, context=None):
         if not ids:
             return True
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
         vals2 = {}
         upd_todo = []
         for field in vals:
@@ -1812,18 +1816,18 @@ class orm_memory(orm_template):
                 vals2[field] = vals[field]
             else:
                 upd_todo.append(field)
-        for id_new in ids:
-            self.datas[id_new].update(vals2)
-            self.datas[id_new]['internal.date_access'] = time.time()
+        for object_id in ids:
+            self._check_access(user, object_id, mode='write')
+            self.datas[object_id].update(vals2)
+            self.datas[object_id]['internal.date_access'] = time.time()
             for field in upd_todo:
-                self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
-        self._validate(cr, user, [id_new], context)
+                self._columns[field].set_memory(cr, self, object_id, field, vals[field], user, context)
+        self._validate(cr, user, [object_id], context)
         wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_write(user, self._name, id_new, cr)
-        return id_new
+        wf_service.trg_write(user, self._name, object_id, cr)
+        return object_id
 
     def create(self, cr, user, vals, context=None):
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
         self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
@@ -1842,6 +1846,7 @@ class orm_memory(orm_template):
                 upd_todo.append(field)
         self.datas[id_new] = vals2
         self.datas[id_new]['internal.date_access'] = time.time()
+        self.datas[id_new]['internal.create_uid'] = user
 
         for field in upd_todo:
             self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
@@ -1936,13 +1941,19 @@ class orm_memory(orm_template):
             import expression
             e = expression.expression(args)
             e.parse(cr, user, self, context)
-            res=e.__dict__['_expression__exp']
+            res = e.exp
         return res or []
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
         if not context:
             context = {}
+
+        # implicit filter on current user
+        if not args:
+            args = []
+        args.insert(0, ('internal.create_uid', '=', user))
+
         result = self._where_calc(cr, user, args, context=context)
         if result==[]:
             return self.datas.keys()
@@ -1954,25 +1965,20 @@ class orm_memory(orm_template):
         if result:
             for id, data in self.datas.items():
                 counter=counter+1
-                data['id']  = id
-                if limit and (counter >int(limit)):
+                data['id'] = id
+                if limit and (counter > int(limit)):
                     break
                 f = True
                 for arg in result:
-                     if arg[1] =='=':
-                         val =eval('data[arg[0]]'+'==' +' arg[2]', locals())
-                     elif arg[1] in ['<','>','in','not in','<=','>=','<>']:
-                         val =eval('data[arg[0]]'+arg[1] +' arg[2]', locals())
-                     elif arg[1] in ['ilike']:
-                         if str(data[arg[0]]).find(str(arg[2]))!=-1:
-                             val= True
-                         else:
-                             val=False
+                    if arg[1] == '=':
+                        val = eval('data[arg[0]]'+'==' +' arg[2]', locals())
+                    elif arg[1] in ['<','>','in','not in','<=','>=','<>']:
+                        val = eval('data[arg[0]]'+arg[1] +' arg[2]', locals())
+                    elif arg[1] in ['ilike']:
+                        val = (str(data[arg[0]]).find(str(arg[2]))!=-1)
 
-                     if f and val:
-                         f = True
-                     else:
-                         f = False
+                    f = f and val
+
                 if f:
                     res.append(id)
         if count:
@@ -1980,20 +1986,22 @@ class orm_memory(orm_template):
         return res or []
 
     def unlink(self, cr, uid, ids, context=None):
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
         for id in ids:
-            if id in self.datas:
-                del self.datas[id]
+            self._check_access(uid, id, 'unlink')
+            self.datas.pop(id, None)
         if len(ids):
             cr.execute('delete from wkf_instance where res_type=%s and res_id IN %s', (self._name, tuple(ids)))
         return True
 
     def perm_read(self, cr, user, ids, context=None, details=True):
         result = []
+        credentials = self.pool.get('res.users').name_get(cr, user, [user])[0]
+        create_date = time.strftime('%Y-%m-%d %H:%M:%S')
         for id in ids:
+            self._check_access(user, id, 'read')
             result.append({
-                'create_uid': (user, 'Root'),
-                'create_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'create_uid': credentials,
+                'create_date': create_date,
                 'write_uid': False,
                 'write_date': False,
                 'id': id

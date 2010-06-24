@@ -44,6 +44,25 @@ class ir_model(osv.osv):
     _name = 'ir.model'
     _description = "Objects"
     _rec_name = 'name'
+
+    def _is_osv_memory(self, cr, uid, ids, field_name, arg, context=None):
+        models = self.browse(cr, uid, ids, context=context)
+        res = dict.fromkeys(ids)
+        for model in models:
+            res[model.id] = isinstance(self.pool.get(model.model), osv.osv_memory)
+        return res
+
+    def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
+        if not domain:
+            return []
+        field, operator, value = domain[0]
+        if operator not in ['=', '!=']:
+            raise osv.except_osv('Invalid search criterions','The osv_memory field can only be compared with = and != operator.')
+        value = bool(value) if operator == '=' else not bool(value)
+        all_model_ids = self.search(cr, uid, [], context=context)
+        is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
+        return [('id', 'in', [id for id in is_osv_mem if bool(is_osv_mem[id]) == value])]
+
     _columns = {
         'name': fields.char('Object Name', size=64, translate=True, required=True),
         'model': fields.char('Object', size=64, required=True, select=1),
@@ -51,6 +70,9 @@ class ir_model(osv.osv):
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Manually Created',readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
+        'osv_memory': fields.function(_is_osv_memory, method=True, string='In-memory model', type='boolean',
+            fnct_search=_search_osv_memory,
+            help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)")
     }
     _defaults = {
         'model': lambda *a: 'x_',
@@ -81,7 +103,7 @@ class ir_model(osv.osv):
 
     def unlink(self, cr, user, ids, context=None):
         for model in self.browse(cr, user, ids, context):
-            if model.state <> 'manual':
+            if model.state != 'manual':
                 raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(model.name,))
         res = super(ir_model, self).unlink(cr, user, ids, context)
         pooler.restart_pool(cr.dbname)
@@ -300,7 +322,7 @@ class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'model_id': fields.many2one('ir.model', 'Object', required=True),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)]),
         'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade'),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),

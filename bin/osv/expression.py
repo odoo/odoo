@@ -76,6 +76,9 @@ class expression(object):
         self.__main_table = None # 'root' table. set by parse()
         self.__DUMMY_LEAF = (1, '=', 1) # a dummy leaf that must not be parsed or sql generated
 
+    @property
+    def exp(self):
+        return self.__exp[:]
 
     def parse(self, cr, uid, table, context):
         """ transform the leafs of the expression """
