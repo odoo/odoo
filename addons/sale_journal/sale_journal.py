@@ -127,6 +127,7 @@ class picking_journal(osv.osv):
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
+            ('cancel','Cancel'),
             ('done','Done'),
         ], 'Creation date', required=True, readonly=True),
         'note': fields.text('Note'),
@@ -138,6 +139,7 @@ class picking_journal(osv.osv):
         'state': lambda self,cr,uid,context: 'draft',
     }
     def button_picking_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'cancel'})
         for id in ids:
             pick_ids = self.pool.get('stock.picking').search(cr, uid, [('journal_id','=',id)])
             for pickid in pick_ids:
@@ -186,7 +188,7 @@ picking()
 class sale(osv.osv):
     _inherit="sale.order"
     _columns = {
-        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal'),
+        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal', domain=[('state','!=', 'done')]),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')
     }
     def action_ship_create(self, cr, uid, ids, *args):
