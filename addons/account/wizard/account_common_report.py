@@ -29,14 +29,14 @@ class account_common_report(osv.osv_memory):
     _description = "Common Report"
 
     _columns = {
-        'account_id': fields.many2one('account.account', 'Chart of account', required=True, domain = [('parent_id','=',False)]),
+        'chart_account_id': fields.many2one('account.account', 'Chart of account', required=True, domain = [('parent_id','=',False)]),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal year', help='Keep empty for all open fiscal year'),
 
         'filter': fields.selection([('filter_no','No filters'), ('filter_date','Date'), ('filter_period','Periods')],"Filter by:", required=True),
 
         'period_from': fields.many2one('account.period', 'Start period'),
         'period_to': fields.many2one('account.period', 'End period'),
-        'period_ids': fields.many2many('account.period', 'ledger_period_rel', 'ledger_id', 'period_id', 'Periods'),
+        #not used. Do we really need it? 'period_ids': fields.many2many('account.period', 'ledger_period_rel', 'ledger_id', 'period_id', 'Periods'), 
 
         'journal_ids': fields.many2many('account.journal', 'account_common_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
 
@@ -92,7 +92,7 @@ class account_common_report(osv.osv_memory):
 #            'amount_currency' : True,
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
-            'account_id': _get_account,
+            'chart_account_id': _get_account,
     }
 
     def _build_context(self, cr, uid, ids, data, context = None):
@@ -109,14 +109,17 @@ class account_common_report(osv.osv_memory):
         return result
 
     def _print_report(self, cr, uid, ids, data, query_line, context):
-        raise _('not implemented')
+        raise (_('Error'), _('not implemented'))
 
     def check_report(self, cr, uid, ids, context=None):
-        import pdb
-        pdb.set_trace()
+        obj_acc_move_line = self.pool.get('account.move.line')
+        data = {}
+        data['ids'] = context.get('active_ids',[])
+        data['model'] = context.get('active_model', 'ir.ui.menu')
+        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id'])[0]
         used_context = self._build_context(cr, uid, ids, data, context)
         query_line = obj_acc_move_line._query_get(cr, uid,
-                obj='account_move_line', context=used_context)
+                obj='l', context=used_context)
         return self._print_report(cr, uid, ids, data, query_line, context)
 account_common_report()
 

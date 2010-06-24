@@ -34,16 +34,19 @@ class account_report_general_ledger(osv.osv_memory):
         'landscape': fields.boolean("Landscape Mode"),
         'soldeinit': fields.boolean("Include initial balances"),
         'amount_currency': fields.boolean("With Currency"),
-        #'state': fields.selection([('bydate','By Date'), ('byperiod','By Period'), ('all','By Date and Period'), ('none','No Filter')],"Date/Period Filter"),
+        'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort By'),
     }
 
     _defaults = {
             'display_account' : 'bal_all',
             'landscape': True,
             'amount_currency' : True,
+            'sortby': 'sort_date',
     }
 
-    def _print_report(self, cr, uid, ids, context=None):
+    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+        data['form'].update(self.read(cr, uid, ids, ['display_account',  'landscape',  'soldeinit', 'amount_currency', 'sortby'])[0])
+        data['form']['query_get'] = query_line
         if data['form']['landscape'] == True:
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True, }
         else:

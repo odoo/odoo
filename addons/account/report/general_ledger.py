@@ -40,12 +40,9 @@ class general_ledger(rml_parse.rml_parse):
         new_ids = []
         if (data['model'] == 'account.account'):
             new_ids = 'active_ids' in data['form']['context'] and data['form']['context']['active_ids'] or []
-            #new_ids = ids
         else:
-            new_ids.append(data['form']['Account_list'])
-
-            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
-
+            new_ids.append(data['form']['chart_account_id'])
+        objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         super(general_ledger, self).set_context(objects, data, new_ids, report_type)
 
     def __init__(self, cr, uid, name, context):
@@ -81,7 +78,7 @@ class general_ledger(rml_parse.rml_parse):
         res = self.cr.dictfetchall()
         borne_min = res[0]['start_date']
         borne_max = res[0]['stop_date']
-        if form['state'] == 'byperiod':
+        if form['filter'] == 'filter_period':
             ## This function will return the most aged date
             periods = form['periods']
             #periods = form['periods'][0][2]
@@ -98,36 +95,10 @@ class general_ledger(rml_parse.rml_parse):
             res = self.cr.dictfetchall()
             borne_min = res[0]['start_date']
             borne_max = res[0]['stop_date']
-        elif form['state'] == 'bydate':
+        elif form['filter'] == 'filter_date':
             borne_min = form['date_from']
             borne_max = form['date_to']
-        elif form['state'] == 'all':
-            periods = form['periods']
-            #periods = form['periods'][0][2]
-            if not periods:
-                sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = """ + str(form['fiscalyear'])   + """
-                    """
-            else:
-                periods_id = ','.join(map(str, periods))
-                sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in ( """ + periods_id   + """)
-                    """
-            self.cr.execute(sql)
-            res = self.cr.dictfetchall()
-            period_min = res[0]['start_date']
-            period_max = res[0]['stop_date']
-            date_min = form['date_from']
-            date_max = form['date_to']
-            if period_min<date_min:
-                borne_min = period_min
-            else :
-                borne_min = date_min
-            if date_max<period_max:
-                borne_max = period_max
-            else :
-                borne_max = date_max
-        elif form['state'] == 'none':
+        elif form['filter'] == 'filter_no':
             sql = """
                     SELECT min(date) as start_date,max(date) as stop_date FROM account_move_line """
             self.cr.execute(sql)
@@ -141,46 +112,26 @@ class general_ledger(rml_parse.rml_parse):
         return self.date_borne
 
     def get_children_accounts(self, account, form):
-
         self.child_ids = self.pool.get('account.account').search(self.cr, self.uid,
             [('parent_id', 'child_of', self.ids)])
-#
+
         res = []
         ctx = self.context.copy()
-        ## We will make the test for period or date
-        ## We will now make the test
-        #
-        ctx['state'] = form['context'].get('state','all')
-        if form.has_key('fiscalyear'):
-            ctx['fiscalyear'] = form['fiscalyear']
-            ctx['periods'] = form['periods']
-            #ctx['periods'] = form['periods'][0][2]
-
-        else:
-            ctx['date_from'] = form['date_from']
-            ctx['date_to'] = form['date_to']
-        ##
-        #
-        self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
+        self.query = form['query_get']
         if account and account.child_consol_ids: # add ids of consolidated childs also of selected account
             ctx['consolidate_childs'] = True
             ctx['account_id'] = account.id
         ids_acc = self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])], context=ctx)
-        for child_id in ids_acc:
-            child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
+        for child_account in self.pool.get('account.account').browse(self.cr, self.uid, ids_acc):
             sold_account = self._sum_solde_account(child_account,form)
             self.sold_accounts[child_account.id] = sold_account
             if form['display_account'] == 'bal_mouvement':
                 if child_account.type != 'view' \
-                and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-                    [('account_id','=',child_account.id)],
-                    context=ctx)) <> 0 :
+                and len(self.pool.get('account.move.line').search(self.cr, self.uid, [('account_id','=',child_account.id)], context=ctx)) <> 0 :
                     res.append(child_account)
             elif form['display_account'] == 'bal_solde':
                 if child_account.type != 'view' \
-                and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-                    [('account_id','=',child_account.id)],
-                    context=ctx)) <> 0 :
+                and len(self.pool.get('account.move.line').search(self.cr, self.uid, [('account_id','=',child_account.id)], context=ctx)) <> 0 :
                     if ( sold_account <> 0.0):
                         res.append(child_account)
             else:
@@ -191,10 +142,11 @@ class general_ledger(rml_parse.rml_parse):
                     res.append(child_account)
         ##
         if not len(res):
-
             return [account]
         else:
             ## We will now compute solde initiaux
+            if not form['soldeinit']:
+                return res
             for move in res:
                 SOLDEINIT = "SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l WHERE l.account_id = " + str(move.id) +  " AND l.date < '" + self.borne_date['max_date'] + "'" +  " AND l.date > '" + self.borne_date['min_date'] + "'"
                 self.cr.execute(SOLDEINIT)
@@ -215,20 +167,18 @@ class general_ledger(rml_parse.rml_parse):
                 else:
                     move.init_credit = 0
                     move.init_debit = 0
-
-
         return res
 
     def lines(self, account, form):
         """ Return all the account_move_line of account with their account code counterparts """
-
-        # First compute all counterpart strings for every move_id where this account appear
+        # First compute all counterpart strings for every move_id where this account appear.
+        # Currently, the counterpart info is used only in landscape mode
         sql = """
             SELECT m1.move_id,
             array_to_string(ARRAY(SELECT DISTINCT a.code FROM account_move_line m2 LEFT JOIN account_account a ON (m2.account_id=a.id) WHERE m2.move_id = m1.move_id AND m2.account_id<>%%s), ', ') AS counterpart
-            FROM (SELECT move_id FROM account_move_line l WHERE %s AND l.account_id = %%s AND l.date<=%%s AND l.date>=%%s  GROUP BY move_id) m1
+            FROM (SELECT move_id FROM account_move_line l WHERE %s AND l.account_id = %%s GROUP BY move_id) m1
         """ % self.query
-        self.cr.execute(sql, (account.id, account.id, self.date_borne['max_date'], self.date_borne['min_date']))
+        self.cr.execute(sql, (account.id, account.id))
         counterpart_res = self.cr.dictfetchall()
         counterpart_accounts = {}
         for i in counterpart_res:
@@ -236,10 +186,10 @@ class general_ledger(rml_parse.rml_parse):
         del counterpart_res
 
         # Then select all account_move_line of this account
-        if form['sortbydate'] == 'sort_date':
-            sql_sort='l.date'
+        if form['sortby'] == 'sort_journal_partner':
+            sql_sort='j.code, p.name'
         else:
-            sql_sort='j.code'
+            sql_sort='l.date'
         sql = """
             SELECT l.id, l.date, j.code, l.amount_currency,l.ref, l.name, COALESCE(l.debit,0) AS debit, COALESCE(l.credit,0) AS credit, l.period_id, l.partner_id,
             m.name AS move_name, m.id AS move_id,
@@ -252,9 +202,9 @@ class general_ledger(rml_parse.rml_parse):
             LEFT JOIN res_partner p on (l.partner_id=p.id)
             LEFT JOIN account_invoice i on (m.id =i.move_id)
             JOIN account_journal j on (l.journal_id=j.id)
-            WHERE %s AND l.account_id = %%s AND l.date<=%%s AND l.date>=%%s ORDER by %s
+            WHERE %s AND l.account_id = %%s ORDER by %s
         """ % (self.query, sql_sort)
-        self.cr.execute(sql, (account.id,  self.date_borne['max_date'], self.date_borne['min_date']))
+        self.cr.execute(sql, (account.id,))
         res = self.cr.dictfetchall()
         account_sum = 0.0
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
@@ -266,8 +216,6 @@ class general_ledger(rml_parse.rml_parse):
                 l['ref'] = '%s: %s'%(inv_types[l['invoice_type']],l['invoice_number'])
             l['partner'] = l['partner_name'] or ''
             account_sum = l['debit'] - l ['credit']
-            #c = time.strptime(l['date'],"%Y-%m-%d")
-            #l['date'] = time.strftime("%d-%m-%Y",c)
             l['progress'] = account_sum
             l['line_corresp'] = counterpart_accounts[l['move_id']]
             # Modification du amount Currency
@@ -302,9 +250,6 @@ class general_ledger(rml_parse.rml_parse):
         sum_credit = self.cr.fetchone()[0] or 0.0
         if form.get('soldeinit', False):
             sum_credit += account.init_credit
-        #
-        ##
-
         return sum_credit
 
     def _sum_solde_account(self, account, form):
