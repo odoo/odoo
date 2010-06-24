@@ -383,7 +383,7 @@ class report_account_analytic_planning_account(osv.osv):
                     FROM report_account_analytic_planning_line
                     WHERE planning_id = %s AND account_id=%s
                 )""", (line.planning_id.id,line.account_id.id ))
-            result[line.id] = cr.fetchall()[0][0] / div *div2
+            result[line.id] = cr.fetchall()[0][0] / div * div2
         return result
 
     def _get_timesheets(self, cr, uid, ids, name, args, context):
@@ -493,13 +493,13 @@ where user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
         for line in self.browse(cr, uid, ids, context):
             where = ''
             if line.user_id:
-                where='user_id='+str(line.user_id.id)+' and '
+                where = 'user_id=' + str(line.user_id.id) + ' and '
             cr.execute('''select
                     sum(planned_hours)
                 from
                     project_task
                 where
-                '''+where+'''
+                ''' + where + '''
                     project_id in (select id from project_project where category_id=%s) and
                     date_close>=%s and
                     date_close<=%s''', (
