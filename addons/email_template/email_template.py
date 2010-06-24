@@ -108,7 +108,8 @@ class email_template(osv.osv):
         'enforce_from_account':fields.many2one(
                    'email_template.account',
                    string="Enforce From Account",
-                   help="Emails will be sent only from this account."),
+                   help="Emails will be sent only from this account(which are approved).",
+                   domain=[('state','=','approved')]),
         'from_email' : fields.related('enforce_from_account', 'email_id',
                                                 type='char', string='From',),        
         'def_to':fields.char(
@@ -580,8 +581,8 @@ class email_template(osv.osv):
                                                              context)
 
         print 'Sending', mailbox_id
-        self.pool.get('email_template.mailbox').send_this_mail(cursor, user, [mailbox_id], context)
         return mailbox_id
+        
 
     def generate_mail(self,
                       cursor,
@@ -595,6 +596,7 @@ class email_template(osv.osv):
         if not template:
             raise Exception("The requested template could not be loaded")
         print 'loaded', record_ids
+        result = True
         for record_id in record_ids:
             mailbox_id = self._generate_mailbox_item_from_template(
                                                                 cursor,
@@ -625,7 +627,9 @@ class email_template(osv.osv):
                                                 {'folder':'outbox'},
                                                 context=context
             )
-        return True
+            # TODO : manage return value of all the records
+            result = self.pool.get('email_template.mailbox').send_this_mail(cursor, user, [mailbox_id], context)
+        return result
 
 email_template()
 
@@ -641,7 +645,7 @@ class email_template_preview(osv.osv_memory):
         if 'template_id' in context.keys():
             ref_obj_id = self.pool.get('email.template').read(cr, uid, context['template_id'], ['object_name'], context)
             ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
-            ref_obj_ids = self.pool.get(ref_obj_name).search(cr, uid, [], context=context)
+            ref_obj_ids = self.pool.get(ref_obj_name).search(cr, uid, [], 0, 20, 'id desc', context=context)
             ref_obj_recs = self.pool.get(ref_obj_name).name_get(cr, uid, ref_obj_ids, context)
             return ref_obj_recs    
         
