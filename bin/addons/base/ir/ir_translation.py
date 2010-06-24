@@ -144,15 +144,15 @@ class ir_translation(osv.osv):
         res = cr.fetchone()
         trad = res and res[0] or ''
         return trad
-        
+
     def create(self, cursor, user, vals, context=None):
         if not context:
             context = {}
         ids = super(ir_translation, self).create(cursor, user, vals, context=context)
         for trans_obj in self.read(cursor, user, [ids], ['name','type','res_id','src','lang'], context=context):
             self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
-            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], context.get('lang','en_US'), [trans_obj['res_id']])
-        return ids    
+            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
+        return ids
 
     def write(self, cursor, user, ids, vals, context=None):
         if not context:
@@ -160,7 +160,7 @@ class ir_translation(osv.osv):
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
             self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
-            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], context.get('lang','en_US'), [trans_obj['res_id']])
+            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
         return result
 
     def unlink(self, cursor, user, ids, context=None):
@@ -168,9 +168,9 @@ class ir_translation(osv.osv):
             context = {}
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
             self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
-            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], context.get('lang','en_US'), [trans_obj['res_id']])
+            self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
-        return result    
+        return result
 
 ir_translation()
 
