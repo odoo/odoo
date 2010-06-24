@@ -95,8 +95,8 @@ class DocIndex(indexer):
         return ['.doc']
 
     def _doIndexFile(self,fname):
-        #fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
-        return _to_unicode( 'None')
+        fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
+        return _to_unicode(fp.read())
 
 cntIndex.register(DocIndex())
 
