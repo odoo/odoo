@@ -11,9 +11,27 @@
               <field name="invoice_sequence_id" position="after">
                     <field  name="statement_sequence_id"/>
                     <field  name="auto_cash"/>
-                    <field  name="check_dtls"/>
+<!--                    <field  name="check_dtls"/>-->
                     <field  name="special_journal"/>
               </field>
+            </field>
+          </record>
+
+          <record model="ir.ui.view" id="view_account_journal_pos_user_form">
+            <field name="name">POS Journal</field>
+            <field name="model">account.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+              <xpath expr="//notebook[last()]" position="inside">
+                        <page string="Point Of Sale">
+                            <group cols="2" colspan="4">
+                                <field name="check_dtls"/>
+                            </group>
+                            <separator colspan="4" string="Users"/>
+                            <field name="journal_users" nolabel="1"/>
+                        </page>
+             </xpath>
             </field>
           </record>
 
@@ -403,7 +421,7 @@
                     <field name="act_window_id" ref="action_pos_account_bank_statment"/>
         </record>
         <menuitem name="All Cash Registers" parent="menu_statement_tree_all"
-                 action="action_pos_account_bank_statment" id="menu_pos_bank_statment_tree" groups="base.group_extended" sequence="4"/>
+                 action="action_pos_account_bank_statment" id="menu_pos_bank_statment_tree" sequence="4"/>
 
         <record model="ir.actions.act_window" id="action_my_all_pos_account_bank_statment">
             <field name="name">All My Cashboxes</field>

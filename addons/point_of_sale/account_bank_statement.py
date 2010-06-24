@@ -36,6 +36,7 @@ class account_journal(osv.osv):
         'check_dtls': fields.boolean('Check Details', help="This field authorize Validation of Cashbox without checking ending details"),
         'statement_sequence_id': fields.many2one('ir.sequence', 'Statement Sequence', \
             help="The sequence used for statement numbers in this journal."),
+        'journal_users': fields.many2many('res.users','pos_journal_users','journal_id','user_id','Users'),
         }
     _defaults = {
         'check_dtls': lambda *a:True,

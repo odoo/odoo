@@ -56,7 +56,7 @@ class pos_close_statement(osv.osv_memory):
                 'res_model': 'account.bank.statement',
                 'view_id': False,
                 'type': 'ir.actions.act_window'
-}   
+}
 
 pos_close_statement()
 

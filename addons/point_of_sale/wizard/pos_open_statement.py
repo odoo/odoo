@@ -38,13 +38,22 @@ class pos_open_statement(osv.osv_memory):
              @return : Blank Directory
         """
         list_statement = []
+        mod_obj = self.pool.get('ir.model.data')
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         statement_obj = self.pool.get('account.bank.statement')
         singer_obj = self.pool.get('singer.statement')
         sequence_obj = self.pool.get('ir.sequence')
         journal_obj = self.pool.get('account.journal')
         journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True)])
-        journal_ids = journal_obj.browse(cr, uid, journal_lst)
+        sql = """
+                select journal_id from pos_journal_users
+                where user_id=%d
+                """%(uid)
+        cr.execute(sql)
+        user_journals = cr.fetchall()
+        lst = map(lambda x: x[0], user_journals)
+        journal_ids = journal_obj.browse(cr, uid, lst)
+
         for journal in journal_ids:
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
             if len(ids):
@@ -88,16 +97,19 @@ class pos_open_statement(osv.osv_memory):
                                 'number': i.number,
                                 'starting_id': statement_id,
                             })
-            return {
-                'domain': "[('id','in', ["+','.join(map(str,list_statement))+"])]",
-                'name': 'Open Statement',
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'account.bank.statement',
-                'view_id': False, # TODO: REFERENCE RIGHT VIEWS
-                'type': 'ir.actions.act_window'
-}   
-        return {}
+        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_bank_statement_tree')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        return {
+#            'domain': "[('id','in', ["+','.join(map(str,list_statement))+"])]",
+            'domain': "[('state','=','open')]",
+            'name': 'Open Statement',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.bank.statement',
+            'views': [(resource_id,'tree')],
+            'type': 'ir.actions.act_window'
+}
+#        return {}
 
 pos_open_statement()
 
