@@ -27,17 +27,22 @@ class ir_filters(osv.osv):
     '''
     _name = 'ir.filters'
     _description = 'Filters'
-    
+
     def _list_all_models(self, cr, uid, context=None):
         cr.execute("SELECT model, name from ir_model")
         return cr.fetchall()
 
+    def get_filters(self, cr, uid, model):
+        act_ids = self.search(cr,uid,[('model_id','=',model),('user_id','=',uid)])
+        my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'])
+        return my_acts
+
     _columns = {
-        'name': fields.char('Action Name', size=64, translate=True, required=True), 
-        'user_id':fields.many2one('res.users', 'User', help='False means for every user'), 
-        'domain': fields.char('Domain Value', size=250, required=True), 
-        'context': fields.char('Context Value', size=250, required=True), 
-        'model_id': fields.selection(_list_all_models, 'Model', required=True), 
+        'name': fields.char('Action Name', size=64, translate=True, required=True),
+        'user_id':fields.many2one('res.users', 'User', help='False means for every user'),
+        'domain': fields.char('Domain Value', size=250, required=True),
+        'context': fields.char('Context Value', size=250, required=True),
+        'model_id': fields.selection(_list_all_models, 'Model', required=True),
     }
 
 ir_filters()
