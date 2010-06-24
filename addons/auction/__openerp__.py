@@ -32,6 +32,11 @@
      It completely manages an auction such as managing bids,
      keeping track of the sold articles along with the paid
      and unpaid objects including delivery of the articles.
+     Dashboards for auction that includes:
+       * My Latest Objects (list)
+       * My Latest Deposits (list)
+       * Objects Statistics (list)
+       * My Objects By Day (list)
     """,
     'author': 'Tiny',
     'depends': ['base', 'account', 'hr_attendance'],
@@ -54,12 +59,15 @@
 #        'wizard/auction_aie_send_result_view.xml',
         'wizard/auction_lots_buyer_map_view.xml',
 #        'wizard/auction_lots_numerotate_view.xml',
-        
+
         'auction_view.xml',
         'auction_report.xml',
-        'auction_wizard.xml'
+        'auction_wizard.xml',
+        'board_auction_view.xml',
+        'board_auction_manager_view.xml',
+
     ],
-    'demo_xml': ['auction_demo.xml'],
+    'demo_xml': ['auction_demo.xml','board_auction_demo.xml'],
     'installable': True,
     'active': False,
     'certificate': '0039333102717',

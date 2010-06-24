@@ -41,7 +41,15 @@ appropriate staff, and make sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
-between mails and Open ERP.""",
+between mails and Open ERP. 
+Create dashboard for CRM that includes:
+    * My Leads (list)
+    * Leads by Stage (graph)
+    * My Meetings (list)
+    * Sales Pipeline by Stage (graph)
+    * My Cases (list)
+    * Jobs Tracking (graph)
+""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': [
@@ -51,6 +59,7 @@ between mails and Open ERP.""",
         'mail_gateway',
         'base_calendar',
         'resource',
+        'board'
     ],
     'init_xml': [
         'crm_data.xml',
@@ -60,7 +69,6 @@ between mails and Open ERP.""",
         'crm_opportunity_data.xml',
         'crm_phonecall_data.xml',
     ],
-
     'update_xml': [
         'wizard/crm_lead_to_partner_view.xml',
         'wizard/crm_lead_to_opportunity_view.xml',
@@ -98,14 +106,18 @@ between mails and Open ERP.""",
         'process/crm_configuration_process.xml',
         'crm_installer_view.xml', 
         
-        'res_partner_view.xml'
+        'res_partner_view.xml',
+        'board_crm_view.xml',
+        'board_crm_statistical_view.xml',
+       
     ],
     'demo_xml': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_meeting_demo.xml',
         'crm_opportunity_demo.xml',
-        'crm_phonecall_demo.xml'
+        'crm_phonecall_demo.xml',
+        'board_crm_demo.xml',
     ],
     'test': [
             'test/test_crm_lead.yml',

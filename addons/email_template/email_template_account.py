@@ -30,7 +30,7 @@ class email_template_account(osv.osv):
                             'text/html'
                             ]
     _columns = {
-        'name': fields.char('Email Account Desc',
+        'name': fields.char('Description',
                         size=64, required=True,
                         readonly=True, select=True,
                         states={'draft':[('readonly', False)]}),
@@ -56,22 +56,16 @@ class email_template_account(osv.osv):
                         size=120, invisible=True,
                         required=False, readonly=True,
                         states={'draft':[('readonly', False)]}),
-        'smtptls':fields.boolean('Use TLS',
+        'smtptls':fields.boolean('TLS',
                         states={'draft':[('readonly', False)]}, readonly=True),
                                 
-        'smtpssl':fields.boolean('Use SSL/TLS (only in python 2.6)',
+        'smtpssl':fields.boolean('SSL/TLS (only in python 2.6)',
                         states={'draft':[('readonly', False)]}, readonly=True),
         'send_pref':fields.selection([
                                       ('html', 'HTML otherwise Text'),
                                       ('text', 'Text otherwise HTML'),
                                       ('both', 'Both HTML & Text')
                                       ], 'Mail Format', required=True),
-        'allowed_groups':fields.many2many(
-                        'res.groups',
-                        'account_group_rel', 'templ_id', 'group_id',
-                        string="Allowed User Groups",
-                        help="Only users from these groups will be" \
-                        "allowed to send mails from this ID"),
         'company':fields.selection([
                         ('yes', 'Yes'),
                         ('no', 'No')
@@ -89,7 +83,7 @@ class email_template_account(osv.osv):
                                   ('suspended', 'Suspended'),
                                   ('approved', 'Approved')
                                   ],
-                        'Account Status', required=True, readonly=True),
+                        'Status', required=True, readonly=True),
     }
 
     _defaults = {
@@ -102,7 +96,6 @@ class email_template_account(osv.osv):
                                                         ['name'],
                                                         context
                                                         )['name'],
-         'smtpssl':lambda * a:True,
          'state':lambda * a:'draft',
          'user':lambda self, cursor, user, context:user,
          'send_pref':lambda * a: 'html',
@@ -273,7 +266,7 @@ class email_template_account(osv.osv):
         return result
     
     def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, context=None):
-        #TODO: Replace all this crap with a single email object
+        #TODO: Replace all this with a single email object
         if body is None:
             body = {}
         if payload is None:
@@ -327,19 +320,20 @@ class email_template_account(osv.osv):
                         msg.attach(part)
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
-                    return error
+                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 try:
                     #print msg['From'],toadds
                     serv.sendmail(msg['From'], addresses_l['all'], msg.as_string())
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Server Send Error\nDescription: %s") % (id, error))
-                    return error
+                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 #The mail sending is complete
                 serv.close()
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_INFO, _("Mail from Account %s successfully Sent.") % (id))
                 return True
             else:
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Account not approved") % id)
+                return {'error_msg':"Mail from Account %s failed. Probable Reason:Account not approved"% id}
                                 
     def extracttime(self, time_as_string):
         """
@@ -401,7 +395,6 @@ class email_template_account(osv.osv):
         return date_as_date
         
     def send_receive(self, cr, uid, ids, context=None):
-        self.get_mails(cr, uid, ids, context)
         for id in ids:
             ctx = context.copy()
             ctx['filters'] = [('account_id', '=', id)]

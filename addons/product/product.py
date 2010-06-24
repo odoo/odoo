@@ -210,6 +210,7 @@ class product_category(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
     }
+    
 
     _defaults = {
         'type' : lambda *a : 'normal',
@@ -219,7 +220,7 @@ class product_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from product_category where id =ANY(%s)',(ids,))
+            cr.execute('select distinct parent_id from product_category where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -245,7 +246,8 @@ class product_template(osv.osv):
         result = {}
         for product in self.browse(cr, uid, ids, context):
             if product.seller_ids:
-                result[product.id] = product.seller_ids[0].delay
+                partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  product.seller_ids if partner_id and partner_id.sequence])
+                result[product.id] = partner_list and partner_list[0] and partner_list[0][1] and partner_list[0][1].delay or False
             else:
                 result[product.id] = 1
         return result
@@ -456,7 +458,7 @@ class product_product(osv.osv):
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
-        'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
+        'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
@@ -584,6 +586,7 @@ class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
     _rec_name = 'ean'
+    _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
         'name' : fields.text('Description', size=64),
@@ -607,7 +610,6 @@ class product_packaging(osv.osv):
         'length': fields.float('Length', help='The length of the package'),
     }
 
-    _order = 'sequence'
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):

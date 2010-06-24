@@ -32,14 +32,14 @@ from tools.translate import _
 import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
+import collections
 
 from tools import command_re
 
-class crm_cases(osv.osv):
-    """ crm cases """
-
+class mailgate_thread(osv.osv):
+    """ mailgate_thread """
     _name = "mailgate.thread"
-    _inherit = "mailgate.thread"    
+    _inherit = "mailgate.thread"
 
     def message_new(self, cr, uid, msg, context):
         """
@@ -127,7 +127,7 @@ class crm_cases(osv.osv):
         #getattr(self, act)(cr, uid, select)
         return res
 
-    def emails_get(self, cr, uid, ids, context={}):
+    def emails_get(self, cr, uid, ids, context=None):
 
         """ 
         Get Emails
@@ -137,16 +137,24 @@ class crm_cases(osv.osv):
         @param ids: List of email’s IDs
         @param context: A standard dictionary for contextual values
         """
-        res = []
+        res = {}
+
         if isinstance(ids, (str, int, long)):
-            select = [ids]
+            select = [long(ids)]
         else:
             select = ids
-        for case in self.browse(cr, uid, select):
-            user_email = (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or False
-            res += [(user_email, case.email_from, case.email_cc or False, getattr(case,'priority') and case.priority or False)]
-        if isinstance(ids, (str, int, long)):
-            return len(res) and res[0] or False
+
+        for thread in self.browse(cr, uid, select, context=context):
+            values = collections.defaultdict(set)
+
+            for message in thread.message_ids:
+                user_email = (message.user_id and message.user_id.address_id and message.user_id.address_id.email) or False
+                values['user_email'].add(user_email)
+                values['email_from'].add(message.email_from)
+                values['email_cc'].add(message.email_cc or False)
+
+            res[str(thread.id)] = dict((key,list(values[key])) for key, value in values.iteritems())
+
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):
@@ -161,4 +169,4 @@ class crm_cases(osv.osv):
         """
         return True
 
-crm_cases()
+mailgate_thread()

@@ -45,7 +45,7 @@ class base_report(report_sxw.rml_parse):
 
         period_query_cond=self.pool.get('account.period').search(self.cr, self.uid,[('fiscalyear_id','=',form['fiscalyear'])])
 
-        self.cr.execute("SELECT MIN(date_start) AS date_start, MAX(date_stop) AS date_stop FROM account_period WHERE id =ANY(%s)",(period_query_cond,))
+        self.cr.execute("SELECT MIN(date_start) AS date_start, MAX(date_stop) AS date_stop FROM account_period WHERE id IN %s",(tuple(period_query_cond),))
         dates =self.cr.dictfetchall()
         self._set_variable('date_start', dates[0]['date_start'])
         self._set_variable('date_stop', dates[0]['date_stop'])

@@ -89,7 +89,7 @@ class account_invoice_with_message(report_sxw.rml_parse):
                 if entry.uos_id.id==False:
                     res['uos']=''
                 else:
-                    uos_name = self.pool.get('product.uom').read(self.cr,self.uid,entry.uos_id.id,['name'],self.context.copy())
+                    uos_name = self.pool.get('product.uom').read(self.cr, self.uid, entry.uos_id.id, ['name'], self.context.copy())
                     res['uos']=uos_name['name']
             else:
 

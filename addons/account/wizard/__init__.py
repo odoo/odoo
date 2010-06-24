@@ -24,6 +24,7 @@ import account_common_report
 import account_automatic_reconcile
 import account_move_line_reconcile_select
 import account_move_line_unreconcile_select
+import account_reconcile_partner_process
 import account_reconcile
 import account_unreconcile
 import account_invoice_refund
@@ -60,6 +61,8 @@ import account_central_journal
 import account_general_journal
 import account_change_currency
 
+import account_bs_report
+import account_pl_report
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 

@@ -35,14 +35,14 @@ class report_custom(report_rml):
     def __init__(self, name, table, tmpl, xsl):
         report_rml.__init__(self, name, table, tmpl, xsl)
 
-    def create_xml(self,cr, uid, ids, datas, context={}):
+    def create_xml(self, cr, uid, ids, datas, context={}):
         service = netsvc.LocalService("object_proxy")
 
 #       start_time = time.clock()
 
 #           lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', ids, ['obj_price','ach_pay_id','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
-        lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', ids, ['obj_price','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
-        auction = service.execute(cr.dbname,uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
+        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', ids, ['obj_price','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
+        auction = service.execute(cr.dbname, uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
 
 #       mid_time = time.clock()
 
@@ -96,7 +96,7 @@ class report_custom(report_rml):
 #       mid_time3 = time.clock()
 
         debit = adj
-        costs = service.execute(cr.dbname,uid, 'auction.lots', 'compute_seller_costs', ids)
+        costs = service.execute(cr.dbname, uid, 'auction.lots', 'compute_seller_costs', ids)
         for cost in costs:
             debit += cost['amount']
 

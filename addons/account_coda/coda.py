@@ -29,8 +29,8 @@ class account_coda(osv.osv):
         'name': fields.binary('Coda file', readonly=True),
         'statement_ids': fields.one2many('account.bank.statement','coda_id','Generated Bank Statement', readonly=True),
         'note': fields.text('Import log', readonly=True),
-        'journal_id': fields.many2one('account.journal','Bank Journal', readonly=True,select=True),
-        'date': fields.date('Import Date', readonly=True,select=True),
+        'journal_id': fields.many2one('account.journal','Bank Journal', readonly=True, select=True),
+        'date': fields.date('Import Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users','User', readonly=True, select=True),
     }
     _defaults = {

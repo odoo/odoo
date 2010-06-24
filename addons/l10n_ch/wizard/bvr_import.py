@@ -71,7 +71,7 @@ def _reconstruct_invoice_ref(cursor, user, reference, context):
         cursor.execute('SELECT l.id ' \
                     'FROM account_move_line l, account_invoice i ' \
                     'WHERE l.move_id = i.move_id AND l.reconcile_id is NULL  ' \
-                        'AND i.id =ANY(%s)',([id_invoice],))
+                        'AND i.id IN %s',(tuple([id_invoice]),))
         inv_line = []
         for id_line in cursor.fetchall():
             inv_line.append(id_line[0])

@@ -150,7 +150,7 @@ class membership_line(osv.osv):
             )
         JOIN account_invoice ai ON (
             ai.id = ail.invoice_id)
-        WHERE ml.id =ANY(%s)''',(ids,))
+        WHERE ml.id IN %s''',(tuple(ids),))
         res = cr.fetchall()
         for r in res:
             if r[0] and r[0] < 0:
@@ -358,10 +358,11 @@ class Partner(osv.osv):
 
     def __get_membership_state(self, *args, **kwargs):
         return self._membership_state(*args, **kwargs)
-    
+
     _columns = {
         'associate_member': fields.many2one('res.partner', 'Associate member'),
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
+        'member': fields.boolean('Member'),
         'free_member': fields.boolean('Free member'),
         'membership_amount': fields.float(
                     'Membership amount', digits=(16, 2),
@@ -412,7 +413,7 @@ class Partner(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct associate_member from res_partner where id =ANY(%s)',(ids,))
+            cr.execute('select distinct associate_member from res_partner where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -422,16 +423,16 @@ class Partner(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive associated members.', ['associate_member'])
     ]
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         if context is None:
-            context = {}    
+            context = {}
         default = default.copy()
         default['member_lines'] = []
         return super(Partner, self).copy(cr, uid, id, default, context)
-    
+
 Partner()
 
 class product_template(osv.osv):
@@ -446,7 +447,7 @@ class Product(osv.osv):
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if ('product' in context) and (context['product']=='membership_product'):
             model_data_ids_form = self.pool.get('ir.model.data').search(cr,user,[('model','=','ir.ui.view'),('name','in',['membership_products_form','membership_products_tree'])])
-            resource_id_form = self.pool.get('ir.model.data').read(cr,user,model_data_ids_form,fields=['res_id','name'])
+            resource_id_form = self.pool.get('ir.model.data').read(cr, user, model_data_ids_form, fields=['res_id','name'])
             dict_model={}
             for i in resource_id_form:
                 dict_model[i['name']]=i['res_id']
@@ -483,10 +484,10 @@ class Invoice(osv.osv):
         member_line_obj = self.pool.get('membership.membership_line')
         today = time.strftime('%Y-%m-%d')
         for invoice in self.browse(cr, uid, ids):
-            mlines = member_line_obj.search(cr,uid,
+            mlines = member_line_obj.search(cr, uid,
                     [('account_invoice_line','in',
                         [ l.id for l in invoice.invoice_line])], context)
-            member_line_obj.write(cr,uid,mlines, {'date_cancel':today}, context)
+            member_line_obj.write(cr, uid, mlines, {'date_cancel':today}, context)
         return super(Invoice, self).action_cancel(cr, uid, ids, context)
 Invoice()
 
@@ -646,7 +647,7 @@ ReportPartnerMemberYearNew()
 
 class account_invoice_line(osv.osv):
     _inherit='account.invoice.line'
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
             context={}

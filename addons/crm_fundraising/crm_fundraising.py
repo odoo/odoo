@@ -28,10 +28,8 @@ class crm_fundraising(osv.osv, crm.crm_case):
     _name = "crm.fundraising"
     _description = "Fund Raising Cases"
     _order = "id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread']
     _columns = {
-            'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
             'id': fields.integer('ID'), 
             'name': fields.char('Name', size=128, required=True),
             'active': fields.boolean('Active', required=False), 
@@ -87,6 +85,8 @@ class crm_fundraising(osv.osv, crm.crm_case):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+            'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('res_model','=',_name)]),
+            'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('res_model','=',_name)]),
         }
 
     _defaults = {

@@ -19,13 +19,13 @@
     user_id: base.user_root
     
 - |
-  I check that idea on draft state.
+  I check that the idea is in draft state.
 -
   !assert {model: idea.idea, id: idea_idea_0}:
     - state == 'draft'  
     
 - |
-  I open this idea by click on "Open" button.
+  I open this idea by clicking on the "Open" button.
 - 
   !workflow {model: idea.idea, action: idea_open, ref: idea_idea_0}
   

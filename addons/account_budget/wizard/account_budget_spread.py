@@ -27,16 +27,15 @@ class account_budget_spread(osv.osv_memory):
     _name = 'account.budget.spread'
     _description = 'Account Budget spread '
     _columns = {
-        'fiscalyear': fields.many2one('account.fiscalyear','Fiscal Year', required=True),
+        'fiscalyear': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         }
 
     def check_spread(self, cr, uid, ids, context=None):
-        service = netsvc.LocalService("object_proxy")
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [])[0]
-        res = service.execute(cr.dbname, uid, 'account.budget.post', 'spread', context['active_ids'], data['fiscalyear'], data['amount'])
+        data = self.browse(cr, uid, ids, context=context)[0]
+        res = self.pool.get('account.budget.post').spread(cr, uid, context['active_ids'], data.fiscalyear.id, data.amount)
         return {}
 
 account_budget_spread()

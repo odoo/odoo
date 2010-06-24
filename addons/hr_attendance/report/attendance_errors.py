@@ -36,7 +36,7 @@ class attendance_print(report_sxw.rml_parse):
         })
 
     def _get_employees(self, emp_ids):
-        emp_obj_list = self.pool.get('hr.employee').browse(self.cr,self.uid,emp_ids)
+        emp_obj_list = self.pool.get('hr.employee').browse(self.cr, self.uid, emp_ids)
         return emp_obj_list    
         
 #    def _sign(self, dt):
@@ -50,7 +50,7 @@ class attendance_print(report_sxw.rml_parse):
 #            return dt.strftime(format)
 
     def _lst(self, employee_id, dt_from, dt_to, max, *args):
-        self.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action in (%s,%s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
+        self.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action IN (%s,%s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
         res = self.cr.dictfetchall()
         for r in res:
             if r['action'] == 'sign_out':
@@ -66,7 +66,7 @@ class attendance_print(report_sxw.rml_parse):
         return res
 
     def _lst_total(self, employee_id, dt_from, dt_to, max, *args):
-        self.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action in (%s,%s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
+        self.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action IN (%s,%s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
         res = self.cr.dictfetchall()
         if not res:
             return ('/','/')

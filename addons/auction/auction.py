@@ -34,7 +34,7 @@ class auction_artists(osv.osv):
     _columns = {
         'name': fields.char('Artist/Author Name', size=64, required=True),
         'pseudo': fields.char('Pseudo', size=64),
-        'birth_death_dates':fields.char('Birth / Death dates',size=64),
+        'birth_death_dates':fields.char('Birth / Death dates', size=64),
         'biography': fields.text('Biography'),
     }
 auction_artists()
@@ -45,7 +45,7 @@ auction_artists()
 class auction_dates(osv.osv):
     _name = "auction.dates"
 
-    def _adjudication_get(self, cr, uid, ids, prop, unknow_none,unknow_dict):
+    def _adjudication_get(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         tmp={}
         for id in ids:
             tmp[id]=0.0
@@ -97,15 +97,21 @@ class auction_dates(osv.osv):
         # objects vendus mais non factures
         #TODO: convert this query to tiny API
         lots_obj = self.pool.get('auction.lots')
-        cr.execute('select count(*) as c from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
+        cr.execute('select count(*) as c from auction_lots where auction_id IN %s and state=%s and obj_price>0', (tuple(ids),'draft',))
+        cr.execute('SELECT COUNT(*) AS c '
+                   'FROM auction_lots '
+                   'WHERE auction_id IN %s '
+                   'AND state=%s AND obj_price>0', (tuple(ids), 'draft'))
         nbr = cr.fetchone()[0]
         ach_uids = {}
-        cr.execute('select id from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
+        cr.execute('SELECT id FROM auction_lots '
+                   'WHERE auction_id IN %s '
+                   'AND state=%s AND obj_price>0', (tuple(ids), 'draft'))
         r = lots_obj.lots_invoice(cr, uid, [x[0] for x in cr.fetchall()],{},None)
-        cr.execute('select id from auction_lots where auction_id =ANY(%s) and obj_price>0',(ids,))
+        cr.execute('select id from auction_lots where auction_id IN %s and obj_price>0',(tuple(ids),))
         ids2 = [x[0] for x in cr.fetchall()]
     #   for auction in auction_ids:
-        c = lots_obj.seller_trans_create(cr, uid, ids2,{})
+        c = lots_obj.seller_trans_create(cr, uid, ids2, {})
         self.write(cr, uid, ids, {'state':'closed'}) #close the auction
         return True
 auction_dates()
@@ -115,7 +121,9 @@ auction_dates()
 # Deposits
 #----------------------------------------------------------
 def _inv_uniq(cr, ids):
-    cr.execute('select name from auction_deposit where id =ANY(%s)',(ids,))
+    cr.execute('SELECT id FROM auction_lots '
+                   'WHERE auction_id IN %s '
+                   'AND obj_price>0', (tuple(ids),))
     for datas in cr.fetchall():
         cr.execute('select count(*) from auction_deposit where name=%s', (datas[0],))
         if cr.fetchone()[0]>1:
@@ -231,7 +239,9 @@ def _type_get(self, cr, uid,ids):
 # Lots
 #----------------------------------------------------------
 def _inv_constraint(cr, ids):
-    cr.execute('select id, bord_vnd_id, lot_num from auction_lots where id =ANY(%s)', (ids,))
+    cr.execute('SELECT id, bord_vnd_id, lot_num FROM auction_lots '
+               'WHERE id IN %s',
+               (tuple(ids),))
     for datas in cr.fetchall():
         cr.execute('select count(*) from auction_lots where bord_vnd_id=%s and lot_num=%s', (datas[1],datas[2]))
         if cr.fetchone()[0]>1:

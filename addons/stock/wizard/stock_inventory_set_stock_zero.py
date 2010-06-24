@@ -32,22 +32,19 @@ import wizard
 class inventory_set_stock_zero(osv.osv_memory):
     _name = "stock.inventory.set.stock.zero"
     _description = "Set Stock to 0"
+    
     _columns = {
             'location_id': fields.many2one('stock.location', 'Location', required=True), 
-            }
+    }
     
     def do_merge(self, cr, uid, ids, context):
-        """ 
-             To set stock to Zero 
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param context: A standard dictionary 
-             
-             @return:  
-        
+        """ To set stock to Zero 
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: the ID or list of IDs if we want more than one 
+        @param context: A standard dictionary 
+        @return:  
         """            
         invent_obj = pooler.get_pool(cr.dbname).get('stock.inventory')
         invent_line_obj = pooler.get_pool(cr.dbname).get('stock.inventory.line')

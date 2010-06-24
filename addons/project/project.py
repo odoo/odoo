@@ -92,10 +92,10 @@ class project(osv.osv):
                 FROM
                     project_task
                 WHERE
-                    project_id =ANY(%s) AND
+                    project_id IN %s AND
                     state<>'cancelled'
                 GROUP BY
-                    project_id''',(ids2,))
+                    project_id''',(tuple(ids2),))
             progress = dict(map(lambda x: (x[0], (x[1], x[2], x[3])), cr.fetchall()))
         for project in self.browse(cr, uid, ids, context=context):
             s = [0.0, 0.0, 0.0]
@@ -123,7 +123,7 @@ class project(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
-        'priority': fields.integer('Sequence'),
+        'priority': fields.integer('Sequence', help="Gives the sequence order when displaying a list of task"),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose."),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
@@ -150,14 +150,14 @@ class project(osv.osv):
              if leave['date_start'] > leave['date']:
                  return False
          return True
-    
+
     def _check_escalation(self, cr, uid, ids):
          project_obj = self.browse(cr, uid, ids[0])
          if project_obj.project_escalation_id:
              if project_obj.project_escalation_id.id == project_obj.id:
                  return False
-         return True 
-     
+         return True
+
     _constraints = [
         (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date']),
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
@@ -196,7 +196,7 @@ class project(osv.osv):
         res = super(project, self).copy(cr, uid, id, default, context)
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
         if ids:
-            cr.execute('update project_task set active=True where project_id =ANY(%s)',(ids,))
+            cr.execute('update project_task set active=True where project_id IN %s',(tuple(ids),))
         return res
 
     def duplicate_template(self, cr, uid, ids, context={}):
@@ -272,7 +272,7 @@ class task(osv.osv):
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
         res = {}
-        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id =ANY(%s) GROUP BY task_id",(ids,))
+        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
         for task in self.browse(cr, uid, ids, context=context):
             res[task.id] = {'effective_hours': hours.get(task.id, 0.0), 'total_hours': task.remaining_hours + hours.get(task.id, 0.0)}
@@ -343,7 +343,6 @@ class task(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
-        'user_id': lambda obj, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'priority': lambda *a: '2',
         'progress': lambda *a: 0,

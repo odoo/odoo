@@ -61,7 +61,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
         # remove osv_memory class becaz it does not have demo data
         if obj_list:
-            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model =ANY(%s)",(obj_list,))
+            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model IN %s",(tuple(obj_list),))
             res = cr.fetchall()
             print res
             for remove_obj in res:

@@ -29,10 +29,8 @@ class crm_claim(osv.osv, crm.crm_case):
     _name = "crm.claim"
     _description = "Claim Cases"
     _order = "id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread']
     _columns = {
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'id': fields.integer('ID', readonly=True), 
         'name': fields.char('Name', size=128, required=True), 
         'active': fields.boolean('Active', required=False), 
@@ -74,7 +72,8 @@ class crm_claim(osv.osv, crm.crm_case):
         'company_id': fields.many2one('res.company', 'Company'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"), 
+                                # domain="[('partner_id','=',partner_id)]"
+                                 ), 
         'email_cc': fields.text('Watchers Emails', size=252, help="These people will receive a copy of the future communication between partner and users by email"), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."), 
         'partner_name': fields.char("Employee's Name", size=64), 
@@ -89,6 +88,8 @@ class crm_claim(osv.osv, crm.crm_case):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('res_model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('res_model','=',_name)]),
     }
 
     _defaults = {

@@ -117,7 +117,7 @@ class account_balance_report(osv.osv_memory):
             context = {}
         sql = """
             SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql,(data['form']['date_from'],))
+        cr.execute(sql, (data['form']['date_from'],))
         res = cr.dictfetchall()
         if res:
 

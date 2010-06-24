@@ -92,9 +92,9 @@ class account_analytic_line(osv.osv):
                 company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
 
             # Compute based on pricetype
-            pricetype=self.pool.get('product.price.type').browse(cr,uid,company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
+            pricetype=self.pool.get('product.price.type').browse(cr, uid, company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
             # Take the company currency as the reference one
-            context['currency_id']=company_obj.browse(cr,uid,company_id).currency_id.id
+            context['currency_id']=company_obj.browse(cr, uid, company_id).currency_id.id
             amount_unit=prod.price_get(pricetype.field, context)[prod.id]
             amount=amount_unit*unit_amount or 1.0
             return {'value': {

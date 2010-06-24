@@ -32,6 +32,7 @@
     'init_xml': [],
     'update_xml': [
         'marketing_campaign_mailchimp_view.xml',
+        'wizard/create_list_view.xml',
     ],
     'demo_xml': [],
     'installable': True,

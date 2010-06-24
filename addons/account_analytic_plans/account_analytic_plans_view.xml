@@ -129,10 +129,10 @@
         src_model="account.analytic.plan"
         id="account_analytic_instance_model_open"/>
 
-    <menuitem
-        name="Analytic Distribution's models" parent="account.account_def_analytic_journal"
-        id="menu_account_analytic_plan_instance_action"
-        action="account_analytic_plan_instance_action"/>
+<!--    <menuitem-->
+<!--        name="Analytic Distribution's models" parent="account.account_def_analytic_journal"-->
+<!--        id="menu_account_analytic_plan_instance_action"-->
+<!--        action="account_analytic_plan_instance_action"/>-->
 
     <record model="ir.ui.view" id="account_analytic_plan_instance_line_form">
         <field name="name">account.analytic.plan.instance.line.form</field>
@@ -192,11 +192,16 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-    <menuitem
-        parent="account.account_analytic_def_account"
-        id="menu_account_analytic_plan_action"
-        action="account_analytic_plan_form_action"/>
+	
+	<menuitem
+        parent="account.menu_analytic"
+        name="Multi Plans"
+        id="menu_account_analytic_multi_plan_action"
+        />
+     <menuitem
+         parent="menu_account_analytic_multi_plan_action"
+         id="menu_account_analytic_plan_action"
+         action="account_analytic_plan_form_action"/>	
 
     <record model="ir.ui.view" id="account_analytic_plan_line_form">
         <field name="name">account.analytic.plan.line.form</field>

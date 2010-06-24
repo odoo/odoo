@@ -178,7 +178,7 @@ class account_followup_print_all(osv.osv_memory):
             msg_unsent = ''
             count = 0
             data_user = user_obj.browse(cr, uid, uid)
-            move_lines = line_obj.browse(cr,uid,data['partner_ids'][0][2])
+            move_lines = line_obj.browse(cr, uid, data['partner_ids'][0][2])
             partners = []
             dict_lines = {}
             for line in move_lines:
@@ -186,7 +186,7 @@ class account_followup_print_all(osv.osv_memory):
                 dict_lines[line.name.id] =line
             for partner in partners:
                 ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
-                data_lines = move_obj.browse(cr,uid,ids_lines)
+                data_lines = move_obj.browse(cr, uid, ids_lines)
                 followup_data = dict_lines[partner.id]
                 dest = False
                 if partner.address:
@@ -272,7 +272,7 @@ class account_followup_print_all(osv.osv_memory):
         data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
         date = 'date' in context and context['date'] or data['date']
         for id in to_update.keys():
-            if to_update[id]['partner_id'] in data['partner_ids'][0][2]:
+            if to_update[id]['partner_id'] in data['partner_ids']:
                 cr.execute(
                     "UPDATE account_move_line "\
                     "SET followup_line_id=%s, followup_date=%s "\

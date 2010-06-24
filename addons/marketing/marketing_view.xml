@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-	   
-        <menuitem name="Marketing" icon="terp-crm" id="marketing_menu" sequence="10"/>
+
+        <menuitem name="Marketing" icon="terp-crm" id="marketing_menu" sequence="17"/>
 
         <record id="view_marketing_installer" model="ir.ui.view">
             <field name="name">marketing.installer.view</field>
@@ -21,9 +21,18 @@
                          position="attributes">
                     <attribute name="string">OpenERP provides tools to automate your leads process, design marketing campaigns and profile efficiently your customers.</attribute>
                   </xpath>
+                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                       <attribute name='rowspan'>13</attribute>
+                       <attribute name='string'></attribute>
+                 </xpath>
+                  <xpath expr="//button[@string='Install Modules']" position="attributes">
+                            <attribute name="string">Configure</attribute>
+                  </xpath>
                   <group colspan="8">
-                        <field name="marketing_campaign" />
+                        <field name="email_template" />
                         <field name="crm_profiling" />
+                        <field name="marketing_campaign" />
+                        <field name="marketing_campaign_mailchimp" />
                   </group>
                 </data>
             </field>

@@ -85,9 +85,9 @@ class document_directory_content(osv.osv):
 
     _columns = {
         'object_id': fields.many2one('ir.model', 'Object', oldname= 'ics_object_id'),
-        'obj_iterate': fields.boolean('Iterate object',help="If set, a separate \
+        'obj_iterate': fields.boolean('Iterate object', help="If set, a separate \
                         instance will be created for each record of Object"),
-        'fname_field': fields.char("Filename field",size=16,help="The field of the \
+        'fname_field': fields.char("Filename field", size=16, help="The field of the \
                         object used in the filename. Has to be a unique identifier."),
         'ics_domain': fields.char('Domain', size=64),
         'ics_field_ids': fields.one2many('document.directory.ics.fields', 'content_id', 'Fields Mapping')
@@ -138,7 +138,7 @@ class document_directory_content(osv.osv):
                 dctx2 = { 'active_id': ro['id'] }
                 if fname_fld:
                     dctx2['active_'+fname_fld] = ro[fname_fld]
-                n = node_content(tname, node, node.context,content,dctx=dctx2, act_id = ro['id'])
+                n = node_content(tname, node, node.context, content, dctx=dctx2, act_id = ro['id'])
                 n.fill_fields(cr, dctx2)
                 res2.append(n)
             return res2
