@@ -62,7 +62,7 @@
         </record>
         
         <record id="process_node_supplieraccountingentries0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_form"/>
+            <field name="menu_id" ref="account.menu_action_move_journal_line_form"/>
             <field name="model_id" ref="account.model_account_move"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Accounting&quot;&quot;&quot;" name="name"/>
@@ -72,7 +72,7 @@
         </record>
         
         <record id="process_node_supplierpaymentorder0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_search"/>
+            <field name="menu_id" ref="account.menu_eaction_account_moves_all"/>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Payment Order&quot;&quot;&quot;" name="name"/>
@@ -83,7 +83,7 @@
         </record>
         
         <record id="process_node_supplierreconciliation0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_search"/>
+            <field name="menu_id" ref="account.menu_eaction_account_moves_all"/>
             <field name="model_id" ref="account.model_account_move_reconcile"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Reconciliation&quot;&quot;&quot;" name="name"/>
