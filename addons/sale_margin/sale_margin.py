@@ -26,6 +26,16 @@ class sale_order_line(osv.osv):
     _name = "sale.order.line"
     _inherit = "sale.order.line"
 
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
+        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
+            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag)
+        purchase_price = self.pool.get('product.product').browse(cr, uid, product).standard_price
+        res['value'].update({'purchase_price':purchase_price})
+        return res
+
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for line in self.browse(cr, uid, ids):
@@ -38,7 +48,7 @@ class sale_order_line(osv.osv):
         return res
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True),
+        'margin': fields.function(_product_margin, method=True, string='Margin', store={}),
         'purchase_price': fields.float('Cost Price', digits=(16,2))
     }
 
