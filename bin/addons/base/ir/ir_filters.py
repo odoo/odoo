@@ -39,6 +39,11 @@ class ir_filters(osv.osv):
         'context': fields.char('Context Value', size=250, required=True), 
         'model_id': fields.selection(_list_all_models, 'Model', required=True), 
     }
+    
+    def get_filters(self, cr, uid, model):
+        act_ids = self.search(cr,uid,[('model_id','=',model),('user_id','=',uid)])
+        my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'])
+        return my_acts
 
 ir_filters()
 
