@@ -65,7 +65,6 @@ send an Email to Invited Person')
             context = {}
 
         model = False
-        model_field = False
         context_id = context and context.get('active_id', False) or False
         if not context or not context.get('model'):
             return {}
