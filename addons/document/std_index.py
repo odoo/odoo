@@ -178,18 +178,10 @@ class ImageNoIndex(indexer):
 cntIndex.register(ImageNoIndex())
 
 # other opendocument formats:
-#vnd.oasis.opendocument.chart-template
-#vnd.oasis.opendocument.chart
-#vnd.oasis.opendocument.database
-#vnd.oasis.opendocument.formula-template
-#vnd.oasis.opendocument.formula
-#vnd.oasis.opendocument.graphics-template
-#vnd.oasis.opendocument.graphics
-#vnd.oasis.opendocument.image
-#vnd.oasis.opendocument.presentation-template
-#vnd.oasis.opendocument.presentation
-#vnd.oasis.opendocument.spreadsheet-template
-#vnd.oasis.opendocument.spreadsheet
+# chart-template chart database
+# formula-template formula graphics-template graphics
+# image
+# presentation-template presentation spreadsheet-template spreadsheet
 
 class OpenDoc(indexer):
     """ Index OpenDocument files.
