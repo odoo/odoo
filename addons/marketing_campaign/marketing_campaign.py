@@ -395,9 +395,9 @@ class marketing_campaign_workitem(osv.osv):
                     'object': wi.activity_id,
                     'transition': wi.activity_id.to_ids
                 }
-                expr = eval(str(wi.activity_id.condition), eval_context)
-                if expr:
-                    try:
+                try:
+                    expr = eval(str(wi.activity_id.condition), eval_context)
+                    if expr:
                         result = True
                         if wi.campaign_id.mode in ('manual','active'):
                             result = self.pool.get('marketing.campaign.activity').process(
@@ -410,11 +410,10 @@ class marketing_campaign_workitem(osv.osv):
                             if type(result) == type({}) and 'error_msg' in result:
                                vals['error_msg'] = result['error_msg']
                             self.write(cr, uid, wi.id, vals)
-                    except Exception,e:
-                        self.write(cr, uid, wi.id, {'state': 'exception', 'error_msg': str(e)})
-                else :
-                    self.write(cr, uid, wi.id, {'state': 'cancelled'})
-
+                    else:
+                        self.write(cr, uid, wi.id, {'state': 'cancelled'})
+                except Exception,e:
+                    self.write(cr, uid, wi.id, {'state': 'exception', 'error_msg': str(e)})
         return True
 
     def process_all(self, cr, uid, camp_ids=None, context={}):
@@ -422,16 +421,19 @@ class marketing_campaign_workitem(osv.osv):
         if not camp_ids:
             camp_ids = camp_obj.search(cr, uid, [('state','=','running')], context=context)
         for camp in camp_obj.browse(cr, uid, camp_ids, context=context):
-            if camp.mode in ('test_realtime','active'):
-                workitem_ids = self.search(cr, uid, [('state', '=', 'todo'),
-                        ('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))])
-            elif camp.mode == 'test':
-                workitem_ids = self.search(cr, uid, [('state', '=', 'todo')])
-            else:
-                # manual states are not processed automatically
-                workitem_ids = []
-            if workitem_ids:
-                self.process(cr, uid, workitem_ids, context)
+            while True:
+                if camp.mode in ('test_realtime','active'):
+                    workitem_ids = self.search(cr, uid, [('state', '=', 'todo'),
+                            ('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))])
+                elif camp.mode == 'test':
+                    workitem_ids = self.search(cr, uid, [('state', '=', 'todo')])
+                else:
+                    # manual states are not processed automatically
+                    workitem_ids = []
+                if workitem_ids:
+                    self.process(cr, uid, workitem_ids, context)
+                else:
+                    break
 
     def preview(self, cr, uid, ids, context):
         res = {}

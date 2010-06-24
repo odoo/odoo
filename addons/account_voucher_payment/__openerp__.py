@@ -38,8 +38,10 @@
 
     "demo_xml" : [],
     "update_xml" : [
+        "security/ir.model.access.csv",
+        "wizard/account_voucher_unreconcile_view.xml",
         "account_voucher_payment_view.xml",
-        "account_voucher_payment_wizard.xml"
+
     ],
     "test" : [
 #        "test/account_voucher.yml",

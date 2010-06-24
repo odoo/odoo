@@ -46,8 +46,8 @@
                 <search string="Search Coda">
                    <group col="10" colspan="4">
                         <field name="journal_id"/>
-                        <field name="date"/>
                         <field name="user_id" default="uid"/>
+                        <field name="date"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -66,12 +66,12 @@
 		<field name="res_model">account.coda</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
-        <field name="context">{"search_default_user_id":uid}</field>		
+        <field name="context">{"search_default_user_id":uid}</field>
 		<field name="search_view_id" ref="view_aaccount_coda_filter"/>
 	</record>
 
 	<menuitem name="Coda Statements" parent="account.menu_finance_periodical_processing" id="menu_account_coda"  sequence="12"/>
-	
+
 	<menuitem name="Coda Statements" parent="menu_account_coda" id="menu_account_coda_statement" action="action_account_coda" sequence="15"/>
 
 	<menuitem name="Import Coda Statements" action="action_account_coda_import" parent="menu_account_coda"

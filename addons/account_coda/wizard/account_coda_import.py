@@ -28,11 +28,8 @@ from osv import fields
 from osv import osv
 from tools.translate import _
 
-
-
-
 def str2date(date_str):
-    return time.strftime("%y/%m/%d",time.strptime(date_str,"%d%m%y"))
+    return time.strftime("%y/%m/%d", time.strptime(date_str, "%d%m%y"))
 
 def str2float(str):
     try:
@@ -45,41 +42,40 @@ def list2float(lst):
         return str2float((lambda s : s[:-3] + '.' + s[-3:])(lst))
     except:
         return 0.0
-    
+
 class account_coda_import(osv.osv_memory):
     _name = 'account.coda.import'
     _description = 'Account Coda Import'
     _columns = {
             'journal_id': fields.many2one('account.journal', 'Bank Journal', required=True),
-            'def_payable': fields.many2one('account.account', 'Default Payable Account',domain=[('type','=','payable')],required=True,help= 'Set here the payable account that will be used, by default, if the partner is not found'),
-            'def_receivable': fields.many2one('account.account', 'Default Receivable Account',domain=[('type','=','receivable')],required=True,help= 'Set here the receivable account that will be used, by default, if the partner is not found',),
-            'awaiting_account': fields.many2one('account.account', 'Default Account for Unrecognized Movement',required=True,help= 'Set here the default account that will be used, if the partner is found but does not have the bank account , or if he is domiciled',),
-            'coda': fields.binary('Coda File', required=True),   
-            'note':fields.text('Log'),       
+            'def_payable': fields.many2one('account.account', 'Default Payable Account', domain=[('type', '=', 'payable')], required=True, help= 'Set here the payable account that will be used, by default, if the partner is not found'),
+            'def_receivable': fields.many2one('account.account', 'Default Receivable Account', domain=[('type', '=', 'receivable')], required=True, help= 'Set here the receivable account that will be used, by default, if the partner is not found',),
+            'awaiting_account': fields.many2one('account.account', 'Default Account for Unrecognized Movement', required=True, help= 'Set here the default account that will be used, if the partner is found but does not have the bank account , or if he is domiciled',),
+            'coda': fields.binary('Coda File', required=True),
+            'note':fields.text('Log'),
     }
     def coda_parsing(self, cr, uid, ids, context):
-        
-      
+
         journal_obj=self.pool.get('account.journal')
-        account_period_obj = self.pool.get('account.period')   
-        partner_bank_obj=self.pool.get('res.partner.bank')   
-        bank_statement_obj=self.pool.get('account.bank.statement')
-        move_line_obj=self.pool.get('account.move.line')
-        bank_statement_line_obj=self.pool.get('account.bank.statement.line')
-        statement_reconcile_obj=self.pool.get('account.bank.statement.reconcile')
-        account_coda_obj=self.pool.get('account.coda')
+        account_period_obj = self.pool.get('account.period')
+        partner_bank_obj = self.pool.get('res.partner.bank')
+        bank_statement_obj = self.pool.get('account.bank.statement')
+        move_line_obj = self.pool.get('account.move.line')
+        bank_statement_line_obj = self.pool.get('account.bank.statement.line')
+        statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
+        account_coda_obj = self.pool.get('account.coda')
         mod_obj = self.pool.get('ir.model.data')
-        
+
         data = self.read(cr, uid, ids)[0]
-        
-        
+
+
         codafile = data['coda']
         journal_code = journal_obj.browse(cr, uid, data['journal_id'], context).code
-      
+
         period = account_period_obj.find(cr, uid, context=context)[0]
         def_pay_acc = data['def_payable']
         def_rec_acc = data['def_receivable']
-    
+
         str_log = ""
         err_log = "Errors:\n------\n"
         nb_err=0
@@ -87,7 +83,7 @@ class account_coda_import(osv.osv_memory):
         str_log1 = "Coda File is Imported  :  "
         str_not=''
         str_not1=''
-    
+
         bank_statements=[]
         bank_statement = {}
         recordlist = base64.decodestring(codafile).split('\n')
@@ -95,12 +91,12 @@ class account_coda_import(osv.osv_memory):
         for line in recordlist:
             if line[0] == '0':
                 # header data
-               
+
                 bank_statement["bank_statement_line"]={}
                 bank_statement_lines = {}
                 bank_statement['date'] = str2date(line[5:11])
                 bank_statement['journal_id']=data['journal_id']
-                period_id = account_period_obj.search(cr, uid, [('date_start','<=',time.strftime('%Y-%m-%d',time.strptime(bank_statement['date'],"%y/%m/%d"))),('date_stop','>=',time.strftime('%Y-%m-%d',time.strptime(bank_statement['date'],"%y/%m/%d")))])
+                period_id = account_period_obj.search(cr, uid, [('date_start', '<=', time.strftime('%Y-%m-%d', time.strptime(bank_statement['date'], "%y/%m/%d"))), ('date_stop', '>=', time.strftime('%Y-%m-%d', time.strptime(bank_statement['date'], "%y/%m/%d")))])
                 bank_statement['period_id'] = period_id and period_id[0] or False
                 bank_statement['state']='draft'
             elif line[0] == '1':
@@ -112,7 +108,7 @@ class account_coda_import(osv.osv_memory):
                 bank_statement["acc_number"]=line[5:17]
                 bank_statement["acc_holder"]=line[64:90]
                 bank_statement['name'] = journal_code + ' ' + str(line[2:5])
-    
+
             elif line[0]=='2':
                 # movement data record 2
                 if line[1]=='1':
@@ -123,19 +119,19 @@ class account_coda_import(osv.osv_memory):
                     st_line['extra_note'] = ''
                     st_line['statement_id']=0
                     st_line['ref'] = line[2:10]
-                    st_line['date'] = time.strftime('%Y-%m-%d',time.strptime(str2date(line[115:121]),"%y/%m/%d")),
+                    st_line['date'] = time.strftime('%Y-%m-%d', time.strptime(str2date(line[115:121]), "%y/%m/%d")),
                     st_line_amt = list2float(line[32:47])
-    
+
                     if line[61]=='1':
                         st_line['toreconcile'] = True
                         st_line['name']=line[65:77]
                     else:
                         st_line['toreconcile'] = False
                         st_line['name']=line[62:115]
-    
+
                     st_line['free_comm'] = st_line['name']
-                    st_line['val_date']=time.strftime('%Y-%m-%d',time.strptime(str2date(line[47:53]),"%y/%m/%d")),
-                    st_line['entry_date']=time.strftime('%Y-%m-%d',time.strptime(str2date(line[115:121]),"%y/%m/%d")),
+                    st_line['val_date']=time.strftime('%Y-%m-%d', time.strptime(str2date(line[47:53]), "%y/%m/%d")),
+                    st_line['entry_date']=time.strftime('%Y-%m-%d', time.strptime(str2date(line[115:121]), "%y/%m/%d")),
                     st_line['partner_id']=0
                     if line[31] == '1':
                         st_line_amt = - st_line_amt
@@ -148,14 +144,14 @@ class account_coda_import(osv.osv_memory):
                 elif line[1] == '2':
                     st_line_name = line[2:6]
                     bank_statement_lines[st_line_name].update({'account_id': data['awaiting_account']})
-    
+
                 elif line[1] == '3':
                     # movement data record 3.1
                     st_line_name = line[2:6]
                     st_line_partner_acc = str(line[10:47]).strip()
                     cntry_number=line[10:47].strip()
                     contry_name=line[47:125].strip()
-                    bank_ids = partner_bank_obj.search(cr, uid, [('acc_number','=',st_line_partner_acc)])
+                    bank_ids = partner_bank_obj.search(cr, uid, [('acc_number', '=', st_line_partner_acc)])
                     bank_statement_lines[st_line_name].update({'cntry_number': cntry_number, 'contry_name': contry_name})
                     if bank_ids:
                         bank = partner_bank_obj.browse(cr, uid, bank_ids[0], context)
@@ -167,9 +163,9 @@ class account_coda_import(osv.osv_memory):
                                 bank_statement_lines[st_line_name].update({'account_id': bank.partner_id.property_account_receivable.id})
                     else:
                         nb_err += 1
-                        err_log += _('The bank account %s is not defined for the partner %s.\n')%(cntry_number,contry_name)
+                        err_log += _('The bank account %s is not defined for the partner %s.\n')%(cntry_number, contry_name)
                         bank_statement_lines[st_line_name].update({'account_id': data['awaiting_account']})
-    
+
                     bank_statement["bank_statement_line"]=bank_statement_lines
             elif line[0]=='3':
                 if line[1] == '1':
@@ -187,18 +183,18 @@ class account_coda_import(osv.osv_memory):
                 if line[41] == '1':
                     bal_end = - bal_end
                 bank_statement["balance_end_real"]= bal_end
-    
+
             elif line[0]=='9':
                 # footer record
-                
+
                 bank_statements.append(bank_statement)
         #end for
         bkst_list=[]
         for statement in bank_statements:
             try:
-                bk_st_id =bank_statement_obj.create(cr,uid,{
+                bk_st_id =bank_statement_obj.create(cr, uid, {
                     'journal_id': statement['journal_id'],
-                    'date':time.strftime('%Y-%m-%d',time.strptime(statement['date'],"%y/%m/%d")),
+                    'date':time.strftime('%Y-%m-%d', time.strptime(statement['date'], "%y/%m/%d")),
                     'period_id':statement['period_id'] or period,
                     'balance_start': statement["balance_start"],
                     'balance_end_real': statement["balance_end_real"],
@@ -210,15 +206,15 @@ class account_coda_import(osv.osv_memory):
                     line=lines[value]
                     reconcile_id = False
                     if line['toreconcile']:
-                        rec_id = move_line_obj.search(cr, uid, [('name','=',line['name']),('reconcile_id','=',False),('account_id.reconcile','=',True)])
+                        rec_id = move_line_obj.search(cr, uid, [('name', '=', line['name']), ('reconcile_id', '=', False), ('account_id.reconcile', '=', True)])
                         if rec_id:
                             reconcile_id = statement_reconcile_obj.create(cr, uid, {
                                 'line_ids': [(6, 0, rec_id)]
                                 }, context=context)
                     str_not1 = ''
                     if line.has_key('contry_name') and line.has_key('cntry_number'):
-                        str_not1="Partner name:%s \n Partner Account Number:%s \n Communication:%s \n Value Date:%s \n Entry Date:%s \n"%(line["contry_name"],line["cntry_number"],line["free_comm"]+line['extra_note'],line["val_date"][0],line["entry_date"][0])
-                    id=bank_statement_line_obj.create(cr,uid,{
+                        str_not1="Partner name:%s \n Partner Account Number:%s \n Communication:%s \n Value Date:%s \n Entry Date:%s \n"%(line["contry_name"], line["cntry_number"], line["free_comm"]+line['extra_note'], line["val_date"][0], line["entry_date"][0])
+                    id=bank_statement_line_obj.create(cr, uid, {
                                'name':line['name'],
                                'date': line['date'],
                                'amount': line['amount'],
@@ -229,18 +225,18 @@ class account_coda_import(osv.osv_memory):
                                'note':str_not1,
                                'ref':line['ref'],
                                })
-    
-                str_not= "\n \n Account Number: %s \n Account Holder Name: %s " %(statement["acc_number"],statement["acc_holder"])
+
+                str_not= "\n \n Account Number: %s \n Account Holder Name: %s " %(statement["acc_number"], statement["acc_holder"])
                 std_log += "\nStatement : %s , Date  : %s, Starting Balance :  %.2f , Ending Balance : %.2f \n"\
                           %(statement['name'], statement['date'], float(statement["balance_start"]), float(statement["balance_end_real"]))
                 bkst_list.append(bk_st_id)
-    
+
             except osv.except_osv, e:
                 cr.rollback()
                 nb_err+=1
                 err_log += '\n Application Error : ' + str(e)
                 raise # REMOVEME
-    
+
             except Exception, e:
                 cr.rollback()
                 nb_err+=1
@@ -253,7 +249,7 @@ class account_coda_import(osv.osv_memory):
                 raise
         err_log += '\n\nNumber of statements : '+ str(len(bkst_list))
         err_log += '\nNumber of error :'+ str(nb_err) +'\n'
-    
+
         account_coda_obj.create(cr, uid, {
             'name':codafile,
             'statement_ids': [(6, 0, bkst_list,)],
@@ -262,28 +258,28 @@ class account_coda_import(osv.osv_memory):
             'date':time.strftime("%Y-%m-%d"),
             'user_id':uid,
             })
-        test='' 
+        test=''
         test=str_log1 + std_log + err_log
-        self.write(cr, uid,ids, {'note':test}, context=context)
+        self.write(cr, uid, ids, {'note':test}, context=context)
         extraction= { 'statment_ids':bkst_list}
         context.update({ 'statment_ids':bkst_list})
-        model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'),('name', '=', 'account_coda_note_view')], context=context)
+        model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'account_coda_note_view')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {
                 'name': _('Result'),
-                'res_id': ids[0],                
+                'res_id': ids[0],
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'account.coda.import',
                 'view_id': False,
                 'target':'new',
-                'views': [(resource_id,'form')],
+                'views': [(resource_id, 'form')],
                 'context': context,
                 'type': 'ir.actions.act_window',
         }
-    def action_open_window(self, cr, uid,data,  context):
+    def action_open_window(self, cr, uid, data, context):
         return {
-            'domain':"[('id','in',%s)]"%(context.get('statment_ids',False)),
+            'domain':"[('id','in',%s)]"%(context.get('statment_ids', False)),
             'name': 'Statement',
             'view_type': 'form',
             'view_mode': 'tree,form',

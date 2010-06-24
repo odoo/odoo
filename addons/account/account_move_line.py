@@ -529,7 +529,6 @@ class account_move_line(osv.osv):
         return result
 
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
-        print 'XXXXXXXXXXXXXXXXXXXXXXXXXXX : ', move_id, partner_id, account_id, debit, credit, date, journal
         val = {}
         val['date_maturity'] = False
 
@@ -791,7 +790,7 @@ class account_move_line(osv.osv):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
             return result
-       
+
         fld = []
         fields = {}
         flds = []
@@ -801,12 +800,12 @@ class account_move_line(osv.osv):
         
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
-        all_journal = []
+        all_journal = [None]
         for journal in journals:
             all_journal.append(journal.id)
             for field in journal.view_id.columns_id:
                 if not field.field in fields:
-                    fields[field.field] = [journal.id]
+                    fields[field.field] = [None, journal.id]
                     fld.append((field.field, field.sequence))
                     flds.append(field.field)
                 else:
