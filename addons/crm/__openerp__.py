@@ -69,7 +69,6 @@ Create dashboard for CRM that includes:
         'crm_opportunity_data.xml',
         'crm_phonecall_data.xml',
     ],
-
     'update_xml': [
         'wizard/crm_lead_to_partner_view.xml',
         'wizard/crm_lead_to_opportunity_view.xml',

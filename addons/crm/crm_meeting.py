@@ -43,9 +43,7 @@ class crm_meeting(osv.osv, crm_case):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ["calendar.event"]
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread',"calendar.event"]
     _columns = {
         # From crm.case
         'name': fields.char('Summary', size=124, required=True), 
@@ -59,7 +57,6 @@ class crm_meeting(osv.osv, crm_case):
         'id': fields.integer('ID'),
 
         # Meeting fields
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
             ),
@@ -69,6 +66,8 @@ class crm_meeting(osv.osv, crm_case):
                                  'event_id', 'attendee_id', 'Attendees'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date_deadline': fields.datetime('Deadline'),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('res_model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('res_model','=',_name)]),
         'state': fields.selection([('open', 'Confirmed'),
                                     ('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),

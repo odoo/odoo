@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import account_common_report
+
 import account_automatic_reconcile
 import account_move_line_reconcile_select
 import account_move_line_unreconcile_select
@@ -32,7 +34,8 @@ import account_journal_select
 import account_move_bank_reconcile
 import account_subscription_generate
 import account_aged_trial_balance
-import account_general_ledger_report
+#import account_general_ledger_report
+import account_report_general_ledger
 import account_third_party_ledger
 import account_partner_balance_report
 import account_balance_report
@@ -58,6 +61,8 @@ import account_central_journal
 import account_general_journal
 import account_change_currency
 
+import account_bs_report
+import account_pl_report
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 
