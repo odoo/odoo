@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -161,54 +161,33 @@ class ir_values(osv.osv):
             else:
                 res_id=False
 
-            where1 = ['key=%s','model=%s']
-            where2 = [key,str(m)]
-            where_opt = []
+            where = ['key=%s','model=%s']
+            params = [key, str(m)]
             if key2:
-                where1.append('key2=%s')
-                where2.append(key2[:200])
+                where.append('key2=%s')
+                params.append(key2[:200])
             else:
-                dest = where1
-                if not key2_req or meta:
-                    dest=where_opt
-                dest.append('key2 is null')
-
+                if key2_req and not meta:
+                    where.append('key2 is null')
             if res_id_req and (models[-1][0]==m):
                 if res_id:
-                    where1.append('res_id=%d' % (res_id,))
+                    where.append('res_id=%s')
+                    params.append(res_id)
                 else:
-                    where1.append('(res_id is NULL)')
+                    where.append('(res_id is NULL)')
             elif res_id:
                 if (models[-1][0]==m):
-                    where1.append('(res_id=%d or (res_id is null))' % (res_id,))
-                    where_opt.append('res_id=%d' % (res_id,))
+                    where.append('(res_id=%s or (res_id is null))')
+                    params.append(res_id)
                 else:
-                    where1.append('res_id=%d' % (res_id,))
+                    where.append('res_id=%s')
+                    params.append(res_id)
 
-#           if not without_user:
-            where_opt.append('user_id=%d' % (uid,))
-
-            result = []
-            ok = True
-            result_ids = {}
-            while ok:
-                if not where_opt:
-                    cr.execute('select id,name,value,object,meta, key from ir_values where ' +\
-                            ' and '.join(where1)+' and user_id is null', where2)
-                else:
-                    cr.execute('select id,name,value,object,meta, key from ir_values where ' +\
-                            ' and '.join(where1+where_opt), where2)
-                for rec in cr.fetchall():
-                    if rec[0] in result_ids:
-                        continue
-                    if rec[2]:                    
-                        result.append(rec)
-                        result_ids[rec[0]] = True
-                if len(where_opt):
-                    where_opt.pop()
-                else:
-                    ok = False
-
+            where.append('(user_id=%s or (user_id IS NULL))')
+            params.append(uid)
+            clause = ' and '.join(where)
+            cr.execute('select id,name,value,object,meta, key from ir_values where ' + clause, params)
+            result = cr.fetchall()
             if result:
                 break
 
@@ -250,16 +229,14 @@ class ir_values(osv.osv):
         res2 = res[:]
         for r in res:
             if type(r[2])==type({}) and 'type' in r[2]:
-                if r[2]['type'] in ('ir.actions.report.xml','ir.actions.act_window','ir.actions.wizard'):
-                    if r[2].has_key('groups_id'):
-                        groups = r[2]['groups_id']
-                        if len(groups) > 0:
-                            cr.execute("SELECT count(*) FROM res_groups_users_rel WHERE gid = ANY(%s) AND uid=%s",(groups, uid))
-                            gr_ids = cr.fetchall()
-                            if not gr_ids[0][0] > 0:
-                                res2.remove(r)
-                            if r[1]=='Menuitem' and not res2:
-                                  raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
+                groups = r[2].get('groups_id')
+                if groups:
+                        cr.execute('SELECT COUNT(1) FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',(tuple(groups), uid))
+                        cnt = cr.fetchone()[0]
+                        if cnt:
+                            res2.remove(r)
+                        if r[1] == 'Menuitem' and not res2:
+                            raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
         return res2
 ir_values()
 
