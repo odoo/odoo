@@ -36,7 +36,7 @@ class account_common_report(osv.osv_memory):
 
         'period_from': fields.many2one('account.period', 'Start period'),
         'period_to': fields.many2one('account.period', 'End period'),
-        #not used. Do we really need it? 'period_ids': fields.many2many('account.period', 'ledger_period_rel', 'ledger_id', 'period_id', 'Periods'), 
+        #not used. Do we really need it? 'period_ids': fields.many2many('account.period', 'ledger_period_rel', 'ledger_id', 'period_id', 'Periods'),
 
         'journal_ids': fields.many2many('account.journal', 'account_common_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
 
@@ -53,16 +53,16 @@ class account_common_report(osv.osv_memory):
         #'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
-    def _get_company(self, cr, uid, context=None):
-        user_obj = self.pool.get('res.users')
-        company_obj = self.pool.get('res.company')
-        if context is None:
-            context = {}
-        user = user_obj.browse(cr, uid, uid, context=context)
-        if user.company_id:
-           return user.company_id.id
-        else:
-           return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
+#    def _get_company(self, cr, uid, context=None):
+#        user_obj = self.pool.get('res.users')
+#        company_obj = self.pool.get('res.company')
+#        if context is None:
+#            context = {}
+#        user = user_obj.browse(cr, uid, uid, context=context)
+#        if user.company_id:
+#           return user.company_id.id
+#        else:
+#           return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
 
     def _get_account(self, cr, uid, context=None):
         tmp = self.pool.get('account.account').search(cr, uid, [], limit=1 )
