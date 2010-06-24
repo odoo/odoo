@@ -12,6 +12,16 @@
         domain="[('partner_id', '=', active_id)]"
         groups="base.group_extended"
         />
+    
+    <act_window
+            id="act_crm_phonecall_crm_meeting_new"
+            name="Meetings"
+            res_model="crm.meeting"
+            src_model="crm.phonecall"
+            view_mode="tree,form,calendar,"
+            context="{'default_duration': 4.0, 'default_phonecall_id': active_id}"
+            domain="[('phonecall_id', '=', active_id)]"
+            view_type="form"/>
 
 <!-- PHONE CALLS (menu)  -->
 
