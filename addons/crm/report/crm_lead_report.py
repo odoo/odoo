@@ -147,7 +147,7 @@ class crm_lead_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
-                    (select count(id) from mailgate_message where res_id=c.id and res_model='crm.lead') as email,
+                    (select count(id) from mailgate_message where res_id=c.id and model='crm.lead') as email,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
                     avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24) as  delay_expected,

@@ -258,6 +258,8 @@
                         <field name="section_id"
                             invisible="context.get('invisible_section', True)" />
                         <field name="user_id"/>
+                        <field name="priority" invisible="1"/>
+                        <field name="categ_id" invisible="1"/>
                         <field name="state"/>
                         <button name="case_open" string="Open"
                             states="draft,pending" type="object"
@@ -299,14 +301,14 @@
                 <field name="arch" type="xml">
                     <search string="Search Opportunities">
                         <filter icon="terp-check"
-                            string="Current"
+                            string="Current"  help="Current Opportunities"
                             name="current"
                             domain="[('state','in',('draft','open'))]"/>
                         <filter icon="terp-camera_test"
-                            string="Open"
+                            string="Open"  help="Open Opportunities"
                             domain="[('state','=','open')]"/>
                         <filter icon="terp-gtk-media-pause"
-                            string="Pending"
+                            string="Pending"  help="Pending Opportunities"
                             domain="[('state','=','pending')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="Today"
@@ -352,8 +354,10 @@
                             <separator orientation="vertical" />
                             <filter string="Creation" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'create_date'}" />
-                            <filter string="Exp.Closing" icon="terp-go-month"
-                                domain="[]" context="{'group_by':'date_deadline'}" />
+                            <filter string="Exp.Closing"
+                                icon="terp-go-month"
+                                help="Expected Closing" domain="[]"
+                                context="{'group_by':'date_deadline'}" />
                         </group>
                     </search>
                 </field>
