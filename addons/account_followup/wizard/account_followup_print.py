@@ -271,7 +271,7 @@ class account_followup_print_all(osv.osv_memory):
         data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
         date = 'date' in context and context['date'] or data['date']
         for id in to_update.keys():
-            if to_update[id]['partner_id'] in data['partner_ids'][0][2]:
+            if to_update[id]['partner_id'] in data['partner_ids']:
                 cr.execute(
                     "UPDATE account_move_line "\
                     "SET followup_line_id=%s, followup_date=%s "\
