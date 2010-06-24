@@ -108,8 +108,7 @@ class email_template(osv.osv):
         'enforce_from_account':fields.many2one(
                    'email_template.account',
                    string="Enforce From Account",
-                   help="Emails will be sent only from this account(which are approved).",
-                   domain=[('state','=','approved')]),
+                   help="Emails will be sent only from this account(which are approved)."),
         'from_email' : fields.related('enforce_from_account', 'email_id',
                                                 type='char', string='From',),        
         'def_to':fields.char(
