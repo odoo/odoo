@@ -377,6 +377,9 @@ property or property parameter."),
     _defaults = {
         'state': lambda *x: 'needs-action',
     }
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        raise osv.except_osv(_('Warning!'), _('Can not Duplicate'))
 
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
@@ -875,7 +878,7 @@ class calendar_event(osv.osv):
             value = {
                  'duration': 24
                  }
-            return {'value': value}
+            duration = 0.0
 
         start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         if end_date and not duration:
@@ -1005,17 +1008,17 @@ class calendar_event(osv.osv):
     _columns = {
         'id': fields.integer('ID'),
         'sequence': fields.integer('Sequence'),
-        'name': fields.char('Description', size=64, required=False),
-        'date': fields.datetime('Date'),
-        'date_deadline': fields.datetime('Deadline'),
+        'name': fields.char('Description', size=64, required=False, states={'done': [('readonly', True)]}),
+        'date': fields.datetime('Date', states={'done': [('readonly', True)]}),
+        'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
         'create_date': fields.datetime('Created', readonly=True),
-        'duration': fields.float('Duration'),
-        'description': fields.text('Your action'),
+        'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
+        'description': fields.text('Description', states={'done': [('readonly', True)]}),
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
-             ('confidential', 'Confidential')], 'Mark as'), 
-        'location': fields.char('Location', size=264, help="Location of Event"), 
+             ('confidential', 'Confidential')], 'Mark as', states={'done': [('readonly', True)]}), 
+        'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}), 
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], \
-                                                'Show as'),
+                                                'Show as', states={'done': [('readonly', True)]}),
         'base_calendar_url': fields.char('Caldav URL', size=264),
         'exdate': fields.text('Exception Date/Times', help="This property \
 defines the list of date/time exceptions for arecurring calendar component."),
@@ -1029,14 +1032,14 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
-                            ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'),
-        'alarm_id': fields.many2one('res.alarm', 'Alarm'),
+                            ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency', states={'done': [('readonly', True)]}),
+        'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]}),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
         'recurrent_uid': fields.integer('Recurrent ID'),
         'recurrent_id': fields.datetime('Recurrent ID date'),
         'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, \
                          string='Timezone', store=True),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'freq': fields.selection([('None', 'No Repeat'), \
                                 ('secondly', 'Secondly'), \
                                 ('minutely', 'Minutely'), \
@@ -1068,7 +1071,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'end_date': fields.date('Repeat Until'), 
         'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', \
                                  'event_id', 'attendee_id', 'Attendees'), 
-        'allday': fields.boolean('All Day'), 
+        'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}), 
         'active': fields.boolean('Active', help="If the active field is set to \
 true, it will allow you to hide the event alarm information without removing it.")
     }

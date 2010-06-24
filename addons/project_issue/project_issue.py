@@ -178,8 +178,8 @@ class project_issue(osv.osv, crm.crm_case):
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
                                 method=True, multi='working_days_close', type="float", store=True),
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('res_model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('res_model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
     }
 
     def _get_project(self, cr, uid, context):

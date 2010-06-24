@@ -183,14 +183,18 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         emails = [this.email_to]
         body = case_pool.format_body(this.message)
         email_from = this.email_from or False
-        case_pool._history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, details=body, email_from=email_from)
 
+        flag = False
         flag = tools.email_send(
             email_from, 
             emails, 
             this.subject, 
             body, 
         )
+        if flag:
+            case_pool._history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, subject=this.subject, details=body, email_from=email_from)
+        if not flag:
+                raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
         if this.add_cc:
             case_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc + ', ' + this.email_to or this.email_to})
         return {}
@@ -199,7 +203,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         message = []
         lead_proxy = self.pool.get('crm.lead')
         lead = lead_proxy.browse(cr, uid, lead_id, context=context)
-        if lead.type == 'lead':
+        if not lead.type or lead.type == 'lead':
                 field_names = [
                     'partner_name', 'title', 'function', 'street', 'street2', 
                     'zip', 'city', 'country_id', 'state_id', 'email_from', 
