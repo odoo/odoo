@@ -286,7 +286,7 @@ class pos_order(osv.osv):
         'date_validation': fields.function(_get_date_payment, method=True, string='Validation Date', type='date',  store=True),
         'date_payment': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date',  store=True),
         'date_validity': fields.date('Validity Date', required=True),
-        'user_id': fields.many2one('res.users', 'Connected Salesman', readonly=True),
+        'user_id': fields.many2one('res.users', 'Connected Salesman'),
         'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_all, method=True, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
@@ -297,7 +297,7 @@ class pos_order(osv.osv):
         'price_type': fields.selection([
             ('tax_excluded','Tax excluded')
         ], 'Price method', required=True),
-        'statement_ids': fields.one2many('account.bank.statement.line','pos_statement_id','Payments'),
+        'statement_ids': fields.one2many('account.bank.statement.line','pos_statement_id','Payments',states={'draft': [('readonly', False)]},readonly=True),
         'payments': fields.one2many('pos.payment', 'order_id', 'Order Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one( 'res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
@@ -1175,16 +1175,16 @@ class pos_order_line(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         }
     
-    def _check_qty(self, cr, uid, ids):
-        lines = self.browse(cr, uid, ids)
-        for line in lines:
-            if line.qty <= 0:
-                return False
-        return True
+#    def _check_qty(self, cr, uid, ids):
+#        lines = self.browse(cr, uid, ids)
+#        for line in lines:
+#            if line.qty <= 0:
+#                return False
+#        return True
     
-    _constraints = [
-        (_check_qty, 'Order quantity cannot be negative or zero !', ['qty']),
-    ]
+#    _constraints = [
+#        (_check_qty, 'Order quantity cannot be negative or zero !', ['qty']),
+#    ]
     
     def create(self, cr, user, vals, context={}):
         if vals.get('product_id'):

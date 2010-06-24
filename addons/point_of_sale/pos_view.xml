@@ -12,9 +12,9 @@
             <field name="arch" type="xml">
                 <form string="Sales Order POS">
                     <group col="6" colspan="4">
-                        <field name="user_salesman_id" />
+                        <!--field name="user_salesman_id" />
                         <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
-                        <field name="contract_number" groups="base.group_extended"/>
+                        <field name="contract_number" groups="base.group_extended"/> -->
 
                     </group>
                      <notebook colspan="4">
@@ -23,14 +23,14 @@
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275" />
                                     <field name="qty" />
-                                    <field name="qty_rfd" groups="base.group_extended"/>
+                                    <!--field name="qty_rfd" groups="base.group_extended"/-->
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
-                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" />
+                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" invisible="1"/>
                                     <field name="price_unit" readonly="1"/>
                                     <field name="notice"/>
-                                    <field name="serial_number"/>
+                                    <!--field name="serial_number"/-->
                                     <field name="price_subtotal" />
-                                    <field name="price_subtotal_incl"/>
+                                    <field name="price_subtotal_incl" sum="Subtotal"/>
                                 </tree>
                                 <form string="Order lines" >
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
@@ -47,8 +47,8 @@
                             <group colspan="4" col="7">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="%(action_pos_discount)d" string="D_iscount" type="action" states="draft"/>
-                                <button name="dummy_button" string="Compute" type="object" />
+                                <!--button name="%(action_pos_discount)d" string="D_iscount" type="action" states="draft"/>
+                                <button name="dummy_button" string="Compute" type="object" /-->
                             </group>
 
                             <group colspan="4" col="9" groups="base.group_extended">
@@ -76,11 +76,12 @@
                         <page string="Order and Payment">
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Order Information" colspan="4"/>
+				<field name="user_salesman_id" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="shop_id" widget="selection"  />
                                 <field name="name"/>
-                                <field name="user_id" />
-                                <field name="sale_manager" />
+                                <field name="user_id" string="Salesman"/>
+                                <!--field name="sale_manager" /-->
                                 <field name="price_type" />
                             </group>
                             <group colspan="2" col="2" name="Type">
@@ -92,7 +93,8 @@
                             </group>
                             <group colspan="4">
                                 <separator string="Invoicing" colspan="4"/>
-                                <field name="sale_journal" domain="[('type','=','sale'),('company_id','=',company_id)]"/>
+                                <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
+                                <field name="sale_journal" domain="[('type','=','sale')]" widget="selection"/>
                                 <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection"/>
                                 <field name="invoice_id"/>
                                 <group colspan="2" col="3">
