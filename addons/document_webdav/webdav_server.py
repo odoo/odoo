@@ -183,7 +183,7 @@ class DAVAuthProvider(OpenERPAuthProvider):
         """ authenticate, but also allow the False db, meaning to skip
             authentication when no db is specified.
         """
-        if db is False and user is None and passwd is None:
+        if db is False:
             return True
         return OpenERPAuthProvider.authenticate(self, db, user, passwd, client_address)
 
