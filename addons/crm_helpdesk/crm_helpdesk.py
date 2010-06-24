@@ -28,10 +28,8 @@ class crm_helpdesk(osv.osv, crm.crm_case):
     _name = "crm.helpdesk"
     _description = "Helpdesk Cases"
     _order = "id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread']
     _columns = {
-            'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
             'id': fields.integer('ID', readonly=True), 
             'name': fields.char('Name', size=128, required=True), 
             'active': fields.boolean('Active', required=False), 
