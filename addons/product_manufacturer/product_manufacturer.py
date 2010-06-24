@@ -1,5 +1,5 @@
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,7 +14,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -24,25 +24,12 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     _name = 'product.product'
     _columns = {
+        'manufacturer' : fields.many2one('res.partner', 'Manufacturer'),
+        'manufacturer_pname' : fields.char('Manufacturer Product Name', size=64),
+        'manufacturer_pref' : fields.char('Manufacturer Product Code', size=64),
         'attribute_ids': fields.one2many('product.manufacturer.attribute', 'product_id', 'Attributes'),
-        'manufacturer_ids': fields.one2many('res.partner.manufacturer', 'product_id', 'Manufacturers'),
     }
 product_product()
-
-class res_partner_manufacturer(osv.osv):
-    _name = 'res.partner.manufacturer'
-    _rec_name = 'manufacturer_id'
-    _columns = {
-        'manufacturer_id' : fields.many2one('res.partner', 'Manufacturer'),
-        'country_id' : fields.many2one('res.country', 'Country'),
-        'authorized' : fields.boolean('Authorized'),
-        'product_id': fields.many2one('product.product', 'Product', ondelete='cascade'),
-    }
-    _defaults = {
-        'authorized': True,
-    }
-
-res_partner_manufacturer()
 
 class product_attribute(osv.osv):
     _name = "product.manufacturer.attribute"

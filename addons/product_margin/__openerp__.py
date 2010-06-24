@@ -31,7 +31,10 @@ the report has several options to help you get the data you need.
 """,
     'author': 'Tiny',
     'depends': ['base', 'product', 'account'],
-    'update_xml': ['wizard/product_margin_view.xml','product_margin_view.xml'],
+    'update_xml': [
+                   'security/ir.model.access.csv',
+                   'wizard/product_margin_view.xml',
+                   'product_margin_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,

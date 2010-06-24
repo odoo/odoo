@@ -584,6 +584,9 @@ class account_journal_column(osv.osv):
         result = []
         cols = self.pool.get('account.move.line')._columns
         for col in cols:
+            if col in ('period_id', 'journal_id'):
+                continue
+                
             result.append( (col, cols[col].string) )
         result.sort()
         return result
@@ -657,11 +660,9 @@ class account_journal(osv.osv):
 #           })
         return journal_id
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context={}, limit=100):
         if not args:
             args = []
-        if context is None:
-            context = {}
         ids = []
         if name:
             ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit, context=context)
@@ -832,7 +833,7 @@ class account_period(osv.osv):
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context={}, limit=80):
         if args is None:
             args = []
         if context is None:
@@ -844,7 +845,7 @@ class account_period(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None):
+    def write(self, cr, uid, ids, vals, context={}):
         obj=[]
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
@@ -1143,6 +1144,7 @@ class account_move(osv.osv):
         return amount
 
     def _centralise(self, cr, uid, move, mode, context=None):
+        assert(mode in ('debit', 'credit'), 'Invalid Mode') #to prevent sql injection
         if context is None:
             context = {}
 
@@ -1190,10 +1192,7 @@ class account_move(osv.osv):
         else:
             line_id2 = 0
 
-        cr.execute('SELECT SUM(%s) '\
-                   'FROM account_move_line '\
-                   'WHERE move_id=%s AND id<>%s',
-                   (mode, move.id, line_id2))
+        cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
         return True
