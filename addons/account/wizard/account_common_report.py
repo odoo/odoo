@@ -102,8 +102,9 @@ class account_common_report(osv.osv_memory):
             result['date_from'] = data['form']['date_from']
             result['date_to'] = data['form']['date_to']
         elif data['form']['filter'] == 'filter_period':
-            period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])[0]['date_start']
-            period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])[0]['date_stop']
+            period_obj = self.pool.get('account.period')
+            period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])['date_start']
+            period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])['date_stop']
             cr.execute('SELECT id FROM account_period WHERE date_start >= %s AND date_stop <= %s', (period_date_start, period_date_stop))
             result['periods'] = lambda x: x[0], cr.fetchall()
         return result
@@ -118,8 +119,7 @@ class account_common_report(osv.osv_memory):
         data['model'] = context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id'])[0]
         used_context = self._build_context(cr, uid, ids, data, context)
-        query_line = obj_acc_move_line._query_get(cr, uid,
-                obj='l', context=used_context)
+        query_line = obj_acc_move_line._query_get(cr, uid, obj='l', context=used_context)
         return self._print_report(cr, uid, ids, data, query_line, context)
 account_common_report()
 
