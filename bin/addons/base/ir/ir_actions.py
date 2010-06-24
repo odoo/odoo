@@ -256,7 +256,8 @@ class act_window(osv.osv):
         'auto_search':fields.boolean('Auto Search'),
         'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
-        'menus': fields.char('Menus', size=4096)
+        'menus': fields.char('Menus', size=4096),
+        'help': fields.text('Action description')
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',

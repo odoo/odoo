@@ -665,7 +665,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 process_sql_file(cr, fp)
             elif ext == '.csv':
                 noupdate = (kind == 'init')
-                tools.convert_csv_import(cr, module_name, file, id_map, mode, noupdate)
+                tools.convert_csv_import(cr, module_name, pathname, file.read(), id_map, mode, noupdate)
             elif ext == '.yml':
                 tools.convert_yaml_import(cr, module_name, file, id_map, mode, noupdate)
             else:

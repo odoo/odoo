@@ -3175,14 +3175,15 @@ class orm(orm_template):
             # The parent_left/right computation may take up to
             # 5 seconds. No need to recompute the values if the
             # parent is the same. Get the current value of the parent
-            base_query = 'SELECT id FROM %s WHERE id IN %%s AND %s' % \
-                            (self._table, self._parent_name)
-            params = (tuple(ids),)
             parent_val = vals[self._parent_name]
             if parent_val:
-                cr.execute(base_query + " != %s", params + (parent_val,))
+                query = "SELECT id FROM %s WHERE id IN %%s AND (%s != %%s OR %s IS NULL)" % \
+                                (self._table, self._parent_name, self._parent_name)
+                cr.execute(query, (tuple(ids), parent_val))
             else:
-                cr.execute(base_query + " IS NULL", params)
+                query = "SELECT id FROM %s WHERE id IN %%s AND (%s IS NOT NULL)" % \
+                                (self._table, self._parent_name)
+                cr.execute(query, (tuple(ids),))
             parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
         upd0 = []
@@ -3864,7 +3865,6 @@ class orm(orm_template):
         data = self.read(cr, uid, [id], context=context_wo_lang)[0]
 
         fields = self.fields_get(cr, uid, context=context)
-        trans_data=[]
         for f in fields:
             ftype = fields[f]['type']
 
@@ -3883,40 +3883,68 @@ class orm(orm_template):
             elif ftype in ('one2many', 'one2one'):
                 res = []
                 rel = self.pool.get(fields[f]['relation'])
-                if data[f] != False:
+                if data[f]:
+                    # duplicate following the order of the ids
+                    # because we'll rely on it later for copying
+                    # translations in copy_translation()!
+                    data[f].sort()
                     for rel_id in data[f]:
                         # the lines are first duplicated using the wrong (old)
                         # parent but then are reassigned to the correct one thanks
-                        # to the (4, ...)
-                        d,t = rel.copy_data(cr, uid, rel_id, context=context)
+                        # to the (0, 0, ...)
+                        d = rel.copy_data(cr, uid, rel_id, context=context)
                         res.append((0, 0, d))
-                        trans_data += t
                 data[f] = res
             elif ftype == 'many2many':
                 data[f] = [(6, 0, data[f])]
 
-        trans_obj = self.pool.get('ir.translation')
-        #TODO: optimize translations
-        for f in fields:
-            trans_name = ''
-            if f in self._columns and self._columns[f].translate:
-                trans_name = self._name+","+f
-            elif f in self._inherit_fields and self._inherit_fields[f][2].translate:
-                trans_name = self._inherit_fields[f][0] + "," + f
-
-            if trans_name:
-                trans_ids = trans_obj.search(cr, uid, [
-                        ('name', '=', trans_name),
-                        ('res_id','=',data['id'])
-                    ])
-
-                trans_data.extend(trans_obj.read(cr,uid,trans_ids,context=context))
-
         del data['id']
+
+        # make sure we don't break the current parent_store structure and
+        # force a clean recompute!
+        for parent_column in ['parent_left', 'parent_right']:
+            data.pop(parent_column, None)
 
         for v in self._inherits:
             del data[self._inherits[v]]
-        return data, trans_data
+        return data
+
+    def copy_translations(self, cr, uid, old_id, new_id, context=None):
+        trans_obj = self.pool.get('ir.translation')
+        fields = self.fields_get(cr, uid, context=context)
+
+        translation_records = []
+        for field_name, field_def in fields.items():
+            # we must recursively copy the translations for o2o and o2m
+            if field_def['type'] in ('one2one', 'one2many'):
+                target_obj = self.pool.get(field_def['relation'])
+                old_record, new_record  = self.read(cr, uid, [old_id, new_id], [field_name], context=context)
+                # here we rely on the order of the ids to match the translations
+                # as foreseen in copy_data()
+                old_childs = sorted(old_record[field_name])
+                new_childs = sorted(new_record[field_name])
+                for (old_child, new_child) in zip(old_childs, new_childs):
+                    # recursive copy of translations here
+                    target_obj.copy_translations(cr, uid, old_child, new_child, context=context)
+            # and for translatable fields we keep them for copy
+            elif field_def.get('translate'):
+                trans_name = ''
+                if field_name in self._columns:
+                    trans_name = self._name + "," + field_name
+                elif field_name in self._inherit_fields:
+                    trans_name = self._inherit_fields[field_name][0] + "," + field_name
+                if trans_name:
+                    trans_ids = trans_obj.search(cr, uid, [
+                            ('name', '=', trans_name),
+                            ('res_id','=', old_id)
+                    ])
+                    translation_records.extend(trans_obj.read(cr,uid,trans_ids,context=context))
+
+        for record in translation_records:
+            del record['id']
+            record['res_id'] = new_id
+            trans_obj.create(cr, uid, record, context=context)
+
 
     def copy(self, cr, uid, id, default=None, context=None):
         """
@@ -3931,13 +3959,9 @@ class orm(orm_template):
         :return: True
 
         """
-        trans_obj = self.pool.get('ir.translation')
-        data, trans_data = self.copy_data(cr, uid, id, default, context)
+        data = self.copy_data(cr, uid, id, default, context)
         new_id = self.create(cr, uid, data, context)
-        for record in trans_data:
-            del record['id']
-            record['res_id'] = new_id
-            trans_obj.create(cr, uid, record, context)
+        self.copy_translations(cr, uid, id, new_id, context)
         return new_id
 
     def exists(self, cr, uid, ids, context=None):

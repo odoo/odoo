@@ -585,7 +585,10 @@ def trans_generate(lang, modules, dbname=None):
 
         for constraint in pool.get(model)._constraints:
             msg = constraint[1]
-            push_translation(module, 'constraint', model, 0, encode(msg))
+            # Check presence of __call__ directly instead of using
+            # callable() because it will be deprecated as of Python 3.0
+            if not hasattr(msg, '__call__'):
+                push_translation(module, 'constraint', model, 0, encode(msg))
 
         for field_name,field_def in pool.get(model)._columns.items():
             if field_def.translate:

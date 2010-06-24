@@ -380,7 +380,7 @@ class _rml_canvas(object):
                 try:
                     u = urllib.urlopen(str(node.get('file')))
                     s = cStringIO.StringIO(u.read())
-                except:
+                except Exception:
                     u = file(os.path.join(self.path,str(node.get('file'))), 'rb')
                     s = cStringIO.StringIO(u.read())
         img = ImageReader(s)
@@ -788,7 +788,7 @@ class _rml_template(object):
             try :
                 gr = pt.findall('pageGraphics')\
                     or pt[1].findall('pageGraphics')
-            except :
+            except Exception: # FIXME: be even more specific, perhaps?
                 gr=''
             if len(gr):
                 drw = _rml_draw(self.localcontext,gr[0], self.doc, images=images, path=self.path, title=self.title)
@@ -818,7 +818,7 @@ def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
     try:
         from customfonts import SetCustomFonts
         SetCustomFonts(r)
-    except:
+    except Exception:
         pass
     fp = cStringIO.StringIO()
     r.render(fp)
@@ -832,7 +832,7 @@ def parseString(rml, localcontext = {},fout=None, images={}, path='.',title=None
     try:
         from customfonts import SetCustomFonts
         SetCustomFonts(r)
-    except:
+    except Exception:
         pass
 
     if fout:

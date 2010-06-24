@@ -989,7 +989,7 @@
             <field name="context">{'manual':True}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
-        <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom"/>
+        <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom" groups="base.group_extended"/>
         <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
 
         <record id="action_model_fields" model="ir.actions.act_window">
@@ -1477,8 +1477,8 @@
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
-        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"
-            groups="base.group_extended"/>
+        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" 
+        		parent="base.next_id_4" groups="base.group_extended" sequence="20"/>
 
         <record id="action_start_configurator" model="ir.actions.server">
           <field name="name">Launch Configuration Wizards</field>
