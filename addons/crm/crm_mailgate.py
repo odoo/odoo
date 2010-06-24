@@ -38,9 +38,8 @@ from tools import command_re
 
 class mailgate_thread(osv.osv):
     """ mailgate_thread """
-
     _name = "mailgate.thread"
-    _inherit = "mailgate.thread"    
+    _inherit = "mailgate.thread"
 
     def message_new(self, cr, uid, msg, context):
         """

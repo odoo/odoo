@@ -96,11 +96,10 @@ class crm_send_new_email(osv.osv_memory):
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id
-                model = hist.model_id.model
+                model = hist.res_model
                 model_pool = self.pool.get(model)
-                res_ids = model_pool.search(cr, uid, [('thread_id','=', hist.thread_id.id)])
-                res_id = res_ids and res_ids[0] or False
-                case = model_pool.browse(cr, uid, res_id)
+                case = model_pool.browse(cr, uid, hist.res_id)
+                res_id = hist.res_id
             emails = [obj.email_to] + (obj.email_cc or '').split(',')
             emails = filter(None, emails)
             body = obj.text
@@ -120,15 +119,14 @@ class crm_send_new_email(osv.osv_memory):
             if message_id:
                 x_headers['References'] = "%s" % (message_id)
 
-            flag = False
-            
+            print case.section_id
             flag = tools.email_send(
                 email_from,
                 emails,
                 obj.subject,
                 body,
                 attach=attach,
-                reply_to=case.section_id.reply_to,
+                reply_to=case.section_id and case.section_id.reply_to or email_from,
                 openobject_id=str(case.id),
                 x_headers=x_headers
             )
@@ -196,15 +194,14 @@ class crm_send_new_email(osv.osv_memory):
         include_original = context and context.get('include_original', False) or False
         res = {}
         for hist in hist_obj.browse(cr, uid, res_ids, context=context):
-            model = hist.model_id.model
+            model = hist.res_model
 
             # In the case where the crm.case does not exist in the database
             if not model:
                 return {}
 
             model_pool = self.pool.get(model)
-            res_ids = model_pool.search(cr, uid, [('thread_id','=', hist.thread_id.id)])
-            res_id = res_ids and res_ids[0] or False            
+            res_id = hist.res_id or False
             case = model_pool.browse(cr, uid, res_id)
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from or hist.email_from or False})

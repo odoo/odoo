@@ -30,14 +30,10 @@ class mailgate_thread(osv.osv):
     '''
     _name = 'mailgate.thread'
     _description = 'Mailgateway Thread'
-    _rec_name = 'thread' 
-
     _columns = {
-        'thread': fields.char('Thread', size=32, required=False), 
-        'message_ids': fields.one2many('mailgate.message', 'thread_id', 'Messages', domain=[('history', '=', True)], required=False), 
-        'log_ids': fields.one2many('mailgate.message', 'thread_id', 'Logs', domain=[('history', '=', False)], required=False), 
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False)]),
     }
-        
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
         """
         @param self: The object pointer
@@ -60,18 +56,16 @@ class mailgate_thread(osv.osv):
         if all(isinstance(case_id, (int, long)) for case_id in cases):
             cases = self.browse(cr, uid, cases, context=context)
 
-        model_obj = self.pool.get('ir.model')
         att_obj = self.pool.get('ir.attachment')
         obj = self.pool.get('mailgate.message')
 
         for case in cases:
-            model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
             data = {
                 'name': keyword, 
                 'user_id': uid, 
-                'model_id' : model_ids and model_ids[0] or False, 
+                'res_model' : case._name, 
+                'res_id': case.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
-                'thread_id': case.thread_id.id,
                 'message_id': message_id, 
             }
             attachments = []
@@ -83,7 +77,7 @@ class mailgate_thread(osv.osv):
                     'name': subject or 'History', 
                     'history': True, 
                     'user_id': uid, 
-                    'model_id' : model_ids and model_ids[0] or False, 
+                    'res_model' : case._name, 
                     'res_id': case.id,
                     'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                     'description': details or (hasattr(case, 'description') and case.description or False), 
@@ -94,16 +88,11 @@ class mailgate_thread(osv.osv):
                         (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
                          case.user_id.address_id.email) or tools.config.get('email_from', False), 
                     'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False, 
-                    'thread_id': case.thread_id.id, 
                     'message_id': message_id, 
                     'attachment_ids': [(6, 0, attachments)]
                 }
             res = obj.create(cr, uid, data, context)
         return True
-    
-    __history = history = _history
-    
-
 mailgate_thread()
 
 class mailgate_message(osv.osv):
@@ -112,15 +101,13 @@ class mailgate_message(osv.osv):
     '''
     _name = 'mailgate.message'
     _description = 'Mailgateway Message'
-    _order = 'date desc'
-
+    _order = 'id desc'
     _columns = {
         'name':fields.char('Message', size=64), 
-        'model_id': fields.many2one('ir.model', 'Model'), 
+        'res_model': fields.char('Object Name', size=128), 
         'res_id': fields.integer('Resource ID'),
-        'thread_id':fields.many2one('mailgate.thread', 'Thread'), 
         'date': fields.datetime('Date'), 
-        'history': fields.boolean('Is History?', required=False), 
+        'history': fields.boolean('Is History?'),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
         'message': fields.text('Description'), 
         'email_from': fields.char('Email From', size=84), 
@@ -135,5 +122,3 @@ class mailgate_message(osv.osv):
 
 mailgate_message()
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
