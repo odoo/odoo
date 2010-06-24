@@ -39,7 +39,7 @@
         </record>
     
         <record id="process_node_invoiceinvoice0" model="process.node">
-            <field name="menu_id" ref="account.menu_finance_invoice"/>
+            <field name="menu_id" ref="account.menu_finance_receivables"/>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Create Invoice&quot;&quot;&quot;" name="name"/>
@@ -50,7 +50,7 @@
         </record>
     
         <record id="process_node_accountingentries0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_form"/>
+            <field name="menu_id" ref="account.menu_action_move_journal_line_form"/>
             <field name="model_id" ref="account.model_account_move"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Accounting&quot;&quot;&quot;" name="name"/>
@@ -72,7 +72,7 @@
   		</record>
     
         <record id="process_node_paymententries0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_form"/>
+            <field name="menu_id" ref="account.menu_action_move_journal_line_form"/>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Payment&quot;&quot;&quot;" name="name"/>
@@ -83,7 +83,7 @@
         </record>
     
         <record id="process_node_reconciliation0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_search"/>
+            <field name="menu_id" ref="account.menu_eaction_account_moves_all"/>
             <field name="model_id" ref="account.model_account_move_reconcile"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Reconciliation&quot;&quot;&quot;" name="name"/>
@@ -105,7 +105,7 @@
         </record>
         
         <record id="process_node_accountingstatemententries0" model="process.node">
-            <field name="menu_id" ref="account.menu_action_move_line_search"/>
+            <field name="menu_id" ref="account.menu_eaction_account_moves_all"/>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
             <field eval="&quot;&quot;&quot;Bank Statement&quot;&quot;&quot;" name="name"/>

@@ -64,7 +64,7 @@
         <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="6"/>
 
        <menuitem
-            name="Periodic Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="3"/>
+            name="Periodic Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4"/>
         <menuitem
             parent="menu_eval_hr_config"
             id="menu_open_view_hr_evaluation_plan_tree"
@@ -257,7 +257,7 @@
                         />
 
                         <separator orientation="vertical"/>
-                        <field name="employee_id" widget="selection" select="1"/>
+                        <field name="employee_id" select="1"/>
                         <field name="plan_id" widget="selection" select="1"/>
                         </group>
                         <newline/>
@@ -349,8 +349,8 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                         <separator orientation="vertical"/>
-                        <field name="user_to_review_id" widget="selection"/>
-                        <field name="user_id" string="Interviewer" widget="selection"/>
+                        <field name="user_to_review_id"/>
+                        <field name="user_id" string="Interviewer"/>
                    </group>
                </search>
             </field>

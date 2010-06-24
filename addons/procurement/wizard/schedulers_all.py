@@ -46,9 +46,9 @@ class procurement_compute_all(osv.osv_memory):
         proc_obj = self.pool.get('procurement.order')
         for proc in self.browse(cr, uid, ids):
             proc_obj.run_scheduler(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname,\
-                    context=context)
+                    context=context)                    
         return {}
-    
+
     def procure_calculation(self, cr, uid, ids, context):
         """ 
         @param self: The object pointer.

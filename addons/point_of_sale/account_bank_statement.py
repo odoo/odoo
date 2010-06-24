@@ -221,7 +221,7 @@ class account_bank_statement(osv.osv):
         self.write(cr, uid, ids, {'date':time.strftime("%Y-%m-%d %H:%M:%S"), 'state':'open', 'name':number})
         return True
 
-    def button_confirm(self, cr, uid, ids, context=None):
+    def button_confirm(self, cr, uid, ids, context={}):
         
         """ Check the starting and ending detail of  statement 
         @return: True 
@@ -245,7 +245,10 @@ class account_bank_statement(osv.osv):
 
             self.write(cr, uid, statement.id, {'balance_end_real':Decimal(str(val_statement_line))+Decimal(str(val2)),'closing_date':time.strftime("%Y-%m-%d %H:%M:%S"),'state':'draft'})
            # self.write(cr, uid, statement.id, {'balance_end_real':bal_st+val_statement_line,'closing_date':time.strftime("%Y-%m-%d %H:%M:%S"),'state':'draft'})
-        return  super(account_bank_statement, self).button_confirm(cr, uid, ids, context=None)
+        return  super(account_bank_statement, self).button_confirm(cr, uid, ids, context={})
+    
+    def button_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'draft'}, context=context)
 
 account_bank_statement()
 

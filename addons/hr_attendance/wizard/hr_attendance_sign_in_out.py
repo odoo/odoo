@@ -33,16 +33,14 @@ class hr_si_so_ask(osv.osv_memory):
         'emp_id': fields.char('Empoyee ID', size=32, required=True, readonly=True),
                 }
     def _get_empname(self, cr, uid, context=None):
-        emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
+        emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:
-            employee = emp_obj.read(cr, uid, emp_id)[0]
-            return employee['name']
+            employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0].name
+            return employee
         return ''
 
     def _get_empid(self, cr, uid, context=None):
-        emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
+        emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:
             return emp_id[0]
         return False
@@ -74,11 +72,10 @@ class hr_sign_in_out(osv.osv_memory):
                 }
 
     def _get_empid(self, cr, uid, context=None):
-        emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
+        emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:
-            employee = emp_obj.read(cr, uid, emp_id)[0]
-            return {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0]}
+            employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0]
+            return {'name': employee.name, 'state': employee.state, 'emp_id': emp_id[0]}
         return {}
 
     def default_get(self, cr, uid, fields_list, context=None):
@@ -88,16 +85,15 @@ class hr_sign_in_out(osv.osv_memory):
         return res
 
     def si_check(self, cr, uid, ids, context=None):
-        
-        att_obj = self.pool.get('hr.attendance')
         obj_model = self.pool.get('ir.model.data')
+        att_obj = self.pool.get('hr.attendance')
         data = self.read(cr, uid, ids, [])[0]
         emp_id = data['emp_id']
         att_id = att_obj.search(cr, uid, [('employee_id', '=', emp_id)], limit=1, order='name desc')
-        last_att = att_obj.read(cr, uid, att_id)
+        last_att = att_obj.browse(cr, uid, att_id)
         if last_att:
             last_att = last_att[0]
-        cond = not last_att or last_att['action'] == 'sign_out'
+        cond = not last_att or last_att.action == 'sign_out'
         if cond:
             return self.sign_in(cr, uid, data, context)
         else:
@@ -114,17 +110,16 @@ class hr_sign_in_out(osv.osv_memory):
             }
 
     def so_check(self, cr, uid, ids, context=None):
-        
-        att_obj = self.pool.get('hr.attendance')
         obj_model = self.pool.get('ir.model.data')
         data = self.read(cr, uid, ids, [])[0]
+        att_obj = self.pool.get('hr.attendance')
         emp_id = data['emp_id']
         att_id = att_obj.search(cr, uid, [('employee_id', '=', emp_id),('action','!=','action')], limit=1, order='name desc')
-        last_att = att_obj.read(cr, uid, att_id)
+        last_att = att_obj.browse(cr, uid, att_id, context=context)
         if last_att:
             last_att = last_att[0]
         if not att_id and not last_att:
-            model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_attendance_message')], context=context)
+            model_data_ids = obj_model.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_hr_attendance_message')], context=context)
             resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
             return {
                 'name': _('Sign in / Sign out'),
@@ -140,7 +135,7 @@ class hr_sign_in_out(osv.osv_memory):
         if cond:
             return self.sign_out(cr, uid, data, context)
         else:
-            model_data_ids = self.pool.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_hr_attendance_si_ask')], context=context)
+            model_data_ids = self.pool.get('ir.model.data').search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_hr_attendance_si_ask')], context=context)
             resource_id = self.pool.get('ir.model.data').read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
             return {
                 'name': _('Sign in / Sign out'),
@@ -153,12 +148,11 @@ class hr_sign_in_out(osv.osv_memory):
             }
 
     def sign_in(self, cr, uid, data, context=None):
-        att_obj = self.pool.get('hr.attendance')
         emp_id = data['emp_id']
         if 'last_time' in data:
             if data['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):
                 raise osv.except_osv(_('UserError'), _('The sign-out date must be in the past'))
-            att_obj.create(cr, uid, {
+            self.pool.get('hr.attendance').create(cr, uid, {
                 'name': data['last_time'],
                 'action': 'sign_out',
                 'employee_id': emp_id
@@ -170,12 +164,11 @@ class hr_sign_in_out(osv.osv_memory):
         return {} # To do: Return Success message
 
     def sign_out(self, cr, uid, data, context=None):
-        att_obj = self.pool.get('hr_attendance')
         emp_id = data['emp_id']
         if 'last_time' in data:
             if data['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):
                 raise osv.except_osv(_('UserError'), _('The Sign-in date must be in the past'))
-            att_obj.create(cr, uid, {'name':data['last_time'], 'action':'sign_in',  'employee_id':emp_id})
+            self.pool.get('hr.attendance').create(cr, uid, {'name':data['last_time'], 'action':'sign_in',  'employee_id':emp_id})
         try:
             success = self.pool.get('hr.employee').attendance_action_change(cr, uid, [emp_id], 'sign_out')
         except:

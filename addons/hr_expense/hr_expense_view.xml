@@ -145,8 +145,8 @@
                       <separator orientation="vertical"/>
                       <field name="name" select='1'/>
                       <field name="date" select='1'/>
-                      <field name="user_id" select="1" widget="selection" string="User">
-                      		<filter icon="terp-personal+"
+                      <field name="user_id" select="1" string="User">
+                      <filter icon="terp-personal+"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
@@ -171,7 +171,7 @@
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
 
-        <menuitem id="next_id_49" name="Expenses" sequence="8"
+        <menuitem id="next_id_49" name="Expenses" sequence="4"
            parent="hr.menu_hr_root"/>
 
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses"
@@ -183,7 +183,7 @@
          <field name="inherit_id" ref="product.product_normal_form_view"/>
          <field name="type">form</field>
          <field name="arch" type="xml">
-            <field groups="base.group_extended" name="rental" position="after">
+            <field name="purchase_ok" position="after">
                <field name="hr_expense_ok"/>
             </field>
          </field>

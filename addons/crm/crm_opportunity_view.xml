@@ -15,7 +15,7 @@
 
         <menuitem action="crm_opportunity_categ_action"
             id="menu_crm_case_opportunity-act" name="Categories"
-            parent="menu_crm_config_opportunity" />
+            parent="menu_crm_config_opportunity" sequence="1"/>
 
         <!-- Opportunity Stages Form View-->
 
@@ -30,9 +30,9 @@
 
         <menuitem action="crm_opportunity_stage_act"
             id="menu_crm_opportunity_stage_act" name="Stages"
-            parent="menu_crm_config_opportunity" />
+            parent="menu_crm_config_opportunity" sequence="2"/>
 
-		<!-- Opportunity Resource Type Form View -->
+        <!-- Opportunity Resource Type Form View -->
 
         <record id="crm_opportunity_resource_act" model="ir.actions.act_window">
             <field name="name">Opportunity Resource Type</field>
@@ -45,7 +45,7 @@
 
         <menuitem action="crm_opportunity_resource_act"
             id="menu_crm_opportunity_resource_act" name="Resource"
-            parent="menu_crm_config_opportunity" />
+            parent="menu_crm_config_opportunity" sequence="3"/>
 
         <!-- Opportunities Form View -->
 
@@ -81,8 +81,10 @@
                             name="%(opportunity2phonecall_act)d" icon="gtk-redo" type="action"  />
                             <newline/>
                             <field name="date_action"/>
+                            <field name="title_action"/>
                             <field name="priority" string="Priority"/>
-                            <field name="type" readonly="1"/>
+                            <newline/>
+                            <field name="type" invisible="1"/>
                         </group>
                         <notebook colspan="4">
                         <page string="Opportunity">
@@ -133,6 +135,27 @@
                                     icon="gtk-convert" />
                             </group>
                         </page>
+                        <page string="Lead">
+                            <group colspan="2" col="4">
+                                <separator string="Contact" colspan="4" col="4"/>
+                                <field name="partner_name" string="Partner Name" colspan="4"/>
+                                <newline/>
+                                <field domain="[('domain', '=', 'contact')]" name="title"/>
+                                <field name="function" />
+                                <field name="street" colspan="4"/>
+                                <field name="street2" colspan="4"/>
+                                <field name="zip"/>
+                                <field name="city"/>
+                                <field name="country_id"/>
+                                <field name="state_id"/>
+                            </group>
+                            <group colspan="2" col="3">
+                                <separator string="Communication" colspan="4" col="3"/>
+                                <field name="fax"/>
+                                <newline/>
+                                <field name="mobile"/>
+                            </group>
+                        </page>
 
                         <page string="Emails" groups="base.group_extended">
                             <group colspan="4">
@@ -160,10 +183,10 @@
                                     icon="gtk-undo" type="action" />
                                 </form>
                                 <tree string="Communication history">
-		                            <field name="date"/>
-		                            <field name="email_from" />
-		                            <field name="email_to"/>
-		                            <field name="description"/>
+                                    <field name="date"/>
+                                    <field name="email_from" />
+                                    <field name="email_to"/>
+                                    <field name="description"/>
                                 </tree>
                             </field>
                             <button colspan="2" string="Send New Email"
@@ -223,8 +246,8 @@
                         <field name="create_date"/>
                         <field name="name" string="Opportunity"/>
                         <field name="partner_id"/>
+                        <field name="date_action"/>
                         <field name="stage_id"/>
-                        <field name="categ_id" invisible="1" groups="base.group_extended"/>
                         <button name="stage_previous" string="Previous"
                             states="open,pending" type="object" icon="gtk-go-back" />
                         <button name="stage_next" string="Next"
@@ -232,10 +255,9 @@
                             icon="gtk-go-forward" />
                         <field name="planned_revenue" sum="Total of Planned Revenue"/>
                         <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
-                        <field name="date_action"/>
-                        <field name="section_id" groups="base.group_extended"/>
+                        <field name="section_id"
+                            invisible="context.get('invisible_section', True)" />
                         <field name="user_id"/>
-                        <field name="priority"/>
                         <field name="state"/>
                         <button name="case_open" string="Open"
                             states="draft,pending" type="object"
@@ -297,17 +319,23 @@
                         />
                         <separator orientation="vertical"/>
                         <field name="name" string="Opportunity"/>
-                        <field name="user_id" widget="selection">
+                        <field name="user_id">
                             <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
                                 help="Unassigned Opportunities" />
                         </field>
                         <field name="section_id"
-                            default="context.get('section_id', False)" select="1"
+                            default="context.get('section_id', False)"
+                            context="{'invisible_section': False}"
                             widget="selection">
                             <filter icon="terp-personal+"
-                                domain="[('section_id','=',context.get('section_id',False))]"
+                                domain="[('section_id.user_id','=',uid)]"
+                                context="{'invisible_section': False}"
                                 help="My Sale Team" />
+                            <filter icon="terp-personal+"
+                                context="{'invisible_section': False}"
+                                domain="[]"
+                                help="Show Sales Team"/>
                         </field>
                         <newline/>
                         <group expand="0" string="Group By..." colspan="16">

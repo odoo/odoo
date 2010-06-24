@@ -8,6 +8,7 @@
              <field name="type">form</field>
              <field name="arch" type="xml">
               	<form string="Select Date-Period">
+              		<group width="620" height="210">
      				<field name="company_id" groups="base.group_multi_company"/>
      				<field name="result_selection" required = "True"/>
     	 			<newline/>
@@ -30,9 +31,11 @@
      				</group>
      				<newline/>
      				<group colspan="4" col="6">
-                       	<label string ="" colspan="2"/>
-     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                       	<separator colspan="4"/>
+                       	<newline/>
+     					<button special="cancel" string="Cancel" icon="terp-gtk-stop"/>
                			<button name="check_state" string="Print" type="object" icon="gtk-print"/>
+ 					</group>
  					</group>
  				</form>
              </field>

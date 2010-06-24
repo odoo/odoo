@@ -2,7 +2,7 @@
 <openerp>
     <data>
        <menuitem name="Knowledge Management" icon="terp-stock"
-           id="base.menu_document" sequence="4" />
+           id="base.menu_document" sequence="19" />
 
        <menuitem name="Configuration"
            id="base.menu_document_configuration"
@@ -160,16 +160,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Wiki">
-                        <filter icon="terp-check" string="Need Review" domain="[('review','=',True)]"/>
-                        <separator orientation="vertical"/>
-                        <field name="section" select="1"/>
-                        <field name="name" select="1"/>
-                        <field name="group_id" select="1"/>
-                        <field name="write_uid" select="1"/>
-                        <field name="write_date" select="1"/>
-                        <field name="review" select="1"/>
-<!--                        <field name="create_uid" widget="selection" select="1"/>-->
-                        <newline/>
+                    <filter icon="terp-check" string="Need Review" domain="[('review','=',True)]"/>
+                    <separator orientation="vertical"/>
+                    <field name="section" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="group_id" select="1"/>
+                    <field name="write_uid" select="1"/>
+                    <field name="write_date" select="1"/>
+                    <field name="review" select="1"/>
+                    <newline/>
                     <group expand="0" string="Group By..." colspan="8" col="6">
                         <filter icon="terp-check" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
                         <filter icon="terp-personal" string="Author" domain="[]" context="{'group_by':'create_uid'}"/>

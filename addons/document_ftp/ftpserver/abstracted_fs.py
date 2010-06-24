@@ -265,7 +265,7 @@ class abstracted_fs:
 
             if object2:
                 where += [('res_id','=',object2.id),('res_model','=',object2._name)]
-            cids = fobj.search(cr, uid,where)
+            cids = fobj.search(cr, uid, where)
             if len(cids):
                 cid = cids[0]
 

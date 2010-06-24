@@ -62,15 +62,17 @@ class survey_name_wiz(osv.osv_memory):
             for sur in surv_obj.browse(cr, uid, [context.get('survey_id',False)]):
                 result.append((sur.id, sur.title))
             return result
-        group_id = self.pool.get('res.groups').search(cr, uid, [('name', '=', 'Survey / Manager')])
+        group_id = self.pool.get('res.groups').search(cr, uid, [('name', 'in', ('Survey / Manager','Survey / User'))])
         user_obj = self.pool.get('res.users')
         user_rec = user_obj.read(cr, uid, uid)
         for sur in surv_obj.browse(cr, uid, surv_obj.search(cr, uid, [])):
             if sur.state == 'open':
-                if group_id[0]  in user_rec['groups_id']:
-                    result.append((sur.id, sur.title))
-                elif sur.id in user_rec['survey_id']:
-                    result.append((sur.id, sur.title))
+#                if group_id[0]  in user_rec['groups_id']:
+                for i in group_id:
+                    if i in user_rec['groups_id']:
+                        result.append((sur.id, sur.title))
+                    elif sur.id in user_rec['survey_id']:
+                        result.append((sur.id, sur.title))
         return result
 
     _columns = {

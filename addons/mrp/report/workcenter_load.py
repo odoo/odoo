@@ -104,7 +104,7 @@ class report_custom(report_int):
             "WHERE mrp_production_workcenter_line.production_id=mrp_production.id "\
             "AND mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id "\
             "AND mrp_production.state NOT IN ('cancel','done') "\
-            "AND mrp_workcenter.id =ANY(%s)",(ids,))
+            "AND mrp_workcenter.id IN %s",(tuple(ids),))
         res = cr.dictfetchone()
         if not res['stop']:
             res['stop'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -135,8 +135,8 @@ class report_custom(report_int):
         # select workcenters
         cr.execute(
             "SELECT mw.id, rs.name FROM mrp_workcenter mw, resource_resource rs " \
-            "WHERE mw.id=ANY(%s) and mw.resource_id=rs.id " \
-            "ORDER BY mw.id" ,(ids,))
+            "WHERE mw.id IN %s and mw.resource_id=rs.id " \
+            "ORDER BY mw.id" ,(tuple(ids),))
         workcenters = cr.dictfetchall()
 
         data = []

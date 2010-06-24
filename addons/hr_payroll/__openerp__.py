@@ -37,22 +37,23 @@
     'website':'http://www.openerp.com',
     'depends': [
         'hr',
-        'account',
         'hr_contract', 
         'hr_holidays',
-        'hr_expense'
+        'hr_expense',
+        'account'
     ],
     'init_xml': [
     ],
     'update_xml': [
         'hr_payroll_view.xml',
-#        'hr_payroll_workflow.xml',
-#        'hr_payroll_sequence.xml',
-#        'hr_paroll_report.xml',
-#        'hr_payroll_data.xml',
-#        'hr_payroll_wizard.xml'
+        'hr_payroll_workflow.xml',
+        'hr_payroll_sequence.xml',
+        'hr_paroll_report.xml',
+        'hr_payroll_data.xml',
+        'hr_payroll_wizard.xml'
     ],
     'demo_xml': [
+        'hr_payroll_demo.xml'
     ],
     'installable': True,
     'active': False,

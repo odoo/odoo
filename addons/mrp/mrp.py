@@ -117,9 +117,9 @@ class mrp_bom(osv.osv):
     """
     Defines bills of material for a product.
     """
-    _name = 'mrp.bom'    
+    _name = 'mrp.bom'
     _description = 'Bill of Material'
-    
+
     def _child_compute(self, cr, uid, ids, name, arg, context={}):
         """ Gets child bom.
         @param self: The object pointer
@@ -140,14 +140,14 @@ class mrp_bom(osv.osv):
             bom_id = ids[0]
         bom_parent = bom_obj.browse(cr, uid, bom_id)
         for bom in self.browse(cr, uid, ids, context=context):
-            if (bom_parent and bom_parent.multi_level_bom) or bom.id == bom_id:
+            if (bom_parent) or (bom.id == bom_id):
                 result[bom.id] = map(lambda x: x.id, bom.bom_lines)
             else:
                 result[bom.id] = []
             if bom.bom_lines:
                 continue
             ok = ((name=='child_complete_ids') and (bom.product_id.supply_method=='produce'))
-            if (bom.type=='phantom' or ok) and bom_parent.multi_level_bom:
+            if (bom.type=='phantom' or ok):
                 sids = bom_obj.search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
                 if sids:
                     bom2 = bom_obj.browse(cr, uid, sids[0], context=context)
@@ -201,9 +201,8 @@ class mrp_bom(osv.osv):
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
         'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
-        'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
+        'child_complete_ids': fields.function(_child_compute, relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
-        'multi_level_bom': fields.boolean('Multi-level BoM'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -212,7 +211,6 @@ class mrp_bom(osv.osv):
         'product_rounding': lambda *a: 1.0,
         'type': lambda *a: 'normal',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c),
-        'multi_level_bom': lambda *a: 0,
     }
     _order = "sequence"
     _sql_constraints = [
@@ -223,7 +221,7 @@ class mrp_bom(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct bom_id from mrp_bom where id =ANY(%s)',(ids,))
+            cr.execute('select distinct bom_id from mrp_bom where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -247,7 +245,7 @@ class mrp_bom(osv.osv):
                 v['name'] = prod.name
             return {'value': v}
         return {}
-   
+
     def _bom_find(self, cr, uid, product_id, product_uom, properties=[]):
         """ Finds BoM for particular product and product uom.
         @param product_id: Selected product.
@@ -545,16 +543,21 @@ class mrp_production(osv.osv):
             return {'value': {'location_dest_id': src}}
         return {}
 
-    def product_id_change(self, cr, uid, ids, product):
+    def product_id_change(self, cr, uid, ids, product, context=None):
         """ Finds UoM of changed product.
         @param product: Id of changed product.
         @return: Dictionary of values.
         """
         if not product:
-            return {}
-        res = self.pool.get('product.product').read(cr, uid, [product], ['uom_id'])[0]
-        uom = res['uom_id'] and res['uom_id'][0]
-        result = {'product_uom': uom}
+            return {'value': {
+                'product_uom': False,
+                'bom_id': False
+            }}
+        res = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        result = {
+            'product_uom': res.uom_id and res.uom_id.id or False,
+            'bom_id': res.bom_ids and res.bom_ids[0].id or False
+        }
         return {'value': result}
 
     def bom_id_change(self, cr, uid, ids, product):
@@ -681,30 +684,28 @@ class mrp_production(osv.osv):
         raw_product_todo = []
         final_product_todo = []
 
+        produced_qty = 0
+        for produced_product in production.move_created_ids2:
+            if (produced_product.scraped) or (produced_product.product_id.id<>production.product_id.id):
+                continue
+            produced_qty += produced_product.product_qty
+
         if production_mode in ['consume','consume_produce']:
-            # To consume remaining qty of raw materials
             consumed_products = {}
-            produced_qty = 0
             for consumed_product in production.move_lines2:
                 if consumed_product.scraped:
                     continue
                 if not consumed_products.get(consumed_product.product_id.id, False):
                     consumed_products[consumed_product.product_id.id] = 0
-                consumed_products[consumed_product.product_id.id] += consumed_product.product_qty
-
-            for produced_product in production.move_created_ids2:
-                if produced_product.scraped:
-                    continue
-                produced_qty += produced_product.product_qty
+                consumed_products[consumed_product.product_id.id] -= consumed_product.product_qty
 
             for raw_product in production.move_lines:
-                consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
-                consumed_qty -= produced_qty
-                rest_qty = production_qty - consumed_qty
-                if rest_qty > production.product_qty:
-                   rest_qty = production.product_qty
-                if rest_qty > 0:
-                    stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
+                for f in production.product_lines:
+                    if f.product_id.id==raw_product.product_id.id:
+                        consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
+                        rest_qty = production_qty * f.product_qty / production.product_qty - consumed_qty
+                        if rest_qty > 0:
+                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
@@ -726,7 +727,6 @@ class mrp_production(osv.osv):
                    production_qty = rest_qty
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, production.location_dest_id.id, context=context)
-
 
         for raw_product in production.move_lines2:
             new_parent_ids = []
@@ -953,7 +953,4 @@ class mrp_production_product_line(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Production Order', select=True),
     }
 mrp_production_product_line()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

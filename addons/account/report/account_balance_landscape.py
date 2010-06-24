@@ -351,7 +351,7 @@ class account_balance_landscape(rml_parse.rml_parse):
 
         if perc==1:
             if form['select_account']!=False:
-                ref_ac=self.pool.get('account.account').browse(self.cr, self.uid,form['select_account'],ctx.copy())
+                ref_ac=self.pool.get('account.account').browse(self.cr, self.uid, form['select_account'], ctx.copy())
                 if ref_ac.balance<>0.00:
                     ref_bal=ref_ac.balance
                 else:
@@ -365,7 +365,7 @@ class account_balance_landscape(rml_parse.rml_parse):
         total_for_perc=[]
 #       if perc==1:
         self.done_total=1
-        self.total_for_perc=self.linesForTotal(form,ids={},doneAccount={},level=1)
+        self.total_for_perc=self.linesForTotal(form, ids={}, doneAccount={}, level=1)
         self.done_total=0
 
         for t1 in range(0,len(form['fiscalyear'])):
@@ -376,13 +376,13 @@ class account_balance_landscape(rml_parse.rml_parse):
 #           self.result_total = {}
 
         for temp in range(0,len(form['fiscalyear'])):
-            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][temp])
+            fy=self.pool.get('account.fiscalyear').name_get(self.cr, self.uid, form['fiscalyear'][temp])
             years["year"+str(temp)]=fy[0][1][12:16]
 
         return [years]
 
 
-    def linesForTotal(self,form,ids={},doneAccount={},level=1):
+    def linesForTotal(self, form, ids={}, doneAccount={}, level=1):
         if self.done_total==1:
             self.done_total==1
         else:
@@ -443,7 +443,7 @@ class account_balance_landscape(rml_parse.rml_parse):
                 ids2 = [(x.code,x.id) for x in entry[0].child_id]
                 ids2.sort()
 
-                result_total_parent = self.linesForTotal(form, [x[1] for x in ids2],doneAccount,level+1)
+                result_total_parent = self.linesForTotal(form, [x[1] for x in ids2], doneAccount, level+1)
 
         return [self.result_total]
 
@@ -462,7 +462,7 @@ class account_balance_landscape(rml_parse.rml_parse):
             ctx['periods'] = form['periods']
             ctx['period_manner']=form['period_manner']
             ctx['state'] = form['context'].get('state','all')
-            tmp1 = self.pool.get('account.account').browse(self.cr, self.uid, ids,ctx.copy())
+            tmp1 = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx.copy())
 
             if len(tmp1):
                 accounts.append(tmp1)
@@ -598,12 +598,12 @@ class account_balance_landscape(rml_parse.rml_parse):
 
         return result
 
-    def get_years(self,form):
+    def get_years(self, form):
         result =[]
         res={}
-        for temp in range(0,len(form['fiscalyear'])):
+        for temp in range(0, len(form['fiscalyear'])):
             res={}
-            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][temp])
+            fy=self.pool.get('account.fiscalyear').name_get(self.cr, self.uid, form['fiscalyear'][temp])
             res['year']=fy[0][1]
             res['last_str']=temp
 
@@ -611,7 +611,7 @@ class account_balance_landscape(rml_parse.rml_parse):
         self.linesForYear(form)
         return result
 
-    def get_lines(self,year_dict,form):
+    def get_lines(self, year_dict, form):
         final_result = []
         line_l =[]
         res = {}
@@ -643,7 +643,7 @@ class account_balance_landscape(rml_parse.rml_parse):
                 final_result.append(res)
         return final_result
 
-    def cal_total(self,year_dict):
+    def cal_total(self, year_dict):
         total_l = self.result_total
         if total_l:
             for k,v in total_l.items():

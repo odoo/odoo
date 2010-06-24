@@ -20,10 +20,12 @@
 #
 ##############################################################################
 
+import time
+
 from osv import fields,osv
 from osv import orm
 import netsvc
-import time
+from tools.translate import _
 
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
@@ -34,42 +36,55 @@ class purchase_requisition(osv.osv):
         'date_start': fields.datetime('Requisition Date'),
         'date_end': fields.datetime('Requisition Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', help="If the requisition is exclusive, it will cancel all purchase orders when you confirm one of them", required=True),
+        'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', required=True, help="Purchase Tender (exclusive):On the confirmation of a purchase order, it cancels the remaining purchase order.Multiple Requisitions:It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders'),
-        'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase'),
+        'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }
     _defaults = {
-        'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'state': lambda *args: 'draft',
-        'exclusive': lambda *args: 'multiple',
+        'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'state': 'draft',
+        'exclusive': 'multiple',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id ,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
 
 
-    def tender_cancel(self, cr, uid, ids, context={}):
+    def tender_cancel(self, cr, uid, ids, context=None):
         purchase_order_obj = self.pool.get('purchase.order')
         for purchase in self.browse(cr, uid, ids):
             for purchase_id in purchase.purchase_ids:
                 if str(purchase_id.state) in('draft','wait'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         self.write(cr, uid, ids, {'state': 'cancel'})
+        for (id,name) in self.name_get(cr, uid, ids):
+                    message = _('Tender') + " '" + name + "' "+ _("is cancelled")
+                    self.log(cr, uid, id, message)
         return True
-    def tender_in_progress(self, cr, uid, ids, context={}):
+    def tender_in_progress(self, cr, uid, ids, context=None):
+        for quotations in self.browse(cr, uid, ids):
+            if not quotations.purchase_ids:
+                raise osv.except_osv(_('Purchase order required'),('You should have atleast one purchase order line defined for this tender'))
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
+        for (id,name) in self.name_get(cr, uid, ids):
+                    message = _('Tender') + " '" + name + "' "+ _(" is In Progress")
+                    self.log(cr, uid, id, message)
         return True
-    def tender_reset(self, cr, uid, ids, context={}):
+    def tender_reset(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'draft'})
+        for (id,name) in self.name_get(cr, uid, ids):
+                    message = _('Tender') + " '" + name + "' "+ _("is in draft state")
+                    self.log(cr, uid, id, message)
         return True
-    def tender_done(self, cr, uid, ids, context={}):
+    def tender_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        for (id,name) in self.name_get(cr, uid, ids):
+                    message = _('Tender') + " '" + name + "' "+ _("is done")
+                    self.log(cr, uid, id, message)
         return True
-
-
 
 purchase_requisition()
 
@@ -86,7 +101,7 @@ class purchase_requisition_line(osv.osv):
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade')
     }
 
-    def onchange_product_id(self, cr, uid, ids, product_id,product_uom_id, context={}):
+    def onchange_product_id(self, cr, uid, ids, product_id,product_uom_id, context=None):
 
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
@@ -96,7 +111,7 @@ class purchase_requisition_line(osv.osv):
         value = {'product_uom_id': ''}
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
-            value = {'product_uom_id': prod.uom_id.id}
+            value = {'product_uom_id': prod.uom_id.id,'product_qty':1.0}
         return {'value': value}
 
     _defaults = {
@@ -131,7 +146,7 @@ class product_product(osv.osv):
         'purchase_requisition': fields.boolean('Purchase Requisition', help="Check this box so that requisitions generates purchase requisitions instead of directly requests for quotations.")
     }
     _defaults = {
-        'purchase_requisition': lambda *args: False
+        'purchase_requisition': False
     }
 product_product()
 
@@ -158,3 +173,5 @@ class procurement_order(osv.osv):
                 })
         return res
 procurement_order()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

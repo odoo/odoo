@@ -34,14 +34,15 @@
     Budgets
     Customer and Supplier Invoices
     Bank statements
+    Reconciliation process by partner
     Creates a dashboards for accountants that includes:
     * List of uninvoiced quotations
     * Graph of aged receivables
-    * Graph of aged incomes    
+    * Graph of aged incomes
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
-module named account_voucherss
+module named account_vouchers
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
@@ -85,6 +86,7 @@ module named account_voucherss
         'wizard/account_compare_account_balance_report_view.xml',
         'wizard/account_third_party_ledger.xml',
         'wizard/account_reconcile_view.xml',
+        'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_end_fy.xml',

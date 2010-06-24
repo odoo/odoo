@@ -4,7 +4,7 @@
 
         <menuitem id="menu_scrum"
             name="Scrum"
-            parent="base.menu_main_pm"/>
+            parent="base.menu_main_pm" sequence="3"/>
 
         <!-- Scrum Project -->
 
@@ -43,7 +43,7 @@
                     <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-execute"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                     <button type="action" string="Convert to Task" name="%(action_scrum_backlog_to_task)d" states="pending" icon="gtk-execute"/>
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
@@ -61,7 +61,7 @@
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
-      					<button name="button_postpone" string="Post Pone" type="object"                  
+      					<button name="button_postpone" string="Post Pone" type="object"
 						help="Post Pone backlog" colspan="2"
                          icon="gtk-convert"  attrs="{'invisible':[('state','=','done')]}"/>
                         <field name="user_id" select="1"/>
@@ -141,8 +141,8 @@
                         <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Backlogs"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="project_id" widget="selection"/>
-                        <field name="sprint_id" widget="selection" domain="[('state','in',('draft','open'))]">
+                        <field name="project_id"/>
+                        <field name="sprint_id" domain="[('state','in',('draft','open'))]">
                             <filter icon="terp-project"
                                 string="Sprints"
                                 domain="[('sprint_id.state','=','open')]"
@@ -152,7 +152,7 @@
                                 domain="[('sprint_id','=',False)]"
                                 help="Backlogs Not Assigned To Sprints."/>
                         </field>
-                        <field name="user_id" widget="selection"/>
+                        <field name="user_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
@@ -176,7 +176,7 @@
         <menuitem
             action="action_product_backlog_form"
             id="menu_action_product_backlog_form"
-            sequence="20"
+            sequence="10"
             parent="menu_scrum"/>
 
         <!--
@@ -188,7 +188,7 @@
             <field name="model">scrum.sprint</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree colors="blue:state in ('pending');grey:state in ('cancel','done')" string="Scrum Sprint">
+                <tree colors="blue:state in ('pending');grey:state in ('cancel','done')" string="Scrum Sprint">
                     <field name="name"/>
                     <field name="project_id"/>
                     <field name="scrum_master_id"/>
@@ -198,7 +198,7 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="expected_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-execute"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
@@ -268,8 +268,8 @@
                         <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="project_id" widget="selection"/>
-                        <field name="scrum_master_id" widget="selection"/>
+                        <field name="project_id"/>
+                        <field name="scrum_master_id"/>
                         <field name="date_start"/>
                     </group>
                     <newline/>
@@ -295,7 +295,7 @@
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
         </record>
         <menuitem
-            sequence="10"
+            sequence="30"
             action="action_sprint_all_tree" id="menu_action_sprint_all_tree" parent="menu_scrum"/>
 
         <!--
@@ -357,10 +357,10 @@
                     <group col="10" colspan="4">
                         <filter name="scrum_daily" icon="terp-go-today" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
-                        <field name="sprint_id" widget="selection">
+                        <field name="sprint_id">
                             <filter icon="terp-check" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints" default="1"/>
                         </field>
-                        <field name="project_id" widget="selection"/>
+                        <field name="project_id"/>
                         <field name="date"/>
                     </group>
                     <newline/>
@@ -380,7 +380,7 @@
             <field name="context">{'search_default_scrum_daily':1}</field>
             <field name="search_view_id" ref="view_scrum_meeting_search"/>
         </record>
-        <menuitem sequence="30"
+        <menuitem sequence="20"
             action="action_meeting_form" id="menu_action_meeting_form" parent="menu_scrum"/>
 
         <!--

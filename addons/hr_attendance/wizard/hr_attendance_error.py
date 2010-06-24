@@ -44,7 +44,7 @@ class hr_attendance_error(osv.osv_memory):
         data_error = self.read(cr, uid, ids)[0]
         date_from = data_error['init_date']
         date_to = data_error['end_date']
-        cr.execute("select id from hr_attendance where employee_id =ANY(%s) and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action =ANY(%s) order by name" ,(context['active_ids'], date_to, date_from, ['sign_in','sign_out']))
+        cr.execute("select id from hr_attendance where employee_id IN %s and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action IN %s order by name" ,(tuple(context['active_ids']), date_to, date_from, tuple(['sign_in','sign_out'])))
         attendance_ids = [x[0] for x in cr.fetchall()]
         if not attendance_ids:
             raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
