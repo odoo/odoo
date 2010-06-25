@@ -1005,6 +1005,18 @@ class stock_picking(osv.osv):
             }, context=context)
         return res
 
+    def test_done(self, cr, uid, ids, context={}):
+        ok = False
+        for pick in self.browse(cr, uid, ids, context=context):
+            if not pick.move_lines:
+                return True
+            for move in pick.move_lines:
+                if move.state not in ('cancel','done'):
+                    return False
+                if move.state=='done':
+                    ok = True
+        return ok
+
     def test_cancel(self, cr, uid, ids, context={}):
         """ Test whether the move lines are canceled or not.
         @return: True or False
@@ -1832,11 +1844,10 @@ class stock_move(osv.osv):
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
-        # We should remove this
-        #picking_obj = self.pool.get('stock.picking')
-        #for pick in picking_obj.browse(cr, uid, picking_ids):
-        #    if len([(move.state in ('done','cancelled')) for move in pick.move_lines]) == len(pick.move_lines):
-        #        picking_obj.action_done(cr, uid, [pick.id])
+        picking_obj = self.pool.get('stock.picking')
+        wf_service = netsvc.LocalService("workflow")
+        for pick_id in picking_ids:
+            wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 
         for (id,name) in picking_obj.name_get(cr, uid, picking_ids):
             message = _('Document') + " '" + name + "' "+ _("is processed")
