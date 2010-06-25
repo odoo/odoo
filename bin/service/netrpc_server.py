@@ -48,7 +48,7 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
             try:
                 self.socket.shutdown(
                     getattr(socket, 'SHUT_RDWR', 2))
-            except: pass
+            except Exception: pass
             # That should garbage-collect and close it, too
             self.sock = None
 
@@ -56,7 +56,7 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
         self.running = True
         try:
             ts = tiny_socket.mysocket(self.sock)
-        except:
+        except Exception:
             self.threads.remove(self)
             self.running = False
             return False

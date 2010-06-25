@@ -159,16 +159,6 @@ class act_window(osv.osv):
         (_check_model, 'Invalid model name in the action definition.', ['res_model','src_model'])
     ]
 
-    def get_filters(self, cr, uid, model):
-        cr.execute('SELECT id FROM ir_act_window a WHERE a.id not in (SELECT act_id FROM ir_act_window_user_rel) AND a.res_model=\''+model+'\' and a.filter=\'1\';')
-        all_ids = cr.fetchall()
-        filter_ids =  map(lambda x:x[0],all_ids)
-        act_ids = self.search(cr,uid,[('res_model','=',model),('filter','=',1),('default_user_ids','in',(','.join(map(str,[uid,])),))])
-        act_ids += filter_ids
-        act_ids = list(set(act_ids))
-        my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'])
-        return my_acts
-
     def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
         res={}
         for act in self.browse(cr, uid, ids):
@@ -381,7 +371,7 @@ class actions_server(osv.osv):
     def _select_signals(self, cr, uid, context={}):
         cr.execute("SELECT distinct w.osv, t.signal FROM wkf w, wkf_activity a, wkf_transition t \
         WHERE w.id = a.wkf_id  AND t.act_from = a.id OR t.act_to = a.id AND t.signal!='' \
-        AND t.signal not in (null, NULL)")
+        AND t.signal NOT IN (null, NULL)")
         result = cr.fetchall() or []
         res = []
         for rs in result:

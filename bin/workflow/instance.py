@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -71,7 +71,7 @@ def _update_end(cr, inst_id, ident):
         act_names = cr.fetchall()
         cr.execute("update wkf_instance set state='complete' where id=%s", (inst_id,))
         cr.execute("update wkf_workitem set state='complete' where subflow_id=%s", (inst_id,))
-        cr.execute("select i.id,w.osv,i.res_id from wkf_instance i left join wkf w on (i.wkf_id=w.id) where i.id in (select inst_id from wkf_workitem where subflow_id=%s)", (inst_id,))
+        cr.execute("select i.id,w.osv,i.res_id from wkf_instance i left join wkf w on (i.wkf_id=w.id) where i.id IN (select inst_id from wkf_workitem where subflow_id=%s)", (inst_id,))
         for i in cr.fetchall():
             for act_name in act_names:
                 validate(cr, i[0], (ident[0],i[1],i[2]), 'subflow.'+act_name[0])

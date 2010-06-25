@@ -1538,8 +1538,12 @@ class orm_template(object):
                         view_id = view_ref_res[0]
 
             if view_id:
-                where = (model and (" and model='%s'" % (self._name,))) or ''
-                cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%s'+where, (view_id,))
+                query = "SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%s"
+                params = (view_id,)
+                if model:
+                    query += " AND model=%s"
+                    params += (self._name,)
+                cr.execute(query, params)
             else:
                 cr.execute('''SELECT
                         arch,name,field_parent,id,type,inherit_id
@@ -1750,6 +1754,10 @@ class orm_memory(orm_template):
         self.check_id = 0
         cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
 
+    def _check_access(self, uid, object_id, mode):
+        if uid != 1 and self.datas[object_id]['internal.create_uid'] != uid:
+            raise except_orm(_('AccessError'), '%s access is only allowed on your own records for osv_memory objects' % mode.capitalize())
+
     def vaccum(self, cr, uid):
         self.check_id += 1
         if self.check_id % self._check_time:
@@ -1770,7 +1778,6 @@ class orm_memory(orm_template):
     def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         if not fields_to_read:
             fields_to_read = self._columns.keys()
         result = []
@@ -1781,8 +1788,10 @@ class orm_memory(orm_template):
             for id in ids:
                 r = {'id': id}
                 for f in fields_to_read:
-                    if id in self.datas:
-                        r[f] = self.datas[id].get(f, False)
+                    record = self.datas.get(id)
+                    if record:
+                        self._check_access(user, id, 'read')
+                        r[f] = record.get(f, False)
                         if r[f] and isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                             r[f] = len(r[f])
                 result.append(r)
@@ -1800,7 +1809,6 @@ class orm_memory(orm_template):
     def write(self, cr, user, ids, vals, context=None):
         if not ids:
             return True
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
         vals2 = {}
         upd_todo = []
         for field in vals:
@@ -1808,18 +1816,18 @@ class orm_memory(orm_template):
                 vals2[field] = vals[field]
             else:
                 upd_todo.append(field)
-        for id_new in ids:
-            self.datas[id_new].update(vals2)
-            self.datas[id_new]['internal.date_access'] = time.time()
+        for object_id in ids:
+            self._check_access(user, object_id, mode='write')
+            self.datas[object_id].update(vals2)
+            self.datas[object_id]['internal.date_access'] = time.time()
             for field in upd_todo:
-                self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
-        self._validate(cr, user, [id_new], context)
+                self._columns[field].set_memory(cr, self, object_id, field, vals[field], user, context)
+        self._validate(cr, user, [object_id], context)
         wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_write(user, self._name, id_new, cr)
-        return id_new
+        wf_service.trg_write(user, self._name, object_id, cr)
+        return object_id
 
     def create(self, cr, user, vals, context=None):
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
         self.vaccum(cr, user)
         self.next_id += 1
         id_new = self.next_id
@@ -1838,6 +1846,7 @@ class orm_memory(orm_template):
                 upd_todo.append(field)
         self.datas[id_new] = vals2
         self.datas[id_new]['internal.date_access'] = time.time()
+        self.datas[id_new]['internal.create_uid'] = user
 
         for field in upd_todo:
             self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
@@ -1932,13 +1941,19 @@ class orm_memory(orm_template):
             import expression
             e = expression.expression(args)
             e.parse(cr, user, self, context)
-            res=e.__dict__['_expression__exp']
+            res = e.exp
         return res or []
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
         if not context:
             context = {}
+
+        # implicit filter on current user
+        if not args:
+            args = []
+        args.insert(0, ('internal.create_uid', '=', user))
+
         result = self._where_calc(cr, user, args, context=context)
         if result==[]:
             return self.datas.keys()
@@ -1950,25 +1965,20 @@ class orm_memory(orm_template):
         if result:
             for id, data in self.datas.items():
                 counter=counter+1
-                data['id']  = id
-                if limit and (counter >int(limit)):
+                data['id'] = id
+                if limit and (counter > int(limit)):
                     break
                 f = True
                 for arg in result:
-                     if arg[1] =='=':
-                         val =eval('data[arg[0]]'+'==' +' arg[2]', locals())
-                     elif arg[1] in ['<','>','in','not in','<=','>=','<>']:
-                         val =eval('data[arg[0]]'+arg[1] +' arg[2]', locals())
-                     elif arg[1] in ['ilike']:
-                         if str(data[arg[0]]).find(str(arg[2]))!=-1:
-                             val= True
-                         else:
-                             val=False
+                    if arg[1] == '=':
+                        val = eval('data[arg[0]]'+'==' +' arg[2]', locals())
+                    elif arg[1] in ['<','>','in','not in','<=','>=','<>']:
+                        val = eval('data[arg[0]]'+arg[1] +' arg[2]', locals())
+                    elif arg[1] in ['ilike']:
+                        val = (str(data[arg[0]]).find(str(arg[2]))!=-1)
 
-                     if f and val:
-                         f = True
-                     else:
-                         f = False
+                    f = f and val
+
                 if f:
                     res.append(id)
         if count:
@@ -1976,20 +1986,22 @@ class orm_memory(orm_template):
         return res or []
 
     def unlink(self, cr, uid, ids, context=None):
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
         for id in ids:
-            if id in self.datas:
-                del self.datas[id]
+            self._check_access(uid, id, 'unlink')
+            self.datas.pop(id, None)
         if len(ids):
-            cr.execute('delete from wkf_instance where res_type=%s and res_id = ANY  (%s)', (self._name,ids))
+            cr.execute('delete from wkf_instance where res_type=%s and res_id IN %s', (self._name, tuple(ids)))
         return True
 
     def perm_read(self, cr, user, ids, context=None, details=True):
         result = []
+        credentials = self.pool.get('res.users').name_get(cr, user, [user])[0]
+        create_date = time.strftime('%Y-%m-%d %H:%M:%S')
         for id in ids:
+            self._check_access(user, id, 'read')
             result.append({
-                'create_uid': (user, 'Root'),
-                'create_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'create_uid': credentials,
+                'create_date': create_date,
                 'write_uid': False,
                 'write_date': False,
                 'id': id
@@ -2193,12 +2205,12 @@ class orm(orm_template):
         columns += ('id', 'write_uid', 'write_date', 'create_uid', 'create_date') # openerp access columns
         cr.execute("SELECT a.attname, a.attnotnull"
                    "  FROM pg_class c, pg_attribute a"
-                   " WHERE c.relname=%%s"
+                   " WHERE c.relname=%s"
                    "   AND c.oid=a.attrelid"
-                   "   AND a.attisdropped=%%s"
+                   "   AND a.attisdropped=%s"
                    "   AND pg_catalog.format_type(a.atttypid, a.atttypmod) NOT IN ('cid', 'tid', 'oid', 'xid')"
-                   "   AND a.attname NOT IN (%s)" % ",".join(['%s']*len(columns)),
-                       [self._table, False] + columns)
+                   "   AND a.attname NOT IN %s" ,(self._table, False, tuple(columns))),
+
         for column in cr.dictfetchall():
             if log:
                 logger.notifyChannel("orm", netsvc.LOG_DEBUG, "column %s is in the table %s but not in the corresponding object %s" % (column['attname'], self._table, self._name))
@@ -2212,9 +2224,9 @@ class orm(orm_template):
         todo_end = []
         self._field_create(cr, context=context)
         if getattr(self, '_auto', True):
-            cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
+            cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s" ,( self._table,))
             if not cr.rowcount:
-                cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS" % self._table)
+                cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
                 cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'","''")))
                 create = True
             cr.commit()
@@ -2280,7 +2292,7 @@ class orm(orm_template):
                         if not res:
                             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY (%s) REFERENCES "%s" ON DELETE SET NULL' % (self._obj, f._fields_id, f._table))
                 elif isinstance(f, fields.many2many):
-                    cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (f._rel,))
+                    cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (f._rel,))
                     if not cr.dictfetchall():
                         if not self.pool.get(f._obj):
                             raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
@@ -2356,7 +2368,7 @@ class orm(orm_template):
                                 try:
                                     cr.commit()
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
-                                except Exception, e:
+                                except Exception:
                                     logger.notifyChannel('orm', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: openerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                             cr.commit()
                     elif len(res)==1:
@@ -2427,7 +2439,7 @@ class orm(orm_template):
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
                                     cr.commit()
-                                except Exception, e:
+                                except Exception:
                                     logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                                 cr.commit()
                             elif not f.required and f_pg_notnull == 1:
@@ -2472,7 +2484,7 @@ class orm(orm_template):
                 todo_end.append((order, self._update_store, (f, k)))
 
         else:
-            cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (self._table,))
+            cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))
             create = not bool(cr.fetchone())
 
         cr.commit()     # start a new transaction
@@ -2481,11 +2493,12 @@ class orm(orm_template):
             conname = '%s_%s' % (self._table, key)
             cr.execute("SELECT conname FROM pg_constraint where conname=%s", (conname,))
             if not cr.dictfetchall():
+                query = 'ALTER TABLE "%s" ADD CONSTRAINT "%s" %s' % (self._table, conname, con,)
                 try:
-                    cr.execute('alter table "%s" add constraint "%s_%s" %s' % (self._table, self._table, key, con,))
+                    cr.execute(query)
                     cr.commit()
                 except:
-                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\nALTER table %s ADD CONSTRAINT %s_%s %s' % (con, self._table, self._table, self._table, key, con,))
+                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\n%s' % (con, self._table, query))
                     cr.rollback()
 
         if create:
@@ -2824,18 +2837,19 @@ class orm(orm_template):
                 return '"%s"' % (f,)
             fields_pre2 = map(convert_field, fields_pre)
             order_by = self._parent_order or self._order
+            select_fields = ','.join(fields_pre2 + ['id'])
+            query = 'SELECT %s FROM "%s" WHERE id IN %%s' % (select_fields, self._table)
+            if d1:
+                query += " AND " + d1
+            query += " ORDER BY " + order_by
             for sub_ids in cr.split_for_in_conditions(ids):
                 if d1:
-                    cr.execute('SELECT %s FROM %s WHERE %s.id IN %%s AND %s ORDER BY %s' % \
-                            (','.join(fields_pre2 + [self._table + '.id']), ','.join(tables), self._table, ' and '.join(d1),
-                                order_by),[sub_ids,]+d2)
+                    cr.execute(query, [tuple(sub_ids)] + d2)
                     if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
                 else:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN %%s ORDER BY %s' %
-                               (','.join(fields_pre2 + ['id']), self._table,
-                                order_by), (sub_ids,))
+                    cr.execute(query, (tuple(sub_ids),))
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
@@ -2922,7 +2936,7 @@ class orm(orm_template):
                     for group in groups:
                         module = group.split(".")[0]
                         grp = group.split(".")[1]
-                        cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+                        cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s"  \
                                    (grp, module, 'res.groups', user))
                         readonly = cr.fetchall()
                         if readonly[0][0] >= 1:
@@ -2968,13 +2982,14 @@ class orm(orm_template):
         if not ids:
             return []
         fields = ''
+        uniq = isinstance(ids, (int, long))
+        if uniq:
+            ids = [ids]
+        fields = 'id'
         if self._log_access:
-            fields = ', u.create_uid, u.create_date, u.write_uid, u.write_date'
-        if isinstance(ids, (int, long)):
-            ids_str = str(ids)
-        else:
-            ids_str = string.join(map(lambda x: str(x), ids), ',')
-        cr.execute('select u.id'+fields+' from "'+self._table+'" u where u.id in ('+ids_str+')')
+            fields += ', create_uid, create_date, write_uid, write_date'
+        query = 'SELECT %s FROM "%s" WHERE id IN %%s' % (fields, self._table)
+        cr.execute(query, (tuple(ids),))
         res = cr.dictfetchall()
         for r in res:
             for key in r:
@@ -2982,8 +2997,8 @@ class orm(orm_template):
                 if key in ('write_uid', 'create_uid', 'uid') and details:
                     if r[key]:
                         r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
-        if isinstance(ids, (int, long)):
-            return res[ids]
+        if uniq:
+            return res[ids[0]]
         return res
 
     def _check_concurrency(self, cr, ids, context):
@@ -3059,20 +3074,15 @@ class orm(orm_template):
         for oid in ids:
             wf_service.trg_delete(uid, self._name, oid, cr)
 
-        #cr.execute('select * from '+self._table+' where id in ('+str_d+')', ids)
-        #res = cr.dictfetchall()
-        #for key in self._inherits:
-        #   ids2 = [x[self._inherits[key]] for x in res]
-        #   self.pool.get(key).unlink(cr, uid, ids2)
 
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         for sub_ids in cr.split_for_in_conditions(ids):
             cr.execute('delete from ' + self._table + ' ' \
-                       'where id in %s', (sub_ids,))
+                       'where id IN %s', (sub_ids,))
         for order, object, store_ids, fields in result_store:
             if object != self._name:
                 obj =  self.pool.get(object)
-                cr.execute('select id from '+obj._table+' where id in ('+','.join(map(str, store_ids))+')')
+                cr.execute('select id from '+obj._table+' where id IN %s',(tuple(store_ids),))
                 rids = map(lambda x: x[0], cr.fetchall())
                 if rids:
                     obj._store_set_values(cr, uid, rids, fields, context)
@@ -3100,7 +3110,7 @@ class orm(orm_template):
 
         vals format for relational field type.
 
-            + many2many field : 
+            + many2many field :
 
                 For write operation on a many2many fields a list of tuple is
                 expected. The folowing tuples are accepted:
@@ -3138,7 +3148,7 @@ class orm(orm_template):
                 for group in groups:
                     module = group.split(".")[0]
                     grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s" \
                                (grp, module, 'res.groups', user))
                     readonly = cr.fetchall()
                     if readonly[0][0] >= 1:
@@ -3229,7 +3239,7 @@ class orm(orm_template):
             self.check_access_rule(cr, user, ids, 'write', context=context)
             for sub_ids in cr.split_for_in_conditions(ids):
                 cr.execute('update ' + self._table + ' set ' + ','.join(upd0) + ' ' \
-                           'where id in %s', upd1 + [sub_ids])
+                           'where id IN %s', upd1 + [sub_ids])
 
             if totranslate:
                 # TODO: optimize
@@ -3261,7 +3271,7 @@ class orm(orm_template):
             nids = []
             for sub_ids in cr.split_for_in_conditions(ids):
                 cr.execute('select distinct "'+col+'" from "'+self._table+'" ' \
-                           'where id in %s', (sub_ids,))
+                           'where id IN %s', (sub_ids,))
                 nids.extend([x[0] for x in cr.fetchall()])
 
             v = {}
@@ -3457,7 +3467,7 @@ class orm(orm_template):
                 for group in groups:
                     module = group.split(".")[0]
                     grp = group.split(".")[1]
-                    cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+                    cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
                                (grp, module, 'res.groups', user))
                     readonly = cr.fetchall()
                     if readonly[0][0] >= 1:
@@ -3602,7 +3612,7 @@ class orm(orm_template):
         field_flag = False
         field_dict = {}
         if self._log_access:
-            cr.execute('select id,write_date from '+self._table+' where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select id,write_date from '+self._table+' where id IN %s',(tuple(ids),))
             res = cr.fetchall()
             for r in res:
                 if r[1]:
@@ -3983,13 +3993,12 @@ class orm(orm_template):
         if not parent:
             parent = self._parent_name
         ids_parent = ids[:]
-        while len(ids_parent):
+        query = 'SELECT distinct "%s" FROM "%s" WHERE id IN %%s' % (parent, self._table)
+        while ids_parent:
             ids_parent2 = []
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids_parent = ids_parent[i:i+cr.IN_MAX]
-                cr.execute('SELECT distinct "'+parent+'"'+
-                    ' FROM "'+self._table+'" ' \
-                    'WHERE id = ANY(%s)',(sub_ids_parent,))
+                cr.execute(query, (tuple(sub_ids_parent),))
                 ids_parent2.extend(filter(None, map(lambda x: x[0], cr.fetchall())))
             ids_parent = ids_parent2
             for i in ids_parent:

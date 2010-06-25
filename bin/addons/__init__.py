@@ -33,8 +33,6 @@ import pooler
 
 
 import netsvc
-from osv import fields
-import addons
 
 import zipfile
 import release
@@ -88,8 +86,7 @@ class Graph(dict):
         ## Then we get the values from the database
         cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
                    '  FROM ir_module_module'
-                   ' WHERE name in (%s)' % (','.join(['%s'] * len(self))),
-                    additional_data.keys()
+                   ' WHERE name IN %s',(tuple(additional_data),)
                    )
 
         ## and we update the default values with values from the database
@@ -304,7 +301,7 @@ def load_information_from_description_file(module):
     :param module: The name of the module (sale, purchase, ...)
     """
     for filename in ['__openerp__.py', '__terp__.py']:
-        description_file = addons.get_module_resource(module, filename)
+        description_file = get_module_resource(module, filename)
         if os.path.isfile(description_file):
             return eval(tools.file_open(description_file).read())
 
@@ -729,10 +726,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 load_demo_xml(cr, m, idref, mode)
                 load_demo(cr, m, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
-                
+
                 # launch tests only in demo mode, as most tests will depend
                 # on demo data. Other tests can be added into the regular
-                # 'data' section, but should probably not alter the data, 
+                # 'data' section, but should probably not alter the data,
                 # as there is no rollback.
                 load_test(cr, m, idref, mode)
 
@@ -824,8 +821,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         while True:
             loop_guardrail += 1
             if loop_guardrail > 100:
-                raise ProgrammingError()
-            cr.execute("SELECT name from ir_module_module WHERE state in (%s)" % ','.join(['%s']*len(STATES_TO_LOAD)), STATES_TO_LOAD)
+                raise ValueError('Possible recursive module tree detected, aborting.')
+            cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(STATES_TO_LOAD),))
 
             module_list = [name for (name,) in cr.fetchall() if name not in graph]
             if not module_list:
@@ -841,9 +838,19 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             has_updates = has_updates or r
 
         if has_updates:
-            cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
+            cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
+                model_obj = pool.get(model)
+                if not isinstance(model_obj, osv.osv.osv_memory):
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
+
+            # Temporary warning while we remove access rights on osv_memory objects, as they have
+            # been replaced by owner-only access rights
+            cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
+            for (model, name) in cr.fetchall():
+                model_obj = pool.get(model)
+                if isinstance(model_obj, osv.osv.osv_memory):
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'In-memory object %s (%s) should not have explicit access rules!' % (model, name))
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():
@@ -878,11 +885,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.execute('''delete from
                         ir_ui_menu
                     where
-                        (id not in (select parent_id from ir_ui_menu where parent_id is not null))
+                        (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
                     and
-                        (id not in (select res_id from ir_values where model='ir.ui.menu'))
+                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
                     and
-                        (id not in (select res_id from ir_model_data where model='ir.ui.menu'))''')
+                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
                 cr.commit()
                 if not cr.rowcount:
                     break

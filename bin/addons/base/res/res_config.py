@@ -77,7 +77,7 @@ class res_config_configurable(osv.osv_memory):
             todo_obj = todos.browse(cr, uid, active_todos[0], context=None)
             todo_groups = map(lambda x:x.id, todo_obj.groups_id)
             if todo_groups:
-                cr.execute("select 1 from res_groups_users_rel where uid=%s and gid=ANY(%s)",(uid, todo_groups,))
+                cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN %s",(uid, tuple(todo_groups),))
                 dont_skip_todo = bool(cr.fetchone())
             if dont_skip_todo:
                 return todos.browse(cr, uid, active_todos[0], context=None)

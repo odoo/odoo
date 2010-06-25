@@ -148,7 +148,7 @@ class GettextAlias(object):
         except:
             return source
 
-        cr.execute('select value from ir_translation where lang=%s and type in (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
+        cr.execute('select value from ir_translation where lang=%s and type IN (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
         res_trans = cr.fetchone()
         return res_trans and res_trans[0] or source
 _ = GettextAlias()
@@ -446,9 +446,10 @@ def trans_generate(lang, modules, dbname=None):
     query_param = None
     if 'all_installed' in modules:
         query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
-    elif not 'all' in modules:
-        query += ' WHERE module IN (%s)' % ','.join(['%s']*len(modules))
-        query_param = modules
+    query_param = None
+    if 'all' not in modules:
+        query += ' WHERE module IN %s'
+        query_param = (tuple(modules),)
     query += ' ORDER BY module, model, name'
 
     cr.execute(query, query_param)
@@ -584,7 +585,10 @@ def trans_generate(lang, modules, dbname=None):
 
         for constraint in pool.get(model)._constraints:
             msg = constraint[1]
-            push_translation(module, 'constraint', model, 0, encode(msg))
+            # Check presence of __call__ directly instead of using
+            # callable() because it will be deprecated as of Python 3.0
+            if not hasattr(msg, '__call__'):
+                push_translation(module, 'constraint', model, 0, encode(msg))
 
         for field_name,field_def in pool.get(model)._columns.items():
             if field_def.translate:

@@ -176,8 +176,7 @@ def handler(signum, _):
     logger.notifyChannel('shutdown', netsvc.LOG_INFO, 
                          "Shutdown Server! - %s" % ( SIGNALS[signum], ))
     logger.shutdown()
-    #sys.exit(0)
-    os._exit(0)
+    sys.exit(0)
 
 for signum in SIGNALS:
     signal.signal(signum, handler)

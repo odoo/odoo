@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,7 +23,7 @@ import time, os
 
 import netsvc
 import report,pooler,tools
-
+from operator import itemgetter
 
 def graph_get(cr, graph, wkf_ids, nested=False, workitem={}):
     import pydot
@@ -56,7 +56,8 @@ def graph_get(cr, graph, wkf_ids, nested=False, workitem={}):
             graph.add_node(pydot.Node(n['id'], **args))
             actfrom[n['id']] = (n['id'],{})
             actto[n['id']] = (n['id'],{})
-    cr.execute('select * from wkf_transition where act_from in ('+','.join(map(lambda x: str(x['id']),nodes))+')')
+            node_ids = tuple(map(itemgetter('id'), nodes))
+    cr.execute('select * from wkf_transition where act_from IN %s', (node_ids,))
     transitions = cr.dictfetchall()
     for t in transitions:
         if not t['act_to'] in activities:
