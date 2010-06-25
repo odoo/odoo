@@ -95,6 +95,7 @@ class account_common_report(osv.osv_memory):
         if context is None:
             context = {}
         result = {}
+        period_obj = self.pool.get('account.period')
         result['fiscalyear'] = data['form']['fiscalyear_id'] and data['form']['fiscalyear_id'] or False
         if data['form']['filter'] == 'filter_date':
             result['date_from'] = data['form']['date_from']
