@@ -2840,7 +2840,7 @@ class orm(orm_template):
             select_fields = ','.join(fields_pre2 + ['id'])
             query = 'SELECT %s FROM "%s" WHERE id IN %%s' % (select_fields, self._table)
             if d1:
-                query += " AND " + d1
+                query += " AND " + (' OR '.join(d1))
             query += " ORDER BY " + order_by
             for sub_ids in cr.split_for_in_conditions(ids):
                 if d1:
