@@ -108,7 +108,7 @@ class account_common_report(osv.osv_memory):
             period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])['date_start']
             period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])['date_stop']
             cr.execute('SELECT id FROM account_period WHERE date_start >= %s AND date_stop <= %s', (period_date_start, period_date_stop))
-            result['periods'] = lambda x: x[0], cr.fetchall()
+            result['periods'] = map(lambda x: x[0], cr.fetchall())
         return result
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
@@ -124,6 +124,8 @@ class account_common_report(osv.osv_memory):
         used_context = self._build_context(cr, uid, ids, data, context)
         if used_context.get('periods', False):
             data['form']['periods'] = used_context['periods']
+        else:
+            data['form']['periods'] = []
         query_line = self.pool.get('account.move.line')._query_get(cr, uid, obj='l', context=used_context)
         return self._print_report(cr, uid, ids, data, query_line, context=context)
 
