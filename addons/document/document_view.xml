@@ -36,8 +36,6 @@
             <tree string="Storage Media" toolbar="1">
                 <field name="name"/>
                 <field name="type"/>
-                <field name="online"/>
-                <field name="readonly"/>
             </tree>
         </field>
     </record>
@@ -48,16 +46,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document storage">
-                    <filter string="Database Storage" domain="[('type','=','db')]"/>
-                    <filter string="Internal File storage" domain="[('type','=','filestore')]"/>
-                    <filter string="External File storage" domain="[('type','=','realstore')]"/>
-                    <separator orientation="vertical"/>
                     <field name="name" />
-                    <field name="user_id" />                    
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Type"  domain="[]" context="{'group_by':'type'}"/>
-                        <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>                                               
                     </group>
                </search>
             </field>
