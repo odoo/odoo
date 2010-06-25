@@ -282,12 +282,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         defaults = super(crm_lead_forward_to_partner, self).default_get(cr, uid, fields, context=context)
 
-        active_ids = context.get('active_ids')
-        if not active_ids:
+        active_id = context.get('active_id')
+        if not active_id:
             return defaults
 
         lead_proxy = self.pool.get('crm.lead')
-        lead = lead_proxy.browse(cr, uid, active_ids[0], context=context)
+        lead = lead_proxy.browse(cr, uid, active_id, context=context)
 
         message = self._get_case_history(cr, uid, defaults.get('history'), lead.id, context=context)
         defaults.update({

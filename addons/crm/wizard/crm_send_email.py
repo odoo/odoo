@@ -172,7 +172,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from})
             if 'email_from' in fields:
-                res.update({'email_from': case.section_id and case.section_id.reply_to or user_mail_from})
+                res.update({'email_from': user_mail_from})
             if 'subject' in fields:
                 res.update({'subject': str(context.get('subject', case.name) or '')})
             if 'email_cc' in fields:
@@ -209,7 +209,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from or hist.email_from or False})
             if 'email_from' in fields:
-                res.update({'email_from': case.section_id and case.section_id.reply_to or user_mail_from})
+                res.update({'email_from': user_mail_from})
 
             signature = '\n' + (case.user_id.signature or '')
             original = [signature]
