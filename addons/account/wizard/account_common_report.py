@@ -104,8 +104,8 @@ class account_common_report(osv.osv_memory):
         elif data['form']['filter'] == 'filter_period':
             if data['form']['period_from'] == False or data['form']['period_to'] == False:
                 raise osv.except_osv(_('Error'),_('Select Start period and End period'))
-            period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])[0]['date_start']
-            period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])[0]['date_stop']
+            period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])['date_start']
+            period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])['date_stop']
             cr.execute('SELECT id FROM account_period WHERE date_start >= %s AND date_stop <= %s', (period_date_start, period_date_stop))
             result['periods'] = lambda x: x[0], cr.fetchall()
         return result
