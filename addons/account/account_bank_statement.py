@@ -284,6 +284,13 @@ class account_bank_statement(osv.osv):
                                 _('Account move line "%s" is not valid') % line.name)
 
                 if move.reconcile_id and move.reconcile_id.line_ids:
+                    ## Search if move has already a partial reconciliation
+                    previous_partial = False
+                    for line_reconcile_move in move.reconcile_id.line_ids:
+                        if line_reconcile_move.reconcile_partial_id:
+                            previous_partial = True
+                            break
+                    ##
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
                     if abs(move.reconcile_amount-move.amount)<0.0001:
@@ -293,8 +300,15 @@ class account_bank_statement(osv.osv):
                         for entry in move.reconcile_id.line_new_ids:
                             writeoff_acc_id = entry.account_id.id
                             break
+                        ## If we have already a partial reconciliation
+                        ## We need to make a partial reconciliation
+                        ## To add this amount to previous paid amount
+                        if previous_partial:
+                            account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
+                        ## If it's the first reconciliation, we do a full reconciliation as regular
+                        else:
+                            account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
 
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
                     #except:
