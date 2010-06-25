@@ -101,7 +101,6 @@ class ir_values(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_values_key_model_key2_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_values_key_model_key2_index ON ir_values (key, model, key2)')
-            cr.commit()
 
     def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
         if type(value)==type(u''):
