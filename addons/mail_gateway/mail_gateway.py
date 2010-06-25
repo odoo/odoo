@@ -50,8 +50,20 @@ class mailgate_thread(osv.osv):
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
         raise Exception, _('Method is not implemented')
 
-    def emails_get(self, cr, uid, ids, context=None):
-        raise Exception, _('Method is not implemented')
+    def message_followers(self, cr, uid, ids, context=None):
+        """ Get a list of emails of the people following this thread
+        """
+        res = {}
+        if isinstance(ids, (str, int, long)):
+            ids = [long(ids)]
+        for thread in self.browse(cr, uid, ids, context=context):
+            l=[]
+            for message in thread.message_ids:
+                l.append((message.user_id and message.user_id.email) or '')
+                l.append(message.email_from or '')
+                l.append(message.email_cc or '')
+            res[thread.id] = l
+        return res
 
     def msg_send(self, cr, uid, id, *args, **argv):
         raise Exception, _('Method is not implemented')
@@ -169,16 +181,8 @@ class mailgate_tool(osv.osv_memory):
             text = decode_header(text.replace('\r', '')) 
         return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), text or []))
 
-    def to_email(self, text):
-        _email = re.compile(r'.*<.*@.*\..*>', re.UNICODE)
-        def record(path):
-            eml = path.group()
-            index = eml.index('<')
-            eml = eml[index:-1].replace('<', '').replace('>', '')
-            return eml
-
-        bits = _email.sub(record, text)
-        return bits
+    def to_email(self,text):
+        return re.findall(r'([^ ,<@]+@[^> ,]+)',text)
 
     def history(self, cr, uid, model, res_ids, msg, attach, context=None):
         """This function creates history for mails fetched
@@ -213,58 +217,39 @@ class mailgate_tool(osv.osv_memory):
             msg_id = msg_pool.create(cr, uid, msg_data, context=context)
         return True
 
-    def email_send(self, cr, uid, model, res_id, msg, from_email=False, email_default=False):
-        """This function Sends return email on submission of  Fetched email in OpenERP database
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param model: OpenObject Model
+    def email_forward(self, cr, uid, model, res_ids, msg,  email_error=False):
+        """Sends an email to all people following the thread
         @param res_id: Id of the record of OpenObject model created from the Email details 
         @param msg: Email details
-        @param email_default: Default Email address in case of any Problem
+        @param email_error: Default Email address in case of any Problem
         """
-        history_pool = self.pool.get('mailgate.message')
-        model_pool = self.pool.get(model)
-        from_email = from_email or tools.config.get('email_from', None)
-        message = email.message_from_string(tools.ustr(msg).encode('utf-8'))
-        subject = message['Subject']
+        for res_id in res_ids:
+            history_pool = self.pool.get('mailgate.message')
+            message = email.message_from_string(tools.ustr(msg).encode('utf-8'))
+            encoding = message.get_content_charset()
+            message['body'] = message.get_payload(decode=True)
+            if encoding:
+                message['body'] = self._to_decode(message['body'], [encoding])
+            subject = message['Subject']
 
-        values = {}
-        if hasattr(model_pool, 'emails_get'):
-            values = model_pool.emails_get(cr, uid, [res_id])
-        emails = values.get(res_id, {})
+            from_email = self._decode_header(message['From'])
 
-        priority = emails.get('priority', [3])[0]
-        em = emails['user_email'] + emails['email_from'] + emails['email_cc']
-        msg_mails = map(self.to_email, filter(None, em))
+            model_pool = self.pool.get(model)
+            message_followers = model_pool.message_followers(cr, uid, [res_id])[res_id]
+            message_followers_emails = self.to_email(','.join(message_followers))
 
-        encoding = message.get_content_charset()
-        message['body'] = message.get_payload(decode=True)
-        if encoding:
-            message['body'] = self._to_decode(message['body'], [encoding])
+            message_recipients = self.to_email(','.join([from_email,self._decode_header(message['To']),self._decode_header(message['Cc'])]) )
+            message_forward = [i for i in message_followers_emails if (i and (i not in message_recipients))]
 
-        from_mail = self._decode_header(message['From'])
-        body = _("""
-Hello %s,""" % (from_mail))
-        body += _("""
-
-    Your Request ID: %s""") % (res_id)
-        body += _("""
-Thanks
-
--------- Original Message --------
-%s
-""") % (self._to_decode(message['body'], [encoding]))
-        res = None
-        try:
-            res = tools.email_send(from_email, msg_mails, subject, body, openobject_id=res_id)
-        except Exception, e:
-            if email_default:
-                temp_msg = '[%s] %s'%(res_id, message['Subject'])
-                del message['Subject']
-                message['Subject'] = '[OpenERP-FetchError] %s' %(temp_msg)
-                tools.email_send(from_email, email_default, message.get('Subject'), message.get('body'), openobject_id=res_id)
-        return res
+            res = None
+            try:
+                res = tools.email_send(from_email, message_forward, subject, body, openobject_id=res_id)
+            except Exception, e:
+                if email_error:
+                    temp_msg = '[%s] %s'%(res_id, message['Subject'])
+                    del message['Subject']
+                    message['Subject'] = '[OpenERP-Error] %s' %(temp_msg)
+                    tools.email_send(from_email, email_error, message.get('Subject'), message.get('body'), openobject_id=res_id)
 
     def process_email(self, cr, uid, model, message, attach=True, context=None):
         """This function Processes email and create record for given OpenERP model 
@@ -394,7 +379,6 @@ Thanks
                         res = part.get_payload(decode=True)
                         if encoding:
                             res = tools.ustr(res)
-
                         body += res
 
             msg['body'] = body
@@ -442,6 +426,7 @@ Thanks
                             context = context)
         else:
             self.history(cr, uid, model, res_ids, msg, att_ids, context=context)
+        self.email_forward(cr, uid, model, res_ids, message)
         return new_res_id
 
     def get_partner(self, cr, uid, from_email, context=None):
@@ -456,7 +441,7 @@ Thanks
             'partner_address_id': False,
             'partner_id': False
         }
-        from_email = self.to_email(from_email)
+        from_email = self.to_email(from_email)[0]
         address_ids = address_pool.search(cr, uid, [('email', '=', from_email)])
         if address_ids:
             address = address_pool.browse(cr, uid, address_ids[0])

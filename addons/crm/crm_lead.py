@@ -331,37 +331,6 @@ and users"),
 
         return res
 
-    def emails_get(self, cr, uid, ids, context=None):
-
-        """
-        Get Emails
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of email’s IDs
-        @param context: A standard dictionary for contextual values
-        """
-        res = {}
-
-        if isinstance(ids, (str, int, long)):
-            select = [long(ids)]
-        else:
-            select = ids
-
-        for thread in self.browse(cr, uid, select, context=context):
-            values = collections.defaultdict(set)
-
-            for message in thread.message_ids:
-                user_email = (message.user_id and message.user_id.address_id and message.user_id.address_id.email) or False
-                values['user_email'].add(user_email)
-                values['email_from'].add(message.email_from)
-                values['email_cc'].add(message.email_cc or False)
-            values['priority'] = thread.priority
-
-            res[thread.id] = dict((key,list(values[key])) for key, value in values.iteritems())
-
-        return res
-
     def msg_send(self, cr, uid, id, *args, **argv):
 
         """ Send The Message
