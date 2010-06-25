@@ -288,7 +288,7 @@
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
         <field name="domain">[('parent_id','child_of',active_id)]</field>
-        <field name="context">{'parent_id':'active_id'}</field>
+        <field name="context">{'parent_id':active_id}</field>
     </record>
 
     <record model="ir.values" id="ir_action_document_file_directory_form">
