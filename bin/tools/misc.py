@@ -374,10 +374,6 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace('<em>','/').replace('</em>','/')
 
 
-    # the only line breaks we respect is those of ending tags and
-    # breaks
-
-    html = html.replace('\n',' ')
     html = html.replace('<br>', '\n')
     html = html.replace('<tr>', '\n')
     html = html.replace('</p>', '\n\n')
@@ -400,6 +396,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
         if i == 0:
             html += '\n\n'
         html += ustr('[%s] %s\n') % (i+1, url)
+
     return html
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
