@@ -111,9 +111,12 @@ class module(osv.osv):
             try:
                 key = data_id['model']
                 if key=='ir.ui.view':
-                    v = view_obj.browse(cr,uid,data_id.res_id)
-                    aa = v.inherit_id and '* INHERIT ' or ''
-                    res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
+                    try:
+                        v = view_obj.browse(cr,uid,data_id.res_id)
+                        aa = v.inherit_id and '* INHERIT ' or ''
+                        res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
+                    except:
+                        pass
                 elif key=='ir.actions.report.xml':
                     res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
                 elif key=='ir.ui.menu':
