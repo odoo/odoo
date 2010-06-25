@@ -109,7 +109,8 @@ class crm_opportunity(osv.osv):
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'type': 'opportunity',
     }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
