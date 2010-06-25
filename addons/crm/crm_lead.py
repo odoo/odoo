@@ -96,20 +96,20 @@ class crm_lead(osv.osv, crm_case):
 
     _columns = {
         # From crm.case
-        'name': fields.char('Name', size=64), 
-        'active': fields.boolean('Active', required=False), 
+        'name': fields.char('Name', size=64),
+        'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'email_from': fields.char('Email', size=128, help="E-mail address of the contact"),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'),
+                        select=True, help='Sales team to which this case belongs to.\
+                             Defines responsible user and e-mail address for the mail gateway.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'email_cc': fields.text('Watchers Emails', size=252 , help="These \
-people will receive a copy of the future communication between partner \
-and users by email"),
+addresses will receive a copy of the future e-mail communication between partner \
+and users"),
         'description': fields.text('Notes'),
-        'write_date': fields.datetime('Update Date' , readonly=True), 
+        'write_date': fields.datetime('Update Date' , readonly=True),
 
         # Lead fields
         'categ_id': fields.many2one('crm.case.categ', 'Lead Source', \
@@ -274,8 +274,8 @@ and users by email"),
         res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
         if res:
             vals.update(res)
-        res = self.create(cr, uid, vals, context)
 
+        res = self.create(cr, uid, vals, context)
 
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
@@ -318,14 +318,22 @@ and users by email"),
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 vls[key] = res.group(2).lower()
-
         vals.update(vls)
-        res = self.write(cr, uid, ids, vals)
+
+        # Unfortunately the API is based on lists
+        # but we want to update the state based on the
+        # previous state, so we have to loop:
+        for case in self.browse(cr, uid, ids, context=context):
+            values = dict(vals)
+            if case.state == crm.AVAILABLE_STATES[4][0]: #pending
+                values.update(state=crm.AVAILABLE_STATES[1][0]) #open
+            res = self.write(cr, uid, [case.id], values, context=context)
+
         return res
 
     def emails_get(self, cr, uid, ids, context=None):
 
-        """ 
+        """
         Get Emails
         @param self: The object pointer
         @param cr: the current row, from the database cursor,

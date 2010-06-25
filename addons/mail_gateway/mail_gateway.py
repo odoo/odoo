@@ -152,7 +152,7 @@ class mailgate_tool(osv.osv_memory):
 
     _name = 'email.server.tools'
     _description = "Email Server Tools"
-    
+
     def _to_decode(self, s, charsets):
         if not s:
             return s
@@ -168,7 +168,7 @@ class mailgate_tool(osv.osv_memory):
         if text:
             text = decode_header(text.replace('\r', '')) 
         return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), text or []))
- 
+
     def to_email(self, text):
         _email = re.compile(r'.*<.*@.*\..*>', re.UNICODE)
         def record(path):
@@ -179,7 +179,7 @@ class mailgate_tool(osv.osv_memory):
 
         bits = _email.sub(record, text)
         return bits
-    
+
     def history(self, cr, uid, model, res_ids, msg, attach, context=None):
         """This function creates history for mails fetched
         @param self: The object pointer
@@ -212,7 +212,7 @@ class mailgate_tool(osv.osv_memory):
             }
             msg_id = msg_pool.create(cr, uid, msg_data, context=context)
         return True
-    
+
     def email_send(self, cr, uid, model, res_id, msg, from_email=False, email_default=False):
         """This function Sends return email on submission of  Fetched email in OpenERP database
         @param self: The object pointer
@@ -227,10 +227,7 @@ class mailgate_tool(osv.osv_memory):
         model_pool = self.pool.get(model)
         from_email = from_email or tools.config.get('email_from', None)
         message = email.message_from_string(tools.ustr(msg).encode('utf-8'))
-        subject = "[%s] %s" %(res_id, message['Subject'])
-        #msg_mails = []
-        #mails = [self._decode_header(message['From']), self._decode_header(message['To'])]
-        #mails += self._decode_header(message.get('Cc', '')).split(',')
+        subject = message['Subject']
 
         values = {}
         if hasattr(model_pool, 'emails_get'):
@@ -241,11 +238,6 @@ class mailgate_tool(osv.osv_memory):
         em = emails['user_email'] + emails['email_from'] + emails['email_cc']
         msg_mails = map(self.to_email, filter(None, em))
 
-        #mm = [self._decode_header(message['From']), self._decode_header(message['To'])]
-        #mm += self._decode_header(message.get('Cc', '')).split(',')
-
-        #msg_mails = map(self.to_email, filter(None, mm))        
-        
         encoding = message.get_content_charset()
         message['body'] = message.get_payload(decode=True)
         if encoding:
@@ -258,10 +250,9 @@ Hello %s,""" % (from_mail))
 
     Your Request ID: %s""") % (res_id)
         body += _("""
-        
 Thanks
 
--------- Original Message --------        
+-------- Original Message --------
 %s
 """) % (self._to_decode(message['body'], [encoding]))
         res = None
@@ -284,7 +275,6 @@ Thanks
         @param message: Email details
         @param attach: Email attachments
         @param context: A standard dictionary for contextual values"""
-
         model_pool = self.pool.get(model)
         if not context:
             context = {}
@@ -441,14 +431,14 @@ Thanks
         # Store messages
         context.update({'model' : model})
         if hasattr(model_pool, '_history'):
-            model_pool._history(cr, uid, res_ids, _('Receive'), history=True, 
-                            subject = msg.get('subject'), 
-                            email = msg.get('to'), 
-                            details = msg.get('body'), 
-                            email_from = msg.get('from'), 
-                            message_id = msg.get('message-id'), 
+            model_pool._history(cr, uid, res_ids, _('Receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            message_id = msg.get('message-id'),
                             references = msg.get('references', False),
-                            attach = msg.get('attachments', {}).items(), 
+                            attach = msg.get('attachments', {}).items(),
                             context = context)
         else:
             self.history(cr, uid, model, res_ids, msg, att_ids, context=context)
@@ -476,5 +466,3 @@ Thanks
         return res
 
 mailgate_tool()
-
-
