@@ -114,6 +114,10 @@
                             <field name="file_name" colspan="2" />
                             <field name="report_template" colspan="2"
                                     domain="[('model','=',model_int_name)]" />
+                            <group colspan="2">
+                                <button name="create_action" string="Create Action" type="object" colspan="1" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
+                                <button name="delete_action" string="Delete Action" type="object" colspan="1" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
+                            </group>
                         </page>
                     </notebook>
                 </form>

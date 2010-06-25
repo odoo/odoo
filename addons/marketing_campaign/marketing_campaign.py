@@ -289,7 +289,9 @@ class marketing_campaign_activity(osv.osv):
         context = {}
         server_obj = self.pool.get('ir.actions.server')
         context['active_id'] = workitem.res_id
-        return server_obj.run(cr, uid, [activity.server_action_id.id], context)
+        res = server_obj.run(cr, uid, [activity.server_action_id.id], context)
+        #server action return False if the action is perfomed except client_action,other and python code
+        return res==False and True or res 
 
     def process(self, cr, uid, act_id, wi_id, context={}):
         activity = self.browse(cr, uid, act_id)
