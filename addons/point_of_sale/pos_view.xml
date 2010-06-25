@@ -76,7 +76,7 @@
                         <page string="Order and Payment">
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Order Information" colspan="4"/>
-				<field name="user_salesman_id" />
+                                <field name="user_salesman_id" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="shop_id" widget="selection"  />
                                 <field name="name"/>
@@ -174,7 +174,7 @@
             </field>
         </record>
 
-        <menuitem name="Point of Sale" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
+        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="2" />
         <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
@@ -798,15 +798,15 @@
                     id="products_for_output_operations"/>
 
         <menuitem name="Register Management" parent="menu_point_root"
-            id="menu_point_config" sequence="3"/>
+            id="menu_point_config" sequence="4"/>
         <menuitem
-            name="Input Operations" parent="menu_point_config"
+            name="Input Operations" parent="menu_point_of_sale"
             string="Refloat"
             action="action_box_entries"
-            id="menu_wizard_enter_jrnl" sequence="3" />
+            id="menu_wizard_enter_jrnl" sequence="2" />
 
         <menuitem
-            name="Output Operations" parent="menu_point_config"
+            name="Output Operations" parent="menu_point_of_sale"
             string="Refloat"
             action="action_box_out"
             id="menu_wizard_enter_jrnl2" sequence="3" />

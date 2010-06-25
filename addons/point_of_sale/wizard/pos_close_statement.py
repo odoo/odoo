@@ -38,6 +38,7 @@ class pos_close_statement(osv.osv_memory):
         """
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         list_statement = []
+        mod_obj = self.pool.get('ir.model.data')
         statement_obj = self.pool.get('account.bank.statement')
         journal_obj = self.pool.get('account.journal')
         journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True), ('check_dtls', '=', False)])
@@ -46,15 +47,17 @@ class pos_close_statement(osv.osv_memory):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
             list_statement = ids
             statement_obj.button_confirm(cr, uid, ids, context)
-        if not list_statement:
-            return {}
+#        if not list_statement:
+#            return {}
+        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_bank_statement_tree')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {
                 'domain': "[('id','in', list_statement)]",
                 'name': 'Close Statements',
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'account.bank.statement',
-                'view_id': False,
+                'views': [(resource_id,'tree')],
                 'type': 'ir.actions.act_window'
 }
 
