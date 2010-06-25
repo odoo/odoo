@@ -248,7 +248,7 @@ and users by email"),
     def message_new(self, cr, uid, msg, context):
         """
         Automatically calls when new email message arrives
-        
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
@@ -260,7 +260,7 @@ and users by email"),
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-        
+
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -270,13 +270,13 @@ and users by email"),
         }
         if msg.get('priority', False):
             vals['priority'] = priority
-        
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
+
+        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
         if res:
             vals.update(res)
         res = self.create(cr, uid, vals, context)
-        
-        
+
+
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -292,21 +292,18 @@ and users by email"),
         return res
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
-        """ 
+        """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs 
         """
-        
+
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        
+
         msg_from = msg['from']
-        vals.update({
-            'description': msg['body']
-        })
-        if msg.get('priority', False):
+        if msg.get('priority'):
             vals['priority'] = msg.get('priority')
 
         maps = {
@@ -314,14 +311,14 @@ and users by email"),
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
-        vls = { }
+        vls = {}
         for line in msg['body'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
-            if res and maps.get(res.group(1).lower(), False):
+            if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 vls[key] = res.group(2).lower()
-        
+
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
         return res
