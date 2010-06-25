@@ -246,7 +246,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             "Mobile: %s" % (pa.mobile or ''), 
             ]
         return "\n".join(message + ['---'])
-        
+
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
@@ -261,21 +261,21 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         lead_proxy = self.pool.get('crm.lead')
         lead = lead_proxy.browse(cr, uid, active_ids[0], context=context)
         message = False
-        
+
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         email_from = ''
         if user.address_id and user.address_id.email:
             email_from = "%s <%s>" % (user.name, user.address_id.email)
-        
+
         message = self.get_lead_details(cr, uid, lead.id, context=context)
 
         res = {
-            'email_from' : email_from, 
-            'subject' : '[%s-Forward:%06d] %s' % (lead.type.title(), lead.id, lead.name), 
-            'message' : message, 
+            'email_from' : email_from,
+            'subject' : '%s: ' % (_('Fwd'), lead.name),
+            'message' : message,
         }
         if 'history' in fields:
-            res.update({'history': 'info'})
+            res.update({'history': 'latest'})
         return res
 
 crm_lead_forward_to_partner()
