@@ -10,7 +10,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="CRM" position="inside">
+                <page string="History" position="inside">
 	       		    <field name="meeting_ids" colspan="4" nolabel="1" >
 	       			    <tree string="Meetings" colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
 			                <field name="name" string="Subject" />
@@ -29,7 +29,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="CRM" position="inside">
+                <page string="History" position="inside">
                     <field name="phonecall_ids" colspan="4" nolabel="1" />
                 </page>
             </field>
@@ -41,7 +41,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="CRM" position="inside">
+                <page string="History" position="inside">
                     <field name="opportunity_ids" colspan="4" nolabel="1" domain="[('type', '=', 'opportunity')]">
 	                     <tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
 	                         <field name="create_date"/>
