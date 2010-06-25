@@ -127,7 +127,7 @@ class mailgate_message(osv.osv):
     _description = 'Mailgateway Message'
     _order = 'id desc'
     _columns = {
-        'name':fields.char('Message', size=64), 
+        'name':fields.char('Subject', size=128), 
         'model': fields.char('Object Name', size=128), 
         'res_id': fields.integer('Resource ID'),
         'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),

@@ -37,7 +37,6 @@ class crm_lead(osv.osv, crm_case):
     _description = "Lead"
     _order = "priority, id desc"
     _inherit = ['mailgate.thread','res.partner.address']
-
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
         @param cr: the current row, from the database cursor,
