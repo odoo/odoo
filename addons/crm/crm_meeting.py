@@ -43,32 +43,32 @@ class crm_meeting(osv.osv, crm_case):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ["calendar.event"]
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread',"calendar.event"]
     _columns = {
         # From crm.case
-        'name': fields.char('Summary', size=124, required=True), 
-        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}), 
+        'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}), 
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"), 
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', \
+                                 domain="[('partner_id','=',partner_id)]", states={'done': [('readonly', True)]}), 
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]}, \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'), 
-        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
         'id': fields.integer('ID'),
-
+        'create_date': fields.datetime('Creation Date' , readonly=True),
+        'write_date': fields.datetime('Write Date' , readonly=True),
         # Meeting fields
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
             ),
         'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
         'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
-                                 'event_id', 'attendee_id', 'Attendees'),
+                                 'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'date_deadline': fields.datetime('Deadline'),
+        'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
         'state': fields.selection([('open', 'Confirmed'),
                                     ('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),

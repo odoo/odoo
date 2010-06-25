@@ -21,104 +21,15 @@
 #
 ###########################################################################################
 
-import re
-import smtplib
-import email
-import mimetypes
-from email.Header import decode_header
-from email.MIMEText import MIMEText
-import xmlrpclib
-import os
-import binascii
-import time
-import socket
 import logging
-import sys
 import optparse
-
-email_re = re.compile(r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6})")
-case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
-command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
-
-priorities = {
-    '1': '1 (Highest)', 
-    '2': '2 (High)', 
-    '3': '3 (Normal)', 
-    '4': '4 (Low)', 
-    '5': '5 (Lowest)', 
-}
-
-def html2plaintext(html, body_id=None, encoding='utf-8'):
-    ## (c) Fry-IT, www.fry-it.com, 2007
-    ## <peter@fry-it.com>
-    ## download here: http://www.peterbe.com/plog/html2plaintext
-    
-    
-    """ from an HTML text, convert the HTML to plain text.
-    If @body_id is provided then this is the tag where the 
-    body (not necessarily <body>) starts.
-    """
-    try:
-        from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
-    except:
-        return html
-            
-    urls = []
-    if body_id is not None:
-        strainer = SoupStrainer(id=body_id)
-    else:
-        strainer = SoupStrainer('body')
-    
-    soup = BeautifulSoup(html, parseOnlyThese=strainer, fromEncoding=encoding)
-    for link in soup.findAll('a'):
-        title = unicode(link)
-        for url in [x[1] for x in link.attrs if x[0]=='href']:
-            urls.append(dict(url=url, tag=unicode(link), title=title))
-
-    html = unicode(soup)
-            
-    url_index = []
-    i = 0
-    for d in urls:
-        if d['title'] == d['url'] or 'http://'+d['title'] == d['url']:
-            html = html.replace(d['tag'], d['url'])
-        else:
-            i += 1
-            html = html.replace(d['tag'], '%s [%s]' % (d['title'], i))
-            url_index.append(d['url'])
-
-    html = html.replace('<strong>', '*').replace('</strong>', '*')
-    html = html.replace('<b>', '*').replace('</b>', '*')
-    html = html.replace('<h3>', '*').replace('</h3>', '*')
-    html = html.replace('<h2>', '**').replace('</h2>', '**')
-    html = html.replace('<h1>', '**').replace('</h1>', '**')
-    html = html.replace('<em>', '/').replace('</em>', '/')
-
-    # the only line breaks we respect is those of ending tags and 
-    # breaks
-    
-    html = html.replace('\n', ' ')
-    html = html.replace('<br>', '\n')
-    html = html.replace('<tr>', '\n')
-    html = html.replace('</p>', '\n\n')
-    html = re.sub('<br\s*/>', '\n', html)
-    html = html.replace(' ' * 2, ' ')
-
-    html = re.sub('<.*?>', ' ', html)
-
-    # lstrip all lines
-    html = '\n'.join([x.lstrip() for x in html.splitlines()])
-
-    for i, url in enumerate(url_index):
-        if i == 0:
-            html += '\n\n'
-        html += '[%s] %s\n' % (i+1, url)       
-    return html
+import sys
+import xmlrpclib
+import email
 
 class rpc_proxy(object):
-    def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):        
-        self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path))
+    def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):
+        self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path), allow_none=True)
         self.user_id = uid
         self.passwd = passwd
         self.dbname = dbname
@@ -127,7 +38,7 @@ class rpc_proxy(object):
         return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request, **kwargs)
 
 class email_parser(object):
-    def __init__(self, uid, password, model, email, email_default, dbname, host, port):        
+    def __init__(self, uid, password, model, email, email_default, dbname, host, port):
         self.rpc = rpc_proxy(uid, password, host=host, port=port, dbname=dbname)
         try:
             self.model_id = int(model)
@@ -137,301 +48,21 @@ class email_parser(object):
             self.model = str(model)
         self.email = email
         self.email_default = email_default
-        self.canal_id = False
-
-    def email_get(self, email_from):
-        res = email_re.search(email_from)
-        return res and res.group(1)
-
-    def partner_get(self, email):
-        mail = self.email_get(email)
-        adr_ids = self.rpc('res.partner.address', 'search', [('email', '=', mail)])
-        if not adr_ids:
-            return {}
-        adr = self.rpc('res.partner.address', 'read', adr_ids, ['partner_id'])
-        return {
-            'partner_address_id': adr[0]['id'], 
-            'partner_id': adr[0].get('partner_id', False) and adr[0]['partner_id'][0] or False
-        }
-
-    def _to_decode(self, s, charsets):
-       for charset in charsets:
-           if charset:
-               try:
-                   return s.decode(charset)
-               except UnicodeError:
-                    pass
-       return s.decode('latin1')
-
-    def _decode_header(self, text):
-        if text:
-            text = decode_header(text.replace('\r', '')) 
-        return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), text or []))
-
-    def msg_new(self, msg):
-        message = self.msg_body_get(msg)
-        msg_subject = self._decode_header(msg['Subject'])
-        msg_from = self._decode_header(msg['From'])
-        msg_to = self._decode_header(msg['To'])
-        msg_cc = self._decode_header(msg['Cc'] or '')
         
-        data = {
-            'name': msg_subject, 
-            'email_from': msg_from, 
-            'email_cc': msg_cc,             
-            'user_id': False, 
-            'description': message['body'], 
-            'state' : 'draft',
-        }
-        data.update(self.partner_get(msg_from))
-
-        values = {
-            'message_ids' : [
-                (0, 0, {
-                 'model_id' : self.rpc('ir.model', 'search', [('name', '=', self.model)])[0],
-                 'date' : time.strftime('%Y-%m-%d %H:%M:%S'),
-                 'description' : message['body'],
-                 'email_from' : msg_from,
-                 'email_to' : msg_to,
-                 'name' : 'Receive',
-                 'history' : True,
-                 'user_id' : self.rpc.user_id,
-                 }
-                )
-            ]
-        }
-        thread_id = self.rpc('mailgate.thread', 'create', values)
-        data['thread_id'] = thread_id
-        oid = self.rpc(self.model, 'create', data)
-
-        attachments = message['attachment']        
-        for attach in attachments or []:
-            data_attach = {
-                'name': str(attach), 
-                'datas': binascii.b2a_base64(str(attachments[attach])), 
-                'datas_fname': str(attach), 
-                'description': 'Mail attachment', 
-                'res_model': self.model, 
-                'res_id': oid
-            }
-            self.rpc('ir.attachment', 'create', data_attach)
-
-        return (oid, thread_id,)
-
-    def msg_body_get(self, msg):
-        message = {
-            'body' : '',
-            'attachment' : {},
-        }
-        attachment = message['attachment'];
-        counter = 1;
-
-        for part in msg.walk():
-            if part.get_content_maintype() == 'multipart':
-                continue
-
-            if part.get_content_maintype()=='text':
-                buf = part.get_payload(decode=True)
-                if buf:
-                    txt = self._to_decode(buf, part.get_charsets())
-                    txt = re.sub("<\/?(\w)>", '', txt)
-                if txt and part.get_content_subtype() == 'plain':
-                    message['body'] += txt 
-                elif txt and part.get_content_subtype() == 'html':
-                    message['body'] += html2plaintext(txt)  
-
-                filename = part.get_filename();
-                if filename :
-                    attachment[filename] = part.get_payload(decode=True);
-
-            elif part.get_content_maintype() in ('application', 'image', 'text'):
-                filename = part.get_filename();
-                if not filename :
-                    filename = 'attach_file'+str(counter);
-                    counter += 1;
-
-                attachment[filename] = part.get_payload(decode=True);
-            message['attachment'] = attachment
-        #end for        
-        return message
-
-    def msg_user(self, msg, id):
-        body = self.msg_body_get(msg)
-
-        # handle email body commands (ex: Set-State: Draft)
-        actions = {}
-        body_data=''
-        for line in body['body'].split('\n'):
-            res = command_re.match(line)
-            if res:
-                actions[res.group(1).lower()] = res.group(2).lower()
-            else:
-                body_data += line+'\n'
-        body['body'] = body_data
-
-        data = {
-#            'description': body['body'],
-        }
-        act = 'case_open'
-        if 'state' in actions:
-            if actions['state'] in ['draft', 'close', 'cancel', 'open', 'pending']:
-                act = 'case_' + actions['state']
-
-            for k1, k2 in [('cost', 'planned_cost'), ('revenue', 'planned_revenue'), ('probability', 'probability')]:
-                try:
-                    data[k2] = float(actions[k1])
-                except:
-                    pass
-
-        if 'priority' in actions:
-            if actions['priority'] in ('1', '2', '3', '4', '5'):
-                data['priority'] = actions['priority']
-
-        if 'partner' in actions:
-            data['email_from'] = actions['partner'][:128]
-
-        if 'user' in actions:
-            uids = self.rpc('res.users', 'name_search', actions['user'])
-            if uids:
-                data['user_id'] = uids[0][0]
-
-        self.rpc(self.model, act, [id])
-        self.rpc(self.model, 'write', [id], data)
-        attachments = body['attachment']        
-        for attach in attachments or []:
-            data_attach = {
-                'name': str(attach), 
-                'datas': binascii.b2a_base64(str(attachments[attach])), 
-                'datas_fname': str(attach), 
-                'description': 'Mail attachment', 
-                'res_model': self.model, 
-                'res_id': id
-            }
-            self.rpc('ir.attachment', 'create', data_attach)
-
-        self.create_message(id, msg['From'], msg['To'], 'Send', message['body'])
-
-        return id
-
-    def create_message(self, oid, email_from, email_to, name, body):
-        """
-        This functions creates a message in the thread
-
-        > create_message(id, msg['From'], msg['To'], 'Send', message['body'])
-        """
-        values = {
-            'thread_id' : self.rpc(self.model, 'read', [oid], ['thread_id'])[0]['thread_id'][0],
-            'model_id' : self.rpc('ir.model', 'search', [('name', '=', self.model)])[0],
-            'res_id' : oid,
-            'date' : time.strftime('%Y-%m-%d %H:%M:%S'),
-            'description' : body,
-            'email_from' : self._decode_header(email_from),
-            'email_to' : self._decode_header(email_to),
-            'name' : name,
-            'history' : True,
-            'user_id' : self.rpc.user_id,
-        }
-        return self.rpc('mailgate.message', 'create', values)
-
-    def msg_send(self, msg, emails, priority=None):
-        if not emails:
-            return False
-
-        msg['To'] = emails[0]
-        if len(emails) > 1:
-            msg['Cc'] = ','.join(emails[1:])
-        msg['Reply-To'] = self.email
-
-        if priority:
-            msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
-
-        s = smtplib.SMTP()
-        s.connect()
-        s.sendmail(self.email, emails, msg.as_string())
-        s.close()
-        return True
-
-    def msg_partner(self, msg, id):
-        message = self.msg_body_get(msg)
-        body = message['body']
-        act = 'case_open'
-        self.rpc(self.model, act, [id])
-        attachments = message['attachment']        
-        for attach in attachments or []:
-            data_attach = {
-                'name': str(attach), 
-                'datas': binascii.b2a_base64(str(attachments[attach])), 
-                'datas_fname': str(attach), 
-                'description': 'Mail attachment', 
-                'res_model': self.model, 
-                'res_id': id
-            }
-            self.rpc('ir.attachment', 'create', data_attach)
-
-        self.create_message(id, msg['From'], msg['To'], 'Send', message['body'])
-        return id
-
-    def msg_test(self, msg, case_str):
-        if not case_str:
-            return (False, False)
         
-        case_id = int(case_str)
-        emails = self.rpc(self.model, 'emails_get', [case_id])
-        return (case_id, emails)
+        
 
-    def parse(self, msg):
-        case_str = reference_re.search(msg.get('References', ''))
-        if case_str:
-            case_str = case_str.group(1)
-        else:
-            case_str = case_re.search(msg.get('Subject', ''))
-            if case_str:
-                case_str = case_str.group(1)
-
-        logging.info("email: %s -> %s -- %s", msg['From'], self.email, msg['Subject'])
-        (case_id, emails) = self.msg_test(msg, case_str)
-        thread_id = None
-        if case_id:
-            values = self.rpc(self.model, 'read', [case_id], ['thread_id'])
-            if values:
-                thread_id = values[0]['thread_id'][0]
-                emails = emails[str(thread_id)]
-
-            user_email = filter(None, emails['user_email'])[0]
-            
-            if user_email and self.email_get(user_email) == self.email_get(self._decode_header(msg['From'])):
-                self.msg_user(msg, case_id)
-            else:
-                self.msg_partner(msg, case_id)
-        else:
-            case_id, thread_id = self.msg_new(msg)
-            subject = self._decode_header(msg['Subject'])
-            msg['Subject'] = "[%s] %s" % (case_id, subject,)
-            msg['Message-Id'] = "<%s-openerpcrm-%s@%s>" % (time.time(), case_id, socket.gethostname(),)
-
-        logging.info("  case: %r", case_id)
-        logging.info("  thread: %r", thread_id)
-
-        values = self.rpc(self.model, 'emails_get', [case_id])
-
-        emails = values[str(thread_id)]
-
-        priority = emails.get('piority', [3])[0]
-        em = emails['user_email'] + emails['email_from'] + emails['email_cc']
-        emails = map(self.email_get, filter(None, em))
-
-        mm = [self._decode_header(msg['From']), self._decode_header(msg['To'])]+self._decode_header(msg.get('Cc', '')).split(',')
-        msg_mails = map(self.email_get, filter(None, mm))
-
-        emails = filter(lambda m: m and m not in msg_mails, emails)
+    def parse(self, message):
         try:
-            self.msg_send(msg, emails, priority)
-        except:
-            if self.email_default:
-                a = self._decode_header(msg['Subject'])
-                msg['Subject'] = '[OpenERP-CaseError] ' + a
-                self.msg_send(msg, self.email_default.split(','))
-        return case_id, thread_id, emails
+            res_id = self.rpc('email.server.tools', 'process_email', self.model, message)
+        except Exception, e:
+            res_id = False
+
+#    Reply mail
+        if res_id:
+            self.rpc('email.server.tools', 'email_send', self.model, res_id, message, self.email, self.email_default)
+        
+        return res_id
 
 if __name__ == '__main__':
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.0')
@@ -454,7 +85,7 @@ if __name__ == '__main__':
 
     parser = email_parser(options.userid, options.password, options.model, options.email, options.default, dbname=options.dbname, host=options.host, port=options.port)
 
-    msg_txt = email.message_from_file(sys.stdin)
+    msg_txt = sys.stdin.read()
 
     parser.parse(msg_txt)
  

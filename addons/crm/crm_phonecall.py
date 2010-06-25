@@ -31,13 +31,11 @@ class crm_phonecall(osv.osv, crm_case):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread']
     _columns = {
         # From crm.case
         'name': fields.char('Name', size=64),
         'active': fields.boolean('Active', required=False), 
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1), 
         'create_date': fields.datetime('Creation Date' , readonly=True),
@@ -84,6 +82,8 @@ class crm_phonecall(osv.osv, crm_case):
         'date_closed': fields.datetime('Closed', readonly=True), 
         'date': fields.datetime('Date'), 
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
     }
 
     _defaults = {

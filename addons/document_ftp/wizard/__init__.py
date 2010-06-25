@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,30 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+import ftp_browse
+import ftp_configuration
 
-{
-    "name" : "Accounting Reports",
-    "version" : "1.0",
-    "depends" : [
-        "account"
-    ],
-    "author" : "Tiny ERP",
-    "description": """Accounting Reports 
-Modules gives the 2 most Important Reports for the Accounting
-* Profit and Loss Account
-* Balance Sheet
-    """,
-    "website" : "http://tinyerp.com/module_account.html",
-    "category" : "Generic Modules/Accounting",
-    "init_xml" : [
-    ],
-    "demo_xml" : [
-                   
-    ],
-    "update_xml" : [
-        "wizard/account_pl_report_view.xml",
-        "wizard/account_bs_report_view.xml"
-    ],
-    "active": False,
-    "installable": True
-}
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
