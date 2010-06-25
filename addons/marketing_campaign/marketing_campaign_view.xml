@@ -362,7 +362,7 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Workitems">
+            <tree string="Marketing Campaign Activities">
                 <field name="segment_id"/>
                 <field name="activity_id" />
                 <field name="res_name" />
@@ -381,7 +381,7 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Workitem">
+            <form string="Marketing Campaign Activities">
                 <group colspan="4" col="6">
                     <group colspan="2" col="2">
                         <separator string="Campaign Step" colspan="2"/>
@@ -421,7 +421,7 @@
        <field name="model">marketing.campaign.workitem</field>
        <field name="type">search</field>
        <field name="arch" type="xml">
-           <search string="Workitems">
+           <search string="Marketing Campaign Activities">
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name = "todo" domain="[('state','=','todo')]"/>
                <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','inprogress')]"/>
                <filter icon="terp-emblem-important" string="Exception" domain="[('state','=','exception')]"/>
@@ -443,7 +443,7 @@
    </record>
 
     <record model="ir.actions.act_window" id="action_marketing_campaign_workitem">
-        <field name="name">Workitems</field>
+        <field name="name">Campaign Activities</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">marketing.campaign.workitem</field>
         <field name="view_type">form</field>
