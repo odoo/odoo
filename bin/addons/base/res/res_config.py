@@ -114,6 +114,14 @@ class res_config_configurable(osv.osv_memory):
                                   'next action is %s' % next)
         if next:
             action = next.action_id
+            print {
+                'view_mode': action.view_mode,
+                'view_type': action.view_type,
+                'view_id': action.view_id and [action.view_id.id] or False,
+                'res_model': action.res_model,
+                'type': action.type,
+                'target': action.target,
+            }
             return {
                 'view_mode': action.view_mode,
                 'view_type': action.view_type,
@@ -121,7 +129,7 @@ class res_config_configurable(osv.osv_memory):
                 'res_model': action.res_model,
                 'type': action.type,
                 'target': action.target,
-                }
+            }
         self.logger.notifyChannel(
             'actions', netsvc.LOG_INFO,
             'all configuration actions have been executed')
@@ -133,6 +141,7 @@ class res_config_configurable(osv.osv_memory):
             .read(cr, uid, current_user_menu.id)
 
     def start(self, cr, uid, ids, context=None):
+        print 'Start'
         ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
         for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
             if (todo.restart=='always') or (todo.restart=='onskip' and (todo.state in ('skip','cancel'))):

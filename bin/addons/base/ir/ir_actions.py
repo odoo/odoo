@@ -523,6 +523,7 @@ class actions_server(osv.osv):
     #   ACTION_ID : Action to launch
 
     def run(self, cr, uid, ids, context={}):
+        print 'Run Server Action'
         logger = netsvc.Logger()
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
@@ -536,7 +537,9 @@ class actions_server(osv.osv):
                 'uid' : uid
             }
             expr = eval(str(action.condition), cxt)
+            print expr, action.state
             if not expr:
+                print 'Not Expr'
                 continue
 
             if action.state=='client_action':
@@ -545,6 +548,7 @@ class actions_server(osv.osv):
                 return self.pool.get(action.action_id.type)\
                     .read(cr, uid, action.action_id.id, context=context)
 
+            if action.state=='code':
                 if config['server_actions_allow_code']:
                     localdict = {
                         'self': self.pool.get(action.model_id.model),
@@ -556,7 +560,7 @@ class actions_server(osv.osv):
                         'object':obj,
                         'obj': obj,
                         }
-                    eval(action.code, localdict, "exec")
+                    eval(action.code, localdict, mode="exec")
                     if 'action' in localdict:
                         return localdict['action']
                 else:
