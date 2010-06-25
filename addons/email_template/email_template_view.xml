@@ -56,14 +56,16 @@
                     <field name="model_int_name" invisible="1" />
                     <notebook colspan="4">
                         <page string="Mail Details">
-                            <field name="enforce_from_account" required= "1"/>
-                            <group col="4" colspan="2">
+                            <group col="2" colspan="2">
+                                <separator string="Addresses" colspan="2"/>
                                 <field name="from_email"/>
-                                <field name="def_to" colspan="4" required="1" />
-                                <field name="def_cc" colspan="4" />
-                                <field name="def_bcc" colspan="4" />
+                                <field name="def_to" required="1"/>
+                                <field name="def_cc"/>
+                                <field name="def_bcc"/>
                             </group>
                             <group col="2" colspan="2">
+                                <separator string="Email Data" colspan="2"/>
+                                <field name="enforce_from_account" required= "1"/>
                                 <field name="def_subject" colspan="4" required="1" />
                                 <field name="use_sign" colspan="4" />
                                 <field name="lang" colspan="4" />

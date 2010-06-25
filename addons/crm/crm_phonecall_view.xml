@@ -118,9 +118,6 @@
                 <separator colspan="4" />
                 <group col="8" colspan="4">
                     <field name="state" select="1" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
@@ -132,6 +129,9 @@
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object"
                         icon="gtk-convert" />
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                 </group>
             </form>
         </field>
@@ -146,8 +146,8 @@
         <field name="arch" type="xml">
             <form string="Phone Call">
                 <group colspan="4" col="7">
-                    <field name="name" string="Summary"/>
-                    <field name="date" string="Planned Date"/>
+                    <field name="name" string="Summary" required="1"/>
+                    <field name="date" string="Planned Date" required="1"/>
                     <field name="user_id"/>
                     <button string="Schedule a Meeting"
                         name="action_make_meeting"
@@ -181,8 +181,6 @@
                     <field name="partner_address_id" string="Contact"
                         on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                     <newline/>
-                    <field name="partner_phone" />
-                    <newline/>
                     <field name="partner_mobile" />
                 </group>
                 <group col="2" colspan="2">
@@ -212,6 +210,7 @@
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="state" invisible="1"/>
+                <field name="create_date" invisible="1"/>
                 <button string="Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="draft,open,pending"

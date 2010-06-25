@@ -143,9 +143,10 @@ class crm_opportunity(osv.osv):
             context = {
                 'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
+                'default_user_id': uid, 
                 'default_section_id': opp.section_id and opp.section_id.id or False,
                 'default_email_from': opp.email_from,
-                'default_state': 'open',
+                'default_state': 'open',  
                 'default_name': opp.name
             }
             value = {

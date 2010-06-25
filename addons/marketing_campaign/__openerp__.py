@@ -28,9 +28,15 @@
                 "document",
                 "email_template"
                 ],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
     "description": """
+Allows you to setup leads automation through marketing campaigns. The campaigns
+are dynamic and multi-channels. The process:
+* Design marketing campaigns that incluces mail templates, reports to print,
+  miscelleanous actions, etc.
+* Define segments that are selections of target people
+* Launch your campaign to automate communications.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

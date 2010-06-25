@@ -535,10 +535,10 @@ class stock_picking(osv.osv):
             seq_obj_name =  'stock.picking.' + vals['type']
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         type_list = {
-            'out':_('Packing List'),
+            'out':_('Picking List'),
             'in':_('Reception'),
-            'internal': _('Internal picking'),
-            'delivery': _('Delivery order')
+            'internal': _('Internal Picking'),
+            'delivery': _('Delivery Order')
         }
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         if not vals.get('auto_picking', False):
@@ -711,7 +711,7 @@ class stock_picking(osv.osv):
         """
         for pick in self.browse(cr, uid, ids, context=context):
             type_list = {
-                'out':'Packing List',
+                'out':'Picking List',
                 'in':'Reception',
                 'internal': 'Internal picking',
                 'delivery': 'Delivery order'

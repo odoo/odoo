@@ -79,7 +79,7 @@ you required for the campaign"),
                                                     ('start', '=', True)])
         if not act_ids :
             raise osv.except_osv("Error", "There is no starting activitity in the campaign")
-        act_ids = act_obj.search(cr, uid, [('id', 'in', actvity_idsf), 
+        act_ids = act_obj.search(cr, uid, [('id', 'in', actvity_ids), 
                                             ('type', '=', 'email')])
         for activity in act_obj.browse(cr, uid, act_ids):
             if not activity.email_template_id.enforce_from_account :

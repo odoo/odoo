@@ -121,11 +121,16 @@ class crm_case(object):
 
         s = self.get_stage_dict(cr, uid, ids, context=context)
         section = self._name
+        stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
                 st = case.stage_id.id  or False
                 if st in s[section]:
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
+                    data = {'stage_id': s[section][st]}
+                    stage = stage_pool.browse(cr, uid, s[section][st], context=context)
+                    if stage.on_change:
+                        data.update({'probability': stage.probability})
+                    self.write(cr, uid, [case.id], data)
         return True
 
     def get_stage_dict(self, cr, uid, ids, context=None):
@@ -162,12 +167,17 @@ class crm_case(object):
 
         s = self.get_stage_dict(cr, uid, ids, context=context)
         section = self._name
+        stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
                 st = case.stage_id.id or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
+                    data = {'stage_id': s[section][st]}
+                    stage = stage_pool.browse(cr, uid, s[section][st], context=context)
+                    if stage.on_change:
+                        data.update({'probability': stage.probability})
+                    self.write(cr, uid, [case.id], data)
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -181,7 +191,8 @@ class crm_case(object):
         """
         if not part:
             return {'value': {'partner_address_id': False,
-                            'email_from': False,
+                            'email_from': False, 
+                            'phone': False
                             }}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
@@ -200,7 +211,7 @@ class crm_case(object):
         if not add:
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email}}
+        return {'value': {'email_from': address.email, 'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         mailgate_pool = self.pool.get('mailgate.thread')
@@ -541,7 +552,7 @@ class crm_case_resource_type(osv.osv):
     _rec_name = "name"
 
     _columns = {
-        'name': fields.char('Case Resource Type', size=64, required=True, translate=True),
+        'name': fields.char('Resource Type', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
