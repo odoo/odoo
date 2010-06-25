@@ -175,7 +175,7 @@ class mailgate_tool(osv.osv_memory):
         bits = _email.sub(record, text)
         return bits
     
-    def history(self, cr, uid, model, res_ids, msg, attach):
+    def history(self, cr, uid, model, res_ids, msg, attach, context=None):
         """This function creates history for mails fetched
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -205,7 +205,7 @@ class mailgate_tool(osv.osv_memory):
                         'user_id': uid, 
                         'attachment_ids': [(6, 0, attach)]
             }
-            msg_id = msg_pool.create(cr, uid, msg_data)
+            msg_id = msg_pool.create(cr, uid, msg_data, context=context)
         return True
     
     def email_send(self, cr, uid, model, res_id, msg, from_email=False, email_default=False):
@@ -423,7 +423,8 @@ Thanks
         if not len(res_ids):
             new_res_id = create_record(msg)
             res_ids = [new_res_id]
-        # Store messages        
+        # Store messages
+        context.update({'model' : model})        
         if hasattr(model_pool, '_history'):
             model_pool._history(cr, uid, res_ids, _('Receive'), history=True, 
                             subject = msg.get('subject'), 
@@ -433,9 +434,9 @@ Thanks
                             message_id = msg.get('message-id'), 
                             references = msg.get('references', False),
                             attach = msg.get('attachments', {}).items(), 
-                            context = {'model' : model})
+                            context = context)
         else:
-            self.history(cr, uid, model, res_ids, msg, att_ids)
+            self.history(cr, uid, model, res_ids, msg, att_ids, context=context)
         return new_res_id
 
     def get_partner(self, cr, uid, from_email, context=None):

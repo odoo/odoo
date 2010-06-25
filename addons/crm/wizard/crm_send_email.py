@@ -107,12 +107,7 @@ class crm_send_new_email(osv.osv_memory):
             body = obj.text
 
             body = case_pool.format_body(body)
-            email_from = getattr(obj, 'email_from', False)
-
-            x_headers = {
-                     'model': model, 
-                     'resource-id': res_id
-                     }
+            email_from = getattr(obj, 'email_from', False)            
             if message_id:
                 x_headers['References'] = "%s" % (message_id)
 
