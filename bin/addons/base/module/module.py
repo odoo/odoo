@@ -337,7 +337,6 @@ class module(osv.osv):
         # iterate through installed modules and mark them as being so
         for mod_name in addons.get_modules():
             ids = self.search(cr, uid, [('name','=',mod_name)])
-
             terp = self.get_module_info(mod_name)
             values = self.get_values_from_terp(terp)
 
@@ -347,7 +346,7 @@ class module(osv.osv):
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     self.write(cr, uid, id, {'state': 'uninstalled'})
                 if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
-                    self.write(cr, uid, id, { 'url': ''})
+                    self.write(cr, uid, id, {'url': ''})
                     res[0] += 1
                 self.write(cr, uid, id, values)
                 cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s', (id,))
@@ -358,6 +357,7 @@ class module(osv.osv):
                 if not terp or not terp.get('installable', True):
                     continue
 
+                ids = self.search(cr, uid, [('name','=',mod_name)])
                 id = self.create(cr, uid, dict(name=mod_name, state='uninstalled', **values))
                 res[1] += 1
             self._update_dependencies(cr, uid, id, terp.get('depends', []))
@@ -466,18 +466,6 @@ class module(osv.osv):
                     logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
-
-    def create(self, cr, uid, data, context={}):
-        id = super(module, self).create(cr, uid, data, context)
-        if data.get('name'):
-            self.pool.get('ir.model.data').create(cr, uid, {
-                'name': 'module_meta_information',
-                'model': 'ir.module.module',
-                'res_id': id,
-                'module': data['name'],
-                'noupdate': True,
-            })
-        return id
 module()
 
 class module_dependency(osv.osv):
