@@ -232,7 +232,7 @@ class email_template(osv.osv):
         template_obj = self.browse(cr, uid, ids)[0]
         src_obj = template_obj.object_name.model
         vals['ref_ir_act_window'] = self.pool.get('ir.actions.act_window').create(cr, uid, {
-             'name': _("%s Mail Form") % template_obj.name,
+             'name': template_obj.name,
              'type': 'ir.actions.act_window',
              'res_model': 'email_template.send.wizard',
              'src_model': src_obj,

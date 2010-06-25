@@ -28,6 +28,9 @@ from email.header import decode_header
 import base64
 import re
 from tools.translate import _
+import logging
+
+_logger = logging.getLogger('mailgate')
 
 class mailgate_thread(osv.osv):
     '''
@@ -45,12 +48,12 @@ class mailgate_thread(osv.osv):
         raise Exception, _('Method is not implemented')
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
-        raise Exception, _('Method is not implemented') 
+        raise Exception, _('Method is not implemented')
 
     def emails_get(self, cr, uid, ids, context=None):
-        raise Exception, _('Method is not implemented') 
+        raise Exception, _('Method is not implemented')
 
-    def msg_send(self, cr, uid, id, *args, **argv):        
+    def msg_send(self, cr, uid, id, *args, **argv):
         raise Exception, _('Method is not implemented')
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, \
@@ -92,7 +95,7 @@ class mailgate_thread(osv.osv):
             if history:
                 for att in attach:
                     attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
-                
+
                 data = {
                     'name': subject or 'History', 
                     'history': True, 
@@ -274,7 +277,7 @@ Thanks
         @param uid: the current user’s ID for security checks,
         @param model: OpenObject Model
         @param message: Email details
-        @param attach: Email attachments        
+        @param attach: Email attachments
         @param context: A standard dictionary for contextual values"""
 
         model_pool = self.pool.get(model)
@@ -282,17 +285,17 @@ Thanks
             context = {}
         res_id = False
         # Create New Record into particular model
-        def create_record(msg):            
+        def create_record(msg):
             if hasattr(model_pool, 'message_new'):
                 res_id = model_pool.message_new(cr, uid, msg, context)
             else:
                 data = {
-                    'name': msg.get('subject'), 
-                    'email_from': msg.get('from'), 
-                    'email_cc': msg.get('cc'), 
-                    'user_id': False, 
-                    'description': msg.get('body'), 
-                    'state' : 'draft', 
+                    'name': msg.get('subject'),
+                    'email_from': msg.get('from'),
+                    'email_cc': msg.get('cc'),
+                    'user_id': False,
+                    'description': msg.get('body'),
+                    'state' : 'draft',
                 }
                 data.update(self.get_partner(cr, uid, msg.get('from'), context=context))
                 res_id = model_pool.create(cr, uid, data, context=context)
@@ -301,28 +304,35 @@ Thanks
                 if attach:
                     for attachment in msg.get('attachments', []):
                         data_attach = {
-                            'name': attachment, 
-                            'datas': binascii.b2a_base64(str(attachments.get(attachment))), 
-                            'datas_fname': attachment, 
-                            'description': 'Mail attachment', 
-                            'res_model': model, 
-                            'res_id': res_id, 
+                            'name': attachment,
+                            'datas': binascii.b2a_base64(str(attachments.get(attachment))),
+                            'datas_fname': attachment,
+                            'description': 'Mail attachment',
+                            'res_model': model,
+                            'res_id': res_id,
                         }
-                        att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))               
-            
+                        att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
+
             return res_id
 
         history_pool = self.pool.get('mailgate.message')
-        msg_txt = email.message_from_string(message)
+
+        # Warning: message_from_string doesn't always work correctly on unicode,
+        # we must use utf-8 strings here :-(
+        msg_txt = email.message_from_string(tools.ustr(message).encode('utf-8'))
         message_id = msg_txt.get('Message-ID', False)
         msg = {}
+
         if not message_id:
-            return False
+            # Very unusual situation, be we should be fault-tolerant here
+            message_id = time.time()
+            msg_txt['Message-ID'] = message_id
+            _logger.info('Message without message-id, generating a random one: %s', message_id)
 
         fields = msg_txt.keys()
         msg['id'] = message_id
-        msg['message-id'] = message_id       
-        
+        msg['message-id'] = message_id
+
         if 'Subject' in fields:
             msg['subject'] = self._decode_header(msg_txt.get('Subject'))
 
@@ -348,19 +358,19 @@ Thanks
             msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
 
         if 'References' in fields:
-            msg['references'] = msg_txt.get('References')        
+            msg['references'] = msg_txt.get('References')
 
         if 'X-Priority' in fields:
             msg['priority'] = msg_txt.get('X-priority', '3 (Normal)').split(' ')[0]
 
-        if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', None):
+        if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', ''):
             encoding = msg_txt.get_content_charset()
             msg['body'] = msg_txt.get_payload(decode=True)
             if encoding:
                 msg['body'] = tools.ustr(msg['body'])
 
         attachments = {}
-        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', None):
+        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
             body = ""
             counter = 1
             for part in msg_txt.walk():
@@ -396,7 +406,7 @@ Thanks
             msg['attachments'] = attachments
         res_ids = []
         new_res_id = False
-        if msg.get('references', False):
+        if msg.get('references'):
             references = msg.get('references')
             if '\r\n' in references:
                 references = msg.get('references').split('\r\n')
@@ -415,16 +425,16 @@ Thanks
                     res_id = int(res_id)
                     res_ids.append(res_id)
                     model_pool = self.pool.get(model)
-                
+
                     vals = {}
                     if hasattr(model_pool, 'message_update'):
                         model_pool.message_update(cr, uid, [res_id], vals, msg, context=context)
-                    
+
         if not len(res_ids):
             new_res_id = create_record(msg)
             res_ids = [new_res_id]
         # Store messages
-        context.update({'model' : model})        
+        context.update({'model' : model})
         if hasattr(model_pool, '_history'):
             model_pool._history(cr, uid, res_ids, _('Receive'), history=True, 
                             subject = msg.get('subject'), 
@@ -448,7 +458,7 @@ Thanks
         """
         address_pool = self.pool.get('res.partner.address')
         res = {
-            'partner_address_id': False, 
+            'partner_address_id': False,
             'partner_id': False
         }
         from_email = self.to_email(from_email)
