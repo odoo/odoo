@@ -10,6 +10,17 @@
                 <form position="attributes">
                   <attribute name="string">Account Journal</attribute>
                 </form>
+				<separator string="title" position="attributes">
+    				<attribute name="string">Define Account Journal</attribute>
+				</separator>
+                <xpath expr="//label[@string='description']"
+                       position="attributes">
+                        <attribute name="string"></attribute>
+		        </xpath>
+		        <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                        <attribute name='rowspan'>13</attribute>
+                        <attribute name='string'></attribute>
+                </xpath>
                 <group string="res_config_contents" position="replace">
                   <label colspan="4" align="0.0"
                          string="Set accounts on financial journals defined by CamptoCamp l10n_ch module"/>
