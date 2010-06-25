@@ -24,36 +24,31 @@ from tools.translate import _
 class account_central_journal(osv.osv_memory):
     _name = 'account.central.journal'
     _description = 'Account Central Journal'
+    _inherit = "account.common.report"
+    _defaults={
+               'filter': 'filter_period'
+               }
 
-    _columns = {
-        'journal_id': fields.many2many('account.journal', 'account_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
-        'period_id': fields.many2many('account.period', 'account_period_rel', 'account_id', 'period_id', 'Periods',  required=True),
-        }
-
-    def check_data(self, cr, uid, ids, context={}):
-        obj_jperiod = self.pool.get('account.journal.period')
-        datas = {}
-        datas['ids'] = []
-        datas['model'] = 'account.journal.period'
-        datas['form'] = self.read(cr, uid, ids)[0]
-        period_id = datas['form']['period_id']
-        journal_id = datas['form']['journal_id']
-
-        if isinstance(period_id, list):
-            ids_final = []
-            for journal in journal_id:
-                for period in period_id:
-                    ids_journal_period = obj_jperiod.search(cr,uid, [('journal_id','=',journal),('period_id','=',period)], context=context)
-                    if ids_journal_period:
-                        ids_final.append(ids_journal_period)
-                if not ids_final:
-                    raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.central.journal',
-            'datas': datas,
-            'nodestroy':True,
-            }
+    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+            periods = [x[0] for x in data['form']['periods'][1]]
+            data['form']['periods'] = periods
+            data['ids'] = ids
+            obj_jperiod = self.pool.get('account.journal.period')
+            if isinstance(periods, list):
+                ids_final = []
+                for journal in data['form']['journal_ids']:
+                    for period in periods:
+                        ids_journal_period = obj_jperiod.search(cr,uid, [('journal_id','=',journal),('period_id','=',period)], context=context)
+                        if ids_journal_period:
+                            ids_final.append(ids_journal_period)
+                    if not ids_final:
+                        raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
+            return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'account.central.journal.wiz',
+                'datas': data,
+                'nodestroy':True,
+                }
 
 account_central_journal()
 

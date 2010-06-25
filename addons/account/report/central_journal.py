@@ -45,8 +45,9 @@ class journal_print(report_sxw.rml_parse):
                         self.cr.execute('select a.code, a.name, sum(debit) as debit, sum(credit) as credit from account_move_line l left join account_account a on (l.account_id=a.id) where l.period_id=%s and l.journal_id=%s and l.state<>\'draft\' group by a.id, a.code, a.name, l.journal_id, l.period_id', (period, journal))
                         res = self.cr.dictfetchall()
                         a = {'journal':self.pool.get('account.journal').browse(self.cr, self.uid, journal),'period':self.pool.get('account.period').browse(self.cr, self.uid, period)}
-                        res[0].update(a)
-                        ids_final.append(res)
+                        if res:
+                            res[0].update(a)
+                            ids_final.append(res)
             return ids_final
         self.cr.execute('select a.code, a.name, sum(debit) as debit, sum(credit) as credit from account_move_line l left join account_account a on (l.account_id=a.id) where l.period_id=%s and l.journal_id=%s and l.state<>\'draft\' group by a.id, a.code, a.name', (period_id, journal_id))
         res = self.cr.dictfetchall()
