@@ -43,7 +43,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         'message' : fields.text('Message', required=True),
         'history': fields.selection([('latest', 'Latest email'), ('whole', 'Whole Story'), ('info', 'Case Information')], 'Send history', required=True),
         'add_cc': fields.boolean('Add as CC', required=False, help="Check this box if you want this address to be added in the CC list"\
-                                        " for this case, in order to receive all future conversations"),
+            " for this case, in order to receive all future conversations"),
     }
 
     _defaults = {
@@ -124,6 +124,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             return
 
         model_pool = self.pool.get('crm.lead')
+        print history_type
         if history_type == 'info':
             msg_val = self.get_lead_details(cr, uid, res_id, context=context)
 
@@ -141,7 +142,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             msg_val = self.get_latest_history(cr, uid, log_ids[0].id, context=context)
 
         return msg_val
-
 
     def on_change_partner(self, cr, uid, ids, partner_id):
         """This function fills address information based on partner/user selected
@@ -290,7 +290,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         lead_proxy = self.pool.get('crm.lead')
         lead = lead_proxy.browse(cr, uid, active_id, context=context)
 
-        message = self._get_case_history(cr, uid, defaults.get('history'), lead.id, context=context)
+        message = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
         defaults.update({
             'subject' : '%s: %s' % (_('Fwd'), lead.name),
             'message' : message,
