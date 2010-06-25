@@ -224,8 +224,8 @@ class mailgate_tool(osv.osv_memory):
         history_pool = self.pool.get('mailgate.message')
         model_pool = self.pool.get(model)
         from_email = from_email or tools.config.get('email_from', None)
-        message = email.message_from_string(str(msg))
-        subject = "[%s] %s" %(res_id, self._decode_header(message['Subject']))
+        message = email.message_from_string(tools.ustr(msg).encode('utf-8'))
+        subject = "[%s] %s" %(res_id, message['Subject'])
         #msg_mails = []
         #mails = [self._decode_header(message['From']), self._decode_header(message['To'])]
         #mails += self._decode_header(message.get('Cc', '')).split(',')
@@ -248,7 +248,7 @@ class mailgate_tool(osv.osv_memory):
         message['body'] = message.get_payload(decode=True)
         if encoding:
             message['body'] = tools.ustr(message['body'].decode(encoding))
-        
+
         body = _("""
 Hello %s,
         
@@ -258,13 +258,13 @@ Thanks
 
 -------- Original Message --------        
 %s
-""") %(self._decode_header(message['From']), res_id, message['body'])
+""") %(message['From'], res_id, message['body'])
         res = None
         try:
             res = tools.email_send(from_email, msg_mails, subject, body, openobject_id=res_id)
         except Exception, e:
             if email_default:
-                temp_msg = '[%s] %s'%(res_id, self._decode_header(message['Subject']))
+                temp_msg = '[%s] %s'%(res_id, message['Subject'])
                 del message['Subject']
                 message['Subject'] = '[OpenERP-FetchError] %s' %(temp_msg)
                 tools.email_send(from_email, email_default, message.get('Subject'), message.get('body'), openobject_id=res_id)
