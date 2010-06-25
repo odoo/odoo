@@ -100,8 +100,10 @@ class account_common_report(osv.osv_memory):
             result['date_from'] = data['form']['date_from']
             result['date_to'] = data['form']['date_to']
         elif data['form']['filter'] == 'filter_period':
-            if data['form']['period_from'] == False or data['form']['period_to'] == False:
+            if not data['form']['period_from'] or not data['form']['period_to']:
                 raise osv.except_osv(_('Error'),_('Select Start period and End period'))
+            elif (data['form']['period_from'] > data['form']['period_to']):
+                raise osv.except_osv(_('Error'),_('Start period should be smaller then End period'))
             period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])['date_start']
             period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])['date_stop']
             cr.execute('SELECT id FROM account_period WHERE date_start >= %s AND date_stop <= %s', (period_date_start, period_date_stop))
