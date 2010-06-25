@@ -154,6 +154,8 @@ class mailgate_tool(osv.osv_memory):
     _description = "Email Server Tools"
     
     def _to_decode(self, s, charsets):
+        if not s:
+            return s
         for charset in charsets:
             if charset:
                 try:
@@ -247,18 +249,21 @@ class mailgate_tool(osv.osv_memory):
         encoding = message.get_content_charset()
         message['body'] = message.get_payload(decode=True)
         if encoding:
-            message['body'] = tools.ustr(message['body'].decode(encoding))
+            message['body'] = self._to_decode(message['body'], [encoding])
 
+        from_mail = self._decode_header(message['From'])
         body = _("""
-Hello %s,
-        
-    Your Request ID: %s
+Hello %s,""" % (from_mail))
+        body += _("""
 
+    Your Request ID: %s""") % (res_id)
+        body += _("""
+        
 Thanks
 
 -------- Original Message --------        
 %s
-""") %(message['From'], res_id, message['body'])
+""") % (self._to_decode(message['body'], [encoding]))
         res = None
         try:
             res = tools.email_send(from_email, msg_mails, subject, body, openobject_id=res_id)
