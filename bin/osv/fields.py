@@ -63,7 +63,7 @@ class _column(object):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
 
-    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context='', states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
+    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context={}, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
         self.states = states or {}
         self.string = string
         self.readonly = readonly
