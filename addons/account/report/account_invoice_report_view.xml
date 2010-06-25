@@ -18,8 +18,6 @@
                 <field name="product_id" invisible="1"/>
                 <field name="uom_name" invisible="not context.get('set_visible',False)"/>
                 <field name="categ_id" invisible="1"/>
-                <field name="nbr" sum="# of Lines"/>
-                <field name="product_qty"/>
                 <field name="state" invisible="1"/>
                 <field name="period_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
@@ -29,6 +27,8 @@
                 <field name="address_invoice_id" invisible="1"/>
                 <field name="partner_bank" invisible="1"/>
                 <field name="account_id" invisible="1"/>
+                <field name="nbr" sum="# of Lines"/>
+                <field name="product_qty"/>
                 <field name="reconciled"  sum="# Reconciled"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
