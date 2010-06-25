@@ -135,7 +135,7 @@ class account_bank_statement(osv.osv):
           'balance_start': fields.function(_get_starting_balance, method=True, string='Starting Balance', type='float',digits=(16,2)),
          # 'balance_start': fields.float('Starting Balance',digits=(16,2)),
          # 'balance_end': fields.float('Balance',digits=(16,2)),
-          'state': fields.selection([('draft', 'Draft'),('confirm', 'Confirm'),('open','Open')],
+          'state': fields.selection([('draft', 'Draft'),('confirm', 'Close'),('open','Open')],
                                     'State', required=True, states={'confirm': [('readonly', True)]}, readonly="1"),
           'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, string="Total of Entry encoding"),
           'date':fields.datetime("Opening Date"),
