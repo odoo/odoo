@@ -30,11 +30,9 @@ def geo_find(addr):
     url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
     xml = urllib.urlopen(url).read()
     if '<error>' in xml:
-        print 'Error'
         return None
     result = re.search(regex, xml, re.M|re.I)
     if not result:
-        print 'No Regex', xml
         return None
     return float(result.group(1)),float(result.group(2))
 
@@ -78,18 +76,23 @@ class crm_lead(osv.osv):
     def forward_to_partner(self, cr, uid, ids, context=None):
         fobj = self.pool.get('crm.lead.forward.to.partner')
         for lead in self.browse(cr, uid, ids, context=context):
+            context = {'active_id': lead.id, 'active_ids': [lead.id], 'active_model': 'crm.lead'}
             if lead.partner_assigned_id:
                 email = False
                 if lead.partner_assigned_id.address:
                     email = lead.partner_assigned_id.address[0].email
+                if not email:
+                    raise osv.except_osv(_('Error !'), _('No partner assigned to this opportunity'))
                 forward = fobj.create(cr, uid, {
                     'name': 'email',
                     'history': 'whole',
                     'email_to': email,
                     'message': fobj._get_case_history(cr, uid, 'whole', lead.id, context) or False
-                }, {'active_id': lead.id, 'active_ids': [lead.id]})
+                }, context)
+                fobj.action_forward(cr, uid, [forward], context)
             else:
                 raise osv.except_osv(_('Error !'), _('No partner assigned to this opportunity'))
+        return True
 
     def assign_partner(self, cr, uid, ids, context=None):
         ok = False
