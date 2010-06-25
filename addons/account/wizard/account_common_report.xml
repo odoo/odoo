@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <openerp>
     <data>
+
         <record id="account_common_report_view" model="ir.ui.view">
             <field name="name">Common Report</field>
             <field name="model">account.common.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Select Date-Period">
-
                 <group colspan="4" col="6">
                     <field name="chart_account_id" colspan="2" widget='selection'/>
                     <field name="fiscalyear_id"/>
                     <field name="filter"/>
                 </group>
-
                 <notebook tabpos="up" colspan="6">
                     <page string="Journals">
                         <field name="journal_ids" colspan="4" nolabel="1"/>
@@ -27,7 +27,6 @@
                         <field name="date_to"/>
                     </page>
                 </notebook>
-
 <!--
                 <group colspan="4" col="4" attrs="{'invisible':[('state','!=','bydate')]}">
                     <group colspan="2" col="4">
@@ -109,8 +108,6 @@
             <field name="target">new</field>
         </record>
 -->
-
-
 
     </data>
 </openerp>
