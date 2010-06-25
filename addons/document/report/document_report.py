@@ -53,8 +53,8 @@ class report_document_user(osv.osv):
         'partner':fields.char('Partner',size=64,readonly=True),
      }
     def init(self, cr):
-         cr.execute("""
-            create or replace view report_document_user as (
+        tools.drop_view_if_exists(cr, 'report_document_user')
+        cr.execute("""CREATE VIEW report_document_user AS (
                  select
                      min(f.id) as id,
                      to_char(f.create_date, 'YYYY') as name,
@@ -94,7 +94,7 @@ class report_files_partner(osv.osv):
     def init(self, cr):
          tools.drop_view_if_exists(cr, 'report_files_partner')
          cr.execute("""
-            create or replace view report_files_partner as (
+            CREATE VIEW report_files_partner as (
                 select min(f.id) as id,count(*) as nbr,
                        to_char(f.create_date,'YYYY') as name,
                        min(to_char(f.create_date,'MM')) as month,
@@ -119,8 +119,10 @@ class report_document_file(osv.osv):
      }
     _order = "month"
     def init(self, cr):
-         cr.execute("""
-            create or replace view report_document_file as (
+        print "called an init!"
+        tools.drop_view_if_exists(cr, 'report_document_file')
+        cr.execute("""
+            CREATE VIEW report_document_file AS (
                 select min(f.id) as id,
                        count(*) as nbr,
                        min(EXTRACT(MONTH FROM f.create_date)||'-'||to_char(f.create_date,'Month')) as month,
@@ -145,8 +147,9 @@ class report_document_wall(osv.osv):
              }
 
     def init(self, cr):
-         cr.execute("""
-            create or replace view report_document_wall as (
+        tools.drop_view_if_exists(cr, 'report_document_wall')
+        cr.execute("""
+            CREATE VIEW report_document_wall as (
                select max(f.id) as id,
                to_char(min(f.create_date),'YYYY-MM-DD HH24:MI:SS') as last,
                f.user_id as user_id, f.user_id as user,
