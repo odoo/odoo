@@ -1833,10 +1833,10 @@ class stock_move(osv.osv):
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
         # We should remove this
-        picking_obj = self.pool.get('stock.picking')
-        for pick in picking_obj.browse(cr, uid, picking_ids):
-            if len([(move.state in ('done','cancelled')) for move in pick.move_lines]) == len(pick.move_lines):
-                picking_obj.action_done(cr, uid, [pick.id])
+        #picking_obj = self.pool.get('stock.picking')
+        #for pick in picking_obj.browse(cr, uid, picking_ids):
+        #    if len([(move.state in ('done','cancelled')) for move in pick.move_lines]) == len(pick.move_lines):
+        #        picking_obj.action_done(cr, uid, [pick.id])
 
         for (id,name) in picking_obj.name_get(cr, uid, picking_ids):
             message = _('Document') + " '" + name + "' "+ _("is processed")
