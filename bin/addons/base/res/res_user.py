@@ -265,7 +265,7 @@ class users(osv.osv):
                 result = override_password(result)
             else:
                 result = map(override_password, result)
-        
+
         if isinstance(result, list):
             for rec in result:
                 if not rec.get('action_id',True):
@@ -273,7 +273,7 @@ class users(osv.osv):
         else:
             if not result.get('action_id',True):
                 result['action_id'] = (self._get_menu(cr, uid),'Menu')
-        
+
         return result
 
 
@@ -287,6 +287,15 @@ class users(osv.osv):
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  _('You can not have two users with the same login !'))
     ]
+
+    def _get_email_from(self, cr, uid, ids, context=None):
+        if not isinstance(ids, list):
+            ids = [ids]
+        res = dict.fromkeys(ids)
+        for user in self.browse(cr, uid, ids, context=context):
+            if user.user_email:
+                res[user.id] = "%s <%s>" % (user.name, user.user_email)
+        return res
 
     def _get_admin_id(self, cr):
         if self.__admin_ids.get(cr.dbname) is None:
