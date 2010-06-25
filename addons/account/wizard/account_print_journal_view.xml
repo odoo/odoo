@@ -7,17 +7,28 @@
             <field name="model">account.print.journal</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Print Journal">
-			    <group col="4" colspan="6">
-				    <field name="journal_id"/>
-				    <field name="period_id"/>
-				    <newline/>
-				    <field name="sort_selection"/>
+			<form string="Print Journals">
+			<group height="350" width="650">
+			    <group colspan="4">
+			    	<separator string="Journals" colspan="4"/>
+			    	<newline/>
+			    	<field name="journal_ids" nolabel="1"/>
+			    	<newline/>
+			    	<separator string="Periods" colspan="4"/>
+					<group colspan="4">
+					    <field name="period_from"/>
+					    <field name="period_to"/>
+				    </group>
+				    <group colspan="4">
+					    <separator string="" colspan="4" col="2"/>
+					    <field name="sort_selection" />
+					</group>
 				</group>
+			</group>
 				<separator colspan="4"/>
 			    <group col="2" colspan="4">
-	            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-						<button name="check_data" string="Print" colspan="1" type="object" icon="gtk-ok"/>
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+					<button name="check_report" string="Print" colspan="1" type="object" icon="gtk-ok"/>
 				</group>
 			</form>
             </field>

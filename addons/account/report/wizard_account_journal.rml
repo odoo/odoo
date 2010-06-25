@@ -119,7 +119,7 @@
   <story>
     <para style="Table Contents">[[ repeatIn(objects, 'o') ]]</para>
     <blockTable colWidths="65.0,62.0,58.0,62.0,174.0,57.0,61.0" style="Table1" repeatRows="1">
-       <para style="terp_default_8">[[repeatIn(lines(data['form']['period_id'][0][2],data['form']['journal_id'][0][2],data['form']['sort_selection']), 'line') ]]</para>
+       <para style="terp_default_8">[[repeatIn(lines(data['form']['periods'],data['form']['journal_ids'],data['form']['sort_selection']), 'line') ]]</para>
       <tr>
         <td>
           <para style="P10a">Date</para>

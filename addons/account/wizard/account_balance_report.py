@@ -47,7 +47,7 @@ class account_balance_report(osv.osv_memory):
          @return: A dictionary which of fields with values.
         """
         res = {}
-        if 'journal_ids' in fields:
+        if 'journal_ids' in fields:# FIX me!!
             res['journal_ids'] = []
             return res
         else:
