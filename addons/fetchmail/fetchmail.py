@@ -50,7 +50,7 @@ class email_server(osv.osv):
         'type':fields.selection([
             ('pop', 'POP Server'), 
             ('imap', 'IMAP Server'), 
-        ], 'State', select=True, readonly=False), 
+        ], 'Server Type', select=True, readonly=False), 
         'is_ssl':fields.boolean('SSL ?', required=False), 
         'attach':fields.boolean('Add Attachments ?', required=False), 
         'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}), 
@@ -107,11 +107,13 @@ class email_server(osv.osv):
             ids = self.search(cr, uid, [])
         return self.fetch_mail(cr, uid, ids, context)
 
-    def fetch_mail(self, cr, uid, ids, context={}):
+    def fetch_mail(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
         email_tool = self.pool.get('email.server.tools')
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
-
+            context.update({'server_id': server.id, 'server_type': server.type})
             count = 0
             try:
                 if server.type == 'imap':
@@ -123,10 +125,10 @@ class email_server(osv.osv):
 
                     imap_server.login(server.user, server.password)
                     imap_server.select()
-                    result, data = imap_server.search(None, '(UNSEEN)')
+                    result, data = imap_server.search(None, '(UNSEEN)')                    
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, server_id=server.id, server_type=server.type, context=context)
+                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool = self.pool.get('ir.actions.server')
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
@@ -154,7 +156,7 @@ class email_server(osv.osv):
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
-                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, server_id=server.id, server_type=server.type, context=context)
+                        res_id = email_tool.process_email(cr, uid, server.object_id.model, data[0][1], attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool = self.pool.get('ir.actions.server')
                             action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
@@ -182,9 +184,33 @@ class mailgate_message(osv.osv):
         'type':fields.selection([
             ('pop', 'POP Server'), 
             ('imap', 'IMAP Server'), 
-        ], 'State', select=True, readonly=True), 
+        ], 'Server Type', select=True, readonly=True), 
     }
     _order = 'id desc'
+
+    def create(self, cr, uid, values, context=None):
+        if not context:
+            context={}
+        server_id = context.get('server_id',False)
+        server_type = context.get('server_type',False)
+        if server_id:
+            values['server_id'] = server_id
+        if server_type:
+            values['server_type'] = server_type
+        res = super(mailgate_message,self).create(cr, uid, values, context=context)
+        return res
+
+    def write(self, cr, uid, ids, values, context=None):
+        if not context:
+            context={}
+        server_id = context.get('server_id',False)
+        server_type = context.get('server_type',False)
+        if server_id:
+            values['server_id'] = server_id
+        if server_type:
+            values['server_type'] = server_type
+        res = super(mailgate_message,self).write(cr, uid, ids, values, context=context)
+        return res
 
 mailgate_message()
 

@@ -120,8 +120,8 @@ and users by email"),
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
         'partner_name': fields.char("Partner Name", size=64),
-        'optin': fields.selection([('yes','Yes'),('no','No'),('unknown','/')],'Opt-In'),
-        'optout': fields.selection([('yes','Yes'),('no','No'),('unknown','/')],'Opt-Out'),
+        'optin': fields.boolean('Opt-In'),
+        'optout': fields.boolean('Opt-Out'),
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
@@ -153,8 +153,6 @@ and users by email"),
         'user_id': crm_case._get_default_user,
         'email_from': crm_case._get_default_email,
         'state': lambda *a: 'draft',
-        'optin': lambda *a: 'unknown',
-        'optout': lambda *a: 'unknown',
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
@@ -238,10 +236,19 @@ and users by email"),
                         }
         return value
 
+    def stage_next(self, cr, uid, ids, context=None):
+        stage = super(crm_lead, self).stage_next(cr, uid, ids, context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            if stage_obj.on_change:
+                data = {'probability': stage_obj.probability}
+                self.write(cr, uid, ids, data)
+        return stage
+
     def message_new(self, cr, uid, msg, context):
         """
         Automatically calls when new email message arrives
-        
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
@@ -253,7 +260,7 @@ and users by email"),
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-        
+
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -263,13 +270,13 @@ and users by email"),
         }
         if msg.get('priority', False):
             vals['priority'] = priority
-        
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
+
+        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
         if res:
             vals.update(res)
         res = self.create(cr, uid, vals, context)
-        
-        
+
+
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -285,21 +292,18 @@ and users by email"),
         return res
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
-        """ 
+        """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs 
         """
-        
+
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        
+
         msg_from = msg['from']
-        vals.update({
-            'description': msg['body']
-        })
-        if msg.get('priority', False):
+        if msg.get('priority'):
             vals['priority'] = msg.get('priority')
 
         maps = {
@@ -307,14 +311,14 @@ and users by email"),
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
-        vls = { }
+        vls = {}
         for line in msg['body'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
-            if res and maps.get(res.group(1).lower(), False):
+            if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 vls[key] = res.group(2).lower()
-        
+
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
         return res
@@ -361,7 +365,6 @@ and users by email"),
             @param **args: Return Dictionary of Keyword Value
         """
         return True
-
 crm_lead()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

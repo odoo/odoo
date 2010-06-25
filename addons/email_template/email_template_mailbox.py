@@ -41,6 +41,7 @@ class email_template_mailbox(osv.osv):
         return True
     
     def send_this_mail(self, cr, uid, ids=None, context=None):
+        result = True
         for id in (ids or []):
             try:
                 account_obj = self.pool.get('email_template.account')

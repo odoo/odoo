@@ -332,7 +332,7 @@ class project_issue(osv.osv, crm.crm_case):
         if res:
             vals.update(res)
         res = self.create(cr, uid, vals, context)
-        
+        self.convert_to_bug(cr, uid, [res], context=context)
         
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
@@ -427,4 +427,12 @@ class project_issue(osv.osv, crm.crm_case):
         return True
 
 project_issue()
+
+class project(osv.osv):
+    _inherit = "project.project"
+    _columns = {
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+    }
+project()
+
 

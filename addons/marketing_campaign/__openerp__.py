@@ -24,7 +24,7 @@
     "name" : "",
     "version" : "1.1",
     "depends" : ["marketing",
-                "crm", 
+                "crm",
                 "document",
                 "email_template"
                 ],
@@ -42,8 +42,9 @@ are dynamic and multi-channels. The process:
     'init_xml': [],
     'update_xml': [
         'marketing_campaign_view.xml',
-        'marketing_campaign_data.xml',    
-        'marketing_campaign_workflow.xml',    
+        'marketing_campaign_data.xml',
+        'marketing_campaign_workflow.xml',
+        'res_partner_view.xml',
         'report/campaign_analysis_view.xml',
         "security/marketing_campaign_security.xml",
         "security/ir.model.access.csv"

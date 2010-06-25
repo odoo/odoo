@@ -19,9 +19,18 @@
 #
 ##############################################################################
 
-import marketing_campaign
-import res_partner
-import report
+from osv import fields,osv
+
+class res_partner(osv.osv):
+    """ Inherits partner and adds CRM information in the partner form """
+    _inherit = 'res.partner'
+
+    _columns = {
+                'task_ids': fields.one2many('project.task', 'partner_id',\
+                                        'Tasks', readonly=True),
+                }
+
+res_partner()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

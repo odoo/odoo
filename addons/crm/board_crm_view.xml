@@ -19,15 +19,16 @@
 			<field name="res_model">crm.lead</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="crm.crm_case_tree_view_leads"/>
+			<field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
             <field name="domain">[('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
 		</record>
+
 		<record model="ir.actions.act_window" id="act_my_meetings">
 			<field name="res_model">crm.meeting</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="crm.crm_case_tree_view_meet"/>
-			<field name="domain">[('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+            <field name="domain">[('user_id','=',uid),('state','!=','cancel'),('date','ilike',time.strftime("%Y-%m"))]</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="act_my_leads_stage">
@@ -53,34 +54,28 @@
 			<field name="arch" type="xml">
 				<form string="Connecting Dashboard">
 					<hpaned>
-
 						<child1>
-
 							<action
+								string="My Opportunities"
 								name="%(act_my_leads)d"
 								colspan="4"
 								height="150"
 								width="510"/>
-
 							<action
 								string="My Meetings"
 								name="%(act_my_meetings)d"
 								height="150"
 								colspan="4"/>
-
 						</child1>
-
 						<child2>
 							<action
-                                string="My Leads By Stage"
+                                string="Revenues by stage"
                                 name="%(act_my_leads_stage)d"
                                 colspan="4"/>
-
                             <action
                                 string="My Sales Pipeline"
                                 name="%(act_sales_pipeline)d"
                                 colspan="4"/>
-
                         </child2>
                     </hpaned>
                 </form>
@@ -105,7 +100,5 @@
             action="open_board_crm"
             sequence="1"
             id="menu_board_crm" icon="terp-graph"/>
-
-
     </data>
 </openerp>
