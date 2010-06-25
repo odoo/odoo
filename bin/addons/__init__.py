@@ -342,7 +342,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
             global not_loaded
             not_loaded.append(module)
             logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
-            raise osv.osv.except_osv('Error!',"Module '%s' was not found" % (module,))
+            continue
+            #raise osv.osv.except_osv('Error!',"Module '%s' was not found" % (module,))
 
 
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
