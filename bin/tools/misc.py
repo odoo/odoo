@@ -334,6 +334,9 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     If @body_id is provided then this is the tag where the
     body (not necessarily <body>) starts.
     """
+
+    html = ustr(html)
+
     try:
         from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
     except:
@@ -349,9 +352,9 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     for link in soup.findAll('a'):
         title = link.renderContents()
         for url in [x[1] for x in link.attrs if x[0]=='href']:
-            urls.append(dict(url=url, tag=str(link), title=title))
+            urls.append(dict(url=ustr(url), tag=ustr(link), title=ustr(title)))
 
-    html = soup.__str__()
+    html = ustr(soup.__str__())
 
     url_index = []
     i = 0
@@ -396,7 +399,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     for i, url in enumerate(url_index):
         if i == 0:
             html += '\n\n'
-        html += '[%s] %s\n' % (i+1, url)
+        html += ustr('[%s] %s\n') % (i+1, url)
     return html
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
