@@ -39,8 +39,8 @@
             <field name="model">crm.lead.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Leads Analysis" type="bar">
-                    <field name="day"/>
+                <graph orientation="vertical" string="Leads Analysis" type="bar">
+                    <field name="stage_id"/>
                     <field name="planned_revenue" operator="+"/>
                     <field group="True" name="user_id"/>
                 </graph>
