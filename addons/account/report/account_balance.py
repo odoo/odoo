@@ -56,8 +56,8 @@ class account_balance(report_sxw.rml_parse):
             return True
         def get_fiscalyear(self, form):
             res=[]
-            if form.has_key('fiscalyear'):
-                fisc_id = form['fiscalyear']
+            if form.has_key('fiscalyear_id'):
+                fisc_id = form['fiscalyear_id']
                 if not (fisc_id):
                     return ''
                 self.cr.execute("select name from account_fiscalyear where id = %s" , (int(fisc_id),))
@@ -84,7 +84,7 @@ class account_balance(report_sxw.rml_parse):
                     else:
                         result+=r.name+", "
 
-            return str(result and result[:-1]) or ''
+            return str(result and result[:-1]) or 'ALL'
 
 
         def lines(self, form, ids={}, done=None, level=1):
@@ -100,14 +100,27 @@ class account_balance(report_sxw.rml_parse):
             res={}
             result_acc=[]
             ctx = self.context.copy()
-            ctx['state'] = form['context'].get('state','all')
-            ctx['fiscalyear'] = form['fiscalyear']
-            if form['state']=='byperiod' :
+            
+            ctx['fiscalyear'] = form['fiscalyear_id']
+            if form['filter'] == 'filter_period':            
+                periods = form['periods']
+                if not periods:
+                    sql = """
+                        Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = %s
+                        """
+                    sqlargs = (form['fiscalyear'],)
+                else:
+                    sql = """
+                        Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in %s
+                    """
+                sqlargs = (tuple(periods),)
+                self.cr.execute(sql, sqlargs)   
+                res = self.cr.dictfetchall() 
                 ctx['periods'] = form['periods']
-            elif form['state']== 'bydate':
+            elif form['filter'] == 'filter_date':
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to']
-            elif form['state'] == 'all' :
+            elif form['filter'] == 'filter_no' :
                 ctx['periods'] = form['periods']
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to']
@@ -115,6 +128,7 @@ class account_balance(report_sxw.rml_parse):
 #            def cmp_code(x, y):
 #                return cmp(x.code, y.code)
 #            accounts.sort(cmp_code)
+
             child_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, ids, ctx)
             if child_ids:
                 ids = child_ids
