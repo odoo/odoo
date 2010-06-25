@@ -332,7 +332,7 @@ class project_issue(osv.osv, crm.crm_case):
         if res:
             vals.update(res)
         res = self.create(cr, uid, vals, context)
-        
+        self.convert_to_bug(cr, uid, [res], context=context)
         
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
