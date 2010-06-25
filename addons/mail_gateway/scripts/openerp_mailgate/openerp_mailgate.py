@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #    Copyright (C) 2010-TODAY OpenERP S.A. (http://www.openerp.com)
@@ -17,7 +17,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ###########################################################################################
 
@@ -48,25 +48,25 @@ class email_parser(object):
             self.model = str(model)
         self.email = email
         self.email_default = email_default
-        
-        
-        
+
 
     def parse(self, message):
         try:
             res_id = self.rpc('email.server.tools', 'process_email', self.model, message)
         except Exception, e:
+            logger = logging.getLogger('mail-gateway')
+            logger.warning('Failed to process incoming email. Source of the failed mail is available at debug level.', exc_info=True)
+            logger.debug('Source of the mail that failed to parse:', message)
             res_id = False
 
 #    Reply mail
         if res_id:
             self.rpc('email.server.tools', 'email_send', self.model, res_id, message, self.email, self.email_default)
-        
         return res_id
 
 if __name__ == '__main__':
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.0')
-    group = optparse.OptionGroup(parser, "Note", 
+    group = optparse.OptionGroup(parser, "Note",
         "This program parse a mail from standard input and communicate "
         "with the Open ERP server for case management in the CRM module.")
     parser.add_option_group(group)
@@ -88,5 +88,5 @@ if __name__ == '__main__':
     msg_txt = sys.stdin.read()
 
     parser.parse(msg_txt)
- 
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
