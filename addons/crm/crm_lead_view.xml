@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-	<!--Lead Stage Form view -->
+    <!--Lead Stage Form view -->
 
     <record id="crm_lead_stage_act" model="ir.actions.act_window">
         <field name="name">Lead Stages</field>
@@ -18,7 +18,7 @@
         parent="menu_crm_config_lead" />
 
 
-    	<!--  Resource Type Form View -->
+        <!--  Resource Type Form View -->
 
         <record id="crm_lead_resource_act" model="ir.actions.act_window">
             <field name="name">Lead Resource Type</field>
@@ -34,7 +34,7 @@
             groups="base.group_extended" sequence="2"
             parent="menu_crm_config_lead" />
 
-		<!-- CRM Lead Form View  -->
+        <!-- CRM Lead Form View  -->
 
         <record model="ir.ui.view" id="crm_case_form_view_leads">
         <field name="name">CRM - Leads Form</field>
@@ -205,7 +205,7 @@
         </field>
     </record>
 
-	<!-- CRM Lead Tree View -->
+    <!-- CRM Lead Tree View -->
 
     <record model="ir.ui.view" id="crm_case_tree_view_leads">
         <field name="name">CRM - Leads Tree</field>
@@ -217,6 +217,7 @@
                 <field name="create_date"/>
                 <field name="name"/>
                 <field name="partner_name"/>
+                <field name="country_id" invisible="context.get('invisible_country', True)" />
                 <field name="email_from"/>
                 <field name="phone"/>
 
@@ -230,8 +231,7 @@
                 <button name="stage_next" string="Next"
                     states="open,pending" type="object"
                     icon="gtk-go-forward" />
-                <field name="section_id"
-                    invisible="context.get('invisible_section', True)" />
+                <field name="section_id" invisible="context.get('invisible_section', True)" />
                 <field name="user_id" />
                 <field name="state" />
                 <button name="case_open" string="Open"
@@ -254,7 +254,7 @@
         </field>
     </record>
 
-	<!-- CRM Lead Calendar View -->
+    <!-- CRM Lead Calendar View -->
 
     <record model="ir.ui.view" id="crm_case_calendar_view_leads">
         <field name="name">CRM - Leads Calendar</field>
@@ -271,7 +271,7 @@
         </field>
     </record>
 
-	<!-- CRM Lead Search View -->
+    <!-- CRM Lead Search View -->
 
     <record id="view_crm_case_leads_filter" model="ir.ui.view">
         <field name="name">CRM - Leads Search</field>
@@ -321,6 +321,20 @@
                         help="Show Sales Team"/>
                 </field>
                 <newline/>
+                <group  expand="0" string="Extended options..." groups="base.group_extended">
+                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                      <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                      <separator orientation="vertical"/>
+                      <field name="country_id" context="{'invisible_country': False}">
+                          <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
+                      </field>
+                      <separator orientation="vertical"/>
+                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                      <newline/>
+                      <field name="create_date" string="Creation Date"/>
+                      <field name="date_closed"/>
+                </group>
+                <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -336,6 +350,5 @@
            </search>
         </field>
     </record>
-
 </data>
 </openerp>
