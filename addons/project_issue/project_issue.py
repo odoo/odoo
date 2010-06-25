@@ -428,3 +428,11 @@ class project_issue(osv.osv, crm.crm_case):
 
 project_issue()
 
+class project(osv.osv):
+    _inherit = "project.project"
+    _columns = {
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+    }
+project()
+
+

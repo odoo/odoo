@@ -28,9 +28,9 @@ import pooler
 from tools.translate import _
 
 sale_form = """<?xml version="1.0"?>
-<form string="Create a Sale Order">
+<form string="Convert to Sale Order">
     <field name="partner_id" required="True"/>
-    <field name="shop_id" required="True"/>
+    <field name="shop_id" required="True" widget="selection"/>
     <field name="analytic_account"/>
     <field name="picking_policy" required="True"/>
     <field name="close"/>

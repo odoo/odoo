@@ -81,9 +81,7 @@ class crm_lead2opportunity(osv.osv_memory):
                 'partner_id': this.partner_id.id, 
                 'type': 'opportunity'
             }
-            
             lead_obj.write(cr, uid, lead.id, vals, context=context)
-            
             lead_obj._history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
 
         value = {

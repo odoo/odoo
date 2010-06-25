@@ -19,9 +19,18 @@
 #
 ##############################################################################
 
-import marketing_campaign
-import res_partner
-import report
+from osv import fields,osv
+
+class res_partner(osv.osv):
+    """ Inherits partner and adds CRM information in the partner form """
+    _inherit = 'res.partner'
+
+    _columns = {
+                'emails': fields.one2many('mailgate.message', 'partner_id',\
+                                        'Emails', readonly=True),
+                }
+
+res_partner()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
