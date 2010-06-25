@@ -123,6 +123,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         if not res_id:
             return
 
+        msg_val = ''
         model_pool = self.pool.get('crm.lead')
         print history_type
         if history_type == 'info':
