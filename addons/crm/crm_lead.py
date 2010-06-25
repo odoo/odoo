@@ -117,8 +117,8 @@ and users by email"),
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
         'partner_name': fields.char("Partner Name", size=64),
-        'optin': fields.selection([('yes','Yes'),('no','No'),('unknown','/')],'Opt-In'),
-        'optout': fields.selection([('yes','Yes'),('no','No'),('unknown','/')],'Opt-Out'),
+        'optin': fields.boolean('Opt-In'),
+        'optout': fields.boolean('Opt-Out'),
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
@@ -150,8 +150,6 @@ and users by email"),
         'user_id': crm_case._get_default_user,
         'email_from': crm_case._get_default_email,
         'state': lambda *a: 'draft',
-        'optin': lambda *a: 'unknown',
-        'optout': lambda *a: 'unknown',
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
@@ -235,6 +233,14 @@ and users by email"),
                         }
         return value
 
+    def stage_next(self, cr, uid, ids, context=None):
+        stage = super(crm_lead, self).stage_next(cr, uid, ids, context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            if stage_obj.on_change:
+                data = {'probability': stage_obj.probability}
+                self.write(cr, uid, ids, data)
+        return stage
 crm_lead()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

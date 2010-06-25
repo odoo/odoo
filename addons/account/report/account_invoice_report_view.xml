@@ -57,31 +57,31 @@
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
               <group col="10" colspan="12">
-	            	<filter icon="terp-go-year" string="  365 Days  "
-		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-		                    help="Invoices of last 365 days"/>
-	                <filter icon="terp-go-month" string="   30 Days   "
-	                		name="month"
-	                		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                		help="Invoices of last 30 days"/>
-	                <filter icon="terp-go-week"
-	                        string="    7 Days    "
-	                        separator="1"
-	                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-	                        help="Invoices during last 7 days"/>
-	                <separator orientation="vertical"/>
+                    <filter icon="terp-go-year" string="  365 Days  "
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                            help="Invoices of last 365 days"/>
+                    <filter icon="terp-go-month" string="   30 Days   "
+                            name="month"
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                            help="Invoices of last 30 days"/>
+                    <filter icon="terp-go-week"
+                            string="    7 Days    "
+                            separator="1"
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            help="Invoices during last 7 days"/>
+                    <separator orientation="vertical"/>
                     <filter string="Current"
-	                		icon="terp-check"
-                    		domain="[('state','in',('draft','open'))]"
-                    		help = "Draft and Open Invoices"/>
-                   	<filter string="Pro-forma"
-                   			icon="terp-check"
-                   			domain="[('state','=','proforma'),('state','=','proforma2')]"
-                   			help = "Pro-forma Invoices"/>
-                   	<filter string="Current"
-	                		domain="[('state', '=' ,'open')]"
-	                		help = "open Invoices"/>
-	                <filter string="Done"
+                            icon="terp-check"
+                            domain="[('state','in',('draft','open'))]"
+                            help = "Draft and Open Invoices"/>
+                       <filter string="Pro-forma"
+                               icon="terp-check"
+                               domain="[('state','=','proforma'),('state','=','proforma2')]"
+                               help = "Pro-forma Invoices"/>
+                       <filter string="Current"
+                            domain="[('state', '=' ,'open')]"
+                            help = "open Invoices"/>
+                    <filter string="Done"
                             icon="terp-dialog-close"
                             domain="[('state','=','paid')]"
                             help = "Done Invoices"/>
@@ -89,14 +89,14 @@
                   <field name="partner_id"/>
                     <field name="user_id" widget="selection">
                     <filter icon="terp-dolar"
-                    		string="My Invoices"
-                    		help="My Invoices"
-                    		domain="[('user_id','=',uid)]"/>
+                            string="My Invoices"
+                            help="My Invoices"
+                            domain="[('user_id','=',uid)]"/>
                     </field>
-				</group>
-				<newline/>
+                </group>
+                <newline/>
                 <group expand="0" string="Group By...">
-                    <filter string="Salesman" name='User' icon="terp-personal" context="{'group_by':'user_id'}"/>
+                    <filter string="Salesman" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
                     <separator orientation="vertical"/>
@@ -111,9 +111,9 @@
                     <separator orientation="vertical"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <newline/>
-                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
-                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
+                    <filter string="Day" name="day" icon="terp-go-today" context="{'group_by':'day'}"/>
+                    <filter string="Month" name="month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" name="year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended options..." groups="base.group_extended">
@@ -139,11 +139,19 @@
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_product':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
     </record>
 
     <menuitem action="action_account_invoice_report_all" id="menu_action_account_invoice_report_all" parent="account.menu_finance_statistic_report_statement" sequence="0"/>
+
+    <act_window
+        domain="[('partner_id', '=', active_id)]"
+        id="act_account_invoice_partner_relation"
+        name="Monthly Turnover"
+        context="{'search_default_month':1,'search_default_user':1,'group_by_no_leaf':1,'group_by':[]}"
+        res_model="account.invoice.report"
+        src_model="res.partner"/>
 
 </data>
 </openerp>
