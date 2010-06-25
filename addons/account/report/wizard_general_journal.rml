@@ -178,10 +178,10 @@
 	          </para>
 	        </td>
 	        <td>
-	          <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_debit(data['form']['period_id'][0][2],data['form']['journal_id'][0][2])) ]]</u></para>
+	          <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_debit(data['form']['periods'],data['form']['journal_ids'])) ]]</u></para>
 	        </td>
 	        <td>
-	          <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_credit(data['form']['period_id'][0][2],data['form']['journal_id'][0][2])) ]]</u></para>
+	          <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_credit(data['form']['periods'],data['form']['journal_ids'])) ]]</u></para>
 	        </td>
 	      </tr>
 	    </blockTable>
@@ -191,7 +191,7 @@
 	   <tr>
 	   <td>
 
-	       <para style="terp_default_9"><font>[[ repeatIn( lines( data['form']['period_id'][0][2], data['form']['journal_id'][0][2] ),'line')]]</font></para>
+       <para style="terp_default_9"><font>[[ repeatIn( lines( data['form']['periods'], data['form']['journal_ids'] ),'line')]]</font></para>
 	      <blockTable colWidths="175.0,115.0,82.0,82.0,75.0" style="Table_Sub_Total">
 	        <tr>
 	          <td>
@@ -208,10 +208,10 @@
 	            </para>
 	          </td>
 	          <td>
-	            <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_debit_period( line[0]['pid'],data['form']['journal_id'][0][2])) ]]</u></para>
+	            <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_debit_period( line[0]['pid'],data['form']['journal_ids'])) ]]</u></para>
 	          </td>
 	          <td>
-	            <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_credit_period(line[0]['pid'],data['form']['journal_id'][0][2])) ]]</u></para>
+	            <para style="terp_default_Bold_9_Right"><u>[[ formatLang(sum_credit_period(line[0]['pid'],data['form']['journal_ids'])) ]]</u></para>
 	          </td>
 	        </tr>
 			 <tr>
