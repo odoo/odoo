@@ -13,10 +13,11 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Storage Media">
-                <group colspan="4" col="4">
+                <group colspan="4" col="6">
                     <field name="name" select="1" colspan="4"/>
-                    <field name="user_id"/>
                     <field name="type"/>
+                    <newline/>
+                    <field name="user_id"/>
                     <field name="online"/>
                     <field name="readonly"/>
                 </group>
