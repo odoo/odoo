@@ -48,35 +48,25 @@ class product_uom(osv.osv):
     _name = 'product.uom'
     _description = 'Product Unit of Measure'
 
-    def _factor(self, cursor, user, ids, name, arg, context):
+    def _factor_inv(self, cursor, user, ids, name, arg, context):
         res = {}
         for uom in self.browse(cursor, user, ids, context=context):
             if uom.factor:
-                if uom.factor_inv_data:
-                    res[uom.id] = uom.factor_inv_data
-                else:
-                    res[uom.id] = round(1 / uom.factor, 6)
+                res[uom.id] = round(1 / uom.factor, 6)
             else:
                 res[uom.id] = 0.0
         return res
 
-    def _factor_inv(self, cursor, user, id, name, value, arg, context):
-        ctx = context.copy()
-        if 'read_delta' in ctx:
-            del ctx['read_delta']
+    def _factor_inv_write(self, cursor, user, id, name, value, arg, context):
         if value:
-            data = 0.0
-            if round(1 / round(1/value, 6), 6) != value:
-                data = value
             self.write(cursor, user, id, {
                 'factor': round(1/value, 6),
-                'factor_inv_data': data,
-                }, context=ctx)
+            }, context=context)
         else:
             self.write(cursor, user, id, {
                 'factor': 0.0,
-                'factor_inv_data': 0.0,
-                }, context=ctx)
+            }, context=context)
+        return True
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
@@ -85,17 +75,17 @@ class product_uom(osv.osv):
         'factor': fields.float('Ratio', digits=(12, 6), required=True,
             help='The coefficient for the formula:\n' \
                     '1 (base unit) = coeff (this unit). Ratio = 1 / Factor.'),
-        'factor_inv': fields.function(_factor, digits=(12, 6),
+        'factor_inv': fields.function(_factor_inv, digits=(12, 6),
+            fnct_inv=_factor_inv_write,
             method=True, string='Factor',
             help='The coefficient for the formula:\n' \
                     'coeff (base unit) = 1 (this unit). Factor = 1 / Rate.'),
-        'factor_inv_data': fields.float('Factor', digits=(12, 6)),
         'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
             help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the unit of measure without removing it."),
-        'uom_factor': fields.selection([('bigger','Bigger than the Default'),
-                                        ('smaller','Smaller than the Default'),
-                                        ('','')],'UoM Factor'),
+        'uom_factor': fields.selection([('bigger','Bigger than the default'),
+                                        ('smaller','Smaller than the default'),
+                                        ('default','The Default unit of measure')],'Type of Unit', required=1),
     }
 
     _defaults = {
@@ -103,12 +93,11 @@ class product_uom(osv.osv):
         'factor_inv': lambda *a: 1.0,
         'active': lambda *a: 1,
         'rounding': lambda *a: 0.01,
-        'uom_factor': lambda *a: 'smaller',
+        'uom_factor': lambda *a: 'default',
     }
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'Value of the factor can never be 0 !'),
-        ('factor_inv_data_gt_zero', 'CHECK (factor_inv_data!=0)', 'Value of the factor_inv_data can never be 0 !'),
     ]
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
@@ -124,15 +113,9 @@ class product_uom(osv.osv):
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context={}):
         if from_unit.category_id.id <> to_unit.category_id.id:
             return qty
-        if from_unit.factor_inv_data:
-            amount = qty * from_unit.factor_inv_data
-        else:
-            amount = qty / from_unit.factor
+        amount = qty / from_unit.factor
         if to_unit:
-            if to_unit.factor_inv_data:
-                amount = rounding(amount / to_unit.factor_inv_data, to_unit.rounding)
-            else:
-                amount = rounding(amount * to_unit.factor, to_unit.rounding)
+            amount = rounding(amount * to_unit.factor, to_unit.rounding)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
@@ -145,26 +128,15 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[-1], uoms[0]
         if from_unit.category_id.id <> to_unit.category_id.id:
             return price
-        if from_unit.factor_inv_data:
-            amount = price / from_unit.factor_inv_data
-        else:
-            amount = price * from_unit.factor
+        amount = price * from_unit.factor
         if to_uom_id:
-            if to_unit.factor_inv_data:
-                amount = amount * to_unit.factor_inv_data
-            else:
-                amount = amount / to_unit.factor
+            amount = amount / to_unit.factor
         return amount
 
-    def onchange_factor_inv(self, cursor, user, ids, value):
-        if value == 0.0:
-            return {'value': {'factor': 0}}
-        return {'value': {'factor': round(1/value, 6)}}
-
     def onchange_factor(self, cursor, user, ids, value):
-        if value == 0.0:
-            return {'value': {'factor_inv': 0}}
-        return {'value': {'factor_inv': round(1/value, 6)}}
+        if value == 'default':
+            return {'value': {'factor': 1, 'factor_inv': 1}}
+        return {}
 
 product_uom()
 
