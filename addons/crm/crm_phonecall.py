@@ -52,7 +52,7 @@ class crm_phonecall(osv.osv, crm_case):
                                     ('draft', 'Draft'), 
                                     ('open', 'Todo'), 
                                     ('cancel', 'Cancelled'), 
-                                    ('done', 'Closed'), 
+                                    ('done', 'Done'), 
                                     ('pending', 'Pending'),
                                 ], 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
@@ -89,7 +89,7 @@ class crm_phonecall(osv.osv, crm_case):
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
-        'state': lambda *a: 'draft', 
+        'state': lambda *a: 'open', 
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': lambda *a: 1, 
     }
