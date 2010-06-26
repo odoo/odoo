@@ -118,20 +118,18 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
-
         s = self.get_stage_dict(cr, uid, ids, context=context)
         section = self._name
+        stage = False
         stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
                 st = case.stage_id.id  or False
                 if st in s[section]:
                     data = {'stage_id': s[section][st]}
-                    stage = stage_pool.browse(cr, uid, s[section][st], context=context)
-                    if stage.on_change:
-                        data.update({'probability': stage.probability})
+                    stage = s[section][st]
                     self.write(cr, uid, [case.id], data)
-        return True
+        return stage
 
     def get_stage_dict(self, cr, uid, ids, context=None):
         """This function gives dictionary for stage according to stage levels
@@ -174,9 +172,10 @@ class crm_case(object):
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
                     data = {'stage_id': s[section][st]}
-                    stage = stage_pool.browse(cr, uid, s[section][st], context=context)
-                    if stage.on_change:
-                        data.update({'probability': stage.probability})
+                    if s[section][st]:
+                        stage = stage_pool.browse(cr, uid, s[section][st], context=context)
+                        if stage.on_change:
+                            data.update({'probability': stage.probability})
                     self.write(cr, uid, [case.id], data)
         return True
 

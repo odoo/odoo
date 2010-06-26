@@ -37,7 +37,6 @@ class crm_lead(osv.osv, crm_case):
     _description = "Lead"
     _order = "priority, id desc"
     _inherit = ['mailgate.thread','res.partner.address']
-
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
         @param cr: the current row, from the database cursor,
@@ -97,20 +96,20 @@ class crm_lead(osv.osv, crm_case):
 
     _columns = {
         # From crm.case
-        'name': fields.char('Name', size=64), 
-        'active': fields.boolean('Active', required=False), 
+        'name': fields.char('Name', size=64),
+        'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'email_from': fields.char('Email', size=128, help="E-mail address of the contact"),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'),
+                        select=True, help='Sales team to which this case belongs to.\
+                             Defines responsible user and e-mail address for the mail gateway.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'email_cc': fields.text('Watchers Emails', size=252 , help="These \
-people will receive a copy of the future communication between partner \
-and users by email"),
+addresses will receive a copy of the future e-mail communication between partner \
+and users"),
         'description': fields.text('Notes'),
-        'write_date': fields.datetime('Update Date' , readonly=True), 
+        'write_date': fields.datetime('Update Date' , readonly=True),
 
         # Lead fields
         'categ_id': fields.many2one('crm.case.categ', 'Lead Source', \
@@ -120,8 +119,8 @@ and users by email"),
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.lead')]"),
         'partner_name': fields.char("Partner Name", size=64),
-        'optin': fields.selection([('yes','Yes'),('no','No'),('unknown','/')],'Opt-In'),
-        'optout': fields.selection([('yes','Yes'),('no','No'),('unknown','/')],'Opt-Out'),
+        'optin': fields.boolean('Opt-In'),
+        'optout': fields.boolean('Opt-Out'),
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
@@ -153,8 +152,7 @@ and users by email"),
         'user_id': crm_case._get_default_user,
         'email_from': crm_case._get_default_email,
         'state': lambda *a: 'draft',
-        'optin': lambda *a: 'unknown',
-        'optout': lambda *a: 'unknown',
+        'type': lambda *a: 'lead',
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
@@ -238,10 +236,19 @@ and users by email"),
                         }
         return value
 
+    def stage_next(self, cr, uid, ids, context=None):
+        stage = super(crm_lead, self).stage_next(cr, uid, ids, context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            if stage_obj.on_change:
+                data = {'probability': stage_obj.probability}
+                self.write(cr, uid, ids, data)
+        return stage
+
     def message_new(self, cr, uid, msg, context):
         """
         Automatically calls when new email message arrives
-        
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
@@ -253,7 +260,7 @@ and users by email"),
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-        
+
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -263,13 +270,13 @@ and users by email"),
         }
         if msg.get('priority', False):
             vals['priority'] = priority
-        
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
+
+        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
         if res:
             vals.update(res)
+
         res = self.create(cr, uid, vals, context)
-        
-        
+
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -285,21 +292,18 @@ and users by email"),
         return res
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
-        """ 
+        """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs 
         """
-        
+
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        
+
         msg_from = msg['from']
-        vals.update({
-            'description': msg['body']
-        })
-        if msg.get('priority', False):
+        if msg.get('priority'):
             vals['priority'] = msg.get('priority')
 
         maps = {
@@ -307,46 +311,23 @@ and users by email"),
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
-        vls = { }
+        vls = {}
         for line in msg['body'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
-            if res and maps.get(res.group(1).lower(), False):
+            if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 vls[key] = res.group(2).lower()
-        
         vals.update(vls)
-        res = self.write(cr, uid, ids, vals)
-        return res
 
-    def emails_get(self, cr, uid, ids, context=None):
-
-        """ 
-        Get Emails
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of email’s IDs
-        @param context: A standard dictionary for contextual values
-        """
-        res = {}
-
-        if isinstance(ids, (str, int, long)):
-            select = [long(ids)]
-        else:
-            select = ids
-
-        for thread in self.browse(cr, uid, select, context=context):
-            values = collections.defaultdict(set)
-
-            for message in thread.message_ids:
-                user_email = (message.user_id and message.user_id.address_id and message.user_id.address_id.email) or False
-                values['user_email'].add(user_email)
-                values['email_from'].add(message.email_from)
-                values['email_cc'].add(message.email_cc or False)
-            values['priority'] = thread.priority
-
-            res[thread.id] = dict((key,list(values[key])) for key, value in values.iteritems())
+        # Unfortunately the API is based on lists
+        # but we want to update the state based on the
+        # previous state, so we have to loop:
+        for case in self.browse(cr, uid, ids, context=context):
+            values = dict(vals)
+            if case.state == crm.AVAILABLE_STATES[4][0]: #pending
+                values.update(state=crm.AVAILABLE_STATES[1][0]) #open
+            res = self.write(cr, uid, [case.id], values, context=context)
 
         return res
 
@@ -361,7 +342,6 @@ and users by email"),
             @param **args: Return Dictionary of Keyword Value
         """
         return True
-
 crm_lead()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

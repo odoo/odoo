@@ -50,8 +50,8 @@ this campaign to be run"),
                                 ('manual', 'With Manual Confirmation'),
                                 ('active', 'Normal')],
                                  'Mode', required=True, help= \
-"""Test - It creates and process all the workitems directly (without waiting for the delay on transitions) but do not send emails or produce reports.
-Test in Realtime - It creates and process all the workitems directly but do not send emails or produce reports.
+"""Test - It creates and process all the activities directly (without waiting for the delay on transitions) but do not send emails or produce reports.
+Test in Realtime - It creates and process all the activities directly but do not send emails or produce reports.
 With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.
 Normal - the campaign runs normally and automatically sends all emails and reports"""),
         'state': fields.selection([('draft', 'Draft'),
@@ -289,7 +289,9 @@ class marketing_campaign_activity(osv.osv):
         context = {}
         server_obj = self.pool.get('ir.actions.server')
         context['active_id'] = workitem.res_id
-        return server_obj.run(cr, uid, [activity.server_action_id.id], context)
+        res = server_obj.run(cr, uid, [activity.server_action_id.id], context)
+        #server action return False if the action is perfomed except client_action,other and python code
+        return res==False and True or res 
 
     def process(self, cr, uid, act_id, wi_id, context={}):
         activity = self.browse(cr, uid, act_id)
