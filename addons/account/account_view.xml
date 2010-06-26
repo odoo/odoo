@@ -2113,7 +2113,7 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Accounting Entries">
+                        <page string="Accounting Entries" attrs="{'invisible': [('state','!=','confirm')]}">
                             <field colspan="4" name="move_line_ids" nolabel="1"/>
                         </page>
                     </notebook>
