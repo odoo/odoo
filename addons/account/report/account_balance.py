@@ -23,18 +23,19 @@ import xml
 import copy
 from operator import itemgetter
 import datetime
-from report import report_sxw
 import xml.dom.minidom
 import os, time
-import osv
 import re
+import sys
+
+from report import report_sxw
+import osv
 import tools
 import pooler
-import sys
 
 class account_balance(report_sxw.rml_parse):
         _name = 'report.account.account.balance'
-        def __init__(self, cr, uid, name, context):
+        def __init__(self, cr, uid, name, context=None):
             super(account_balance, self).__init__(cr, uid, name, context=context)
             self.sum_debit = 0.00
             self.sum_credit = 0.00
@@ -52,8 +53,9 @@ class account_balance(report_sxw.rml_parse):
 
         def _add_header(self, node, header=1):
             if header==0:
-                self.rml_header = "" 
+                self.rml_header = ""
             return True
+
         def get_fiscalyear(self, form):
             res=[]
             if form.has_key('fiscalyear_id'):
@@ -86,8 +88,7 @@ class account_balance(report_sxw.rml_parse):
 
             return str(result and result[:-1]) or 'ALL'
 
-
-        def lines(self, form, ids={}, done=None, level=1):
+        def lines(self, form, ids=[], done=None, level=1):
             if not ids:
                 ids = self.ids
             if not ids:
@@ -100,9 +101,9 @@ class account_balance(report_sxw.rml_parse):
             res={}
             result_acc=[]
             ctx = self.context.copy()
-            
+
             ctx['fiscalyear'] = form['fiscalyear_id']
-            if form['filter'] == 'filter_period':            
+            if form['filter'] == 'filter_period':
                 periods = form['periods']
                 if not periods:
                     sql = """
@@ -114,8 +115,8 @@ class account_balance(report_sxw.rml_parse):
                         Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in %s
                     """
                 sqlargs = (tuple(periods),)
-                self.cr.execute(sql, sqlargs)   
-                res = self.cr.dictfetchall() 
+                self.cr.execute(sql, sqlargs)
+                res = self.cr.dictfetchall()
                 ctx['periods'] = form['periods']
             elif form['filter'] == 'filter_date':
                 ctx['date_from'] = form['date_from']
@@ -194,8 +195,6 @@ class account_balance(report_sxw.rml_parse):
         def _sum_debit(self):
             return self.sum_debit
 
-
-            
-
 report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=0)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
