@@ -1080,7 +1080,7 @@ class sale_order_line(osv.osv):
 
         if not uom2:
             uom2 = product_obj.uom_id
-        if (product_obj.type=='product') and (product_obj.virtual_available * product_obj.uom_id.factor < qty * uom2.factor) \
+        if (product_obj.type=='product') and (product_obj.virtual_available * uom2.factor < qty * product_obj.uom_id.factor) \
           and (product_obj.procure_method=='make_to_stock'):
             warning = {
                 'title': _('Not enough stock !'),

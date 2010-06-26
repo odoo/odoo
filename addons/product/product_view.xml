@@ -311,12 +311,12 @@
                 <form string="Units of Measure">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="category_id" select="1"/>
+                        <field name="category_id" select="1" widget="selection"/>
                         <field name="active"/>
                         <field name="uom_factor" on_change="onchange_factor(uom_factor)"/>
                         <group colspan="2" col="2">
-                            <field name="factor" select="1" attrs="{'invisible':[('uom_factor','&lt;&gt;','smaller')]}"/>
-                            <field name="factor_inv" select="1" string="Factor Data" attrs="{'invisible':[('uom_factor','&lt;&gt;','bigger')]}"/>
+                            <field name="factor" attrs="{'invisible':[('uom_factor','&lt;&gt;','smaller')]}"/>
+                            <field name="factor_inv" string="Factor Data" attrs="{'invisible':[('uom_factor','&lt;&gt;','bigger')]}"/>
                         </group>
                         <newline/>
                         <field name="rounding"/>

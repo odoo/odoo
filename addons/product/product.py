@@ -77,7 +77,7 @@ class product_uom(osv.osv):
                     '1 (base unit) = coeff (this unit). Ratio = 1 / Factor.'),
         'factor_inv': fields.function(_factor_inv, digits=(12, 6),
             fnct_inv=_factor_inv_write,
-            method=True, string='Factor',
+            method=True, string='Ratio',
             help='The coefficient for the formula:\n' \
                     'coeff (base unit) = 1 (this unit). Factor = 1 / Rate.'),
         'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
@@ -85,7 +85,7 @@ class product_uom(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the unit of measure without removing it."),
         'uom_factor': fields.selection([('bigger','Bigger than the default'),
                                         ('smaller','Smaller than the default'),
-                                        ('default','The Default unit of measure')],'Type of Unit', required=1),
+                                        ('default','Default UoM for the category')],'Type of Unit', required=1),
     }
 
     _defaults = {
