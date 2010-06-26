@@ -37,7 +37,7 @@
     Note that:
     - You can define new types of events in
                 Events / Configuration / Types of Events
-    - You can access predefined reports about number of registration per event or per event category in :
+    - You can access predefined reports about number of registration per event or per event category in:
                 Events / Reporting
 """,
     'author': 'Tiny',
@@ -46,15 +46,15 @@
     'update_xml': [
         'wizard/event_confirm_registration_view.xml',
         'event_view.xml',
+        'report/report_event_registration_view.xml',
         'event_sequence.xml',
         'security/event_security.xml',
         'security/ir.model.access.csv',
-        'wizard/event_registration_view.xml',
-        'wizard/event_registrations_partner.xml',
         'wizard/event_make_invoice_view.xml',
         'board_association_view.xml',
     ],
-    'demo_xml': ['event_demo.xml','board_association_demo.xml'],
+    'demo_xml': ['event_demo.xml', 'board_association_demo.xml'],
+    'test': ['test/test_event.yml'],
     'installable': True,
     'active': False,
     'certificate': '0083059161581',
