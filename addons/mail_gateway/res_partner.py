@@ -24,11 +24,10 @@ from osv import fields,osv
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
-
     _columns = {
-                'emails': fields.one2many('mailgate.message', 'partner_id',\
+        'emails': fields.one2many('mailgate.message', 'partner_id',\
                                         'Emails', readonly=True),
-                }
+    }
 
 res_partner()
 

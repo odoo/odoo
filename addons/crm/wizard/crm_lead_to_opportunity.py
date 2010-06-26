@@ -83,6 +83,9 @@ class crm_lead2opportunity(osv.osv_memory):
             }
             lead_obj.write(cr, uid, lead.id, vals, context=context)
             lead_obj._history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
+            if lead.partner_id:
+                msg_ids = [ x.id for x in lead.message_ids]
+                self.pool.get('mailgate.message').write(cr, uid, msg_ids, {'partner_id': lead.partner_id.id}, context=context)
 
         value = {
             'name': _('Opportunity'), 

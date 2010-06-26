@@ -53,7 +53,8 @@ class report_document_user(osv.osv):
         'partner':fields.char('Partner',size=64,readonly=True),
      }
     def init(self, cr):
-         cr.execute("""
+        tools.drop_view_if_exists(cr, 'report_document_user')
+        cr.execute("""
             create or replace view report_document_user as (
                  select
                      min(f.id) as id,
@@ -72,7 +73,7 @@ class report_document_user(osv.osv):
                      inner join res_users u on (f.user_id=u.id)
                  group by to_char(f.create_date, 'YYYY'), to_char(f.create_date, 'MM'),d.name,f.parent_id,d.type,f.create_date,f.user_id,f.file_size,u.name,d.type,f.write_date
              )
-         """)
+        """)
 report_document_user()
 
 class report_files_partner(osv.osv):
@@ -119,7 +120,8 @@ class report_document_file(osv.osv):
      }
     _order = "month"
     def init(self, cr):
-         cr.execute("""
+        tools.drop_view_if_exists(cr, 'report_document_file')
+        cr.execute("""
             create or replace view report_document_file as (
                 select min(f.id) as id,
                        count(*) as nbr,
@@ -128,7 +130,7 @@ class report_document_file(osv.osv):
                 from ir_attachment f
                 group by EXTRACT(MONTH FROM f.create_date)
              )
-         """)
+        """)
 
 report_document_file()
 
@@ -145,7 +147,8 @@ class report_document_wall(osv.osv):
              }
 
     def init(self, cr):
-         cr.execute("""
+        tools.drop_view_if_exists(cr, 'report_document_wall')
+        cr.execute("""
             create or replace view report_document_wall as (
                select max(f.id) as id,
                to_char(min(f.create_date),'YYYY-MM-DD HH24:MI:SS') as last,
@@ -159,7 +162,7 @@ class report_document_wall(osv.osv):
                    group by i.user_id) group by f.user_id,f.create_date
                    having (CURRENT_DATE - to_date(to_char(f.create_date,'YYYY-MM-DD'),'YYYY-MM-DD')) > 30
              )
-         """)
+        """)
 report_document_wall()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

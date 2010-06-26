@@ -67,6 +67,11 @@
             <field name="act_to" ref="act_assigned"/>
             <field name="condition">test_assigned()</field>
         </record>
+        <record id="trans_assigned_move_done" model="workflow.transition">
+            <field name="act_from" ref="act_assigned"/>
+            <field name="act_to" ref="act_move"/>
+            <field name="condition">test_done()</field>
+        </record>
         <record id="trans_assigned_move" model="workflow.transition">
             <field name="act_from" ref="act_assigned"/>
             <field name="act_to" ref="act_move"/>
