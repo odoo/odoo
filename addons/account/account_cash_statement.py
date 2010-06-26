@@ -160,17 +160,17 @@ class account_cash_statement(osv.osv):
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-        'balance_start': fields.function(_get_starting_balance, method=True, string='Opening Balance', type='float',digits=(16,2)),
-        'balance_end_real': fields.float('Closing Balance', digits=(16,2), states={'confirm':[('readonly', True)]}),
+        'balance_start': fields.function(_get_starting_balance, method=True, string='Opening Balance', type='float',digits=(16,2), help="Opening balance based on cashBox"),
+        'balance_end_real': fields.float('Closing Balance', digits=(16,2), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('confirm', 'Confirm'),
             ('open','Open')], 'State', required=True, states={'confirm': [('readonly', True)]}, readonly="1"),
-        'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, string="Cash Transaction"),
+        'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, string="Cash Transaction", help="Total cash transactions"),
         'date':fields.datetime("Open On"),
         'closing_date':fields.datetime("Closed On"),
-        'balance_end': fields.function(_end_balance, method=True, string='Balance'),
-        'balance_end_cash': fields.function(_balance_end_cash, method=True, string='Balance'),
+        'balance_end': fields.function(_end_balance, method=True, string='Balance', help="Closing balance based on transactions"),
+        'balance_end_cash': fields.function(_balance_end_cash, method=True, string='Balance', help="Closing balance based on cashBox"),
         'starting_details_ids': fields.one2many('singer.statement', 'starting_id', string='Opening Cashbox'),
         'ending_details_ids': fields.one2many('singer.statement', 'ending_id', string='Closing Cashbox'),
         'name': fields.char('Name', size=64, required=True, readonly=True),
@@ -281,7 +281,7 @@ class account_cash_statement(osv.osv):
                 continue
                 
             if st.balance_end != st.balance_end_cash:
-                raise osv.except_osv(_('Error !'), _('Cash balance is not match with closing balance !'))
+                raise osv.except_osv(_('Error !'), _('Cash balance is not matching with closing balance !'))
                 
             if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
                 raise osv.except_osv(_('Error !'),
