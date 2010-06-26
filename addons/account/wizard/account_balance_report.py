@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import osv, fields
@@ -29,15 +30,17 @@ class account_balance_report(osv.osv_memory):
     _name = 'account.balance.report'
     _description = 'Account Balance Report'
     _columns = {
-                'company_id': fields.many2one('res.company', 'Company', required=True),
-                'display_account': fields.selection([('bal_mouvement','With movements'),
-                                 ('bal_all','All'),
-                                 ('bal_solde','With balance is not equal to 0'),
-                                 ],'Display accounts'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'display_account': fields.selection([('bal_all','All'), ('bal_mouvement','With movements'),
+                         ('bal_solde','With balance is not equal to 0'),
+                         ],'Display accounts'),
                 }
 
+    _defaults = {
+        'display_account': 'bal_all'
+                 }
 
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ To get default values for the object.
          @param self: The object pointer.
          @param cr: A database cursor
@@ -51,7 +54,7 @@ class account_balance_report(osv.osv_memory):
             res['journal_ids'] = []
             return res
         else:
-            result = super(account_balance_report, self).default_get(cr, uid, fields, context)
+            result = super(account_balance_report, self).default_get(cr, uid, fields, context=context)
         result.update({'company_id':self.pool.get('account.account').read(cr, uid, result['chart_account_id'], context=context)['company_id']})
         return result
 
@@ -62,4 +65,7 @@ class account_balance_report(osv.osv_memory):
         data['form'].update(self.read(cr, uid, ids, ['display_account',  'company_id',])[0])
         data['form']['query_get'] = query_line
         return { 'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data, 'nodestroy':True, }
+
 account_balance_report()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
