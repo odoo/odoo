@@ -84,19 +84,19 @@
                     <separator string="Directory Type" colspan="4"/>
                     <field name="type"/>
                     <group colspan="4" col="4" attrs="{'invisible': [('type','!=','ressource')]}">
-			<field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)" 
-			    attrs="{'required': [('type','=','ressource')] }"/>
-			<newline/>
-			<field name="resource_field"     domain="[('model_id','=',ressource_type_id), ('ttype', 'in', ('char', 'selection', 'date', 'datetime'))]"/>
-			<field name="ressource_tree"/>
+                        <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)" 
+                            attrs="{'required': [('type','=','ressource')] }"/>
+                        <newline/>
+                        <field name="resource_field"     domain="[('model_id','=',ressource_type_id), ('ttype', 'in', ('char', 'selection', 'date', 'datetime'))]"/>
+                        <field name="ressource_tree"/>
                     </group>
                     <group colspan="4" col="4" attrs="{'invisible': [('type','!=','at_record')]}">
-			<field name="ressource_parent_type_id"/>
-			<field name="ressource_id" select="2" readonly="1"/>
-		    </group>
+                        <field name="ressource_parent_type_id"/>
+                        <field name="ressource_id" select="2" readonly="1"/>
+                    </group>
                     
                     <group colspan="4" col="4">
-			<field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
+                        <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     </group>
                 </page>
                 <page string="Generated Files" groups="base.group_extended">
@@ -121,7 +121,7 @@
                     </field>
                 </page>
                 <page string="Dynamic context" groups="base.group_extended">
-		    <label colspan="4" string="Define words in the context, for all child directories and files" />
+                    <label colspan="4" string="Define words in the context, for all child directories and files" />
                     <field name="dctx_ids" nolabel="1" colspan="4">
                         <tree string="Fields" editable="bottom">
                             <field name="field"/>
@@ -134,8 +134,8 @@
                     </field>
                 </page>
                 <page string="Security">
-		    <label colspan="4" string="Only members of these groups will have access to this directory and its files." />
-		    <label colspan="4" string="These groups, however, do NOT apply to children directories, which must define their own ones." />
+                    <label colspan="4" string="Only members of these groups will have access to this directory and its files." />
+                    <label colspan="4" string="These groups, however, do NOT apply to children directories, which must define their own groups." />
                     <field name="group_ids" colspan="4" nolabel="1"/>
                 </page>
                 </notebook>
