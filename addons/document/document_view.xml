@@ -229,44 +229,44 @@
         <field name="arch" type="xml">
             <form string="Documents">
                 <group colspan="4" col="6">
-                    <field name="name" select="1" />
-                    <field name="type"/>
+                    <field name="name" select="1" colspan="4" />
                     <field name="parent_id"/>
+                    <newline/>
+                    <field name="user_id"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Attachment">
                     <group col="2" colspan="2">
                         <separator string="Data" colspan="2"/>
+                        <field name="type"/>
+                        <newline />
                         <group col="2" colspan="2" attrs="{'invisible':[('type','=','url')]}">
-                        <field name="datas" filename="datas_fname"/>
-                        <field name="datas_fname" select="1"/>
+                            <field name="datas" filename="datas_fname"/>
+                            <field name="datas_fname" select="1"/>
                         </group>
                         <group col="2" colspan="2" attrs="{'invisible':[('type','=','binary')]}">
-                        <field name="url" widget="url"/>
+                            <field name="url" widget="url"/>
                         </group>
                     </group>
                     <group col="2" colspan="2">
-                        <separator string="Relation" colspan="2"/>
-                         <field name="res_name" readonly="1"/>
-                         <field name="partner_id"/>
-                          <field name="user_id"/>
+                        <separator string="Attached To" colspan="2"/>
+                            <field name="res_model" select="2"/>
+                            <field name="res_id"/>
+                            <field name="res_name" readonly="1"/>
+                        <separator string="Related to" colspan="2"/>
+                            <field name="partner_id"/>
                     </group>
-                    <group col="4" colspan="4">
-                        <separator string="History" colspan="4"/>
-                        <group col="4" colspan="4">
-                        <field name="create_uid"/>
-                        <field name="create_date"/>
-                        </group>
-                        <group col="4" colspan="4">
-                        <field name="write_uid"/>
-                        <field name="write_date"/>
-                        </group>
+                    <group col="2" colspan="2" groups="base.group_extended">
+                        <separator string="Created" colspan="2"/>
+                        <field name="create_uid" readonly="1"/>
+                        <field name="create_date" readonly="1"/>
                     </group>
-
-                </page>
-                <page string="Security">
-                    <field name="group_ids" colspan="4" nolabel="1"/>
+                    <group col="2" colspan="2" groups="base.group_extended">
+                        <separator string="Modified" colspan="2"/>
+                        <field name="write_uid" readonly="1"/>
+                        <field name="write_date" readonly="1"/>
+                    </group>
                 </page>
                 <page string="Indexed Content" groups="base.group_extended">
                     <field name="index_content" colspan="4" nolabel="1"/>
