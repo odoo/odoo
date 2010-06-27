@@ -61,21 +61,6 @@
             parent="menu_tax_report"
             type="wizard"/> -->
 
-
-        <record id="action_tax_code_tree" model="ir.actions.act_window">
-            <field name="name">Chart of Taxes</field>
-            <field name="res_model">account.tax.code</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_tax_code_tree"/>
-        </record>
-        <menuitem
-            action="action_tax_code_tree"
-            id="menu_action_tax_code_tree"
-            parent="menu_tax_report"
-            sequence="12"/>
-
-
         <report id="account_account_balance_compare"
             string="Account balance"
             model="account.account"

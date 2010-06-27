@@ -52,7 +52,7 @@ class crm_phonecall(osv.osv, crm_case):
                                     ('draft', 'Draft'), 
                                     ('open', 'Todo'), 
                                     ('cancel', 'Cancelled'), 
-                                    ('done', 'Closed'), 
+                                    ('done', 'Done'), 
                                     ('pending', 'Pending'),
                                 ], 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
@@ -82,14 +82,14 @@ class crm_phonecall(osv.osv, crm_case):
         'date_closed': fields.datetime('Closed', readonly=True), 
         'date': fields.datetime('Date'), 
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('res_model','=',_name)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('res_model','=',_name)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
     }
 
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
-        'state': lambda *a: 'draft', 
+        'state': lambda *a: 'open', 
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': lambda *a: 1, 
     }

@@ -153,13 +153,15 @@ class account_analytic_account(osv.osv):
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
         res = []
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
-            res.append((record['id'], name))
+        for account in self.browse(cr, uid, ids, context=context):
+            data = []
+            acc = account
+            while acc:
+                data.insert(0, acc.name)
+                acc = acc.parent_id
+            data = ' / '.join(data)
+            res.append((account.id, data))
         return res
 
     def _complete_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
@@ -197,7 +199,7 @@ class account_analytic_account(osv.osv):
         'date': fields.date('Date End'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
-        'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed'),('template', 'Template')], 'State', required=True,readonly=True,
+        'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed'),('template', 'Template')], 'State', required=True,
                                   help='* When an account is created its in \'Draft\' state.\
                                   \n* If any associated partner is there, it can be in \'Open\' state.\
                                   \n* If any pending balance is there it can be in \'Pending\'. \
@@ -314,7 +316,7 @@ class account_analytic_line(osv.osv):
 
     _columns = {
         'name' : fields.char('Description', size=256, required=True),
-        'date' : fields.date('Date', required=True),
+        'date' : fields.date('Date', required=True, select=1),
         'amount' : fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price.'),
         'unit_amount' : fields.float('Quantity', help='Specifies the amount of quantity to count.'),
         'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),

@@ -19,16 +19,6 @@
 #
 ##############################################################################
 
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-#
-##############################################################################
 
 from osv import fields,osv
 import time
@@ -54,8 +44,9 @@ class report_document_user(osv.osv):
      }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_document_user')
-        cr.execute("""CREATE VIEW report_document_user AS (
-                 select
+        cr.execute("""
+            CREATE OR REPLACE VIEW report_document_user as (
+                 SELECT
                      min(f.id) as id,
                      to_char(f.create_date, 'YYYY') as name,
                      to_char(f.create_date, 'MM') as month,
@@ -67,12 +58,12 @@ class report_document_user(osv.osv):
                      f.file_size as file_size,
                      min(d.type) as type,
                      f.write_date as change_date
-                 from ir_attachment f
+                 FROM ir_attachment f
                      left join document_directory d on (f.parent_id=d.id and d.name<>'')
                      inner join res_users u on (f.user_id=u.id)
                  group by to_char(f.create_date, 'YYYY'), to_char(f.create_date, 'MM'),d.name,f.parent_id,d.type,f.create_date,f.user_id,f.file_size,u.name,d.type,f.write_date
              )
-         """)
+        """)
 report_document_user()
 
 class report_files_partner(osv.osv):
@@ -119,10 +110,9 @@ class report_document_file(osv.osv):
      }
     _order = "month"
     def init(self, cr):
-        print "called an init!"
         tools.drop_view_if_exists(cr, 'report_document_file')
         cr.execute("""
-            CREATE VIEW report_document_file AS (
+            create or replace view report_document_file as (
                 select min(f.id) as id,
                        count(*) as nbr,
                        min(EXTRACT(MONTH FROM f.create_date)||'-'||to_char(f.create_date,'Month')) as month,
@@ -130,7 +120,7 @@ class report_document_file(osv.osv):
                 from ir_attachment f
                 group by EXTRACT(MONTH FROM f.create_date)
              )
-         """)
+        """)
 
 report_document_file()
 
@@ -149,7 +139,7 @@ class report_document_wall(osv.osv):
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_document_wall')
         cr.execute("""
-            CREATE VIEW report_document_wall as (
+            create or replace view report_document_wall as (
                select max(f.id) as id,
                to_char(min(f.create_date),'YYYY-MM-DD HH24:MI:SS') as last,
                f.user_id as user_id, f.user_id as user,
@@ -162,7 +152,7 @@ class report_document_wall(osv.osv):
                    group by i.user_id) group by f.user_id,f.create_date
                    having (CURRENT_DATE - to_date(to_char(f.create_date,'YYYY-MM-DD'),'YYYY-MM-DD')) > 30
              )
-         """)
+        """)
 report_document_wall()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

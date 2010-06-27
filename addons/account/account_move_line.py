@@ -801,15 +801,19 @@ class account_move_line(osv.osv):
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
         all_journal = [None]
+        common_fields = {}
+        total = len(journals)
         for journal in journals:
             all_journal.append(journal.id)
             for field in journal.view_id.columns_id:
                 if not field.field in fields:
-                    fields[field.field] = [None, journal.id]
+                    fields[field.field] = [journal.id]
                     fld.append((field.field, field.sequence))
                     flds.append(field.field)
+                    common_fields[field.field] = 1
                 else:
                     fields.get(field.field).append(journal.id)
+                    common_fields[field.field] = common_fields[field.field] + 1
         
         fld.append(('period_id', 3))
         fld.append(('journal_id', 10))
@@ -831,6 +835,10 @@ class account_move_line(osv.osv):
 
         for field_it in fld:
             field = field_it[0]
+            
+            if common_fields.get(field) == total:
+                fields.get(field).append(None)
+            
             if field=='state':
                 state = 'colors="red:state==\'draft\'"'
             

@@ -94,6 +94,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
                 'res_id': phonecall_id, 
+                'domain': [('id', 'in', [int(phonecall_id)])], 
                 'search_view_id': res['res_id']
                 }
         return res

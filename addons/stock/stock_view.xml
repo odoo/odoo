@@ -154,7 +154,7 @@
             <field name="model">stock.tracking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Tracking/Serial">
+                <form string="Packs">
                     <field name="name" select="1"/>
                     <field name="serial" select="1"/>
                     <field name="date" select="1"/>
@@ -167,7 +167,7 @@
             <field name="model">stock.tracking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Tracking/Serial">
+                <tree string="Packs">
                     <field name="name"/>
                     <field name="serial"/>
                     <field name="date"/>
@@ -176,7 +176,7 @@
             </field>
         </record>
         <record id="action_tracking_form" model="ir.actions.act_window">
-            <field name="name">Tracking Lots</field>
+            <field name="name">Packs</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.tracking</field>
             <field name="view_type">form</field>
@@ -193,7 +193,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:not active" string="Tracking Number">
+                <tree colors="grey:not active" string="Packs">
                     <field name="name" />
                     <field name="serial" />
                     <field name="date" />
@@ -637,15 +637,14 @@
                                         type="action" icon="terp-stock_effects-object-colorize"
                                         states="draft,waiting,confirmed,assigned" />
                                     <field groups="base.group_extended" name="tracking_id"/>
-                                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
+                                    <button name="setlast_tracking" string="Put in current pack" type="object"
                                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
-                                        groups="base.group_extended" 
                                         icon="terp-stock_effects-object-colorize" 
+                                        groups="base.group_extended" 
                                         states="draft,assigned,confirmed,done"/>
-                                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
-                                        icon="terp-stock_effects-object-colorize" 
+                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
                                         groups="base.group_extended" 
+                                        icon="terp-stock_effects-object-colorize" 
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
@@ -688,9 +687,8 @@
                                              states="draft,waiting,confirmed,assigned"
                                             type="action" icon="terp-stock_effects-object-colorize"
                                               groups="base.group_extended" />
-                                            <button name="%(move_scrap)d" string="Scrap Move Line" type="action" icon="gtk-justify-fill"/>
-                                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                                attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                            <button name="%(move_scrap)d" string="Scrap" type="action" icon="gtk-justify-fill"/>
+                                            <button name="%(split_into)d" string="Put in a new pack" type="action"
                                                 states="draft,assigned,confirmed,done"
                                                 groups="base.group_extended" 
                                                 icon="terp-stock_effects-object-colorize" />
@@ -804,15 +802,15 @@
                                     <field name="picking_id" />
                                     <field name="prodlot_id" groups="base.group_extended"/>
                                     <field groups="base.group_extended" name="tracking_id"/>
-                                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                        states="draft,assigned,confirmed,done"
-                                        groups="base.group_extended"/>
-                                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                                    <button name="setlast_tracking" string="Put in current pack" type="object"
                                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
                                         groups="base.group_extended" 
                                         icon="terp-stock_effects-object-colorize" 
                                         states="draft,assigned,confirmed,done"/>
+                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                        icon="terp-stock_effects-object-colorize"
+                                        states="draft,assigned,confirmed,done"
+                                        groups="base.group_extended"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
@@ -859,9 +857,8 @@
                                             states="draft,waiting,confirmed,assigned"
                                             type="action" icon="terp-stock_effects-object-colorize"/>
                                             <label/>
-                                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                                attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
-                                              groups="base.group_extended" 
+                                            <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                                groups="base.group_extended" 
                                                 icon="terp-stock_effects-object-colorize"
                                                 states="draft,assigned,confirmed,done"/>
                                             <separator colspan="4" string="Move State"/>
@@ -1014,16 +1011,15 @@
                                         states="draft,assigned,confirmed,done"
                                         groups="base.group_extended"/>
                                     <field name="tracking_id" groups="base.group_extended"/>
-                                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
+                                    <button name="setlast_tracking" string="Put in current pack" type="object"
                                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
+                                        groups="base.group_extended" 
+                                        icon="terp-stock_effects-object-colorize" 
+                                        states="draft,assigned,confirmed,done"/>
+                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
                                         icon="terp-stock_effects-object-colorize"
                                         groups="base.group_extended" 
                                         states="draft,assigned,confirmed,done"/>
-                                <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                    attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
-                                    groups="base.group_extended" 
-                                    icon="terp-stock_effects-object-colorize" 
-                                    states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="date_planned"/>
                                     <field name="state"/>
@@ -1059,8 +1055,7 @@
                                                 groups="base.group_extended" 
                                              />
                                             <label/>
-                                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                                attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
+                                            <button name="%(split_into)d" string="Put in a new pack" type="action"
                                                 groups="base.group_extended" 
                                                 icon="terp-stock_effects-object-colorize" 
                                                 states="draft,assigned,confirmed,done"/>
@@ -1082,7 +1077,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-apply"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(action_partial_picking)d" states="assigned" string="Picking Done" type="action" icon="gtk-execute"/>
+                                <button name="%(action_partial_picking)d" states="assigned" string="Done" type="action" icon="gtk-execute"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -1132,7 +1127,7 @@
         </record>
 
         <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Outgoing Packings</field>
+            <field name="name">Outgoing Orders</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1215,16 +1210,16 @@
                                            type="action" icon="terp-stock_effects-object-colorize"
                                            states="draft,waiting,confirmed,assigned" />
                                     <field name="tracking_id" groups="base.group_extended"/>
-                                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
+                                    <button name="setlast_tracking" string="Put in current pack" type="object"
                                         groups="base.group_extended" 
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                                         states="draft,assigned,confirmed,done"/>
-                                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
                                         groups="base.group_extended" 
-                                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                        icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="state"/>
-                                     <button name="%(stock.move_scrap)d"
+                                    <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" />
@@ -1409,13 +1404,13 @@
                        states="draft,waiting,confirmed,assigned"
                         groups="base.group_extended"/>
                     <field groups="base.group_extended" name="tracking_id"/>
-                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
+                    <button name="setlast_tracking" string="Put in current pack" type="object"
                         groups="base.group_extended" 
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                         states="draft,assigned,confirmed,done"/>
-                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                    <button name="%(split_into)d" string="Put in a new pack" type="action"
                         groups="base.group_extended" 
-                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                        icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
@@ -1480,9 +1475,9 @@
                                       states="draft,waiting,confirmed,assigned"
                                       string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
                                   <label/>
-                                  <button name="%(split_into)d" string="Split Stock Moves" type="action"
+                                  <button name="%(split_into)d" string="Put in a new pack" type="action"
                                       groups="base.group_extended" 
-                                      icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                      icon="terp-stock_effects-object-colorize"
                                       states="draft,assigned,confirmed,done"/>
                                 </group>
                             </group>
@@ -1573,14 +1568,14 @@
                         context="{'default_use_exist': picking_id.type=='in'}"
                         groups="base.group_extended"/>
                     <field name="tracking_id" groups="base.group_extended"/>
-                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                        groups="base.group_extended" 
-                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                        states="draft,assigned,confirmed,done"/>
-                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
+                    <button name="setlast_tracking" string="Put in current pack" type="object"
                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
                         groups="base.group_extended" 
                         icon="terp-stock_effects-object-colorize" 
+                        states="draft,assigned,confirmed,done"/>
+                    <button name="%(split_into)d" string="Put in a new pack" type="action"
+                        groups="base.group_extended" 
+                        icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
                     <field name="date_planned"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -1629,9 +1624,9 @@
                               groups="base.group_extended" 
                               type="action" icon="terp-stock_effects-object-colorize"/>
                               <label/>
-                               <button name="%(split_into)d" string="Split Stock Moves" type="action"
+                               <button name="%(split_into)d" string="Put in a new pack" type="action"
                                   groups="base.group_extended" 
-                                  icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                  icon="terp-stock_effects-object-colorize"
                                   states="draft,assigned,confirmed,done"/>
                               <label/>
                               <button name="%(track_line)d" string="Split in production lots" 
