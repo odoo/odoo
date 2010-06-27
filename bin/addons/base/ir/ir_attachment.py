@@ -94,7 +94,7 @@ class ir_attachment(osv.osv):
             if model_object and res_id:
                 model_pool = self.pool.get(model_object)
                 res = model_pool.name_get(cr,uid,[res_id],context)
-                data[attachment.id] = res[0][1]
+                data[attachment.id] = (res and res[0][1]) or False
             else:
                  data[attachment.id] = False
         return data
