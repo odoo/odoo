@@ -285,11 +285,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
              <search string="IR Attachment">
-             <filter icon="terp-go-month" string="Recent"
-                    help="less 1 month modified/created attachments"
+             <filter icon="terp-go-month" string="Recent Month"
+                    help="Attachment modified/created last 30 days"
                     domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
                 />
                  <separator orientation="vertical"/>
+                 <field name="name"/>
+                 <field name="parent_id" />
                  <field name="user_id">
                     <filter icon="terp-personal"
                         domain="[('user_id','=', False)]"
@@ -300,9 +302,9 @@
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Partner" icon="terp-personal" domain="[]"
-                       context="{'group_by':'partner_id'}" />
+                       context="{'group_by':'partner_id'}"  groups="base.group_extended"/>
                     <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
-                    <filter string="Type"  domain="[]" context="{'group_by':'type'}"/>
+                    <filter string="Type"  domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
                     <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 </group>
@@ -317,11 +319,12 @@
         <field name="arch" type="xml">
             <tree colors="blue:type in ('url',)"> 
                 <field name="name"/>
-                <field name="type"/>
-                <field name="datas_fname"/>
+                <field name="parent_id" />
                 <field name="user_id"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
+                <field name="partner_id" groups="base.group_extended" />
+                <field name="type"  groups="base.group_extended"/>
             </tree>
 
         </field>
