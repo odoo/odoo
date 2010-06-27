@@ -72,33 +72,32 @@ class document_file(osv.osv):
         return res
 
     _columns = {
+        # Columns from ir.attachment:
+        'create_date': fields.datetime('Date Created', readonly=True),
+        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
+        'write_date': fields.datetime('Date Modified', readonly=True),
+        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
+        'res_model': fields.char('Attached Model', size=64), # readonly?
+        'res_id': fields.integer('Attached ID'),
+
+        # If ir.attachment contained any data before document is installed, preserve
+        # the data, don't drop the column!
+        'db_datas': fields.binary('Data', oldname='datas'),
+        'datas': fields.function(_data_get, method=True, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
+
+        # Fields of document:
         'user_id': fields.many2one('res.users', 'Owner', select=1),
         'group_ids': fields.many2many('res.groups', 'document_group_rel', 'item_id', 'group_id', 'Groups'),
         # the directory id now is mandatory. It can still be computed automatically.
         'parent_id': fields.many2one('document.directory', 'Directory', select=1),
+        'index_content': fields.text('Indexed Content'),
+        'partner_id':fields.many2one('res.partner', 'Partner', select=1),
+        'company_id': fields.many2one('res.company', 'Company'),
         'file_size': fields.integer('File Size', required=True),
         'file_type': fields.char('Content Type', size=128),
-        # If ir.attachment contained any data before document is installed, preserve
-        # the data, don't drop the column!
-        'db_datas': fields.binary('Data', oldname='datas'),
-        'index_content': fields.text('Indexed Content'),
-        'write_date': fields.datetime('Date Modified', readonly=True),
-        'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
-        'create_date': fields.datetime('Date Created', readonly=True),
-        'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
-        'store_method': fields.selection([('db', 'Database'), ('fs', 'Filesystem'), ('link', 'Link')], "Storing Method"),
-        'datas': fields.function(_data_get, method=True, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
-        'url': fields.char('File URL',size=64),
+        
+        # fields used for file storage
         'store_fname': fields.char('Stored Filename', size=200),
-        'res_model': fields.char('Attached Model', size=64), #res_model
-        'res_id': fields.integer('Attached ID'), #res_id
-        'partner_id':fields.many2one('res.partner', 'Partner', select=1),
-        'type':fields.selection([
-            ('url','URL'),
-            ('binary','Binary'),
-
-        ],'Type', help="Type is used to separate URL and binary File"),
-        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def __get_def_directory(self, cr, uid, context=None):
@@ -109,8 +108,6 @@ class document_file(osv.osv):
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
         'user_id': lambda self, cr, uid, ctx:uid,
         'file_size': lambda self, cr, uid, ctx:0,
-        'store_method': lambda *args: 'db',
-        'type': 'binary',
         'parent_id': __get_def_directory
     }
     _sql_constraints = [
