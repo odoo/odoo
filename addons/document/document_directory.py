@@ -54,9 +54,8 @@ class document_directory(osv.osv):
             'Type', required=True, select=1,
             help="Defines directory's behaviour."),
         
-        'ressource_type_id': fields.many2one('ir.model', 'Directories Mapped to Objects',
-            help="Select an object here and Open ERP will create a mapping for each of these " \
-                 "objects, using the given domain, when browsing through FTP."),
+        'ressource_type_id': fields.many2one('ir.model', 'Resource model',
+            help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
         'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model',
             help="If you put an object here, this directory template will appear bellow all of these objects. " \
