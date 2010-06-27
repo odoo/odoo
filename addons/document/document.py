@@ -89,7 +89,7 @@ class document_file(osv.osv):
         'user_id': fields.many2one('res.users', 'Owner', select=1),
         'group_ids': fields.many2many('res.groups', 'document_group_rel', 'item_id', 'group_id', 'Groups'),
         # the directory id now is mandatory. It can still be computed automatically.
-        'parent_id': fields.many2one('document.directory', 'Directory', select=1),
+        'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True),
         'index_content': fields.text('Indexed Content'),
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
