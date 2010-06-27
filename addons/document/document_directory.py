@@ -39,16 +39,21 @@ class document_directory(osv.osv):
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
-        'file_type': fields.char('Content Type', size=32),
         'domain': fields.char('Domain', size=128, help="Use a domain if you want to apply an automatic filter on visible resources."),
         'user_id': fields.many2one('res.users', 'Owner'),
         'storage_id': fields.many2one('document.storage', 'Storage'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
-        'parent_id': fields.many2one('document.directory', 'Parent Item'),
+        'parent_id': fields.many2one('document.directory', 'Parent Item', select=1),
         'child_ids': fields.one2many('document.directory', 'parent_id', 'Children'),
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
-        'type': fields.selection([('directory','Static Directory'),('ressource','Other Resources')], 'Type', required=True),
+        'type': fields.selection([ 
+            ('directory','Static Directory'),
+            ('ressource','Folders per resource'),
+            ('at_record','Single folder under resource')],
+            'Type', required=True, select=1,
+            help="Defines directory's behaviour."),
+        
         'ressource_type_id': fields.many2one('ir.model', 'Directories Mapped to Objects',
             help="Select an object here and Open ERP will create a mapping for each of these " \
                  "objects, using the given domain, when browsing through FTP."),
@@ -60,7 +65,7 @@ class document_directory(osv.osv):
         'ressource_tree': fields.boolean('Tree Structure',
             help="Check this if you want to use the same tree structure as the object selected in the system."),
         'dctx_ids': fields.one2many('document.directory.dctx', 'dir_id', 'Context fields'),
-        'company_id': fields.many2one('res.company', 'Company'),        
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
 
@@ -102,7 +107,8 @@ class document_directory(osv.osv):
     }
     _sql_constraints = [
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),
-        ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!')
+        ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!'),
+        ('dir_parented', 'check(parent_id IS NOT NULL OR storage_id IS NOT NULL)', 'Directory must have a parent or a storage')
     ]
     def name_get(self, cr, uid, ids, context={}):
         res = []
