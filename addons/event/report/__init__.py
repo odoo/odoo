@@ -19,32 +19,6 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-
-class event_registration_list(osv.osv_memory):
-    """ List Event Registration """
-    _name = "event.registration.list"
-    _description = "List Event Registrations"
-
-    def open_registration(self, cr, uid, ids, context={}):
-        if not context.get('active_id', None):
-            return {
-            'name': 'Event Registrations',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'event.registration',
-            'type': 'ir.actions.act_window'
-            }
-
-        return {
-            'domain': [('section_id', '=', context['active_id'])],
-            'name': 'Event Registrations',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'event.registration',
-            'type': 'ir.actions.act_window'
-        }
-
-event_registration_list()
+import report_event_registration
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

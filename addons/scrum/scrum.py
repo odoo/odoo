@@ -108,7 +108,7 @@ class scrum_sprint(osv.osv):
         'date_stop': fields.date('Ending Date', required=True),
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True,help="The person who is responsible for the product"),
-        'scrum_master_id': fields.many2one('res.users', 'Scrum Manager', required=True,help="The person who is maintains the processes for the product"),
+        'scrum_master_id': fields.many2one('res.users', 'Scrum Master', required=True,help="The person who is maintains the processes for the product"),
         'meeting_ids': fields.one2many('scrum.meeting', 'sprint_id', 'Daily Scrum'),
         'review': fields.text('Sprint Review'),
         'retrospective': fields.text('Sprint Retrospective'),
@@ -308,7 +308,7 @@ class scrum_meeting(osv.osv):
         meeting_id = self.browse(cr, uid, ids)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
-            self.email_send(cr, uid, ids, email)
+            self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for scrum master defined on sprint.'))
         return True
@@ -316,7 +316,7 @@ class scrum_meeting(osv.osv):
     def button_send_product_owner(self, cr, uid, ids, context=None):
         meeting_id = self.browse(cr, uid, ids)[0]
         if meeting_id.sprint_id.product_owner_id.user_email:
-            self.email_send(cr,uid,ids,email)
+            self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for product owner defined on sprint.'))
         return True

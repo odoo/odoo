@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
+<data>
 
      <act_window
             id="act_crm_opportunity_crm_phonecall_new"
             name="Phone calls"
             res_model="crm.phonecall"
             src_model="crm.lead"
-            view_mode="calendar,tree,form"
+            view_mode="tree,calendar,form"
             context="{'default_duration': 1.0 ,'default_opportunity_id': active_id}"
-            domain="[('user_id','=',uid),('opportunity_id', '=', active_id)]"
+            domain="[('opportunity_id', '=', active_id)]"
             view_type="form"/>
 
     <act_window
@@ -19,7 +19,7 @@
             src_model="crm.lead"
             view_mode="tree,form,calendar,"
             context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
-            domain="[('user_id','=',uid), ('opportunity_id', '=', active_id)]"
+            domain="[('opportunity_id', '=', active_id)]"
             view_type="form"/>
 
      <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
