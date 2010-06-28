@@ -54,7 +54,7 @@ msgstr ""
 #. module: project
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Невалидно име на модел при задаването на действие."
 
 #. module: project
 #: wizard_field:project.task.delegate,init,planned_hours_me:0
@@ -416,11 +416,9 @@ msgid "Medium"
 msgstr "Средно"
 
 #. module: project
-#: view:config.compute.remaining:0
-#: field:config.compute.remaining,remaining_hours:0
-#: field:project.task,remaining_hours:0
+#: field:report.closed.task,remaining_hours:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Оставащи часове"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -524,9 +522,9 @@ msgid "User: %(user_id)s"
 msgstr "Потребител: %(user_id)s"
 
 #. module: project
-#: field:project.task,delay_hours:0
+#: field:report.closed.task,delay_hours:0
 msgid "Delay Hours"
-msgstr ""
+msgstr "Часове забавяне"
 
 #. module: project
 #: field:project.project,contact_id:0
@@ -603,9 +601,9 @@ msgid "Status: %(state)s"
 msgstr "Статус: %(state)s"
 
 #. module: project
-#: view:project.task:0
+#: view:report.closed.task:0
 msgid "Planned"
-msgstr ""
+msgstr "Планирани"
 
 #. module: project
 #: help:project.project,total_hours:0
@@ -783,9 +781,9 @@ msgid "Delegated To"
 msgstr ""
 
 #. module: project
-#: field:project.task,date_close:0
+#: field:report.closed.task,date_close:0
 msgid "Date Closed"
-msgstr ""
+msgstr "Дата на приключване"
 
 #. module: project
 #: field:project.task,user_id:0
@@ -888,9 +886,9 @@ msgid "ID: %(task_id)s"
 msgstr "ID: %(task_id)s"
 
 #. module: project
-#: selection:project.task,state:0
+#: selection:report.closed.task,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "В прогрес"
 
 #. module: project
 #: constraint:ir.model:0
@@ -911,9 +909,9 @@ msgid "Parent Task"
 msgstr "Родителска задача"
 
 #. module: project
-#: view:project.task:0
+#: view:report.closed.task:0
 msgid "Delay"
-msgstr ""
+msgstr "Закъснение"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -946,9 +944,9 @@ msgid "New title of your own task to validate the work done."
 msgstr ""
 
 #. module: project
-#: field:project.task,progress:0
+#: field:report.closed.task,progress:0
 msgid "Progress (%)"
-msgstr ""
+msgstr "Напредък (%)"
 
 #. module: project
 #: field:project.task,description:0
@@ -1160,8 +1158,7 @@ msgid "My Planning"
 msgstr ""
 
 #. module: project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr ""
 
@@ -1211,3 +1208,182 @@ msgstr ""
 #: view:board.board:0
 msgid "My Timesheet"
 msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_tree_month
+#: model:ir.ui.menu,name:project.menu_project_task_tree_month
+msgid "Tasks finished by project (this month)"
+msgstr "Приключени задачи по проект (текущ месец)"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+msgid "Tasks Closed by Project and User"
+msgstr "Приключени задачи по проект и по потребител"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree_month
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree_month
+msgid "Tasks finished by project and user (this month)"
+msgstr "Приключени задачи по проект и по потребител (текущ месец)"
+
+#. module: project
+#: field:report.project.task,hours_effective:0
+#: field:report.project.task.user,hours_effective:0
+msgid "Effective Hours"
+msgstr "Ефективни часове"
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "Задачи според потребител и проект"
+
+#. module: project
+#: field:report.project.task,task_closed:0
+#: field:report.project.task.user,task_closed:0
+msgid "Task Closed"
+msgstr "Приключване на задача"
+
+#. module: project
+#: view:report.project.task:0
+msgid "Tasks by Project"
+msgstr "Задачи по проект"
+
+#. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr "Управление на продажби – справки"
+
+#. module: project
+#: field:report.project.task.user,user_id:0
+msgid "User"
+msgstr "Потребител"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Tasks by Project and User"
+msgstr "Задачи по проект и по потребител"
+
+#. module: project
+#: model:ir.ui.menu,name:project.next_id_63
+msgid "This Month"
+msgstr "Текущ месец"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Tasks by projects and users"
+msgstr "Задачи по проекти и по потребители"
+
+#. module: project
+#: field:report.project.task,closing_days:0
+#: field:report.project.task.user,closing_days:0
+msgid "Avg Closing Delay"
+msgstr "Прибл. закъснение на приключването"
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task
+#: view:report.project.task:0
+msgid "Tasks by project"
+msgstr "Задачи по проект"
+
+#. module: project
+#: field:report.project.task,hours_delay:0
+#: field:report.project.task.user,hours_delay:0
+msgid "Avg. Plan.-Eff."
+msgstr ""
+
+#. module: project
+#: field:report.project.task,name:0 field:report.project.task.user,name:0
+msgid "Month"
+msgstr "Месец"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_tree
+#: model:ir.ui.menu,name:project.menu_project_task_tree
+msgid "Tasks Closed by Project"
+msgstr "Приключени задачи по проект"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+#: view:report.task.user.pipeline.open:0
+msgid "Tasks by User"
+msgstr "Задачи според потребител"
+
+#. module: project
+#: selection:report.task.user.pipeline.open,task_state:0
+msgid "No Task"
+msgstr "Няма задача"
+
+#. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
+msgid "Report on tasks by user for projects"
+msgstr "Доклад на задачите по проекти според потребител"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project.menu_timesheet_task_user
+msgid "Timesheet / Task Hours Per Month"
+msgstr "График / Часове задачи на месец"
+
+#. module: project
+#: field:report.task.user.pipeline.open,company_id:0
+msgid "Company"
+msgstr "Фирма"
+
+#. module: project
+#: model:ir.ui.menu,name:project.next_id_57
+msgid "Reporting"
+msgstr "Справки"
+
+#. module: project
+#: model:ir.module.module,description:project.module_meta_information
+msgid ""
+"Gives statistics on tasks by user on projects to check the pipeline of users."
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_closed_task_board
+msgid "Task Closed Within Past 15 Days"
+msgstr "Приключени задачи през последните 15 дни"
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_hrs:0
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "Часове задачи"
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_nbr:0
+msgid "Task Number"
+msgstr "Номер на задача"
+
+#. module: project
+#: model:ir.model,name:project.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr "report.timesheet.task.user"
+
+#. module: project
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "График / Доклад на часовете задачи на месец"
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_progress:0
+msgid "Task Progress"
+msgstr "Напредък на задачата"
+
+#. module: project
+#: model:ir.model,name:project.model_report_closed_task
+msgid "Closed Task Report"
+msgstr "Доклад за приключена задача"
+
+#. module: project
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "Часове по график"
+
+#. module: project
+#: view:report.closed.task:0
+msgid "Closed Tasks"
+msgstr "Приключени задачи"

@@ -1164,8 +1164,7 @@ msgid "My Planning"
 msgstr "我的计划"
 
 #. module: project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "我的发票科目"
 
@@ -1216,6 +1215,185 @@ msgstr "我用户的管线"
 msgid "My Timesheet"
 msgstr "我的时间表"
 
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_tree_month
+#: model:ir.ui.menu,name:project.menu_project_task_tree_month
+msgid "Tasks finished by project (this month)"
+msgstr "项目的完成的任务(这月)"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+msgid "Tasks Closed by Project and User"
+msgstr "项目和用户关闭的任务"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree_month
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree_month
+msgid "Tasks finished by project and user (this month)"
+msgstr "项目和用户完成的任务(这月)"
+
+#. module: project
+#: field:report.project.task,hours_effective:0
+#: field:report.project.task.user,hours_effective:0
+msgid "Effective Hours"
+msgstr "有效时间"
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "项目和用户的任务"
+
+#. module: project
+#: field:report.project.task,task_closed:0
+#: field:report.project.task.user,task_closed:0
+msgid "Task Closed"
+msgstr "任务关闭"
+
+#. module: project
+#: view:report.project.task:0
+msgid "Tasks by Project"
+msgstr "项目的任务"
+
+#. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr "销售管理 - 报表"
+
+#. module: project
+#: field:report.project.task.user,user_id:0
+msgid "User"
+msgstr "用户"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Tasks by Project and User"
+msgstr "项目和用户的任务"
+
+#. module: project
+#: model:ir.ui.menu,name:project.next_id_63
+msgid "This Month"
+msgstr "本月"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Tasks by projects and users"
+msgstr "项目和用户的任务"
+
+#. module: project
+#: field:report.project.task,closing_days:0
+#: field:report.project.task.user,closing_days:0
+msgid "Avg Closing Delay"
+msgstr "平均关闭延迟"
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task
+#: view:report.project.task:0
+msgid "Tasks by project"
+msgstr "项目任务"
+
+#. module: project
+#: field:report.project.task,hours_delay:0
+#: field:report.project.task.user,hours_delay:0
+msgid "Avg. Plan.-Eff."
+msgstr ""
+
+#. module: project
+#: field:report.project.task,name:0 field:report.project.task.user,name:0
+msgid "Month"
+msgstr "月"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_tree
+#: model:ir.ui.menu,name:project.menu_project_task_tree
+msgid "Tasks Closed by Project"
+msgstr "项目关闭的任务"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+#: view:report.task.user.pipeline.open:0
+msgid "Tasks by User"
+msgstr "用户任务"
+
+#. module: project
+#: selection:report.task.user.pipeline.open,task_state:0
+msgid "No Task"
+msgstr "没任务"
+
+#. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
+msgid "Report on tasks by user for projects"
+msgstr "项目用户任务报表"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project.menu_timesheet_task_user
+msgid "Timesheet / Task Hours Per Month"
+msgstr "时间表/每月任务小时数"
+
+#. module: project
+#: field:report.task.user.pipeline.open,company_id:0
+msgid "Company"
+msgstr "公司"
+
+#. module: project
+#: model:ir.ui.menu,name:project.next_id_57
+msgid "Reporting"
+msgstr "内部报表"
+
+#. module: project
+#: model:ir.module.module,description:project.module_meta_information
+msgid ""
+"Gives statistics on tasks by user on projects to check the pipeline of users."
+msgstr "项目用户任务的统计来检查用户的管线"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_closed_task_board
+msgid "Task Closed Within Past 15 Days"
+msgstr "15天前关闭的任务"
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_hrs:0
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "任务的小时数"
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_nbr:0
+msgid "Task Number"
+msgstr "任务数"
+
+#. module: project
+#: model:ir.model,name:project.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr ""
+
+#. module: project
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "时间表/每月任务小时数报表"
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_progress:0
+msgid "Task Progress"
+msgstr "任务进度"
+
+#. module: project
+#: model:ir.model,name:project.model_report_closed_task
+msgid "Closed Task Report"
+msgstr "关闭任务报表"
+
+#. module: project
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "时间表小时数"
+
+#. module: project
+#: view:report.closed.task:0
+msgid "Closed Tasks"
+msgstr "关闭任务"
+
 #~ msgid ""
 #~ "\n"
 #~ "This module implements a dashboard for project member that includes:\n"
@@ -1234,3 +1412,6 @@ msgstr "我的时间表"
 #~ "    *我的时间表图表\n"
 #~ "    *我的工作分析图形\n"
 #~ "    "
+
+#~ msgid "All Months"
+#~ msgstr "所有月份"

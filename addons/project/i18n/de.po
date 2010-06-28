@@ -1195,8 +1195,7 @@ msgid "My Planning"
 msgstr "Meine Planung"
 
 #. module: project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:project.act_my_account
+#: view:board.board:0 model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
 msgstr "Meine abrechenbaren Zeiten"
 
@@ -1246,3 +1245,182 @@ msgstr "Meine Benutzer"
 #: view:board.board:0
 msgid "My Timesheet"
 msgstr "Meine Zeiterfassung"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_tree_month
+#: model:ir.ui.menu,name:project.menu_project_task_tree_month
+msgid "Tasks finished by project (this month)"
+msgstr "Aufgaben nach Projekten (dieser Monat)"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+msgid "Tasks Closed by Project and User"
+msgstr "Fertige Aufgaben nach Projekt und Benutzer"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree_month
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree_month
+msgid "Tasks finished by project and user (this month)"
+msgstr "Erl. Aufgaben nach Projekt und Benutzer (d. Monat)"
+
+#. module: project
+#: field:report.project.task,hours_effective:0
+#: field:report.project.task.user,hours_effective:0
+msgid "Effective Hours"
+msgstr "Effektive Stunden"
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "Aufgaben nach Benutzer und Projekt"
+
+#. module: project
+#: field:report.project.task,task_closed:0
+#: field:report.project.task.user,task_closed:0
+msgid "Task Closed"
+msgstr "Beendete Aufgaben"
+
+#. module: project
+#: view:report.project.task:0
+msgid "Tasks by Project"
+msgstr "Aufgaben nach Projekt"
+
+#. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr "Verkaufsverwaltung - Berichte"
+
+#. module: project
+#: field:report.project.task.user,user_id:0
+msgid "User"
+msgstr "Benutzer"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Tasks by Project and User"
+msgstr "Aufgaben nach Projekt und Benutzer"
+
+#. module: project
+#: model:ir.ui.menu,name:project.next_id_63
+msgid "This Month"
+msgstr "Dieser Monat"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Tasks by projects and users"
+msgstr "Aufgaben nach Projekten und Benutzern"
+
+#. module: project
+#: field:report.project.task,closing_days:0
+#: field:report.project.task.user,closing_days:0
+msgid "Avg Closing Delay"
+msgstr "Durch. Verzögerung"
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task
+#: view:report.project.task:0
+msgid "Tasks by project"
+msgstr "Aufgaben nach Projekten"
+
+#. module: project
+#: field:report.project.task,hours_delay:0
+#: field:report.project.task.user,hours_delay:0
+msgid "Avg. Plan.-Eff."
+msgstr "Durch. Plan. - Eff."
+
+#. module: project
+#: field:report.project.task,name:0 field:report.project.task.user,name:0
+msgid "Month"
+msgstr "Monat"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_tree
+#: model:ir.ui.menu,name:project.menu_project_task_tree
+msgid "Tasks Closed by Project"
+msgstr "Erl. Aufgaben nach Projekt"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+#: view:report.task.user.pipeline.open:0
+msgid "Tasks by User"
+msgstr "Aufgaben je Benutzer"
+
+#. module: project
+#: selection:report.task.user.pipeline.open,task_state:0
+msgid "No Task"
+msgstr "Keine Aufgabe"
+
+#. module: project
+#: model:ir.module.module,shortdesc:project.module_meta_information
+msgid "Report on tasks by user for projects"
+msgstr "Report je Aufgabe und Benutzer je Projekt"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project.menu_timesheet_task_user
+msgid "Timesheet / Task Hours Per Month"
+msgstr "Arbeitszeitaufzeichnung / Stunden je Monat"
+
+#. module: project
+#: field:report.task.user.pipeline.open,company_id:0
+msgid "Company"
+msgstr "Firma"
+
+#. module: project
+#: model:ir.ui.menu,name:project.next_id_57
+msgid "Reporting"
+msgstr "Berichtswesen"
+
+#. module: project
+#: model:ir.module.module,description:project.module_meta_information
+msgid ""
+"Gives statistics on tasks by user on projects to check the pipeline of users."
+msgstr "Statistik über offene Aufgaben (Pipeline) je Benutzer"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_closed_task_board
+msgid "Task Closed Within Past 15 Days"
+msgstr "Erledigte Aufgaben der letzten 15 Tage"
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_hrs:0
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "Aufgabe Stunden"
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_nbr:0
+msgid "Task Number"
+msgstr "Aufgaben Nummer"
+
+#. module: project
+#: model:ir.model,name:project.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr "report.timesheet.task.user"
+
+#. module: project
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Arbeitszeitaufzeichnung/Aufgaben Stunden je Monat"
+
+#. module: project
+#: field:report.task.user.pipeline.open,task_progress:0
+msgid "Task Progress"
+msgstr "Aufgaben-Fortschritt"
+
+#. module: project
+#: model:ir.model,name:project.model_report_closed_task
+msgid "Closed Task Report"
+msgstr "Abgeschlossene Aufgaben Bericht"
+
+#. module: project
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "Arbeitszeitaufzeichnung Stunden"
+
+#. module: project
+#: view:report.closed.task:0
+msgid "Closed Tasks"
+msgstr "Abgeschlossene Aufgaben"
