@@ -115,6 +115,7 @@ class account_common_report(osv.osv_memory):
         raise (_('Error'), _('not implemented'))
 
     def check_report(self, cr, uid, ids, context=None):
+        obj_acc_move_line = self.pool.get('account.move.line')
         if context is None:
             context = {}
         data = {}
