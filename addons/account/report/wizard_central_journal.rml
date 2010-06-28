@@ -123,7 +123,8 @@
     <paraStyle name="terp_default_Bold_9_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
-  <story>
+  <story> 
+  <para style="terp_default_8">[[ repeatIn(objects, 'o') ]]</para>
     <!--blockTable colWidths="180.0,180.0,180.0" style="Table_header_Content">
       <tr>
         <td>
@@ -145,9 +146,12 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_8">[[ repeatIn(objects, 'o') ]]</para>
-    <para style="terp_default_8">[[ repeatIn(lines(data['form']['period_id'][0][2],data['form']['journal_id'][0][2]), 'line') ]]</para>
+   
+  
+	<section> 		
     <blockTable colWidths="180.0,180.0,180.0" style="Table_Sub_Header_Content">
+	<para style="terp_default_8">[[ repeatIn(lines(data['form']['periods'],data['form']['journal_ids']), 'line') ]]</para>      
+  	<condPageBreak height="1"/>
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Journal Code</para>
@@ -214,17 +218,13 @@
 	          <para style="terp_default_Bold_9_Right">[[ formatLang(sum_credit(line[0]['period'].id, line[0]['journal'].id)) ]]</para>
 	        </td>
 	      </tr>
-	    </blockTable>
-      </td>
-      </tr>
-
-      <tr>
+	      <tr>
       <td>
 	      <blockTable colWidths="80.0,272.0,94.0,87.0" style="Table_Journal_Line_Content">
-	       <para style="terp_default_8">[[repeatIn(line,'l')]]</para>
 	        <tr>
+	         <para style="terp_default_8">[[repeatIn(line,'l')]]</para>
 	          <td>
-	            <para style="terp_default_9">[[ l['code'] ]]</para>
+	            <para style="terp_default_9">d[[ l['code'] ]]</para>
 	          </td>
 	          <td>
 	            <para style="terp_default_9">[[ l['name'] ]]</para>
@@ -237,9 +237,16 @@
 	          </td>
 	        </tr>
 	      </blockTable>
+	      
    	  </td>
    	  </tr>
+	    </blockTable>
+      </td>
+      </tr>
    	 </blockTable>
+   	 <pageBreak/>
+   	 </section>
+   	  	
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>

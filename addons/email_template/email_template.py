@@ -108,8 +108,7 @@ class email_template(osv.osv):
         'enforce_from_account':fields.many2one(
                    'email_template.account',
                    string="Enforce From Account",
-                   help="Emails will be sent only from this account(which are approved).",
-                   domain=[('state','=','approved')]),
+                   help="Emails will be sent only from this account(which are approved)."),
         'from_email' : fields.related('enforce_from_account', 'email_id',
                                                 type='char', string='From',),        
         'def_to':fields.char(
@@ -223,39 +222,41 @@ class email_template(osv.osv):
         'template_language' : lambda *a:'mako',
 
     }
+    
     _sql_constraints = [
         ('name', 'unique (name)', _('The template name must be unique !'))
     ]
 
-    def create(self, cr, uid, vals, context=None):
-        id = super(email_template, self).create(cr, uid, vals, context)
-        src_obj = self.pool.get('ir.model').read(cr, uid, vals['object_name'], ['model'], context)['model']
+    def create_action(self, cr, uid, ids, context):
+        vals = {}
+        template_obj = self.browse(cr, uid, ids)[0]
+        src_obj = template_obj.object_name.model
         vals['ref_ir_act_window'] = self.pool.get('ir.actions.act_window').create(cr, uid, {
-             'name': _("%s Mail Form") % vals['name'],
+             'name': template_obj.name,
              'type': 'ir.actions.act_window',
              'res_model': 'email_template.send.wizard',
              'src_model': src_obj,
              'view_type': 'form',
-             'context': "{'src_model':'%s','template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, id),
+             'context': "{'src_model':'%s','template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, template_obj.id),
              'view_mode':'form,tree',
              'view_id': self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'email_template.send.wizard.form')], context=context)[0],
              'target': 'new',
              'auto_refresh':1
         }, context)
         vals['ref_ir_value'] = self.pool.get('ir.values').create(cr, uid, {
-             'name': _('Send Mail (%s)') % vals['name'],
+             'name': _('Send Mail (%s)') % template_obj.name,
              'model': src_obj,
              'key2': 'client_action_multi',
              'value': "ir.actions.act_window," + str(vals['ref_ir_act_window']),
              'object': True,
          }, context)
-        self.write(cr, uid, id, {
+        self.write(cr, uid, ids, {
             'ref_ir_act_window': vals['ref_ir_act_window'],
             'ref_ir_value': vals['ref_ir_value'],
         }, context)
-        return id
+        return True
 
-    def unlink(self, cr, uid, ids, context=None):
+    def unlink_action(self, cr, uid, ids, context):
         for template in self.browse(cr, uid, ids, context):
             obj = self.pool.get(template.object_name.model)
             try:
@@ -265,6 +266,13 @@ class email_template(osv.osv):
                     self.pool.get('ir.values').unlink(cr, uid, template.ref_ir_value.id, context)
             except:
                 raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
+
+    def delete_action(self, cr, uid, ids, context):
+        self.unlink_action(cr, uid, ids, context)
+        return True
+        
+    def unlink(self, cr, uid, ids, context=None):
+        self.unlink_action(cr, uid, ids, context)
         return super(email_template, self).unlink(cr, uid, ids, context)
     
     def copy(self, cr, uid, id, default=None, context=None):

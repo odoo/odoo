@@ -18,120 +18,53 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import osv, fields
 from tools.translate import _
 
 class account_balance_report(osv.osv_memory):
-    """
-    This wizard will provide the account balance report by periods, between any two dates.
-    """
+
+    _inherit = "account.common.report"
     _name = 'account.balance.report'
     _description = 'Account Balance Report'
     _columns = {
-        'Account_list': fields.many2one('account.account', 'Chart account',
-                                required=True, domain = [('parent_id','=',False)]),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'display_account': fields.selection([('bal_mouvement','With movements'),
-                                 ('bal_all','All'),
-                                 ('bal_solde','With balance is not equal to 0'),
-                                 ],'Display accounts'),
-        'fiscalyear': fields.many2one('account.fiscalyear', 'Fiscal year', help='Keep empty for all open fiscal year'),
-        'state': fields.selection([('bydate','By Date'),
-                                 ('byperiod','By Period'),
-                                 ('all','By Date and Period'),
-                                 ('none','No Filter')
-                                 ],'Date/Period Filter'),
-        'periods': fields.many2many('account.period', 'period_account_balance_rel',
-                                    'report_id', 'period_id', 'Periods',
-                                    help='Keep empty for all open fiscal year'),
-        'date_from': fields.date('Start date', required=True),
-        'date_to': fields.date('End date', required=True),
-        }
+        'display_account': fields.selection([('bal_all','All'), ('bal_mouvement','With movements'),
+                         ('bal_solde','With balance is not equal to 0'),
+                         ],'Display accounts'),
+                }
 
-    def _get_company(self, cr, uid, context=None):
-        user_obj = self.pool.get('res.users')
-        company_obj = self.pool.get('res.company')
-        user = user_obj.browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
+    _defaults = {
+        'display_account': 'bal_all'
+                 }
+
+    def default_get(self, cr, uid, fields, context=None):
+        """ To get default values for the object.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary
+         @return: A dictionary which of fields with values.
+        """
+        res = {}
+        if 'journal_ids' in fields:# FIX me!!
+            res['journal_ids'] = []
+            return res
         else:
-            return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
+            result = super(account_balance_report, self).default_get(cr, uid, fields, context=context)
+        result.update({'company_id':self.pool.get('account.account').read(cr, uid, result['chart_account_id'], context=context)['company_id']})
+        return result
 
-    _defaults={
-        'state' : 'none',
-        'date_from' : time.strftime('%Y-01-01'),
-        'date_to' : time.strftime('%Y-%m-%d'),
-        'company_id' : _get_company,
-        'fiscalyear' : False,
-        'display_account': 'bal_all',
-        }
+    def _print_report(self, cr, uid, ids, data, query_line, context=None):
 
-    def next_view(self, cr, uid, ids, context=None):
-        obj_model = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        data = self.read(cr, uid, ids, [])[0]
-        context.update({'Account_list': data['Account_list']})
-        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','account_balance_report_view')])
-        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'account.balance.report',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': context
-        }
-
-    def check_state(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        data={}
-        data['ids'] = context['active_ids']
-        data['form'] = self.read(cr, uid, ids, ['date_from',  'company_id',  'state', 'periods', 'date_to',  'display_account',  'fiscalyear'])[0]
-        data['form']['Account_list'] = context.get('Account_list',[])
-        data['form']['context'] = context
-        if data['form']['Account_list']:
-            data['model'] = 'ir.ui.menu'
-        else:
-            data['model'] = 'account.account'
-
-        if data['form']['state'] == 'bydate'  :
-           return self._check_date(cr, uid, data, context)
-        elif data['form']['state'] == 'byperiod':
-            if not data['form']['periods']:
-                raise  osv.except_osv(_('Warning'),_('Please Enter Periods ! '))
-
-        return {
-            'type': 'ir.actions.report.xml',
-            'report_name': 'account.account.balance',
-            'datas': data,
-            'nodestroy':True,
-            }
-
-    def _check_date(self, cr, uid, data, context=None):
-        if context is None:
-            context = {}
-        sql = """
-            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql, (data['form']['date_from'],))
-        res = cr.dictfetchall()
-        if res:
-
-            if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
-                raise  osv.except_osv(_('UserError'),_('Date to must be set between %s and %s') % (res[0]['date_start'], res[0]['date_stop']))
-            else:
-                return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'account.account.balance',
-                'datas': data,
-                'nodestroy':True,
-                    }
-        else:
-            raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
+        if data['model']=='ir.ui.menu':
+            data['ids'] = [data['form']['chart_account_id']]
+        data['form'].update(self.read(cr, uid, ids, ['display_account',  'company_id',])[0])
+        data['form']['query_get'] = query_line
+        return { 'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data, 'nodestroy':True, }
 
 account_balance_report()
 

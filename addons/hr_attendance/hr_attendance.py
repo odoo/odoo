@@ -54,7 +54,7 @@ class hr_attendance(osv.osv):
 
         return res
     _columns = {
-        'name' : fields.datetime('Date', required=True),
+        'name' : fields.datetime('Date', required=True, select=1),
         'action' : fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'),('action','Action')], 'Action', required=True),
         'action_desc' : fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
         'employee_id' : fields.many2one('hr.employee', "Employee's Name", required=True, select=True),

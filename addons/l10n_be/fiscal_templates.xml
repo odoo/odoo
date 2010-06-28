@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
     
-	<!-- Fiscal Position Templates -->
-	
-	<record id="fiscal_position_template_1" model="account.fiscal.position.template">
+    <!-- Fiscal Position Templates -->
+    
+    <record id="fiscal_position_template_1" model="account.fiscal.position.template">
             <field name="name">Régime National</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
-	</record>
-	
-	<record id="fiscal_position_template_2" model="account.fiscal.position.template">
+    </record>
+    
+    <record id="fiscal_position_template_2" model="account.fiscal.position.template">
             <field name="name">Régime Extra-Communautaire</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
-	</record>
+    </record>
 
-	<record id="fiscal_position_template_3" model="account.fiscal.position.template">
+    <record id="fiscal_position_template_3" model="account.fiscal.position.template">
             <field name="name">Régime Intra-Communautaire</field>
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
-	</record>
+    </record>
     
     <!-- Fiscal Position Tax Templates -->
 
@@ -25,77 +25,77 @@
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_21" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_2" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_12" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_3" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_6" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_4" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_0" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_5" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_0_co" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_6" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_21_buy_bsd" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO_buy" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_7" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_12_buy_bsd" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO_buy" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_8" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_6_buy_bsd" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO_buy" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_9" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_0_buy_bsd" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO_buy" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_10" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_21_buy_mar" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO_buy" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_10_bis" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_21_buy_ser" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO_buy" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_11" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_12_buy_mar" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO_buy" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_12" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_6_buy_mar" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO_buy" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_13" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="tax_src_id" ref="l10n_be.vat_0_buy_mar" />
             <field name="tax_dest_id" ref="l10n_be.vat_XO_buy" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_15" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="tax_src_id" ref="l10n_be.vat_21" />
             <field name="tax_dest_id" ref="l10n_be.vat_IO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_15b" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="tax_src_id" ref="l10n_be.vat_21_s" />
@@ -105,37 +105,37 @@
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="tax_src_id" ref="l10n_be.vat_12" />
             <field name="tax_dest_id" ref="l10n_be.vat_IO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_17" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="tax_src_id" ref="l10n_be.vat_6" />
             <field name="tax_dest_id" ref="l10n_be.vat_IO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="tax_src_id" ref="l10n_be.vat_0" />
             <field name="tax_dest_id" ref="l10n_be.vat_IO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_19" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="tax_src_id" ref="l10n_be.vat_0_co" />
             <field name="tax_dest_id" ref="l10n_be.vat_IO" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_20" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="tax_src_id" ref="l10n_be.vat_21_buy_bsd" />
             <field name="tax_dest_id" ref="l10n_be.vat_IO_buy_21b" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_21" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="tax_src_id" ref="l10n_be.vat_21_buy_ser" />
             <field name="tax_dest_id" ref="l10n_be.vat_IO_buy_21s" />
-	</record>
+    </record>
     <record id="fiscal_position_tax_template_22" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="tax_src_id" ref="l10n_be.vat_21_buy_mar" />
             <field name="tax_dest_id" ref="l10n_be.vat_IO_buy_21m" />
-	</record>
+    </record>
 
     
     <!-- Fiscal Position Account Templates -->
@@ -144,54 +144,54 @@
             <field name="position_id" ref="fiscal_position_template_1"  />
             <field name="account_src_id" ref="l10n_be.a7000" />
             <field name="account_dest_id" ref="l10n_be.a_sale" />
-	</record>
+    </record>
     
-	<record id="fiscal_position_account_template_3" model="account.fiscal.position.account.template">
+    <record id="fiscal_position_account_template_3" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="account_src_id" ref="l10n_be.a7000" />
             <field name="account_dest_id" ref="l10n_be.a7001" />
-	</record>
-	
-	<record id="fiscal_position_account_template_4" model="account.fiscal.position.account.template">
+    </record>
+    
+    <record id="fiscal_position_account_template_4" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="account_src_id" ref="l10n_be.a_sale" />
             <field name="account_dest_id" ref="l10n_be.a7011" />
-	</record>
+    </record>
     
-	<record id="fiscal_position_account_template_5" model="account.fiscal.position.account.template">
+    <record id="fiscal_position_account_template_5" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="account_src_id" ref="l10n_be.a7020" />
             <field name="account_dest_id" ref="l10n_be.a7021" />
-	</record>
+    </record>
 
-	<record id="fiscal_position_account_template_6" model="account.fiscal.position.account.template">
+    <record id="fiscal_position_account_template_6" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fiscal_position_template_3"  />
             <field name="account_src_id" ref="l10n_be.a7050" />
             <field name="account_dest_id" ref="l10n_be.a7051" />
-	</record>
+    </record>
 
-	<record id="fiscal_position_account_template_7" model="account.fiscal.position.account.template">
+    <record id="fiscal_position_account_template_7" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="account_src_id" ref="l10n_be.a7000" />
             <field name="account_dest_id" ref="l10n_be.a7002" />
-	</record>
-	
-	<record id="fiscal_position_account_template_8" model="account.fiscal.position.account.template">
+    </record>
+    
+    <record id="fiscal_position_account_template_8" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="account_src_id" ref="l10n_be.a_sale" />
             <field name="account_dest_id" ref="l10n_be.a7012" />
-	</record>
+    </record>
     
-	<record id="fiscal_position_account_template_9" model="account.fiscal.position.account.template">
+    <record id="fiscal_position_account_template_9" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="account_src_id" ref="l10n_be.a7020" />
             <field name="account_dest_id" ref="l10n_be.a7022" />
-	</record>
+    </record>
 
-	<record id="fiscal_position_account_template_10" model="account.fiscal.position.account.template">
+    <record id="fiscal_position_account_template_10" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fiscal_position_template_2"  />
             <field name="account_src_id" ref="l10n_be.a7050" />
             <field name="account_dest_id" ref="l10n_be.a7052" />
-	</record>
+    </record>
     </data>
 </openerp>    

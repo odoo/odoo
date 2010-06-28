@@ -233,7 +233,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param email: pass the emails
             @param emailfrom: Pass name the email From else False
             @param context: A standard dictionary for contextual values """
-
         body = self.format_mail(obj, body)
         if not emailfrom:
             if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and\
@@ -255,8 +254,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param context: A standard dictionary for contextual values """
-
-        ok = True
+        ok = True 
         if eval(action.domain):
             obj_ids = obj._table.search(cr, uid, eval(action.domain), context=context)
             if not obj.id in obj_ids:
@@ -277,7 +275,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
             ok = ok and (not action.trg_state_from or action.trg_state_from==obj.state)
         if state_to:
             ok = ok and (not action.trg_state_to or action.trg_state_to==state_to)
-
+        elif action.trg_state_to:
+            ok = False
         reg_name = action.regex_name
         result_name = True
         if reg_name:

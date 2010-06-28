@@ -36,15 +36,19 @@ class journal_print(report_sxw.rml_parse):
             'sum_debit_period': self._sum_debit_period,
             'sum_credit_period': self._sum_credit_period,
             'sum_debit': self._sum_debit,
-            'sum_credit': self._sum_credit
+            'sum_credit': self._sum_credit,
         })
 
-    def set_context(self, objects, data, ids, report_type = None):
+    def set_context(self, objects, data, ids, report_type=None):
         super(journal_print, self).set_context(objects, data, ids, report_type)
-        self.cr.execute('SELECT period_id, journal_id '
-                        'FROM account_journal_period '
-                        'WHERE id IN %s',
-                        (tuple(ids),))
+        if (data['model'] == 'account.journal.period'):
+            self.cr.execute('SELECT period_id, journal_id '
+                            'FROM account_journal_period '
+                            'WHERE id IN %s',
+                            (tuple(ids),))
+        else:
+            self.cr.execute('SELECT period_id, journal_id '
+                        'FROM account_journal_period ')
         res = self.cr.fetchall()
         self.period_ids, self.journal_ids = zip(*res)
 
@@ -91,7 +95,6 @@ class journal_print(report_sxw.rml_parse):
             return lines_data
         if not self.journal_ids:
             return []
-
         self.cr.execute('SELECT j.code, j.name, '
                         'SUM(l.debit) AS debit, SUM(l.credit) AS credit '
                         'FROM account_move_line l '
@@ -146,7 +149,7 @@ class journal_print(report_sxw.rml_parse):
                         'AND state<>\'draft\'',
                         (tuple(periods), tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
-report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print)
+report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header=False)
 report_sxw.report_sxw('report.account.general.journal.wiz', 'account.journal.period', 'addons/account/report/wizard_general_journal.rml', parser=journal_print, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

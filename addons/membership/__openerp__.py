@@ -43,10 +43,12 @@ invoice and send propositions for membership renewal.
         'security/ir.model.access.csv',
         'wizard/membership_invoice_view.xml',
         'membership_view.xml',
+        'report/report_membership_view.xml',
         'wizard/membership_unpaid_invoice_view.xml',
         'process/membership_process.xml'
     ],
     'demo_xml': ['membership_demo.xml'],
+    'test': ['test/test_membership.yml'],             
     'installable': True,
     'active': False,
     'certificate': '0042907796381',

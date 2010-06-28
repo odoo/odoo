@@ -97,9 +97,12 @@ class email_template_account(osv.osv):
                                                         context
                                                         )['name'],
          'state':lambda * a:'draft',
+         'smtpport':lambda *a:25,
+         'smtpserver':lambda *a:'localhost',
+         'company':lambda *a:'yes',
          'user':lambda self, cursor, user, context:user,
-         'send_pref':lambda * a: 'html',
-         'smtptls':lambda * a:True,
+         'send_pref':lambda *a: 'html',
+         'smtptls':lambda *a:True,
      }
     
     _sql_constraints = [
