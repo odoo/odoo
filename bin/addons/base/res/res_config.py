@@ -114,14 +114,6 @@ class res_config_configurable(osv.osv_memory):
                                   'next action is %s' % next)
         if next:
             action = next.action_id
-            print {
-                'view_mode': action.view_mode,
-                'view_type': action.view_type,
-                'view_id': action.view_id and [action.view_id.id] or False,
-                'res_model': action.res_model,
-                'type': action.type,
-                'target': action.target,
-            }
             return {
                 'view_mode': action.view_mode,
                 'view_type': action.view_type,
