@@ -207,7 +207,7 @@ class crm_send_new_email(osv.osv_memory):
             res_id = hist.res_id
             case = model_pool.browse(cr, uid, res_id)
             if 'email_to' in fields:
-                res.update({'email_to': case.email_from or hist.email_from or False})
+                res.update({'email_to': hist.email_from or False})
             if 'email_from' in fields:
                 res.update({'email_from': user_mail_from})
 

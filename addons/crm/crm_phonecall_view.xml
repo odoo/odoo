@@ -204,8 +204,11 @@
             <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)">
                 <field name="date" string="Date"/>
                 <field name="name" string="Call Summary"/>
-                <field name="partner_id" string="Partner"/>
-                <field name="partner_contact"/>
+                <field name="partner_id"
+                	on_change="onchange_partner_id(partner_id, email_from)"
+                	string="Partner" />
+                <field name="partner_address_id" string="Contact"
+                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="state" invisible="1"/>
