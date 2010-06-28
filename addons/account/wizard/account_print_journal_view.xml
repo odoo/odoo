@@ -2,35 +2,16 @@
 <openerp>
     <data>
 
-		<record id="view_account_print_journal" model="ir.ui.view">
+        <record id="account_report_print_journal" model="ir.ui.view">
             <field name="name">Account Print Journal</field>
             <field name="model">account.print.journal</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
-			<form string="Print Journals">
-			<group height="350" width="650">
-			    <group colspan="4">
-			    	<separator string="Journals" colspan="4"/>
-			    	<newline/>
-			    	<field name="journal_ids" nolabel="1"/>
-			    	<newline/>
-			    	<separator string="Periods" colspan="4"/>
-					<group colspan="4">
-					    <field name="period_from"/>
-					    <field name="period_to"/>
-				    </group>
-				    <group colspan="4">
-					    <separator string="" colspan="4" col="2"/>
-					    <field name="sort_selection" />
-					</group>
-				</group>
-			</group>
-				<separator colspan="4"/>
-			    <group col="2" colspan="4">
-            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="check_report" string="Print" colspan="1" type="object" icon="gtk-ok"/>
-				</group>
-			</form>
+               <field name="fiscalyear_id" position="after">
+                   <field name="sort_selection"/>
+                   <newline/>
+               </field>
             </field>
         </record>
 
@@ -41,6 +22,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="view_id" ref="account_report_print_journal"/>
         </record>
 
 		<menuitem
