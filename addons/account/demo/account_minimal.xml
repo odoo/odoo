@@ -14,31 +14,48 @@
         <record id="account_type_asset" model="account.account.type">
             <field name="name">Asset</field>
             <field name="code">asset</field>
+            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_receivable" model="account.account.type">
+            <field name="name">Receivable</field> 
+            <field name="code">receivable</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">unreconciled</field>
         </record>
         <record id="account_type_liability" model="account.account.type">
             <field name="name">Liability</field> 
             <field name="code">liability</field>
+            <field name="report_type">liability</field>
             <field name="close_method">balance</field>
+        </record>
+        <record id="account_type_payable" model="account.account.type">
+            <field name="name">Payable</field> 
+            <field name="code">payable</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_type_income" model="account.account.type">
+            <field name="name">Income</field> 
+            <field name="code">income</field>
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_type_expense" model="account.account.type">
+            <field name="name">Expense</field> 
+            <field name="code">expense</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
         </record>
         <record id="account_type_cash_equity" model="account.account.type">
             <field name="name">Equity</field> 
             <field name="code">equity</field>
             <field name="close_method">balance</field>
         </record>
-        <record id="account_type_income" model="account.account.type">
-            <field name="name">Income</field> 
-            <field name="code">income</field>
-            <field name="close_method">unreconciled</field>
-        </record>
-        <record id="account_type_expense" model="account.account.type">
-            <field name="name">Expense</field> 
-            <field name="code">expense</field>
-            <field name="close_method">unreconciled</field>
-        </record>
         <record id="account_type_cash_moves" model="account.account.type">
             <field name="name">Cash</field> 
             <field name="code">cash</field>
+            <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
 
@@ -65,7 +82,7 @@ your own accounts.
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account_type_income"/>
+            <field name="user_type" ref="account_type_receivable"/>
             <field name="note">
 This chart of account is used for automated testing purpose. It is installed
 only if you selected demo data during your database creation. Modules can
@@ -75,12 +92,12 @@ your own chart of account.
         </record>
         <record id="a_pay" model="account.account">
             <field name="name">Main Payable</field>
-            <field name="code">x 440000</field>
+            <field name="code">x 44000</field>
             <field name="type">payable</field>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account_type_expense"/>
+            <field name="user_type" ref="account_type_payable"/>
             <field name="note">
 This chart of account is used for automated testing purpose. It is installed
 only if you selected demo data during your database creation. Modules can
@@ -90,7 +107,7 @@ your own chart of account.
         </record>
         <record id="cash" model="account.account">
             <field name="name">Petty Cash</field>
-            <field name="code">x 570000</field>
+            <field name="code">x 57000</field>
             <field name="type">other</field>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
@@ -104,7 +121,7 @@ your own chart of account.
         </record>
         <record id="a_expense" model="account.account">
             <field name="name">Products Purchase</field>
-            <field name="code">x 600000</field>
+            <field name="code">x 60000</field>
             <field name="type">other</field>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
@@ -118,11 +135,11 @@ your own chart of account.
         </record>
         <record id="a_sale" model="account.account">
             <field name="name">Products Sales</field>
-            <field name="code">x 701000</field>
+            <field name="code">x 70000</field>
             <field name="type">other</field>
             <field eval="ref('minimal_0')" name="parent_id"/>
-            <field name="user_type" ref="account_type_income"/>
             <field name="company_id" ref="base.main_company"/>
+            <field name="user_type" ref="account_type_income"/>
             <field name="note">
 This chart of account is used for automated testing purpose. It is installed
 only if you selected demo data during your database creation. Modules can
