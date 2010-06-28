@@ -63,9 +63,6 @@ ad_paths.append(_ad)    # for get_module_path
 # Modules already loaded
 loaded = []
 
-#Modules whch raised error
-not_loaded = []
-
 class Graph(dict):
 
     def addNode(self, name, deps):
@@ -80,6 +77,8 @@ class Graph(dict):
             Node(name, self)
 
     def update_from_db(self, cr):
+        if not len(self):
+            return
         # update the graph with values from the database (if exist)
         ## First, we set the default values for each package in graph
         additional_data = dict.fromkeys(self.keys(), {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None})
@@ -95,8 +94,6 @@ class Graph(dict):
         for package in self.values():
             for k, v in additional_data[package.name].items():
                 setattr(package, k, v)
-
-
 
     def __iter__(self):
         level = 0
@@ -339,12 +336,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
             terp_file = get_module_resource(module, '__terp__.py')
 
         if not mod_path or not terp_file:
-            global not_loaded
-            not_loaded.append(module)
-            logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
+            logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not found, skipped' % (module))
             continue
-            #raise osv.osv.except_osv('Error!',"Module '%s' was not found" % (module,))
-
 
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             try:
@@ -354,7 +347,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
                 raise
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
-
+            else:
+                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable, skipped' % (module))
 
     dependencies = dict([(p, deps) for p, deps, data in packages])
     current, later = set([p for p, dep, data in packages]), set()
@@ -794,13 +788,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
         graph = create_graph(cr, ['base'], force)
+        if not graph:
+            logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
+            raise osv.osv.except_osv('Could not load base module', 'module base cannot be loaded! (hint: verify addons-path)')
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
-        global not_loaded
-        if not_loaded:
-            #If some module is not loaded don't proceed further
-            not_loaded = []
-            return
         if update_module:
             modobj = pool.get('ir.module.module')
             states = {'installed': 'button_upgrade', 'uninstalled': 'button_install'}
