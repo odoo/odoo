@@ -217,39 +217,34 @@ class mailgate_tool(osv.osv_memory):
             msg_id = msg_pool.create(cr, uid, msg_data, context=context)
         return True
 
-    def email_forward(self, cr, uid, model, res_ids, msg,  email_error=False):
+    def email_forward(self, cr, uid, model, res_ids, msg, email_error=False, context=None):
         """Sends an email to all people following the thread
-        @param res_id: Id of the record of OpenObject model created from the Email details 
-        @param msg: Email details
+        @param res_id: Id of the record of OpenObject model created from the email message
+        @param msg: email.message.Message to forward
         @param email_error: Default Email address in case of any Problem
         """
-        for res_id in res_ids:
-            history_pool = self.pool.get('mailgate.message')
-            message = email.message_from_string(tools.ustr(msg).encode('utf-8'))
-            encoding = message.get_content_charset()
-            message['body'] = message.get_payload(decode=True)
-            if encoding:
-                message['body'] = self._to_decode(message['body'], [encoding])
-            subject = message['Subject']
+        model_pool = self.pool.get(model)
 
-            from_email = self._decode_header(message['From'])
-
-            model_pool = self.pool.get(model)
-            message_followers = model_pool.message_followers(cr, uid, [res_id])[res_id]
+        for res in model_pool.browse(cr, uid, res_ids, context=context):
+            message_followers = model_pool.message_followers(cr, uid, [res.id])[res.id]
             message_followers_emails = self.to_email(','.join(message_followers))
-
-            message_recipients = self.to_email(','.join([from_email,self._decode_header(message['To']),self._decode_header(message['Cc'])]) )
+            message_recipients = self.to_email(','.join([self._decode_header(msg['from']),
+                                                         self._decode_header(msg['to']),
+                                                         self._decode_header(msg['cc'])]))
             message_forward = [i for i in message_followers_emails if (i and (i not in message_recipients))]
 
-            res = None
-            try:
-                res = tools.email_send(from_email, message_forward, subject, body, openobject_id=res_id)
-            except Exception, e:
-                if email_error:
-                    temp_msg = '[%s] %s'%(res_id, message['Subject'])
-                    del message['Subject']
-                    message['Subject'] = '[OpenERP-Error] %s' %(temp_msg)
-                    tools.email_send(from_email, email_error, message.get('Subject'), message.get('body'), openobject_id=res_id)
+            if message_forward:
+                # TODO: we need an interface for this for all types of objects, not just leads
+                if hasattr(res, 'section'):
+                    del msg['reply-to']
+                    msg['reply-to'] = res.section.email_from
+
+                if not tools._email_send(msg, openobject_id=res_id) and email_error:
+                    subj = msg['subject']
+                    del msg['subject'], msg['to'], msg['cc'], msg['bcc']
+                    msg['subject'] = '[OpenERP-Forward-Failed] %s' % subj
+                    msg['to'] = email_error
+                    tools._email_send(msg, openobject_id=res_id)
 
     def process_email(self, cr, uid, model, message, attach=True, context=None):
         """This function Processes email and create record for given OpenERP model 
@@ -294,8 +289,6 @@ class mailgate_tool(osv.osv_memory):
                         att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
 
             return res_id
-
-        history_pool = self.pool.get('mailgate.message')
 
         # Warning: message_from_string doesn't always work correctly on unicode,
         # we must use utf-8 strings here :-(
@@ -426,7 +419,7 @@ class mailgate_tool(osv.osv_memory):
                             context = context)
         else:
             self.history(cr, uid, model, res_ids, msg, att_ids, context=context)
-        self.email_forward(cr, uid, model, res_ids, message)
+        self.email_forward(cr, uid, model, res_ids, msg_txt)
         return new_res_id
 
     def get_partner(self, cr, uid, from_email, context=None):
