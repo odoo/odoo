@@ -35,7 +35,7 @@ class account_cashbox_line(osv.osv):
 
     def _sub_total(self, cr, uid, ids, name, arg, context=None):
        
-        """ Calculates Sub total"
+        """ Calculates Sub total
         @param name: Names of fields.
         @param arg: User defined arguments
         @return: Dictionary of values.
