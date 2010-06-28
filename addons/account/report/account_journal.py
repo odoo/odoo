@@ -27,6 +27,16 @@ from report import report_sxw
 # Use period and Journal for selection or resources
 #
 class journal_print(report_sxw.rml_parse):
+
+    def set_context(self, objects, data, ids, report_type = None):
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
+        objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
+        import pdb
+        pdb.set_trace()
+        super(journal_print, self).set_context(objects, data, new_ids, report_type)
+
     def __init__(self, cr, uid, name, context={}):
         super(journal_print, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
@@ -70,7 +80,5 @@ class journal_print(report_sxw.rml_parse):
         return self.cr.fetchone()[0] or 0.0
 
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header=False)
-report_sxw.report_sxw('report.account.journal.period.print.wiz', 'account.journal.period', 'addons/account/report/wizard_account_journal.rml', parser=journal_print, header=False)
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
