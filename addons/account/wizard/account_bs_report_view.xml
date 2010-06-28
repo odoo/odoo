@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+        <record id="account_bs_report_view" model="ir.ui.view">
+             <field name="name">Select period</field>
+             <field name="model">account.bs.report</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+              	<form string="Select period">
+				    <field name="company_id"/>
+				    <field name="display_account" required = "True"/>
+				    <newline/>
+				    <field name="fiscalyear"/>
+				    <label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
+				    <field name="display_type"/>
+				    <newline/>
+				    <separator string="Filters" colspan="4"/>
+				    <field name="state" required="True"/>
+				    <newline/>
+				    <group attrs="{'invisible':[('state','=','none')]}" colspan="4">
+				        <group attrs="{'invisible':[('state','=','byperiod')]}" colspan="4">
+				            <separator string="Date Filter" colspan="4"/>
+				            <field name="date_from"/>
+				            <field name="date_to"/>
+				        </group>
+				        <group attrs="{'invisible':[('state','=','bydate')]}" colspan="4">
+				            <separator string="Filter on Periods" colspan="4"/>
+				            <field name="periods" colspan="4" nolabel="1"/>
+				        </group>
+				    </group>
+				    <newline/>
+     				<group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+               			<button name="check_state" string="Print" type="object" icon="gtk-print" default_focus="1"/>
+ 					</group>
+				</form>
+             </field>
+ 		</record>
+
+ 		<record id="action_account_bs_report" model="ir.actions.act_window">
+             <field name="name">Account Balance Sheet</field>
+             <field name="res_model">account.bs.report</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="account_bs_report_view"/>
+             <field name="target">new</field>
+       </record>
+
+		<record id="account_bs_report_account_view" model="ir.ui.view">
+            <field name="name">Account Chart</field>
+             <field name="model">account.bs.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+		        <form string="Select Chart">
+		        	<field name="Account_list" />
+		        	<field name="reserve_account_id"/>
+		        	<separator colspan="4"/>
+	            	<button icon="gtk-cancel" special="cancel" string="Cancel" colspan="2"/>
+		            <button name="next_view" string="Next" type="object" icon="gtk-go-forward" default_focus="1" colspan="2"/>
+		        </form>
+            </field>
+        </record>
+
+        <record id="action_bs_balance_account_report" model="ir.actions.act_window">
+             <field name="name">Select Account</field>
+             <field name="res_model">account.bs.report</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="account_bs_report_account_view"/>
+             <field name="context">{'record_id':active_id}</field>
+             <field name="target">new</field>
+       </record>
+
+ 	   <menuitem icon="STOCK_PRINT"
+ 	   		name="Balance Sheet"
+ 	   		action="action_bs_balance_account_report"
+ 			id="menu_account_bs_report"
+ 			parent="final_accounting_reports"/>
+
+	</data>
+</openerp>

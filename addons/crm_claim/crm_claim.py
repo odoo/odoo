@@ -21,7 +21,7 @@
 
 from osv import fields, osv
 from crm import crm
-
+import time
 class crm_claim(osv.osv, crm.crm_case):
     """
     Crm claim
@@ -29,10 +29,8 @@ class crm_claim(osv.osv, crm.crm_case):
     _name = "crm.claim"
     _description = "Claim Cases"
     _order = "id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread']
     _columns = {
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
         'id': fields.integer('ID', readonly=True), 
         'name': fields.char('Name', size=128, required=True), 
         'active': fields.boolean('Active', required=False), 
@@ -90,6 +88,8 @@ class crm_claim(osv.osv, crm.crm_case):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
     }
 
     _defaults = {
@@ -100,9 +100,46 @@ class crm_claim(osv.osv, crm.crm_case):
         'email_from':crm.crm_case. _get_default_email, 
         'state': lambda *a: 'draft', 
         'section_id':crm.crm_case. _get_section, 
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c), 
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
     }
+    
+    def onchange_partner_id(self, cr, uid, ids, part, email=False):
+        """This function returns value of partner address based on partner
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case IDs
+        @param part: Partner's id
+        @email: Partner's email ID
+        """
+        if not part:
+            return {'value': {'partner_address_id': False,
+                            'email_from': False, 
+                            'partner_phone': False,
+                            'partner_mobile': False
+                            }}
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
+        data = {'partner_address_id': addr['contact']}
+        data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
+        print data
+        return {'value': data}
+
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """This function returns value of partner email based on Partner Address
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case IDs
+        @param add: Id of Partner's address
+        @email: Partner's email ID
+        """
+        if not add:
+            return {'value': {'email_from': False}}
+        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+        return {'value': {'email_from': address.email, 'partner_phone': address.phone, 'partner_mobile': address.mobile}}
+
 
 crm_claim()
 

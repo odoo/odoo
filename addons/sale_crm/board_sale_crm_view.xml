@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+		<record id="action_quotation_for_sale_crm" model="ir.actions.act_window">
+	        <field name="name">Quotations</field>
+	        <field name="res_model">sale.order</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">tree,form</field>
+	        <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
+	   		<field name="view_id" ref="sale.view_order_tree"/>
+    	</record>
+
+    	<record id="view_turnover_by_month_tree" model="ir.ui.view">
+	        <field name="name">turnover.by.month.tree</field>
+	        <field name="model">account.invoice.report</field>
+	        <field name="type">tree</field>
+	        <field name="arch" type="xml">
+	            <tree string="Turnover By Months">
+	                <field name="month"/>
+	                <field name="price_total"/>
+	            </tree>
+	        </field>
+	    </record>
+
+	    <record id="view_turnover_by_month_graph" model="ir.ui.view">
+	        <field name="name">turnover.by.month.graph</field>
+	        <field name="model">account.invoice.report</field>
+	        <field name="type">graph</field>
+	        <field name="arch" type="xml">
+	            <graph string="Turnover By Months" type="bar">
+	                <field name="month"/>
+	                <field name="price_total" operator="+"/>
+	            </graph>
+	        </field>
+	    </record>
+
+		<record model="ir.actions.act_window" id="action_turnover_by_month">
+			<field name="res_model">account.invoice.report</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph,tree</field>
+			<field name="view_id" ref="view_turnover_by_month_tree"/>
+			<field name="domain">[('year','ilike',time.strftime('%Y')),('user_id','=',uid)]</field>
+			<field name="context">{'group_by_no_leaf':1,'group_by':['month']}</field>
+        	<field name="search_view_id" ref="account.view_account_invoice_report_search"/>
+         </record>
+
+		<record model="ir.ui.view" id="crm.board_crm_form">
+			<field name="name">CRM - Dashboard Form</field>
+			<field name="model">board.board</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Connecting Dashboard">
+					<hpaned>
+						<child1>
+							<action
+								string="My Opportunities"
+								name="%(crm.act_my_leads)d"
+								colspan="4"
+								height="150"
+								width="510"/>
+
+							<action
+								string="My Meetings"
+								name="%(crm.act_my_meetings)d"
+								height="150"
+								colspan="4"/>
+							<action
+								string="My Quotations"
+								name="%(action_quotation_for_sale_crm)d"
+								colspan="4"
+								height="150"
+								width="510"/>
+						</child1>
+						<child2>
+							<action
+                                string="Revenues by stage"
+                                name="%(crm.act_my_leads_stage)d"
+                                colspan="4"/>
+                            <action
+                                string="My Sales Pipeline"
+                                name="%(crm.act_sales_pipeline)d"
+                                colspan="4"/>
+                             <action
+                                string="Turnover By Months"
+                                name="%(action_turnover_by_month)d"
+                                colspan="4"/>
+                        </child2>
+                    </hpaned>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

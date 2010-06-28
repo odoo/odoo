@@ -29,7 +29,7 @@ class member_unpaid_invoice(osv.osv_memory):
         'product': fields.many2one('product.product','Membership product', size=64,required=True, help='Select Membership product'),
                }
 
-    def _invoice_membership(self, cr, uid, ids, context):
+    def invoice_membership(self, cr, uid, ids, context):
         model_obj = self.pool.get('ir.model.data')
         partners = []
         result = model_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')

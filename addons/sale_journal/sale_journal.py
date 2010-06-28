@@ -210,7 +210,7 @@ res_partner()
 class picking(osv.osv):
     _inherit="stock.picking"
     _columns = {
-        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal'),
+        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal',  domain=[('state','!=', 'done')]),
         'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal'),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
     }

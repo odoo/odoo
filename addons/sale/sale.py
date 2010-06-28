@@ -98,6 +98,7 @@ class sale_order(osv.osv):
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
+    # This is False
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
@@ -205,7 +206,8 @@ class sale_order(osv.osv):
         return result.keys()
 
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True, select=True, help="unique number of the sale order,computed automatically when the sale order is created"),
+        'name': fields.char('Order Reference', size=64, required=True,
+            readonly=True, states={'draft': [('readonly', False)]}, select=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source document', size=64, help="Reference of the document that generated this sale order request."),
         'client_order_ref': fields.char('Customer Reference', size=64),
@@ -461,7 +463,7 @@ class sale_order(osv.osv):
         invoices = {}
         invoice_ids = []
         picking_obj = self.pool.get('stock.picking')
-        invoice=self.pool.get('account.invoice')
+        invoice = self.pool.get('account.invoice')
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
@@ -484,14 +486,14 @@ class sale_order(osv.osv):
         for val in invoices.values():
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []), context=context)
-                temp_order=''
+                invoice_ref = ''
                 for o, l in val:
-                    temp_order=o.name + ',' + temp_order
+                    invoice_ref += o.name + '|'
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     if o.order_policy == 'picking':
                         picking_obj.write(cr, uid, map(lambda x: x.id, o.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
-                invoice.write(cr, uid, [res], {'origin': temp_order})   
+                invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': invoice_ref})
             else:
                 for order, il in val:
                     res = self._make_invoice(cr, uid, order, il, context=context)
@@ -1025,6 +1027,7 @@ class sale_order_line(osv.osv):
                     }
             result['product_uom_qty'] = qty
 
+        uom2 = False
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
@@ -1080,6 +1083,19 @@ class sale_order_line(osv.osv):
                 result['product_uos_qty'] = qty
             result['th_weight'] = q * product_obj.weight        # Round the quantity up
 
+        if not uom2:
+            uom2 = product_obj.uom_id
+        if (product_obj.type=='product') and (product_obj.virtual_available * uom2.factor < qty * product_obj.uom_id.factor) \
+          and (product_obj.procure_method=='make_to_stock'):
+            warning = {
+                'title': _('Not enough stock !'),
+                'message': _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') %
+                    (qty, uom2 and uom2.name or product_obj.uom_id.name,
+                     max(0,product_obj.virtual_available), product_obj.uom_id.name,
+                     max(0,product_obj.qty_available), product_obj.uom_id.name)
+            }
+
+
         # get unit price
 
         if not pricelist:
@@ -1103,7 +1119,7 @@ class sale_order_line(osv.osv):
                         "You have to change either the product, the quantity or the pricelist."
                     }
             else:
-                result.update({'price_unit': price,'purchase_price' : product_obj.standard_price})
+                result.update({'price_unit': price})
         return {'value': result, 'domain': domain, 'warning': warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,

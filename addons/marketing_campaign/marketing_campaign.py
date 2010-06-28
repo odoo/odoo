@@ -50,8 +50,8 @@ this campaign to be run"),
                                 ('manual', 'With Manual Confirmation'),
                                 ('active', 'Normal')],
                                  'Mode', required=True, help= \
-"""Test - It creates and process all the workitems directly (without waiting for the delay on transitions) but do not send emails or produce reports.
-Test in Realtime - It creates and process all the workitems directly but do not send emails or produce reports.
+"""Test - It creates and process all the activities directly (without waiting for the delay on transitions) but do not send emails or produce reports.
+Test in Realtime - It creates and process all the activities directly but do not send emails or produce reports.
 With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.
 Normal - the campaign runs normally and automatically sends all emails and reports"""),
         'state': fields.selection([('draft', 'Draft'),
@@ -73,11 +73,19 @@ you required for the campaign"),
         campaign = self.browse(cr, uid, ids[0])
         if not campaign.activity_ids :
             raise osv.except_osv("Error", "There is no activitity in the campaign")
-        act_ids = [ act_id.id for act_id in campaign.activity_ids]
-        act_ids  = self.pool.get('marketing.campaign.activity').search(cr, uid,
-                                [('id', 'in', act_ids), ('start', '=', True)])
+        actvity_ids = [ act_id.id for act_id in campaign.activity_ids]
+        act_obj = self.pool.get('marketing.campaign.activity')
+        act_ids  = act_obj.search(cr, uid, [('id', 'in', actvity_ids), 
+                                                    ('start', '=', True)])
         if not act_ids :
             raise osv.except_osv("Error", "There is no starting activitity in the campaign")
+        act_ids = act_obj.search(cr, uid, [('id', 'in', actvity_ids), 
+                                            ('type', '=', 'email')])
+        for activity in act_obj.browse(cr, uid, act_ids):
+            if not activity.email_template_id.enforce_from_account :
+                raise osv.except_osv("Error", "Campaign cannot be start : Email Account is missing in email activity")
+            if activity.email_template_id.enforce_from_account.state != 'approved' :
+                raise osv.except_osv("Error", "Campaign cannot be start : Email Account is not approved for email activity")
         self.write(cr, uid, ids, {'state': 'running'})
         return True
 
@@ -239,7 +247,7 @@ class marketing_campaign_activity(osv.osv):
     def __init__(self, *args):
         self._actions = {'paper' : self.process_wi_report,
                     'email' : self.process_wi_email,
-                    'server_action' : self.process_wi_action,
+                    'action' : self.process_wi_action,
         }
         return super(marketing_campaign_activity, self).__init__(*args)
 
@@ -273,13 +281,17 @@ class marketing_campaign_activity(osv.osv):
         return True
 
     def process_wi_email(self, cr, uid, activity, workitem, context=None):
-        return self.pool.get('email.template').generate_mail(cr, uid, activity.email_template_id.id, [workitem.res_id], context=context)
+        return self.pool.get('email.template').generate_mail(cr, uid, 
+                                            activity.email_template_id.id, 
+                                            [workitem.res_id], context=context)
 
     def process_wi_action(self, cr, uid, activity, workitem, context={}):
         context = {}
         server_obj = self.pool.get('ir.actions.server')
-        server_obj.run(cr, uid, [activity.server_action_id.id], context)
-        return True
+        context['active_id'] = workitem.res_id
+        res = server_obj.run(cr, uid, [activity.server_action_id.id], context)
+        #server action return False if the action is perfomed except client_action,other and python code
+        return res==False and True or res 
 
     def process(self, cr, uid, act_id, wi_id, context={}):
         activity = self.browse(cr, uid, act_id)
@@ -339,7 +351,7 @@ class marketing_campaign_workitem(osv.osv):
              type='many2one', relation='marketing.campaign', string='Campaign', readonly=True),
         'object_id': fields.related('segment_id', 'campaign_id', 'object_id',
              type='many2one', relation='ir.model', string='Object', select=1),
-        'res_id': fields.integer('Resource ID', select=1),
+        'res_id': fields.integer('Resource ID', select=1, readonly=1),
         'res_name': fields.function(_res_name_get, method=True, string='Resource Name', type="char", size=64),
         'date': fields.datetime('Execution Date'),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
@@ -408,7 +420,7 @@ class marketing_campaign_workitem(osv.osv):
                         else:
                             vals = {'state': 'exception'}
                             if type(result) == type({}) and 'error_msg' in result:
-                               vals['error_msg'] = result['error_msg']
+                                vals['error_msg'] = result['error_msg']
                             self.write(cr, uid, wi.id, vals)
                     else:
                         self.write(cr, uid, wi.id, {'state': 'cancelled'})

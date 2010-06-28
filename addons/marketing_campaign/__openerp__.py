@@ -24,20 +24,27 @@
     "name" : "",
     "version" : "1.1",
     "depends" : ["marketing",
-                "crm", 
+                "crm",
                 "document",
                 "email_template"
                 ],
-    "author" : "Tiny",
+    "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
     "description": """
+Allows you to setup leads automation through marketing campaigns. The campaigns
+are dynamic and multi-channels. The process:
+* Design marketing campaigns that incluces mail templates, reports to print,
+  miscelleanous actions, etc.
+* Define segments that are selections of target people
+* Launch your campaign to automate communications.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
         'marketing_campaign_view.xml',
-        'marketing_campaign_data.xml',    
-        'marketing_campaign_workflow.xml',    
+        'marketing_campaign_data.xml',
+        'marketing_campaign_workflow.xml',
+        'res_partner_view.xml',
         'report/campaign_analysis_view.xml',
         "security/marketing_campaign_security.xml",
         "security/ir.model.access.csv"
