@@ -245,17 +245,22 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
+               <filter icon="terp-go-today" string="Current"
+                   name="current"
+                   domain="[('state','in', ('draft','open','pending'))]"/>
+               <separator orientation="vertical"/>
                <filter icon="terp-go-today" string="Today"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),\
                     ('date','&gt;=',datetime.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                   name="today"
                    help="Todays's Phonecalls"
                />
                <filter icon="terp-go-week"
                    string="7 Days"
                    help="Phonecalls during last 7 days"
-                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')),\
-                    ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                   domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                />
+
                <separator orientation="vertical"/>
                <field name="name" string="Call Summary"/>
                <field name="partner_id"/>

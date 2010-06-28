@@ -408,7 +408,7 @@ stock_location()
 
 class stock_tracking(osv.osv):
     _name = "stock.tracking"
-    _description = "Stock Tracking Lots"
+    _description = "Packs"
 
     def checksum(sscc):
         salt = '31' * 8 + '3'
@@ -424,7 +424,7 @@ class stock_tracking(osv.osv):
 
     _columns = {
         'name': fields.char('Tracking ID', size=64, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the tracking lots without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the pack without removing it."),
         'serial': fields.char('Reference', size=64),
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves Tracked'),
         'date': fields.datetime('Created Date', required=True),
@@ -1308,7 +1308,7 @@ class stock_move(osv.osv):
         return (res and res[0]) or False
     _name = "stock.move"
     _description = "Stock Move"
-    _order = 'date_planned desc'
+    _order = 'date_expected desc, id'
     _log_create = False
 
     def name_get(self, cr, uid, ids, context={}):
@@ -1362,7 +1362,7 @@ class stock_move(osv.osv):
         'address_id': fields.many2one('res.partner.address', 'Dest. Address', help="Address where goods are to be delivered"),
 
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="Production lot is used to put a serial number on the production"),
-        'tracking_id': fields.many2one('stock.tracking', 'Tracking Lot', select=True, help="Tracking lot is the code that will be put on the logistical unit/pallet"),
+        'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, help="This is the code that will be put on the logistical unit: pallet, box, pack."),
 #       'lot_id': fields.many2one('stock.lot', 'Consumer lot', select=True, readonly=True),
 
         'auto_validate': fields.boolean('Auto Validate'),
