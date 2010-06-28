@@ -30,8 +30,7 @@ class account_central_journal(osv.osv_memory):
                }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
-            periods = [x[0] for x in data['form']['periods'][1]]
-            data['form']['periods'] = periods
+            periods = data['form']['periods']
             data['ids'] = ids
             obj_jperiod = self.pool.get('account.journal.period')
             if isinstance(periods, list):
@@ -41,8 +40,8 @@ class account_central_journal(osv.osv_memory):
                         ids_journal_period = obj_jperiod.search(cr,uid, [('journal_id','=',journal),('period_id','=',period)], context=context)
                         if ids_journal_period:
                             ids_final.append(ids_journal_period)
-                    if not ids_final:
-                        raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
+                if not ids_final:
+                    raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.central.journal.wiz',
