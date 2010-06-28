@@ -2323,6 +2323,128 @@ class orm(orm_template):
                             res = res_old
                             res[0]['attname'] = k
 
+
+                    if len(res)==1:
+                        f_pg_def = res[0]
+                        f_pg_type = f_pg_def['typname']
+                        f_pg_size = f_pg_def['size']
+                        f_pg_notnull = f_pg_def['attnotnull']
+                        if isinstance(f, fields.function) and not f.store and\
+                                not getattr(f, 'nodrop', False):
+                            logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
+                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE'% (self._table, k))
+                            cr.commit()
+                            f_obj_type = None
+                        else:
+                            f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
+
+                        if f_obj_type:
+                            ok = False
+                            casts = [
+                                ('text', 'char', 'VARCHAR(%d)' % (f.size or 0,), '::VARCHAR(%d)'%(f.size or 0,)),
+                                ('varchar', 'text', 'TEXT', ''),
+                                ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
+                                ('timestamp', 'date', 'date', '::date'),
+                                ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                            ]
+                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
+                                logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
+                                cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
+                                cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
+                                cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                cr.commit()
+                            for c in casts:
+                                if (f_pg_type==c[0]) and (f._type==c[1]):
+                                    if f_pg_type != f_obj_type:
+                                        if f_pg_type != f_obj_type:
+                                            logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                        ok = True
+                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
+                                        cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                        cr.commit()
+                                    break
+
+                            if f_pg_type != f_obj_type:
+                                if not ok:
+                                    i = 0
+                                    while True:
+                                        newname = self._table + '_moved' + str(i)
+                                        cr.execute("SELECT count(1) FROM pg_class c,pg_attribute a " \
+                                            "WHERE c.relname=%s " \
+                                            "AND a.attname=%s " \
+                                            "AND c.oid=a.attrelid ", (self._table, newname))
+                                        if not cr.fetchone()[0]:
+                                            break
+                                        i+=1
+                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB=%s, def=%s), data moved to table %s !" % (k, self._table, f_pg_type, f._type, newname))
+                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (self._table, k, newname))
+                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
+                                    cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'","''")))
+
+                            # if the field is required and hasn't got a NOT NULL constraint
+                            if f.required and f_pg_notnull == 0:
+                                # set the field to the default value if any
+                                if k in self._defaults:
+                                    if callable(self._defaults[k]):
+                                        default = self._defaults[k](self, cr, 1, context)
+                                    else:
+                                        default = self._defaults[k]
+
+                                    if (default is not None):
+                                        ss = self._columns[k]._symbol_set
+                                        query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
+                                        cr.execute(query, (ss[1](default),))
+                                # add the NOT NULL constraint
+                                cr.commit()
+                                try:
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
+                                    cr.commit()
+                                except Exception:
+                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
+                                cr.commit()
+                            elif not f.required and f_pg_notnull == 1:
+                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
+                                cr.commit()
+                            indexname = '%s_%s_index' % (self._table, k)
+                            cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = %s and tablename = %s", (indexname, self._table))
+                            res2 = cr.dictfetchall()
+                            if not res2 and f.select:
+                                cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
+                                cr.commit()
+                            if res2 and not f.select:
+                                cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
+                                cr.commit()
+                            if isinstance(f, fields.many2one):
+                                ref = self.pool.get(f._obj)._table
+                                if ref != 'ir_actions':
+                                    cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
+                                                'pg_attribute as att1, pg_attribute as att2 '
+                                            'WHERE con.conrelid = cl1.oid '
+                                                'AND cl1.relname = %s '
+                                                'AND con.confrelid = cl2.oid '
+                                                'AND cl2.relname = %s '
+                                                'AND array_lower(con.conkey, 1) = 1 '
+                                                'AND con.conkey[1] = att1.attnum '
+                                                'AND att1.attrelid = cl1.oid '
+                                                'AND att1.attname = %s '
+                                                'AND array_lower(con.confkey, 1) = 1 '
+                                                'AND con.confkey[1] = att2.attnum '
+                                                'AND att2.attrelid = cl2.oid '
+                                                'AND att2.attname = %s '
+                                                "AND con.contype = 'f'", (self._table, ref, k, 'id'))
+                                    res2 = cr.dictfetchall()
+                                    if res2:
+                                        if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
+                                            cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
+                                            cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
+                                            cr.commit()
+                    elif len(res)>1:
+                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error, column %s->%s has multiple instances !"%(self._table,k))
                     if not res:
                         if not isinstance(f, fields.function) or f.store:
 
@@ -2369,116 +2491,6 @@ class orm(orm_template):
                                 except Exception:
                                     logger.notifyChannel('orm', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: openerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                             cr.commit()
-                    elif len(res)==1:
-                        f_pg_def = res[0]
-                        f_pg_type = f_pg_def['typname']
-                        f_pg_size = f_pg_def['size']
-                        f_pg_notnull = f_pg_def['attnotnull']
-                        if isinstance(f, fields.function) and not f.store and\
-                                not getattr(f, 'nodrop', False):
-                            logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
-                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE'% (self._table, k))
-                            cr.commit()
-                            f_obj_type = None
-                        else:
-                            f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
-
-                        if f_obj_type:
-                            ok = False
-                            casts = [
-                                ('text', 'char', 'VARCHAR(%d)' % (f.size or 0,), '::VARCHAR(%d)'%(f.size or 0,)),
-                                ('varchar', 'text', 'TEXT', ''),
-                                ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
-                                ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
-                                ('datetime', 'date', 'date', '::date'),
-                                ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
-                                ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
-                            ]
-                            # !!! Avoid reduction of varchar field !!!
-                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
-                            # if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
-                                logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
-                                cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
-                                cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
-                                cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
-                                cr.commit()
-                            for c in casts:
-                                if (f_pg_type==c[0]) and (f._type==c[1]):
-                                    if f_pg_type != f_obj_type:
-                                        if f_pg_type != f_obj_type:
-                                            logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
-                                        ok = True
-                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
-                                        cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
-                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
-                                        cr.commit()
-                                    break
-
-                            if f_pg_type != f_obj_type:
-                                if not ok:
-                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB = %s, def = %s) but unable to migrate this change !" % (k, self._table, f_pg_type, f._type))
-
-                            # if the field is required and hasn't got a NOT NULL constraint
-                            if f.required and f_pg_notnull == 0:
-                                # set the field to the default value if any
-                                if k in self._defaults:
-                                    if callable(self._defaults[k]):
-                                        default = self._defaults[k](self, cr, 1, context)
-                                    else:
-                                        default = self._defaults[k]
-
-                                    if (default is not None):
-                                        ss = self._columns[k]._symbol_set
-                                        query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
-                                        cr.execute(query, (ss[1](default),))
-                                # add the NOT NULL constraint
-                                cr.commit()
-                                try:
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
-                                    cr.commit()
-                                except Exception:
-                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
-                                cr.commit()
-                            elif not f.required and f_pg_notnull == 1:
-                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
-                                cr.commit()
-                            indexname = '%s_%s_index' % (self._table, k)
-                            cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = %s and tablename = %s", (indexname, self._table))
-                            res = cr.dictfetchall()
-                            if not res and f.select:
-                                cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
-                                cr.commit()
-                            if res and not f.select:
-                                cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
-                                cr.commit()
-                            if isinstance(f, fields.many2one):
-                                ref = self.pool.get(f._obj)._table
-                                if ref != 'ir_actions':
-                                    cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
-                                                'pg_attribute as att1, pg_attribute as att2 '
-                                            'WHERE con.conrelid = cl1.oid '
-                                                'AND cl1.relname = %s '
-                                                'AND con.confrelid = cl2.oid '
-                                                'AND cl2.relname = %s '
-                                                'AND array_lower(con.conkey, 1) = 1 '
-                                                'AND con.conkey[1] = att1.attnum '
-                                                'AND att1.attrelid = cl1.oid '
-                                                'AND att1.attname = %s '
-                                                'AND array_lower(con.confkey, 1) = 1 '
-                                                'AND con.confkey[1] = att2.attnum '
-                                                'AND att2.attrelid = cl2.oid '
-                                                'AND att2.attname = %s '
-                                                "AND con.contype = 'f'", (self._table, ref, k, 'id'))
-                                    res = cr.dictfetchall()
-                                    if res:
-                                        if res[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
-                                            cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res[0]['conname'] + '"')
-                                            cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
-                                            cr.commit()
-                    else:
-                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error, column %s->%s has multiple instances !"%(self._table,k))
             for order,f,k in todo_update_store:
                 todo_end.append((order, self._update_store, (f, k)))
 
