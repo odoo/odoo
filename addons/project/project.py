@@ -167,7 +167,7 @@ class project(osv.osv):
             default['name'] = proj.name+_(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
-        cr.execute('update project_task set active=True where project_id in %s', (tuple(ids,)))
+        cr.execute('update project_task set active=True where project_id in %s', (tuple(ids),))
         return res
 
     def duplicate_template(self, cr, uid, ids,context={}):
