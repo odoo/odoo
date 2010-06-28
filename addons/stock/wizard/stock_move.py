@@ -194,7 +194,7 @@ class split_in_production_lot(osv.osv_memory):
         'product_uom': fields.many2one('product.uom', 'Product UOM'),
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number'),
         'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Lots Existing Numbers'),
-        'use_exist' : fields.boolean('Use Exist'),
+        'use_exist' : fields.boolean('Existing Lot'),
      }
 
     def split_lot(self, cr, uid, ids, context=None):
@@ -294,7 +294,7 @@ class stock_move_split_lines(osv.osv_memory):
     _columns = {
         'name': fields.char('Tracking serial', size=64),
         'quantity': fields.integer('Quantity'),
-        'use_exist' : fields.boolean('Use Exist'),
+        'use_exist' : fields.boolean('Existing Lot'),
         'lot_id': fields.many2one('stock.move.split', 'Lot'),
         'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
     }

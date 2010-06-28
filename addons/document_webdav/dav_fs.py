@@ -55,8 +55,6 @@ class openerp_dav_handler(dav_interface):
     M_NS={ "DAV:" : dav_interface.M_NS['DAV:'],}
 
     def __init__(self,  parent, verbose=False):        
-        self.db_name = False
-        self.directory_id=False
         self.db_name_list=[]
         self.parent = parent
         self.baseuri = parent.baseuri
@@ -65,10 +63,10 @@ class openerp_dav_handler(dav_interface):
     def get_propnames(self, uri):
         props = self.PROPS   
         self.parent.log_message('get propnames: %s' % uri)
-        if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
+            # TODO: maybe limit props for databases..?
             return props
         node = self.uri2object(cr, uid, pool, uri2)
         if node:
@@ -83,7 +81,6 @@ class openerp_dav_handler(dav_interface):
         raise DAV_NotFound
 
     def match_prop(self, uri, match, ns, propname):        
-        if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
@@ -104,8 +101,7 @@ class openerp_dav_handler(dav_interface):
             pname        -- name of the property
          """            
         if self.M_NS.has_key(ns):
-           return dav_interface.get_prop(self, uri, ns, propname) 
-        if uri[-1]=='/':uri=uri[:-1]
+            return dav_interface.get_prop(self, uri, ns, propname)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
@@ -114,19 +110,46 @@ class openerp_dav_handler(dav_interface):
         if not node:
             cr.close()
             raise DAV_NotFound
-        res = node.get_dav_eprop(cr, ns, propname)        
+        res = node.get_dav_eprop(cr, ns, propname)
         cr.close()        
         return res    
 
-    def get_db(self,uri):
-        names=self.uri2local(uri).split('/')        
-        self.db_name=False
-        if len(names) > 1:
-            self.db_name=self.uri2local(uri).split('/')[1]
-            if self.db_name=='':
-                raise Exception,'Plese specify Database name in folder'
-        return self.db_name    
-    
+    def get_db(self, uri, rest_ret=False, allow_last=False):
+        """Parse the uri and get the dbname and the rest.
+           Db name should be the first component in the unix-like
+           path supplied in uri.
+           
+           @param rest_ret Instead of the db_name, return (db_name, rest),
+                where rest is the remaining path
+           @param allow_last If the dbname is the last component in the
+                path, allow it to be resolved. The default False value means
+                we will not attempt to use the db, unless there is more
+                path.
+                
+           @return db_name or (dbname, rest) depending on rest_ret,
+                will return dbname=False when component is not found.
+        """
+        
+        uri2 = self.uri2local(uri)
+        if uri2.startswith('/'):
+            uri2 = uri2[1:]
+        names=uri2.split('/',1)
+        db_name=False
+        rest = None
+        if allow_last:
+            ll = 0
+        else:
+            ll = 1
+        if len(names) > ll and names[0]:
+            db_name = names[0]
+            names = names[1:]
+
+        if rest_ret:
+            if len(names):
+                rest = names[0]
+            return db_name, rest
+        return db_name
+
 
     def urijoin(self,*ajoin):
         """ Return the base URI of this request, or even join it with the
@@ -140,20 +163,25 @@ class openerp_dav_handler(dav_interface):
         result = s.exp_list()
         self.db_name_list=[]
         for db_name in result:
-            db = pooler.get_db_only(db_name)
-            cr = db.cursor()
-            cr.execute("select id from ir_module_module where name = 'document' and state='installed' ")
-            res=cr.fetchone()
-            if res and len(res):
-                self.db_name_list.append(db_name)
-            cr.close()
+            cr = None
+            try:
+                db = pooler.get_db_only(db_name)
+                cr = db.cursor()
+                cr.execute("SELECT id FROM ir_module_module WHERE name = 'document' AND state='installed' ")
+                res=cr.fetchone()
+                if res and len(res):
+                    self.db_name_list.append(db_name)
+            except Exception, e:
+                self.parent.log_error("Exception in db list: %s" % e)
+            finally:
+                if cr:
+                    cr.close()
         return self.db_name_list
 
     def get_childs(self, uri, filters=None):
         """ return the child objects as self.baseuris for the given URI """        
         self.parent.log_message('get childs: %s' % uri)
-        if uri[-1]=='/':uri=uri[:-1]
-        cr, uid, pool, dbname, uri2 = self.get_cr(uri)  
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri, allow_last=True)
         
         if not dbname:            
             if cr: cr.close()
@@ -194,38 +222,33 @@ class openerp_dav_handler(dav_interface):
     #
     # pos: -1 to get the parent of the uri
     #
-    def get_cr(self, uri):            
+    def get_cr(self, uri, allow_last=False):
+        """ Split the uri, grab a cursor for that db
+        """
         pdb = self.parent.auth_proxy.last_auth
-        reluri = self.uri2local(uri)        
-        try:
-            dbname = reluri.split('/')[1]
-        except:
-            dbname = False        
+        dbname, uri2 = self.get_db(uri, rest_ret=True, allow_last=allow_last)
+        uri2 = (uri2 and uri2.split('/')) or []
         if not dbname:
-            return None, None, None, False, None
-        if not pdb and dbname:
-            # if dbname was in our uri, we should have authenticated
-            # against that.
-            raise Exception("Programming error")        
-        #assert pdb == dbname, " %s != %s" %(pdb, dbname)        
+            return None, None, None, False, uri2
+        # if dbname was in our uri, we should have authenticated
+        # against that.
+        assert pdb == dbname, " %s != %s" %(pdb, dbname)
         res = self.parent.auth_proxy.auth_creds.get(dbname, False)
-        if not res:            
+        if not res:
             self.parent.auth_proxy.checkRequest(self.parent, uri, dbname)
-            res = self.parent.auth_proxy.auth_creds[dbname]            
+            res = self.parent.auth_proxy.auth_creds[dbname]
         user, passwd, dbn2, uid = res
         db,pool = pooler.get_db_and_pool(dbname)
         cr = db.cursor()
-        uri2 = reluri.split('/')[2:]        
         return cr, uid, pool, dbname, uri2
 
-    def uri2object(self, cr, uid, pool,uri):
+    def uri2object(self, cr, uid, pool, uri):
         if not uid:
             return None
         return pool.get('document.directory').get_object(cr, uid, uri)
 
-    def get_data(self,uri):    
+    def get_data(self,uri, rrange=None):
         self.parent.log_message('GET: %s' % uri)
-        if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         try:
             if not dbname:
@@ -234,6 +257,9 @@ class openerp_dav_handler(dav_interface):
             if not node:
                 raise DAV_NotFound(uri2)
             try:
+                if rrange:
+                    self.parent.log_error("Doc get_data cannot use range")
+                    raise DAV_Error(409)
                 datas = node.get_data(cr)
             except TypeError,e:
                 import traceback                
@@ -256,7 +282,6 @@ class openerp_dav_handler(dav_interface):
     def _get_dav_resourcetype(self,uri):
         """ return type of object """        
         self.parent.log_message('get RT: %s' % uri)
-        if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         try:
             if not dbname:
@@ -272,7 +297,6 @@ class openerp_dav_handler(dav_interface):
 
     def _get_dav_displayname(self,uri):
         self.parent.log_message('get DN: %s' % uri)
-        if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             cr.close()
@@ -288,7 +312,6 @@ class openerp_dav_handler(dav_interface):
     def _get_dav_getcontentlength(self, uri):
         """ return the content length of an object """        
         self.parent.log_message('get length: %s' % uri)
-        if uri[-1]=='/':uri=uri[:-1]
         result = 0
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)        
         if not dbname:
@@ -306,7 +329,6 @@ class openerp_dav_handler(dav_interface):
     def _get_dav_getetag(self,uri):
         """ return the ETag of an object """
         self.parent.log_message('get etag: %s' % uri)
-        if uri[-1]=='/':uri=uri[:-1]
         result = 0
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
@@ -323,7 +345,6 @@ class openerp_dav_handler(dav_interface):
     @memoize(CACHE_SIZE)
     def get_lastmodified(self, uri):
         """ return the last modified date of the object """
-        if uri[-1]=='/':uri=uri[:-1]
         today = time.time()
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
@@ -342,7 +363,6 @@ class openerp_dav_handler(dav_interface):
     @memoize(CACHE_SIZE)
     def get_creationdate(self, uri):
         """ return the last modified date of the object """        
-        if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             raise DAV_Error, 409
@@ -361,7 +381,6 @@ class openerp_dav_handler(dav_interface):
     @memoize(CACHE_SIZE)
     def _get_dav_getcontenttype(self,uri):
         self.parent.log_message('get contenttype: %s' % uri)
-        if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             return 'httpd/unix-directory'
@@ -369,7 +388,7 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound(uri2)
-            result = node.mimetype
+            result = str(node.mimetype)
             return result
             #raise DAV_NotFound, 'Could not find %s' % path
         finally:
@@ -434,10 +453,8 @@ class openerp_dav_handler(dav_interface):
 
     def rmcol(self,uri):
         """ delete a collection """
-        if uri[-1]=='/':uri=uri[:-1]
-
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)        
-        if not dbname: # *-*
+        if not dbname:
             raise DAV_Error, 409
         node = self.uri2object(cr, uid, pool, uri2)             
         node.rmcol(cr)
@@ -447,7 +464,6 @@ class openerp_dav_handler(dav_interface):
         return 204
 
     def rm(self,uri):
-        if uri[-1]=='/':uri=uri[:-1]        
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:        
             cr.close()
@@ -626,3 +642,5 @@ class openerp_dav_handler(dav_interface):
     def is_collection(self, uri):
         """ test if the given uri is a collection """
         return self._get_dav_resourcetype(uri)==COLLECTION
+
+#eof

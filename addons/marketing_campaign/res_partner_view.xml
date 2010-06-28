@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+         <!--  Partners inherited form -->
+
+        <record id="view_workitem_partner_info_form" model="ir.ui.view">
+            <field name="name">res.partner.workitem.info.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                    <page string="History" position="inside">
+                            <field name="workitem_ids" colspan="4" nolabel="1"/>
+                        </page>
+            </field>
+       </record>
+   </data>
+</openerp>
+

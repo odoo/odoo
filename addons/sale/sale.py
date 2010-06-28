@@ -98,6 +98,7 @@ class sale_order(osv.osv):
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
+    # This is False
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
@@ -205,7 +206,8 @@ class sale_order(osv.osv):
         return result.keys()
 
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True, select=True, help="unique number of the sale order,computed automatically when the sale order is created"),
+        'name': fields.char('Order Reference', size=64, required=True,
+            readonly=True, states={'draft': [('readonly', False)]}, select=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source document', size=64, help="Reference of the document that generated this sale order request."),
         'client_order_ref': fields.char('Customer Reference', size=64),
@@ -429,7 +431,6 @@ class sale_order(osv.osv):
                 for preline in preinv.invoice_line:
                     inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
-
         inv = {
             'name': order.client_order_ref or order.name,
             'origin': order.name,
@@ -462,7 +463,7 @@ class sale_order(osv.osv):
         invoices = {}
         invoice_ids = []
         picking_obj = self.pool.get('stock.picking')
-
+        invoice = self.pool.get('account.invoice')
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
@@ -477,7 +478,6 @@ class sale_order(osv.osv):
             created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
             if created_lines:
                 invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
-
         if not invoices:
             for o in self.browse(cr, uid, ids):
                 for i in o.invoice_ids:
@@ -486,11 +486,14 @@ class sale_order(osv.osv):
         for val in invoices.values():
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []), context=context)
+                invoice_ref = ''
                 for o, l in val:
+                    invoice_ref += o.name + '|'
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     if o.order_policy == 'picking':
                         picking_obj.write(cr, uid, map(lambda x: x.id, o.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
+                invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': invoice_ref})
             else:
                 for order, il in val:
                     res = self._make_invoice(cr, uid, order, il, context=context)
@@ -1024,6 +1027,7 @@ class sale_order_line(osv.osv):
                     }
             result['product_uom_qty'] = qty
 
+        uom2 = False
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
@@ -1078,6 +1082,19 @@ class sale_order_line(osv.osv):
                 result['product_uos'] = False
                 result['product_uos_qty'] = qty
             result['th_weight'] = q * product_obj.weight        # Round the quantity up
+
+        if not uom2:
+            uom2 = product_obj.uom_id
+        if (product_obj.type=='product') and (product_obj.virtual_available * uom2.factor < qty * product_obj.uom_id.factor) \
+          and (product_obj.procure_method=='make_to_stock'):
+            warning = {
+                'title': _('Not enough stock !'),
+                'message': _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') %
+                    (qty, uom2 and uom2.name or product_obj.uom_id.name,
+                     max(0,product_obj.virtual_available), product_obj.uom_id.name,
+                     max(0,product_obj.qty_available), product_obj.uom_id.name)
+            }
+
 
         # get unit price
 

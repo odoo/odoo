@@ -41,6 +41,7 @@ class email_template_mailbox(osv.osv):
         return True
     
     def send_this_mail(self, cr, uid, ids=None, context=None):
+        result = True
         for id in (ids or []):
             try:
                 account_obj = self.pool.get('email_template.account')
@@ -56,18 +57,19 @@ class email_template_mailbox(osv.osv):
                               values['subject'] or u'',
                               {'text':values.get('body_text', u'') or u'', 'html':values.get('body_html', u'') or u''},
                               payload=payload, context=context)
-                
                 if result == True:
                     self.write(cr, uid, id, {'folder':'sent', 'state':'na', 'date_mail':time.strftime("%Y-%m-%d %H:%M:%S")}, context)
                     self.historise(cr, uid, [id], "Email sent successfully", context)
                 else:
-                    self.historise(cr, uid, [id], result, context)
+                    error = result['error_msg']
+                    self.historise(cr, uid, [id], error, context)
+                    
             except Exception, error:
                 logger = netsvc.Logger()
                 logger.notifyChannel(_("Power Email"), netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (id, error))
                 self.historise(cr, uid, [id], error, context)
             self.write(cr, uid, id, {'state':'na'}, context)
-        return True
+        return result
     
     def historise(self, cr, uid, ids, message='', context=None):
         for id in ids:
