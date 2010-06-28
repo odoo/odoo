@@ -32,7 +32,6 @@ class account_entries_report(osv.osv):
         'date_created': fields.date('Date Created', readonly=True),
         'date_maturity': fields.date('Date Maturity', readonly=True),
         'ref': fields.char('Reference', size=64, readonly=True),
-
         'nbr':fields.integer('# of Items', readonly=True),
         'debit':fields.float('Debit', readonly=True),
         'credit':fields.float('Credit', readonly=True),
@@ -69,7 +68,6 @@ class account_entries_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
     _order = 'date desc'
-
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')
         cr.execute("""
@@ -106,5 +104,4 @@ class account_entries_report(osv.osv):
                 left join account_period p on (am.period_id=p.id)
             )
         """)
-
 account_entries_report()

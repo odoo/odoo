@@ -68,10 +68,10 @@
                             domain="[('state','=','posted')]"
                             help = "Posted entries"/>
                     <separator orientation="vertical"/>
+                    <field name="journal_id"/>
+                    <field name="period_id"/>
                     <field name="account_id"/>
                     <field name="analytic_account_id"/>
-                    <field name="product_id" />
-                    <field name="partner_id" />
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
@@ -98,6 +98,9 @@
                     <field name="date"/>
                     <field name="date_created"/>
                     <field name="date_maturity"/>
+                    <separator orientation="vertical"/>
+                    <field name="product_id" />
+                    <field name="partner_id" />
                  </group>
             </search>
         </field>

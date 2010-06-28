@@ -508,7 +508,7 @@ class account_move_line(osv.osv):
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
-        (_check_company_id,'Company must be same for its related account and period.',['company_id'] ),
+        (_check_company_id, 'Company must be same for its related account and period.', ['company_id']),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
