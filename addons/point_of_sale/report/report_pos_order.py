@@ -52,6 +52,8 @@ class report_pos_order(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'delay_validation': fields.integer('Delay Validation'),
         'delay_payment': fields.integer('Delay Payment'),
+        'date_validation': fields.date('Validation Date', required=True),
+        'date_payment': fields.date('Payment Date', required=True),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -76,7 +78,10 @@ class report_pos_order(osv.osv):
                     s.user_id as user_id,
                     s.shop_id as shop_id,
                     s.company_id as company_id,
-                    s.sale_journal as journal_id
+                    s.sale_journal as journal_id,
+                    l.product_id as product_id,
+                    s.date_validation,
+                    s.date_payment
                 from pos_order_line as l
                     left join pos_order s on (s.id=l.order_id)
                     left join product_template pt on (pt.id=l.product_id)
@@ -84,7 +89,8 @@ class report_pos_order(osv.osv):
                 group by
                     to_char(s.date_order, 'dd-MM-YYYY'),to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),
                     to_char(s.date_order, 'YYYY-MM-DD'), s.partner_id,s.state,
-                    s.user_id,s.shop_id,s.company_id,s.sale_journal
+                    s.user_id,s.shop_id,s.company_id,s.sale_journal,l.product_id,s.date_validation,
+                    s.date_payment
                 )
             """)
 

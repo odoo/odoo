@@ -13,8 +13,11 @@
 	                <field name="day" invisible="1"/>
 	                <field name="month" invisible="1"/>
 	                <field name="partner_id" invisible="1"/>
+	                <field name="product_id" invisible="1"/>
 	                <field name="shop_id" invisible="1"/>
 	                <field name="journal_id" invisible="1"/>
+	                <field name="date_validation" invisible="1"/>
+	                <field name="date_payment" invisible="1"/>
                     <field name="company_id" invisible="1" groups="base.group_multi_company"/>
 	                <field name="nbr" sum="# of Lines"/>
 	                <field name="product_qty" sum="# of Qty"/>
@@ -74,7 +77,7 @@
 	                    <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
 	                    <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>
 	                    <separator orientation="vertical"/>
-<!--	                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>-->
+	                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
 	                    <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
@@ -83,6 +86,11 @@
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
 	                </group>
+	                <newline/>
+	                <group expand="0" string="Extended options..." groups="base.group_extended">
+                        <field name="date_validation"/>
+                        <field name="date_payment"/>
+                    </group>
 	            </search>
 	        </field>
         </record>
@@ -93,7 +101,7 @@
 	        <field name="view_type">form</field>
 	        <field name="view_mode">tree,graph</field>
 	        <field name="search_view_id" ref="view_report_pos_order_search"/>
-	        <field name="context">{'search_default_today':1,'search_default_User':1}</field>
+	        <field name="context">{'search_default_today':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
 	    </record>
 
 	    <menuitem action="action_report_pos_order_all" id="menu_report_pos_order_all" parent="menu_point_rep" sequence="1"/>
