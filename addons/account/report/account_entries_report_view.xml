@@ -50,14 +50,23 @@
         <field name="arch" type="xml">
             <search string="Entries Analysis">
                 <group colspan="10" col="12">
-                    <filter string="Fiscal Year"
-                            icon="terp-document-new"
-                            domain="[('state','=','draft')]"
-                            help = "Draft entries"/>
-                    <filter string="This Period"
-                            icon="terp-document-new"
-                            domain="[('state','=','draft')]"
-                            help = "Draft entries"/>
+                    <filter string="Profit"
+                        name="profit"
+                        icon="terp-document-new"
+                        domain="[('user_type.report_type','=','profit')]"/>
+                    <filter string="Loss"
+                        name="loss"
+                        icon="terp-document-new"
+                        domain="[('user_type.report_type','=','loss')]"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Asset"
+                        name="asset"
+                        icon="terp-document-new"
+                        domain="[('user_type.report_type','=','asset')]"/>
+                    <filter string="Liability"
+                        name="liability"
+                        icon="terp-document-new"
+                        domain="[('user_type.report_type','=','liability')]"/>
                     <separator orientation="vertical"/>
                     <filter string="Draft"
                             icon="terp-document-new"
@@ -110,7 +119,7 @@
         <field name="res_model">account.entries.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_group_journal':1,'search_default_group_period': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_profit': 1,'search_default_group_journal':1,'search_default_group_period': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
     </record>
     <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all" parent="account.menu_finance_statistic_report_statement" sequence="2"/>
 </data>
