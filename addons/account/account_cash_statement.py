@@ -231,7 +231,16 @@ class account_cash_statement(osv.osv):
         
         res = super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context)
         return res
-
+    
+    def _equal_balance(self, cr, uid, ids, statement, context={}):
+        if statement.balance_end != statement.balance_end_cash:
+            return False
+        else:
+            return True
+    
+    def _user_allow(self, cr, uid, ids, statement, context={}):
+        return True
+    
     def button_open(self, cr, uid, ids, context=None):
         
         """ Changes statement state to Running.
@@ -241,6 +250,10 @@ class account_cash_statement(osv.osv):
         statement_pool = self.pool.get('account.bank.statement')
 
         statement = statement_pool.browse(cr, uid, ids[0])
+        
+        if not self._user_allow(cr, uid, ids, statement, context={}):
+            raise osv.except_osv(_('Error !'), _('User %s have no rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
+            
         number = self.pool.get('ir.sequence').get(cr, uid, statement.journal_id.sequence_id.code)
         
         if len(statement.starting_details_ids) > 0:
@@ -291,7 +304,7 @@ class account_cash_statement(osv.osv):
             if not st.state == 'open':
                 continue
                 
-            if st.balance_end != st.balance_end_cash:
+            if not self._equal_balance(cr, uid, ids, st, context):
                 raise osv.except_osv(_('Error !'), _('Cash balance is not matching with closing balance !'))
                 
             if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
