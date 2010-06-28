@@ -38,7 +38,6 @@
         <field name="model">crm.phonecall</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-
             <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)">
                 <field name="date" string="Date"/>
                 <field name="name" string="Call Summary"/>
@@ -118,9 +117,6 @@
                 <separator colspan="4" />
                 <group col="8" colspan="4">
                     <field name="state" select="1" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
@@ -132,6 +128,9 @@
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object"
                         icon="gtk-convert" />
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                 </group>
             </form>
         </field>
@@ -146,8 +145,8 @@
         <field name="arch" type="xml">
             <form string="Phone Call">
                 <group colspan="4" col="7">
-                    <field name="name" string="Summary"/>
-                    <field name="date" string="Planned Date"/>
+                    <field name="name" string="Summary" required="1"/>
+                    <field name="date" string="Planned Date" required="1"/>
                     <field name="user_id"/>
                     <button string="Schedule a Meeting"
                         name="action_make_meeting"
@@ -181,8 +180,6 @@
                     <field name="partner_address_id" string="Contact"
                         on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                     <newline/>
-                    <field name="partner_phone" />
-                    <newline/>
                     <field name="partner_mobile" />
                 </group>
                 <group col="2" colspan="2">
@@ -212,6 +209,7 @@
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="state" invisible="1"/>
+                <field name="create_date" invisible="1"/>
                 <button string="Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="draft,open,pending"
@@ -247,17 +245,22 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
+               <filter icon="terp-go-today" string="Current"
+                   name="current"
+                   domain="[('state','in', ('draft','open','pending'))]"/>
+               <separator orientation="vertical"/>
                <filter icon="terp-go-today" string="Today"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),\
                     ('date','&gt;=',datetime.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                   name="today"
                    help="Todays's Phonecalls"
                />
                <filter icon="terp-go-week"
                    string="7 Days"
                    help="Phonecalls during last 7 days"
-                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')),\
-                    ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                   domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                />
+
                <separator orientation="vertical"/>
                <field name="name" string="Call Summary"/>
                <field name="partner_id"/>

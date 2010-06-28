@@ -30,9 +30,10 @@
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
-                   'marketing_view.xml',
-                   'security/ir.model.access.csv'
-                   ],
+        'security/marketing_security.xml',
+        'security/ir.model.access.csv',
+        'marketing_view.xml'
+    ],
     'demo_xml': [],
     'installable': True,
     'active': False,

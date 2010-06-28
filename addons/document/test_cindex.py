@@ -31,6 +31,9 @@ for fname in args:
         else:
             res = cntIndex.doIndex(None, fname, None, fname,True)
 
+        if options.verbose:
+            for line in res[:5]:
+                print line
     except Exception,e:
         import traceback,sys
         tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))

@@ -9,15 +9,9 @@
     </record>
     
     <record model="document.storage" id="storage_default">
-	<field name="name">Default File storage</field>
-	<field name="user_id" ref="base.user_admin"/>
-    </record>
-
-    <record model="document.storage" id="storage_db">
-	<field name="name">DB storage</field>
-	<field name="user_id" ref="base.user_admin"/>
-	<field name="type" eval="'db'" />
-	<field name="path"></field>
+        <field name="name">Default DB storage</field>
+        <field name="type">db</field>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
 
     <record model="document.directory" id="dir_root">
@@ -60,7 +54,7 @@
     </record>
 
     <record model="document.directory" id="dir_personnal_folder">
-        <field name="name">Personnal Folders</field>
+        <field name="name">Personal Folders</field>
         <field name="parent_id" ref="dir_root"/>
         <field name="type">ressource</field>
 	<field name="storage_id" ref="storage_default"/>
