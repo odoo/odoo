@@ -8,59 +8,32 @@
             <field name="arch" type="xml">
             <form string="Select Date-Period">
 
-                <group colspan="4" col="6">
-                    <field name="chart_account_id" colspan="2" widget='selection'/>
-                    <field name="fiscalyear_id"/>
-                    <field name="filter"/>
-                </group>
-
-                <notebook tabpos="up" colspan="6">
-                    <page string="Journals">
+               <field name="chart_account_id" widget='selection'/>
+               <field name="fiscalyear_id"/>
+               <group colspan="2" name='Journals'>
+               <notebook tabpos="up">
+                    <page string="Journals" >
                         <field name="journal_ids" colspan="4" nolabel="1"/>
                     </page>
-                    <page string="Periods" attrs="{'invisible':[('filter','!=','filter_period')]}">
-                        <field name="period_from"/>
-                        <field name="period_to"/>
-                    </page>
-                    <page string="Date" attrs="{'invisible':[('filter','!=','filter_date')]}">
-                        <field name="date_from"/>
-                        <field name="date_to"/>
+                </notebook>
+                </group>
+
+                <group colspan="2" name='Filters'>
+                <notebook tabpos="up">
+                    <page string="Filters">
+                        <field name="filter"/>
+                        <separator string="Dates" colspan="4"/>
+                        <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
+                        <field name="date_to" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"  colspan="4"/>
+                        <separator string="Periods"  colspan="4"/>
+                        <field name="period_from" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
+                        <field name="period_to" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
                     </page>
                 </notebook>
-
-<!--
-                <group colspan="4" col="4" attrs="{'invisible':[('state','!=','bydate')]}">
-                    <group colspan="2" col="4">
-                    </group>
-                    <group colspan="2" col="4">
-                        <separator string="Periods" colspan="4"/>
-                        <field name="state" required="True" colspan="2"/>
-                        <newline/>
-                        <group attrs="{'invisible':[('state','!=','bydate')]}" colspan="4">
-                        </group>
-                        <group attrs="{'invisible':[('state','!=','byperiod')]}" colspan="4">
-                        </group>
-                    </group>
-                    <group colspan="2" >
-                    </group>
-                </group>
-
-                <separator string="" colspan="4"/>
-
-                <label string="" colspan="2"/>
-
-                <newline/>
-                <field name="sortbydate" required="True"/>
-                <field name="display_account" required="True"/>
-                <field name="soldeinit" invisible="1"/>
-                <field name="landscape"/>
-                <field name="amount_currency"/>
-                <newline/>
-               -->
-                <group colspan="4" col="6">
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button icon="gtk-print" name="check_report" string="Print" type="object"/>
-                </group>
+               </group>
+               <newline/>
+                <button icon="gtk-cancel" special="cancel" string="Cancel" colspan="2"/>
+                <button icon="gtk-print" name="check_report" string="Print" type="object" colspan="2"/>
             </form>
             </field>
         </record>

@@ -30,11 +30,11 @@ class account_report_general_ledger(osv.osv_memory):
     _description = "General Ledger Report"
 
     _columns = {
-        'display_account': fields.selection([('bal_mouvement','With movements'), ('bal_all','All'), ('bal_solde','With balance is not equal to 0')],"Display accounts"),
+        'display_account': fields.selection([('bal_mouvement','With movements'), ('bal_all','All'), ('bal_solde','With balance is not equal to 0')],"Display accounts", required=True),
         'landscape': fields.boolean("Landscape Mode"),
         'soldeinit': fields.boolean("Include initial balances"),
         'amount_currency': fields.boolean("With Currency"),
-        'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort By'),
+        'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort By', required=True),
     }
 
     _defaults = {
