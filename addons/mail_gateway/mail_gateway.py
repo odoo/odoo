@@ -239,12 +239,12 @@ class mailgate_tool(osv.osv_memory):
                     del msg['reply-to']
                     msg['reply-to'] = res.section.email_from
 
-                if not tools.misc._email_send(msg, openobject_id=res_id) and email_error:
+                if not tools.misc._email_send(msg, openobject_id=res.id) and email_error:
                     subj = msg['subject']
                     del msg['subject'], msg['to'], msg['cc'], msg['bcc']
                     msg['subject'] = '[OpenERP-Forward-Failed] %s' % subj
                     msg['to'] = email_error
-                    tools.misc._email_send(msg, openobject_id=res_id)
+                    tools.misc._email_send(msg, openobject_id=res.id)
 
     def process_email(self, cr, uid, model, message, attach=True, context=None):
         """This function Processes email and create record for given OpenERP model 
