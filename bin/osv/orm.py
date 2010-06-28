@@ -2122,9 +2122,6 @@ class orm(orm_template):
                    d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
                    d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
                                     (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
-                elif fget[groupby]['type'] == 'many2one':
-                    d[groupby] = d[groupby] and ((type(d[groupby])==type(1)) and d[groupby] or d[groupby][1])  or ''
-
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
