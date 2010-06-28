@@ -349,35 +349,39 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     """
 
     html = ustr(html)
-
-    try:
-        from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
-    except:
-        return html
-
     urls = []
+
+    from lxml.etree import Element, tostring
+    try:
+        from lxml.html.soupparser import fromstring
+        kwargs = {}
+    except ImportError:
+        _logger.debug('tools.misc.html2plaintext: cannot use BeautifulSoup, fallback to lxml.etree.HTMLParser')
+        from lxml.etree import fromstring, HTMLParser
+        kwargs = dict(parser=HTMLParser())
+
+    tree = fromstring(html, **kwargs)
+
     if body_id is not None:
-        strainer = SoupStrainer(id=body_id)
+        source = tree.xpath('//*[@id=%s]'%(body_id,))
     else:
-        strainer = SoupStrainer('body')
-
-    soup = BeautifulSoup(html, parseOnlyThese=strainer, fromEncoding=encoding)
-    for link in soup.findAll('a'):
-        title = link.renderContents()
-        for url in [x[1] for x in link.attrs if x[0]=='href']:
-            urls.append(dict(url=ustr(url), tag=ustr(link), title=ustr(title)))
-
-    html = ustr(soup.__str__())
+        source = tree.xpath('//body')
+    if len(source):
+        tree = source[0]
 
     url_index = []
     i = 0
-    for d in urls:
-        if d['title'] == d['url'] or 'http://'+d['title'] == d['url']:
-            html = html.replace(d['tag'], d['url'])
-        else:
+    for link in tree.findall('.//a'):
+        title = link.text
+        url = link.get('href')
+        if url:
             i += 1
-            html = html.replace(d['tag'], '%s [%s]' % (d['title'], i))
-            url_index.append(d['url'])
+            urls.append(dict(url=ustr(url), tag=ustr(link), title=ustr(title)))
+            link.tag = 'span'
+            link.text = '%s [%s]' % (link.text, i)
+            url_index.append(url)
+
+    html = ustr(tostring(tree, encoding=encoding))
 
     html = html.replace('<strong>','*').replace('</strong>','*')
     html = html.replace('<b>','*').replace('</b>','*')
@@ -385,25 +389,15 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace('<h2>','**').replace('</h2>','**')
     html = html.replace('<h1>','**').replace('</h1>','**')
     html = html.replace('<em>','/').replace('</em>','/')
-
-
-    html = html.replace('<br>', '\n')
     html = html.replace('<tr>', '\n')
-    html = html.replace('</p>', '\n\n')
-    html = re.sub('<br\s*/>', '\n', html)
+    html = html.replace('</p>', '\n')
+    html = re.sub('<br\s*/?>', '\n', html)
+    html = re.sub('<.*?>', ' ', html)
     html = html.replace(' ' * 2, ' ')
 
-
-    # for all other tags we failed to clean up, just remove then and
-    # complain about them on the stderr
-    def desperate_fixer(g):
-        #print >>sys.stderr, "failed to clean up %s" % str(g.group())
-        return ' '
-
-    html = re.sub('<.*?>', desperate_fixer, html)
-
-    # lstrip all lines
-    html = '\n'.join([x.lstrip() for x in html.splitlines()])
+    # strip all lines
+    html = '\n'.join([x.strip() for x in html.splitlines()])
+    html = html.replace('\n' * 2, '\n')
 
     for i, url in enumerate(url_index):
         if i == 0:
@@ -862,13 +856,13 @@ def ustr(value):
 
     try:
         return unicode(value)
-    except:
+    except Exception:
         pass
 
     for ln in get_encodings():
         try:
             return unicode(value, ln)
-        except:
+        except Exception:
             pass
     raise UnicodeError('unable de to convert %r' % (orig,))
 
