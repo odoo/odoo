@@ -22,7 +22,7 @@
 
 import pos
 import account_bank_statement
-import pos_account_bank_statement
+#import pos_account_bank_statement
 import wizard
 import report
 

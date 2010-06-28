@@ -20,21 +20,10 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 import time
 import netsvc
-
-
-class account_bank_statement(osv.osv):
-    
-    _inherit = 'account.bank.statement'
-    _columns = {
-        'company_id':fields.many2one('res.company', 'Company', required=True),
-    }
-    _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-    }
-account_bank_statement()
+from osv import osv
+from osv import fields
 
 class account_bank_statement_line(osv.osv):
     
