@@ -408,7 +408,7 @@ stock_location()
 
 class stock_tracking(osv.osv):
     _name = "stock.tracking"
-    _description = "Stock Tracking Lots"
+    _description = "Packs"
 
     def checksum(sscc):
         salt = '31' * 8 + '3'
@@ -424,7 +424,7 @@ class stock_tracking(osv.osv):
 
     _columns = {
         'name': fields.char('Tracking ID', size=64, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the tracking lots without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the pack without removing it."),
         'serial': fields.char('Reference', size=64),
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves Tracked'),
         'date': fields.datetime('Created Date', required=True),
@@ -1005,6 +1005,18 @@ class stock_picking(osv.osv):
             }, context=context)
         return res
 
+    def test_done(self, cr, uid, ids, context={}):
+        ok = False
+        for pick in self.browse(cr, uid, ids, context=context):
+            if not pick.move_lines:
+                return True
+            for move in pick.move_lines:
+                if move.state not in ('cancel','done'):
+                    return False
+                if move.state=='done':
+                    ok = True
+        return ok
+
     def test_cancel(self, cr, uid, ids, context={}):
         """ Test whether the move lines are canceled or not.
         @return: True or False
@@ -1296,7 +1308,7 @@ class stock_move(osv.osv):
         return (res and res[0]) or False
     _name = "stock.move"
     _description = "Stock Move"
-    _order = 'date_planned desc'
+    _order = 'date_expected desc, id'
     _log_create = False
 
     def name_get(self, cr, uid, ids, context={}):
@@ -1350,7 +1362,7 @@ class stock_move(osv.osv):
         'address_id': fields.many2one('res.partner.address', 'Dest. Address', help="Address where goods are to be delivered"),
 
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="Production lot is used to put a serial number on the production"),
-        'tracking_id': fields.many2one('stock.tracking', 'Tracking Lot', select=True, help="Tracking lot is the code that will be put on the logistical unit/pallet"),
+        'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, help="This is the code that will be put on the logistical unit: pallet, box, pack."),
 #       'lot_id': fields.many2one('stock.lot', 'Consumer lot', select=True, readonly=True),
 
         'auto_validate': fields.boolean('Auto Validate'),
@@ -1832,11 +1844,10 @@ class stock_move(osv.osv):
         for id in ids:
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
-        # We should remove this
         picking_obj = self.pool.get('stock.picking')
-        for pick in picking_obj.browse(cr, uid, picking_ids):
-            if len([(move.state in ('done','cancelled')) for move in pick.move_lines]) == len(pick.move_lines):
-                picking_obj.action_done(cr, uid, [pick.id])
+        wf_service = netsvc.LocalService("workflow")
+        for pick_id in picking_ids:
+            wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 
         for (id,name) in picking_obj.name_get(cr, uid, picking_ids):
             message = _('Document') + " '" + name + "' "+ _("is processed")

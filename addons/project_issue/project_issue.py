@@ -183,6 +183,8 @@ class project_issue(osv.osv, crm.crm_case):
                                 method=True, multi='working_days_close', type="float", store=True),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
         'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'date_action_last': fields.datetime('Last Action', readonly=1),
+        'date_action_next': fields.datetime('Next Action', readonly=1),
     }
 
     def _get_project(self, cr, uid, context):
@@ -383,36 +385,6 @@ class project_issue(osv.osv, crm.crm_case):
         res = self.write(cr, uid, ids, vals)
         return res
 
-    def emails_get(self, cr, uid, ids, context=None):
-
-        """ 
-        Get Emails
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of email’s IDs
-        @param context: A standard dictionary for contextual values
-        """
-        res = {}
-
-        if isinstance(ids, (str, int, long)):
-            select = [long(ids)]
-        else:
-            select = ids
-
-        for thread in self.browse(cr, uid, select, context=context):
-            values = collections.defaultdict(set)
-
-            for message in thread.message_ids:
-                user_email = (message.user_id and message.user_id.address_id and message.user_id.address_id.email) or False
-                values['user_email'].add(user_email)
-                values['email_from'].add(message.email_from)
-                values['email_cc'].add(message.email_cc or False)
-            values['priority'] = thread.priority
-
-            res[thread.id] = dict((key,list(values[key])) for key, value in values.iteritems())
-
-        return res
 
     def msg_send(self, cr, uid, id, *args, **argv):
 
