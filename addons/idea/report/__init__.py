@@ -19,8 +19,5 @@
 #
 ##############################################################################
 
-import idea
-import wizard
-import report
+import report_vote
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

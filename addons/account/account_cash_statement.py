@@ -26,16 +26,16 @@ from mx import DateTime
 from decimal import Decimal
 from tools.translate import _
 
-class singer_statement(osv.osv):
+class account_cashbox_line(osv.osv):
     
-    """ Singer Statements """
+    """ Cash Box Details """
     
-    _name = 'singer.statement'
-    _description = 'Statement'
+    _name = 'account.cashbox.line'
+    _description = 'CashBox Line'
 
     def _sub_total(self, cr, uid, ids, name, arg, context=None):
        
-        """ Calculates Sub total"
+        """ Calculates Sub total
         @param name: Names of fields.
         @param arg: User defined arguments
         @return: Dictionary of values.
@@ -61,7 +61,7 @@ class singer_statement(osv.osv):
         'starting_id': fields.many2one('account.bank.statement',ondelete='cascade'),
         'ending_id': fields.many2one('account.bank.statement',ondelete='cascade'),
      }
-singer_statement()
+account_cashbox_line()
 
 class account_cash_statement(osv.osv):
     
@@ -157,22 +157,32 @@ class account_cash_statement(osv.osv):
             res[r] = round(res[r], 2)
         return res
     
+    def _get_company(self, cr, uid, ids, context={}):
+        user_pool = self.pool.get('res.users')
+        company_pool = self.pool.get('res.company')
+        user = user_pool.browse(cr, uid, uid, uid)
+        company_id = user.company_id and user.company_id.id
+        if not company_id:
+            company_id = company_pool.search(cr, uid, [])[0]
+        
+        return company_id
+        
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-        'balance_start': fields.function(_get_starting_balance, method=True, string='Opening Balance', type='float',digits=(16,2), help="Opening balance based on cashBox"),
+        'balance_start': fields.function(_get_starting_balance, store=True, method=True, string='Opening Balance', type='float',digits=(16,2), help="Opening balance based on cashBox"),
         'balance_end_real': fields.float('Closing Balance', digits=(16,2), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('confirm', 'Confirm'),
             ('open','Open')], 'State', required=True, states={'confirm': [('readonly', True)]}, readonly="1"),
-        'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, string="Cash Transaction", help="Total cash transactions"),
+        'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, store=True, string="Cash Transaction", help="Total cash transactions"),
         'date':fields.datetime("Open On"),
         'closing_date':fields.datetime("Closed On"),
-        'balance_end': fields.function(_end_balance, method=True, string='Balance', help="Closing balance based on transactions"),
-        'balance_end_cash': fields.function(_balance_end_cash, method=True, string='Balance', help="Closing balance based on cashBox"),
-        'starting_details_ids': fields.one2many('singer.statement', 'starting_id', string='Opening Cashbox'),
-        'ending_details_ids': fields.one2many('singer.statement', 'ending_id', string='Closing Cashbox'),
+        'balance_end': fields.function(_end_balance, method=True, store=True, string='Balance', help="Closing balance based on transactions"),
+        'balance_end_cash': fields.function(_balance_end_cash, method=True, store=True, string='Balance', help="Closing balance based on cashBox"),
+        'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
+        'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
         'name': fields.char('Name', size=64, required=True, readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', required=False),
     }
@@ -181,7 +191,8 @@ class account_cash_statement(osv.osv):
         'name': lambda *a: '/',
         'date': lambda *a:time.strftime("%Y-%m-%d %H:%M:%S"),
         'journal_id': _default_journal_id,
-        'user_id': lambda self, cr, uid, context=None: uid
+        'user_id': lambda self, cr, uid, context=None: uid,
+        'company_id': _get_company
      }
 
     def create(self, cr, uid, vals, context=None):
@@ -205,7 +216,7 @@ class account_cash_statement(osv.osv):
         @return:  Dictionary of changed values
         """
         
-        cash_pool = self.pool.get('singer.statement')
+        cash_pool = self.pool.get('account.cashbox.line')
         statement_pool = self.pool.get('account.bank.statement')
 
         res = {}
@@ -226,7 +237,7 @@ class account_cash_statement(osv.osv):
         """ Changes statement state to Running.
         @return: True 
         """
-        cash_pool = self.pool.get('singer.statement')
+        cash_pool = self.pool.get('account.cashbox.line')
         statement_pool = self.pool.get('account.bank.statement')
 
         statement = statement_pool.browse(cr, uid, ids[0])
