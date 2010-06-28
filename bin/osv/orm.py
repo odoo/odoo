@@ -2390,6 +2390,7 @@ class orm(orm_template):
                                 ('varchar', 'text', 'TEXT', ''),
                                 ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
+                                ('datetime', 'date', 'date', '::date'),
                                 ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
