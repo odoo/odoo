@@ -241,7 +241,7 @@ class account_cash_statement(osv.osv):
         statement_pool = self.pool.get('account.bank.statement')
 
         statement = statement_pool.browse(cr, uid, ids[0])
-        number = self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement')
+        number = self.pool.get('ir.sequence').get(cr, uid, statement.journal_id.sequence_id.code)
         
         if len(statement.starting_details_ids) > 0:
             sid = []
