@@ -40,12 +40,7 @@ class account_common_report(osv.osv_memory):
         'date_to': fields.date("End Date"),
 
         #'display_account': fields.selection([('bal_mouvement','With movements'), ('bal_all','All'), ('bal_solde','With balance is not equal to 0')],"Display accounts"),
-        #'landscape': fields.boolean("Landscape Mode"),
-        #'soldeinit': fields.boolean("Include initial balances"),
         #'amount_currency': fields.boolean("With Currency"),
-
-        #'filter': fields.boolean("Landscape Mode"),
-        #'state': fields.selection([('bydate','By Date'), ('byperiod','By Period'), ('all','By Date and Period'), ('none','No Filter')],"Date/Period Filter"),
         #'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
@@ -77,14 +72,11 @@ class account_common_report(osv.osv_memory):
         return self.pool.get('account.journal').search(cr, uid ,[])
 
     _defaults = {
-#            'state' : 'none',
             'date_from' : time.strftime('%Y-01-01'),
             'date_to' : time.strftime('%Y-%m-%d'),
 #            'company_id' : _get_company,
 #            'display_account' : 'bal_all',
-#            'sortbydate' : 'sort_date',
             'fiscalyear_id' : _get_fiscalyear,
-#            'landscape': True,
 #            'amount_currency' : True,
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
