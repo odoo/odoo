@@ -41,10 +41,14 @@ class journal_print(report_sxw.rml_parse):
 
     def set_context(self, objects, data, ids, report_type=None):
         super(journal_print, self).set_context(objects, data, ids, report_type)
-        self.cr.execute('SELECT period_id, journal_id '
-                         'FROM account_journal_period '
-                         'WHERE id IN %s',
-                        (tuple(ids),))
+        if (data['model'] == 'account.journal.period'):
+            self.cr.execute('SELECT period_id, journal_id '
+                            'FROM account_journal_period '
+                            'WHERE id IN %s',
+                            (tuple(ids),))
+        else:
+            self.cr.execute('SELECT period_id, journal_id '
+                        'FROM account_journal_period ')
         res = self.cr.fetchall()
         self.period_ids, self.journal_ids = zip(*res)
 
