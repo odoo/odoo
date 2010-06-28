@@ -421,7 +421,7 @@ def _email_send(message, openobject_id=None, debug=False):
                  else False (+ exception logged)
     """
     if openobject_id:
-        msg['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+        message['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
     try:
         oldstderr = smtplib.stderr
@@ -442,7 +442,7 @@ def _email_send(message, openobject_id=None, debug=False):
                 s.login(config['smtp_user'], config['smtp_password'])
             s.sendmail(email_from,
                        flatten([email_to, email_cc, email_bcc]),
-                       msg.as_string())
+                       message.as_string())
         finally:
             s.quit()
             if debug:
