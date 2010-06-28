@@ -412,8 +412,10 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def _email_send(message, openobject_id=None, debug=False):
+def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False, debug=False):
     """Low-level method to send directly a Message through the configured smtp server.
+        :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
+        :param smtp_to_list: RFC-822 envelope RCPT_TOs (not displayed to recipient)
         :param message: an email.message.Message to send
         :param debug: True if messages should be output to stderr before being sent,
                       and smtplib.SMTP put into debug mode.
@@ -424,7 +426,17 @@ def _email_send(message, openobject_id=None, debug=False):
         message['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
     try:
+        smtp_server = config['smtp_server']
+
+        if smtp_server.startswith('maildir:/'):
+            from mailbox import Maildir
+            maildir_path = smtp_server[8:]
+            mdir = Maildir(maildir_path,factory=None, create = True)
+            mdir.add(msg.as_string(True))
+            return True
+
         oldstderr = smtplib.stderr
+        if not ssl: ssl = config.get('smtp_ssl', False)
         s = smtplib.SMTP()
         try:
             # in case of debug, the messages are printed to stderr.
@@ -440,13 +452,16 @@ def _email_send(message, openobject_id=None, debug=False):
 
             if config['smtp_user'] or config['smtp_password']:
                 s.login(config['smtp_user'], config['smtp_password'])
-            s.sendmail(email_from,
-                       flatten([email_to, email_cc, email_bcc]),
-                       message.as_string())
+
+            s.sendmail(smtp_from, smtp_to_list, message.as_string())
         finally:
-            s.quit()
-            if debug:
-                smtplib.stderr = oldstderr
+            try:
+                s.quit()
+                if debug:
+                    smtplib.stderr = oldstderr
+            except:
+                # ignored, just a consequence of the previous exception
+                pass
 
     except Exception, e:
         _logger.error('could not deliver email', exc_info=True)
@@ -471,7 +486,6 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if x_headers is None:
         x_headers = {}
 
-    if not ssl: ssl = config.get('smtp_ssl', False)
 
     if not (email_from or config['email_from']):
         raise ValueError("Sending an email requires either providing a sender "
@@ -530,19 +544,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         def write(self, s):
             self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
 
-    smtp_server = config['smtp_server']
-    if smtp_server.startswith('maildir:/'):
-        from mailbox import Maildir
-        maildir_path = smtp_server[8:]
-        try:
-            mdir = Maildir(maildir_path,factory=None, create = True)
-            mdir.add(msg.as_string(True))
-            return True
-        except Exception,e:
-            netsvc.Logger().notifyChannel('email_send (maildir)', netsvc.LOG_ERROR, e)
-            return False
-
-    return _email_send(msg, openobject_id=openobject_id, debug=debug)
+    return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, openobject_id=openobject_id, ssl=ssl, debug=debug)
 
 #----------------------------------------------------------
 # SMS
