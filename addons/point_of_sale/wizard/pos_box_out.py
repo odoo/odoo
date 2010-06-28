@@ -62,12 +62,12 @@ class pos_box_out(osv.osv_memory):
     def get_out(self, cr, uid, ids, context):
 
         """
-             Create the entries in the CashBox   .
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary
-             @return :Return of operation of product
+         Create the entries in the CashBox   .
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary
+         @return :Return of operation of product
         """
         args = {}
         statement_obj = self.pool.get('account.bank.statement')

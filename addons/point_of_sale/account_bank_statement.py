@@ -46,20 +46,25 @@ class account_cash_statement(osv.osv):
     
     _inherit = 'account.bank.statement'
 
-    def _equal_balance(self, r, uid, ids, statement, context={}):
-        stmt = self.browse(cr, uid, ids[0])
+    def _equal_balance(self, cr, uid, ids, statement, context={}):
 
-        if not stmt.check_dtls:
+        if not statement.journal_id.check_dtls:
             return True
         
-        if stmt.check_dtls and (statement.balance_end != statement.balance_end_cash):
+        if statement.journal_id.check_dtls and (statement.balance_end != statement.balance_end_cash):
             return False
         else:
             return True            
     
     def _user_allow(self, cr, uid, ids, statement, context={}):
         res = False
-        print 'XXXXXXXXXXXXXXXXX : ', statement.journal_id.journal_users
+        uids = []
+        for user in statement.journal_id.journal_users:
+            uids.append(user.id)
+        
+        if uid in uids:
+            res = True
+      
         return res
     
 account_cash_statement()

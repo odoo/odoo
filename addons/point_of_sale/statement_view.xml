@@ -5,7 +5,7 @@
             <field name="name">POS Journal</field>
             <field name="model">account.journal</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="view_account_journal_form"/>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
                     <page string="Point of Sale">
@@ -21,9 +21,9 @@
                 </xpath>
             </field>
         </record>
-
+        
         <menuitem name="Cash Register" parent="point_of_sale.menu_point_root" id="menu_cash_register" sequence="4"/>
-
+        
         <menuitem 
             name="All Cash Registers" 
             parent="menu_cash_register"
