@@ -1865,7 +1865,8 @@ class orm_memory(orm_template):
         self.view_init(cr, uid, fields_list, context)
         if not context:
             context = {}
-        value = {}
+        # we define default value for each field existing in the object
+        value = dict.fromkeys(fields_list)
         # get the default values for the inherited fields
         for f in fields_list:
             if f in self._defaults:
