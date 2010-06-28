@@ -41,8 +41,6 @@ DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['roo
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _rec_name = 'datas_fname'
-    _log_create=True
-
     def _get_filestore(self, cr):
         return os.path.join(DMS_ROOT_PATH, cr.dbname)
 
@@ -100,6 +98,7 @@ class document_file(osv.osv):
             ('binary','Binary'),
 
         ],'Type', help="Type is used to separate URL and binary File"),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def __get_def_directory(self, cr, uid, context=None):
@@ -107,6 +106,7 @@ class document_file(osv.osv):
         return dirobj._get_root_directory(cr, uid, context)
 
     _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
         'user_id': lambda self, cr, uid, ctx:uid,
         'file_size': lambda self, cr, uid, ctx:0,
         'store_method': lambda *args: 'db',

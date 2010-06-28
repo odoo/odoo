@@ -36,16 +36,6 @@
         <menuitem name="Configuration" id="menu_event_config" parent="menu_marketing_event_main" sequence="30" groups="base.group_extended"/>
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="menu_event_config" groups="base.group_extended,crm.group_crm_manager"/>
 
-        <!-- The base section for all events -->
-
-        <record model="ir.actions.act_window" id="action_event_categories">
-            <field name="name">Events by section</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">crm.case.section</field>
-            <field name="domain" eval="[('parent_id','=',False)]" />
-            <field name="view_type">tree</field>
-        </record>
-        <menuitem name="Events by Categories" id="menu_action_event_categories" action="action_event_categories" parent="menu_event_main"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -57,7 +47,7 @@
                 <form string="Events">
                     <group col="6" colspan="4">
                         <field name="name" string="Event" select="1"/>
-                        <field name="type"/>
+                        <field name="type" widget="selection"/>
                         <field name="user_id" select="1"/>
                         <field name="date_begin" select="1"/>
                         <field name="date_end"/>

@@ -26,7 +26,6 @@ class res_partner_contact(osv.osv):
 
     _name = "res.partner.contact"
     _description = "Contact"
-    _log_create = True
 
     def _title_get(self,cr, user, context={}):
         """
@@ -208,7 +207,6 @@ class res_partner_job(osv.osv):
     _name = 'res.partner.job'
     _description ='Contact Partner Function'
     _order = 'sequence_contact'
-    _log_create = True
 
     _columns = {
         'name': fields.related('address_id', 'partner_id', type='many2one',\

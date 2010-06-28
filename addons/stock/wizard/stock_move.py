@@ -193,7 +193,7 @@ class split_in_production_lot(osv.osv_memory):
         'product_uom': fields.many2one('product.uom', 'Product UOM'),
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number'),
         'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Lots Existing Numbers'),
-        'use_exist' : fields.boolean('Use Exist'),
+        'use_exist' : fields.boolean('Existing Lot'),
      }
 
     def split_lot(self, cr, uid, ids, context=None):
@@ -253,21 +253,15 @@ class split_in_production_lot(osv.osv_memory):
                     if quantity_rest == 0:
                         current_move = move.id
                     prodlot_id = False
-                    if data.use_exist and line.prodlot_id:
-                        prodlot_id = prodlot_obj.search(cr, uid, [('id','=',line.prodlot_id.id)])
-                        if prodlot_id:
-                            prodlot_id = prodlot_id[0]
+                    if data.use_exist:
+                        prodlot_id = line.prodlot_id.id
                     if not prodlot_id:
-                      #  sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-                        prodlot_id = prodlot_obj.create(cr, uid, {'name': line.name},
-                        # 'prefix' : line.name},
-                                                 {'product_id': move.product_id.id})
+                        prodlot_id = prodlot_obj.create(cr, uid, {
+                            'name': line.name,
+                            'product_id': move.product_id.id},
+                        context=context)
+                    print 'write', current_move, {'prodlot_id': prodlot_id, 'state':move.state}
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id, 'state':move.state})
-                    prodlot = prodlot_obj.browse(cr, uid, prodlot_id)
-                 #   ref = '%d' % (move.id)
-                 #   if prodlot.ref:
-                 #       ref = '%s, %s' % (prodlot.ref, ref)
-                 #   prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
 
                     update_val = {}
                     if quantity_rest > 0:
@@ -299,7 +293,7 @@ class stock_move_split_lines(osv.osv_memory):
     _columns = {
         'name': fields.char('Tracking serial', size=64),
         'quantity': fields.integer('Quantity'),
-        'use_exist' : fields.boolean('Use Exist'),
+        'use_exist' : fields.boolean('Existing Lot'),
         'lot_id': fields.many2one('stock.move.split', 'Lot'),
         'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
     }

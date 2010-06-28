@@ -20,7 +20,6 @@
 ##############################################################################
 
 from mx import DateTime
-from datetime import datetime, timedelta
 from osv import fields
 from osv import osv
 from tools.translate import _
@@ -418,6 +417,7 @@ class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name  = 'date_planned'
+    _log_create = True
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
         """ Calculates total hours and total no. of cycles for a production order.
@@ -509,18 +509,7 @@ class mrp_production(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
     _order = 'date_planned asc, priority desc';
-    
-    def _check_qty(self, cr, uid, ids):
-        orders = self.browse(cr, uid, ids)
-        for order in orders:
-            if order.product_qty <= 0:
-                return False
-        return True
-    
-    _constraints = [
-        (_check_qty, 'Order quantity cannot be negative or zero !', ['product_qty']),
-    ]
-    
+
     def unlink(self, cr, uid, ids, context=None):
         productions = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -554,16 +543,21 @@ class mrp_production(osv.osv):
             return {'value': {'location_dest_id': src}}
         return {}
 
-    def product_id_change(self, cr, uid, ids, product):
+    def product_id_change(self, cr, uid, ids, product, context=None):
         """ Finds UoM of changed product.
         @param product: Id of changed product.
         @return: Dictionary of values.
         """
         if not product:
-            return {}
-        res = self.pool.get('product.product').read(cr, uid, [product], ['uom_id'])[0]
-        uom = res['uom_id'] and res['uom_id'][0]
-        result = {'product_uom': uom}
+            return {'value': {
+                'product_uom': False,
+                'bom_id': False
+            }}
+        res = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        result = {
+            'product_uom': res.uom_id and res.uom_id.id or False,
+            'bom_id': res.bom_ids and res.bom_ids[0].id or False
+        }
         return {'value': result}
 
     def bom_id_change(self, cr, uid, ids, product):
@@ -642,23 +636,15 @@ class mrp_production(osv.osv):
         """ Changes the production state to Ready and location id of stock move.
         @return: True
         """
+        for (id,name) in self.name_get(cr, uid, ids):
+            message = _('Manufacturing Order ') + " '" + name + "' "+ _("is ready to produce.")
+            self.log(cr, uid, id, message)
         move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state': 'ready'})
-
-        for (production_id,name) in self.name_get(cr, uid, ids):
-            production = self.browse(cr, uid, production_id)
+        for production in self.browse(cr, uid, ids):
             if production.move_prod_id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
-
-            message = ("%s %s %s %s %s %s") % (
-                    _('Manufacturing Order '),
-                    name,
-                    _("scheduled the"),
-                    datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d'),
-                    _("for"),
-                    production.product_id.default_code)
-            self.log(cr, uid, production_id, message)
         return True
 
     def action_production_end(self, cr, uid, ids):
@@ -698,30 +684,28 @@ class mrp_production(osv.osv):
         raw_product_todo = []
         final_product_todo = []
 
+        produced_qty = 0
+        for produced_product in production.move_created_ids2:
+            if (produced_product.scraped) or (produced_product.product_id.id<>production.product_id.id):
+                continue
+            produced_qty += produced_product.product_qty
+
         if production_mode in ['consume','consume_produce']:
-            # To consume remaining qty of raw materials
             consumed_products = {}
-            produced_qty = 0
             for consumed_product in production.move_lines2:
                 if consumed_product.scraped:
                     continue
                 if not consumed_products.get(consumed_product.product_id.id, False):
                     consumed_products[consumed_product.product_id.id] = 0
-                consumed_products[consumed_product.product_id.id] += consumed_product.product_qty
-
-            for produced_product in production.move_created_ids2:
-                if produced_product.scraped:
-                    continue
-                produced_qty += produced_product.product_qty
+                consumed_products[consumed_product.product_id.id] -= consumed_product.product_qty
 
             for raw_product in production.move_lines:
-                consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
-                consumed_qty -= produced_qty
-                rest_qty = production_qty - consumed_qty
-                if rest_qty > production.product_qty:
-                   rest_qty = production.product_qty
-                if rest_qty > 0:
-                    stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
+                for f in production.product_lines:
+                    if f.product_id.id==raw_product.product_id.id:
+                        consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
+                        rest_qty = production_qty * f.product_qty / production.product_qty - consumed_qty
+                        if rest_qty > 0:
+                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
@@ -743,7 +727,6 @@ class mrp_production(osv.osv):
                    production_qty = rest_qty
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, production.location_dest_id.id, context=context)
-
 
         for raw_product in production.move_lines2:
             new_parent_ids = []

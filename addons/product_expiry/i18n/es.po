@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2009-06-30 15:09+0000\n"
-"PO-Revision-Date: 2010-04-29 04:43+0000\n"
-"Last-Translator: Rhubeni Lopes de Andrade <rhube.itsasecret@gmail.com>\n"
+"PO-Revision-Date: 2010-06-27 22:08+0000\n"
+"Last-Translator: Borja López Soilán (Pexego) <borjals@pexego.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-05-21 03:45+0000\n"
+"X-Launchpad-Export-Date: 2010-06-28 03:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_expiry
 #: field:product.product,life_time:0
 msgid "Product lifetime"
-msgstr "Ciclo de vida producto"
+msgstr "Ciclo de vida del producto"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_from_product_template
@@ -54,11 +54,13 @@ msgstr "¡XML no válido para la definición de la vista!"
 #: help:stock.production.lot,life_date:0
 msgid "The date the lot may become dangerous and should not be consumed."
 msgstr ""
+"Fecha en la que el producto puede llegar a ser peligroso y no debería ser "
+"consumido."
 
 #. module: product_expiry
 #: field:stock.production.lot,removal_date:0
 msgid "Removal Date"
-msgstr ""
+msgstr "Fecha de eliminación"
 
 #. module: product_expiry
 #: model:ir.module.module,description:product_expiry.module_meta_information
@@ -70,6 +72,12 @@ msgid ""
 " - alert date\n"
 "Used, for example, in food industries."
 msgstr ""
+"Gestionar diferentes fechas en productos y lotes de producción:\n"
+" - fin de vida\n"
+" - fecha de caducidad\n"
+" - fecha de retirada\n"
+" - fecha de alerta\n"
+"Usados, por ejemplo, en la industria alimentaria."
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
@@ -96,17 +104,19 @@ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM."
 #. module: product_expiry
 #: field:stock.production.lot,life_date:0
 msgid "End of Life Date"
-msgstr ""
+msgstr "Fecha de fin de vida"
 
 #. module: product_expiry
 #: field:stock.production.lot,use_date:0
 msgid "Best before Date"
-msgstr ""
+msgstr "Fecha caducidad"
 
 #. module: product_expiry
 #: help:stock.production.lot,use_date:0
 msgid "The date the lot starts deteriorating without becoming dangerous."
 msgstr ""
+"Fecha en la que el producto empieza a deteriorarse sin llegar a ser "
+"peligroso."
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
@@ -116,7 +126,7 @@ msgstr "Queso Camembert francés"
 #. module: product_expiry
 #: help:product.product,removal_time:0
 msgid "The number of days before a production lot should be removed."
-msgstr ""
+msgstr "Número de días antes de que un lote de producción deba ser retirado."
 
 #. module: product_expiry
 #: field:product.product,use_time:0
@@ -126,7 +136,7 @@ msgstr "Tiempo de uso producto"
 #. module: product_expiry
 #: field:stock.production.lot,alert_date:0
 msgid "Alert Date"
-msgstr ""
+msgstr "Fecha de alerta"
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
@@ -139,6 +149,8 @@ msgid ""
 "The number of days before a production lot starts deteriorating without "
 "becoming dangerous."
 msgstr ""
+"Número de días antes de que un producto empieza a deteriorarse sin llegar a "
+"ser peligroso."
 
 #. module: product_expiry
 #: constraint:product.product:0
@@ -151,30 +163,15 @@ msgid ""
 "The number of days before a production lot may become dangerous and should "
 "not be consumed."
 msgstr ""
+"Número de días antes de que un producto pueda llegar a ser peligroso y no "
+"debe ser consumido."
 
 #. module: product_expiry
 #: help:stock.production.lot,removal_date:0
 msgid "The date the lot should be removed."
-msgstr ""
+msgstr "Fecha en la que el producto debería ser eliminado."
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
 msgid "Product alert time"
 msgstr "Fecha alerta producto"
-
-#~ msgid "Alert date"
-#~ msgstr "Fecha alarma"
-
-#~ msgid ""
-#~ "Track different dates on products and lots. Used, for exampel, in food "
-#~ "industries: expiry date, alert date, date of removal, eso."
-#~ msgstr ""
-#~ "Gestiona distintas fechas para productos y lotes. Utilizado, por ejemplo, en "
-#~ "industria alimentaria: Fecha de caducidad, fecha de alarma, fecha de "
-#~ "eliminación, ..."
-
-#~ msgid "DLUO"
-#~ msgstr "Fecha caducidad"
-
-#~ msgid "Removal date"
-#~ msgstr "Fecha eliminación"

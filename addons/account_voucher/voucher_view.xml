@@ -87,9 +87,7 @@
                         <field name="date" select='1'/>
                         <field name="name" select='1'/>
                         <field name="number" select='1'/>
-                        <field name="journal_id" select='1'/>
                         <field name="partner_id" select='1'/>
-                        <field name="period_id" select='1'/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
@@ -116,9 +114,10 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="domain">[('journal_id.type','=','sale')]</field>
+            <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
         <menuitem id="menu_action_receipt_vou_voucher_list"
-        action="action_receipt_vou_voucher_list" parent="account.menu_finance_receivables" sequence="8"/>
+        action="action_receipt_vou_voucher_list" parent="account.menu_finance_receivables" sequence="12"/>
 
         <!--  Purchase Vouchers -->
         <record model="ir.actions.act_window" id="action_pay_vou_voucher_list">
@@ -128,10 +127,22 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="domain">[('journal_id.type','=','purchase')]</field>
+            <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
         <menuitem id="menu_action_pay_vou_voucher_list"
-        action="action_pay_vou_voucher_list" parent="account.menu_finance_payables" sequence="8"/>
-
+        action="action_pay_vou_voucher_list" parent="account.menu_finance_payables" sequence="12"/>
+        
+        <!-- Journal Vouchers -->
+        <record model="ir.actions.act_window" id="action_voucher_list">
+            <field name="name">Journal Vouchers</field>
+            <field name="res_model">account.voucher</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="view_voucher_tree"/>
+            <field name="search_view_id" ref="view_account_move_filter"/>
+        </record>
+        <menuitem action="action_voucher_list" id="menu_encode_entries_by_voucher" parent="account.menu_finance_entries" sequence="6"/>
+        
 <!--        <record model="ir.actions.act_window" id="action_receipt_cashreceipt_voucher_list">-->
 <!--            <field name="name">Cash Receipt</field>-->
 <!--            <field name="res_model">account.voucher</field>-->

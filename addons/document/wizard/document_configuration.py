@@ -19,7 +19,6 @@
 #
 ##############################################################################
 from osv import osv, fields
-from document_ftp import ftpserver
 class document_configuration(osv.osv_memory):
 
     _name='document.configuration'

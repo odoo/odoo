@@ -115,7 +115,6 @@ class lunch_order(osv.osv):
     _name = 'lunch.order'
     _description = "Lunch Order"
     _rec_name = "user_id"
-    _log_create=True
 
     def _price_get(self, cr, uid, ids, name, args, context=None):
 

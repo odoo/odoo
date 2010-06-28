@@ -9,10 +9,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Close Statements">
-				     	<label string="Are you sure you want to close the statements ?" colspan="2"/>
-				     	<newline/>
+				     	<separator string="Are you sure you want to close the statements ?" colspan="4"/>
                 		<button icon='gtk-cancel' special="cancel"
-                			string="No" />
+                			string="No" colspan="1" />
                 		<button name="close_statement" string="Yes"
                 			colspan="1" type="object" icon="gtk-ok"/>
                 </form>

@@ -149,8 +149,22 @@
         <field name="arch" type="xml">
             <search string="Ideas vote">
                 <group col="10" colspan="4">
+                    <filter icon="terp-go-year" string="  365 Days  "
+                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                        help="Tasks performed in last 365 days"/>
+                    <filter icon="terp-go-month" string="   30 Days   "
+                        name="month"
+                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                        help="Tasks performed in last 30 days"/>
+                    <filter icon="terp-go-week"
+                         string="    7 Days    "
+                         name="week"
+                         separator="1"
+                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                         help="Tasks during last 7 days"/>
+                    <separator orientation="vertical"/>
                     <field name="idea_id" widget="selection"/>
-                    <field name="user_id"/>
+                    <field name="user_id" string="User"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="14">
@@ -247,6 +261,7 @@
             <field name="count_comments" />
             <field name="count_votes" />
             <field name="state"/>
+             <button name="idea_open" string="Open" states="draft" icon="terp-gtk-go-back-rtl"/>
             <button name="%(idea.action_idea_post_vote)d" icon="gtk-execute" type="action" states="open" string="Submit Vote"/>
             <button name="idea_close" string="Accept" states="open" icon="gtk-jump-to"/>
             <button name="idea_cancel" string="Refuse" states="open"  icon="gtk-cancel"/>
@@ -370,9 +385,10 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="view_idea_vote_search"/>
+        <field name="context">{'search_default_week':1}</field>
     </record>
 
-    <menuitem name="Votes" parent="menu_ideas" id="menu_idea_vote" action="action_idea_vote"/>
+    <menuitem name="Votes" parent="menu_idea_reporting" id="menu_idea_vote" action="action_idea_vote"/>
 
     </data>
 </openerp>

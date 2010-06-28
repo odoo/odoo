@@ -37,6 +37,7 @@ AVAILABLE_STATES = [
 class crm_opportunity(osv.osv):
     """ Opportunity Cases """
     _name = "crm.lead"
+    _description = "Opportunity"
     _order = "priority,date_action,id desc"
     _inherit = 'crm.lead'
     _columns = {
@@ -108,7 +109,7 @@ class crm_opportunity(osv.osv):
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'priority': crm.AVAILABLE_PRIORITIES[2][0],
     }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
@@ -142,9 +143,10 @@ class crm_opportunity(osv.osv):
             context = {
                 'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
+                'default_user_id': uid, 
                 'default_section_id': opp.section_id and opp.section_id.id or False,
                 'default_email_from': opp.email_from,
-                'default_state': 'open',
+                'default_state': 'open',  
                 'default_name': opp.name
             }
             value = {

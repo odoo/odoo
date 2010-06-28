@@ -95,23 +95,23 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16), 
 
         'act_method': fields.char('Call Object Method', size=64), 
-        'act_user_id': fields.many2one('res.users', 'Set responsible to'), 
-        'act_state': fields.selection(_state_get, 'Set state to', size=16), 
-        'act_email_cc': fields.char('Add watchers (Cc)', size=250, help="\
+        'act_user_id': fields.many2one('res.users', 'Set Responsible to'), 
+        'act_state': fields.selection(_state_get, 'Set State to', size=16), 
+        'act_email_cc': fields.char('Add Watchers (Cc)', size=250, help="\
 These people will receive a copy of the future communication between partner \
 and users by email"), 
         'act_remind_partner': fields.boolean('Remind Partner', help="Check \
 this if you want the rule to send a reminder by email to the partner."), 
-        'act_remind_user': fields.boolean('Remind responsible', help="Check \
+        'act_remind_user': fields.boolean('Remind Responsible', help="Check \
 this if you want the rule to send a reminder by email to the user."), 
         'act_reply_to': fields.char('Reply-To', size=64), 
-        'act_remind_attach': fields.boolean('Remind with attachment', help="Check this if you want that all documents attached to the object be attached to the reminder email sent."), 
-        'act_mail_to_user': fields.boolean('Mail to responsible', help="Check\
+        'act_remind_attach': fields.boolean('Remind with Attachment', help="Check this if you want that all documents attached to the object be attached to the reminder email sent."), 
+        'act_mail_to_user': fields.boolean('Mail to Responsible', help="Check\
  this if you want the rule to send an email to the responsible person."), 
-        'act_mail_to_watchers': fields.boolean('Mail to watchers (CC)', 
+        'act_mail_to_watchers': fields.boolean('Mail to Watchers (CC)', 
                                                 help="Check this if you want \
 the rule to mark CC(mail to any other person defined in actions)."), 
-        'act_mail_to_email': fields.char('Mail to these emails', size=128, \
+        'act_mail_to_email': fields.char('Mail to these Emails', size=128, \
         help="Email-id of the persons whom mail is to be sent"), 
         'act_mail_body': fields.text('Mail body', help="Content of mail"), 
         'regex_name': fields.char('Regular Expression on Model Name', size=128), 
@@ -233,7 +233,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param email: pass the emails
             @param emailfrom: Pass name the email From else False
             @param context: A standard dictionary for contextual values """
-
         body = self.format_mail(obj, body)
         if not emailfrom:
             if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and\
@@ -255,8 +254,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param context: A standard dictionary for contextual values """
-
-        ok = True
+        ok = True 
         if eval(action.domain):
             obj_ids = obj._table.search(cr, uid, eval(action.domain), context=context)
             if not obj.id in obj_ids:
@@ -277,7 +275,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
             ok = ok and (not action.trg_state_from or action.trg_state_from==obj.state)
         if state_to:
             ok = ok and (not action.trg_state_to or action.trg_state_to==state_to)
-
+        elif action.trg_state_to:
+            ok = False
         reg_name = action.regex_name
         result_name = True
         if reg_name:

@@ -97,6 +97,7 @@ class sale_order(osv.osv):
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
+    # This is False
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
@@ -204,7 +205,8 @@ class sale_order(osv.osv):
         return result.keys()
 
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True, select=True),
+        'name': fields.char('Order Reference', size=64, required=True,
+            readonly=True, states={'draft': [('readonly', False)]}, select=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source document', size=64, help="Reference of the document that generated this sale order request."),
         'client_order_ref': fields.char('Customer Reference', size=64),
@@ -623,6 +625,7 @@ class sale_order(osv.osv):
         picking_id = False
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
+            proc_ids = []
             output_id = order.shop_id.warehouse_id.lot_output_id.id
             picking_id = False
             for line in order.order_line:
@@ -631,6 +634,7 @@ class sale_order(osv.osv):
                 date_planned = (date_planned - relativedelta(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
+                move_id = False
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     location_id = order.shop_id.warehouse_id.lot_stock_id.id
                     if not picking_id:
@@ -671,8 +675,9 @@ class sale_order(osv.osv):
                         'note': line.notes,
                         'company_id': order.company_id.id,
                     })
+                if line.product_id:
                     proc_id = self.pool.get('procurement.order').create(cr, uid, {
-                        'name': order.name,
+                        'name': line.name,
                         'origin': order.name,
                         'date_planned': date_planned,
                         'product_id': line.product_id.id,
@@ -688,35 +693,17 @@ class sale_order(osv.osv):
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
                         'company_id': order.company_id.id,
                     })
-                    wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+                    proc_ids.append(proc_id)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
-                elif line.product_id and line.product_id.product_tmpl_id.type == 'service':
-                    proc_id = self.pool.get('procurement.order').create(cr, uid, {
-                        'name': line.name,
-                        'origin': order.name,
-                        'date_planned': date_planned,
-                        'product_id': line.product_id.id,
-                        'product_qty': line.product_uom_qty,
-                        'product_uom': line.product_uom.id,
-                        'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
-                        'procure_method': line.type,
-                        'property_ids': [(6, 0, [x.id for x in line.property_ids])],
-                        'company_id': order.company_id.id,
-                    })
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
-                    wf_service = netsvc.LocalService("workflow")
-                    wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                else:
-                    #
-                    # No procurement because no product in the sale.order.line.
-                    #
-                    pass
 
             val = {}
             if picking_id:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+
+            for proc_id in proc_ids:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
@@ -1035,6 +1022,7 @@ class sale_order_line(osv.osv):
                     }
             result['product_uom_qty'] = qty
 
+        uom2 = False
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
@@ -1089,6 +1077,19 @@ class sale_order_line(osv.osv):
                 result['product_uos'] = False
                 result['product_uos_qty'] = qty
             result['th_weight'] = q * product_obj.weight        # Round the quantity up
+
+        if not uom2:
+            uom2 = product_obj.uom_id
+        if (product_obj.type=='product') and (product_obj.virtual_available * uom2.factor < qty * product_obj.uom_id.factor) \
+          and (product_obj.procure_method=='make_to_stock'):
+            warning = {
+                'title': _('Not enough stock !'),
+                'message': _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') %
+                    (qty, uom2 and uom2.name or product_obj.uom_id.name,
+                     max(0,product_obj.virtual_available), product_obj.uom_id.name,
+                     max(0,product_obj.qty_available), product_obj.uom_id.name)
+            }
+
 
         # get unit price
 

@@ -21,6 +21,7 @@
 
 from crm import crm
 from osv import fields, osv
+import time
 
 class crm_helpdesk(osv.osv, crm.crm_case):
     """ Helpdesk Cases """
@@ -28,11 +29,8 @@ class crm_helpdesk(osv.osv, crm.crm_case):
     _name = "crm.helpdesk"
     _description = "Helpdesk Cases"
     _order = "id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
-   
-
+    _inherit = ['mailgate.thread']
     _columns = {
-            'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
             'id': fields.integer('ID', readonly=True), 
             'name': fields.char('Name', size=128, required=True), 
             'active': fields.boolean('Active', required=False), 
@@ -88,6 +86,7 @@ class crm_helpdesk(osv.osv, crm.crm_case):
         'partner_address_id': crm.crm_case._get_default_partner_address, 
         'email_from': crm.crm_case. _get_default_email, 
         'state': lambda *a: 'draft', 
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': crm.crm_case. _get_section, 
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c), 
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
