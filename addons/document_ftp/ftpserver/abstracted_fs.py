@@ -428,6 +428,7 @@ class abstracted_fs:
             cr.close()
             raise
         if not uid:
+            cr.close()
             raise OSError(2, 'Authentification Required.')
         return cr, uid, pool
 
@@ -445,10 +446,10 @@ class abstracted_fs:
             result = []
             for db in self.db_list():
                 try:
-                    uid = security.login(db, self.username, self.password)
-                    if uid:
-                        result.append(false_node(db))                    
-                except osv.except_osv:          
+                    result.append(false_node(db))
+                except osv.except_osv:
+		    import traceback
+		    traceback.print_exc()
                     pass
             return result
         cr = pooler.get_db(path.context.dbname).cursor()        
