@@ -4,6 +4,7 @@ import time
 from tarfile import filemode
 import StringIO
 import base64
+import logging
 
 import glob
 import fnmatch
@@ -15,11 +16,6 @@ from service import security
 from osv import osv
 from document.nodes import node_res_dir, node_res_obj
 import stat
-
-def log(message):
-    logger = netsvc.Logger()
-    logger.notifyChannel('DMS', netsvc.LOG_ERROR, message)
-
 
 def _get_month_name(month):
     month=int(month)
@@ -104,7 +100,7 @@ class content_wrapper(StringIO.StringIO):
         StringIO.StringIO.close(self, *args, **kwargs)
 
 
-class abstracted_fs:
+class abstracted_fs(object):
     """A class used to interact with the file system, providing a high
     level, cross-platform interface compatible with both Windows and
     UNIX style filesystems.
@@ -140,8 +136,8 @@ class abstracted_fs:
                     if res and len(res):
                         self.db_name_list.append(db_name)
                     cr.commit()
-                except Exception, e:
-                    log(e)
+                except Exception:
+                    self._log.warning('Cannot use db "%s"', db_name)
             finally:
                 if cr is not None:
                     cr.close()
@@ -154,6 +150,7 @@ class abstracted_fs:
         self.root = None
         self.cwd = '/'
         self.rnfr = None
+        self._log = logging.getLogger('FTP.fs')
 
     # --- Pathname / conversion utilities
 
@@ -299,7 +296,7 @@ class abstracted_fs:
             s = file_wrapper('', cid, node.context.dbname, uid, )
             return s
         except Exception,e:
-            log(e)
+            self._log.exception('Cannot create item %s at node %s', objname, repr(node))
             raise OSError(1, 'Operation not permited.')
         finally:
             if cr:
@@ -399,7 +396,7 @@ class abstracted_fs:
             pool.get('document.directory').create(cr, uid, val)
             cr.commit()            
         except Exception,e:
-            log(e)
+            self._log.exception('Cannot create dir "%s" at node %s', basename, repr(node))
             raise OSError(1, 'Operation not permited.')
         finally:
             if cr: cr.close()
@@ -448,8 +445,6 @@ class abstracted_fs:
                 try:
                     result.append(false_node(db))
                 except osv.except_osv:
-		    import traceback
-		    traceback.print_exc()
                     pass
             return result
         cr = pooler.get_db(path.context.dbname).cursor()        
@@ -513,6 +508,7 @@ class abstracted_fs:
         """
         cr = False
         try:
+	    # FIXME! wrong code here, doesn't use the node API
             dst_basename = _to_unicode(dst_basename)
             cr = pooler.get_db(src.context.dbname).cursor()
             uid = src.context.uid                       
@@ -632,7 +628,7 @@ class abstracted_fs:
             else:
                 raise OSError(1, 'Operation not permited.')
         except Exception,err:
-            log(err)
+            self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, dst_basename, dst_basedir)
             raise OSError(1,'Operation not permited.')
         finally:
             if cr: cr.close()
