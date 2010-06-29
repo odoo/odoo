@@ -110,6 +110,21 @@ class sale_journal(osv.osv):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is closed")
                 self.log(cr, uid, id, message)
         return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        """Overrides orm copy method
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case’s IDs
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+        default.update({'sale_stats_ids': []})
+        return super(sale_journal, self).copy(cr, uid, id, default=default, context=context)
 
 sale_journal()
 
@@ -155,6 +170,22 @@ class picking_journal(osv.osv):
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done', 'date_validation':time.strftime('%Y-%m-%d')})
         return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        """Overrides orm copy method
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case’s IDs
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+        default.update({'picking_stats_ids': []})
+        return super(picking_journal, self).copy(cr, uid, id, default=default, context=context)
+    
 picking_journal()
 
 #==============================================
