@@ -235,19 +235,20 @@ class mailgate_tool(osv.osv_memory):
 
             if message_forward:
                 # TODO: we need an interface for this for all types of objects, not just leads
-                if hasattr(res, 'section'):
+                if hasattr(res, 'section_id'):
                     del msg['reply-to']
-                    msg['reply-to'] = res.section.email_from
+                    msg['reply-to'] = res.section_id.reply_to
 
-                if not tools.misc._email_send(msg, openobject_id=res_id) and email_error:
+                smtp_from = self.to_email(msg['from'])
+                if not tools.misc._email_send(smtp_from, message_forward, msg, openobject_id=res.id) and email_error:
                     subj = msg['subject']
                     del msg['subject'], msg['to'], msg['cc'], msg['bcc']
                     msg['subject'] = '[OpenERP-Forward-Failed] %s' % subj
                     msg['to'] = email_error
-                    tools.misc._email_send(msg, openobject_id=res_id)
+                    tools.misc._email_send(smtp_from, self.to_email(email_error), msg, openobject_id=res.id)
 
     def process_email(self, cr, uid, model, message, attach=True, context=None):
-        """This function Processes email and create record for given OpenERP model 
+        """This function Processes email and create record for given OpenERP model
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
