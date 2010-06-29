@@ -90,18 +90,6 @@ class res_partner_title(osv.osv):
     _order = 'name'
 res_partner_title()
 
-def _contact_title_get(self, cr, uid, context={}):
-    obj = self.pool.get('res.partner.title')
-    ids = obj.search(cr, uid, [('domain', '=', 'contact')])
-    res = obj.read(cr, uid, ids, ['shortcut','name'], context)
-    return [(r['shortcut'], r['name']) for r in res] + [('','')]
-
-def _partner_title_get(self, cr, uid, context={}):
-    obj = self.pool.get('res.partner.title')
-    ids = obj.search(cr, uid, [('domain', '=', 'partner')])
-    res = obj.read(cr, uid, ids, ['shortcut','name'], context)
-    return [(r['shortcut'], r['name']) for r in res] +  [('','')]
-
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [], context=context)
@@ -116,7 +104,7 @@ class res_partner(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
-        'title': fields.selection(_partner_title_get, 'Title', size=32),
+        'title': fields.many2one('res.partner.title','Title'),
         'parent_id': fields.many2one('res.partner','Parent Partner', select=2),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
         'ref': fields.char('Reference', size=64),
@@ -281,7 +269,7 @@ class res_partner_address(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'function': fields.char('Function', size=64),
-        'title': fields.selection(_contact_title_get, 'Title', size=32),
+        'title': fields.many2one('res.partner.title','Title'),
         'name': fields.char('Contact Name', size=64, select=1),
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
