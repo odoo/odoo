@@ -83,8 +83,8 @@
   </stylesheet>
   <story>
    <para>[[ repeatIn(objects, 'a') ]]</para>
-  
-   	<blockTable colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_header" repeatRows="1">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
+
+   	<blockTable colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
        <tr>
           <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
           <td><para style="P12"><font color="white"> </font></para><para style="P2">JNRL</para></td>
@@ -99,12 +99,12 @@
           <td><para style="P12"><font color="white"> </font></para><para style="P4">Currency</para></td>
        </tr>
     </blockTable>
-    
-     <section> 
-    
+
+     <section>
+
       <para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-    
-      <blockTable rowHeights="0.65cm" colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
+
+      <blockTable rowHeights="0.65cm" colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
       	<tr>
         	<td>
           		<blockTable colWidths="404.0,375.0,69.0,72.0,64.0,59.00" style="Table5">
@@ -143,9 +143,9 @@
 			<td><para style="P4_content">[[ formatLang(line['amount_currency'] or 0.00)]] [[ line['currency_code'] ]]</para></td>
 		</tr>
 	  </blockTable>
-	
+
 	</section>
-     
+
     <blockTable colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
        <tr>
           <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
@@ -160,12 +160,12 @@
           <td><para style="P12"><font color="white"> </font></para><para style="P4">Balance</para></td>
        </tr>
 	</blockTable>
-	
+
 	<section>
-	
+
 		<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-		
-		<blockTable rowHeights="0.65cm" colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_content">[[data['form']['amount_currency'] == False or removeParentNode('blockTable')]]
+
+		<blockTable rowHeights="0.65cm" colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_content">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
         	<tr>
          		<td>
 	      			<blockTable colWidths="405.0,435.0,69.0,72.0,64.0" style="Table5">
@@ -201,7 +201,7 @@
 				<td><para style="P4_content">[[ formatLang(line['progress']) ]]</para></td>
 			</tr>
 		</blockTable>
-	
+
 	</section>
  </story>
 </document>
