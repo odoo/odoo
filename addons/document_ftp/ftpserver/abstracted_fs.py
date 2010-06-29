@@ -311,15 +311,11 @@ class abstracted_fs:
             raise OSError(1, 'Operation not permited.')
         # Reading operation
         cr = pooler.get_db(node.context.dbname).cursor()
-        res = False
-        #try:
-        if node.type not in ('collection','database'):            
-            res = node.open(cr, mode)   
-        #except:
-        #    pass
-        cr.close()     
-        if not res:
-            raise OSError(1, 'Operation not permited.')
+        try:
+            res = StringIO.StringIO(node.get_data(cr))
+            res.name = node
+        finally:
+            cr.close()
         return res
 
     # ok, but need test more
@@ -423,10 +419,14 @@ class abstracted_fs:
             return None
         try:
             db,pool = pooler.get_db_and_pool(dbname)
-        except:
+        except Exception:
             raise OSError(1, 'Operation not permited.')
         cr = db.cursor()
-        uid = security.login(dbname, self.username, self.password)
+        try:
+            uid = security.login(dbname, self.username, self.password)
+        except Exception:
+            cr.close()
+            raise
         if not uid:
             raise OSError(2, 'Authentification Required.')
         return cr, uid, pool
