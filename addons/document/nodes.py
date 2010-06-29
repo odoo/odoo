@@ -68,8 +68,42 @@ class node_context(object):
             duri = duri[1:] 
         return ndir
 
+class node_descriptor(object):
+    """A file-like interface to the data contents of a node.
+    
+       This class is NOT a node, but an /open descriptor/ for some
+       node. It can hold references to a cursor or a file object,
+       because the life of a node_descriptor will be the open period
+       of the data.
+       It should also take care of locking, with any native mechanism
+       or using the db.
+       For the implementation, it would be OK just to wrap around file,
+       StringIO or similar class. The node_descriptor is only needed to
+       provide the link to the parent /node/ object.
+    """
 
+    def __init__(self, parent, **kwargs):
+        assert isinstance(parent, node_class)
+        self.name = parent.displayname
+        self.__parent = parent
+    
+    def open(self, **kwargs):
+        raise NotImplementedError
+    
+    def close(self):
+        raise NotImplementedError
 
+    def read(self, size=None):
+        raise NotImplementedError
+
+    def seek(self, offset, whence=None):
+        raise NotImplementedError
+
+    def tell(self):
+        raise NotImplementedError
+
+    def write(self, str):
+        raise NotImplementedError
 
 class node_class(object):
     """ this is a superclass for our inodes
@@ -123,6 +157,20 @@ class node_class(object):
     
     def get_data(self,cr):
         raise TypeError('no data for %s'% self.type)
+        
+    def open_data(self, cr, mode):
+        """ Open a node_descriptor object for this node.
+        
+        @param the mode of open, eg 'r', 'w', 'a', like file.open()
+        
+        This operation may lock the data for this node (and accross
+        other node hierarchies), until the descriptor is close()d. If
+        the node is locked, subsequent opens (depending on mode) may
+        immediately fail with an exception (which?).
+        For this class, there is no data, so no implementation. Each
+        child class that has data should override this.
+        """
+        raise TypeError('no data for %s' % self.type)
 
     def _get_storage(self,cr):
         raise RuntimeError("no storage for base class")
