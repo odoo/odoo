@@ -77,8 +77,8 @@ class document_file(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'write_date': fields.datetime('Date Modified', readonly=True),
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
-        'res_model': fields.char('Attached Model', size=64), # readonly?
-        'res_id': fields.integer('Attached ID'),
+        'res_model': fields.char('Attached Model', size=64, readonly=True),
+        'res_id': fields.integer('Attached ID', readonly=True),
 
         # If ir.attachment contained any data before document is installed, preserve
         # the data, don't drop the column!
