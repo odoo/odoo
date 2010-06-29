@@ -25,9 +25,6 @@ class account_central_journal(osv.osv_memory):
     _name = 'account.central.journal'
     _description = 'Account Central Journal'
     _inherit = "account.common.report"
-    _defaults={
-               'filter': 'filter_period'
-               }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
             periods = data['form']['periods']
