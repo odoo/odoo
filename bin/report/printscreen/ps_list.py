@@ -84,6 +84,8 @@ class report_printscreen_list(report_int):
                     for f in fields_order:
                         if f not in rec:
                             rec.update({f:False})
+                        elif isinstance(rec[f], tuple):
+                            rec[f] = rec[f][1]
                     rows.append(rec)
                     groupby = (rec.get('__context', {})).get('group_by',[])
                     domain = rec.get('__domain', [])
