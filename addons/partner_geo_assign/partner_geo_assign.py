@@ -23,6 +23,7 @@ from osv import osv
 from osv import fields
 import urllib,re
 import random, time
+from tools.translate import _
 
 def geo_find(addr):
     import urllib,re
@@ -82,7 +83,7 @@ class crm_lead(osv.osv):
                 if lead.partner_assigned_id.address:
                     email = lead.partner_assigned_id.address[0].email
                 if not email:
-                    raise osv.except_osv(_('Error !'), _('No partner assigned to this opportunity'))
+                    raise osv.except_osv(_('Error !'), _('No email on the partner assigned to this opportunity'))
                 forward = fobj.create(cr, uid, {
                     'name': 'email',
                     'history': 'whole',

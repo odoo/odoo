@@ -82,8 +82,9 @@
         <menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
 
         <!--
-    Period
-    -->
+            Period
+        -->
+
         <record id="res_role_period" model="res.roles">
             <field eval="&quot;&quot;&quot;Period&quot;&quot;&quot;" name="name"/>
         </record>
@@ -405,11 +406,15 @@
                 <search string="Search Statement">
                    <group col="10" colspan="4">
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Statement"/>
-                        <filter icon="terp-check" string="Poster" domain="[('state','=','confirm')]" help="Confirm confirm"/>
+                        <filter icon="terp-check" string="Posted" domain="[('state','=','confirm')]" help="Confirm confirm"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="date"/>
                         <field name="journal_id"/>
+                    </group>
+                    <group expand="0" string="Group By..." colspan="12" col="10">
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
                     </group>
                 </search>
             </field>
@@ -465,15 +470,10 @@
                         <field name="name" select="1"/>
                         <field name="date" select="1"/>
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1"/>
-<!--                        <field name="currency"/>-->
                         <field name="period_id"/>
-<!--                        <group colspan="2" col="3">-->
-    <!--                        <button name="%(action_view_account_statement_from_invoice)d"-->
-    <!--                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}" icon="gtk-open"/>-->
-<!--                            <button name="button_import_invoice" string="Import Invoice" attrs="{'invisible':[('state','=','confirm')]}" type="object" icon="gtk-apply"/>-->
-<!--                        </group>-->
                         <field name="balance_start"/>
                     <field name="balance_end_real"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Transaction">
                             <field colspan="4" name="line_ids" nolabel="1">
@@ -2325,6 +2325,19 @@
                                     <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'currency_id': parent.currency, 'journal_id': parent.journal_id, 'date':date}" name="reconcile_id"/>
                                     <field invisible="1" name="reconcile_amount"/>
                                 </tree>
+                                <form string="Statement lines">
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <field name="type"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
+                                    <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
+                                    <field name="amount"/>
+                                    <field context="{'partner_id':partner_id,'amount':amount,'account_id':account_id,'currency_id': parent.currency,'journal_id':parent.journal_id, 'date':date}" name="reconcile_id"/>
+                                    <field name="ref"/>
+                                    <field name="sequence"/>
+                                    <separator colspan="4" string="Notes"/>
+                                    <field colspan="4" name="note" nolabel="1"/>
+                                </form>
                             </field>
                         </page>
                         <page string="Cash Box">
