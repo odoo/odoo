@@ -43,7 +43,7 @@ class document_directory(osv.osv):
         'user_id': fields.many2one('res.users', 'Owner'),
         'storage_id': fields.many2one('document.storage', 'Storage'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
-        'parent_id': fields.many2one('document.directory', 'Parent Item', select=1),
+        'parent_id': fields.many2one('document.directory', 'Parent Directory', select=1),
         'child_ids': fields.one2many('document.directory', 'parent_id', 'Children'),
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
