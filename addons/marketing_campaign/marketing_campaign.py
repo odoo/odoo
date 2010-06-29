@@ -26,7 +26,6 @@ from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv
 import netsvc
-import tools
 from tools.translate import _
 
 _intervalTypes = {
@@ -45,6 +44,9 @@ class marketing_campaign(osv.osv):
         'object_id': fields.many2one('ir.model', 'Object', required=True,
                                       help="Choose the Object on which you want \
 this campaign to be run"),
+        'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
+                                            domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",
+                                            help="The generated workitems will be linked to the partner related to the record"),
         'mode':fields.selection([('test', 'Test Directly'),
                                 ('test_realtime', 'Test in Realtime'),
                                 ('manual', 'With Manual Confirmation'),
@@ -135,7 +137,6 @@ class marketing_campaign_segment(osv.osv):
 
     def state_running_set(self, cr, uid, ids, *args):
         segment = self.browse(cr, uid, ids[0])
-        curr_date = time.strftime('%Y-%m-%d %H:%M:%S')
         vals = {'state': 'running'}
         if not segment.date_run:
             vals['date_run'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -159,19 +160,21 @@ class marketing_campaign_segment(osv.osv):
     def synchroniz(self, cr, uid, ids, *args):
         self.process_segment(cr, uid, ids)
         return True
-    
-    def process_segment(self, cr, uid, segment_ids=None, context={}):
+
+    def process_segment(self, cr, uid, segment_ids=None, context=None):
+        Workitems = self.pool.get('marketing.campaign.workitem')
         if not segment_ids:
             segment_ids = self.search(cr, uid, [('state', '=', 'running')], context=context)
 
         action_date = time.strftime('%Y-%m-%d %H:%M:%S')
-        campaigns = {}
+        campaigns = set()
         for segment in self.browse(cr, uid, segment_ids, context=context):
-            campaigns[segment.campaign_id.id] = True
+            campaigns.add(segment.campaign_id.id)
             act_ids = self.pool.get('marketing.campaign.activity').search(cr,
-                  uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)])
+                  uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)], context=context)
 
             model_obj = self.pool.get(segment.object_id.model)
+            partner_field = segment.campaign_id.partner_field_id.name
             criteria = []
             if segment.sync_last_date:
                 criteria += [(segment.sync_mode, '>', segment.sync_last_date)]
@@ -179,24 +182,30 @@ class marketing_campaign_segment(osv.osv):
                 criteria += eval(segment.ir_filter_id.domain)
             object_ids = model_obj.search(cr, uid, criteria, context=context)
 
-            for o_ids in  model_obj.browse(cr, uid, object_ids, context=context) :
+            for o_ids in model_obj.browse(cr, uid, object_ids, context=context):
                 # avoid duplicated workitem for the same resource
                 if segment.sync_mode == 'write_date':
-                    segids = self.pool.get('marketing.campaign.workitem').search(cr, uid, [('res_id','=',o_ids.id),('segment_id','=',segment.id)])
-                    if segids:
+                    wi_ids = Workitems.search(cr, uid, [('res_id','=',o_ids.id),('segment_id','=',segment.id)], context=context)
+                    if wi_ids:
                         continue
+
+                wi_vals = {
+                    'segment_id': segment.id,
+                    'date': action_date,
+                    'state': 'todo',
+                    'res_id': o_ids.id
+                }
+                if partner_field:
+                    partner = getattr(o_ids, partner_field)
+                    if partner:
+                        wi_vals['partner_id'] = partner.id
+
                 for act_id in act_ids:
-                    wi_vals = {
-                        'segment_id': segment.id,
-                        'activity_id': act_id,
-                        'date': action_date,
-                        'partner_id': o_ids.partner_id and o_ids.partner_id.id or False,
-                        'state': 'todo',
-                        'res_id': o_ids.id
-                    }
-                    self.pool.get('marketing.campaign.workitem').create(cr, uid, wi_vals)
-            self.write(cr, uid, segment.id, {'sync_last_date':action_date})
-        self.pool.get('marketing.campaign.workitem').process_all(cr, uid, campaigns.keys(), context=context)
+                    wi_vals['activity_id'] = act_id
+                    Workitems.create(cr, uid, wi_vals, context=context)
+
+            self.write(cr, uid, segment.id, {'sync_last_date':action_date}, context=context)
+        Workitems.process_all(cr, uid, list(campaigns), context=context)
         return True
 
 marketing_campaign_segment()
