@@ -26,7 +26,6 @@ import random, time
 from tools.translate import _
 
 def geo_find(addr):
-    import urllib,re
     regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
     url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
     xml = urllib.urlopen(url).read()
@@ -50,7 +49,6 @@ class res_partner(osv.osv):
         'partner_weight': lambda *args: 0
     }
     def geo_localize(self, cr, uid, ids, context=None):
-        regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.address:
                 continue
@@ -84,12 +82,13 @@ class crm_lead(osv.osv):
                     email = lead.partner_assigned_id.address[0].email
                 if not email:
                     raise osv.except_osv(_('Error !'), _('No email on the partner assigned to this opportunity'))
-                forward = fobj.create(cr, uid, {
-                    'name': 'email',
+                values = fobj.default_get(cr, uid, ['email_from'], context=context)
+                values.update({
                     'history': 'whole',
                     'email_to': email,
-                    'message': fobj._get_case_history(cr, uid, 'whole', lead.id, context) or False
-                }, context)
+                    'message': fobj._get_case_history(cr, uid, 'whole', lead.id, context) or False,
+                    })
+                forward = fobj.create(cr, uid, values, context)
                 fobj.action_forward(cr, uid, [forward], context)
             else:
                 raise osv.except_osv(_('Error !'), _('No partner assigned to this opportunity'))
