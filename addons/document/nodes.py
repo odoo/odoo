@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-import base64
-import StringIO
+# import base64
+# import StringIO
 from osv import osv, fields
 from osv.orm import except_orm
-import urlparse
+# import urlparse
 import pooler
 from tools.safe_eval import safe_eval
 
@@ -741,8 +741,13 @@ class node_file(node_class):
             par = par.parent_id
 
 
-    def open(self, cr, mode=False):
-        raise DeprecationWarning("Who called this?")
+    def open_data(self, cr, mode):
+        stor = self.storage_id
+        assert stor, "No storage for file #%s" % self.file_id
+        # If storage is not set properly, we are just screwed here, don't
+        # try to get it from default.
+        stobj = self.context._dirobj.pool.get('document.storage')
+        return stobj.get_file(cr, self.context.uid, stor, self, mode=mode, context=self.context.context)
 
     def rm(self, cr):
         uid = self.context.uid
