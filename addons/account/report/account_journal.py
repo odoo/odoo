@@ -33,8 +33,6 @@ class journal_print(report_sxw.rml_parse):
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
         objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
-        import pdb
-        pdb.set_trace()
         super(journal_print, self).set_context(objects, data, new_ids, report_type)
 
     def __init__(self, cr, uid, name, context={}):
