@@ -31,12 +31,15 @@ from crm import crm
 from osv import fields,osv,orm
 from osv.orm import except_orm
 from tools.translate import _
+import collections
+import binascii
+import tools
 
 class project_issue(osv.osv, crm.crm_case):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
+    _inherit = ['mailgate.thread']
 
     def case_open(self, cr, uid, ids, *args):
         """
@@ -121,7 +124,6 @@ class project_issue(osv.osv, crm.crm_case):
         return res
 
     _columns = {
-        'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False),
         'id': fields.integer('ID'),
         'name': fields.char('Name', size=128, required=True),
         'active': fields.boolean('Active', required=False),
@@ -179,6 +181,10 @@ class project_issue(osv.osv, crm.crm_case):
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
                                 method=True, multi='working_days_close', type="float", store=True),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'date_action_last': fields.datetime('Last Action', readonly=1),
+        'date_action_next': fields.datetime('Next Action', readonly=1),
     }
 
     def _get_project(self, cr, uid, context):
@@ -298,5 +304,107 @@ class project_issue(osv.osv, crm.crm_case):
             self.write(cr, uid, [case.id], data)
         return True
 
+    def message_new(self, cr, uid, msg, context):
+        """
+        Automatically calls when new email message arrives
+        
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks
+        """
+
+        mailgate_pool = self.pool.get('email.server.tools')
+
+        subject = msg.get('subject')
+        body = msg.get('body')
+        msg_from = msg.get('from')
+        priority = msg.get('priority')
+        
+        vals = {
+            'name': subject,
+            'email_from': msg_from,
+            'email_cc': msg.get('cc'),
+            'description': body,
+            'user_id': False,
+        }
+        if msg.get('priority', False):
+            vals['priority'] = priority
+        
+        res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
+        if res:
+            vals.update(res)
+        res = self.create(cr, uid, vals, context)
+        self.convert_to_bug(cr, uid, [res], context=context)
+        
+        attachents = msg.get('attachments', [])
+        for attactment in attachents or []:
+            data_attach = {
+                'name': attactment,
+                'datas':binascii.b2a_base64(str(attachents.get(attactment))),
+                'datas_fname': attactment,
+                'description': 'Mail attachment',
+                'res_model': self._name,
+                'res_id': res,
+            }
+            self.pool.get('ir.attachment').create(cr, uid, data_attach)
+
+        return res
+
+    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
+        """ 
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of update mail’s IDs 
+        """
+        
+        if isinstance(ids, (str, int, long)):
+            ids = [ids]
+        
+        msg_from = msg['from']
+        vals.update({
+            'description': msg['body']
+        })
+        if msg.get('priority', False):
+            vals['priority'] = msg.get('priority')
+
+        maps = {
+            'cost':'planned_cost',
+            'revenue': 'planned_revenue',
+            'probability':'probability'
+        }
+        vls = { }
+        for line in msg['body'].split('\n'):
+            line = line.strip()
+            res = tools.misc.command_re.match(line)
+            if res and maps.get(res.group(1).lower(), False):
+                key = maps.get(res.group(1).lower())
+                vls[key] = res.group(2).lower()
+        
+        vals.update(vls)
+        res = self.write(cr, uid, ids, vals)
+        return res
+
+
+    def msg_send(self, cr, uid, id, *args, **argv):
+
+        """ Send The Message
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of email’s IDs
+            @param *args: Return Tuple Value
+            @param **args: Return Dictionary of Keyword Value
+        """
+        return True
+
 project_issue()
+
+class project(osv.osv):
+    _inherit = "project.project"
+    _columns = {
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
+    }
+project()
+
 

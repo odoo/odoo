@@ -8,33 +8,29 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Email Preview">
-                    <field name="rel_model" />
-                    <newline />
-                    <field name="rel_model_ref" on_change="on_change_ref(rel_model_ref, context)" />
-                    <newline />
-                    <field name="to" />
-                    <newline />
-                    <field name="cc" />
-                    <newline />
-                    <field name="bcc" />
-                    <newline />
-                    <field name="subject" />
-                    <newline />
-                    <separator string= "Body(Text)" colspan="2"/>
-                    <newline/>
-                    <field name="body_text" nolabel="1" colspan="2"/>
-                    <newline/>
-                    <separator string= "Body(Html)" colspan="2"/>
-                    <newline/>
-                    <field name="body_html" nolabel="1" colspan="2"/>
-                    <newline />
-                    <field name="report" />
-                    <newline/>
-                    <button icon="gtk-ok" special="cancel" string="OK" colspan="2"/>
+                    <group col="4" colspan="4">
+                        <field name="rel_model" />
+                        <field name="rel_model_ref" on_change="on_change_ref(rel_model_ref, context)"/>
+                    </group>
+                    <group col="8" colspan="4">
+                        <field name="to" />
+                        <field name="cc" />
+                        <field name="bcc" />
+                        <field name="subject" />
+                    </group>
+                    <group col="4" colspan="4">
+                        <separator string= "Body(Text)" colspan="2"/>   
+                        <separator string= "Body(Html)" colspan="2"/>
+                        <newline/>
+                        <field name="body_text" nolabel="1" colspan="2"/>
+                        <field name="body_html" nolabel="1" colspan="2"/>
+                    </group>
+                    <field name="report" colspan="2"/>
+                    <button icon="gtk-ok" special="cancel" string="OK" colspan="1"/>
                 </form>
             </field>
         </record>
-
+        
         <record id="wizard_email_template_preview" model="ir.actions.act_window">
             <field name="name">Template Preview</field>
             <field name="res_model">email_template.preview</field>
@@ -60,14 +56,16 @@
                     <field name="model_int_name" invisible="1" />
                     <notebook colspan="4">
                         <page string="Mail Details">
-                            <field name="enforce_from_account" required= "1"/>
-                            <group col="4" colspan="2">
+                            <group col="2" colspan="2">
+                                <separator string="Addresses" colspan="2"/>
                                 <field name="from_email"/>
-                                <field name="def_to" colspan="4" required="1" />
-                                <field name="def_cc" colspan="4" />
-                                <field name="def_bcc" colspan="4" />
+                                <field name="def_to" required="1"/>
+                                <field name="def_cc"/>
+                                <field name="def_bcc"/>
                             </group>
                             <group col="2" colspan="2">
+                                <separator string="Email Data" colspan="2"/>
+                                <field name="enforce_from_account" required= "1"/>
                                 <field name="def_subject" colspan="4" required="1" />
                                 <field name="use_sign" colspan="4" />
                                 <field name="lang" colspan="4" />
@@ -110,12 +108,19 @@
                             </group>
                         </page>
                         <page string="Advanced">
-                            <field name="ref_ir_act_window" />
-                            <field name="ref_ir_value" />
-                            <separator string="Attachments (Report to attach)" colspan="4"/>
-                            <field name="file_name" colspan="2" />
-                            <field name="report_template" colspan="2"
+                            <group colspan="2" col="2">
+                                <separator string="Actions" colspan="2"/>
+                                <button name="create_action" string="Create Action" type="object" colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
+                                <field name="ref_ir_act_window"/>
+                                <field name="ref_ir_value"/>
+                                <button name="delete_action" string="Delete Action" type="object" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Attachments (Report to attach)" colspan="4"/>
+                                <field name="file_name" colspan="2" />
+                                <field name="report_template" colspan="2"
                                     domain="[('model','=',model_int_name)]" />
+                            </group>
                         </page>
                     </notebook>
                 </form>

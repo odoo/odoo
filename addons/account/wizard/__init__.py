@@ -58,6 +58,8 @@ import account_central_journal
 import account_general_journal
 import account_change_currency
 
+import account_bs_report
+import account_pl_report
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 

@@ -26,13 +26,13 @@ class campaign_analysis(osv.osv): #{{{
     _description = "Campaign Analysis"
     _auto = False
     _rec_name = 'date'
-    
     def _total_cost(self, cr, uid, ids, field_name, arg, context={}):
-
-        """ @param cr: the current row, from the database cursor,
+        """
+            @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param ids: List of case and section Data’s IDs
-            @param context: A standard dictionary for contextual values """
+            @param context: A standard dictionary for contextual values
+        """
         result = {}
         for ca_obj in self.browse(cr, uid, ids, context):
             wi_ids = self.pool.get('marketing.campaign.workitem').search(cr, uid,
@@ -41,7 +41,6 @@ class campaign_analysis(osv.osv): #{{{
                                 (ca_obj.campaign_id.fixed_cost / len(wi_ids))
             result[ca_obj.id] = total_cost
         return result
-            
     _columns = {
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), 
@@ -61,36 +60,33 @@ class campaign_analysis(osv.osv): #{{{
                     type='many2one', relation='res.country',string='Country'),
         'total_cost' : fields.function(_total_cost, string='Cost', method=True, 
                                     type="float" ),
-        'revenue': fields.float('Revenue',readonly=True),
-#        'case_id': fields.many2one('crm.lead', 'Opportunity', readonly=True),
-#        'count' : fields.integer('Count', readonly=True),
+        'revenue': fields.float('Revenue',digits=(16,2),readonly=True),
+        'count' : fields.integer('# of Actions', readonly=True),
     }
-    
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'campaign_analysis')
-        
         cr.execute("""
-                create or replace view campaign_analysis as (
-                select
-                    wi.id as id,
-                    to_char(wi.date, 'YYYY') as year,
-                    to_char(wi.date, 'MM') as month,
-                    wi.date as date,
-                    s.campaign_id as campaign_id,
-                    wi.activity_id as activity_id,
-                    wi.segment_id as segment_id,
-                    wi.partner_id as partner_id ,
-                    act.revenue as revenue
-                from
-                    marketing_campaign_workitem wi
-                    left join res_partner p on (p.id=wi.partner_id)
-                    left join marketing_campaign_segment s on (s.id=wi.segment_id)
-                    left join marketing_campaign_activity act on (act.id= wi.activity_id)
-                group by
-                    to_char(wi.date, 'YYYY'),to_char(wi.date, 'MM'),
-                    s.campaign_id,wi.activity_id,wi.segment_id,wi.partner_id,revenue,
-                    wi.date,wi.id
-                )
-            """)
-    
+            create or replace view campaign_analysis as (
+            select
+                min(wi.id) as id,
+                to_char(wi.date::date, 'YYYY') as year,
+                to_char(wi.date::date, 'MM') as month,
+                wi.date::date as date,
+                s.campaign_id as campaign_id,
+                wi.activity_id as activity_id,
+                wi.segment_id as segment_id,
+                wi.partner_id as partner_id ,
+                wi.state as state,
+                sum(act.revenue) as revenue,
+                count(*) as count
+            from
+                marketing_campaign_workitem wi
+                left join res_partner p on (p.id=wi.partner_id)
+                left join marketing_campaign_segment s on (s.id=wi.segment_id)
+                left join marketing_campaign_activity act on (act.id= wi.activity_id)
+            group by
+                s.campaign_id,wi.activity_id,wi.segment_id,wi.partner_id,wi.state,
+                wi.date::date
+            )
+        """)
 campaign_analysis() #}}}

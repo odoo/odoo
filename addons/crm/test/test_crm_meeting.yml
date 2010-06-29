@@ -9,11 +9,11 @@
     date: '2010-04-21 16:04:00'
     date_deadline: '2010-04-22 00:04:00'
     duration: 8.0
-    email_from: info@mycompany.com
-    location: B-1367 Grand-Rosière
-    name: Technical Presentation
+    email_from: info@balmerinc.be
+    location: Ahmedabad
+    name: Regarding Presentation
     partner_address_id: base.res_partner_address_1
-    partner_id: base.main_partner
+    partner_id: base.res_partner_9
     rrule_type: weekly
     section_id: crm.section_sales_department
 - |
@@ -77,9 +77,11 @@
   I can invite internal user. 
 - 
   !record {model: base_calendar.invite.attendee, id: base_calendar_invite_attendee_0}:
+    type: internal
     partner_id: base.res_partner_9
-    type: email
-    email: noemail@openerp.com- |
+    user_ids:
+      - base.user_demo
+- |
   If I set Send mail boolean as True I can see that an email is send to 
     specified email address with proper meeting information.
 -

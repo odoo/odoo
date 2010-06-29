@@ -47,8 +47,6 @@ class document_directory_content(osv.osv):
     _name = 'document.directory.content'
     _description = 'Directory Content'
     _order = "sequence"
-    _log_create = True
-
     def _extension_get(self, cr, uid, context={}):
         cr.execute('select code,name from document_directory_content_type where active')
         res = cr.fetchall()

@@ -117,7 +117,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 
         self.result_details += self.get_result_details(result_dict)
         self.result_details += self.get_result_details(result_dict1)
-        return [_('__openerp__.pyfile'), score]
+        return [_('__openerp__.py file'), score]
 
     def run_test(self, cr, uid, module_path):
         terp_score = self.run_test_terp(cr, uid, module_path)

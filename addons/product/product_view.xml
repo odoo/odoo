@@ -99,7 +99,7 @@
 
                             <group colspan="2" col="2" name="status">
                                 <separator string="Status" colspan="2"/>
-                                <field name="categ_id" select="1" groups="base.group_extended"/>
+                                <field name="categ_id" select="1"/>
                                 <field name="state"/>
                                 <field groups="base.group_extended" name="product_manager"/>
                             </group>
@@ -298,7 +298,6 @@
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="factor"/>
-                    <field name="factor_inv"/>
                     <field name="rounding"/>
                 </tree>
             </field>
@@ -310,14 +309,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Units of Measure">
-                    <field name="name" select="1"/>
-                    <field name="category_id" select="1"/>
-                    <field name="factor" select="1" attrs="{'readonly':[('uom_factor','=','bigger')]}"/>
-                    <field name="factor_inv_data" select="1" string="Factor Data" attrs="{'readonly':[('uom_factor','=','smaller')]}"/>
-                    <field name="factor_inv" invisible="1"/>
-                    <field name="rounding"/>
-                    <field name="uom_factor"/>
-                    <field name="active"/>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="category_id" select="1" widget="selection"/>
+                        <field name="active"/>
+                        <field name="uom_factor" on_change="onchange_factor(uom_factor)"/>
+                        <group colspan="2" col="2">
+                            <field name="factor" attrs="{'invisible':[('uom_factor','&lt;&gt;','smaller')]}"/>
+                            <field name="factor_inv" string="Factor Data" attrs="{'invisible':[('uom_factor','&lt;&gt;','bigger')]}"/>
+                        </group>
+                        <newline/>
+                        <field name="rounding"/>
+                    </group>
                 </form>
             </field>
         </record>

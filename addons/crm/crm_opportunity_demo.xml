@@ -47,7 +47,7 @@
             <field name="type_id" ref="crm.type_oppor1"/>
             <field name="partner_id" ref="base.res_partner_8"/>
             <field eval="&quot;3&quot;" name="priority"/>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_root"/>
             <field eval="&quot;pending&quot;" name="state"/>
             <field eval="55000.0" name="planned_revenue"/>
             <field eval="70" name="probability"/>
@@ -55,7 +55,7 @@
             <field name="categ_id" ref="crm.categ_oppor7"/>
             <field name="stage_id" ref="crm.stage_oppor5"/>
             <field eval="&quot;Mediapole - 5000 units&quot;" name="name"/>
-            <field eval="&quot;info@mediapole.net&quot;" name="email_from"/>
+            <field eval="&quot;info@mycompany.net&quot;" name="email_from"/>
         </record>
         <record id="crm_case_abcfuelcounits0" model="crm.lead">
             <field eval="40" name="probability"/>
@@ -88,91 +88,6 @@
             <field name="categ_id" ref="crm.categ_oppor2"/>
             <field name="stage_id" ref="crm.stage_oppor6"/>
             <field eval="&quot;Dirt Mining Ltd 271742 - 1000 units&quot;" name="name"/>
-        </record>
-        <record id="crm_case_dreamweaversunits0" model="crm.lead">
-            <field eval="75" name="probability"/>
-            <field name="partner_address_id" ref="base.res_partner_address_9"/>
-            <field name="type">opportunity</field>
-            <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_oppor1"/>
-            <field name="partner_id" ref="base.res_partner_2"/>
-            <field eval="&quot;3&quot;" name="priority"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field eval="&quot;open&quot;" name="state"/>
-            <field eval="35000.0" name="planned_cost"/>
-            <field eval="42000.0" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor4"/>
-            <field name="stage_id" ref="crm.stage_oppor1"/>
-            <field eval="&quot;Dream Weavers - 2000 units&quot;" name="name"/>
-        </record>
-        <record id="crm_case_supervalueunits0" model="crm.lead">
-            <field eval="70" name="probability"/>
-            <field name="partner_address_id" ref="base.res_partner_address_11"/>
-            <field name="type">opportunity</field>
-            <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_oppor1"/>
-            <field name="partner_id" ref="base.res_partner_sednacom"/>
-            <field eval="&quot;2&quot;" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="&quot;open&quot;" name="state"/>
-            <field eval="38000.0" name="planned_cost"/>
-            <field eval="49000.0" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor5"/>
-            <field name="stage_id" ref="crm.stage_oppor3"/>
-            <field eval="&quot;Super Value 84581- 1500 units&quot;" name="name"/>
-        </record>
-        <record id="crm_case_business_solutionunits0" model="crm.lead">
-            <field eval="85" name="probability"/>
-            <field name="partner_address_id" ref="base.res_partner_address_zen"/>
-            <field name="type">opportunity</field>
-            <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_oppor1"/>
-            <field name="partner_id" ref="base.res_partner_3"/>
-            <field eval="&quot;1&quot;" name="priority"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field eval="&quot;done&quot;" name="state"/>
-            <field eval="35000.0" name="planned_cost"/>
-            <field eval="40000.0" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor6"/>
-            <field name="stage_id" ref="crm.stage_oppor6"/>
-            <field eval="&quot;Business Solutions 21478- 2000 units&quot;" name="name"/>
-        </record>
-        <record id="crm_case_sunrisemarketingunits0" model="crm.lead">
-            <field eval="45" name="probability"/>
-            <field name="partner_address_id" ref="base.res_partner_address_7"/>
-            <field name="type">opportunity</field>
-            <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_oppor1"/>
-            <field name="partner_id" ref="base.res_partner_4"/>
-            <field eval="&quot;3&quot;" name="priority"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="&quot;draft&quot;" name="state"/>
-            <field eval="45000.0" name="planned_cost"/>
-            <field eval="50000.0" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor6"/>
-            <field name="stage_id" ref="crm.stage_oppor6"/>
-            <field eval="&quot;Sunrise Marketing - 3000 units&quot;" name="name"/>
-        </record>
-        <record id="crm_case_alphaunits0" model="crm.lead">
-            <field eval="50" name="probability"/>
-            <field name="partner_address_id" ref="base.res_partner_address_6"/>
-            <field name="type">opportunity</field>
-            <field eval="1" name="active"/>
-            <field name="type_id" ref="crm.type_oppor1"/>
-            <field name="partner_id" ref="base.res_partner_6"/>
-            <field eval="&quot;2&quot;" name="priority"/>
-            <field name="user_id" ref="base.user_demo"/>
-            <field eval="&quot;cancel&quot;" name="state"/>
-            <field eval="30000.0" name="planned_cost"/>
-            <field eval="40000.0" name="planned_revenue"/>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="categ_id" ref="crm.categ_oppor7"/>
-            <field name="stage_id" ref="crm.stage_oppor2"/>
-            <field eval="&quot;Alpha Appliances - 2000 units&quot;" name="name"/>
         </record>
     </data>
 </openerp>

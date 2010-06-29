@@ -10,19 +10,19 @@
           <field name="arch" type="xml">
               <form string="Create a Sale Order" >
                     <group colspan="4">
-                        <field name="partner_id"/>
-                        <field name="shop_id"/>
+                        <field name="partner_id" required="1"/>
+                        <field name="shop_id" required="1" widget="selection"/>
                         <field name="analytic_account"/>
                         <field name="picking_policy"/>
-                        <field name="close"/>
+                        <field name="close" required="1"/>
                     </group>
                     <separator string="Products" colspan="4"/>
                     <field name="product_ids" colspan="4" nolabel="1"/>
                 <separator colspan="4"/>
                 <group col="4" colspan="4">
                     <label string="" colspan="2"/>
-                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    <button name="makeOrder" string="Create" type="object" icon='gtk-go-forward'/>
+                    <button special="cancel" string="_Close" icon="gtk-cancel"/>
+                    <button name="makeOrder" string="_Ok" type="object" icon='gtk-ok'/>
                 </group>
             </form>
           </field>

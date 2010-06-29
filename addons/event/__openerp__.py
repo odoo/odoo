@@ -50,8 +50,6 @@
         'event_sequence.xml',
         'security/event_security.xml',
         'security/ir.model.access.csv',
-        'wizard/event_registration_view.xml',
-        'wizard/event_registrations_partner.xml',
         'wizard/event_make_invoice_view.xml',
         'board_association_view.xml',
     ],
