@@ -1,0 +1,62 @@
+-
+    In order to test the document_ftp functionality
+-
+    I open the 8021 port and see for ftp presence there
+-
+    I read the list of databases at port 8021 and confirm our db is
+    there
+-
+    I try to locate the default "Documents" folder in the db.
+-
+    I create a "test.txt" file at the server (directly). The file
+    should have the "abcd" content
+-
+    I look for the "test.txt" file at the server
+-
+    I check that the content of "test.txt" is "abcd"
+-
+    I try to cd into an non-existing folder 'Not-This'
+-
+    I create a "test2.txt" file through FTP.
+-
+    I look for the "test2.txt" file at the server
+-
+    I look for the "test2.txt" file through FTP.
+-
+    I delete the "test2.txt" file using FTP.
+-
+    I check at the server that test2.txt is deleted
+-
+    I create a test2.txt file again.
+-
+    I delete the test2.txt from the server (RPC).
+-
+    I check through FTP that test2.txt does not appear.
+-
+    I create a "test-name.txt" file
+-
+    I rename the "test-name.txt" file through ftp.
+-
+    I check that test-name.txt has been renamed.
+-
+    I create a new folder 'Test-Folder2' through FTP
+-
+    I create a file 'test3.txt' at the 'Test-Folder2'
+-
+    I try to retrieve test3.txt
+-
+    I create a new folder, 'Test-Folder3', through FTP
+    I try to move test3.txt to 'Test-Folder3'
+-
+    I remove the 'Test-Folder3'
+-
+    I check that test3.txt is removed.
+-
+    I create 1000 files through FTP
+-
+    I list the 1000 files, check speed
+-
+    I read the 1000 files, check speed
+-
+    I move the 1000 files to 'Test-Folder2'
+-

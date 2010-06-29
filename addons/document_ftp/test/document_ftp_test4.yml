@@ -1,0 +1,34 @@
+-
+    In order to check dynamic folder functionality of document + FTP
+-
+    I create two partners 'Partner1' and 'Partner2'
+-|
+    I create three partner categories: 'none', 'pat1' and 'all'
+    I attach Partner1 to pat1, Partner1+Partner2 to 'all'
+-
+    I create a resource folder of partners, by the (none, pat1, all) 
+    categories.
+-
+    I browse through ftp in the resource folder, checking that three
+    categories are there.
+-
+    I create a 'partners' folder by the first resource one.
+-
+    I check through FTP that the correct partners are listed at each
+    'partners' folder.
+-
+    I create an ir.attachment, attached (not related) to Partner1
+    
+-
+    I check that pat1/Partner1 folder has the file.
+    I check that all/Partner1 folder has the file
+-
+    I place a file at the 'pat1'/Partner1 folder, through FTP
+-
+    I check at the server that the file is attached to Partner1
+-
+    I check that all/Partner1 also has the file
+- |
+    Bonus Piste:
+    I create a 'Partner3' under 'all'
+-
