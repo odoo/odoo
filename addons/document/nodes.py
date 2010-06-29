@@ -684,10 +684,14 @@ class node_file(node_class):
         
         # This only propagates the problem to get_data. Better
         # fix those files to point to the root dir.
-        if fil.parent_id:
-            self.storage_id = fil.parent_id.storage_id.id
-        else:
-            self.storage_id = None    
+        self.storage_id = None
+        par = fil.parent_id
+        while par:
+            if par.storage_id and par.storage_id.id:
+                self.storage_id = par.storage_id.id
+                break
+            par = par.parent_id
+
 
     def open(self, cr, mode=False):
         uid = self.context.uid
