@@ -50,7 +50,7 @@ class journal_print(report_sxw.rml_parse):
         obj_mline = self.pool.get('account.move.line')
         self.cr.execute('update account_journal_period set state=%s where journal_id=%s and period_id=%s and state=%s', ('printed',journal_id,period_id,'draft'))
         self.cr.commit()
-        self.cr.execute('select id from account_move_line where period_id=%s and journal_id=%s and state<>\'draft\''+self.query_get_clause+' order by date,id', (period_id, journal_id))
+        self.cr.execute('select id from account_move_line where period_id=%s and journal_id=%s and state<>\'draft\''+self.query_get_clause+' order by %s', (period_id, journal_id, sort_selection))
         ids = map(lambda x: x[0], self.cr.fetchall())
         return obj_mline.browse(self.cr, self.uid, ids)
 
