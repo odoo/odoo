@@ -82,7 +82,7 @@ class node_descriptor(object):
        provide the link to the parent /node/ object.
     """
 
-    def __init__(self, parent, **kwargs):
+    def __init__(self, parent):
         assert isinstance(parent, node_class)
         self.name = parent.displayname
         self.__parent = parent
