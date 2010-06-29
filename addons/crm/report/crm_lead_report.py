@@ -90,7 +90,7 @@ class crm_lead_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
-        'email': fields.integer('# of Emails', size=128, readonly=True),
+        'email': fields.integer('# Emails', size=128, readonly=True),
         'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
