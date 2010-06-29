@@ -27,39 +27,20 @@ class account_general_journal(osv.osv_memory):
     _description = 'Account General Journal'
 
     def _build_context(self, cr, uid, ids, data, context=None):
-        period_obj = self.pool.get('account.period')
         result = super(account_general_journal, self)._build_context(cr, uid, ids, data, context=context)
-        if not data['form']['period_from'] or not data['form']['period_to']:
-            raise osv.except_osv(_('Error'),_('Select Start period and End period'))
-        elif (data['form']['period_from'] > data['form']['period_to']):
-            raise osv.except_osv(_('Error'),_('Start period should be smaller then End period'))
-        period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])['date_start']
-        period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])['date_stop']
-        cr.execute('SELECT id FROM account_period WHERE date_start >= %s AND date_stop <= %s', (period_date_start, period_date_stop))
-        result.update({'periods': map(lambda x: x[0], cr.fetchall())})
+        if data['form']['filter'] == 'filter_date':
+            cr.execute('SELECT period_id FROM account_move_line WHERE date >= %s AND date <= %s', (data['form']['date_from'], data['form']['date_to']))
+            result['periods'] = map(lambda x: x[0], cr.fetchall())
         return result
 
+
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
-        if context is None:
-            context = {}
-        obj_jperiod = self.pool.get('account.journal.period')
-        period_id = data['form']['periods']
-        journal_id = data['form']['journal_ids']
-        if type(period_id)==type([]):
-            ids_final = []
-            for journal in journal_id:
-                for period in period_id:
-                    ids_journal_period = obj_jperiod.search(cr,uid, [('journal_id','=',journal),('period_id','=',period)], context=context)
-                    if ids_journal_period:
-                        ids_final.append(ids_journal_period)
-                if not ids_final:
-                    raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
-        data['ids'] = []
+        data['form'].update(self.read(cr, uid, ids, ['sort_selection'])[0])
+        fy_ids = data['form']['fiscalyear_id'] and [data['form']['fiscalyear_id']] or self.pool.get('account.fiscalyear').search(cr, uid, [('state', '=', 'draft')], context=context)
+        period_list = data['form']['periods'] or self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', fy_ids)], context=context)
+        data['form']['active_ids'] = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', data['form']['journal_ids']), ('period_id', 'in', period_list)], context=context)
         data['form']['query_get'] = query_line
-        if data['model'] == 'ir.ui.menu':
-            return {'type': 'ir.actions.report.xml', 'report_name': 'account.general.journal.wiz', 'datas': data, 'nodestroy':True, }
-        else:
-            return {'type': 'ir.actions.report.xml', 'report_name': 'account.general.journal', 'datas': data, 'nodestroy':True, }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'account.general.journal', 'datas': data, 'nodestroy':True, }
 
 account_general_journal()
 

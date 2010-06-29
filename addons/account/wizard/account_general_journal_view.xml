@@ -1,28 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-		<record id="view_account_general_journal" model="ir.ui.view">
-            <field name="name">Account Genral Journal</field>
+        <record id="account_report_general_journal_view" model="ir.ui.view">
+            <field name="name">Account General Journal</field>
             <field name="model">account.general.journal</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
- 			<form string="Print General Journal">
-				<group height="320" width="560">
-				    <separator string="Journals" colspan="4"/>
-				    <field name="journal_ids" nolabel="1" colspan="4"/>
-				    <separator string="Periods" colspan="4"/>
-					<group colspan="4">
-					    <field name="period_from"/>
-					    <field name="period_to"/>
- 					</group>
- 				    <group>
- 			    		<separator colspan="4"/>
-	            		<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-						<button name="check_report" string="Print" colspan="1" type="object" icon="gtk-ok"/>
- 					</group>
- 				</group>
- 			</form>
+               <field name="fiscalyear_id" position="after">
+                 <!-- we don't change the view but have to define a view for this specific object otherelse openerp will try to build a fedault one without using the one from the parent object --> 
+               </field>
             </field>
         </record>
 
@@ -33,14 +20,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="view_id" ref="account_report_general_journal_view"/>
         </record>
 
-		<menuitem
-	        name="General Journals"
-	        parent="account.menu_generic_report"
-	        action="action_account_general_journal"
-	        id="menu_account_general_journal"
-	        icon="STOCK_PRINT"/>
-
-	</data>
+        <menuitem
+            name="General Journals"
+            parent="account.menu_generic_report"
+            action="action_account_general_journal"
+            id="menu_account_general_journal"
+            icon="STOCK_PRINT"/>
+    </data>
 </openerp>
