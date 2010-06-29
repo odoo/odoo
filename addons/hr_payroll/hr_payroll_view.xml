@@ -491,10 +491,10 @@
                             <field name="move_payment_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="9" colspan="4">
+                    <group col="10" colspan="4">
                         <field name="state"/>
-                        <button string="Compute Sheet" name="compute_sheet" states="new"/>
-                        <button string="Recompute Sheet" name="compute_sheet" type="object" states="draft"/>
+                        <button string="Compute Sheet" icon="STOCK_JUMP_TO" name="compute_sheet" states="new"/>
+                        <button string="Recompute Sheet" icon="STOCK_JUMP_TO" name="compute_sheet" type="object" states="draft"/>
                         <button string="Verify Sheet" name="verify_sheet" states="draft"/>
                         <button string="Complete HR Checking" name="verify_twice_sheet" states="hr_check"/>
                         <button string="Complete Accountant Checking" name="final_verify_sheet" states="accont_check"/>
@@ -505,11 +505,38 @@
                 </form>
             </field>
         </record>
+        <record id="view_hr_payslip_filter" model="ir.ui.view">
+            <field name="name">hr.payslip.select</field>
+            <field name="model">hr.payslip</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Payslips">
+                    <group col="8" colspan="4">
+                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
+                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Slip"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-account" string="Paid" domain="[('state','=','done'),('paid','=',True)]" help="Paid Slip"/>
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="number"/>
+                        <field name="date"/>
+                    </group>
+                    <newline/>
+                    <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'register_id':self}"/>
+                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'employee_id':self}"/>
+                        <filter string="Periods" name="period_id" icon="terp-go-month" context="{'period_id':self}"/>
+                        <filter string="Staes" name="state" icon="terp-stock_effects-object-colorize" context="{'state':self}"/>
+                    </group>
+                </search>
+            </field>
+        </record>   
         <record id="action_view_hr_payslip_form" model="ir.actions.act_window">
             <field name="name">Employee Payslip</field>
             <field name="res_model">hr.payslip</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_payslip_tree"/>
+            <field name="search_view_id" ref="view_hr_payslip_filter"/>
         </record>
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
         
