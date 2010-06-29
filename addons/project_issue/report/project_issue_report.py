@@ -84,7 +84,8 @@ class project_issue_report(osv.osv):
         'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
-        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" )
+        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
+        'email': fields.integer('# Emails', size=128, readonly=True),
     }
 
     def init(self, cr):
@@ -117,7 +118,8 @@ class project_issue_report(osv.osv):
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
-                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close
+                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
+                    (SELECT count(id) FROM mailgate_message WHERE model='project.issue' AND res_id=c.id) AS email
                 FROM
                     project_issue c
                 WHERE c.categ_id IN (select res_id from ir_model_data WHERE model = 'crm.case.categ' and name='bug_categ')
