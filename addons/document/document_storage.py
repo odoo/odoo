@@ -24,7 +24,9 @@ from osv import osv, fields
 import os
 import tools
 import base64
+import errno
 import logging
+from StringIO import StringIO
 
 from tools.misc import ustr
 from tools.translate import _
@@ -34,6 +36,7 @@ from osv.orm import except_orm
 import random
 import string
 import netsvc
+import nodes
 from content_index import cntIndex
 
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config.get('root_path'), 'filestore'))
@@ -84,6 +87,64 @@ def create_directory(path):
     os.makedirs(path)
     return dir_name
 
+class nodefd_file(nodes.node_descriptor):
+    """ A descriptor to a real file
+
+    Inheriting directly from file doesn't work, since file exports
+    some read-only attributes (like 'name') that we don't like.
+    """
+    def __init__(self, parent, path, mode):
+        nodes.node_descriptor.__init__(self, parent)
+        self.__file = open(path, mode)
+        
+        for attr in ('closed', 'read', 'write', 'seek', 'tell'):
+            setattr(self,attr, getattr(self.__file, attr))
+
+    def close(self):
+        # TODO: locking in init, close()
+        self.__file.close()
+
+    
+class nodefd_db(StringIO, nodes.node_descriptor):
+    """ A descriptor to db data
+    """
+    def __init__(self, parent, ira_browse, mode):
+        nodes.node_descriptor.__init__(self, parent)
+        if mode.endswith('b'):
+            mode = mode[:-1]
+        
+        if mode == 'r':
+            StringIO.__init__(self, ira_browse.db_datas)
+        elif mode == 'w':
+            StringIO.__init__(self, ira_browse.db_datas)
+            # at write, we start at 0 (= overwrite), but have the original
+            # data available, in case of a seek()
+        elif mode == 'a':
+            StringIO.__init__(self, None)
+        else:
+            logging.getLogger('document.storage').error("Incorrect mode %s specified", mode)
+            raise IOError(errno.EINVAL, "Invalid file mode")
+        self.mode = mode
+
+    def close(self):
+        # we now open a *separate* cursor, to update the data.
+        # FIXME: this may be improved, for concurrency handling
+        uid = self.__parent.context.uid
+        cr = pooler.get_db(self.__parent.context.dbname).cursor()
+        if mode == 'w':
+            out = self.getvalue()
+            cr.execute('UPDATE ir_attachment SET db_datas = %s, file_size=%d WHERE id = %s',
+                (out, len(out), self.__parent.file_id))
+        elif mode == 'a':
+            out = self.getvalue()
+            cr.execute("UPDATE ir_attachment " \
+                "SET db_datas = COALESCE(db_datas,'') || %s, " \
+                "    file_size = COALESCE(file_size, 0) + %d " \
+                " WHERE id = %s",
+                (out, len(out), self.__parent.file_id))
+        cr.commit()
+        cr.close()
+        StringIO.close(self)
 
 class document_storage(osv.osv):
     """ The primary object for data storage.
@@ -146,6 +207,47 @@ class document_storage(osv.osv):
         else:
             ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
         return self.__get_data_3(cr, uid, boo, ira, context)
+
+    def get_file(self, cr, uid, id, file_node, mode, context=None):
+        if context is None:
+            context = {}
+        boo = self.browse(cr, uid, id, context)
+        if not boo.online:
+            raise RuntimeError('media offline')
+        
+        ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
+        if boo.type == 'filestore':
+            if not ira.store_fname:
+                # On a migrated db, some files may have the wrong storage type
+                # try to fix their directory.
+                if ira.file_size:
+                    self._doclog.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
+                raise IOError(errno.ENOENT, 'No file can be located')
+            fpath = os.path.join(boo.path, ira.store_fname)
+            if self._debug:
+                self._doclog.debug("Trying to read \"%s\".."% fpath)
+            return nodefd_file(file_node, path=fpath, mode=mode)
+
+        elif boo.type == 'db':
+            # TODO: we need a better api for large files
+            if self._debug:
+                self._doclog.debug("Trying to obtain db_datas for ir.attachment[%d]", ira.id)
+            return nodefd_db(file_node, ira_browse=ira, mode=mode)
+
+        elif boo.type == 'realstore':
+            if not ira.store_fname:
+                # On a migrated db, some files may have the wrong storage type
+                # try to fix their directory.
+                if ira.file_size:
+                    self._doclog.warning("ir.attachment #%d does not have a filename, trying the name." %ira.id)
+                sfname = ira.name
+            fpath = os.path.join(boo.path,ira.store_fname or ira.name)
+            if not os.path.exists(fpath):
+                raise IOError("File not found: %s" % fpath)
+            return nodefd_file(file_node, path=fpath, mode=mode)
+
+        else:
+            raise TypeError("No %s storage" % boo.type)
 
     def __get_data_3(self, cr, uid, boo, ira, context):
         if not boo.online:
