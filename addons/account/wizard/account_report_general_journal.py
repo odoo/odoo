@@ -22,24 +22,12 @@ from osv import osv, fields
 from tools.translate import _
 
 class account_general_journal(osv.osv_memory):
-    _inherit = "account.common.report"
+    _inherit = "account.common.journal.report"
     _name = 'account.general.journal'
     _description = 'Account General Journal'
 
-    def _build_context(self, cr, uid, ids, data, context=None):
-        result = super(account_general_journal, self)._build_context(cr, uid, ids, data, context=context)
-        if data['form']['filter'] == 'filter_date':
-            cr.execute('SELECT period_id FROM account_move_line WHERE date >= %s AND date <= %s', (data['form']['date_from'], data['form']['date_to']))
-            result['periods'] = map(lambda x: x[0], cr.fetchall())
-        return result
-
-
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
-        data['form'].update(self.read(cr, uid, ids, ['sort_selection'])[0])
-        fy_ids = data['form']['fiscalyear_id'] and [data['form']['fiscalyear_id']] or self.pool.get('account.fiscalyear').search(cr, uid, [('state', '=', 'draft')], context=context)
-        period_list = data['form']['periods'] or self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', fy_ids)], context=context)
-        data['form']['active_ids'] = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', data['form']['journal_ids']), ('period_id', 'in', period_list)], context=context)
-        data['form']['query_get'] = query_line
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context)
         return {'type': 'ir.actions.report.xml', 'report_name': 'account.general.journal', 'datas': data, 'nodestroy':True, }
 
 account_general_journal()

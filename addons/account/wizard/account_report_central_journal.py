@@ -24,27 +24,16 @@ from tools.translate import _
 class account_central_journal(osv.osv_memory):
     _name = 'account.central.journal'
     _description = 'Account Central Journal'
-    _inherit = "account.common.report"
+    _inherit = "account.common.journal.report"
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
-            periods = data['form']['periods']
-            data['ids'] = ids
-            obj_jperiod = self.pool.get('account.journal.period')
-            if isinstance(periods, list):
-                ids_final = []
-                for journal in data['form']['journal_ids']:
-                    for period in periods:
-                        ids_journal_period = obj_jperiod.search(cr,uid, [('journal_id','=',journal),('period_id','=',period)], context=context)
-                        if ids_journal_period:
-                            ids_final.append(ids_journal_period)
-                if not ids_final:
-                    raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
-            return {
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context)
+        return {
                 'type': 'ir.actions.report.xml',
-                'report_name': 'account.central.journal.wiz',
+                'report_name': 'account.central.journal',
                 'datas': data,
                 'nodestroy':True,
-                }
+        }
 
 account_central_journal()
 

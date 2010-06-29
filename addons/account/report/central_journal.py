@@ -27,6 +27,15 @@ import pooler
 # Use period and Journal for selection or resources
 #
 class journal_print(report_sxw.rml_parse):
+
+    def set_context(self, objects, data, ids, report_type = None):
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
+        objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
+        self.query_get_clause = data['form']['query_line'] or ''
+        super(journal_print, self).set_context(objects, data, new_ids, report_type)
+
     def __init__(self, cr, uid, name, context):
         super(journal_print, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
@@ -39,29 +48,16 @@ class journal_print(report_sxw.rml_parse):
         })
 
     def lines(self, period_id, journal_id, *args):
-        if type(period_id)==type([]):
-            ids_final = []
-            for journal in journal_id:
-                for period in period_id:
-                    ids_journal_period = self.pool.get('account.journal.period').search(self.cr, self.uid, [('journal_id','=',journal),('period_id','=',period)])
-                    if ids_journal_period:
-                        self.cr.execute('select a.code, a.name, sum(debit) as debit, sum(credit) as credit from account_move_line l left join account_account a on (l.account_id=a.id) where l.period_id=%s and l.journal_id=%s and l.state<>\'draft\' group by a.id, a.code, a.name, l.journal_id, l.period_id', (period, journal))
-                        res = self.cr.dictfetchall()
-                        a = {'journal':self.pool.get('account.journal').browse(self.cr, self.uid, journal),'period':self.pool.get('account.period').browse(self.cr, self.uid, period)}
-                        if res:
-                            res[0].update(a)
-                            ids_final.append(res)
-            return ids_final
-        self.cr.execute('select a.code, a.name, sum(debit) as debit, sum(credit) as credit from account_move_line l left join account_account a on (l.account_id=a.id) where l.period_id=%s and l.journal_id=%s and l.state<>\'draft\' group by a.id, a.code, a.name', (period_id, journal_id))
+        self.cr.execute('SELECT a.code, a.name, SUM(debit) AS debit, SUM(credit) AS credit from account_move_line l LEFT JOIN account_account a ON (l.account_id=a.id) WHERE '+self.query_get_clause+' AND l.period_id=%s AND l.journal_id=%s GROUP BY a.id, a.code, a.name', (period_id, journal_id))
         res = self.cr.dictfetchall()
         return res
 
     def _sum_debit(self, period_id, journal_id):
-        self.cr.execute('select sum(debit) from account_move_line where period_id=%s and journal_id=%s and state<>\'draft\'', (period_id, journal_id))
+        self.cr.execute('SELECT SUM(debit) FROM account_move_line l WHERE '+self.query_get_clause+' AND period_id=%s AND journal_id=%s', (period_id, journal_id))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, period_id, journal_id):
-        self.cr.execute('select sum(credit) from account_move_line where period_id=%s and journal_id=%s and state<>\'draft\'', (period_id, journal_id))
+        self.cr.execute('SELECT SUM(credit) FROM account_move_line l WHERE '+self.query_get_clause+' AND period_id=%s AND journal_id=%s', (period_id, journal_id))
         return self.cr.fetchone()[0] or 0.0
     
     def get_start_date(self, form):
@@ -70,9 +66,5 @@ class journal_print(report_sxw.rml_parse):
     def get_end_date(self, form):
         return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
 
-    
 report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/central_journal.rml', parser=journal_print, header=False)
-report_sxw.report_sxw('report.account.central.journal.wiz', 'account.journal.period', 'addons/account/report/wizard_central_journal.rml', parser=journal_print, header=False)
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

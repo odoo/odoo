@@ -72,8 +72,7 @@ class journal_print(report_sxw.rml_parse):
                         'SUM(l.debit) AS debit, SUM(l.credit) AS credit '
                         'FROM account_move_line l '
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
-                        'WHERE period_id=%s AND journal_id IN %s ' +self.query_get_clause +
-                        'AND l.state<>\'draft\' '
+                        'WHERE '+self.query_get_clause +' AND period_id=%s AND journal_id IN %s '
                         'GROUP BY j.id, j.code, j.name',
                         (period_id, tuple(self.journal_ids)))
         res = self.cr.dictfetchall()
@@ -83,9 +82,8 @@ class journal_print(report_sxw.rml_parse):
         journals = journal_id or self.journal_ids
         if not journals:
             return 0.0
-        self.cr.execute('SELECT SUM(debit) FROM account_move_line '
-                        'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +
-                        'AND state<>\'draft\'',
+        self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
+                        'WHERE '+self.query_get_clause +' AND period_id=%s AND journal_id IN %s ',
                         (period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
@@ -93,9 +91,8 @@ class journal_print(report_sxw.rml_parse):
         journals = journal_id or self.journal_ids
         if not journals:
             return 0.0
-        self.cr.execute('SELECT SUM(credit) FROM account_move_line '
-                        'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +
-                        'AND state<>\'draft\'',
+        self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
+                        'WHERE '+self.query_get_clause +' AND period_id=%s AND journal_id IN %s ',
                         (period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
@@ -104,10 +101,9 @@ class journal_print(report_sxw.rml_parse):
         periods = period_id or self.period_ids
         if not (journals and periods):
             return 0.0
-        self.cr.execute('SELECT SUM(debit) FROM account_move_line '
-                        'WHERE period_id IN %s '
-                        'AND journal_id IN %s '+self.query_get_clause +
-                        'AND state<>\'draft\'',
+        self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
+                        'WHERE '+self.query_get_clause +' AND period_id IN %s '
+                        'AND journal_id IN %s ',
                         (tuple(periods), tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
@@ -116,10 +112,9 @@ class journal_print(report_sxw.rml_parse):
         journals = journal_id or self.journal_ids
         if not (periods and journals):
             return 0.0
-        self.cr.execute('SELECT SUM(credit) FROM account_move_line '
-                        'WHERE period_id IN %s '
-                        'AND journal_id IN %s '+self.query_get_clause +
-                        'AND state<>\'draft\'',
+        self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
+                        'WHERE '+self.query_get_clause +' AND period_id IN %s '
+                        'AND journal_id IN %s ',
                         (tuple(periods), tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 

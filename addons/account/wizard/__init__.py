@@ -56,9 +56,12 @@ import account_use_model
 import account_state_open
 
 import account_statement_from_invoice
-import account_print_journal
-import account_central_journal
-import account_general_journal
+
+import account_common_journal_report
+import account_report_print_journal
+import account_report_central_journal
+import account_report_general_journal
+
 import account_change_currency
 
 import account_bs_report
