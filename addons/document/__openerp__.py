@@ -43,10 +43,10 @@
     'depends': ['base', 'process','board'],
     'init_xml': [],
     'update_xml': [
+        'security/document_security.xml',
         'document_view.xml',
         'document_data.xml',
         'wizard/document_configuration_view.xml',
-        'security/document_security.xml',
         'security/ir.model.access.csv',
         'report/document_report_view.xml',
         'board_document_view.xml',

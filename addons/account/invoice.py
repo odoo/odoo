@@ -325,6 +325,19 @@ class account_invoice(osv.osv):
         'user_id': lambda s, cr, u, c: u,
     }
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        if context.get('active_model','') in ['res.partner']:
+            partner = self.pool.get(context['active_model']).read(cr,uid,context['active_ids'],['supplier','customer'])[0]
+            if not view_type:
+                view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.tree')])[0]
+                view_type = 'tree'
+            if view_type == 'form':
+                if partner['supplier'] and not partner['customer']:
+                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.supplier.form')])[0]
+                else:
+                    view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.form')])[0]
+        return super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+
     def create(self, cr, uid, vals, context={}):
         try:
             res = super(account_invoice, self).create(cr, uid, vals, context)
@@ -871,7 +884,7 @@ class account_invoice(osv.osv):
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
-            self._log_event(cr, uid, ids)
+        self._log_event(cr, uid, ids)
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
@@ -961,7 +974,7 @@ class account_invoice(osv.osv):
         return taxes.values()
 
     def _log_event(self, cr, uid, ids, factor=1.0, name='Open Invoice'):
-        #TODO: implement messages system        
+        #TODO: implement messages system
         return True
 
     def name_get(self, cr, uid, ids, context=None):

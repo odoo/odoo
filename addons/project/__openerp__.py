@@ -46,6 +46,7 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
         "project_report.xml",
         "process/task_process.xml",
         "project_installer.xml",
+        "res_partner_view.xml",
         "report/project_report_view.xml",
         "wizard/project_close_task_view.xml",
         "board_project_view.xml",

@@ -131,18 +131,18 @@ class audittrail_log(osv.osv):
     _name = 'audittrail.log'
     _description = "Audittrail Log"
 
-#    def _name_get_resname(self, cr, uid, ids, *args):
-#        data = {}
-#        for resname in self.browse(cr, uid, ids,[]):
-#            model_object = resname.object_id
-#            res_id = resname.res_id
-#            if model_object and res_id:
-#                model_pool = self.pool.get(model_object.model)
-#                res = model_pool.read(cr, uid, res_id, ['name'])
-#                data[resname.id] = res['name']
-#            else:
-#                 data[resname.id] = False
-#        return data
+    def _name_get_resname(self, cr, uid, ids, *args):
+        data = {}
+        for resname in self.browse(cr, uid, ids,[]):
+            model_object = resname.object_id
+            res_id = resname.res_id
+            if model_object and res_id:
+                model_pool = self.pool.get(model_object.model)
+                res = model_pool.read(cr, uid, res_id, ['name'])
+                data[resname.id] = res['name']
+            else:
+                 data[resname.id] = False
+        return data
 
     _columns = {
         "name": fields.char("Resource Name",size=64),
@@ -521,12 +521,15 @@ class audittrail_objects_proxy(osv_pool):
             if obj_name == 'audittrail.rule':
                 rule = True
         if not rule:
+            cr.close()
             return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
         if not model_ids:
+            cr.close()
             return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
 
         rule_ids = rule_pool.search(cr, uid, [('object_id', 'in', model_ids), ('state', '=', 'subscribed')])
         if not rule_ids:
+             cr.close()
              return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
 
         for thisrule in rule_pool.browse(cr, uid, rule_ids):
@@ -534,7 +537,9 @@ class audittrail_objects_proxy(osv_pool):
                 logged_uids.append(user.id)
             if not logged_uids or uid in logged_uids:
                  if thisrule.log_workflow:
+                     cr.close()
                      return self.log_fct(db, uid, model, method, fct_src, *args)
+            cr.close()
             return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
 
         cr.close()

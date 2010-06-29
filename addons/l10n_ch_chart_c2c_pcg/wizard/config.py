@@ -73,7 +73,7 @@ class Tax_template(osv.osv_memory):
 
     def on_change_paid(self, cr, uid, id, tax, account):
         return self._on_change(
-            cr, uid, ids, tax, vals={'account_paid_id': account})
+            cr, uid, id, tax, vals={'account_paid_id': account})
 
     def execute(self,cr,uid,ids,context={}):
         jids = self.pool.get('account.tax.template').search(cr, uid, [])

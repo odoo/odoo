@@ -508,7 +508,7 @@ class account_move_line(osv.osv):
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
-        (_check_company_id,'Company must be same for its related account and period.',['company_id'] ),
+        (_check_company_id, 'Company must be same for its related account and period.', ['company_id']),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -529,7 +529,6 @@ class account_move_line(osv.osv):
         return result
 
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
-        print 'XXXXXXXXXXXXXXXXXXXXXXXXXXX : ', move_id, partner_id, account_id, debit, credit, date, journal
         val = {}
         val['date_maturity'] = False
 
@@ -791,7 +790,7 @@ class account_move_line(osv.osv):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context,toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
             return result
-       
+
         fld = []
         fields = {}
         flds = []
@@ -801,7 +800,9 @@ class account_move_line(osv.osv):
         
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
-        all_journal = []
+        all_journal = [None]
+        common_fields = {}
+        total = len(journals)
         for journal in journals:
             all_journal.append(journal.id)
             for field in journal.view_id.columns_id:
@@ -809,8 +810,10 @@ class account_move_line(osv.osv):
                     fields[field.field] = [journal.id]
                     fld.append((field.field, field.sequence))
                     flds.append(field.field)
+                    common_fields[field.field] = 1
                 else:
                     fields.get(field.field).append(journal.id)
+                    common_fields[field.field] = common_fields[field.field] + 1
         
         fld.append(('period_id', 3))
         fld.append(('journal_id', 10))
@@ -832,6 +835,10 @@ class account_move_line(osv.osv):
 
         for field_it in fld:
             field = field_it[0]
+            
+            if common_fields.get(field) == total:
+                fields.get(field).append(None)
+            
             if field=='state':
                 state = 'colors="red:state==\'draft\'"'
             

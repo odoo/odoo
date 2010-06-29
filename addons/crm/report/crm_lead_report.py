@@ -77,7 +77,6 @@ class crm_lead_report(osv.osv):
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
-        'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
         'perc_done': fields.function(_get_data, string='%Done', method=True, type="float"),
@@ -92,10 +91,10 @@ class crm_lead_report(osv.osv):
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'email': fields.integer('# of Emails', size=128, readonly=True),
-        'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'delay_close': fields.float('Delay to close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'probability': fields.float('Probability',digits=(16,2),readonly=True),
+        'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
@@ -107,9 +106,9 @@ class crm_lead_report(osv.osv):
         'opening_date': fields.date('Opening Date', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Close Date', readonly=True),
+        'nbr': fields.integer('# of Cases', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        
         'type':fields.selection([
             ('lead','Lead'),
             ('opportunity','Opportunity'),
@@ -148,7 +147,7 @@ class crm_lead_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
-                    (select count(id) from mailgate_message where thread_id=c.id) as email,
+                    (select count(id) from mailgate_message where res_id=c.id and model='crm.lead') as email,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
                     avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24) as  delay_expected,

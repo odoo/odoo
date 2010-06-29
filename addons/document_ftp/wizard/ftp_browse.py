@@ -21,7 +21,6 @@
 
 from osv import osv, fields
 from tools.translate import _
-
 from document_ftp import ftpserver
 class document_ftp_browse(osv.osv_memory):
     _name = 'document.ftp.browse'
@@ -36,7 +35,17 @@ class document_ftp_browse(osv.osv_memory):
         if 'url' in fields:
             user_pool = self.pool.get('res.users')
             current_user = user_pool.browse(cr, uid, uid, context=context)
-            res['url'] = 'ftp://%s@%s:%d'%(current_user.login, ftpserver.HOST, ftpserver.PORT)
+            dir_pool = self.pool.get('document.directory')
+            data_pool = self.pool.get('ir.model.data')        
+            aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
+            aid = data_pool.browse(cr, uid, aid, context=context).res_id
+            ftp_url = self.pool.get('ir.actions.url').browse(cr, uid, aid, context=context)
+            url = ftp_url.url and ftp_url.url.split('ftp://') or []
+            if url:
+                url = url[1]
+            else:
+                url = '%s:%s' %(ftpserver.HOST, ftpserver.PORT) 
+            res['url'] = 'ftp://%s@%s'%(current_user.login, url)
         return res
 
     def browse_ftp(self, cr, uid, ids, context):

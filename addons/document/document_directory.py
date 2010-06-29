@@ -33,8 +33,6 @@ class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Directory'
     _order = 'name desc'
-    _log_create=True
-
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
@@ -62,6 +60,7 @@ class document_directory(osv.osv):
         'ressource_tree': fields.boolean('Tree Structure',
             help="Check this if you want to use the same tree structure as the object selected in the system."),
         'dctx_ids': fields.one2many('document.directory.dctx', 'dir_id', 'Context fields'),
+        'company_id': fields.many2one('res.company', 'Company'),        
     }
 
 
@@ -94,6 +93,7 @@ class document_directory(osv.osv):
                 return None
         
     _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'document.directory', context=c),
         'user_id': lambda self,cr,uid,ctx: uid,
         'domain': lambda self,cr,uid,ctx: '[]',
         'type': lambda *args: 'directory',

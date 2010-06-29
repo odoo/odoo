@@ -554,16 +554,21 @@ class mrp_production(osv.osv):
             return {'value': {'location_dest_id': src}}
         return {}
 
-    def product_id_change(self, cr, uid, ids, product):
+    def product_id_change(self, cr, uid, ids, product, context=None):
         """ Finds UoM of changed product.
         @param product: Id of changed product.
         @return: Dictionary of values.
         """
         if not product:
-            return {}
-        res = self.pool.get('product.product').read(cr, uid, [product], ['uom_id'])[0]
-        uom = res['uom_id'] and res['uom_id'][0]
-        result = {'product_uom': uom}
+            return {'value': {
+                'product_uom': False,
+                'bom_id': False
+            }}
+        res = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        result = {
+            'product_uom': res.uom_id and res.uom_id.id or False,
+            'bom_id': res.bom_ids and res.bom_ids[0].id or False
+        }
         return {'value': result}
 
     def bom_id_change(self, cr, uid, ids, product):
