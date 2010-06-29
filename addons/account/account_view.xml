@@ -1131,18 +1131,18 @@
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_move_line_search"/>
         </record>
-        <record id="action_move_line_search_view4" model="ir.actions.act_window">
-            <field name="name">Checks Register</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_line_tree"/>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="domain">[('journal_id.type', '=', 'bank')]</field>
-        </record>
-        
-        <menuitem action="action_move_line_search_view4" id="journal_bank_move_lines" parent="menu_finance_bank_and_cash"/>
+<!--        <record id="action_move_line_search_view4" model="ir.actions.act_window">-->
+<!--            <field name="name">Cheque Register</field>-->
+<!--            <field name="type">ir.actions.act_window</field>-->
+<!--            <field name="res_model">account.move.line</field>-->
+<!--            <field name="view_type">form</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--            <field name="view_id" ref="view_move_line_tree"/>-->
+<!--            <field name="search_view_id" ref="view_account_move_line_filter"/>-->
+<!--            <field name="domain">[('journal_id.type', '=', 'bank')]</field>-->
+<!--        </record>-->
+<!--        -->
+<!--        <menuitem action="action_move_line_search_view4" id="journal_bank_move_lines" parent="menu_finance_bank_and_cash"/>-->
 
 <!--        <menuitem action="action_move_line_search" id="menu_action_move_line_search" parent="account.next_id_29"/>-->
 

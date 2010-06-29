@@ -72,7 +72,7 @@
             </field>
         </record>
 
-        <record id="view_account_move_filter" model="ir.ui.view">
+        <record id="view_voucher_filter" model="ir.ui.view">
             <field name="name">account.voucher.select</field>
             <field name="model">account.voucher</field>
             <field name="type">search</field>
@@ -114,7 +114,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="domain">[('journal_id.type','=','sale')]</field>
-            <field name="search_view_id" ref="view_account_move_filter"/>
+            <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
         <menuitem id="menu_action_receipt_vou_voucher_list"
         action="action_receipt_vou_voucher_list" parent="account.menu_finance_receivables" sequence="12"/>
@@ -127,7 +127,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_voucher_tree"/>
             <field name="domain">[('journal_id.type','=','purchase')]</field>
-            <field name="search_view_id" ref="view_account_move_filter"/>
+            <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
         <menuitem id="menu_action_pay_vou_voucher_list"
         action="action_pay_vou_voucher_list" parent="account.menu_finance_payables" sequence="12"/>
@@ -139,9 +139,23 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_voucher_tree"/>
-            <field name="search_view_id" ref="view_account_move_filter"/>
+            <field name="search_view_id" ref="view_voucher_filter"/>
         </record>
         <menuitem action="action_voucher_list" id="menu_encode_entries_by_voucher" parent="account.menu_finance_entries" sequence="6"/>
+        
+        <record id="action_cheque_register" model="ir.actions.act_window">
+            <field name="name">Cheque Register</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.voucher</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_voucher_tree"/>
+            <field name="search_view_id" ref="view_voucher_filter"/>
+            <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+        </record>
+        
+        <menuitem action="action_cheque_register" id="menu_action_cheque_register" parent="account.menu_finance_bank_and_cash"/>
+
         
 <!--        <record model="ir.actions.act_window" id="action_receipt_cashreceipt_voucher_list">-->
 <!--            <field name="name">Cash Receipt</field>-->
