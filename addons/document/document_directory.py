@@ -195,17 +195,8 @@ class document_directory(osv.osv):
         """
         if not context:
                 context = {}
-        lang = context.get('lang',False)
-        if not lang:
-            user = self.pool.get('res.users').browse(cr, uid, uid)
-            lang = user.context_lang 
-            context['lang'] = lang
             
-        try: #just instrumentation
-                return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
-        except Exception,e:
-                print "exception: ",e
-                raise
+        return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
 
 
     def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
