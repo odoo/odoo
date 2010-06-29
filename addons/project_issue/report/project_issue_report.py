@@ -20,7 +20,6 @@ class project_issue_report(osv.osv):
             @param context: A standard dictionary for contextual values """
 
         res = {}
-        state_perc = 0.0
         avg_ans = 0.0
 
         for case in self.browse(cr, uid, ids, context):
@@ -91,9 +90,9 @@ class project_issue_report(osv.osv):
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'project_issue_report')
         cr.execute("""
-            create or replace view project_issue_report as (
-                select
-                    min(c.id) as id,
+            CREATE OR REPLACE VIEW project_issue_report AS (
+                SELECT
+                    c.id as id,
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
@@ -111,44 +110,18 @@ class project_issue_report(osv.osv):
                     c.priority as priority,
                     c.project_id as project_id,
                     c.type_id as type_id,
-                    (select 1) as nbr,
+                    1 as nbr,
                     c.assigned_to,
                     c.partner_id,
                     c.canal_id,
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
-                from
+                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
+                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close
+                FROM
                     project_issue c
-                where c.categ_id in (select res_id from ir_model_data where name='bug_categ')
-                group by
-                    to_char(c.create_date, 'YYYY'),
-                    to_char(c.create_date, 'MM'),
-                    to_char(c.create_date, 'YYYY-MM-DD'),
-                    c.state,
-                    to_char(c.date_open, 'YYYY-MM-DD'),
-                    to_char(c.date_closed, 'YYYY-mm-dd'),
-                    c.user_id,
-                    c.section_id,
-                    c.categ_id,
-                    c.stage_id,
-                    c.company_id,
-                    c.priority,
-                    c.working_hours_open,
-                    c.working_hours_close,
-                    c.project_id,
-                    to_char(c.date_closed, 'YYYY-MM-DD'),
-                    c.type_id,
-                    c.working_hours_open,
-                    c.working_hours_close,
-                    date_trunc('day',c.create_date),
-                    c.assigned_to,
-                    c.partner_id,
-                    c.canal_id,
-                    c.task_id
-            )""") 
-
+                WHERE c.categ_id IN (select res_id from ir_model_data WHERE model = 'crm.case.categ' and name='bug_categ')
+            )""")
 project_issue_report()
 
 
