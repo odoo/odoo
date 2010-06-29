@@ -694,16 +694,7 @@ class node_file(node_class):
 
 
     def open(self, cr, mode=False):
-        uid = self.context.uid
-        if self.type in ('collection','database'):
-            return False            
-        fobj = self.context._dirobj.pool.get('ir.attachment').browse(cr, uid, self.file_id, context=self.context.context)
-        if fobj.store_method and fobj.store_method== 'fs' :
-            s = StringIO.StringIO(self.get_data(cr, fobj))
-        else:
-            s = StringIO.StringIO(base64.decodestring(fobj.db_datas or ''))
-        s.name = self
-        return s   
+        raise DeprecationWarning("Who called this?")
 
     def rm(self, cr):
         uid = self.context.uid
@@ -799,14 +790,7 @@ class node_content(node_class):
         self.act_id = act_id
 
     def open(self, cr, mode=False):
-        uid = self.context.uid
-        if self.type in ('collection','database'):
-            return False                    
-        pool = self.context._dirobj.pool
-        res = getattr(pool.get('document.directory.content'), 'process_read')(cr, uid, self)
-        res = StringIO.StringIO(res)
-        res.name = self
-        return res     
+        raise DeprecationWarning()
     
     def fill_fields(self, cr, dctx = None):
         """ Try to read the object and fill missing fields, like mimetype,
