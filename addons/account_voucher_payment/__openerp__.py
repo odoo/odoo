@@ -22,9 +22,8 @@
     "name" : "Invoice Payment/Receipt by Vouchers.",
     "version" : "1.0",
     "author" : 'Tiny & Axelor',
-    "description": """This module includes :
-    * It reconcile the invoice (supplier, customer) while paying through
-    Accounting Vouchers
+    "description": """Extension Account Voucher module includes allows to link payment / receipt 
+    entries with voucher, also automatically reconcile during the payment and receipt entries
     """,
     "category" : "Generic Modules/Indian Accounting",
     "website" : "http://tinyerpindia.com",
