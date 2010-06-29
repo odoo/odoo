@@ -270,6 +270,7 @@ class mailgate_tool(osv.osv_memory):
         res_id = False
         # Create New Record into particular model
         def create_record(msg):
+            att_ids = []
             if hasattr(model_pool, 'message_new'):
                 res_id = model_pool.message_new(cr, uid, msg, context)
             else:
@@ -284,7 +285,6 @@ class mailgate_tool(osv.osv_memory):
                 data.update(self.get_partner(cr, uid, msg.get('from'), context=context))
                 res_id = model_pool.create(cr, uid, data, context=context)
 
-                att_ids = []
                 if attach:
                     for attachment in msg.get('attachments', []):
                         data_attach = {
@@ -369,9 +369,9 @@ class mailgate_tool(osv.osv_memory):
                         if encoding:
                             content = unicode(content, encoding)
                         if part.get_content_subtype() == 'html':
-                            body = tools.html2plaintext(content)
+                            body = tools.ustr(tools.html2plaintext(content))
                         elif part.get_content_subtype() == 'plain':
-                            body = content
+                            body = tools.ustr(content)
                 elif part.get_content_maintype() in ('application', 'image', 'text'):
                     filename = part.get_filename();
                     if filename :
@@ -379,7 +379,7 @@ class mailgate_tool(osv.osv_memory):
                     else:
                         res = part.get_payload(decode=True)
                         if encoding:
-                            res = tools.ustr(res)
+                            res = tools.ustr(res, encoding)
                         body += res
 
             msg['body'] = body
