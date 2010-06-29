@@ -34,7 +34,7 @@
                     <field name="balance_end"/>
                     <field name="user_id"/>
                     <field name="state"/>
-                    <button type="object" string="Open" name="button_open"  states="draft" icon="terp-camera_test"/>
+                    <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
                     <button type="object" string="Confirm" name="button_confirm" states="open" icon="terp-gtk-go-back-rtl"/>
                     <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="terp-gtk-stop"/>
                 </tree>
@@ -109,10 +109,10 @@
                         <field name="total_entry_encoding"/>
                         </group>
                         <group colspan="4">
-                        <button name="button_dummy" states="draft" icon="gtk-execute" string="Compute"/>
-                        <button name="button_confirm" states="open" icon="terp-gtk-go-back-rtl" string="Close CashBox" type="object"/>
-                        <button name="button_open" states="draft"  icon="terp-camera_test" string="Open CashBox" type="object"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object"  icon="gtk-cancel" groups="base.group_extended"/>
+                        <button name="button_dummy" states="draft" string="Compute"/>
+                        <button name="button_confirm" states="open" string="Close CashBox" type="object"/>
+                        <button name="button_open" states="draft" string="Open CashBox" type="object"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" groups="base.group_extended"/>
                     </group>
                 </form>
             </field>
@@ -172,10 +172,10 @@
                         <field name="total_entry_encoding"/>
                         </group>
                         <group colspan="4">
-                        <button name="button_dummy" states="draft" icon="gtk-execute" string="Compute"/>
-                        <button name="button_confirm" states="open" icon="terp-gtk-go-back-rtl" string="Close CashBox" type="object"/>
-                        <button name="button_open" states="draft" icon="terp-camera_test" string="Open CashBox" type="object"/>
-                        <button name="button_cancel" states="confirm"  icon="gtk-cancel" string="Cancel" type="object" groups="base.group_extended"/>
+                        <button name="button_dummy" states="draft" string="Compute"/>
+                        <button name="button_confirm" states="open" string="Close CashBox" type="object"/>
+                        <button name="button_open" states="draft" string="Open CashBox" type="object"/>
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" groups="base.group_extended"/>
                     </group>
                 </form>
             </field>
@@ -301,11 +301,10 @@
                         <field name="total_entry_encoding"/>
                       </group>
                       <group colspan="4">
-                        <button name="button_dummy" states="draft" icon="gtk-execute" string="Compute"/>
-                        <button name="button_confirm" states="open" icon="terp-gtk-go-back-rtl" string="Close CashBox" type="object"/>
-                        <button name="button_open" states="draft" icon="terp-camera_test" string="Open CashBox" type="object"/>
-                        <button name="button_cancel" states="confirm"  icon="gtk-cancel" string="Cancel" type="object" groups="base.group_extended"/>
-                        
+                        <button name="button_dummy" states="draft" string="Compute"/>
+                        <button name="button_open" states="draft" string="Open CashBox" type="object" />
+                        <button name="button_confirm" states="open" string="Confirm" type="object" />
+                        <button name="button_cancel" states="confirm" string="Cancel" type="object" groups="base.group_extended"/>
                     </group>
                 </form>
             </field>

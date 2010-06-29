@@ -182,7 +182,7 @@
                             string="Reply to Last Email"
                             name="%(crm.action_crm_send_mail)d"
                             context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
-                            icon="terp-mail-replied" type="action" />
+                            icon="gtk-undo" type="action" />
                         </form>
                         <tree string="Communication history">
                             <field name="date"/>
@@ -194,10 +194,10 @@
                     <button colspan="2" string="Send New Email"
                         name="%(crm.action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
-                        icon="terp-mail-message-new" type="action" />
+                        icon="gtk-go-forward" type="action" />
                     <button colspan="2" string="Forward to Partner"
                         name="%(crm_lead_forward_to_partner_act)d"
-                        icon="terp-mail-forward" type="action" />
+                        icon="gtk-go-forward" type="action" />
                  </page>
 
                 </notebook>
@@ -280,23 +280,23 @@
         <field name="arch" type="xml">
             <search string="Search Leads">
                 <filter icon="terp-check"
-                    string="Current" help="Current Leads"
+                    string="Current"
                     default="1" name="current"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-camera_test"
-                    string="Open" help="Open Leads"
+                    string="Open"
                     domain="[('state','=','open')]"/>
                 <filter icon="terp-gtk-media-pause"
-                    string="Pending" help="Pending Leads"
+                    string="Pending"
                     domain="[('state','=','pending')]"/>
 
                 <separator orientation="vertical"/>
                 <filter icon="terp-go-today" string="Today"
                     domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), \
                             ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 23:59:59'))]"
-                    help="Today's Leads" />
+                    help="Todays' Opportunities" />
                 <filter icon="terp-go-week" string="7 Days"
-                    help="Leads during last 7 days"
+                    help="Opportunities during last 7 days"
                     domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d')),\
                      ('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                 />
@@ -338,9 +338,9 @@
                 <group expand="0" string="Group By...">
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Source" help="Lead's Source" icon="terp-purchase" domain="[]" context="{'group_by':'categ_id'}"/>
+                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
+                    <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
                     <separator orientation="vertical"/>

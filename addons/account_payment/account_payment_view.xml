@@ -45,11 +45,11 @@
             <field name="model">payment.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-				<form string="Payment Type">
-                    <field name="name"/>
+                <form string="Payment Type">
+                    <field name="name" select="1"/>
                     <field name="code"/>
-                    <separator string="Suitable Bank Types" colspan="4"/>
-                    <field name="suitable_bank_types" nolabel="1"  colspan="4"/>
+                    <newline/>
+                    <field colspan="4" name="suitable_bank_types" select="1"/>
                 </form>
             </field>
         </record>

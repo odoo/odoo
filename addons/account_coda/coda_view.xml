@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<openerp>
+<data>
+
+	<record model="ir.ui.view" id="view_account_coda_form">
+		<field name="name">account.coda.form</field>
+		<field name="model">account.coda</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Coda import">
+				<field name="name" />
+				<field name="journal_id" />
+				<field name="date" />
+				<field name="user_id" />
+                                <notebook colspan="4">
+                                    <page string="Log">
+                                       <field name="note" colspan="4"/>
+                                    </page>    
+                                    <page string="Statements">
+                                       <field name="statement_ids" colspan="4"/>
+                                    </page>
+                                </notebook>
+			</form>
+		</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="view_account_coda_tree">
+		<field name="name">account.coda.tree</field>
+		<field name="model">account.coda</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Coda import">
+				<field name="journal_id" />
+				<field name="date" />
+				<field name="user_id" />
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_account_coda">
+		<field name="name">Coda import</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">account.coda</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+	<menuitem name="Coda Statements" parent="account.menu_finance_reporting" id="menu_account_coda" action="action_account_coda" sequence="12"/>
+
+	<menuitem name="Import Coda Statements" action="wizard_account_coda_import" parent="account.menu_finance_periodical_processing"
+	type="wizard"  id="menu_account_coda_wizard" sequence="15"/>
+
+	<act_window name="Coda File"
+		domain="[('statement_ids', 'in', [active_id])]"
+		res_model="account.coda"
+		src_model="account.bank.statement"
+		view_type="form"
+		view_mode="tree,form"
+ 		id="act_account_payment_account_bank_statement"/>
+
+	</data>
+</openerp>

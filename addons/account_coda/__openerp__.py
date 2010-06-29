@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -24,16 +24,13 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Account CODA",
-    "description":"""
-    Module provides functionality to import
+    "description":"""Module provides functionality to import
     bank statements from coda files.
     """,
     "depends":["base", "account"],
-    "demo_xml":["account_coda_demo.xml"],
+    "demo_xml":["coda_demo.xml"],
     "init_xml":[],
-    "update_xml" : ["security/ir.model.access.csv",
-                    "wizard/account_coda_import.xml",
-                    "account_coda_view.xml"],
+    "update_xml" : ["security/ir.model.access.csv","coda_wizard.xml","coda_view.xml"],
     "active":False,
     "installable":True,
 

@@ -238,7 +238,6 @@ class pos_order(osv.osv):
             'invoice_id': False,
             'account_move': False,
             'picking_id': False,
-            'statement_ids':[],
             'nb_print': 0,
             'pickings': []
         })

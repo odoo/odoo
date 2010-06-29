@@ -28,11 +28,11 @@
     Modules to automate letters for unpaid invoices, with multi-level recalls.
 
     You can define your multiple levels of recall through the menu:
-        Financial Management/Configuration/Follow-Ups
+        Financial Management/Configuration/Payment Terms/Follow-Ups
 
     Once it's defined, you can automatically print recalls every day
     through simply clicking on the menu:
-        Financial Management/Periodical Processing/Send followups
+        Financial_Management/Periodical_Processing/Print_Follow-Ups
 
     It will generate a PDF with all the letters according the the
     different levels of recall defined. You can define different policies
@@ -40,7 +40,7 @@
 
 
     Note that if you want to change the followup level for a given partner/account entry, you can do it in the menu:
-        Financial Management/Reporting/Follow-Ups/All receivable entries
+        Financial_Management/Reporting/Follow-Ups/All Receivable Entries
 
 """,
     'author': 'Tiny',
