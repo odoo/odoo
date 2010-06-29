@@ -93,8 +93,9 @@ msgid ""
 "costs in this analytic account: timesheets, expenses, ...You can configure "
 "an automatic invoice rate on analytic accounts."
 msgstr ""
-"이 필드를 체크하면, 귀하의 플랜이 분석계정 (타임시트, 비용)의 비용에 기초하여 인보이스를 자동 생성합니다. 분석 계정 상의 자동 "
-"인보이스 요율을 구성할 수 있습니다."
+"이 필드를 체크하면, 귀하의 플랜이 분석계정 (타임시트, 비용)의 비용에 기초하"
+"여 인보이스를 자동 생성합니다. 분석 계정 상의 자동 인보이스 요율을 구성할 수 "
+"있습니다."
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,init,name:0
@@ -249,7 +250,9 @@ msgstr "통화"
 msgid ""
 "Complete this field only if you want to force to use a specific product. "
 "Keep empty to use the real product that comes from the cost."
-msgstr "특정 상품을 사용하도록 하려면 이 필드를 완성하십시오. 원가로부터 도출되는 실제 상품을 이용하려면 비워 두십시오."
+msgstr ""
+"특정 상품을 사용하도록 하려면 이 필드를 완성하십시오. 원가로부터 도출되는 실"
+"제 상품을 이용하려면 비워 두십시오."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_tree_invoiced
@@ -489,54 +492,130 @@ msgstr "마감되지 않은 인보이스 대상 계정들"
 msgid "Cost"
 msgstr "원가"
 
-#, python-format
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
+msgid "Analytic account to close"
+msgstr "마감할 분석 계정"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity_max:0
+msgid "Max. Quantity"
+msgstr "최대 수량"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,name:0
+msgid "Analytic account"
+msgstr "분석 계정"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,state:0
+msgid "State"
+msgstr "상태"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,date_deadline:0
+msgid "Deadline"
+msgstr "마감시한"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Analytic Account Reporting"
+msgstr "분석 계정 보고"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,partner_id:0
+msgid "Partner"
+msgstr "파트너"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_analytic_account_tree
+#: view:report.analytic.account.close:0
+msgid "Expired analytic accounts"
+msgstr "시효소멸된 분석 계정들"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,quantity:0
+msgid "Quantity"
+msgstr "수량"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
+msgid "Lines to Invoice"
+msgstr "인보이스할 라인들"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: model:ir.ui.menu,name:hr_timesheet_invoice.account_analytic_lines_to_invoice_report
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
+msgstr "인보이스할 분석 라인들"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,sale_price:0
+msgid "Sale price"
+msgstr "판매 가격"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Analytic lines - Reporting"
+msgstr "분석 라인들 - 리포팅"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,name:0
+msgid "Month"
+msgstr "월"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,amount:0
+msgid "Amount"
+msgstr "금액"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
+msgid "Analytic lines to invoice report"
+msgstr "인보이스 리포트로의 분석 라인"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,product_uom_id:0
+msgid "UoM"
+msgstr ""
+
 #~ msgid "Analytic account incomplete"
 #~ msgstr "불완전 분석 계정"
 
-#, python-format
 #~ msgid "Analytic Account incomplete"
 #~ msgstr "불완전 분석 계정"
 
-#, python-format
 #~ msgid "Partner incomplete"
 #~ msgstr "불완전 파트너"
 
-#, python-format
 #~ msgid "Data Insufficient!"
 #~ msgstr "데이터 부족 !"
 
-#, python-format
 #~ msgid "Error !"
 #~ msgstr "에러!"
 
-#, python-format
 #~ msgid "You can not modify an invoiced analytic line!"
 #~ msgstr "인보이스된 분석 라인을 수정할 수는 없습니다."
 
-#, python-format
 #~ msgid "Invoices"
 #~ msgstr "인보이스"
 
-#, python-format
 #~ msgid "Error"
 #~ msgstr "에러"
 
-#, python-format
 #~ msgid "Please fill in the Address field in the Partner: %s."
 #~ msgstr "파트너의 주소 필드를 채우십시오:%s"
 
-#, python-format
 #~ msgid "Balance product needed"
 #~ msgstr "필요한 밸런스 상품"
 
-#, python-format
 #~ msgid "No Records Found for Report!"
 #~ msgstr "리포트를 위한 레코드가 없음!"
 
-#, python-format
 #~ msgid "At least one line has no product !"
 #~ msgstr "한 라인 이상에 상품이 없습니다!"
 
-#, python-format
 #~ msgid "Please fill a Balance product in the wizard"
 #~ msgstr "위저드의 밸런스 상품을 기재하십시오."
