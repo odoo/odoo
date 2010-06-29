@@ -26,15 +26,20 @@ import random, time
 from tools.translate import _
 
 def geo_find(addr):
-    regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
-    url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
-    xml = urllib.urlopen(url).read()
-    if '<error>' in xml:
-        return None
-    result = re.search(regex, xml, re.M|re.I)
-    if not result:
-        return None
-    return float(result.group(1)),float(result.group(2))
+    try: 
+        regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
+        url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
+        xml = urllib.urlopen(url).read()
+        if '<error>' in xml:
+            return None
+        result = re.search(regex, xml, re.M|re.I)
+        if not result:
+            return None
+        return float(result.group(1)),float(result.group(2))
+    except Exception, e:
+        raise osv.except_osv(_('Network error'), 
+                             _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
+    
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
@@ -82,7 +87,10 @@ class crm_lead(osv.osv):
                     email = lead.partner_assigned_id.address[0].email
                 if not email:
                     raise osv.except_osv(_('Error !'), _('No email on the partner assigned to this opportunity'))
-                values = fobj.default_get(cr, uid, ['email_from'], context=context)
+
+                values = fobj.default_get(cr, uid, ['name', 'email_from'], context=context)
+                if not values.get('email_from'):
+                    raise osv.except_osv(_('Error !'), _('Please set an email address in your user preferences'))
                 values.update({
                     'history': 'whole',
                     'email_to': email,
