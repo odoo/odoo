@@ -10,12 +10,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Send New Mail" col="4">
-                    <separator string="Send New Mail" colspan="4"/>
-                    <group colspan="4" col="6">
-                    <field name="email_from" />
-                    <field name="email_to"  />
-                    <field name="email_cc" />
-                    <field name="subject" colspan="6"/>
+                    <group colspan="4" col="2">
+                    <field name="email_from"/>
+                    <field name="email_to" />
+                    <field name="email_cc"/>
+                    <field name="subject"/>
                     </group>
                     <notebook colspan="6">
                         <page string="Message">

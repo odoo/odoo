@@ -23,7 +23,6 @@ from osv import fields, osv
 
 class wiki_create_menu(osv.osv_memory):
     """ Create Menu """
-
     _name = "wiki.create.menu"
     _description = "Wizard Create Menu"
 
@@ -42,9 +41,13 @@ class wiki_create_menu(osv.osv_memory):
 
         """
         mod_obj = self.pool.get('ir.model.data')
-        action_id = mod_obj._get_id(cr, uid, 'wiki', 'action_view_wiki_wiki_page_open')
-
         for menu in self.browse(cr, uid, ids):
+            action_id = mod_obj._get_id(cr, uid, 'wiki', 'action_view_wiki_wiki_page_open')
+            action_id = mod_obj.copy(cr, uid, action_id, context=context, default={
+                'domain':"[('group_id','=',"+str(context.get('active_id',False))+"]",
+                "name": menu.menu_name
+            })
+
             menu_id = self.pool.get('ir.ui.menu').create(cr, uid, {
                             'name': menu.menu_name,
                             'parent_id':menu.menu_parent_id.id,

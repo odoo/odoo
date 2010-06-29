@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-	<!--Lead Stage Form view -->
+    <!--Lead Stage Form view -->
 
     <record id="crm_lead_stage_act" model="ir.actions.act_window">
         <field name="name">Lead Stages</field>
@@ -18,7 +18,7 @@
         parent="menu_crm_config_lead" />
 
 
-    	<!--  Resource Type Form View -->
+        <!--  Resource Type Form View -->
 
         <record id="crm_lead_resource_act" model="ir.actions.act_window">
             <field name="name">Lead Resource Type</field>
@@ -34,7 +34,7 @@
             groups="base.group_extended" sequence="2"
             parent="menu_crm_config_lead" />
 
-		<!-- CRM Lead Form View  -->
+        <!-- CRM Lead Form View  -->
 
         <record model="ir.ui.view" id="crm_case_form_view_leads">
         <field name="name">CRM - Leads Form</field>
@@ -147,6 +147,11 @@
                         <field name="date_closed"/>
                     </group>
                     <group colspan="2" col="2">
+                        <separator string="Mailings" colspan="2" col="2"/>
+                        <field name="optin"/>
+                        <field name="optout"/>
+                    </group>
+                    <group colspan="2" col="2">
                         <separator string="Statistics" colspan="2" col="2"/>
                         <field name="day_open"/>
                         <field name="day_close"/>
@@ -160,9 +165,10 @@
                     <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                         <form string="Communication history">
                             <group col="6" colspan="4">
-                                <field name="date"/>
-                                <field name="email_to"/>
                                 <field name="email_from"/>
+                                <field name="email_to"/>
+                                <field name="date"/>
+                                <field name="name" colspan="6"/>
                             </group>
                             <notebook colspan="4">
                                 <page string="Details">
@@ -176,7 +182,7 @@
                             string="Reply to Last Email"
                             name="%(crm.action_crm_send_mail)d"
                             context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
-                            icon="gtk-undo" type="action" />
+                            icon="terp-mail-replied" type="action" />
                         </form>
                         <tree string="Communication history">
                             <field name="date"/>
@@ -188,10 +194,10 @@
                     <button colspan="2" string="Send New Email"
                         name="%(crm.action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
-                        icon="gtk-go-forward" type="action" />
+                        icon="terp-mail-message-new" type="action" />
                     <button colspan="2" string="Forward to Partner"
                         name="%(crm_lead_forward_to_partner_act)d"
-                        icon="gtk-go-forward" type="action" />
+                        icon="terp-mail-forward" type="action" />
                  </page>
 
                 </notebook>
@@ -199,18 +205,19 @@
         </field>
     </record>
 
-	<!-- CRM Lead Tree View -->
+    <!-- CRM Lead Tree View -->
 
     <record model="ir.ui.view" id="crm_case_tree_view_leads">
-        <field name="name">CRM - Leads Tree</field>
+        <field name="name">Leads</field>
         <field name="model">crm.lead</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Leads Tree"  colors="blue:state=='pending';grey:state in ('cancel', 'done');red:date_deadline &lt; current_date">
+            <tree string="Leads"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
                 <field name="date_deadline" invisible="1"/>
                 <field name="create_date"/>
-                <field name="partner_name"/>
                 <field name="name"/>
+                <field name="partner_name"/>
+                <field name="country_id" invisible="context.get('invisible_country', True)" />
                 <field name="email_from"/>
                 <field name="phone"/>
 
@@ -224,8 +231,7 @@
                 <button name="stage_next" string="Next"
                     states="open,pending" type="object"
                     icon="gtk-go-forward" />
-                <field name="section_id"
-                    invisible="context.get('invisible_section', True)" />
+                <field name="section_id" invisible="context.get('invisible_section', True)" />
                 <field name="user_id" />
                 <field name="state" />
                 <button name="case_open" string="Open"
@@ -248,7 +254,7 @@
         </field>
     </record>
 
-	<!-- CRM Lead Calendar View -->
+    <!-- CRM Lead Calendar View -->
 
     <record model="ir.ui.view" id="crm_case_calendar_view_leads">
         <field name="name">CRM - Leads Calendar</field>
@@ -256,17 +262,16 @@
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <calendar string="Meeting For Leads Generation"
-                date_start="create_date" color="user_id"
-                date_delay="duration">
+            <calendar string="Leads Generation"
+                date_start="create_date" color="user_id">
                 <field name="name" />
                 <field name="partner_name" />
-                <field name="partner_contact" />
+                <field name="partner_address_id" />
             </calendar>
         </field>
     </record>
 
-	<!-- CRM Lead Search View -->
+    <!-- CRM Lead Search View -->
 
     <record id="view_crm_case_leads_filter" model="ir.ui.view">
         <field name="name">CRM - Leads Search</field>
@@ -275,27 +280,28 @@
         <field name="arch" type="xml">
             <search string="Search Leads">
                 <filter icon="terp-check"
-                    string="Current"
+                    string="Current" help="Current Leads"
                     default="1" name="current"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-camera_test"
-                    string="Open"
+                    string="Open" help="Open Leads"
                     domain="[('state','=','open')]"/>
                 <filter icon="terp-gtk-media-pause"
-                    string="Pending"
+                    string="Pending" help="Pending Leads"
                     domain="[('state','=','pending')]"/>
 
                 <separator orientation="vertical"/>
                 <filter icon="terp-go-today" string="Today"
                     domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), \
                             ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 23:59:59'))]"
-                    help="Todays' Opportunities" />
+                    help="Today's Leads" />
                 <filter icon="terp-go-week" string="7 Days"
-                    help="Opportunities during last 7 days"
+                    help="Leads during last 7 days"
                     domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d')),\
                      ('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                 />
                 <separator orientation="vertical"/>
+                <field name="name"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
                 <field name="user_id">
@@ -315,12 +321,26 @@
                         help="Show Sales Team"/>
                 </field>
                 <newline/>
+                <group  expand="0" string="Extended options..." groups="base.group_extended">
+                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                      <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+                      <separator orientation="vertical"/>
+                      <field name="country_id" context="{'invisible_country': False}">
+                          <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
+                      </field>
+                      <separator orientation="vertical"/>
+                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                      <newline/>
+                      <field name="create_date" string="Creation Date"/>
+                      <field name="date_closed"/>
+                </group>
+                <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'categ_id'}"/>
+                    <filter string="Source" help="Lead's Source" icon="terp-purchase" domain="[]" context="{'group_by':'categ_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
+                    <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                     <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter string="Referrer" icon="terp-personal" domain="[]" context="{'group_by':'referred'}"/>
                     <separator orientation="vertical"/>
@@ -330,6 +350,5 @@
            </search>
         </field>
     </record>
-
 </data>
 </openerp>

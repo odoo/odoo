@@ -23,16 +23,11 @@
     "name" : "Accounting Voucher Entries",
     "version" : "1.0",
     "author" : 'Tiny & Axelor',
-    "description": """
-    Indian Accounting module includes all the basic requirenments of
-    Basic Accounting, plus new things which are available :
-    * Indian Account Chart
-    * New Invoice - (Local, Retail)
-    * Invoice Report
-    * Tax structure
-    * Journals
-    * VAT Declaration report
-    * Accounting Periods
+    "description": """Account Voucher module includes all the basic requirements of
+    Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc...
+    * Voucher Entry
+    * Voucher Receipt
+    * Cheque Register
     """,
     "category" : "Generic Modules/Accounting",
     "website" : "http://tinyerp.com",
