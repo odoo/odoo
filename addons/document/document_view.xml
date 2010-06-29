@@ -66,6 +66,7 @@
         name="Storage Media"
         action="action_document_storage_form"
         id="menu_document_storage_media"
+        groups="base.group_extended"
         parent="menu_document_management_configuration"/>
 
     <record model="ir.ui.view" id="view_document_directory_form">
@@ -73,10 +74,10 @@
         <field name="model">document.directory</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Directories">
+            <form string="Directories" col="6">
                 <field name="name" select="1" colspan="4"/>
                 <field name="parent_id"/>
-                <field name="storage_id" />
+                <field name="storage_id" widget="selection" />
                 <field name="user_id"/>
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 <notebook colspan="4">
@@ -250,10 +251,12 @@
                         </group>
                     </group>
                     <group col="2" colspan="2">
-                        <separator string="Attached To" colspan="2"/>
-                            <field name="res_model" select="2"/>
-                            <field name="res_id"/>
+                    <field name="res_id" invisible="True"/>
+                        <group col="2" colspan="2" attrs="{'invisible': [('res_id','=',0)]}">
+                            <separator string="Attached To" colspan="2"/>
+                            <field name="res_model" readonly="True" invisible="True"/>
                             <field name="res_name" readonly="1"/>
+                        </group>
                         <separator string="Related to" colspan="2"/>
                             <field name="partner_id"/>
                     </group>
