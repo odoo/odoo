@@ -793,7 +793,7 @@ class DTPHandler(asyncore.dispatcher):
         if self.transfer_finished:
             self.cmd_channel.respond("226 Transfer complete.")
             if self.file_obj:
-                fname = self.cmd_channel.fs.fs2ftp(self.file_obj.name)
+                fname = self.file_obj.name
                 self.cmd_channel.log('"%s" %s.' %(fname, action))
         else:
             tot_bytes = self.get_transmitted_bytes()

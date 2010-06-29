@@ -14,7 +14,8 @@ import netsvc
 import os
 from service import security
 from osv import osv
-from document.nodes import node_res_dir, node_res_obj
+#from document.nodes import node_res_dir, node_res_obj
+from document.nodes import get_node_context
 import stat
 
 def _get_month_name(month):
@@ -55,50 +56,6 @@ def _to_decode(s):
                 return s.decode('ascii')
             except UnicodeError:
                 return s  
-    
-			
-class file_wrapper(StringIO.StringIO):
-    def __init__(self, sstr='', ressource_id=False, dbname=None, uid=1, name=''):
-        StringIO.StringIO.__init__(self, sstr)
-        self.ressource_id = ressource_id
-        self.name = name
-        self.dbname = dbname
-        self.uid = uid
-    def close(self, *args, **kwargs):
-        db,pool = pooler.get_db_and_pool(self.dbname)
-        cr = db.cursor()
-        cr.commit()
-        try:
-            val = self.getvalue()
-            val2 = {
-                'datas': base64.encodestring(val),
-                'file_size': len(val),
-            }
-            pool.get('ir.attachment').write(cr, self.uid, [self.ressource_id], val2)
-        finally:
-            cr.commit()
-            cr.close()
-        StringIO.StringIO.close(self, *args, **kwargs)
-
-class content_wrapper(StringIO.StringIO):
-    def __init__(self, dbname, uid, pool, node, name=''):
-        StringIO.StringIO.__init__(self, '')
-        self.dbname = dbname
-        self.uid = uid
-        self.node = node
-        self.pool = pool
-        self.name = name
-    def close(self, *args, **kwargs):
-        db,pool = pooler.get_db_and_pool(self.dbname)
-        cr = db.cursor()
-        cr.commit()
-        try:
-            getattr(self.pool.get('document.directory.content'), 'process_write')(cr, self.uid, self.node, self.getvalue())
-        finally:
-            cr.commit()
-            cr.close()
-        StringIO.StringIO.close(self, *args, **kwargs)
-
 
 class abstracted_fs(object):
     """A class used to interact with the file system, providing a high
@@ -186,14 +143,16 @@ class abstracted_fs(object):
 
     # Ok
     def ftp2fs(self, path_orig, data):
-        path = self.ftpnorm(path_orig)        
+        path = self.ftpnorm(path_orig)
         if not data or (path and path=='/'):
             return None               
         path2 = filter(None,path.split('/'))[1:]
-        (cr, uid, pool) = data
+        (cr, uid) = data
         if len(path2):     
-            path2[-1]=_to_unicode(path2[-1])        
-        res = pool.get('document.directory').get_object(cr, uid, path2[:])
+            path2[-1]=_to_unicode(path2[-1])
+       
+        ctx = get_node_context(cr, uid, {})
+        res = ctx.get_uri(cr, path2[:])
         if not res:
             raise OSError(2, 'Not such file or directory.')
         return res
@@ -302,15 +261,13 @@ class abstracted_fs(object):
             if cr:
                 cr.close()
 
-    # Ok
     def open(self, node, mode):
         if not node:
             raise OSError(1, 'Operation not permited.')
         # Reading operation
         cr = pooler.get_db(node.context.dbname).cursor()
         try:
-            res = StringIO.StringIO(node.get_data(cr))
-            res.name = node
+            res = node.open_data(cr, mode)
         finally:
             cr.close()
         return res
@@ -401,7 +358,6 @@ class abstracted_fs(object):
         finally:
             if cr: cr.close()
 
-    # Ok
     def close_cr(self, data):
         if data:
             data[0].close()
@@ -415,7 +371,7 @@ class abstracted_fs(object):
         if dbname not in self.db_list():
             return None
         try:
-            db,pool = pooler.get_db_and_pool(dbname)
+            db = pooler.get_db(dbname)
         except Exception:
             raise OSError(1, 'Operation not permited.')
         cr = db.cursor()
@@ -427,9 +383,22 @@ class abstracted_fs(object):
         if not uid:
             cr.close()
             raise OSError(2, 'Authentification Required.')
-        return cr, uid, pool
+        return cr, uid
 
-    # Ok
+    def get_node_cr_uid(self, node):
+        """ Get cr, uid, pool from a node
+        """
+        db = pooler.get_db(node.context.dbname)
+        return db.cursor(), node.context.uid
+        
+    def get_node_cr(self, node):
+        """ Get the cursor for the database of a node
+        
+        The cursor is the only thing that a node will not store 
+        persistenly, so we have to obtain a new one for each call.
+        """
+        return self.get_node_cr_uid(node)[0]
+        
     def listdir(self, path):
         """List the content of a directory."""
         class false_node(object):
@@ -447,32 +416,21 @@ class abstracted_fs(object):
                 except osv.except_osv:
                     pass
             return result
-        cr = pooler.get_db(path.context.dbname).cursor()        
+        cr = self.get_node_cr(path)
         res = path.children(cr)
         cr.close()
         return res
 
-    # Ok
     def rmdir(self, node):
         """Remove the specified directory."""
         assert node
-        cr = pooler.get_db(node.context.dbname).cursor()
-        uid = node.context.uid
-        pool = pooler.get_pool(node.context.dbname)        
-        object = node.context._dirobj.browse(cr, uid, node.dir_id)
-        if not object:
-            raise OSError(2, 'Not such file or directory.')
-        if object._table_name == 'document.directory':            
-            if node.children(cr):
-                raise OSError(39, 'Directory not empty.')
-            res = pool.get('document.directory').unlink(cr, uid, [object.id])
-        else:
-            raise OSError(1, 'Operation not permited.')
+        cr = self.get_node_cr(node)
+        try:
+            node.rmcol(cr)
+            cr.commit()
+        finally:
+            cr.close()
 
-        cr.commit()
-        cr.close()
-
-    # Ok
     def remove(self, node):
         assert node
         if node.type == 'collection':
@@ -484,20 +442,12 @@ class abstracted_fs(object):
     def rmfile(self, node):
         """Remove the specified file."""
         assert node
-        if node.type == 'collection':
-            return self.rmdir(node)
-        uid = node.context.uid
-        pool = pooler.get_pool(node.context.dbname)
-        cr = pooler.get_db(node.context.dbname).cursor()
-        object = pool.get('ir.attachment').browse(cr, uid, node.file_id)
-        if not object:
-            raise OSError(2, 'Not such file or directory.')
-        if object._table_name == 'ir.attachment':
-            res = pool.get('ir.attachment').unlink(cr, uid, [object.id])
-        else:
-            raise OSError(1, 'Operation not permited.')
-        cr.commit()
-        cr.close()
+        cr = self.get_node_cr(node)
+        try:
+            node.rm(cr)
+            cr.commit()
+        finally:
+            cr.close()
 
     # Ok
     def rename(self, src, dst_basedir, dst_basename):
