@@ -21,6 +21,7 @@
 
 import time
 from report import report_sxw
+import pooler
 
 #
 # Use period and Journal for selection or resources
@@ -32,7 +33,9 @@ class journal_print(report_sxw.rml_parse):
             'time': time,
             'lines': self.lines,
             'sum_debit': self._sum_debit,
-            'sum_credit': self._sum_credit
+            'sum_credit': self._sum_credit,
+            'get_start_date': self.get_start_date,
+            'get_end_date': self.get_end_date
         })
 
     def lines(self, period_id, journal_id, *args):
@@ -60,6 +63,14 @@ class journal_print(report_sxw.rml_parse):
     def _sum_credit(self, period_id, journal_id):
         self.cr.execute('select sum(credit) from account_move_line where period_id=%s and journal_id=%s and state<>\'draft\'', (period_id, journal_id))
         return self.cr.fetchone()[0] or 0.0
+    
+    def get_start_date(self, form):
+        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
+        
+    def get_end_date(self, form):
+        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
+
+    
 report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/central_journal.rml', parser=journal_print, header=False)
 report_sxw.report_sxw('report.account.central.journal.wiz', 'account.journal.period', 'addons/account/report/wizard_central_journal.rml', parser=journal_print, header=False)
 

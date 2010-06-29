@@ -43,11 +43,35 @@ class partner_balance(report_sxw.rml_parse):
             'get_company': self._get_company,
             'get_currency': self._get_currency,
             'comma_me' : self.comma_me,
+            'get_fiscalyear': self.get_fiscalyear,
+            'get_periods':self.get_periods,
         })
         ## Compute account list one time
     #
     # Date Management
     #
+    
+    def get_periods(self, form):
+            result=''
+            if form.has_key('periods') and form['periods']:
+                period_ids = form['periods']
+                per_ids = self.pool.get('account.period').browse(self.cr, self.uid, form['periods'])
+                for r in per_ids:
+                    if r == per_ids[len(per_ids)-1]:
+                        result+=r.name+". "
+                    else:
+                        result+=r.name+", "
+            else:
+                fy_obj = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear'])
+                res = fy_obj.period_ids
+                len_res = len(res)
+                for r in res:
+                    if r == res[len_res-1]:
+                        result+=r.name+". "
+                    else:
+                        result+=r.name+", "
+            return str(result and result[:-1]) or 'ALL'
+    
     def date_range(self, start, end):
         if not start or not end:
             return []
@@ -294,7 +318,7 @@ class partner_balance(report_sxw.rml_parse):
                     new_header['enlitige'] = tot_enlitige
                     new_header['balance'] = float(tot_sdebit) - float(tot_scredit)
                     new_header['type'] = 3
-                    ##
+                    ##get_fiscalyear
                     ##
 
                     completearray.append(new_header)
@@ -468,8 +492,12 @@ class partner_balance(report_sxw.rml_parse):
     def _get_currency(self, form):
         return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
 
+    def get_fiscalyear(self,form):
+        print "ffffffffffffff",form
+        return pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear']).name
+
 report_sxw.report_sxw('report.account.partner.balance', 'res.partner',
     'account/report/partner_balance.rml',parser=partner_balance,
-    header=False)
+    header=0)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

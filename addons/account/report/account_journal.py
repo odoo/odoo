@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-
+import pooler
 from report import report_sxw
 
 #
@@ -42,7 +42,10 @@ class journal_print(report_sxw.rml_parse):
             'time': time,
             'lines': self.lines,
             'sum_debit': self._sum_debit,
-            'sum_credit': self._sum_credit
+            'sum_credit': self._sum_credit,
+            'get_start_period': self.get_start_period,
+            'get_end_period': self.get_end_period,
+            'get_account': self.get_account
         })
 
     def lines(self, period_id, journal_id, sort_selection='date', *args):
@@ -61,6 +64,15 @@ class journal_print(report_sxw.rml_parse):
     def _sum_credit(self, period_id, journal_id):
         self.cr.execute('select sum(credit) from account_move_line where period_id=%s and journal_id=%s'+self.query_get_clause+' and state<>\'draft\'', (period_id, journal_id))
         return self.cr.fetchone()[0] or 0.0
+    
+    def get_start_period(self, form):
+        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
+        
+    def get_end_period(self, form):
+        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
+    
+    def get_account(self, form):
+        return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr,self.uid,form['chart_account_id']).name
 
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
