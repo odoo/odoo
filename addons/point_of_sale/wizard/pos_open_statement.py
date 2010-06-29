@@ -65,38 +65,42 @@ class pos_open_statement(osv.osv_memory):
             cr.execute(sql)
             st_id = cr.fetchone()
             number = ''
-            if journal.statement_sequence_id:
+            if journal.sequence_id:
                 number = sequence_obj.get_id(cr, uid, journal.id)
             else:
                 number = sequence_obj.get(cr, uid,
                                 'account.bank.statement')
 
-    #        statement_id=statement_obj.create(cr,uid,{'journal_id':journal.id,
-    #                                                  'company_id':company_id,
-    #                                                  'user_id':uid,
-    #                                                  'state':'open',
-    #                                                  'name':number
-    #                                                  })
-            period = statement_obj._get_period(cr, uid, context) or None
-            cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')"%(journal.id, company_id, uid, number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
-            cr.commit()
-            cr.execute("select id from account_bank_statement where journal_id=%d and company_id=%d and user_id=%d and state='open' and name='%s'"%(journal.id, company_id, uid, number))
-            statement_id = cr.fetchone()[0]
-            if st_id:
-                statemt_id = statement_obj.browse(cr, uid, st_id[0])
-                list_statement.append(statemt_id.id)
-                if statemt_id and statemt_id.ending_details_ids:
-                    statement_obj.write(cr, uid, [statement_id], {
-                        'balance_start': statemt_id.balance_end,
-                        'state': 'open',
-                    })
-                    if statemt_id.ending_details_ids:
-                        for i in statemt_id.ending_details_ids:
-                            c = singer_obj.create(cr, uid, {
-                                'pieces': i.pieces,
-                                'number': i.number,
-                                'starting_id': statement_id,
-                            })
+
+            statement_id=statement_obj.create(cr,uid,{'journal_id':journal.id,
+                                                      'company_id':company_id,
+                                                      'user_id':uid,
+                                                      'state':'open',
+                                                      'name':number
+                                                      })
+            statement_obj.button_open(cr,uid,[statement_id],context)
+
+#            period = statement_obj._get_period(cr, uid, context) or None
+#            cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')"%(journal.id, company_id, uid, number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
+#            cr.commit()
+#            cr.execute("select id from account_bank_statement where journal_id=%d and company_id=%d and user_id=%d and state='open' and name='%s'"%(journal.id, company_id, uid, number))
+#            statement_id = cr.fetchone()[0]
+#            print "statement_id",statement_id
+#            if st_id:
+#                statemt_id = statement_obj.browse(cr, uid, st_id[0])
+#                list_statement.append(statemt_id.id)
+#                if statemt_id and statemt_id.ending_details_ids:
+#                    statement_obj.write(cr, uid, [statement_id], {
+#                        'balance_start': statemt_id.balance_end,
+#                        'state': 'open',
+#                    })
+#                    if statemt_id.ending_details_ids:
+#                        for i in statemt_id.ending_details_ids:
+#                            c = statement_obj.create(cr, uid, {
+#                                'pieces': i.pieces,
+#                                'number': i.number,
+#                                'starting_id': statement_id,
+#                            })
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_bank_statement_tree')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {

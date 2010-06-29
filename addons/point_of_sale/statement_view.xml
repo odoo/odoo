@@ -21,17 +21,17 @@
                 </xpath>
             </field>
         </record>
-        
+
         <menuitem name="Cash Register" parent="point_of_sale.menu_point_root" id="menu_cash_register" sequence="4"/>
-        
-        <menuitem 
-            name="All Cash Registers" 
+
+        <menuitem
+            name="All Cash Registers"
             parent="menu_cash_register"
-            action="account.action_view_bank_statement_tree" 
-            id="menu_all_menu_cash_register" 
+            action="account.action_view_bank_statement_tree"
+            id="menu_all_menu_cash_register"
             sequence="4"
         />
-        
+
         <record id="action_new_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Cash Register</field>
             <field name="type">ir.actions.act_window</field>
@@ -54,14 +54,49 @@
             <field name="view_id" ref="account.view_bank_statement_form2"/>
             <field name="act_window_id" ref="action_new_bank_statement_tree"/>
         </record>
-        
-        <menuitem 
-            name="Open a Cash Registers" 
+
+        <record id="action_new_bank_statement_all_tree" model="ir.actions.act_window">
+            <field name="name">All Register</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="account.view_bank_statement_tree"/>
+            <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
+        </record>
+
+        <menuitem
+            name="All Registers"
             parent="menu_cash_register"
-            action="action_new_bank_statement_tree" 
-            id="menu_new_cash_register" 
+            action="action_new_bank_statement_all_tree"
+            id="menu_all_menu_all_register"
+            sequence="4"
+        />
+
+        <menuitem
+            name="Open a Cash Registers"
+            parent="menu_cash_register"
+            action="action_new_bank_statement_tree"
+            id="menu_new_cash_register"
             sequence="3"
         />
+
+        <menuitem name="Opening Operations" parent="point_of_sale.menu_point_root"
+            id="menu_point_open_config" sequence="1"/>
+        <menuitem
+            name="Open my Cash Registers" parent="menu_point_open_config"
+            string="Open my Cash Register"
+            action="action_pos_open_statement"
+            id="menu_open_statement" sequence="1" />
+
+        <menuitem name="Closing Operations" parent="point_of_sale.menu_point_root"
+            id="menu_point_close_config" sequence="3"/>
+
+        <menuitem
+            name="Close my Cash Register" parent="menu_point_close_config"
+            string="Close my Cash Register"
+            action="action_pos_close_statement"
+            id="menu_close_statement" sequence="2" />
 
     </data>
 </openerp>
