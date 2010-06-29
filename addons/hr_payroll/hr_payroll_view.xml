@@ -472,13 +472,13 @@
                     </notebook>
                     <group col="9" colspan="4">
                         <field name="state"/>
-                        <button string="Compute Sheet" name="compute_sheet" states="new"/>
-                        <button string="Recompute Sheet" name="compute_sheet" type="object" states="draft"/>
-                        <button string="Verify Sheet" name="verify_sheet" states="draft"/>
-                        <button string="Complete HR Checking" name="verify_twice_sheet" states="hr_check"/>
-                        <button string="Complete Accountant Checking" name="final_verify_sheet" states="accont_check"/>
-                        <button string="Pay Salary" name="process_sheet" states="confirm"/>
-                        <button string="Cancel" name="cancel_sheet" states="draft,hr_check,accont_check,confirm"/>
+                        <button string="Compute Sheet" name="compute_sheet" icon="terp-document-new" states="new"/>
+                        <button string="Recompute Sheet" name="compute_sheet"  icon="gtk-convert" type="object" states="draft"/>
+                        <button string="Verify Sheet" name="verify_sheet" icon="gtk-apply" states="draft"/>
+                        <button string="Complete HR Checking"  icon="gtk-apply" name="verify_twice_sheet" states="hr_check"/>
+                        <button string="Complete Accountant Checking" name="final_verify_sheet" icon="gtk-apply" states="accont_check"/>
+                        <button string="Pay Salary" icon="terp-document-new"  name="process_sheet" states="confirm"/>
+                        <button string="Cancel" name="cancel_sheet" icon="gtk-cancel" states="draft,hr_check,accont_check,confirm"/>
                         <button string="Set to Draft" name="set_to_draft" states="cancel"/>
                     </group>
                 </form>
@@ -723,9 +723,9 @@
                     </notebook>
                     <group col="6" colspan="6">
                         <field name="state"/>
-                        <button name="confirm_sheet" string="Confirm Sheet" states="draft" type="object"/>
-                        <button name="set_to_draft" string="Set to Draft" states="cancel,confirm" type="object"/>
-                        <button name="cancel_sheet" string="Cancel Sheet" states="draft" type="object"/>
+                        <button name="confirm_sheet"  icon="gtk-apply" string="Confirm Sheet" states="draft" type="object"/>
+                        <button name="set_to_draft" string="Set to Draft"  icon="gtk-convert"  states="cancel,confirm" type="object"/>
+                        <button name="cancel_sheet" string="Cancel Sheet" states="draft" icon="gtk-cancel"  type="object"/>
                     </group>
                 </form>
             </field>
@@ -802,13 +802,13 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state"/>
-                        <button string="Compute" name="compute_sheet" states="new" type="object"/>
-                        <button string="Verify Sheet" name="verify_sheet" states="draft" type="object"/>
-                        <button string="Complete HR Checking" name="verify_twice_sheet" type="object" states="hr_check"/>
-                        <button string="Complete Accountant Checking" name="final_verify_sheet" states="accont_check" type="object"/>
-                        <button string="Pay Salary" name="process_sheet" states="confirm" type="object"/>
-                        <button string="Cancel" name="cancel_sheet" states="draft,hr_check,accont_check,confirm" type="object"/>
-                        <button string="Set to Draft" name="set_to_draft" states="cancel" type="object"/>
+                        <button string="Compute" name="compute_sheet" states="new" icon="terp-document-new" type="object"/>
+                        <button string="Verify Sheet" icon="gtk-ok" name="verify_sheet" states="draft" type="object"/>
+                        <button string="Complete HR Checking"  icon="gtk-apply" name="verify_twice_sheet" type="object" states="hr_check"/>
+                        <button string="Complete Accountant Checking" icon="gtk-apply"  name="final_verify_sheet" states="accont_check" type="object"/>
+                        <button string="Pay Salary" icon="gtk-apply"  name="process_sheet" states="confirm" type="object" />
+                        <button string="Cancel" name="cancel_sheet" icon="gtk-cancel" states="draft,hr_check,accont_check,confirm" type="object"/>
+                        <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" />
                     </group>
                 </form>
             </field>
