@@ -127,7 +127,7 @@ class mailgate_thread(osv.osv):
                     'message_id': message_id, 
                     'attachment_ids': [(6, 0, attachments)]
                 }
-            res = obj.create(cr, uid, data, context)
+            obj.create(cr, uid, data, context)
         return True
 mailgate_thread()
 
@@ -139,24 +139,32 @@ class mailgate_message(osv.osv):
     _description = 'Mailgateway Message'
     _order = 'id desc'
     _columns = {
-        'name':fields.char('Subject', size=128), 
-        'model': fields.char('Object Name', size=128), 
-        'res_id': fields.integer('Resource ID'),
+        'name':fields.char('Subject', size=128),
+        'model': fields.char('Object Name', size=128, select=1),
+        'res_id': fields.integer('Resource ID', select=1),
         'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
-        'date': fields.datetime('Date'), 
+        'date': fields.datetime('Date'),
         'history': fields.boolean('Is History?'),
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
-        'message': fields.text('Description'), 
-        'email_from': fields.char('Email From', size=84), 
-        'email_to': fields.char('Email To', size=84), 
-        'email_cc': fields.char('Email CC', size=84), 
-        'email_bcc': fields.char('Email BCC', size=84), 
+        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
+        'message': fields.text('Description'),
+        'email_from': fields.char('Email From', size=84),
+        'email_to': fields.char('Email To', size=84),
+        'email_cc': fields.char('Email CC', size=84),
+        'email_bcc': fields.char('Email BCC', size=84),
         'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email.", select=True),
         'references': fields.text('References', readonly=True, help="Referencess emails."),
-        'description': fields.text('Description'), 
-        'partner_id': fields.many2one('res.partner', 'Partner', required=False), 
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'), 
+        'description': fields.text('Description'),
+        'partner_id': fields.many2one('res.partner', 'Partner', required=False),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
     }
+
+    def init(self, cr):
+        cr.execute("""SELECT indexname
+                      FROM pg_indexes
+                      WHERE indexname = 'mailgate_message_res_id_model_idx'""")
+        if not cr.fetchone():
+            cr.execute("""CREATE INDEX mailgate_message_res_id_model_idx
+                          ON mailgate_message (model, res_id)""")
 
 mailgate_message()
 
@@ -214,7 +222,7 @@ class mailgate_tool(osv.osv_memory):
                         'user_id': uid, 
                         'attachment_ids': [(6, 0, attach)]
             }
-            msg_id = msg_pool.create(cr, uid, msg_data, context=context)
+            msg_pool.create(cr, uid, msg_data, context=context)
         return True
 
     def email_forward(self, cr, uid, model, res_ids, msg, email_error=False, context=None):
@@ -289,7 +297,7 @@ class mailgate_tool(osv.osv_memory):
                         }
                         att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
 
-            return res_id
+            return res_id, att_ids
 
         # Warning: message_from_string doesn't always work correctly on unicode,
         # we must use utf-8 strings here :-(
@@ -346,7 +354,6 @@ class mailgate_tool(osv.osv_memory):
         attachments = {}
         if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
             body = ""
-            counter = 1
             for part in msg_txt.walk():
                 if part.get_content_maintype() == 'multipart':
                     continue
@@ -365,7 +372,7 @@ class mailgate_tool(osv.osv_memory):
                             body = tools.html2plaintext(content)
                         elif part.get_content_subtype() == 'plain':
                             body = content
-                elif part.get_content_maintype()=='application' or part.get_content_maintype()=='image' or part.get_content_maintype()=='text':
+                elif part.get_content_maintype() in ('application', 'image', 'text'):
                     filename = part.get_filename();
                     if filename :
                         attachments[filename] = part.get_payload(decode=True)
@@ -378,6 +385,7 @@ class mailgate_tool(osv.osv_memory):
             msg['body'] = body
             msg['attachments'] = attachments
         res_ids = []
+        attachment_ids = []
         new_res_id = False
         if msg.get('references'):
             references = msg.get('references')
@@ -404,7 +412,7 @@ class mailgate_tool(osv.osv_memory):
                         model_pool.message_update(cr, uid, [res_id], vals, msg, context=context)
 
         if not len(res_ids):
-            new_res_id = create_record(msg)
+            new_res_id, attachment_ids = create_record(msg)
             res_ids = [new_res_id]
         # Store messages
         context.update({'model' : model})
@@ -416,10 +424,10 @@ class mailgate_tool(osv.osv_memory):
                             email_from = msg.get('from'),
                             message_id = msg.get('message-id'),
                             references = msg.get('references', False),
-                            attach = msg.get('attachments', {}).items(),
+                            attach = attachments.items(),
                             context = context)
         else:
-            self.history(cr, uid, model, res_ids, msg, att_ids, context=context)
+            self.history(cr, uid, model, res_ids, msg, attachment_ids, context=context)
         self.email_forward(cr, uid, model, res_ids, msg_txt)
         return new_res_id
 
