@@ -285,11 +285,11 @@ class OerpAuthProxy(AuthProxy):
             self.provider.log("Failing authorization after 5 requests w/o password")
             raise AuthRejectedExc("Authorization failed.")
         self.auth_tries += 1
-        raise AuthRequiredExc(atype = 'Basic', realm=self.provider.realm)
+        raise AuthRequiredExc(atype='Basic', realm=self.provider.realm)
 
 import security
 class OpenERPAuthProvider(AuthProvider):
-    def __init__(self,realm = 'OpenERP User'):
+    def __init__(self,realm='OpenERP User'):
         self.realm = realm
 
     def setupAuth(self, multi, handler):

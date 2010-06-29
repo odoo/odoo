@@ -655,27 +655,37 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Attachments">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="2">
                         <field name="name" select="1" />
-                        <field name="create_uid" select="2"/>
-                        <field name="create_date" select="2"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Attachment">
-                        <group col="2" colspan="2">
-                            <separator string="Data" colspan="2"/>
+                    <group col="4" colspan="4">
+                        <separator string="Data" colspan="2"/>
+                        <field name="type"/>
+                        <newline />
+                        <group col="2" colspan="4" attrs="{'invisible':[('type','=','url')]}">
                             <field name="datas" filename="datas_fname"/>
                             <field name="datas_fname" select="1"/>
                         </group>
+                        <group col="2" colspan="4" attrs="{'invisible':[('type','=','binary')]}">
+                            <field name="url" widget="url"/>
+                        </group>
+                    </group>
                         <group col="2" colspan="2">
                             <separator string="Attached To" colspan="2"/>
                             <field name="res_model" select="2"/>
                             <field name="res_id"/>
                             <field name="res_name"/>
                         </group>
+                    <group col="2" groups="base.group_extended">
+                        <separator string="Created" colspan="2"/>
+                        <field name="create_uid" select="2"/>
+                        <field name="create_date" select="2"/>
+                    </group>
                     </page>
                     <page string="Notes">
-                        <field colspan="4" name="description" nolabel="1"/>
+                        <field name="description" nolabel="1" colspan="4"/>
                     </page>
                     </notebook>
                 </form>
