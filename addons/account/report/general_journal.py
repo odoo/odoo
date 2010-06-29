@@ -37,6 +37,8 @@ class journal_print(report_sxw.rml_parse):
             'sum_credit_period': self._sum_credit_period,
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
+            'get_start_date': self.get_start_date,
+            'get_end_date': self.get_end_date
         })
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -120,5 +122,12 @@ class journal_print(report_sxw.rml_parse):
                         'AND state<>\'draft\'',
                         (tuple(periods), tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
+
+    def get_start_date(self, form):
+        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
+        
+    def get_end_date(self, form):
+        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
+  
 report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

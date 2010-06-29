@@ -38,6 +38,10 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
+    <blockTableStyle id="Table_Company_Name">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
     <blockTableStyle id="Table_Print_Current_datetime">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -65,6 +69,34 @@
     <blockTableStyle id="Table_Journal_Detail">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table_Sub_Header_Content">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="2,-1" stop="2,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table_Subheader_Content_detail">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="2,-1" stop="2,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -124,24 +156,40 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="75.0,465.0" style="Table_Print_Current_datetime">
+    <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Printing Date :</para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]]</para>
+          <para style="terp_header_Centre">General Journal</para>
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="P2">
+        <font color="white"> </font>
+    </para>
+    <para style="P9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_8">
+    <blockTable colWidths="180.0,180.0,180.0" style="Table_Sub_Header_Content">
+      <tr>
+        <td><para style="terp_tblheader_Details_Centre">Start Period</para></td>
+        <td><para style="terp_tblheader_Details_Centre">End Period</para></td>
+        <td><para style="terp_tblheader_Details_Centre">Printing Date</para></td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="180.0,180.0,180.0" style="Table_Subheader_Content_detail">
+      <tr>
+        <td><para style="terp_default_Centre_9">[[ get_start_date(data['form']) ]]</para></td>
+        <td><para style="terp_default_Centre_9">[[ get_end_date(data['form']) ]]</para></td>
+        <td><para style="terp_default_Centre_9">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]] </para></td>
+      </tr>
+    </blockTable>
+    <para style="P9">
       <font color="white"> </font>
-    </para>
+    </para>    
     <section>
-
+    <para style="P9">
+      <font color="white"> </font>
+   </para>
     <blockTable colWidths="61.0,228.0,95.0,80.0,73.0" style="Table_Journal_Title" repeatRows="1">
       <tr>
         <td>
