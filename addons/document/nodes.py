@@ -417,7 +417,15 @@ class node_res_dir(node_class):
         ctx.update(self.dctx)
         where = []
         if self.domain:
-            where += safe_eval(self.domain, self.dctx)
+            app = safe_eval(self.domain, self.dctx)
+            if not app:
+                pass
+            elif isinstance(app, list):
+                where.extend(app)
+            elif isinstance(app, tuple):
+                where.append(app)
+            else:
+                raise RuntimeError("incorrect domain expr: %s" % self.domain)
         if self.resm_id:
             where.append(('id','=',self.resm_id))
     
