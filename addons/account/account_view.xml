@@ -59,8 +59,9 @@
         <menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
 
         <!--
-    Period
-    -->
+            Period
+        -->
+
         <record id="res_role_period" model="res.roles">
             <field eval="&quot;&quot;&quot;Period&quot;&quot;&quot;" name="name"/>
         </record>
@@ -387,16 +388,10 @@
                         <field name="name" select="1"/>
                         <field name="date" select="1"/>
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1"/>
-<!--                        <field name="currency"/>-->
                         <field name="period_id"/>
-<!--                        <group colspan="2" col="3">-->
-    <!--                        <button name="%(action_view_account_statement_from_invoice)d"-->
-    <!--                            string="Import Invoice" type="action" attrs="{'invisible':[('state','=','confirm')]}" icon="gtk-open"/>-->
-<!--                            <button name="button_import_invoice" string="Import Invoice" attrs="{'invisible':[('state','=','confirm')]}" type="object" icon="gtk-apply"/>-->
-<!--                        </group>-->
                         <field name="balance_start"/>
                     <field name="balance_end_real"/>
-                    </group>                    
+                    </group>
                     <notebook colspan="4">
                         <page string="Transaction">
                             <field colspan="4" name="line_ids" nolabel="1">
