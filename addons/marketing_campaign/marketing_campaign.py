@@ -375,6 +375,15 @@ class marketing_campaign_transition(osv.osv):
                                           required=True),
     }
 
+    _defaults = {
+        'interval_nbr': 1,
+        'interval_type': 'days',
+    }
+
+    _sql_constraints = [
+        ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
+    ]
+
     def default_get(self, cr, uid, fields, context=None):
         value = super(marketing_campaign_transition, self).default_get(cr, uid,
                                                                 fields, context)
