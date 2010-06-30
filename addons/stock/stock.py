@@ -542,7 +542,7 @@ class stock_picking(osv.osv):
         }
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         if not vals.get('auto_picking', False):
-            message = type_list.get(vals.get('type', ''), _('Picking') + " '" + vals.get('name', 'n/a') + _(" with origin")+" '" + (vals.get('origin', '') or 'n/a') + "' "+ _("is created."))
+            message = type_list.get(vals.get('type', False), _('Picking')) + " '" + (vals['name'] or "n/a") + _(" with origin")+" '" + (vals.get('origin') or "n/a") + "' "+ _("is created.")
             self.log(cr, user, new_id, message)
         return new_id
 
@@ -670,6 +670,8 @@ class stock_picking(osv.osv):
         """
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
+            if not pick.move_lines:
+                raise osv.except_osv(_('Error !'),_('You can not process picking without stock moves'))
             wf_service.trg_validate(uid, 'stock.picking', pick.id,
                 'button_confirm', cr)
             #move_ids = [x.id for x in pick.move_lines]
@@ -1378,9 +1380,9 @@ class stock_move(osv.osv):
         'price_unit': fields.float('Unit Price',
             digits_compute= dp.get_precision('Account')),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1),
-        'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
+        'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner", store=True),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order"),
-        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
+        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin",store=True),
         'scraped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scraped'),
     }
     _constraints = [
@@ -2154,17 +2156,17 @@ class stock_move(osv.osv):
 
         for move in complete:
             self.action_done(cr, uid, [move.id], context)
-
-            # TOCHECK : Done picking if all moves are done
-            cr.execute("""
-                SELECT move.id FROM stock_picking pick
-                RIGHT JOIN stock_move move ON move.picking_id = pick.id AND move.state = %s
-                WHERE pick.id = %s""",
-                        ('done', move.picking_id.id))
-            res = cr.fetchall()
-            if len(res) == len(move.picking_id.move_lines):
-                picking_obj.action_move(cr, uid, [move.picking_id.id])
-                wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
+            if  move.picking_id.id :
+                # TOCHECK : Done picking if all moves are done
+                cr.execute("""
+                    SELECT move.id FROM stock_picking pick
+                    RIGHT JOIN stock_move move ON move.picking_id = pick.id AND move.state = %s
+                    WHERE pick.id = %s""",
+                            ('done', move.picking_id.id))
+                res = cr.fetchall()
+                if len(res) == len(move.picking_id.move_lines):
+                    picking_obj.action_move(cr, uid, [move.picking_id.id])
+                    wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
 
         ref = {}
         done_move_ids = []

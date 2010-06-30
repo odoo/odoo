@@ -277,11 +277,7 @@ class CalDAV(object):
                                            % (model_obj._table, data[map_field]))
                             r_ids = map(lambda x: x[0], cr.fetchall())
                         if r_ids:
-                            rdata = self.pool.get(model).read(cr, uid, r_ids)
-                            event_obj = self.pool.get('basic.calendar.event')
-                            rcal = event_obj.export_cal(cr, uid, rdata, context=context)
-                            for revents in rcal.contents['vevent']:
-                                ical.contents['vevent'].append(revents)
+                            rcal = self.export_cal(cr, uid, r_ids, 'vevent', context=context)
                         if data.get('recurrent_uid', None):
                             uidval = openobjectid2uid(cr, data['recurrent_uid'], model)
                         vevent.add('uid').value = uidval

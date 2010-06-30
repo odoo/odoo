@@ -221,24 +221,24 @@
     <!-- Views and action for project  dashboard -->
     <record id="view_task_by_days_vs_planned_hours_tree" model="ir.ui.view">
         <field name="name">task.by.days.vs.planned.hours.tree</field>
-        <field name="model">task.by.days.vs.planned.hours</field>
+        <field name="model">report.project.task.user</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Task By Days vs Planned Hours" >
                 <field name="day"/>
-                <field name="planned_hour"/>
+                <field name="hours_planned"/>
             </tree>
         </field>
     </record>
 
     <record id="view_task_by_days_vs_planned_hours_graph" model="ir.ui.view">
          <field name="name">task.by.days.vs.planned.hours.graph</field>
-         <field name="model">task.by.days.vs.planned.hours</field>
+         <field name="model">report.project.task.user</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Task By Days vs Planned Hours" type="bar">
                  <field name="day"/>
-                 <field name="planned_hour" operator="+"/>
+                 <field name="hours_planned" operator="+"/>
                  <field name="project_id" group="True"/>
              </graph>
          </field>
@@ -246,7 +246,7 @@
 
     <record id="action_task_by_days_vs_planned_hours_graph" model="ir.actions.act_window">
         <field name="name">Task By Days vs Planned Hours</field>
-        <field name="res_model">task.by.days.vs.planned.hours</field>
+        <field name="res_model">report.project.task.user</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
         <field name="view_id" ref="view_task_by_days_vs_planned_hours_graph"/>
