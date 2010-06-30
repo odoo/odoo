@@ -7,16 +7,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Year Salary">
-                   <group col="4" colspan="4"  width="500">
+                <group height="260" width="460">
 			    	<field name="fiscalyear_id"/>
 			    	<newline/>
-			    	<field name="employee_ids" colspan="2"/>
+			    	<field name="employee_ids" />
 			    	<newline/>
 					<button icon='gtk-cancel' special="cancel" 
 	        			string="Close" />
 	 				<button name="print_report" string="Print Report"
 	        			 type="object" icon="gtk-print" />
-	        		</group>		 				    	 
+					</group>	        			 
                 </form>
             </field>
         </record>
@@ -29,7 +29,7 @@
             <field name="target">new</field>
         </record>
 	
-	<menuitem id="action_hr_payroll_employees_detail" 
+	<menuitem id="menu_hr_payroll_employees_detail" 
             icon="STOCK_PRINT"
             action="action_hr_payroll_employees_detail" 
             parent="menu_hr_payroll_reporting" 

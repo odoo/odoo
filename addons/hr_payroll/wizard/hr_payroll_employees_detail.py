@@ -24,8 +24,8 @@ import time
 from osv import fields, osv
 from tools.translate import _
 
-class hr_payroll_employees_detail(osv.osv):
-   _name = "hr.payroll.employees.detail"
+class hr_payroll_employees_detail(osv.osv_memory):
+   _name ='hr.payroll.employees.detail'
    _columns = {
         'employee_ids': fields.many2many('hr.employee', 'payroll_emp_rel','payroll_id','emp_id', 'Employees',required=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)        
@@ -55,7 +55,6 @@ class hr_payroll_employees_detail(osv.osv):
         res = self.read(cr, uid, ids, ['employee_ids', 'fiscalyear_id'], context)
         res = res and res[0] or {}
         datas['form'] = res
-        datas['form']['fiscalyear_id']=res['fiscalyear_id'][0]
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'employees.salary',

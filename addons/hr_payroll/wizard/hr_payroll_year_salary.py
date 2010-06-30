@@ -1,69 +1,69 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
-import datetime
-import pooler
 import time
-import netsvc
 
-form='''<?xml version="1.0"?>
-<form string="Year Salary">
-    <field name="fiscalyear_id" select="1" colspan="2"/>
-    <newline/>
-    <field name="employee_ids" colspan="2"/>
-    <newline/>
-    <separator string="Salary Deposit Date Option?" colspan="2"/>
-    <newline/>
-    <field name="salary_on"/>
-</form>'''
-fields = {    
-    'fiscalyear_id':{'string': 'Fiscal Year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True },
-    'employee_ids':{'string':'Employees', 'type':'many2many','relation':'hr.employee','required':True},
-    'salary_on':{
-        'string':"Salary On",
-        'type':'selection',
-        'selection':[('current_month','Current Month Date'),('next_month','Next Month Date')],
-        'default': lambda *a:'current_month'
-    },
-       }
+from osv import fields, osv
+from tools.translate import _
 
-class wizard_print(wizard.interface):
-    def _get_defaults(self, cr, uid, data, context={}):
-        fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        data['form']['fiscalyear_id'] = fiscalyear_obj.find(cr, uid)
-        return data['form']
+class hr_payroll_year_salary(osv.osv_memory):
+   _name = "hr.payroll.year.salary"
+   _columns = {
+        'employee_ids': fields.many2many('hr.employee', 'payroll_year_rel','payroll_year_id','emp_id', 'Employees',required=True),
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)  ,
+        'salary_on': fields.selection([('current_month','Current Month Date'),('next_month','Next Month Date')],'Salary On'),   
+       } 
 
-    states={
-        'init':{
-            'actions':[_get_defaults],
-            'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
-        },
-        'report':{
-            'actions':[],
-            'result':{'type':'print', 'report':'year.salary', 'state':'end'}
-        }
+   def _get_defaults(self, cr, uid, ids, context={}):
+        fiscal_ids=self.pool.get('account.fiscalyear').search(cr,uid,[])
+        if fiscal_ids:
+            return fiscal_ids[0]
+        return False
+   
+   _defaults = {
+        'fiscalyear_id':_get_defaults,
+        'salary_on': lambda *a:'current_month'
     }
-wizard_print('wizard.year.salary')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+   def print_report(self, cr, uid, ids, context={}):
+        """
+         To get the date and print the report
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary
+         @return : return report
+        """
 
+        datas = {'ids': context.get('active_ids', [])}
+        
+        res = self.read(cr, uid, ids, ['employee_ids', 'fiscalyear_id','salary_on'], context)
+        res = res and res[0] or {}
+        datas['form'] = res
+#        datas['form']['fiscalyear_id']=res['fiscalyear_id'][0]
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'year.salary',
+            'datas': datas,
+            'nodestroy':True,
+       }
+   
+hr_payroll_year_salary()

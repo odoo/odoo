@@ -24,7 +24,7 @@ import time
 from osv import fields, osv
 from tools.translate import _
 
-class hr_payroll_create_analytic(osv.osv):
+class hr_payroll_create_analytic(osv.osv_memory):
    _name = "hr.payroll.create.analytic"
    _columns = {
         'company_id': fields.many2one('res.company', 'Company'),
