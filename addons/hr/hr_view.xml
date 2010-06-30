@@ -42,7 +42,7 @@
                 <form string="Employee">
                     <group colspan="4" col="8">
                         <group colspan="6" col="6">
-                            <field colspan="6" name="name" select="1"/>
+                            <field colspan="6" name="name" />
                             <field name="user_id"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             <field name="active" groups="base.group_extended"/>
@@ -120,7 +120,6 @@
                 <search string="Employees">
                     <filter icon="terp-personal-" domain="[('active','=',False)]" string="Unactive"
                         groups="base.group_extended"/>
-                    <separator orientation="vertical" />
                     <field name="name"/>
                     <field name="department_id" widget="selection"/>
                     <field name="job_id" widget="selection"/>
@@ -181,7 +180,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Marital Status">
-                    <field colspan="4" name="name" nolabel="1" select="1"/>
+                    <field name="name"/>
+                    <separator colspan="4" string="Description"/>
                     <field colspan="4" name="description" nolabel="1"/>
                 </form>
             </field>
@@ -250,8 +250,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee Category">
-                    <field name="name" select="1"/>
-                    <field name="parent_id" select="1"/>
+                    <field name="name" />
+                    <field name="parent_id" />
                 </form>
             </field>
         </record>
@@ -328,8 +328,8 @@
             <field name="arch" type="xml">
                 <form string="Job">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="department_id" select="1"/>
+                        <field name="name" />
+                        <field name="department_id" />
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="expected_employees"/>
                         <field name="no_of_employee"/>
@@ -356,7 +356,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Job">
-                    <field name="name" select="1"/>
+                    <field name="name" />
                     <field name="department_id" />
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
