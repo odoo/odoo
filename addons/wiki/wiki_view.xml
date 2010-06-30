@@ -129,7 +129,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Content">
-                        <separator colspan="4" string="Informations"/>
+                        <separator colspan="4" string="Page Content"/>
                         <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
                         </page>
                     </notebook>
@@ -163,7 +163,7 @@
                     <group expand="0" string="Group By..." colspan="8" col="6">
                         <filter icon="terp-check" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>
                         <filter icon="terp-personal" string="Author" domain="[]" context="{'group_by':'create_uid'}"/>
-                        <filter icon="terp-personal-" string="Last Author" domain="[]" context="{'group_by':'write_uid'}"/>
+                        <filter icon="terp-personal-" string="Last Contributor" domain="[]" context="{'group_by':'write_uid'}"/>
                     </group>
                 </search>
             </field>
@@ -177,7 +177,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
-<!--            <field name="context">{'section':'1','search_default_create_uid':uid}</field>-->
             <field name="search_view_id" ref="view_wiki_filter"/>
         </record>
 
