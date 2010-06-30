@@ -99,11 +99,12 @@
         </record>
 
         <record id="view_split_in_lots" model="ir.ui.view">
-                <field name="name">Split in lots</field>
-                <field name="model">stock.move.split</field>
-                <field name="type">form</field>
-                <field name="arch" type="xml">
-              <form string="Split in lots">
+	            <field name="name">Split in lots</field>
+	            <field name="model">stock.move.split</field>
+	            <field name="type">form</field>
+	            <field name="arch" type="xml">
+				<form string="Split in lots">
+				<group width="660" height="275">
                   <field name="product_id" colspan="4" readonly="1"/>
                   <newline/>
                   <group colspan="4" col="4">
@@ -142,24 +143,25 @@
                             </form>
                         </field>
                     </group>
-                        <separator string="" colspan="4" />
-                        <label string="" colspan="2" />
-                        <button icon='gtk-cancel' special="cancel"
-                            string="Cancel" />
-                        <button name="split_lot" string="Ok"
-                            type="object" icon="gtk-ok" />
-                    </form>
-                </field>
-            </record>
+	                	<separator string="" colspan="4" />
+	                	<label string="" colspan="2" />
+	                	<button icon='gtk-cancel' special="cancel"
+	                		string="Cancel" />
+	                	<button name="split_lot" string="Ok"
+	                		type="object" icon="gtk-ok" />
+					</group>
+	                </form>
+	            </field>
+	        </record>
 
-            <record id="track_line" model="ir.actions.act_window">
-                <field name="name">Split in lots</field>
-                <field name="type">ir.actions.act_window</field>
-                <field name="res_model">stock.move.split</field>
-                <field name="view_type">form</field>
-                <field name="view_mode">form</field>
-                <field name="target">new</field>
-            </record>
+	        <record id="track_line" model="ir.actions.act_window">
+	            <field name="name">Split in lots</field>
+	            <field name="type">ir.actions.act_window</field>
+	            <field name="res_model">stock.move.split</field>
+	            <field name="view_type">form</field>
+	            <field name="view_mode">form</field>
+	            <field name="target">new</field>
+	        </record>
 
-    </data>
+	</data>
 </openerp>

@@ -61,8 +61,9 @@ class stock_partial_picking(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False)
         _moves_arch_lst = """<form string="Deliver Products">
-                        <separator colspan="4" string="General Information"/>
-                        <field name="date" colspan="4" />
+                        <separator colspan="4" string="Delivery Information"/>
+                    	<field name="date" />
+                    	<separator colspan="4"/>
                         <separator colspan="4" string="Move Detail"/>
                         """
         _moves_fields = result['fields']
