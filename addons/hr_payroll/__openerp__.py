@@ -50,6 +50,7 @@
         'hr_payroll_sequence.xml',
         'hr_paroll_report.xml',
         'hr_payroll_data.xml',
+        'wizard/hr_payroll_create_analytic.xml',
         'hr_payroll_wizard.xml'
     ],
     'demo_xml': [
