@@ -28,9 +28,9 @@ class company(osv.osv):
             help="This is the leads/security time for each purchase order."),
     }
     _defaults = {
-        'po_lead': 1.0,
+        'po_lead': lambda *a: 1.0,
     }
-
 company()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

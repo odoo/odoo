@@ -1,6 +1,6 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* document
+#	* document
 #
 msgid ""
 msgstr ""
@@ -36,8 +36,6 @@ msgstr ""
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
 
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
@@ -151,7 +149,8 @@ msgid "File Information"
 msgstr "Информация о файле"
 
 #. module: document
-#: field:document.directory,file_ids:0 view:ir.attachment:0
+#: field:document.directory,file_ids:0
+#: view:ir.attachment:0
 msgid "Files"
 msgstr "Файлы"
 
@@ -161,7 +160,8 @@ msgid "Stored Filename"
 msgstr ""
 
 #. module: document
-#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0
+#: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Последние изменения пользователя"
 
@@ -215,7 +215,8 @@ msgid "Directory Type"
 msgstr "Тип папки"
 
 #. module: document
-#: field:document.directory,group_ids:0 field:ir.attachment,group_ids:0
+#: field:document.directory,group_ids:0
+#: field:ir.attachment,group_ids:0
 msgid "Groups"
 msgstr "Группы"
 
@@ -250,7 +251,8 @@ msgid "Notes"
 msgstr "Примечания"
 
 #. module: document
-#: view:ir.attachment:0 field:ir.attachment,index_content:0
+#: view:ir.attachment:0
+#: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr ""
 
@@ -310,15 +312,16 @@ msgid "Integrated Document Management System"
 msgstr ""
 
 #. module: document
-#: field:report.document.user,directory:0
-#: field:report.files.partner,directory:0
+#: field:document.directory.content,directory_id:0
+#: field:ir.attachment,parent_id:0
 msgid "Directory"
-msgstr "Папка"
+msgstr ""
 
 #. module: document
-#: field:report.document.user,user_id:0 field:report.document.wall,user_id:0
+#: field:document.directory,user_id:0
+#: field:ir.attachment,user_id:0
 msgid "Owner"
-msgstr "Владелец"
+msgstr ""
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
@@ -343,7 +346,8 @@ msgid "Content Type"
 msgstr "Тип данных"
 
 #. module: document
-#: view:document.directory:0 view:ir.attachment:0
+#: view:document.directory:0
+#: view:ir.attachment:0
 msgid "Security"
 msgstr "Безопасность"
 
@@ -380,7 +384,8 @@ msgid "Domain"
 msgstr "Домен"
 
 #. module: document
-#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0
+#: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Дата изменения"
 
@@ -441,9 +446,9 @@ msgid "Cancel"
 msgstr "Отмена"
 
 #. module: document
-#: field:report.document.user,partner:0 field:report.files.partner,partner:0
+#: field:ir.attachment,partner_id:0
 msgid "Partner"
-msgstr "Партнер"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -464,165 +469,3 @@ msgstr ""
 #: view:document.directory:0
 msgid "Contents"
 msgstr "Содержание"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_partner
-msgid "Files Per Month"
-msgstr "Файлов в месяц"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_wall
-#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_shame
-#: view:report.document.wall:0
-msgid "Wall of Shame"
-msgstr "Доска позора"
-
-#. module: document
-#: model:ir.model,name:document.model_report_files_partner
-msgid "Files details by Partners"
-msgstr ""
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all
-msgid "All Months"
-msgstr "Все месяцы"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_myfile
-#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_myfile
-msgid "My files"
-msgstr "Мои файлы"
-
-#. module: document
-#: view:report.document.user:0
-msgid "Files by users"
-msgstr ""
-
-#. module: document
-#: view:report.files.partner:0
-msgid "Files per Month"
-msgstr "Файлов в месяц"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_my_document_tree1
-msgid "My files (All months)"
-msgstr "Мои файлы (Все месяцы)"
-
-#. module: document
-#: field:report.document.wall,file_name:0
-msgid "Last Posted File Name"
-msgstr ""
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_action_view_my_document_report
-msgid "Reporting"
-msgstr "Отчетность"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_wall
-msgid "Users that did not inserted documents since one month"
-msgstr "Пользователи, не вставляшие документов месяц"
-
-#. module: document
-#: view:report.files.partner:0
-msgid "Files By Partner"
-msgstr ""
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this
-msgid "This Month"
-msgstr "Данный месяц"
-
-#. module: document
-#: field:report.document.user,user:0 field:report.document.wall,user:0
-msgid "User"
-msgstr "Пользователь"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_userfile
-#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_userfile
-msgid "All Users files"
-msgstr "Файлы всех пользователей"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_my_document_tree
-msgid "My files (This months)"
-msgstr "Мои файлы (Текущий месяц)"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_user
-msgid "Files details by Users"
-msgstr ""
-
-#. module: document
-#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
-msgid "# of Files"
-msgstr ""
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_user_graph
-msgid "Files By Users"
-msgstr ""
-
-#. module: document
-#: model:ir.module.module,shortdesc:report_document.module_meta_information
-msgid "Document Management - Reporting"
-msgstr ""
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files (All months)"
-msgstr ""
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_file
-msgid "Files details by Directory"
-msgstr ""
-
-#. module: document
-#: field:report.document.user,change_date:0
-#: field:report.files.partner,change_date:0
-msgid "Modified Date"
-msgstr "Изменённая дата"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_size_month
-#: view:report.document.file:0
-msgid "File Size by Month"
-msgstr ""
-
-#. module: document
-#: field:report.document.user,file_title:0
-#: field:report.files.partner,file_title:0
-msgid "File Name"
-msgstr "Имя файла"
-
-#. module: document
-#: field:report.document.file,month:0 field:report.document.user,month:0
-#: field:report.document.user,name:0 field:report.document.wall,month:0
-#: field:report.document.wall,name:0 field:report.files.partner,name:0
-msgid "Month"
-msgstr "Месяц"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
-#: view:report.document.user:0
-msgid "Files by Month"
-msgstr "Файлы по месяцам"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
-#: view:report.document.user:0
-msgid "Files by Resource Type"
-msgstr "Файлы по типам ресурсов"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree
-msgid "All Users files (This month)"
-msgstr "Файлы всех пользователей (Текущий месяц)"
-
-#. module: document
-#: field:report.document.wall,last:0
-msgid "Last Posted Time"
-msgstr ""

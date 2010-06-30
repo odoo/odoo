@@ -1,6 +1,6 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* project
+#	* project
 #
 msgid ""
 msgstr ""
@@ -213,7 +213,9 @@ msgstr ""
 "του χρήστη στον οποίο έχετε αναθέσει την εργασία."
 
 #. module: project
-#: view:project.project:0 field:project.project,notes:0 view:project.task:0
+#: view:project.project:0
+#: field:project.project,notes:0
+#: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
 msgstr "Σημειώσεις"
@@ -229,7 +231,8 @@ msgid "Analysis"
 msgstr "Ανάλυση"
 
 #. module: project
-#: model:ir.model,name:project.model_project_project view:project.project:0
+#: model:ir.model,name:project.model_project_project
+#: view:project.project:0
 #: field:project.task,project_id:0
 #: model:res.request.link,name:project.req_link_project
 msgid "Project"
@@ -253,12 +256,14 @@ msgid ""
 msgstr "Αυτόματες παράμετροι κεφαλίδων και υποσέλιδων"
 
 #. module: project
-#: selection:project.project,state:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
 msgid "Cancelled"
 msgstr "Ακυρώθηκε"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_header:0
+#: view:project.project:0
+#: field:project.project,warn_header:0
 msgid "Mail Header"
 msgstr "Κεφαλίδα Μηνύματος"
 
@@ -324,7 +329,8 @@ msgid "Extra Info"
 msgstr "Επιπλέον Πληροφορίες"
 
 #. module: project
-#: field:project.project,partner_id:0 field:project.task,partner_id:0
+#: field:project.project,partner_id:0
+#: field:project.task,partner_id:0
 msgid "Partner"
 msgstr "Συνεργάτης"
 
@@ -404,7 +410,8 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Υπολογισμένο ως εξής: Χρόνος που Αναλώθηκε + Υπολοιπο Χρόνου"
 
 #. module: project
-#: field:project.task,type:0 field:project.task.type,name:0
+#: field:project.task,type:0
+#: field:project.task.type,name:0
 msgid "Type"
 msgstr "Τύπος"
 
@@ -448,7 +455,8 @@ msgid "Planned Time"
 msgstr "Προγραμματισμένος Χρόνος"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_work view:project.task:0
+#: model:ir.model,name:project.model_project_task_work
+#: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr ""
@@ -499,17 +507,20 @@ msgid "Template"
 msgstr "Πρότυπο"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_definitions view:res.company:0
+#: model:ir.ui.menu,name:project.menu_definitions
+#: view:res.company:0
 msgid "Configuration"
 msgstr "Ρυθμίσεις"
 
 #. module: project
-#: field:project.project,date_start:0 field:project.task,date_start:0
+#: field:project.project,date_start:0
+#: field:project.task,date_start:0
 msgid "Starting Date"
 msgstr "Ημερ/νία Εκκίνησης"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_all_project view:project.project:0
+#: model:ir.ui.menu,name:project.menu_all_project
+#: view:project.project:0
 msgid "Projects"
 msgstr "Έργα"
 
@@ -561,17 +572,20 @@ msgstr "Άκυρο XML για Αρχιτεκτονική Όψης!"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
-#: model:ir.ui.menu,name:project.menu_main view:res.company:0
+#: model:ir.ui.menu,name:project.menu_main
+#: view:res.company:0
 msgid "Project Management"
 msgstr "Διαχείριση Έργου"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Χρόνος που Αναλώθηκε"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_tasks view:project.task:0
+#: model:ir.ui.menu,name:project.menu_tasks
+#: view:project.task:0
 msgid "Tasks"
 msgstr "Εργασίες"
 
@@ -659,7 +673,8 @@ msgstr "Δημιουργία τιμολογίων από γραμμή πωλήσ
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 msgid "Draft"
 msgstr "Πρόχειρα"
 
@@ -674,8 +689,10 @@ msgid "Project Manager"
 msgstr "Διαχειριστής Έργου"
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Pending"
 msgstr "Σε εκκρεμότητα"
@@ -700,7 +717,8 @@ msgid "Project Time Unit"
 msgstr "Μονάδα Χρόνου Έργου"
 
 #. module: project
-#: field:project.project,complete_name:0 field:project.project,name:0
+#: field:project.project,complete_name:0
+#: field:project.project,name:0
 msgid "Project Name"
 msgstr "Όνομα Έργου"
 
@@ -828,7 +846,8 @@ msgstr ""
 #. module: project
 #: help:project.project,effective_hours:0
 msgid "Sum of spent hours of all tasks related to this project."
-msgstr "Άθροισμα ωρών εργασίας που αναλώθηκαν σε όλες τις Εργασίες του Έργου."
+msgstr ""
+"Άθροισμα ωρών εργασίας που αναλώθηκαν σε όλες τις Εργασίες του Έργου."
 
 #. module: project
 #: help:project.task,project_id:0
@@ -888,8 +907,10 @@ msgstr ""
 "ανάλυση κόστους και εσόδων, φύλλα χρόνου εργασίας κλπ."
 
 #. module: project
-#: view:project.project:0 selection:project.project,state:0
-#: view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,init,state:0
 msgid "Done"
 msgstr "Ολοκληρώθηκε"
@@ -898,7 +919,8 @@ msgstr "Ολοκληρώθηκε"
 #: view:config.compute.remaining:0
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: wizard_button:project.task.close,mail_ask,end:0
 #: wizard_button:project.task.delegate,init,end:0
 msgid "Cancel"
@@ -1079,7 +1101,8 @@ msgid "Template of Projects"
 msgstr "Πρότυπο Έργου"
 
 #. module: project
-#: field:project.project,priority:0 field:project.task,sequence:0
+#: field:project.project,priority:0
+#: field:project.task,sequence:0
 msgid "Sequence"
 msgstr "Ιεράρχηση"
 
@@ -1143,7 +1166,8 @@ msgid "Delegate your task to the other user"
 msgstr "Ανάθεση εργασίας στον άλλο χρήστη"
 
 #. module: project
-#: view:project.project:0 field:project.project,warn_footer:0
+#: view:project.project:0
+#: field:project.project,warn_footer:0
 msgid "Mail Footer"
 msgstr "Υποσέλιδο Mail"
 
@@ -1153,112 +1177,19 @@ msgstr "Υποσέλιδο Mail"
 msgid "Running projects"
 msgstr "Έργα σε εξέλιξη"
 
-#. module: project
-#: view:board.board:0
-msgid "My project's planning"
-msgstr "Σχεδιασμός Έργων μου"
-
-#. module: project
-#: view:hr_timesheet_sheet.sheet:0
-#: model:ir.actions.act_window,name:project.act_hr_timesheet_sheet
-msgid "Timesheets"
-msgstr "Φύλλα Χρόνου Εργασίας"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_view_task_tree_deadline
-msgid "My Task's Deadlines"
-msgstr "Προθεσμίες Αναθέσεών μου"
-
-#. module: project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:project.action_view_board_note_tree
-msgid "Public Notes"
-msgstr "Κοινοποιημένες Σημειώσεις"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_board_project
-#: model:ir.ui.menu,name:project.menu_board_project
-msgid "Project Dashboard"
-msgstr "Πίνακας Έργων"
-
-#. module: project
-#: model:ir.module.module,shortdesc:project.module_meta_information
-msgid "Board for project users"
-msgstr "Πίνακας Χρηστών Έργου"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_project_pipeline_user
-msgid "Pipeline of tasks"
-msgstr "Κανάλι Αναθέσεων"
-
-#. module: project
-#: view:board.board:0
-msgid "My Planning"
-msgstr "Ο Σχεδιασμός μου"
-
-#. module: project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:project.act_my_account
-msgid "My accounts to invoice"
-msgstr "Οι λογαριασμοί μου προς τιμολόγηση"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_board_project_manager
-#: model:ir.ui.menu,name:project.menu_board_project_manager
-msgid "Project Manager Dashboard"
-msgstr "Πίνακας Αναφορών Διευθυντή Έργου"
-
-#. module: project
-#: view:board.board:0
-msgid "My Deadlines"
-msgstr "Οι Προθεσμίες μου"
-
-#. module: project
-#: view:board.board:0
-msgid "User's timesheets"
-msgstr "Φύλλα χρόνου χρηστών"
-
-#. module: project
-#: view:board.board:0
-msgid "Project manager board"
-msgstr "Πίνακας διευθυντή έργου"
-
-#. module: project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:project.action_view_task_tree
-msgid "My Open Tasks"
-msgstr "Οι Ανοικτές Αναθέσεις μου"
-
-#. module: project
-#: view:board.board:0
-msgid "My Board"
-msgstr "Ο Πίνακάς μου"
-
-#. module: project
-#: view:board.board:0
-msgid "My tasks board"
-msgstr "Ο πίνακας αναθέσεών μου"
-
-#. module: project
-#: view:board.board:0
-msgid "My user's pipeline"
-msgstr "Το κανάλι μου"
-
-#. module: project
-#: view:board.board:0
-msgid "My Timesheet"
-msgstr "Το Φύλλο Χρόνου μου"
-
+#, python-format
 #~ msgid ""
 #~ "Couldn't send mail because the contact for this task (%s) has no email "
 #~ "address!"
 #~ msgstr ""
-#~ "Το mail δεν μπόρεσε να σταλλεί διότι η επαφή για την εργασία (%s) δεν "
-#~ "έχει διεύθυνση email!"
+#~ "Το mail δεν μπόρεσε να σταλλεί διότι η επαφή για την εργασία (%s) δεν έχει "
+#~ "διεύθυνση email!"
 
+#, python-format
 #~ msgid "Operation Not Permitted !"
 #~ msgstr "Μη Επιτρεπτή Λειτουργία!"
 
+#, python-format
 #~ msgid ""
 #~ "A new project has been created !\n"
 #~ "We suggest you to close this one and work on this new project."
@@ -1266,16 +1197,20 @@ msgstr "Το Φύλλο Χρόνου μου"
 #~ "Ένα νέο έργο δημιουργήθηκε!\n"
 #~ "Σας προτείνουμε να κλείσετε αυτό και να εργαστείτε στο νέο."
 
+#, python-format
 #~ msgid "Operation Done"
 #~ msgstr "Λειτουργία Ολοκληρώθηκε"
 
+#, python-format
 #~ msgid "Error"
 #~ msgstr "Σφάλμα"
 
+#, python-format
 #~ msgid "Couldn't send mail because your email address is not configured!"
 #~ msgstr ""
 #~ "Δεν έχετε ρυθμίσει τη διεύθυνση email  σας! Αδύνατη η αποστολή μηνύματος."
 
+#, python-format
 #~ msgid ""
 #~ "You can not delete a project with tasks. I suggest you to deactivate it."
 #~ msgstr ""

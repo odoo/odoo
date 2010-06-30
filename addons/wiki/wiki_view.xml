@@ -1,18 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-       <menuitem name="Knowledge Management" icon="terp-stock"
-           id="base.menu_document" sequence="19" />
+       <menuitem name="Knowledge" icon="terp-stock"
+           id="knowledge.menu_document" sequence="19" />
 
        <menuitem name="Configuration"
-           id="base.menu_document_configuration"
-           parent="base.menu_document" sequence="50" />
+           id="knowledge.menu_document_configuration"
+           parent="knowledge.menu_document" sequence="50" />
 
        <menuitem name="Wiki" id="menu_wiki_configuration"
-           parent="base.menu_document_configuration" sequence="2" />
+           parent="knowledge.menu_document_configuration" sequence="2" />
 
-       <menuitem id="base.menu_document2" name="Collaborative Content"
-           parent="base.menu_document" />
 
 <!--  Wiki Groups Tree view -->
 
@@ -190,7 +188,7 @@
             <field name="search_view_id" ref="view_wiki_filter"/>
         </record>
 
-        <menuitem parent="base.menu_document2"
+        <menuitem parent="knowledge.menu_document2"
             id="menu_action_wiki_wiki" name="Wiki Pages"
             action="action_wiki" />
 

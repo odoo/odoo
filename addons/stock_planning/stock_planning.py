@@ -20,19 +20,15 @@
 #
 ##############################################################################
 
+from osv import fields,osv
+import pooler
+from tools import config
 import time
+import netsvc
 import math
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
-
-from osv import fields
-from osv import osv
-import netsvc
-
 from tools.translate import _
-import tools
-from tools import config
-
 
 def rounding(fl, round_value):
     if not round_value:
@@ -378,17 +374,16 @@ class stock_sale_forecast(osv.osv):
         return res / val.product_id.uom_id.factor, uom.rounding
 
     def _sales_per_users(self, cr, uid, so, so_line, company, users):
-
         cr.execute("SELECT sum(sol.product_uom_qty) FROM sale_order_line AS sol LEFT JOIN sale_order AS s ON (s.id = sol.order_id) " \
                    "WHERE (sol.id IN %s) AND (s.state NOT IN (\'draft\',\'cancel\')) AND (s.id IN %s) AND (s.company_id=%s) " \
-                    "AND (s.user_id IN %s) " ,(tuple(so_line), tuple(so), company, tuple(users)))
+                    "AND (s.user_id IN %s) " %(tuple(so_line), tuple(so), company, tuple(users)))
         ret = cr.fetchone()[0] or 0.0
         return ret
 
     def _sales_per_warehouse(self, cr, uid, so, so_line, company, shops):        
         cr.execute("SELECT sum(sol.product_uom_qty) FROM sale_order_line AS sol LEFT JOIN sale_order AS s ON (s.id = sol.order_id) " \
                    "WHERE (sol.id IN %s) AND (s.state NOT IN (\'draft\',\'cancel\')) AND (s.id IN %s)AND (s.company_id=%s) " \
-                    "AND (s.shop_id IN %s)" ,(tuple(so_line), tuple(so), company, tuple(shops)))
+                    "AND (s.shop_id IN %s)" %(tuple(so_line), tuple(so), company, tuple(shops)))
         ret = cr.fetchone()[0] or 0.0
         return ret
 
@@ -416,8 +411,8 @@ class stock_sale_forecast(osv.osv):
                     dept_obj = self.pool.get('hr.department')
                     dept_id =  obj.analyzed_dept_id.id and [obj.analyzed_dept_id.id] or []
                     dept_ids = dept_obj.search(cr,uid,[('parent_id','child_of',dept_id)])
-#                    dept_ids_set = ','.join(map(str,dept_ids))
-                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN %s)" ,(tuple(dept_ids),))
+                    dept_ids_set = ','.join(map(str,dept_ids))
+                    cr.execute("SELECT user_id FROM hr_department_user_rel WHERE (department_id IN %s)" %(tuple(dept_ids_set),))
                     dept_users = [x for x, in cr.fetchall()]
                     dept_users_set =  ','.join(map(str,dept_users))
                 else:
@@ -425,22 +420,21 @@ class stock_sale_forecast(osv.osv):
                 factor, round_value = self._from_default_uom_factor(cr, uid, obj, obj.product_uom.id, context=context)
                 for i, period in enumerate(periods):
                     if period:
-                        so_period_ids = so_obj.search(cr, uid, [('date_order','>=',period.date_start),('date_order','<=',period.date_stop) ], context = context)
+                        so_period_ids = so_obj.search(cr, uid, [('date_order','>=',period.date_start), ('date_order','<=',period.date_stop)], context = context)
                         if so_period_ids:
-                           # so_period_set = ','.join(map(str,so_period_ids))
+                            so_period_set = ','.join(map(str,so_period_ids))
                             if obj.analyzed_user_id:
                                 user_set = str(obj.analyzed_user_id.id)
-                           
-                                sales[i][0] =self._sales_per_users(cr, uid, so_period_ids, so_line_product_ids, obj.company_id.id, user_set)
+                                sales[i][0] =self._sales_per_users(cr, uid, so_period_set, so_line_product_set, obj.company_id.id, user_set)
                                 sales[i][0] *=factor
                             if dept_users:
-                                sales[i][1]=  self._sales_per_users(cr, uid, so_period_ids,  so_line_product_ids, obj.company_id.id, dept_users_set)
+                                sales[i][1]=  self._sales_per_users(cr, uid, so_period_set,  so_line_product_set, obj.company_id.id, dept_users_set)
                                 sales[i][1]*=factor
                             if shops:
-                                sales[i][2]= self._sales_per_warehouse(cr, uid, so_period_ids,  so_line_product_ids, obj.company_id.id, shops_set)
+                                sales[i][2]= self._sales_per_warehouse(cr, uid, so_period_set,  so_line_product_set, obj.company_id.id, shops_set)
                                 sales[i][2]*=factor
                             if obj.analyze_company:
-                                sales[i][3]= self._sales_per_company(cr, uid, so_period_ids, so_line_product_ids, obj.company_id.id, )
+                                sales[i][3]= self._sales_per_company(cr, uid, so_period_set, so_line_product_set, obj.company_id.id, )
                                 sales[i][3]*=factor
         self.write(cr, uid, ids, {
             'analyzed_period1_per_user':sales[0][0],
