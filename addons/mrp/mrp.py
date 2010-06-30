@@ -20,8 +20,7 @@
 ##############################################################################
 
 from mx import DateTime
-from osv import fields
-from osv import osv
+from osv import osv, fields
 from tools.translate import _
 import ir
 import netsvc
@@ -520,8 +519,8 @@ class mrp_production(osv.osv):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Production Order(s) which are in %s State!' % s['state']))
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
-    def copy(self, cr, uid, id, default=None,context=None):
-        if not default:
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
             default = {}
         default.update({
             'name': self.pool.get('ir.sequence').get(cr, uid, 'mrp.production'),
