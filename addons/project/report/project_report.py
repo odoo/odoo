@@ -33,7 +33,7 @@ class report_project_task_user(osv.osv):
         'user_id':fields.many2one('res.users', 'Assigned To', readonly=True),
         'date_start': fields.date('Starting Date',readonly=True),
         'no_of_days': fields.integer('# of Days', size=128, readonly=True),
-        'description': fields.text('Description',readonly=True),
+     #   'description': fields.text('Description',readonly=True),
         'date_end': fields.date('Ending Date',readonly=True),
         'date_deadline': fields.date('Deadline',readonly=True),
         'project_id':fields.many2one('project.project', 'Project', readonly=True),
@@ -104,7 +104,7 @@ class report_project_task_user(osv.osv):
                     (extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24)  as delay_endings_days
               from project_task t
 
-                group by 
+                group by
                     t.id,
                     remaining_hours,
                     t.effective_hours,

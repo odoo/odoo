@@ -52,7 +52,7 @@ class crm_helpdesk_report(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             if field_name != 'avg_answers':
                 state = field_name[5:]
-                cr.execute("select count(*) from crm_opportunity where \
+                cr.execute("select count(*) from crm_lead where \
                     section_id =%s and state='%s'"%(case.section_id.id, state))
                 state_cases = cr.fetchone()[0]
                 perc_state = (state_cases / float(case.nbr)) * 100
@@ -91,7 +91,7 @@ class crm_helpdesk_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True), 
+        'day': fields.char('Day', size=128, readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),

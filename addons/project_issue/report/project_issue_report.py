@@ -26,7 +26,7 @@ class project_issue_report(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             if field_name != 'avg_answers':
                 state = field_name[5:]
-                cr.execute("select count(*) from crm_opportunity where \
+                cr.execute("select count(*) from crm_lead where \
                     section_id =%s and state='%s'"%(case.section_id.id, state))
                 state_cases = cr.fetchone()[0]
                 perc_state = (state_cases / float(case.nbr)) * 100
@@ -51,7 +51,7 @@ class project_issue_report(osv.osv):
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
-        'user_id2':fields.many2one('res.users', 'Assigned To', readonly=True),
+     #   'user_id2':fields.many2one('res.users', 'Assigned To', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
@@ -81,7 +81,7 @@ class project_issue_report(osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'type_id': fields.many2one('crm.case.resource.type', 'Version', domain="[('object_id.model', '=', 'project.issue')]"),
-        'user_id2losed': fields.date('Close Date', readonly=True),
+    #    'user_id2losed': fields.date('Close Date', readonly=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
@@ -147,7 +147,7 @@ class project_issue_report(osv.osv):
                     c.partner_id,
                     c.canal_id,
                     c.task_id
-            )""") 
+            )""")
 
 project_issue_report()
 

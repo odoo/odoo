@@ -36,7 +36,7 @@ class crm_fundraising_report(osv.osv):
     _name = "crm.fundraising.report"
     _auto = False
     _description = "CRM Fundraising Report"
-    
+
     def _get_data(self, cr, uid, ids, field_name, arg, context={}):
 
         """ @param cr: the current row, from the database cursor,
@@ -51,7 +51,7 @@ class crm_fundraising_report(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             if field_name != 'avg_answers':
                 state = field_name[5:]
-                cr.execute("select count(*) from crm_opportunity where \
+                cr.execute("select count(*) from crm_lead where \
                     section_id =%s and state='%s'"%(case.section_id.id, state))
                 state_cases = cr.fetchone()[0]
                 perc_state = (state_cases / float(case.nbr)) * 100
@@ -90,7 +90,7 @@ class crm_fundraising_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'day': fields.char('Day', size=128, readonly=True), 
+        'day': fields.char('Day', size=128, readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                     domain="[('section_id','=',section_id),\
                     ('object_id.model', '=', 'crm.fundraising')]"),
