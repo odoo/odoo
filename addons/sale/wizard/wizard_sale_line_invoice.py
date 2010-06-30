@@ -28,7 +28,7 @@ from tools.translate import _
 
 invoice_form = """<?xml version="1.0"?>
 <form string="Create invoices">
-    <separator colspan="4" string="Do you really want to create the invoices ?" />
+    <separator colspan="4" string="Do you really want to create the invoice(s) ?" />
 </form>
 """
 
