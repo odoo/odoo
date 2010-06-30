@@ -20,6 +20,7 @@
 ##############################################################################
 
 from mx import DateTime
+from datetime import datetime, timedelta
 from osv import fields
 from osv import osv
 from tools.translate import _
@@ -417,7 +418,6 @@ class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name  = 'date_planned'
-    _log_create = True
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
         """ Calculates total hours and total no. of cycles for a production order.
@@ -509,7 +509,18 @@ class mrp_production(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
     _order = 'date_planned asc, priority desc';
-
+    
+    def _check_qty(self, cr, uid, ids):
+        orders = self.browse(cr, uid, ids)
+        for order in orders:
+            if order.product_qty <= 0:
+                return False
+        return True
+    
+    _constraints = [
+        (_check_qty, 'Order quantity cannot be negative or zero !', ['product_qty']),
+    ]
+    
     def unlink(self, cr, uid, ids, context=None):
         productions = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -636,15 +647,23 @@ class mrp_production(osv.osv):
         """ Changes the production state to Ready and location id of stock move.
         @return: True
         """
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Manufacturing Order ') + " '" + name + "' "+ _("is ready to produce.")
-            self.log(cr, uid, id, message)
         move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state': 'ready'})
-        for production in self.browse(cr, uid, ids):
+
+        for (production_id,name) in self.name_get(cr, uid, ids):
+            production = self.browse(cr, uid, production_id)
             if production.move_prod_id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
+
+            message = ("%s %s %s %s %s %s") % (
+                    _('Manufacturing Order '),
+                    name,
+                    _("scheduled the"),
+                    datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d'),
+                    _("for"),
+                    production.product_id.default_code)
+            self.log(cr, uid, production_id, message)
         return True
 
     def action_production_end(self, cr, uid, ids):

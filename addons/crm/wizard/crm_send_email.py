@@ -20,12 +20,12 @@
 #
 ##############################################################################
 
+from crm import crm
 from osv import osv, fields
 from tools.translate import _
 import base64
 import time
 import tools
-from crm import crm
 
 class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
@@ -109,7 +109,17 @@ class crm_send_new_email(osv.osv_memory):
 
             body = case_pool.format_body(body)
             email_from = getattr(obj, 'email_from', False)
-            x_headers = {}
+
+            case_pool._history(cr, uid, [case], _('Send'), history=True, \
+                                email=obj.email_to, details=body, \
+                                subject=obj.subject, email_from=email_from, \
+                                message_id=message_id, attach=attach)
+
+            x_headers = {
+                     'model': model, 
+                     'resource-id': res_id
+                     }
+
             if message_id:
                 x_headers['References'] = "%s" % (message_id)
 
@@ -174,7 +184,11 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_from' in fields:
                 res.update({'email_from': user_mail_from})
             if 'subject' in fields:
+<<<<<<< TREE
                 res.update({'subject': str(context.get('subject', case.name) or '')})
+=======
+                res.update({'subject': '[%s] %s' % (str(case.id), context.get('subject', case.name) or '')})
+>>>>>>> MERGE-SOURCE
             if 'email_cc' in fields:
                 res.update({'email_cc': case.email_cc or ''})
             if 'text' in fields:
