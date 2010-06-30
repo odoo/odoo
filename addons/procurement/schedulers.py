@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-import time
-from mx import DateTime
-
 from osv import osv
 import netsvc
 import pooler
+from mx import DateTime
+import time
+
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
@@ -37,7 +37,9 @@ class procurement_order(osv.osv):
             context = {}
 
         if use_new_cursor:
+            print 'Cursor New', cr,
             cr = pooler.get_db(use_new_cursor).cursor()
+            print cr
         wf_service = netsvc.LocalService("workflow")
 
         procurement_obj = self.pool.get('procurement.order')
@@ -122,6 +124,7 @@ class procurement_order(osv.osv):
                 })
         if use_new_cursor:
             cr.commit()
+            print 'Cursor Close', cr
             cr.close()
         return {}
 
@@ -172,7 +175,9 @@ class procurement_order(osv.osv):
         if not context:
             context = {}
         if use_new_cursor:
+            print 'Cursor New', cr,
             cr = pooler.get_db(use_new_cursor).cursor()
+            print cr
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
         location_obj = self.pool.get('stock.location')
         procurement_obj = self.pool.get('procurement.order')
@@ -196,7 +201,7 @@ class procurement_order(osv.osv):
                     qty = max(op.product_min_qty, op.product_max_qty)-prods
                     reste = qty % op.qty_multiple
                     if reste > 0:
-                        qty += op.qty_multiple - reste
+                        qty += op.qty_multiple - reste                    
                     newdate = DateTime.now() + DateTime.RelativeDateTime(
                             days = int(op.product_id.seller_delay))
                     if op.product_id.supply_method == 'buy':
@@ -236,9 +241,9 @@ class procurement_order(osv.osv):
                 })
         if use_new_cursor:
             cr.commit()
+            print 'Cursor Close', cr
             cr.close()
         return {}
-
 procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

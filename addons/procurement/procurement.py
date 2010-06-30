@@ -464,7 +464,7 @@ class stock_warehouse_orderpoint(osv.osv):
     """
     _name = "stock.warehouse.orderpoint"
     _description = "Minimum Inventory Rule"
-
+    
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the orderpoint without removing it."),
@@ -485,17 +485,17 @@ class stock_warehouse_orderpoint(osv.osv):
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
-        'active': 1,
-        'logic': 'max',
-        'qty_multiple': 1,
+        'active': lambda *a: 1,
+        'logic': lambda *a: 'max',
+        'qty_multiple': lambda *a: 1,
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'stock.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
     }
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
-    ]
-
+    ]   
+    
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         """ Finds location id for changed warehouse.
         @param warehouse_id: Changed id of warehouse.
@@ -506,7 +506,7 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'location_id': w.lot_stock_id.id}
             return {'value': v}
         return {}
-
+    
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         """ Finds UoM for changed product.
         @param product_id: Changed id of product.
@@ -517,7 +517,7 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
-
+    
     def copy(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
@@ -525,6 +525,6 @@ class stock_warehouse_orderpoint(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context)
-
+    
 stock_warehouse_orderpoint()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

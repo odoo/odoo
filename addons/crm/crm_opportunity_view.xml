@@ -182,7 +182,7 @@
                                     string="Reply to Last Email"
                                     name="%(crm.action_crm_send_mail)d"
                                     context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
-                                    icon="terp-mail-replied" type="action" />
+                                    icon="gtk-undo" type="action" />
                                 </form>
                                 <tree string="Communication history">
                                     <field name="date"/>
@@ -194,10 +194,10 @@
                             <button colspan="2" string="Send New Email"
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.lead'}"
-                                icon="terp-mail-message-new" type="action" />
+                                icon="gtk-go-forward" type="action" />
                             <button colspan="2" string="Forward to Partner"
                                 name="%(crm_lead_forward_to_partner_act)d"
-                                icon="terp-mail-forward" type="action" />
+                                icon="gtk-go-forward" type="action" />
                         </page>
                         <page string="History" groups="base.group_extended">
                             <group col="2" colspan="2">
@@ -360,6 +360,7 @@
                         <group expand="0" string="Group By..." colspan="16">
                             <filter string="Stage" icon="terp-stage" domain="[]"
                                 context="{'group_by':'stage_id'}" />
+                            <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                             <filter string="Priority" icon="terp-rating-rated" domain="[]"
                                 context="{'group_by':'priority'}" />
                             <filter string="Category" icon="terp-stock_symbol-selection"
@@ -368,6 +369,7 @@
                             <separator orientation="vertical" />
                             <filter string="Salesman" icon="terp-personal"
                                 domain="[]" context="{'group_by':'user_id'}" />
+                            <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
                             <separator orientation="vertical" />
                             <filter string="Creation" icon="terp-go-month"
                                 domain="[]" context="{'group_by':'create_date'}" />

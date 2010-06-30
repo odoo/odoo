@@ -42,7 +42,7 @@ class product_product(osv.osv):
             invoice_types=()
             states=()
             if invoice_state=='paid':
-                states=('paid',)
+                states=('paid')
             elif invoice_state=='open_paid':
                 states=('open','paid')
             elif invoice_state=='draft_open_paid':

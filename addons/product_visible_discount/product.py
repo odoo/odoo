@@ -46,25 +46,6 @@ class sale_order_line(osv.osv):
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True,date_order=False,packaging=False,fiscal_position=False, flag=False):
 
-        def get_real_price(res_dict, product_id, pricelist):
-            item_obj = self.pool.get('product.pricelist.item')
-            price_type_obj = self.pool.get('product.price.type')
-            product_obj = self.pool.get('product.product')
-            template_obj = self.pool.get('product.template')
-            field_name = 'list_price'
-
-            if res_dict.get('item_id',False) and res_dict['item_id'].get(pricelist,False):
-                item = res_dict['item_id'].get(pricelist,False)
-                item_base = item_obj.read(cr, uid, [item], ['base'])[0]['base']
-                if item_base > 0:
-                    field_name = price_type_obj.browse(cr, uid, item_base).field
-
-            product_tmpl_id = product_obj.browse(cr, uid, product_id, context).product_tmpl_id.id
-
-            product_read = template_obj.read(cr, uid, product_tmpl_id, [field_name], context)
-            return product_read[field_name]
-
-
         res=super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
             lang, update_tax,date_order,fiscal_position=fiscal_position,flag=flag)
@@ -87,16 +68,15 @@ class sale_order_line(osv.osv):
 #            product_read = self.pool.get('product.template').read(cr, uid, product_tmpl_id, [field_name], context)
 #            list_price = product_read[field_name]
             list_price = pricelist_obj.price_get(cr, uid, [pricelist],
-                    product.id, qty or 1.0, partner_id, {'uom': uom,'date': date_order })
+                    product.id, qty or 1.0, partner_id, {'uom': uom,'date': date_order })[pricelist]
 
-            pricelists = pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
+            pricelists=pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
 
             old_uom = product.uos_id or product.uom_id
-#            new_list_price = product_uom_obj._compute_price(cr,
-#                        uid, old_uom.id, list_price, uom)
-            new_list_price = get_real_price(list_price, product.id, pricelist)
-            if(len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price[pricelist] != 0):
-                discount = (new_list_price - price) / new_list_price * 100
+            new_list_price = product_uom_obj._compute_price(cr,
+                        uid, old_uom.id, list_price, uom)
+            if(len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price != 0):
+                discount=(new_list_price-price) / new_list_price * 100
                 result['price_unit'] = new_list_price
                 result['discount'] = discount
             else:

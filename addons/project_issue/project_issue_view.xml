@@ -96,7 +96,7 @@
                                     string="Reply to Last Email"
                                     name="%(crm.action_crm_send_mail)d"
                                     context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
-                                    icon="terp-mail-replied" type="action" />
+                                    icon="gtk-undo" type="action" />
                                 </form>
                                 <tree string="Communication history">
                                     <field name="date"/>
@@ -108,7 +108,7 @@
                            <button colspan="4" string="Send New Email"
                                name="%(crm.action_crm_send_mail)d"
                                context="{'mail':'new', 'model': 'project.issue'}"
-                               icon="terp-mail-message-new" type="action" />
+                               icon="gtk-go-forward" type="action" />
                         </page>
                            <page string="History" groups="base.group_extended">
                             <group col="2" colspan="2">

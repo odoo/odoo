@@ -188,10 +188,10 @@ class project_issue(osv.osv, crm.crm_case):
     }
 
     def _get_project(self, cr, uid, context):
-       user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-       if user.context_project_id:
-           return user.context_project_id.id
-       return False
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if user.context_project_id:
+            return user.context_project_id.id
+        return False
 
     _defaults = {
         'active': lambda *a: 1,
@@ -214,11 +214,6 @@ class project_issue(osv.osv, crm.crm_case):
         if context is None:
             context = {}
 
-#        for case in case_obj.browse(cr, uid, ids, context=context):
-#            if case.state != 'open':
-#                raise osv.except_osv(_('Warning !'),
-#                    _('Issues or Feature Requests should be in \'Open\' state before converting into Task.'))
-
         result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
         res = data_obj.read(cr, uid, result, ['res_id'])
         id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
@@ -240,11 +235,9 @@ class project_issue(osv.osv, crm.crm_case):
                 'planned_hours': 0.0,
             })
 
-            new_task = task_obj.browse(cr, uid, new_task_id)
-
             vals = {
                 'task_id': new_task_id,
-                }
+            }
             case_obj.write(cr, uid, [bug.id], vals)
 
         return  {
@@ -361,7 +354,6 @@ class project_issue(osv.osv, crm.crm_case):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
         
-        msg_from = msg['from']
         vals.update({
             'description': msg['body']
         })
