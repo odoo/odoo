@@ -32,7 +32,6 @@ import difflib
 
 class Wiki(osv.osv):
     """ wiki """
-
     _name = "wiki.wiki"
 
 Wiki()
@@ -78,7 +77,7 @@ class GroupLink(osv.osv):
 GroupLink()
 
 
-class Wiki(osv.osv):
+class Wiki2(osv.osv):
     """ Wiki Page """
 
     _inherit = "wiki.wiki"
@@ -87,19 +86,22 @@ class Wiki(osv.osv):
 
     _columns = {
         'name': fields.char('Title', size=256, select=True, required=True),
-        'write_uid': fields.many2one('res.users', "Last Author"),
+        'write_uid': fields.many2one('res.users', "Last Author", select=True),
         'text_area': fields.text("Content"),
         'create_uid': fields.many2one('res.users', 'Author', select=True),
         'create_date': fields.datetime("Created on", select=True),
         'write_date': fields.datetime("Modification Date", select=True),
-        'tags': fields.char('Tags', size=1024),
+        'tags': fields.char('Tags', size=1024, select=True),
         'history_id': fields.one2many('wiki.wiki.history', 'wiki_id', 'History Lines'),
         'minor_edit': fields.boolean('Minor edit', select=True),
         'summary': fields.char('Summary', size=256),
-        'section': fields.char('Sequence', size=32, help="Use page section code like 1.2.1"),
-        'group_id': fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
-        'toc': fields.boolean('Table of Contents'),
-        'review': fields.boolean('Need Review'),
+        'section': fields.char('Section', size=32, help="Use page section code like 1.2.1", select=True),
+        'group_id': fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null', 
+            help="Topic, also called Wiki Group"),
+        'toc': fields.boolean('Table of Contents', 
+            help="Indicates that this pages is a table of contents (linking to other pages)"),
+        'review': fields.boolean('Needs Review', select=True, 
+            help="Indicates that this page should be reviewed, raising the attention of other contributors"),
         'parent_id': fields.many2one('wiki.wiki', 'Parent Page'),
         'child_ids': fields.one2many('wiki.wiki', 'parent_id', 'Child Pages'),
     }
@@ -176,29 +178,7 @@ class Wiki(osv.osv):
                 history.create(cr, uid, res)
         return result
 
-    def open_wiki_page(self, cr, uid, ids, context):
-
-        """ Opens Wiki Page for Editing
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of wiki page’s IDs
-
-        """
-        pages = self.pool.get('wiki.wiki').search(cr, uid, [('name', '=', 'Basic Wiki Editing')])
-        if not pages:
-           raise osv.except_osv(_('Warning !'), _("No Help page is defined"))
-        value = {
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'wiki.wiki',
-            'view_id': False,
-            'res_id': pages[0],
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-        }
-        return value
-
-Wiki()
+Wiki2()
 
 
 class History(osv.osv):
