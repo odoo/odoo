@@ -23,64 +23,7 @@
                     <field name="fixed_cost"/>
                     <field name="partner_field_id"/>
                 </group>
-                <field name="activity_ids" nolabel = "1" colspan="4" default_get="{'object_id':object_id}">
-                    <form string="Activities">
-                        <group colspan="4" col="6">
-                            <separator string="Activity Definition" colspan="4"/>
-                            <separator string="Cost Control" colspan="2"/>
-                            <field name="name" select="1" />
-                            <field name="start"/>
-                            <field name="variable_cost" select="1"/>
-                            <field name="object_id" invisible="1"/>
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Condition" colspan="2"/>
-                            <field name="condition"/>
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Action" colspan="2"/>
-                            <field name="type" colspan="4"/>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','email')]}" >
-                                <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','paper')]}" >
-                                <field name="report_id" attrs="{'required':[('type','=','paper')]}"/>
-                                <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','action')]}" >
-                                <field name="server_action_id" attrs="{'required':[('type','=','action')]}" domain="[('model_id','=',object_id)]" />
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','subcampaign')]}" >
-                                <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
-                                <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
-                            </group>
-                        </group>
-                        <newline/>
-                        <group colspan="4" col="4">
-                            <separator string="Transitions" colspan="4"/>
-                            <field name="to_ids" nolabel="1" colspan="2" mode="tree" default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
-                                 <tree string="Outgoing Transitions" editable="bottom">
-                                     <field name="activity_to_id"/>
-                                     <field name="interval_nbr"/>
-                                     <field name="interval_type"/>
-                                 </tree>
-                             </field>
-                             <field name="from_ids" nolabel="1" colspan="2" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
-                                 <tree string="Incoming Transitions" editable="bottom">
-                                     <field name="activity_from_id"/>
-                                     <field name="interval_nbr"/>
-                                     <field name="interval_type"/>
-                                 </tree>
-                             </field>
-                         </group>
-                    </form>
-                    <tree string="Activities">
-                        <field name="name"/>
-                        <field name="start"/>
-                        <field name="condition"/>
-                        <field name="type"/>
-                    </tree>
-                </field>
+                <field name="activity_ids" nolabel = "1" colspan="4" default_get="{'object_id': object_id}" />
                 <separator string="Status" colspan="4" />
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
@@ -265,6 +208,8 @@
     ======================
     Marketing Activities
     ======================
+
+    these views are not intended to be used outside the campaign context.
     -->
 
     <record model="ir.ui.view" id="view_marketing_campaign_activity_form">
@@ -273,7 +218,6 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Activities">
-
                 <group colspan="4" col="6">
                     <separator string="Activity Definition" colspan="4"/>
                     <separator string="Cost Control" colspan="2"/>
@@ -287,7 +231,7 @@
                     <field name="condition"/>
                 </group>
                 <group colspan="2" col="2">
-                    <separator string="Action"/>
+                    <separator string="Action" colspan="2"/>
                     <field name="type" colspan="4"/>
                     <group colspan="4" attrs="{'invisible':[('type','!=','email')]}" >
                         <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
@@ -297,7 +241,7 @@
                         <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
                     </group>
                     <group colspan="4" attrs="{'invisible':[('type','!=','action')]}" >
-                        <field name="server_action_id" attrs="{'required':[('type','=','action')]}" />
+                        <field name="server_action_id" attrs="{'required':[('type','=','action')]}" domain="[('model_id','=',object_id)]" />
                     </group>
                     <group colspan="4" attrs="{'invisible':[('type','!=','subcampaign')]}" >
                         <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
@@ -305,16 +249,16 @@
                     </group>
                 </group>
                 <newline/>
-                <group colspan="4" col="4">
-                    <separator string="Transitions" colspan="4"/>
-                    <field name="to_ids" nolabel="1" colspan="2" mode="tree" default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
+                <group colspan="4" col="2" expand="1">
+                    <separator string="Transitions" colspan="2"/>
+                    <field name="to_ids" nolabel="1" mode="tree" default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
                          <tree string="Outgoing Transitions" editable="bottom">
                              <field name="activity_to_id"/>
                              <field name="interval_nbr"/>
                              <field name="interval_type"/>
                          </tree>
                      </field>
-                     <field name="from_ids" nolabel="1" colspan="2" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
+                     <field name="from_ids" nolabel="1" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
                          <tree string="Incoming Transitions" editable="bottom">
                              <field name="activity_from_id"/>
                              <field name="interval_nbr"/>
@@ -325,7 +269,7 @@
             </form>
         </field>
     </record>
-
+    
     <record model="ir.ui.view" id="view_marketing_campaign_activity_tree">
         <field name="name">marketing.campaign.activity.tree</field>
         <field name="model">marketing.campaign.activity</field>
@@ -333,7 +277,6 @@
         <field name="arch" type="xml">
             <tree string="Activities">
                 <field name="name" select="1"/>
-                <field name="campaign_id" select="1"/>
                 <field name="start"/>
                 <field name="condition"/>
                 <field name="type"/>
@@ -341,16 +284,6 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_marketing_campaign_activity_form">
-        <field name="name">Activities</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">marketing.campaign.activity</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_marketing_campaign_activity_tree"/>
-    </record>
-
-       <!--menuitem id="menu_marketing_campaign_activity_form" parent="menu_marketing" action="action_marketing_campaign_activity_form" sequence="3" /-->
 
     <!--
     ======================
@@ -444,7 +377,7 @@
    </record>
 
     <record model="ir.actions.act_window" id="action_marketing_campaign_workitem">
-        <field name="name">Campaign Activities</field>
+        <field name="name">Campaign Activities (Workitems)</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">marketing.campaign.workitem</field>
         <field name="view_type">form</field>
