@@ -86,7 +86,7 @@ class Wiki2(osv.osv):
 
     _columns = {
         'name': fields.char('Title', size=256, select=True, required=True),
-        'write_uid': fields.many2one('res.users', "Last Author", select=True),
+        'write_uid': fields.many2one('res.users', "Last Contributor", select=True),
         'text_area': fields.text("Content"),
         'create_uid': fields.many2one('res.users', 'Author', select=True),
         'create_date': fields.datetime("Created on", select=True),
