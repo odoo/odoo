@@ -170,17 +170,17 @@ class crm_send_new_email(osv.osv_memory):
 
         for case in mod_obj.browse(cr, uid, res_id):
             if 'email_to' in fields:
-                res.update({'email_to': case.email_from})
+                res.update({'email_to': tools.ustr(case.email_from)})
             if 'email_from' in fields:
-                res.update({'email_from': user_mail_from})
+                res.update({'email_from': tools.ustr(user_mail_from)})
             if 'subject' in fields:
                 res.update({'subject': tools.ustr(context.get('subject', case.name) or '')})
             if 'email_cc' in fields:
-                res.update({'email_cc': case.email_cc or ''})
+                res.update({'email_cc': tools.ustr(case.email_cc or '')})
             if 'text' in fields:
-                res.update({'text': '\n\n'+(case.user_id.signature or '')})
+                res.update({'text': u'\n\n'+(tools.ustr(case.user_id.signature or ''))})
             if 'state' in fields:
-                res.update({'state': 'pending'})
+                res.update({'state': u'pending'})
 
         return res
 
@@ -207,28 +207,28 @@ class crm_send_new_email(osv.osv_memory):
             res_id = hist.res_id
             case = model_pool.browse(cr, uid, res_id)
             if 'email_to' in fields:
-                res.update({'email_to': hist.email_from or False})
+                res.update({'email_to': case.email_from and tools.ustr(case.email_from) or False})
             if 'email_from' in fields:
-                res.update({'email_from': user_mail_from})
+                res.update({'email_from': user_mail_from and tools.ustr(user_mail_from) or False})
 
-            signature = '\n' + (case.user_id.signature or '')
+            signature = u'\n' + (tools.ustr(case.user_id.signature or ''))
             original = [signature]
 
             if include_original == True and 'text' in fields:
-                header = '-------- Original Message --------'
-                sender = 'From: %s' %(hist.email_from or '')
-                to = 'To: %s' % (hist.email_to or '')
-                sentdate = 'Date: %s' % (hist.date)
-                desc = '\n%s'%(hist.description)
+                header = u'-------- Original Message --------'
+                sender = u'From: %s' %(tools.ustr(hist.email_from or ''))
+                to = u'To: %s' % (tools.ustr(hist.email_to or ''))
+                sentdate = u'Date: %s' % (tools.ustr(hist.date))
+                desc = u'\n%s'%(tools.ustr(hist.description))
 
                 original = [header, sender, to, sentdate, desc, signature]
 
-            res['text']= '\n\n\n' + '\n'.join(original)
+            res['text']= u'\n\n\n' + u'\n'.join(original)
 
             if 'subject' in fields:
-                res.update({'subject': 'Re: %s' %(hist.name or '')})
+                res.update({u'subject': u'Re: %s' %(tools.ustr(hist.name or ''))})
             if 'state' in fields:
-                res['state']='pending'
+                res['state'] = u'pending'
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
