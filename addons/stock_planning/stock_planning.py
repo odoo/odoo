@@ -346,12 +346,13 @@ class stock_sale_forecast(osv.osv):
 
     def product_amt_change(self, cr, uid, ids, product_amt = 0.0, product_uom=False):
         ret={}
+        round_value = 1
         if product_amt:
             coeff_def2uom = 1
             val1 = self.browse(cr, uid, ids)
             val = val1[0]
             if (product_uom != val.product_id.uom_id.id):
-                coeff_def2uom, rounding = self._from_default_uom_factor( cr, uid, val, product_uom, {})
+                coeff_def2uom, round_value = self._from_default_uom_factor( cr, uid, val, product_uom, {})
             ret['product_qty'] = rounding(coeff_def2uom * product_amt/(val.product_id.product_tmpl_id.list_price), round_value)
         res = {'value': ret}
         return res
