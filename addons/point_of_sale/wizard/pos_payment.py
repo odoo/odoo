@@ -207,7 +207,7 @@ class pos_make_payment(osv.osv_memory):
        }
 
     _columns = {
-        'journal':fields.selection(pos_box_entries.get_journal, "Journal",required=True),
+        'journal':fields.selection(pos_box_entries.get_journal, "Cash Register",required=True),
         'product_id': fields.many2one('product.product', "Acompte"),
         'amount':fields.float('Amount', digits=(16,2) ,required= True),
         'payment_name': fields.char('Payment name', size=32, required=True),
