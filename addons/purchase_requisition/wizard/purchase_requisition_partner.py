@@ -45,6 +45,8 @@ class purchase_requisition_partner(osv.osv_memory):
         True
 
     def onchange_partner_id(self, cr, uid, ids, partner_id):
+        if not partner_id:
+            return {}
         addr = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['default'])
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
         return {'value':{'partner_address_id': addr['default']}}
