@@ -222,10 +222,15 @@
                                <field name="rrule_type" string="Recurrency"
                                     colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
                                <button string="Edit All"
-                                   help="Edit all Ourrences of recurrent Meeting"
+                                   help="Edit all Ourrences of recurrent Events"
                                    attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                                    name="open_event" icon="gtk-edit"
                                    type="object" />
+                               <button string="ExRule"
+                                    help="Add Exception Rule"
+                                    name="%(base_calendar.action_base_calendar_set_exrule)d" icon="gtk-zoom-out"  type="action"
+                                    context="{'model' : 'calendar.event'}"
+                                    attrs="{'invisible':[('rrule_type','in', ('none', False))]}"/>
                         </group>
                     </group>
                     <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
@@ -350,7 +355,7 @@
             <field name="arch" type="xml">
                 <tree string="Events">
                     <field name="name" string="Subject" />
-                    <field name="date" string="Meeting Date" />
+                    <field name="date" string="Event Date" />
                     <field name="location" />
                     <field name="show_as" />
                     <field name="class" string="Privacy" />
