@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
         <record id="view_crm_opportunity_geo_assign_form" model="ir.ui.view">
             <field name="name">crm.lead.geo_assign.inherit</field>
             <field name="model">crm.lead</field>
@@ -9,7 +8,7 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
-                    <page string="Partner Assignation">
+                    <page string="Geo Assignation">
                         <field name="partner_assigned_id"/>
                         <newline/>
                         <field name="partner_latitude"/>
@@ -36,7 +35,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
-                    <page string="Partner Association">
+                    <page string="Geo Location">
                         <field name="partner_weight"/>
                         <label string="" colspan="1"/>
                         <button
