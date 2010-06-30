@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -42,7 +42,7 @@ class report_custom(report_rml):
         month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
         for employee_id in ids:
-            emp = self.pool.get('hr.employee').read(cr, uid, 'read', [employee_id], ['name'])[0]
+            emp = pooler.get_pool(cr.dbname).get('hr.employee').read(cr, uid, [employee_id], ['name'])[0]
             stop, days_xml = False, []
             user_repr = '''
             <user>
@@ -74,15 +74,15 @@ class report_custom(report_rml):
                     if att['action'] == 'sign_out':
                         wh += (dt - ldt).hours
                     ldt = dt
-                
+
                 # Week xml representation
                 wh = hour2str(wh)
                 today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, wh)
                 days_xml.append(today_xml)
                 today, tomor = tomor, tomor + one_day
-                
+
             user_xml.append(user_repr % '\n'.join(days_xml))
-        
+
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
