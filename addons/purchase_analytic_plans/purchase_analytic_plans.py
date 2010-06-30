@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,15 +15,17 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import time
-from mx import DateTime
 
-from osv import fields, osv
+from osv import fields
+from osv import osv
+import time
 import netsvc
+
 import ir
+from mx import DateTime
 import pooler
 from tools import config
 
@@ -32,7 +34,7 @@ class purchase_order_line(osv.osv):
     _inherit='purchase.order.line'
     _columns = {
         'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
-                }
+    }
 
 purchase_order_line()
 
@@ -46,5 +48,5 @@ class purchase_order(osv.osv):
         return res
 
 purchase_order()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
@@ -27,7 +27,7 @@ class stock_move(osv.osv):
         'sale_line_id': fields.many2one('sale.order.line', 'Sale Order Line', ondelete='set null', select=True, readonly=True),
     }
     _defaults = {
-        'sale_line_id': False
+        'sale_line_id': lambda *a:False
     }
 stock_move()
 
@@ -37,7 +37,7 @@ class stock_picking(osv.osv):
         'sale_id': fields.many2one('sale.order', 'Sale Order', ondelete='set null', select=True, readonly=True),
     }
     _defaults = {
-        'sale_id': False
+        'sale_id': lambda *a: False
     }
 
     def get_currency_id(self, cursor, user, picking):
@@ -127,7 +127,7 @@ class stock_picking(osv.osv):
         for invoice in invoice_obj.browse(cursor, user, invoice_ids,
                 context=context):
             invoices[invoice.id] = invoice
-
+            
         for picking in picking_obj.browse(cursor, user, picking_ids,
                 context=context):
 
@@ -135,15 +135,15 @@ class stock_picking(osv.osv):
                 continue
             sale_lines = picking.sale_id.order_line
             invoice_created = invoices[result[picking.id]]
-
+            
             for inv in invoice_obj.browse(cursor, user, [invoice_created.id], context=context):
                 if not inv.fiscal_position:
                     invoice_obj.write(cursor, user, [inv.id], {'fiscal_position': picking.sale_id.fiscal_position.id}, context=context)
-
+                    
             if picking.sale_id.client_order_ref:
                 inv_name = picking.sale_id.client_order_ref + " : " + invoice_created.name
                 invoice_obj.write(cursor, user, [invoice_created.id], {'name': inv_name}, context=context)
-
+            
             for sale_line in sale_lines:
                 if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
                     if group:
@@ -189,7 +189,7 @@ class stock_picking(osv.osv):
                         })
 
         return result
-
+    
     def action_cancel(self, cr, uid, ids, context={}):
         res = super(stock_picking, self).action_cancel(cr, uid, ids, context=context)
         for pick in self.browse(cr, uid, ids, context):
@@ -200,9 +200,13 @@ class stock_picking(osv.osv):
                         call_ship_end = False
                         break
                 if call_ship_end:
-                    self.pool.get('sale.order').action_ship_end(cr, uid, [pick.sale_id.id], context)
+                    self.pool.get('sale.order').action_ship_end(cr, uid, [pick.sale_id.id], context)    
         return res
+
 
 stock_picking()
 
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

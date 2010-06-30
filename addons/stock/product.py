@@ -349,8 +349,7 @@ class product_product(osv.osv):
                 if location_info.usage == 'inventory':
                     if fields.get('virtual_available'):
                         res['fields']['virtual_available']['string'] = _('Future P&L')
-                    if fields.get('qty_available'):                        
-                        res['fields']['qty_available']['string'] = _('P&L Qty')
+                    res['fields']['qty_available']['string'] = _('P&L Qty')
 
                 if location_info.usage == 'procurement':
                     if fields.get('virtual_available'):

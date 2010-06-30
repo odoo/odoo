@@ -28,11 +28,11 @@ class company(osv.osv):
             help="This is the time frame analysed by the scheduler when "\
             "computing procurements. All procurements that are not between "\
             "today and today+range are skipped for futur computation."),
-                }
+    }
     _defaults = {
-        'schedule_range': 80.0,
-                }
-
+        'schedule_range': lambda *a: 80.0,
+    }
 company()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
