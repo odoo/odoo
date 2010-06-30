@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -48,7 +48,7 @@ class report_custom(report_rml):
         user_xml = []
 
         for employee_id in ids:
-            emp = self.pool.get('hr.employee').read(cr, uid, [employee_id], ['id', 'name'])[0]
+            emp = pooler.get_pool(cr.dbname).get('hr.employee').read(cr, uid, [employee_id], ['id', 'name'])[0]
             monday, n_monday = first_monday, first_monday + one_week
             stop, week_xml = False, []
             user_repr = '''
@@ -71,7 +71,7 @@ class report_custom(report_rml):
                     attendances = cr.dictfetchall()
                     week_wh = {}
                     # Fake sign ins/outs at week ends, to take attendances across week ends into account
-                    # XXX this is wrong for the first sign-in ever and the last sign out to this date 
+                    # XXX this is wrong for the first sign-in ever and the last sign out to this date
                     if attendances and attendances[0]['action'] == 'sign_out':
                         attendances.insert(0, {'name': monday.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_in'})
                     if attendances and attendances[-1]['action'] == 'sign_in':
@@ -96,10 +96,10 @@ class report_custom(report_rml):
                 week_repr.append('</week>')
                 if len(week_repr) > 21: # 21 = minimal length of week_repr
                     week_xml.append('\n'.join(week_repr))
-                
+
                 monday, n_monday = n_monday, n_monday + one_week
             user_xml.append(user_repr % '\n'.join(week_xml))
-        
+
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s

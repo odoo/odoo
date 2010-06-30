@@ -8,27 +8,29 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Invoice analytic lines">
-			    <group col="4" colspan="6">
-			        <notebook>
-			        <page string="Billing Data">
-			            <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
-			            <field name="date"/>
-			            <field name="time"/>
-			            <field name="name"/>
-			            <field name="price"/>
-			            <separator string="Force to use a specific product" colspan="4"/>
-			            <field name="product"/>
-			        </page>
-			        <page string="Filter on Accounts" groups="base.group_extended">
-			            <separator string="Choose accounts you want to invoice" colspan="4"/>
-			            <field name="accounts" colspan="4" nolabel="1"/>
-			        </page>
-			        </notebook>
-				</group>
-				<separator colspan="4"/>
-			    <group col="2" colspan="4">
-            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="do_create" string="Create Invoices" colspan="1" type="object" icon="gtk-execute"/>
+			    <group height="280" width="450">
+				    <group col="4" colspan="6">
+				        <notebook>
+				        <page string="Billing Data">
+				            <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
+				            <field name="date"/>
+				            <field name="time"/>
+				            <field name="name"/>
+				            <field name="price"/>
+				            <separator string="Force to use a specific product" colspan="4"/>
+				            <field name="product"/>
+				        </page>
+				        <page string="Filter on Accounts" groups="base.group_extended">
+				            <separator string="Choose accounts you want to invoice" colspan="4"/>
+				            <field name="accounts" colspan="4" nolabel="1"/>
+				        </page>
+				        </notebook>
+					</group>
+					<separator colspan="4"/>
+				    <group col="2" colspan="4">
+	            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+						<button name="do_create" string="Create Invoices" colspan="1" type="object" icon="gtk-execute"/>
+					</group>
 				</group>
 			</form>
             </field>
