@@ -59,6 +59,7 @@ class mrp_workcenter(osv.osv):
     }
     _defaults = {
         'capacity_per_cycle': lambda *a: 1.0,
+        'resource_type': lambda *a: 'material',
      }
 mrp_workcenter()
 
