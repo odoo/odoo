@@ -797,7 +797,6 @@ class hr_payslip(osv.osv):
         'paid':fields.boolean('Paid ? ', required=False),
         'note':fields.text('Description'),
         'contract_id':fields.many2one('hr.contract', 'Contract', required=False),
-        
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
     }
@@ -843,20 +842,11 @@ class hr_payslip(osv.osv):
         move_pool = self.pool.get('account.move')
 
         for slip in self.browse(cr, uid, ids, context):
-            if slip.move_id:
-                if slip.move_id.state == 'posted':
-                    move_pool.button_cancel(cr, uid [slip.move_id.id], context)
-                move_pool.unlink(cr, uid, [slip.move_id.id])
-            
-            if slip.adj_move_id:
-                if slip.adj_move_id.state == 'posted':
-                    move_pool.button_cancel(cr, uid [slip.adj_move_id.id], context)
-                move_pool.unlink(cr, uid, [slip.adj_move_id.id])
-                
-            if slip.other_move_id:
-                if slip.other_move_id.state == 'posted':
-                    move_pool.button_cancel(cr, uid [slip.other_move_id.id], context)
-                move_pool.unlink(cr, uid, [slip.other_move_id.id])
+            for line in slip.move_ids:
+                if slip.move_id:
+                    if slip.move_id.state == 'posted':
+                        move_pool.button_cancel(cr, uid [slip.move_id.id], context)
+                    move_pool.unlink(cr, uid, [slip.move_id.id])
             
         self.write(cr, uid, ids, {'state':'cancel'})
         return True
@@ -1385,7 +1375,9 @@ class hr_payslip(osv.osv):
             LIMIT 1
             '''
         cr.execute(sql_req, (employee.id, date, date))
-        contract = cr.dictfetchone()
+        contract = cr.dictfetchone() 
+        
+        contract = contract and contract or {}
         
         return contract
     
@@ -1589,9 +1581,12 @@ class hr_payslip(osv.osv):
             })
             self.write(cr, uid, [slip.id], update)
         
-        
         for slip in self.browse(cr, uid, ids):
-            basic_before_leaves = basic
+
+            if not slip.contract_id :
+                continue
+                
+            basic_before_leaves = slip.basic
 
             working_day = 0
             off_days = 0
@@ -1600,7 +1595,7 @@ class hr_payslip(osv.osv):
             days_arr = [0, 1, 2, 3, 4, 5, 6]
             for dy in range(contract.working_days_per_week, 7):
                 off_days += get_days(1, dates[1].day, dates[1].month, dates[1].year, days_arr[dy])
-        
+            
             total_off = off_days
             working_day = dates[1].day - total_off
             perday = slip.net / working_day

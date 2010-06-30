@@ -387,10 +387,6 @@ class crm_case(object):
                     attach=attach_to_send
                 )
                 self._history(cr, uid, [case], _('Send'), history=True, email=dest, details=body, email_from=src)
-                #if flag:
-                #    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
-                #else:
-                #    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
         return True
 
     def _check(self, cr, uid, ids=False, context={}):

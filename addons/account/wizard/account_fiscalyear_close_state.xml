@@ -7,16 +7,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Close states of Fiscal year and periods">
-                	<group colspan="4" >
-                		 <field name="fy_id"  domain = "[('state','=','draft')]"/>
-              			 <separator string="Are you sure you want to close the fiscal year ?" colspan="4"/>
-                		 <field name="sure"/>
-                    </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                       	<label string ="" colspan="2"/>
-                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button icon="gtk-close" string="Close states" name="data_save" type="object"/>
+                	<group width="380" height="180">
+	                	<group colspan="4">
+	                		 <field name="fy_id"  domain = "[('state','=','draft')]"/>
+	              			 <separator string="Are you sure you want to close the fiscal year ?" colspan="4"/>
+	                		 <field name="sure"/>
+	                    </group>
+	                       	<separator string="" colspan="4" />
+	                    <group colspan="4" col="6">
+	                       	<label string ="" colspan="2"/>
+	                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+	                    	<button icon="gtk-close" string="Close states" name="data_save" type="object"/>
+	                   </group>
                    </group>
                </form>
             </field>

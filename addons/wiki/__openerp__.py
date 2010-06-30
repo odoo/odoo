@@ -24,13 +24,13 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
-    The base module to manage documents(wiki)
+The base module to manage documents(wiki)
 
-    keep track for the wiki groups, pages, and history
+keep track for the wiki groups, pages, and history
     """,
     'author': 'Tiny & Axelor',
     'website': 'http://openerp.com',
-    'depends': ['base'],
+    'depends': ['knowledge'],
     'init_xml': [],
     'update_xml': [
         'wizard/wiki_wiki_page_open_view.xml',

@@ -251,8 +251,8 @@ class account_cash_statement(osv.osv):
         statement = statement_pool.browse(cr, uid, ids[0])
         
         if not self._user_allow(cr, uid, ids, statement, context={}):
-            raise osv.except_osv(_('Error !'), _('User %s have no rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
-            
+            raise osv.except_osv(_('Error !'), _('User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
+        
         number = self.pool.get('ir.sequence').get(cr, uid, statement.journal_id.sequence_id.code)
         
         if len(statement.starting_details_ids) > 0:

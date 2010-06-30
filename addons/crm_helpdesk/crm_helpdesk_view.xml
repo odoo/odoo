@@ -93,41 +93,6 @@
                                     icon="gtk-convert" />
                             </group>
                         </page>
-                        <page string="History" groups="base.group_extended">
-                            <group colspan="2" col="2">
-                                <separator colspan="4" string="Dates"/>
-                                <field name="create_date"/>
-                                <field name="date_closed"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator colspan="4" string="Misc"/>
-                                <field name="id" select="1"/>
-                                <field name="active"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator colspan="4" string="Estimates"/>
-                                <field name="planned_cost"/>
-                            </group>
-                            <newline/>
-                            <group colspan="4" col="2">
-                                <separator colspan="4" string="References"/>
-                                <field colspan="4" name="ref"/>
-                                <field colspan="4" name="ref2"/>
-                            </group>
-                            <field colspan="4" name="log_ids" nolabel="1">
-                                <tree string="Logs">
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </tree>
-                                <form string="Logs">
-                                    <separator string="Action Information" colspan="4"/>
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </form>
-                            </field>
-                        </page>
                         <page string="Emails" groups="base.group_extended">
                             <group colspan="4">
                                 <field colspan="4" name="email_cc" string="CC"/>
@@ -164,6 +129,41 @@
                                 name="%(crm.action_crm_send_mail)d"
                                 context="{'mail':'new', 'model': 'crm.helpdesk'}"
                                 icon="gtk-go-forward" type="action" />
+                        </page>
+                        <page string="History" groups="base.group_extended">
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Dates"/>
+                                <field name="create_date"/>
+                                <field name="date_closed"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Misc"/>
+                                <field name="id" select="1"/>
+                                <field name="active"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Estimates"/>
+                                <field name="planned_cost"/>
+                            </group>
+                            <newline/>
+                            <group colspan="4" col="2">
+                                <separator colspan="4" string="References"/>
+                                <field colspan="4" name="ref"/>
+                                <field colspan="4" name="ref2"/>
+                            </group>
+                            <field colspan="4" name="log_ids" nolabel="1">
+                                <tree string="Logs">
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </tree>
+                                <form string="Logs">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </form>
+                            </field>
                         </page>
                     </notebook>
                 </form>
