@@ -49,9 +49,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Departments">
-                    <group col='4' colspan='2'>
-                        <field name="name" />
-                        <field name="manager_id"/>
+                    <field name="name"/>
+                    <field name="manager_id" />
+                    <newline />
+                    <group expand="0" string="Group By...">
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
                     </group>
                 </search>
              </field>

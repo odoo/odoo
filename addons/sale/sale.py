@@ -20,10 +20,11 @@
 ##############################################################################
 
 import time
-import netsvc
-from osv import fields, osv
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+import netsvc
+from osv import fields, osv
 from tools import config
 from tools.translate import _
 
@@ -41,8 +42,8 @@ class sale_shop(osv.osv):
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
-sale_shop()
 
+sale_shop()
 
 def _incoterm_get(self, cr, uid, context=None):
     if context is None:
@@ -77,11 +78,11 @@ class sale_order(osv.osv):
         return val
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
+        cur_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
         res = {}
-        cur_obj = self.pool.get('res.currency')
-        for order in self.browse(cr, uid, ids, context):
+        for order in self.browse(cr, uid, ids, context=context):
             res[order.id] = {
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
@@ -222,15 +223,15 @@ class sale_order(osv.osv):
             ('cancel', 'Cancelled')
             ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
         'date_order': fields.date('Ordered Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'create_date': fields.date('Creation Date', readonly=True),
-        'date_confirm': fields.date('Confirmation Date', readonly=True),
+        'create_date': fields.date('Creation Date', readonly=True, help="Date on which sale order is created"),
+        'date_confirm': fields.date('Confirmation Date', readonly=True, help="Date on which sale order is confirmed"),
         'user_id': fields.many2one('res.users', 'Salesman', states={'draft': [('readonly', False)]}, select=True),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)]}, required=True, change_default=True, select=True),
-        'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)]}),
+        'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Invoice address for current sale order"),
         'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="The name and address of the contact who requested the order or quotation."),
         'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Shipping address for current sale order"),
 
-        'incoterm': fields.selection(_incoterm_get, 'Incoterm', size=3),
+        'incoterm': fields.selection(_incoterm_get, 'Incoterm', size=3, help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction"),
         'picking_policy': fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery')],
             'Picking Policy', required=True, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
@@ -245,16 +246,16 @@ class sale_order(osv.osv):
   - The 'Invoice on Order After Delivery' choice will generate the draft invoice based on sale order after all picking lists have been finished.
   - The 'Invoice from the picking' choice is used to create an invoice during the picking process."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist version for current sale order"),
-        'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
+        'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)]}, help="The analytic account related to a sale order"),
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
         'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Picking', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
-        'shipped': fields.boolean('Picked', readonly=True),
+        'shipped': fields.boolean('Picked', readonly=True, help="It indicates that a picking has been done.It will set to True if the ordered quantities are available and the picking is done.If the ordered quantities are not available it generates a Purchase/Manufacturing order.Unless its Picking and Purchase/Manufacturing order are not in the done state it wont be set to True"),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
-            fnct_search=_invoiced_search, type='boolean'),
+            fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid"),
         'note': fields.text('Notes'),
 
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Untaxed Amount',
@@ -262,19 +263,19 @@ class sale_order(osv.osv):
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
-            multi='sums'),
+            multi='sums', help="The amount without tax"),
         'amount_tax': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Taxes',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
-            multi='sums'),
+            multi='sums', help="The tax amount"),
         'amount_total': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Total',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
-            multi='sums'),
+            multi='sums', help="The total amount"),
 
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
@@ -283,13 +284,13 @@ class sale_order(osv.osv):
     }
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
-        'picking_policy': lambda *a: 'direct',
-        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
-        'order_policy': lambda *a: 'manual',
-        'state': lambda *a: 'draft',
+        'picking_policy': 'direct',
+        'date_order': time.strftime('%Y-%m-%d'),
+        'order_policy': 'manual',
+        'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
-        'invoice_quantity': lambda *a: 'order',
+        'invoice_quantity': 'order',
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
@@ -335,7 +336,7 @@ class sale_order(osv.osv):
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
         for (id,name) in self.name_get(cr, uid, ids):
             message = _('Sale order ') + " '" + name + "' "+ _("is in draft state")
-            self.log(cr, uid, id, message) 
+            self.log(cr, uid, id, message)
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part):
@@ -410,8 +411,16 @@ class sale_order(osv.osv):
         return {}
 
     def _make_invoice(self, cr, uid, order, lines, context=None):
+        journal_obj = self.pool.get('account.journal')
+        inv_obj = self.pool.get('account.invoice')
+
         if context is None:
             context = {}
+
+        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
+        if not journal_ids:
+            raise osv.except_osv(_('Error !'),
+                _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
         a = order.partner_id.property_account_receivable.id
         if order.payment_term:
             pay_term = order.payment_term.id
@@ -422,12 +431,6 @@ class sale_order(osv.osv):
                 for preline in preinv.invoice_line:
                     inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
-        journal_obj = self.pool.get('account.journal')
-        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
-        if not journal_ids:
-            raise osv.except_osv(_('Error !'),
-                _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
-
         inv = {
             'name': order.client_order_ref or order.name,
             'origin': order.name,
@@ -447,7 +450,6 @@ class sale_order(osv.osv):
             'company_id' : order.company_id.id,
             'user_id':order.user_id and order.user_id.id or False
         }
-        inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))
         inv_id = inv_obj.create(cr, uid, inv, context=context)
         data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], pay_term, time.strftime('%Y-%m-%d'))
@@ -456,12 +458,14 @@ class sale_order(osv.osv):
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}
         invoice_ids = []
-
-        context = {}
+        picking_obj = self.pool.get('stock.picking')
+        invoice = self.pool.get('account.invoice')
+        if context is None:
+            context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
         # last day of the last month as invoice date
         if date_inv:
@@ -474,21 +478,22 @@ class sale_order(osv.osv):
             created_lines = self.pool.get('sale.order.line').invoice_line_create(cr, uid, lines)
             if created_lines:
                 invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
-
         if not invoices:
             for o in self.browse(cr, uid, ids):
                 for i in o.invoice_ids:
                     if i.state == 'draft':
                         return i.id
-        picking_obj = self.pool.get('stock.picking')
         for val in invoices.values():
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []), context=context)
+                invoice_ref = ''
                 for o, l in val:
+                    invoice_ref += o.name + '|'
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     if o.order_policy == 'picking':
                         picking_obj.write(cr, uid, map(lambda x: x.id, o.picking_ids), {'invoice_state': 'invoiced'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
+                invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': invoice_ref})
             else:
                 for order, il in val:
                     res = self._make_invoice(cr, uid, order, il, context=context)
@@ -561,19 +566,19 @@ class sale_order(osv.osv):
 
     def action_wait(self, cr, uid, ids, *args):
         product=[]
-        product_obj=self.pool.get('product.product')
+        product_obj = self.pool.get('product.product')
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            for line in o.order_line: 
+            for line in o.order_line:
                 product.append(line.product_id.default_code)
         params = ', '.join(map(lambda x : str(x),product))
         message = _('Sale order ') + " '" + o.name + "' "+ _("created on")+" '" +o.create_date + "' "+_("for")+" '" +params  + "' "+_("is confirmed")
         self.log(cr, uid, id, message)
-
+        return True
 
     def procurement_lines_get(self, cr, uid, ids, *args):
         res = []
@@ -775,10 +780,10 @@ sale_order()
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        context = context or {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
+        res = {}
+        context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
             price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
             taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty)
@@ -836,15 +841,15 @@ class sale_order_line(osv.osv):
     }
     _order = 'sequence, id'
     _defaults = {
-        'discount': lambda *a: 0.0,
-        'delay': lambda *a: 0.0,
-        'product_uom_qty': lambda *a: 1,
-        'product_uos_qty': lambda *a: 1,
-        'sequence': lambda *a: 10,
-        'invoiced': lambda *a: 0,
-        'state': lambda *a: 'draft',
-        'type': lambda *a: 'make_to_stock',
-        'product_packaging': lambda *a: False
+        'discount': 0.0,
+        'delay': 0.0,
+        'product_uom_qty': 1,
+        'product_uos_qty': 1,
+        'sequence':  10,
+        'invoiced': 0,
+        'state': 'draft',
+        'type': 'make_to_stock',
+        'product_packaging': False
     }
 
     def invoice_line_create(self, cr, uid, ids, context=None):
@@ -936,7 +941,7 @@ class sale_order_line(osv.osv):
             context = {}
         for (id,name) in self.name_get(cr, uid, ids):
             message = _('Sale order line') + " '" + name + "' "+ _("is confirmed")
-            self.log(cr, uid, id, message)  
+            self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
     def button_done(self, cr, uid, ids, context=None):
@@ -1193,3 +1198,4 @@ class sale_config_picking_policy(osv.osv_memory):
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
 sale_config_picking_policy()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

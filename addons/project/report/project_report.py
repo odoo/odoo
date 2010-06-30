@@ -104,7 +104,7 @@ class report_project_task_user(osv.osv):
                     (extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24)  as delay_endings_days
               from project_task t
 
-                group by 
+                group by
                     t.id,
                     remaining_hours,
                     t.effective_hours,
@@ -203,31 +203,5 @@ class task_by_days(osv.osv):
         """)
 task_by_days()
 
-class task_by_days_vs_planned_hours(osv.osv):
-    _name = "task.by.days.vs.planned.hours"
-    _description = "Task By Days vs Planned Hours"
-    _auto = False
-    _columns = {
-        'day': fields.char('Day', size=128, required=True),
-        'planned_hour': fields.float('Planned Hours', readonly=True),
-        'project_id':fields.many2one('project.project','Project')
-     }
-    _order = 'day desc'
-    def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'task_by_days_vs_planned_hours')
-        cr.execute("""
-            create or replace view task_by_days_vs_planned_hours as (
-                select
-                    min(pt.id) as id,
-                    to_char(pt.create_date, 'YYYY-MM-DD') as day,
-                    sum(planned_hours) as planned_hour,
-                    pt.project_id
-                from
-                    project_task as pt
-                group by
-                    to_char(pt.create_date, 'YYYY-MM-DD'),pt.project_id
-            )
-        """)
-task_by_days_vs_planned_hours()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
