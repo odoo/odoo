@@ -23,6 +23,7 @@ import time
 import base64
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from operator import itemgetter
 
 from osv import fields, osv
 import netsvc
@@ -34,6 +35,44 @@ _intervalTypes = {
     'months': lambda interval: relativedelta(months=interval),
     'years': lambda interval: relativedelta(years=interval),
 }
+
+def dict_map(f, d):
+    return dict((k, f(v)) for k,v in d.items())
+
+def _find_fieldname(model, field):
+    inherit_columns = dict_map(itemgetter(2), model._inherit_fields)
+    all_columns = dict(inherit_columns, **model._columns)
+    for fn in all_columns:
+        if all_columns[fn] is field:
+            return fn
+    raise ValueError('field not found: %r' % (field,))
+
+class selection_converter(object):
+    """Format the selection in the browse record objects"""
+    def __init__(self, value):
+        self._value = value
+        self._str = value
+
+    def set_value(self, cr, uid, _self_again, record, field, lang):
+        # this design is terrible
+        # search fieldname from the field
+        fieldname = _find_fieldname(record._table, field)
+        context = dict(lang=lang.code)
+        fg = record._table.fields_get(cr, uid, [fieldname], context=context)
+        selection = dict(fg[fieldname]['selection'])
+        self._str = selection[self.value]
+
+    @property
+    def value(self):
+        return self._value
+
+    def __str__(self):
+        return self._str
+
+translate_selections = {
+    'selection': selection_converter,
+}
+
 
 class marketing_campaign(osv.osv):
     _name = "marketing.campaign"
@@ -221,7 +260,7 @@ class marketing_campaign_activity(osv.osv):
                                             required = True, ondelete='cascade', select=1),
         'object_id': fields.related('campaign_id','object_id',
                                       type='many2one', relation='ir.model',
-                                      string='Object'),
+                                      string='Object', readonly=True),
         'start': fields.boolean('Start',help= "This activity is launched when the campaign starts."),
         'condition': fields.char('Condition', size=256, required=True,
                                  help="Python condition to know if the activity can be launched"),
@@ -313,25 +352,36 @@ marketing_campaign_activity()
 class marketing_campaign_transition(osv.osv):
     _name = "marketing.campaign.transition"
     _description = "Campaign Transition"
-    _rec_name = "interval_type"
+
+    _interval_units = [('hours', 'Hour(s)'), ('days', 'Day(s)'),
+                       ('months', 'Month(s)'), ('years','Year(s)')]
+
+
+    def _get_name(self, cr, uid, ids, fn, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for tr in self.browse(cr, uid, ids, context=context, fields_process=translate_selections):
+            result[tr.id] = _('After %(interval_nbr)d %(interval_type)s') % tr
+        return result
 
     _columns = {
+        'name': fields.function(_get_name, method=True, string='Name',
+                                type='char', size=128),
         'activity_from_id': fields.many2one('marketing.campaign.activity',
-                                                             'Source Activity', select=1),
+                                            'Source Activity', select=1),
         'activity_to_id': fields.many2one('marketing.campaign.activity',
-                                                        'Destination Activity'),
-        'interval_nbr': fields.integer('Interval No.'),
-        'interval_type': fields.selection([('hours', 'Hours'), ('days', 'Days'),
-                                           ('months', 'Months'),
-                                            ('years','Years')],'Interval Type')
+                                          'Destination Activity'),
+        'interval_nbr': fields.integer('Interval Value', required=True),
+        'interval_type': fields.selection(_interval_units, 'Interval Unit',
+                                          required=True),
     }
 
-    def default_get(self, cr, uid, fields, context={}):
+    def default_get(self, cr, uid, fields, context=None):
         value = super(marketing_campaign_transition, self).default_get(cr, uid,
                                                                 fields, context)
-        if context.has_key('type_id'):
+        if context and 'type_id' in context:
             value[context['type_id']] = context['activity_id']
         return value
+
 
 marketing_campaign_transition()
 
