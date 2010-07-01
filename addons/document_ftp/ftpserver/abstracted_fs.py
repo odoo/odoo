@@ -277,7 +277,7 @@ class abstracted_fs(object):
         if not node:
             raise OSError(1, 'Operation not permited.')
         
-        cr, uid = self.get_node_cr(node)
+        cr = self.get_node_cr(node)
         try:
             basename =_to_unicode(basename)
             cdir = node.create_child_collection(cr, basename)
