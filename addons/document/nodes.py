@@ -209,6 +209,32 @@ class node_class(object):
     def get_dav_eprop(self, cr, ns, prop):
         return None
 
+    def move_to(self, cr, fil_obj, ndir_obj, in_write=False):
+        """ Move this node to a new parent directory.
+        fil_obj, can be None, is the browse object for the file, if already
+            available.
+        ndir_obj must be the browse object to the new doc.directory location,
+            where this node should be moved to.
+        in_write: When called by write(), we shouldn't attempt to write the
+            object, but instead return the dict of vals (avoid re-entrance).
+            If false, we should write all data to the object, here, as if the
+            caller won't do anything after calling move_to()
+        
+        Return value:
+            True: the node is moved, the caller can update other values, too.
+            False: the node is either removed or fully updated, the caller 
+                must discard the fil_obj, not attempt to write any more to it.
+            dict: values to write back to the object. *May* contain a new id!
+        
+        Depending on src and target storage, implementations of this function
+        could do various things.
+        Should also consider node<->content, dir<->dir moves etc.
+        
+        Move operations, as instructed from APIs (eg. request from DAV) could
+        use this function.
+        """
+        raise NotImplementedError
+
     def rm(self, cr):
         raise RuntimeError("Not Implemented")
 

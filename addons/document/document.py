@@ -28,6 +28,7 @@ import os
 
 import pooler
 import netsvc
+from osv.orm import except_orm
 #import StringIO
 
 from psycopg2 import Binary
@@ -153,7 +154,30 @@ class document_file(osv.osv):
             return False
         if not self._check_duplication(cr, uid, vals, ids, 'write'):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
-        result = super(document_file, self).write(cr, uid, ids, vals, context=context)
+        if 'parent_id' in vals:
+            # perhaps this file is changing directory
+            nctx = nodes.get_node_context(cr,uid,context)
+            dirobj = self.pool.get('document.directory')
+            dbro = dirobj.browse(cr, uid, vals['parent_id'], context=context)
+            ids2 = []
+            result = False
+            for fbro in self.browse(cr, uid, ids, context=context):
+                if fbro.parent_id != vals['parent_id']:
+                    fnode = nodes.node_file(None,None,nctx,fbro)
+                    res = fnode.move_to(cr, fbro, dbro, True)
+                    if isinstance(res, dict):
+                        vals2 = vals.copy()
+                        vals2.update(res)
+                        wid = res.get('id', fbro.id)
+                        result = super(document_file,self).write(cr,uid,wid,vals2,context=context)
+                        # TODO: how to handle/merge several results?
+                    elif res == True:
+                        ids2.append(fbro.id)
+                    elif res == False:
+                        pass
+            ids = ids2
+        if len(ids):
+            result = super(document_file,self).write(cr, uid, ids, vals, context=context)
         cr.commit()
         return result
 
