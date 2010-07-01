@@ -241,7 +241,6 @@ class account_automatic_reconcile(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'context': context,
-            'nodestroy':True,
         }
 
 account_automatic_reconcile()

@@ -40,7 +40,7 @@
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process','board'],
+    'depends': ['process','board', 'knowledge'],
     'init_xml': [],
     'update_xml': [
         'security/document_security.xml',

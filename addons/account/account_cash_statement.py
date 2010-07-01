@@ -26,16 +26,16 @@ from mx import DateTime
 from decimal import Decimal
 from tools.translate import _
 
-class singer_statement(osv.osv):
+class account_cashbox_line(osv.osv):
     
-    """ Singer Statements """
+    """ Cash Box Details """
     
-    _name = 'singer.statement'
-    _description = 'Statement'
+    _name = 'account.cashbox.line'
+    _description = 'CashBox Line'
 
     def _sub_total(self, cr, uid, ids, name, arg, context=None):
        
-        """ Calculates Sub total"
+        """ Calculates Sub total
         @param name: Names of fields.
         @param arg: User defined arguments
         @return: Dictionary of values.
@@ -61,7 +61,7 @@ class singer_statement(osv.osv):
         'starting_id': fields.many2one('account.bank.statement',ondelete='cascade'),
         'ending_id': fields.many2one('account.bank.statement',ondelete='cascade'),
      }
-singer_statement()
+account_cashbox_line()
 
 class account_cash_statement(osv.osv):
     
@@ -157,22 +157,31 @@ class account_cash_statement(osv.osv):
             res[r] = round(res[r], 2)
         return res
     
+    def _get_company(self, cr, uid, ids, context={}):
+        user_pool = self.pool.get('res.users')
+        company_pool = self.pool.get('res.company')
+        user = user_pool.browse(cr, uid, uid, uid)
+        company_id = user.company_id and user.company_id.id
+        if not company_id:
+            company_id = company_pool.search(cr, uid, [])[0]
+        
+        return company_id
+        
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-        'balance_start': fields.function(_get_starting_balance, method=True, string='Opening Balance', type='float',digits=(16,2), help="Opening balance based on cashBox"),
+        'balance_start': fields.function(_get_starting_balance, store=True, method=True, string='Opening Balance', type='float',digits=(16,2), help="Opening balance based on cashBox"),
         'balance_end_real': fields.float('Closing Balance', digits=(16,2), states={'confirm':[('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('confirm', 'Confirm'),
             ('open','Open')], 'State', required=True, states={'confirm': [('readonly', True)]}, readonly="1"),
-        'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, string="Cash Transaction", help="Total cash transactions"),
-        'date':fields.datetime("Open On"),
+        'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, store=True, string="Cash Transaction", help="Total cash transactions"),
         'closing_date':fields.datetime("Closed On"),
-        'balance_end': fields.function(_end_balance, method=True, string='Balance', help="Closing balance based on transactions"),
-        'balance_end_cash': fields.function(_balance_end_cash, method=True, string='Balance', help="Closing balance based on cashBox"),
-        'starting_details_ids': fields.one2many('singer.statement', 'starting_id', string='Opening Cashbox'),
-        'ending_details_ids': fields.one2many('singer.statement', 'ending_id', string='Closing Cashbox'),
+        'balance_end': fields.function(_end_balance, method=True, store=True, string='Balance', help="Closing balance based on transactions"),
+        'balance_end_cash': fields.function(_balance_end_cash, method=True, store=True, string='Balance', help="Closing balance based on cashBox"),
+        'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
+        'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
         'name': fields.char('Name', size=64, required=True, readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', required=False),
     }
@@ -181,7 +190,8 @@ class account_cash_statement(osv.osv):
         'name': lambda *a: '/',
         'date': lambda *a:time.strftime("%Y-%m-%d %H:%M:%S"),
         'journal_id': _default_journal_id,
-        'user_id': lambda self, cr, uid, context=None: uid
+        'user_id': lambda self, cr, uid, context=None: uid,
+        'company_id': _get_company
      }
 
     def create(self, cr, uid, vals, context=None):
@@ -205,7 +215,7 @@ class account_cash_statement(osv.osv):
         @return:  Dictionary of changed values
         """
         
-        cash_pool = self.pool.get('singer.statement')
+        cash_pool = self.pool.get('account.cashbox.line')
         statement_pool = self.pool.get('account.bank.statement')
 
         res = {}
@@ -220,17 +230,30 @@ class account_cash_statement(osv.osv):
         
         res = super(account_cash_statement, self).onchange_journal_id(cr, uid, statement_id, journal_id, context)
         return res
-
+    
+    def _equal_balance(self, cr, uid, ids, statement, context={}):
+        if statement.balance_end != statement.balance_end_cash:
+            return False
+        else:
+            return True
+    
+    def _user_allow(self, cr, uid, ids, statement, context={}):
+        return True
+    
     def button_open(self, cr, uid, ids, context=None):
         
         """ Changes statement state to Running.
         @return: True 
         """
-        cash_pool = self.pool.get('singer.statement')
+        cash_pool = self.pool.get('account.cashbox.line')
         statement_pool = self.pool.get('account.bank.statement')
 
         statement = statement_pool.browse(cr, uid, ids[0])
-        number = self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement')
+        
+        if not self._user_allow(cr, uid, ids, statement, context={}):
+            raise osv.except_osv(_('Error !'), _('User %s does not have rights to access %s journal !' % (statement.user_id.name, statement.journal_id.name)))
+        
+        number = self.pool.get('ir.sequence').get(cr, uid, statement.journal_id.sequence_id.code)
         
         if len(statement.starting_details_ids) > 0:
             sid = []
@@ -280,7 +303,7 @@ class account_cash_statement(osv.osv):
             if not st.state == 'open':
                 continue
                 
-            if st.balance_end != st.balance_end_cash:
+            if not self._equal_balance(cr, uid, ids, st, context):
                 raise osv.except_osv(_('Error !'), _('Cash balance is not matching with closing balance !'))
                 
             if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):

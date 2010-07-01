@@ -1,11 +1,6 @@
 <openerp>
 <data>
-    <!--<menuitem name="Document Management" icon="terp-stock" id="menu_document"/>
-    <menuitem name="Document Configuration" id="menu_document_configuration" parent="menu_document"/>-->
-
-    <menuitem name="Knowledge" icon="terp-stock" id="base.menu_document" sequence="19" groups="group_document_user"/>
-    <menuitem name="Configuration" id="base.menu_document_configuration" parent="base.menu_document" sequence="50"/>
-    <menuitem name="Document Management" id="menu_document_management_configuration" parent="base.menu_document_configuration" sequence="1"/>
+    <menuitem name="Document Management" id="menu_document_management_configuration" parent="knowledge.menu_document_configuration" sequence="1"/>
 
     <record model="ir.ui.view" id="view_document_storage_form">
         <field name="name">document.storage</field>
@@ -340,7 +335,7 @@
         <field name="name">Document</field>
         <field name="view_type">form</field>
     </record>
-    <menuitem name="Documents" id="menu_document_doc" parent="base.menu_document" sequence="5"/>
+    <menuitem name="Documents" id="menu_document_doc" parent="knowledge.menu_document" sequence="5"/>
     <menuitem
         name="Documents"
         action="action_document_file_form"
