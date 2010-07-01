@@ -392,9 +392,9 @@ class node_dir(node_database):
                     pass
 
     def __eq__(self, other):
-        if not self.context == other.context:
-            return False
         if type(self) != type(other):
+            return False
+        if not self.context == other.context:
             return False
         # Two directory nodes, for the same document.directory, may have a 
         # different context! (dynamic folders)
@@ -526,9 +526,9 @@ class node_res_dir(node_class):
             self.dctx_dict['dctx_' + dfld.field] = dfld.expr
 
     def __eq__(self, other):
-        if not self.context == other.context:
-            return False
         if type(self) != type(other):
+            return False
+        if not self.context == other.context:
             return False
         # Two nodes, for the same document.directory, may have a 
         # different context! (dynamic folders)
@@ -640,9 +640,9 @@ class node_res_obj(node_class):
             self.res_id = res_id
 
     def __eq__(self, other):
-        if not self.context == other.context:
-            return False
         if type(self) != type(other):
+            return False
+        if not self.context == other.context:
             return False
         if not self.res_model == other.res_model:
             return False
@@ -852,9 +852,9 @@ class node_file(node_class):
             par = par.parent_id
 
     def __eq__(self, other):
-        if not self.context == other.context:
-            return False
         if type(self) != type(other):
+            return False
+        if not self.context == other.context:
             return False
         if self.dctx != other.dctx:
             return False
