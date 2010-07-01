@@ -576,7 +576,7 @@ property or property parameter."),
         if not vals.get("email") and vals.get("cn"):
             cnval = vals.get("cn").split(':')
             email = filter(lambda x:x.__contains__('@'), cnval)
-            vals['email'] = email[0]
+            vals['email'] = email and email[0] or ''
             vals['cn'] = vals.get("cn")
         res = super(calendar_attendee, self).create(cr, uid, vals, context)
         return res
@@ -629,6 +629,7 @@ true, it will allow you to hide the event alarm information without removing it.
         if not context:
             context = {}
         alarm_obj = self.pool.get('calendar.alarm')
+        res_alarm_obj = self.pool.get('res.alarm')
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
 
@@ -636,6 +637,30 @@ true, it will allow you to hide the event alarm information without removing it.
         for data in model_obj.browse(cr, uid, ids, context):
 
             basic_alarm = data.alarm_id
+            cal_alarm = data.base_calendar_alarm_id
+            if (not basic_alarm and cal_alarm) or (basic_alarm and cal_alarm):
+                new_res_alarm = None
+                # Find for existing res.alarm
+                duration = cal_alarm.trigger_duration
+                interval = cal_alarm.trigger_interval
+                occurs = cal_alarm.trigger_occurs
+                related = cal_alarm.trigger_related
+                domain = [('trigger_duration', '=', duration), ('trigger_interval', '=', interval), ('trigger_occurs', '=', occurs), ('trigger_related', '=', related)]
+                alarm_ids = res_alarm_obj.search(cr, uid, domain, context=context)
+                if not alarm_ids:
+                    val = {
+                            'trigger_duration': duration, 
+                            'trigger_interval': interval, 
+                            'trigger_occurs': occurs, 
+                            'trigger_related': related,
+                            'name': str(duration) + ' ' + str(interval) + ' '  + str(occurs)
+                           }
+                    new_res_alarm = res_alarm_obj.create(cr, uid, val, context=context)
+                else:
+                    new_res_alarm = alarm_ids[0]
+                cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
+                                    where id=%s' % (model_obj._table, \
+                                    cal_alarm.id, new_res_alarm, data.id))
             if not context.get('alarm_id', False):
                 self.do_alarm_unlink(cr, uid, [data.id], model)
                 return True
@@ -1463,7 +1488,7 @@ true, it will allow you to hide the event alarm information without removing it.
             context = {}
         res = super(calendar_event, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
         alarm_obj = self.pool.get('res.alarm')
-        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date')
+        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
 
         return res
 
@@ -1514,7 +1539,7 @@ true, it will allow you to hide the event alarm information without removing it.
             context = {}
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
-        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date')
+        alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
         return res
 
 calendar_event()
