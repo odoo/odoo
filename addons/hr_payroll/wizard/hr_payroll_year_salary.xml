@@ -8,19 +8,24 @@
             <field name="arch" type="xml">
 			   <form string="Year Salary">
 			   <group col="4" colspan="4"  width="600">
-			    <field name="fiscalyear_id" select="1" colspan="2"/>
+			   <group col="3" colspan="1">
+				    <field name="fiscalyear_id" select="1" colspan="2"/>
+				    <newline/>
+				    <separator string="Employee" colspan="4"/>
+				    <field name="employee_ids"  nolabel="1" colspan="2"/>
+					<newline/>
+			    	<separator string="Salary Deposit Date Option?" colspan="2"/>		
+			    	<newline/>
+			    	<field name="salary_on"/>			    		    
+				</group>
 			    <newline/>
-			    <field name="employee_ids" colspan="2"/>
-			    <newline/>
-			    <separator string="Salary Deposit Date Option?" colspan="2"/>
-			    <newline/>
-			    <field name="salary_on"/>
-			    <newline/>
-				<button icon='gtk-cancel' special="cancel" 
-	        			string="Close" />
-				<button name="print_report" string="Print Report"
-	        			 type="object" icon="gtk-print" />
-				</group>	        			 
+			    <group>
+					<button icon='gtk-cancel' special="cancel" 
+		        			string="Close" />
+					<button name="print_report" string="Print Report"
+		        			 type="object" icon="gtk-print" />
+	        	</group>
+			</group>	        			 
 			</form>
             </field>
         </record>

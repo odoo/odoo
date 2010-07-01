@@ -7,15 +7,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Year Salary">
-                <group  width="500">
-			    	<field name="fiscalyear_id" />
-			    	<separator string="Employee" colspan="4"/>
-			    	<field name="employee_ids"  nolabel="1" colspan="2" />
+                 <group col="4" colspan="4"  width="600">
+			    	<group col="2" colspan="1">
+				    	<field name="fiscalyear_id"  align="1.0" />
+				    	<newline/>
+				    	<separator string="Employee" colspan="4"/>
+				    	<field name="employee_ids"  nolabel="1" colspan="2" />
+			    	</group>
 			    	<newline/>
+			    	<group col="2" colspan="1">
 					<button icon='gtk-cancel' special="cancel" 
 	        			string="Close" />
 	 				<button name="print_report" string="Print Report"
 	        			 type="object" icon="gtk-print" />
+					</group>	        			 
 					</group>	        			 
                 </form>
             </field>
