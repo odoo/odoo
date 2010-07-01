@@ -41,23 +41,34 @@ class pos_close_statement(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         statement_obj = self.pool.get('account.bank.statement')
         journal_obj = self.pool.get('account.journal')
-        journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True), ('check_dtls', '=', False)])
+        journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True)])
         journal_ids = journal_obj.browse(cr, uid, journal_lst)
+        list_statement=[]
         for journal in journal_ids:
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
-            list_statement = ids
-            statement_obj.button_confirm(cr, uid, ids, context)
+            list_statement.append(ids[0])
+            if not journal.check_dtls:
+                statement_obj.button_confirm(cr, uid, ids, context)
 #        if not list_statement:
 #            return {}
-        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_bank_statement_tree')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+#        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_bank_statement_tree')], context=context)
+#        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+
+        data_obj = self.pool.get('ir.model.data')
+        id2 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
+        id3 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_form2')
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+
         return {
-                'domain': "[('id','in', list_statement)]",
+                'domain': "[('id','in'," + str(list_statement) + ")]",
                 'name': 'Close Statements',
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'account.bank.statement',
-                'views': [(resource_id,'tree')],
+                'views': [(id2, 'tree'),(id3, 'form')],
                 'type': 'ir.actions.act_window'
 }
 

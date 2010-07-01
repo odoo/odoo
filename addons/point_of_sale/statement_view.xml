@@ -61,8 +61,20 @@
             <field name="res_model">account.bank.statement</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="account.view_bank_statement_tree"/>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
             <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement_all_register1">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.view_bank_statement_tree"/>
+            <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement_all_register">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
 
         <menuitem

@@ -101,8 +101,15 @@ class pos_open_statement(osv.osv_memory):
 #                                'number': i.number,
 #                                'starting_id': statement_id,
 #                            })
-        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_bank_statement_tree')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+
+        data_obj = self.pool.get('ir.model.data')
+        id2 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
+        id3 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_form2')
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+
         return {
 #            'domain': "[('id','in', ["+','.join(map(str,list_statement))+"])]",
             'domain': "[('state','=','open')]",
@@ -110,7 +117,7 @@ class pos_open_statement(osv.osv_memory):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.bank.statement',
-            'views': [(resource_id,'tree')],
+            'views': [(id2, 'tree'),(id3, 'form')],
             'type': 'ir.actions.act_window'
 }
 #        return {}
