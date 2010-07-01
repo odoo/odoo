@@ -47,7 +47,7 @@ class purchase_requisition(osv.osv):
         'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
         'state': 'draft',
         'exclusive': 'multiple',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition', context=c),
         'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id ,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
@@ -85,7 +85,7 @@ class purchase_requisition(osv.osv):
                     message = _('Tender') + " '" + name + "' "+ _("is done")
                     self.log(cr, uid, id, message)
         return True
-
+    
 purchase_requisition()
 
 class purchase_requisition_line(osv.osv):
@@ -102,7 +102,6 @@ class purchase_requisition_line(osv.osv):
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id,product_uom_id, context=None):
-
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id
@@ -113,10 +112,10 @@ class purchase_requisition_line(osv.osv):
             prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
             value = {'product_uom_id': prod.uom_id.id,'product_qty':1.0}
         return {'value': value}
-
+        
     _defaults = {
-                 'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-                 }
+                 'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition.line', context=c),
+                }
 purchase_requisition_line()
 
 class purchase_order(osv.osv):
@@ -133,12 +132,9 @@ class purchase_order(osv.osv):
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
                     self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
-
         return res
 
-
 purchase_order()
-
 
 class product_product(osv.osv):
     _inherit = 'product.product'
@@ -149,7 +145,6 @@ class product_product(osv.osv):
         'purchase_requisition': False
     }
 product_product()
-
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'

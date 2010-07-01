@@ -155,7 +155,7 @@ class purchase_order(osv.osv):
         'date_approve':fields.date('Date Approved', readonly=1, help="Date on which purchase order has been approved"),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True,
-            states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}),
+            states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},domain="[('partner_id', '=', partner_id)]"),
         'dest_address_id':fields.many2one('res.partner.address', 'Destination Address',
             states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
             help="Put an address if you want to deliver directly from the supplier to the customer." \
