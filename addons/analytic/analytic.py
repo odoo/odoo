@@ -233,6 +233,9 @@ class account_analytic_account(osv.osv):
     ]
 
     def create(self, cr, uid, vals, context=None):
+        if context.get('analytic_project_copy', False):
+            if vals.get('child_ids', False):
+                vals['child_ids'] = [] 
         parent_id = vals.get('parent_id', 0)
         if ('code' not in vals or not vals['code']) and not parent_id:
             vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account')
