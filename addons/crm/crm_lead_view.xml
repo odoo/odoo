@@ -5,7 +5,7 @@
     <!--Lead Stage Form view -->
 
     <record id="crm_lead_stage_act" model="ir.actions.act_window">
-        <field name="name">Lead Stages</field>
+        <field name="name">Stages</field>
         <field name="res_model">crm.case.stage</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_case_stage_tree"/>
@@ -19,9 +19,8 @@
 
 
         <!--  Resource Type Form View -->
-
         <record id="crm_lead_resource_act" model="ir.actions.act_window">
-            <field name="name">Lead Resource Type</field>
+            <field name="name">Lead Sources</field>
             <field name="res_model">crm.case.resource.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
@@ -30,12 +29,11 @@
         </record>
 
       <menuitem action="crm_lead_resource_act"
-            id="menu_crm_lead_resource_act" name="Resource Type"
+            id="menu_crm_lead_resource_act" name="Lead Sources"
             groups="base.group_extended" sequence="2"
             parent="menu_crm_config_lead" />
 
         <!-- CRM Lead Form View  -->
-
         <record model="ir.ui.view" id="crm_case_form_view_leads">
         <field name="name">CRM - Leads Form</field>
         <field name="model">crm.lead</field>
@@ -226,9 +224,9 @@
                 <field name="referred" invisible="1"/>
 
                 <field name="stage_id"/>
-                <button name="stage_previous" string="Previous"
+                <button name="stage_previous" string="Previous Stage"
                     states="open,pending" type="object" icon="gtk-go-back" />
-                <button name="stage_next" string="Next"
+                <button name="stage_next" string="Next Stage"
                     states="open,pending" type="object"
                     icon="gtk-go-forward" />
                 <field name="section_id" invisible="context.get('invisible_section', True)" />
@@ -312,7 +310,7 @@
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
                         domain="[('section_id.user_id','=',uid)]"
-                        help="My Sale Team"/>
+                        help="My Sales Team"/>
                     <filter icon="terp-personal+"
                         context="{'invisible_section': False}"
                         domain="[]"

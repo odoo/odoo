@@ -178,7 +178,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_cc' in fields:
                 res.update({'email_cc': tools.ustr(case.email_cc or '')})
             if 'text' in fields:
-                res.update({'text': u'\n\n'+(tools.ustr(case.user_id.signature or ''))})
+                res.update({'text': u'\n'+(tools.ustr(case.user_id.signature or ''))})
             if 'state' in fields:
                 res.update({'state': u'pending'})
 
@@ -211,7 +211,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_from' in fields:
                 res.update({'email_from': user_mail_from and tools.ustr(user_mail_from) or False})
 
-            signature = u'\n' + (tools.ustr(case.user_id.signature or ''))
+            signature = u'\n' + (tools.ustr(case.user_id.signature or '')) + u'\n'
             original = [signature]
 
             if include_original == True and 'text' in fields:
@@ -221,9 +221,9 @@ class crm_send_new_email(osv.osv_memory):
                 sentdate = u'Date: %s' % (tools.ustr(hist.date))
                 desc = u'\n%s'%(tools.ustr(hist.description))
 
-                original = [header, sender, to, sentdate, desc, signature]
+                original = [signature, header, sender, to, sentdate, desc]
 
-            res['text']= u'\n\n\n' + u'\n'.join(original)
+            res['text']= u'\n' + u'\n'.join(original)
 
             if 'subject' in fields:
                 res.update({u'subject': u'Re: %s' %(tools.ustr(hist.name or ''))})

@@ -1,54 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-        <!-- Opportunity Categories Form View -->
-
-        <record id="crm_opportunity_categ_action" model="ir.actions.act_window">
-            <field name="name">Opportunity Categories</field>
-            <field name="res_model">crm.case.categ</field>
-            <field name="view_type">form</field>
-            <field name="view_id"  ref="crm.crm_case_categ_tree-view"/>
-            <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-            <field name="context">{'object_id':'crm.lead'}</field>
-        </record>
-
-        <menuitem action="crm_opportunity_categ_action"
-            id="menu_crm_case_opportunity-act" name="Categories"
-            parent="menu_crm_config_opportunity" sequence="1"/>
-
-        <!-- Opportunity Stages Form View-->
-
-        <record id="crm_opportunity_stage_act" model="ir.actions.act_window">
-            <field name="name">Opportunity Stages</field>
-            <field name="res_model">crm.case.stage</field>
-            <field name="view_type">form</field>
-             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-             <field name="context">{'object_id':'crm.lead'}</field>
-        </record>
-
-        <menuitem action="crm_opportunity_stage_act"
-            id="menu_crm_opportunity_stage_act" name="Stages"
-            parent="menu_crm_config_opportunity" sequence="2"/>
-
-        <!-- Opportunity Resource Type Form View -->
-
-        <record id="crm_opportunity_resource_act" model="ir.actions.act_window">
-            <field name="name">Opportunity Resource Type</field>
-            <field name="res_model">crm.case.resource.type</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.lead')]</field>
-             <field name="context">{'object_id':'crm.lead'}</field>
-        </record>
-
-        <menuitem action="crm_opportunity_resource_act"
-            id="menu_crm_opportunity_resource_act" name="Resource"
-            parent="menu_crm_config_opportunity" sequence="3"/>
-
         <!-- Opportunities Form View -->
-
             <record model="ir.ui.view" id="crm_case_form_view_oppor">
                 <field name="name">Opportunities</field>
                 <field name="model">crm.lead</field>
@@ -149,11 +102,13 @@
                                 <field name="country_id"/>
                                 <field name="state_id"/>
                             </group>
-                            <group colspan="2" col="3">
-                                <separator string="Communication" colspan="4" col="3"/>
+                            <group colspan="2" col="2">
+                                <separator string="Communication" colspan="2"/>
                                 <field name="fax"/>
-                                <newline/>
                                 <field name="mobile"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Mailings" colspan="2"/>
                                 <field name="optin"/>
                                 <field name="optout"/>
                             </group>
@@ -251,9 +206,9 @@
                         <field name="country_id" invisible="context.get('invisible_country', True)" />
                         <field name="date_action"/>
                         <field name="stage_id"/>
-                        <button name="stage_previous" string="Previous"
+                        <button name="stage_previous" string="Previous Stage"
                             states="open,pending" type="object" icon="gtk-go-back" />
-                        <button name="stage_next" string="Next"
+                        <button name="stage_next" string="Next Stage"
                             states="open,pending" type="object"
                             icon="gtk-go-forward" />
                         <field name="planned_revenue" sum="Total of Planned Revenue"/>
@@ -336,7 +291,7 @@
                             <filter icon="terp-personal+"
                                 domain="[('section_id.user_id','=',uid)]"
                                 context="{'invisible_section': False}"
-                                help="My Sale Team" />
+                                help="My Sales Team" />
                             <filter icon="terp-personal+"
                                 context="{'invisible_section': False}"
                                 domain="[]"
