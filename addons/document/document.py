@@ -194,26 +194,10 @@ class document_file(osv.osv):
             vals['res_id'] = context.get('default_res_id', False)
         if not vals.get('res_model', False) and context.get('default_res_model', False):
             vals['res_model'] = context.get('default_res_model', False)
-        if vals.get('res_id', False) and vals.get('res_model', False):
-            obj_model = self.pool.get(vals['res_model'])
-            result = obj_model.read(cr, uid, [vals['res_id']], ['name', 'partner_id', 'address_id'], context=context)
-            if len(result):
-                obj = result[0]
-                if obj_model._name == 'res.partner':
-                    vals['partner_id'] = obj['id']
-                elif obj.get('address_id', False):
-                    if isinstance(obj['address_id'], tuple) or isinstance(obj['address_id'], list):
-                        address_id = obj['address_id'][0]
-                    else:
-                        address_id = obj['address_id']
-                    address = self.pool.get('res.partner.address').read(cr, uid, [address_id], context=context)
-                    if len(address):
-                        vals['partner_id'] = address[0]['partner_id'][0] or False
-                elif obj.get('partner_id', False):
-                    if isinstance(obj['partner_id'], tuple) or isinstance(obj['partner_id'], list):
-                        vals['partner_id'] = obj['partner_id'][0]
-                    else:
-                        vals['partner_id'] = obj['partner_id']
+        if vals.get('res_id', False) and vals.get('res_model', False) \
+                and not vals.get('partner_id', False):
+            vals['partner_id'] = __get_partner_id(cr, uid, \
+                vals['res_model'], vals['res_id'], context)
 
         datas = None
         if vals.get('link', False) :
@@ -232,6 +216,23 @@ class document_file(osv.osv):
         result = super(document_file, self).create(cr, uid, vals, context)
         cr.commit() # ?
         return result
+
+    def __get_partner_id(self, cr, uid, res_model, res_id, context):
+        """ A helper to retrieve the associated partner from any res_model+id
+            It is a hack that will try to discover if the mentioned record is
+            clearly associated with a partner record.
+        """
+        if False:
+            obj_model = self.pool.get(vals['res_model'])
+            if obj_model._name == 'res.partner':
+                return res_id
+            elif 'partner_id' in obj_model._columns and obj_model._columns['partner_id']._obj == 'res.partner':
+                bro = obj_model.browse(self, cr, uid, res_id, context=context)
+                return bro.partner_id.id
+            elif 'address_id' in obj_model._columns and obj_model._columns['address_id']._obj == 'res.partner.address':
+                bro = obj_model.browse(self, cr, uid, res_id, context=context)
+                return bro.address_id.partner_id.id
+        return False
 
     def unlink(self, cr, uid, ids, context={}):
         stor = self.pool.get('document.storage')
