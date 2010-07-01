@@ -187,73 +187,31 @@ class abstracted_fs(object):
 
     # --- Wrapper methods around open() and tempfile.mkstemp
 
-    # Ok
     def create(self, node, objname, mode):
+        """ Create a children file-node under node, open it
+            @return open node_descriptor of the created node
+        """
         objname = _to_unicode(objname) 
-        cr = None       
+        cr = self.get_node_cr(node)
         try:
-            uid = node.context.uid
-            pool = pooler.get_pool(node.context.dbname)
-            cr = pooler.get_db(node.context.dbname).cursor()
             child = node.child(cr, objname)
             if child:
-                if child.type in ('collection','database'):
+                if child.type not in ('file','content'):
                     raise OSError(1, 'Operation not permited.')
-                if child.type == 'content':
-                    s = content_wrapper(node.context.dbname, uid, pool, child)
-                    return s
-            fobj = pool.get('ir.attachment')
-            ext = objname.find('.') >0 and objname.split('.')[1] or False
 
-            # TODO: test if already exist and modify in this case if node.type=file
-            ### checked already exits
-            object2 = False
-            if isinstance(node, node_res_obj):
-                object2 = node and pool.get(node.context.context['res_model']).browse(cr, uid, node.context.context['res_id']) or False            
-            
-            cid = False
-            object = node.context._dirobj.browse(cr, uid, node.dir_id)
-            where = [('name','=',objname)]
-            if object and (object.type in ('directory')) or object2:
-                where.append(('parent_id','=',object.id))
-            else:
-                where.append(('parent_id','=',False))
+                ret = child.open_data(cr, mode)
+                cr.close()
+                return ret
+        except OSError:
+            cr.close()
+            raise
+        except Exception,e:
+            self._log.exception('Cannot locate item %s at node %s', objname, repr(node))
+            pass
 
-            if object2:
-                where += [('res_id','=',object2.id),('res_model','=',object2._name)]
-            cids = fobj.search(cr, uid, where)
-            if len(cids):
-                cid = cids[0]
-
-            if not cid:
-                val = {
-                    'name': objname,
-                    'datas_fname': objname,
-                    'parent_id' : node.dir_id, 
-                    'datas': '',
-                    'file_size': 0L,
-                    'file_type': ext,
-                    'store_method' :  (object.storage_id.type == 'filestore' and 'fs')\
-                                 or  (object.storage_id.type == 'db' and 'db')
-                }
-                if object and (object.type in ('directory')) or not object2:
-                    val['parent_id']= object and object.id or False
-                partner = False
-                if object2:
-                    if 'partner_id' in object2 and object2.partner_id.id:
-                        partner = object2.partner_id.id
-                    if object2._name == 'res.partner':
-                        partner = object2.id
-                    val.update( {
-                        'res_model': object2._name,
-                        'partner_id': partner,
-                        'res_id': object2.id
-                    })
-                cid = fobj.create(cr, uid, val, context={})
-            cr.commit()
-
-            s = file_wrapper('', cid, node.context.dbname, uid, )
-            return s
+        try:
+            child = node.create_child(cr, objname, data=None)
+            return child.open_data(cr, mode)
         except Exception,e:
             self._log.exception('Cannot create item %s at node %s', objname, repr(node))
             raise OSError(1, 'Operation not permited.')
@@ -265,7 +223,7 @@ class abstracted_fs(object):
         if not node:
             raise OSError(1, 'Operation not permited.')
         # Reading operation
-        cr = pooler.get_db(node.context.dbname).cursor()
+        cr = self.get_node_cr(node)
         try:
             res = node.open_data(cr, mode)
         finally:
@@ -279,24 +237,12 @@ class abstracted_fs(object):
         name.  Unlike mkstemp it returns an object with a file-like
         interface.
         """
-        raise 'Not Yet Implemented'
-#        class FileWrapper:
-#            def __init__(self, fd, name):
-#                self.file = fd
-#                self.name = name
-#            def __getattr__(self, attr):
-#                return getattr(self.file, attr)
-#
-#        text = not 'b' in mode
-#        # max number of tries to find out a unique file name
-#        tempfile.TMP_MAX = 50
-#        fd, name = tempfile.mkstemp(suffix, prefix, dir, text=text)
-#        file = os.fdopen(fd, mode)
-#        return FileWrapper(file, name)
+        raise NotImplementedError
 
         text = not 'b' in mode
         # for unique file , maintain version if duplicate file
         if dir:
+	    # TODO
             cr = dir.cr
             uid = dir.uid
             pool = pooler.get_pool(node.context.dbname)
@@ -330,28 +276,12 @@ class abstracted_fs(object):
         cr = False
         if not node:
             raise OSError(1, 'Operation not permited.')
+        
+        cr, uid = self.get_node_cr(node)
         try:
             basename =_to_unicode(basename)
-            cr = pooler.get_db(node.context.dbname).cursor()
-            uid = node.context.uid
-            pool = pooler.get_pool(node.context.dbname)
-            object2 = False            
-            if isinstance(node, node_res_obj):
-                object2 = node and pool.get(node.context.context['res_model']).browse(cr, uid, node.context.context['res_id']) or False            
-            obj = node.context._dirobj.browse(cr, uid, node.dir_id)            
-            if obj and (obj.type == 'ressource') and not object2:
-                raise OSError(1, 'Operation not permited.')
-            val = {
-                'name': basename,
-                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
-                'ressource_id': object2 and object2.id or False,
-                'parent_id' : False
-            }
-            if (obj and (obj.type in ('directory'))) or not object2:                
-                val['parent_id'] =  obj and obj.id or False            
-            # Check if it alreayd exists !
-            pool.get('document.directory').create(cr, uid, val)
-            cr.commit()            
+            cdir = node.create_child_collection(cr, basename)
+            self._log.debug("Created child dir: %r", cdir)
         except Exception,e:
             self._log.exception('Cannot create dir "%s" at node %s', basename, repr(node))
             raise OSError(1, 'Operation not permited.')
@@ -449,134 +379,17 @@ class abstracted_fs(object):
         finally:
             cr.close()
 
-    # Ok
     def rename(self, src, dst_basedir, dst_basename):
-        """
-            Renaming operation, the effect depends on the src:
+        """ Renaming operation, the effect depends on the src:
             * A file: read, create and remove
             * A directory: change the parent and reassign childs to ressource
         """
-        cr = False
+        cr = self.get_node_cr(src)
         try:
-	    # FIXME! wrong code here, doesn't use the node API
-            dst_basename = _to_unicode(dst_basename)
-            cr = pooler.get_db(src.context.dbname).cursor()
-            uid = src.context.uid                       
-            if src.type == 'collection':
-                obj2 = False
-                dst_obj2 = False
-                pool = pooler.get_pool(src.context.dbname)
-                if isinstance(src, node_res_obj):
-                    obj2 = src and pool.get(src.context.context['res_model']).browse(cr, uid, src.context.context['res_id']) or False            
-                obj = src.context._dirobj.browse(cr, uid, src.dir_id)                 
-                if isinstance(dst_basedir, node_res_obj):
-                    dst_obj2 = dst_basedir and pool.get(dst_basedir.context.context['res_model']).browse(cr, uid, dst_basedir.context.context['res_id']) or False
-                dst_obj = dst_basedir.context._dirobj.browse(cr, uid, dst_basedir.dir_id)                 
-                if obj._table_name <> 'document.directory':
-                    raise OSError(1, 'Operation not permited.')
-                result = {
-                    'directory': [],
-                    'attachment': []
-                }
-                # Compute all childs to set the new ressource ID                
-                child_ids = [src]
-                while len(child_ids):
-                    node = child_ids.pop(0)                    
-                    child_ids += node.children(cr)                        
-                    if node.type == 'collection':
-                        object2 = False                                            
-                        if isinstance(node, node_res_obj):                  
-                            object2 = node and pool.get(node.context.context['res_model']).browse(cr, uid, node.context.context['res_id']) or False                           
-                        object = node.context._dirobj.browse(cr, uid, node.dir_id)                         
-                        result['directory'].append(object.id)
-                        if (not object.ressource_id) and object2:
-                            raise OSError(1, 'Operation not permited.')
-                    elif node.type == 'file':
-                        result['attachment'].append(object.id)
-                
-                if obj2 and not obj.ressource_id:
-                    raise OSError(1, 'Operation not permited.')
-                
-                if (dst_obj and (dst_obj.type in ('directory'))) or not dst_obj2:
-                    parent_id = dst_obj and dst_obj.id or False
-                else:
-                    parent_id = False              
-                
-                
-                if dst_obj2:                    
-                    ressource_type_id = pool.get('ir.model').search(cr, uid, [('model','=',dst_obj2._name)])[0]
-                    ressource_id = dst_obj2.id                    
-                    ressource_model = dst_obj2._name                    
-                    if dst_obj2._name == 'res.partner':
-                        partner_id = dst_obj2.id
-                    else:                                                
-                        partner_id = pool.get(dst_obj2._name).fields_get(cr, uid, ['partner_id']) and dst_obj2.partner_id.id or False
-                else:
-                    ressource_type_id = False
-                    ressource_id = False
-                    ressource_model = False
-                    partner_id = False                               
-                pool.get('document.directory').write(cr, uid, result['directory'], {
-                    'name' : dst_basename,
-                    'ressource_id': ressource_id,
-                    'ressource_parent_type_id': ressource_type_id,
-                    'parent_id' : parent_id
-                })
-                val = {
-                    'res_id': ressource_id,
-                    'res_model': ressource_model,                    
-                    'partner_id': partner_id
-                }
-                pool.get('ir.attachment').write(cr, uid, result['attachment'], val)
-                if (not val['res_id']) and result['attachment']:
-                    cr.execute('update ir_attachment set res_id=NULL where id in ('+','.join(map(str,result['attachment']))+')')
-
-                cr.commit()
-
-            elif src.type == 'file':    
-                pool = pooler.get_pool(src.context.dbname)                
-                obj = pool.get('ir.attachment').browse(cr, uid, src.file_id)                
-                dst_obj2 = False                     
-                if isinstance(dst_basedir, node_res_obj):
-                    dst_obj2 = dst_basedir and pool.get(dst_basedir.context.context['res_model']).browse(cr, uid, dst_basedir.context.context['res_id']) or False            
-                dst_obj = dst_basedir.context._dirobj.browse(cr, uid, dst_basedir.dir_id)  
-             
-                val = {
-                    'partner_id':False,
-                    #'res_id': False,
-                    'res_model': False,
-                    'name': dst_basename,
-                    'datas_fname': dst_basename,
-                }
-
-                if (dst_obj and (dst_obj.type in ('directory','ressource'))) or not dst_obj2:
-                    val['parent_id'] = dst_obj and dst_obj.id or False
-                else:
-                    val['parent_id'] = False
-
-                if dst_obj2:
-                    val['res_model'] = dst_obj2._name
-                    val['res_id'] = dst_obj2.id                    
-                    if dst_obj2._name == 'res.partner':
-                        val['partner_id'] = dst_obj2.id
-                    else:                        
-                        val['partner_id'] = pool.get(dst_obj2._name).fields_get(cr, uid, ['partner_id']) and dst_obj2.partner_id.id or False
-                elif obj.res_id:
-                    # I had to do that because writing False to an integer writes 0 instead of NULL
-                    # change if one day we decide to improve osv/fields.py
-                    cr.execute('update ir_attachment set res_id=NULL where id=%s', (obj.id,))
-
-                pool.get('ir.attachment').write(cr, uid, [obj.id], val)
-                cr.commit()
-            elif src.type=='content':
-                src_file = self.open(src,'r')
-                dst_file = self.create(dst_basedir, dst_basename, 'w')
-                dst_file.write(src_file.getvalue())
-                dst_file.close()
-                src_file.close()
-                cr.commit()
-            else:
-                raise OSError(1, 'Operation not permited.')
+            nname = _to_unicode(dst_basename)
+            ret = src.move_to(cr, dst_basedir, new_name=nname)
+            # API shouldn't wait for us to write the object
+            assert (ret is True) or (ret is False)
         except Exception,err:
             self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, dst_basename, dst_basedir)
             raise OSError(1,'Operation not permited.')
