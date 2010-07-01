@@ -3,7 +3,7 @@
 
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    d$
 #
@@ -28,7 +28,7 @@ from report import report_sxw
 from tools import amount_to_text_en
 
 class salary_structure_report(report_sxw.rml_parse):
-      
+
     def __init__(self, cr, uid, name, context):
           super(salary_structure_report, self).__init__(cr, uid, name, context)
           self.localcontext.update({
@@ -38,7 +38,7 @@ class salary_structure_report(report_sxw.rml_parse):
             'get_line_amount_type':self.get_line_amount_type,
             'get_line_type':self.get_line_type
           })
-          
+
     def get_contract(self,emp):
         curr_date = "'"+time.strftime("%Y-%m-%d")+"'"
         sql_req= '''
@@ -59,16 +59,16 @@ class salary_structure_report(report_sxw.rml_parse):
             return []
         contract = self.pool.get('hr.contract').browse(self.cr, self.uid, [contract_id['id']])
         return contract
-    
+
     def get_type(self,type):
         return type[0].swapcase() + type[1:] +' Salary'
-    
+
     def get_line_amount_type(self,amount_type):
         if amount_type == 'per':
             return 'Percent(%)'
         else:
             return 'Fixed'
-        
+
     def get_line_type(self,type):
         if type == 'allounce':
             return 'Allowance'
@@ -83,7 +83,7 @@ class salary_structure_report(report_sxw.rml_parse):
         else:
             return 'Other Deduction'
 
-report_sxw.report_sxw('report.salary.structure', 'hr.employee', 'hr_payroll/report/report_emp_salary_structure.rml', parser=salary_structure_report)   
+report_sxw.report_sxw('report.salary.structure', 'hr.employee', 'hr_payroll/report/report_emp_salary_structure.rml', parser=salary_structure_report)
 
 
 
@@ -92,7 +92,7 @@ report_sxw.report_sxw('report.salary.structure', 'hr.employee', 'hr_payroll/repo
 
 
 
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 
 
