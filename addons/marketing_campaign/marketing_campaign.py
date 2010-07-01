@@ -24,6 +24,8 @@ import base64
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+from traceback import format_exception
+from sys import exc_info
 
 from osv import fields, osv
 import netsvc
@@ -151,7 +153,7 @@ you required for the campaign"),
             raise ValueError('signal cannot be False')
 
         Workitems = self.pool.get('marketing.campaign.workitem')
-        domain = [('object_id.name', '=', model),
+        domain = [('object_id.model', '=', model),
                   ('state', '=', 'running')]
         campaign_ids = self.search(cr, uid, domain, context=context)
         for campaign in self.browse(cr, uid, campaign_ids, context):
@@ -165,6 +167,7 @@ you required for the campaign"),
                             ]
                 wi_ids = Workitems.search(cr, uid, wi_domain, context=context)
                 Workitems.process(cr, uid, wi_ids, context=context)
+        return True
 
     def _signal(self, cr, uid, record, signal, context=None):
         return self.signal(cr, uid, record._table._name,
@@ -547,7 +550,7 @@ class marketing_campaign_workitem(osv.osv):
             result = True
             if campaign_mode in ('manual', 'active'):
                 Activities = self.pool.get('marketing.campaign.activity')
-                result = Activities.process(activity.id, workitem.id,
+                result = Activities.process(cr, uid, activity.id, workitem.id,
                                             context=context)
 
             values = dict(state='done')
@@ -595,8 +598,9 @@ class marketing_campaign_workitem(osv.osv):
                         new_wi = self.browse(cr, uid, wi_id, context)
                         self._process_one(cr, uid, new_wi, context)
 
-        except Exception, e:
-            workitem.write({'state': 'exception', 'error_msg': str(e)},
+        except Exception:
+            tb = "".join(format_exception(*exc_info()))
+            workitem.write({'state': 'exception', 'error_msg': tb},
                      context=context)
 
     def process(self, cr, uid, workitem_ids, context=None):
@@ -622,6 +626,7 @@ class marketing_campaign_workitem(osv.osv):
                     break
 
                 self.process(cr, uid, workitem_ids, context)
+        return True
 
     def preview(self, cr, uid, ids, context):
         res = {}
