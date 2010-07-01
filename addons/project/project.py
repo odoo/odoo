@@ -206,6 +206,7 @@ class project(osv.osv):
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
             parent_id = context.get('parent_id',False) # check me where to pass context for parent id ??
+            context['analytic_project_copy'] = True
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
@@ -213,13 +214,10 @@ class project(osv.osv):
             result.append(new_id)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             res = cr.fetchall()
-            for (tasks_id,) in res:
-                task_obj.copy(cr, uid, tasks_id, default = {
-                                    'project_id': new_id,
-                                    'active':True}, context=context)
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)], context=context)
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.category_id.id)], context=context)
+            parent_id = self.read(cr, uid, new_id, ['category_id'])['category_id'][0]
             if child_ids:
-                self.duplicate_template(cr, uid, child_ids, context={'parent_id': new_id})
+                self.duplicate_template(cr, uid, child_ids, context={'parent_id': parent_id})
 
         if result and len(result):
             res_id = result[0]
@@ -263,7 +261,7 @@ class task(osv.osv):
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
-
+    
     def _str_get(self, task, level=0, border='***', context={}):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
@@ -316,7 +314,7 @@ class task(osv.osv):
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
-        'type': fields.many2one('project.task.type', 'Stage'),
+        'type': fields.many2one('project.task.type', 'Stage',),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
