@@ -305,6 +305,8 @@ class scrum_meeting(osv.osv):
     }
 
     def button_send_to_master(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         meeting_id = self.browse(cr, uid, ids)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
@@ -314,6 +316,9 @@ class scrum_meeting(osv.osv):
         return True
 
     def button_send_product_owner(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context.update({'button_send_product_owner': True})
         meeting_id = self.browse(cr, uid, ids)[0]
         if meeting_id.sprint_id.product_owner_id.user_email:
             self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
@@ -322,6 +327,8 @@ class scrum_meeting(osv.osv):
         return True
 
     def email_send(self, cr, uid, ids, email, context=None):
+        if context is None:
+            context = {}
         email_from = tools.config.get('email_from', False)
         meeting_id = self.browse(cr,uid,ids)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -332,7 +339,12 @@ class scrum_meeting(osv.osv):
         sub_name = meeting_id.name or 'Scrum Meeting of %s '%meeting_id.date
         flag = tools.email_send(user_email , [email], sub_name, body, reply_to=None, openobject_id=str(meeting_id.id))
         if not flag:
-            raise osv.except_osv(_('Error !'), _(' Email Not send to %s!' % meeting_id.sprint_id.product_owner_id.name))
+            if context.get('button_send_product_owner', False):
+                raise osv.except_osv(_('Error !'), _(' Email Not send to the product owner %s!' % meeting_id.sprint_id.product_owner_id.name))
+            raise osv.except_osv(_('Error !'), _(' Email Not send to the scrum master %s!' % meeting_id.sprint_id.scrum_master_id.name))
+        if context.get('button_send_product_owner', False):
+            raise osv.except_osv(_('Information !'), _(' Email send successfully to product owner %s!' % meeting_id.sprint_id.product_owner_id.name))
+        raise osv.except_osv(_('Information!'), _(' Email send successfully to scrum master %s!'% meeting_id.sprint_id.scrum_master_id.name))
         return True
 
 scrum_meeting()

@@ -9,14 +9,18 @@
 
 == Answer ==
 
+
+
 == External Links ==
 
-            </field>
+</field>
         </record>
         <record id="wiki_wiki_bugs" model="wiki.wiki">
             <field name="name">Bug Tracker ?</field>
             <field name="tags">crm, bugs</field>
             <field name="group_id" ref="wiki_groups_faq"/>
+            <field name="create_uid" eval="1"/>
+            <field name="write_uid" eval="1"/>
             <field name="minor_edit">0</field>
             <field name="toc">0</field>
             <field name="review">1</field>
@@ -48,13 +52,14 @@ Integration Benefits:
 
 * The Open ERP Website: [http://openerp.com]
 * The DMS Documentation: [http://openerp.com]
-
-            </field>
+</field>
         </record>
         <record id="wiki_wiki_dms" model="wiki.wiki">
             <field name="name">Document Management System ?</field>
             <field name="tags">dms, document</field>
             <field name="group_id" ref="wiki_groups_faq"/>
+            <field name="create_uid" eval="1"/>
+            <field name="write_uid" eval="1"/>
             <field name="minor_edit">0</field>
             <field name="toc">1</field>
             <field name="section">1</field>
@@ -88,8 +93,7 @@ Integration Benefits:
 
 * The Open ERP Website : [http://openerp.com]
 * The DMS Documentation : [http://openerp.com]
-
-            </field>
+</field>
         </record>
     </data>
 </openerp>

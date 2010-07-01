@@ -82,12 +82,11 @@ class base_calendar_set_exrule(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
-
         """
-        crm_obj = self.pool.get('crm.meeting')
-        for meeting in crm_obj.browse(cr, uid, context.get('active_ids', [])):
-            if not meeting.rrule:
-                raise osv.except_osv(_("Warning !"), _("Please Apply Recurrency after Apply Exception Rule"))
+        event_obj = self.pool.get(context.get('active_model'))
+        for event in event_obj.browse(cr, uid, context.get('active_ids', [])):
+            if not event.rrule:
+                raise osv.except_osv(_("Warning !"), _("Please Apply Recurrency before applying Exception Rule."))
         return False
 
     def compute_exrule_string(self, cr, uid, ids, context=None):
