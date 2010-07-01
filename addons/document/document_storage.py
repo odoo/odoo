@@ -35,6 +35,7 @@ from osv.orm import except_orm
 
 import random
 import string
+import pooler
 import netsvc
 import nodes
 from content_index import cntIndex
@@ -129,21 +130,27 @@ class nodefd_db(StringIO, nodes.node_descriptor):
     def close(self):
         # we now open a *separate* cursor, to update the data.
         # FIXME: this may be improved, for concurrency handling
-        uid = self.__parent.context.uid
-        cr = pooler.get_db(self.__parent.context.dbname).cursor()
-        if mode == 'w':
-            out = self.getvalue()
-            cr.execute('UPDATE ir_attachment SET db_datas = %s, file_size=%d WHERE id = %s',
-                (out, len(out), self.__parent.file_id))
-        elif mode == 'a':
-            out = self.getvalue()
-            cr.execute("UPDATE ir_attachment " \
-                "SET db_datas = COALESCE(db_datas,'') || %s, " \
-                "    file_size = COALESCE(file_size, 0) + %d " \
-                " WHERE id = %s",
-                (out, len(out), self.__parent.file_id))
-        cr.commit()
-        cr.close()
+        par = self._get_parent()
+        uid = par.context.uid
+        cr = pooler.get_db(par.context.dbname).cursor()
+        try:
+            if self.mode == 'w':
+                out = self.getvalue()
+                cr.execute('UPDATE ir_attachment SET db_datas = %s, file_size=%d WHERE id = %s',
+                    (out, len(out), par.file_id))
+            elif self.mode == 'a':
+                out = self.getvalue()
+                cr.execute("UPDATE ir_attachment " \
+                    "SET db_datas = COALESCE(db_datas,'') || %s, " \
+                    "    file_size = COALESCE(file_size, 0) + %d " \
+                    " WHERE id = %s",
+                    (out, len(out), par.file_id))
+            cr.commit()
+        except Exception, e:
+            logging.getLogger('document.storage').exception('Cannot update db file #%d for close:', par.file_id)
+            raise
+        finally:
+            cr.close()
         StringIO.close(self)
 
 class document_storage(osv.osv):

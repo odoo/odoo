@@ -87,6 +87,9 @@ class node_descriptor(object):
         self.name = parent.displayname
         self.__parent = parent
     
+    def _get_parent(self):
+        return self.__parent
+
     def open(self, **kwargs):
         raise NotImplementedError
     
