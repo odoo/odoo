@@ -282,6 +282,7 @@ class abstracted_fs(object):
             basename =_to_unicode(basename)
             cdir = node.create_child_collection(cr, basename)
             self._log.debug("Created child dir: %r", cdir)
+            cr.commit()
         except Exception,e:
             self._log.exception('Cannot create dir "%s" at node %s', basename, repr(node))
             raise OSError(1, 'Operation not permited.')
@@ -390,6 +391,7 @@ class abstracted_fs(object):
             ret = src.move_to(cr, dst_basedir, new_name=nname)
             # API shouldn't wait for us to write the object
             assert (ret is True) or (ret is False)
+            cr.commit()
         except Exception,err:
             self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, dst_basename, dst_basedir)
             raise OSError(1,'Operation not permited.')
