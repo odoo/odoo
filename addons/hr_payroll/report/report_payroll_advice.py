@@ -6,7 +6,7 @@ from tools import amount_to_text_en
 class payroll_advice_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(payroll_advice_report, self).__init__(cr, uid, name, context)
-        
+
         self.total_amount = 0.00
         self.total_bysal = 0.00
         self.localcontext.update({
@@ -25,17 +25,17 @@ class payroll_advice_report(report_sxw.rml_parse):
         date = mx.DateTime.strptime(input_date, '%Y-%m-%d')
         res['mname']= date.strftime('%B')+'-'+date.strftime('%Y')
         return res
-    
+
     def convert(self,amount, cur):
         amt_en = amount_to_text_en.amount_to_text(amount,'en',cur);
         return amt_en
-    
+
     def get_bysal_total(self):
         return self.total_bysal
 
     def get_total(self):
         return self.total_amount
-    
+
     def get_detail(self,line_ids):
         result =[]
         if line_ids:
@@ -50,5 +50,8 @@ class payroll_advice_report(report_sxw.rml_parse):
                 self.total_bysal += l.bysal
                 result.append(res)
         return result
-    
-report_sxw.report_sxw('report.payroll.advice', 'hr.payroll.advice', 'hr_payroll/report/report_payroll_advice.rml', parser=payroll_advice_report)   
+
+report_sxw.report_sxw('report.payroll.advice', 'hr.payroll.advice', 'hr_payroll/report/report_payroll_advice.rml', parser=payroll_advice_report)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
