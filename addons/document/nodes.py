@@ -67,6 +67,27 @@ class node_context(object):
                 return False            
             duri = duri[1:] 
         return ndir
+        
+    def get_dir_node(cr, dbro):
+        """Create (or locate) a node for a directory
+            @param dbro a browse object of document.directory
+        """
+        fullpath = self._dirobj.get_full_path(cr, self.uid, dbro.id, self.context)
+        if dbro.type == 'directory':
+            return node_dir(fullpath, None ,self, dbro)
+        elif dbro.type == 'ressource':
+            assert dbro.ressource_parent_type_id == False
+            return node_res_dir(fullparh, None, self, dbro)
+        else:
+            raise ValueError("dir node for %s type", dbro.type)
+
+    def get_file_node(cr, fbro):
+        """ Create or locate a node for a static file
+            @param fbro a browse object of an ir.attachment
+        """
+        # TODO: fill the parent
+        return node_file(None,None,self,fbro)
+
 
 class node_descriptor(object):
     """A file-like interface to the data contents of a node.
