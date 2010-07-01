@@ -94,7 +94,7 @@ class tinythunderbird_partner(osv.osv):
             dictcreate.update({'partner_id':partner[0]['partner_id'][0]})
         create_id = case_pool.create(cr, user, dictcreate)
         cases=case_pool.browse(cr,user,[create_id])
-        case_pool._history(cr, user, cases, _('Archive'), history=True, email=False)
+        case_pool._history(cr, user, cases, _('Archive'), history=True)
         return create_id
 
     def thunderbird_createcontact(self,cr,user,vals):

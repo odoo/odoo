@@ -661,9 +661,7 @@ true, it will allow you to hide the event alarm information without removing it.
                 cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
                                     where id=%s' % (model_obj._table, \
                                     cal_alarm.id, new_res_alarm, data.id))
-            if not context.get('alarm_id', False):
-                self.do_alarm_unlink(cr, uid, [data.id], model)
-                return True
+
             self.do_alarm_unlink(cr, uid, [data.id], model)
             if basic_alarm:
                 vals = {
@@ -1334,7 +1332,7 @@ true, it will allow you to hide the event alarm information without removing it.
             yearstring = bymonth + bystring
 
         if datas.get('end_date'):
-            datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
+            datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
         enddate = (datas.get('count') and (';COUNT=' + str(datas.get('count'))) or '') +\
                              ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
 
@@ -1464,7 +1462,7 @@ true, it will allow you to hide the event alarm information without removing it.
             fields.append('date')
         for base_calendar_id, real_id in select:
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
-            ls = base_calendar_id2real_id(base_calendar_id, with_date=res.get('duration', 0))
+            ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
                 res['date_deadline'] = ls[2]
@@ -1502,27 +1500,23 @@ true, it will allow you to hide the event alarm information without removing it.
         @return: True
         """
         res = False
-        for id in ids:
-            ls = base_calendar_id2real_id(id)
-            if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
-                date_new = ls[1]
-                for record in self.read(cr, uid, [base_calendar_id2real_id(id)], \
-                                            ['date', 'rrule', 'exdate']):
-                    if record['rrule']:
-                        exdate = (record['exdate'] and (record['exdate'] + ',') or '') + ''.join((re.compile('\d')).findall(date_new)) + 'Z'
-                        if record['date'] == date_new:
-                            res = self.write(cr, uid, [base_calendar_id2real_id(id)], {'exdate': exdate})
-                    else:
-                        ids = map(lambda x: base_calendar_id2real_id(x), ids)
-                        res = super(calendar_event, self).unlink(cr, uid, \
-                                                base_calendar_id2real_id(ids))
-                        alarm_obj = self.pool.get('res.alarm')
-                        alarm_obj.do_alarm_unlink(cr, uid, ids, self._name)
-            else:
-                ids = map(lambda x: base_calendar_id2real_id(x), ids)
-                res = super(calendar_event, self).unlink(cr, uid, ids)
-                alarm_obj = self.pool.get('res.alarm')
-                alarm_obj.do_alarm_unlink(cr, uid, ids, self._name)
+        for event_id in ids:
+            if isinstance(event_id, (int, long)):
+                res = super(calendar_event, self).unlink(cr, uid, event_id)
+                self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
+                continue
+            event_id, date_new = event_id.split('-')
+            event_id = [int(event_id)]
+            for record in self.read(cr, uid, event_id, ['date', 'rrule', 'exdate']):
+                if record['rrule']:
+                    # Remove one of the recurrent event 
+                    date_new = time.strftime("%Y-%m-%d %H:%M:%S", \
+                                 time.strptime(date_new, "%Y%m%d%H%M%S"))
+                    exdate = (record['exdate'] and (record['exdate'] + ',') or '') + ''.join((re.compile('\d')).findall(date_new)) + 'Z'
+                    res = self.write(cr, uid, event_id, {'exdate': exdate})
+                else:
+                    res = super(calendar_event, self).unlink(cr, uid, event_id)
+                    self.pool.get('res.alarm').do_alarm_unlink(cr, uid, event_id, self._name)
         return res
 
     def create(self, cr, uid, vals, context=None):

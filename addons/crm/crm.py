@@ -212,13 +212,10 @@ class crm_case(object):
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'phone': address.phone}}
 
-    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
+    def _history(self, cr, uid, cases, keyword, history=False, emails=None, message=None, context=None):
         mailgate_pool = self.pool.get('mailgate.thread')
         return mailgate_pool._history(cr, uid, cases, keyword, history=history,\
-                                       subject=subject, email=email, \
-                                       details=details, email_from=email_from,\
-                                       message_id=message_id, attach=attach, \
-                                       context=context)
+                                        emails=emails, message=message, context=context)
 
     def case_open(self, cr, uid, ids, *args):
         """Opens Case
@@ -360,14 +357,13 @@ class crm_case(object):
                 src = case.email_from
                 dest = case.section_id.reply_to
                 body = ""
-                body = case.email_last or case.description
+                body = case.description
                 if not destination:
                     src, dest = dest, src
                     if body and case.user_id.signature:
                         body += '\n\n%s' % (case.user_id.signature)
 
                 body = self.format_body(body)
-                dest = [dest]
 
                 attach_to_send = None
 
@@ -377,16 +373,19 @@ class crm_case(object):
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
                 # Send an email
+                subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
                 flag = tools.email_send(
                     src,
-                    dest,
-                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
+                    [dest],
+                    subject,
                     body,
                     reply_to=case.section_id.reply_to,
                     openobject_id=str(case.id),
                     attach=attach_to_send
                 )
-                self._history(cr, uid, [case], _('Send'), history=True, email=dest, details=body, email_from=src)
+                emails = {'email_from': src, 'email_to': dest}
+                message = {'subject': subject, 'description': body, 'attach': attach_to_send}
+                self._history(cr, uid, [case], _('Send'), history=True, emails=emails, message=message)
         return True
 
     def _check(self, cr, uid, ids=False, context={}):

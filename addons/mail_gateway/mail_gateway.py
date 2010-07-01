@@ -68,8 +68,7 @@ class mailgate_thread(osv.osv):
     def msg_send(self, cr, uid, id, *args, **argv):
         raise Exception, _('Method is not implemented')
 
-    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, \
-                    email_from=False, message_id=False, references=None, attach=None, context=None):
+    def _history(self, cr, uid, cases, keyword, history=False, emails=None, message=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -77,17 +76,18 @@ class mailgate_thread(osv.osv):
         @param cases: a browse record list
         @param keyword: Case action keyword e.g.: If case is closed "Close" keyword is used
         @param history: Value True/False, If True it makes entry in case History otherwise in Case Log
-        @param email: Email address if any
-        @param details: Details of case history if any 
-        @param atach: Attachment sent in email
+        @param emails: Email details, e.g. emails = {'email_from': 'FROM', 'email_to': 'TO', 'email_cc': 'CC', 'email_bcc': 'BCC'}
+        @param message: Details of email to send, e.g. message = {'subject': 'SUBJECT', 'description': 'DESCRIPTION', 'message_id':'MESSAGE_ID', 'ref_id': 'REFERENCES' , 'attach': 'ATTACH'}
         @param context: A standard dictionary for contextual values"""
         if context is None:
             context = {}
-        if attach is None:
-            attach = []
-
+        if message is None:
+            message = {}
+        if emails is None:
+            emails = {}
+        if message.get('attach') is None:
+            message.update({'attach': []})
         # The mailgate sends the ids of the cases and not the object list
-
         if all(isinstance(case_id, (int, long)) for case_id in cases):
             cases = self.browse(cr, uid, cases, context=context)
 
@@ -101,34 +101,40 @@ class mailgate_thread(osv.osv):
                 'model' : case._name, 
                 'res_id': case.id, 
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
-                'message_id': message_id, 
+                'message_id': message.get('message_id', False), 
             }
             attachments = []
             if history:
-                for att in attach:
+                for att in message.get('attach'):
                     attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
 
                 data = {
-                    'name': subject or 'History', 
+                    'name': message.get('subject', 'History'), 
                     'history': True, 
                     'user_id': uid, 
                     'model' : case._name, 
                     'res_id': case.id,
                     'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
-                    'description': details or (hasattr(case, 'description') and case.description or False), 
-                    'email_to': email or \
+                    'description': message.get('description') or (hasattr(case, 'description') and case.description or False), 
+                    'email_to': emails.get('email_to') or \
                         (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
                          case.user_id.address_id.email) or tools.config.get('email_from', False), 
-                    'email_from': email_from or \
+                    'email_from': emails.get('email_from') or \
                         (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
                          case.user_id.address_id.email) or tools.config.get('email_from', False), 
+                    'email_cc': emails.get('email_cc', None), 
+                    'email_bcc': emails.get('email_bcc', None),
                     'partner_id': hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False, 
-                    'references': references, 
-                    'message_id': message_id, 
+                    'ref_id': message.get('ref_id'), 
+                    'message_id': message.get('message_id'), 
                     'attachment_ids': [(6, 0, attachments)]
                 }
-            obj.create(cr, uid, data, context)
+            obj.create(cr, uid, data, context=context)
         return True
+
+    history = _history
+    __history = _history
+
 mailgate_thread()
 
 class mailgate_message(osv.osv):
@@ -415,15 +421,9 @@ class mailgate_tool(osv.osv_memory):
         # Store messages
         context.update({'model' : model})
         if hasattr(model_pool, '_history'):
-            model_pool._history(cr, uid, res_ids, _('Receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False),
-                            attach = attachments.items(),
-                            context = context)
+            emails = {'email_from': msg.get('from'), 'email_to': msg.get('to'), 'email_cc': msg.get('cc')}
+            message = {'subject': msg.get('subject'), 'description': msg.get('body'), 'message_id': msg.get('message-id'), 'ref_id': msg.get('references', False) , 'attach': attachments.items()}
+            model_pool._history(cr, uid, res_ids, _('Receive'), history=True, emails=emails, message=message, context = context)
         else:
             self.history(cr, uid, model, res_ids, msg, attachment_ids, context=context)
         self.email_forward(cr, uid, model, res_ids, msg_txt)
