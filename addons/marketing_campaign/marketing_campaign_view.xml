@@ -218,52 +218,54 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Activities">
-                <group colspan="4" col="6">
-                    <separator string="Activity Definition" colspan="4"/>
-                    <separator string="Cost Control" colspan="2"/>
-                    <field name="name" select="1" />
-                    <field name="start"/>
-                    <field name="variable_cost" select="1"/>
-                    <field name="object_id" invisible="1"/>
-                </group>
-                <group colspan="2" col="2">
-                    <separator string="Condition" colspan="2"/>
-                    <field name="condition"/>
-                </group>
-                <group colspan="2" col="2">
-                    <separator string="Action" colspan="2"/>
-                    <field name="type" colspan="4"/>
-                    <group colspan="4" attrs="{'invisible':[('type','!=','email')]}" >
-                        <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible':[('type','!=','paper')]}" >
-                        <field name="report_id" attrs="{'required':[('type','=','paper')]}" context="{'object_id':object_id}"/>
-                        <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible':[('type','!=','action')]}" >
-                        <field name="server_action_id" attrs="{'required':[('type','=','action')]}" domain="[('model_id','=',object_id)]" />
-                    </group>
-                    <group colspan="4" attrs="{'invisible':[('type','!=','subcampaign')]}" >
-                        <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
-                        <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
+                <field name="object_id" invisible="1"/>
+                <separator string="Activity Definition" colspan="4"/>
+                <field name="name" select="1" colspan='4' />
+                <field name="signal"/>
+                <field name="start"/>
+                <field name="variable_cost" select="1"/>
+                <newline/> 
+                
+                <separator string="Action" colspan="4"/>
+                <group colspan='4' col='4'>
+                    <field name="condition" colspan='4'/>
+                    <field name="type" width='100'/>
+                    <group colspan='2' col='1'>
+                        <group attrs="{'invisible':[('type','!=','email')]}" >
+                            <field name="email_template_id" attrs="{'required':[('type','=','email')]}" />
+                        </group>
+                        <group attrs="{'invisible':[('type','!=','paper')]}" >
+                            <field name="report_id" attrs="{'required':[('type','=','paper')]}" context="{'object_id':object_id}"/>
+                            <field name="report_directory_id" attrs="{'required':[('type','=','paper')]}" />
+                        </group>
+                        <group attrs="{'invisible':[('type','!=','action')]}" >
+                            <field name="server_action_id" attrs="{'required':[('type','=','action')]}" domain="[('model_id','=',object_id)]" />
+                        </group>
+                        <group attrs="{'invisible':[('type','!=','subcampaign')]}" >
+                            <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
+                            <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
+                        </group>
                     </group>
                 </group>
                 <newline/>
+
                 <group colspan="4" col="2" expand="1">
                     <separator string="Transitions" colspan="2"/>
+                    <field name="from_ids" nolabel="1" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
+                        <tree string="Incoming Transitions" editable="bottom">
+                            <field name="activity_from_id"/>
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </tree>
+                    </field>
                     <field name="to_ids" nolabel="1" mode="tree" default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
-                         <tree string="Outgoing Transitions" editable="bottom">
-                             <field name="activity_to_id"/>
-                             <field name="interval_nbr"/>
-                             <field name="interval_type"/>
-                         </tree>
-                     </field>
-                     <field name="from_ids" nolabel="1" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
-                         <tree string="Incoming Transitions" editable="bottom">
-                             <field name="activity_from_id"/>
-                             <field name="interval_nbr"/>
-                             <field name="interval_type"/>
-                         </tree>
+                        <tree string="Outgoing Transitions" editable="bottom">
+                            <field name="activity_to_id"/>
+                            <field name='trigger'/>
+                            <field name="interval_nbr"/>
+                            <field name="interval_type"/>
+                        </tree>
                      </field>
                 </group>
             </form>
@@ -357,7 +359,6 @@
        <field name="arch" type="xml">
            <search string="Marketing Campaign Activities">
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name = "todo" domain="[('state','=','todo')]"/>
-               <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','inprogress')]"/>
                <filter icon="terp-emblem-important" string="Exception" domain="[('state','=','exception')]"/>
                <separator orientation="vertical"/>
                <field name="segment_id" select="1"/>

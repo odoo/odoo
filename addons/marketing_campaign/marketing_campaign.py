@@ -36,6 +36,8 @@ _intervalTypes = {
     'years': lambda interval: relativedelta(years=interval),
 }
 
+DT_FMT = '%Y-%m-%d %H:%M:%S'
+
 def dict_map(f, d):
     return dict((k, f(v)) for k,v in d.items())
 
@@ -142,6 +144,32 @@ you required for the campaign"),
     def state_cancel_set(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'cancelled'})
         return True
+
+
+    def signal(self, cr, uid, model, res_id, signal, context=None):
+        if not signal:
+            raise ValueError('signal cannot be False')
+
+        Workitems = self.pool.get('marketing.campaign.workitem')
+        domain = [('object_id.name', '=', model),
+                  ('state', '=', 'running')]
+        campaign_ids = self.search(cr, uid, domain, context=context)
+        for campaign in self.browse(cr, uid, campaign_ids, context):
+            for activity in campaign.activity_ids:
+                if activity.signal != signal:
+                    continue
+                wi_domain = [('activity_id', '=', activity.id),
+                             ('res_id', '=', res_id),
+                             ('state', '=', 'todo'),
+                             ('date', '=', False),
+                            ]
+                wi_ids = Workitems.search(cr, uid, wi_domain, context=context)
+                Workitems.process(cr, uid, wi_ids, context=context)
+
+    def _signal(self, cr, uid, record, signal, context=None):
+        return self.signal(cr, uid, record._table._name,
+                           record.id, signal, context)
+
 marketing_campaign()
 
 class marketing_campaign_segment(osv.osv):
@@ -252,6 +280,7 @@ marketing_campaign_segment()
 class marketing_campaign_activity(osv.osv):
     _name = "marketing.campaign.activity"
     _description = "Campaign Activity"
+
     _actions_type = [('email', 'E-mail'), ('paper', 'Paper'), ('action', 'Action'),
                         ('subcampaign', 'Sub-Campaign')]
     _columns = {
@@ -284,7 +313,10 @@ class marketing_campaign_activity(osv.osv):
         'subcampaign_segment_id': fields.many2one('marketing.campaign.segment',
                                                    'Sub Campaign Segment'),
         'variable_cost': fields.float('Variable Cost'),
-        'revenue': fields.float('Revenue')
+        'revenue': fields.float('Revenue'),
+        'signal': fields.char('Signal', size=128,
+                              help='An activity with a signal can be called \
+                                      programmatically'),
     }
 
     _defaults = {
@@ -292,7 +324,23 @@ class marketing_campaign_activity(osv.osv):
         'condition': lambda *a: 'True',
         'object_id' : lambda obj, cr, uid, context  : context.get('object_id',False),
     }
+
+    def _check_signal(self, cr, uid, ids, context=None):
+        return all(activity.signal
+                   for activity in self.browse(cr, uid, ids, context)
+                   for transition in activity.from_ids
+                   if transition.trigger == 'signal')
+
+    _constraints = [
+        (_check_signal,
+         "An incoming transition is triggered by a signal but this transition \
+                doesn't have one",
+         ['signal', 'from_ids']
+        ),
+    ]
+
     def __init__(self, *args):
+        # FIXME use self._process_wi_<type>
         self._actions = {'paper' : self.process_wi_report,
                     'email' : self.process_wi_email,
                     'action' : self.process_wi_action,
@@ -359,32 +407,70 @@ class marketing_campaign_transition(osv.osv):
 
     def _get_name(self, cr, uid, ids, fn, args, context=None):
         result = dict.fromkeys(ids, False)
-        for tr in self.browse(cr, uid, ids, context=context, fields_process=translate_selections):
-            result[tr.id] = _('After %(interval_nbr)d %(interval_type)s') % tr
+        formatters = {
+            'auto': _('Automatic transition'),
+            'time': _('After %(interval_nbr)d %(interval_type)s'),
+            'signal': _('On signal'),
+        }
+        for tr in self.browse(cr, uid, ids, context=context,
+                              fields_process=translate_selections):
+            result[tr.id] = formatters[tr.trigger.value] % tr
         return result
+
+
+    def _delta(self, cr, uid, ids, context=None):
+        assert len(ids) == 1
+        transition = self.browse(cr, uid, ids[0], context)
+        if transition.trigger != 'time':
+            raise ValueError('Delta is only relevant for timed transiton')
+        return relativedelta(**{transition.interval_type: transition.interval_nbr})
+
 
     _columns = {
         'name': fields.function(_get_name, method=True, string='Name',
                                 type='char', size=128),
         'activity_from_id': fields.many2one('marketing.campaign.activity',
-                                            'Source Activity', select=1),
+                                            'Source Activity', select=1,
+                                            required=True),
         'activity_to_id': fields.many2one('marketing.campaign.activity',
-                                          'Destination Activity'),
+                                          'Destination Activity',
+                                          required=True),
         'interval_nbr': fields.integer('Interval Value', required=True),
         'interval_type': fields.selection(_interval_units, 'Interval Unit',
                                           required=True),
+
+        'trigger': fields.selection([('auto', 'Automatic'),
+                                     ('time', 'Time'),
+                                     ('signal','Signal')],
+                                    'Trigger', required=True,
+                                    help="How is trigger the destination workitem"),
     }
 
     _defaults = {
         'interval_nbr': 1,
         'interval_type': 'days',
+        'trigger': 'time',
     }
 
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
 
+    def _check_signal(self, cr, uid, ids, context=None):
+        return all(tr.activity_to_id.signal
+                   for tr in self.browse(cr, uid, ids, context)
+                   if tr.trigger == 'signal')
+
+    _constraints = [
+        (_check_signal,
+         "The transition is triggered by a signal but destination activity \
+                doesn't have one",
+         ['trigger', 'activity_to_ids']
+        ),
+    ]
+
     def default_get(self, cr, uid, fields, context=None):
+        # TODO remove type_id and use directly the fieldname as key (use default_<field> ??)
         value = super(marketing_campaign_transition, self).default_get(cr, uid,
                                                                 fields, context)
         if context and 'type_id' in context:
@@ -399,6 +485,7 @@ class marketing_campaign_workitem(osv.osv):
     _description = "Campaign Workitem"
 
     def _res_name_get(self, cr, uid, ids, field_name, arg, context=None):
+        # FIXME better code
         res = {}
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.res_id:
@@ -421,9 +508,9 @@ class marketing_campaign_workitem(osv.osv):
              type='many2one', relation='ir.model', string='Object', select=1),
         'res_id': fields.integer('Resource ID', select=1, readonly=1),
         'res_name': fields.function(_res_name_get, method=True, string='Resource Name', type="char", size=64),
-        'date': fields.datetime('Execution Date'),
+        'date': fields.datetime('Execution Date', help='If date is not set, this workitem have to be run manually'),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
-        'state': fields.selection([('todo', 'To Do'), ('inprogress', 'In Progress'),
+        'state': fields.selection([('todo', 'To Do'),
                                    ('exception', 'Exception'), ('done', 'Done'),
                                    ('cancelled', 'Cancelled')], 'State'),
 
@@ -431,26 +518,8 @@ class marketing_campaign_workitem(osv.osv):
     }
     _defaults = {
         'state': lambda *a: 'todo',
+        'date': False,
     }
-
-    def process_chain(self, cr, uid, workitem_id, context={}):
-        workitem = self.browse(cr, uid, workitem_id)
-        for mct_id in workitem.activity_id.to_ids:
-            launch_date = time.strftime('%Y-%m-%d %H:%M:%S')
-            if mct_id.interval_type and mct_id.interval_nbr :
-                launch_date = (datetime.now() + _intervalTypes[ \
-                                mct_id.interval_type](mct_id.interval_nbr) \
-                                ).strftime('%Y-%m-%d %H:%M:%S')
-            workitem_vals = {
-                'segment_id': workitem.segment_id.id,
-                'activity_id': mct_id.activity_to_id.id,
-                'date': launch_date,
-                'partner_id': workitem.partner_id.id,
-                'res_id': workitem.res_id,
-                'state': 'todo',
-            }
-            self.create(cr, uid, workitem_vals)
-        return True
 
     def button_draft(self, cr, uid, workitem_ids, context={}):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
@@ -464,56 +533,105 @@ class marketing_campaign_workitem(osv.osv):
                 self.write(cr, uid, [wi.id], {'state':'cancelled'}, context=context)
         return True
 
-    def process(self, cr, uid, workitem_ids, context={}):
-        for wi in self.browse(cr, uid, workitem_ids):
-            if wi.state == 'todo':
-                eval_context = {
-                    'pool': self.pool,
-                    'cr': cr,
-                    'uid': uid,
-                    'wi': wi,
-                    'object': wi.activity_id,
-                    'transition': wi.activity_id.to_ids
-                }
-                try:
-                    expr = eval(str(wi.activity_id.condition), eval_context)
-                    if expr:
-                        result = True
-                        if wi.campaign_id.mode in ('manual','active'):
-                            result = self.pool.get('marketing.campaign.activity').process(
-                                cr, uid, wi.activity_id.id, wi.id, context)
-                        if result:
-                            self.write(cr, uid, wi.id, {'state': 'done'})
-                            self.process_chain(cr, uid, wi.id, context)
-                        else:
-                            vals = {'state': 'exception'}
-                            if type(result) == type({}) and 'error_msg' in result:
-                                vals['error_msg'] = result['error_msg']
-                            self.write(cr, uid, wi.id, vals)
-                    else:
-                        self.write(cr, uid, wi.id, {'state': 'cancelled'})
-                except Exception,e:
-                    self.write(cr, uid, wi.id, {'state': 'exception', 'error_msg': str(e)})
+    def _process_one(self, cr, uid, workitem, context=None):
+        if workitem.state != 'todo':
+            return
+
+        activity = workitem.activity_id
+
+        eval_context = {
+            'pool': self.pool,
+            'cr': cr,
+            'uid': uid,
+            'wi': workitem,
+            'object': activity,
+            'transition': activity.to_ids
+        }
+        try:
+            condition = activity.condition
+            campaign_mode = workitem.campaign_id.mode
+            if condition:
+                if not eval(condition, eval_context):
+                    workitem.write({'state': 'cancelled'}, context=context)
+                    return
+            result = True
+            if campaign_mode in ('manual', 'active'):
+                Activities = self.pool.get('marketing.campaign.activity')
+                result = Activities.process(activity.id, workitem.id,
+                                            context=context)
+
+            values = dict(state='done')
+            if not workitem.date:
+                values['date'] = datetime.now().strftime(DT_FMT)
+            workitem.write(values, context=context)
+
+            if result:
+                # process _chain
+                for transition in activity.to_ids:
+                    launch_date = False
+                    if transition.trigger == 'auto':
+                        launch_date = datetime.now()
+                    elif transition.trigger == 'time':
+                        launch_date = datetime.now() + transition._delta()
+
+                    if launch_date:
+                        launch_date = launch_date.strftime(DT_FMT)
+                    values = {
+                        'date': launch_date,
+                        'segment_id': workitem.segment_id.id,
+                        'activity_id': transition.activity_to_id.id,
+                        'partner_id': workitem.partner_id.id,
+                        'res_id': workitem.res_id,
+                        'state': 'todo',
+                    }
+                    wi_id = self.create(cr, uid, values, context=context)
+
+                    # Now, depending of the trigger and the campaign mode 
+                    # we now if must run the newly created workitem.
+                    #
+                    # rows = transition trigger \ colums = campaign mode
+                    #
+                    #           test    test_realtime     manual      normal (active)
+                    # time       Y            N             N           N
+                    # signal     N            N             N           N
+                    # auto       Y            Y             N           Y
+                    # 
+
+                    run = False
+                    if transition.trigger != 'signal' and campaign_mode != 'manual':
+                        if transition.trigger == 'auto' or campaign_mode == 'test':
+                            run = True
+                    if run:
+                        new_wi = self.browse(cr, uid, wi_id, context)
+                        self._process_one(cr, uid, new_wi, context)
+
+        except Exception, e:
+            workitem.write({'state': 'exception', 'error_msg': str(e)},
+                     context=context)
+
+    def process(self, cr, uid, workitem_ids, context=None):
+        for wi in self.browse(cr, uid, workitem_ids, context):
+            self._process_one(cr, uid, wi, context)
         return True
 
-    def process_all(self, cr, uid, camp_ids=None, context={}):
+    def process_all(self, cr, uid, camp_ids=None, context=None):
         camp_obj = self.pool.get('marketing.campaign')
-        if not camp_ids:
+        if camp_ids is None:
             camp_ids = camp_obj.search(cr, uid, [('state','=','running')], context=context)
         for camp in camp_obj.browse(cr, uid, camp_ids, context=context):
+            if camp.mode == 'manual':
+                # manual states are not processed automatically
+                continue
             while True:
-                if camp.mode in ('test_realtime','active'):
-                    workitem_ids = self.search(cr, uid, [('state', '=', 'todo'),
-                            ('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))])
-                elif camp.mode == 'test':
-                    workitem_ids = self.search(cr, uid, [('state', '=', 'todo')])
-                else:
-                    # manual states are not processed automatically
-                    workitem_ids = []
-                if workitem_ids:
-                    self.process(cr, uid, workitem_ids, context)
-                else:
+                domain = [('state', '=', 'todo'), ('date', '!=', False)]
+                if camp.mode in ('test_realtime', 'active'):
+                    domain += [('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))]
+
+                workitem_ids = self.search(cr, uid, domain, context=context)
+                if not workitem_ids:
                     break
+
+                self.process(cr, uid, workitem_ids, context)
 
     def preview(self, cr, uid, ids, context):
         res = {}
