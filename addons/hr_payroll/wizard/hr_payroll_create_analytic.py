@@ -31,7 +31,7 @@ class hr_payroll_create_analytic(osv.osv_memory):
         'type': fields.selection([('bydeg','By Employee Function'), ('byallded','By Allownce / Deduction')],'Type'),        
        } 
    
-   def do_duplicate(self, cr, uid, ids, context):
+   def do_duplicate(self, cr, uid, ids, context=None):
        
         account_pool =self.pool.get('account.analytic.account')
         func_pool = self.pool.get('hr.employee.grade')

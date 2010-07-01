@@ -25,22 +25,23 @@ from osv import fields, osv
 from tools.translate import _
 
 class hr_payroll_employees_detail(osv.osv_memory):
+    
    _name ='hr.payroll.employees.detail'
    _columns = {
         'employee_ids': fields.many2many('hr.employee', 'payroll_emp_rel','payroll_id','emp_id', 'Employees',required=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)        
        } 
-   def _get_defaults(self, cr, uid, ids, context={}):
+   def _get_fiscalyear(self, cr, uid, ids, context={}):
         fiscal_ids=self.pool.get('account.fiscalyear').search(cr,uid,[])
         if fiscal_ids:
             return fiscal_ids[0]
         return False
    
    _defaults = {
-        'fiscalyear_id':_get_defaults,
+        'fiscalyear_id':_get_fiscalyear,
     }
 
-   def print_report(self, cr, uid, ids, context={}):
+   def print_report(self, cr, uid, ids, context=None):
         """
          To get the date and print the report
          @param self: The object pointer.
@@ -52,7 +53,7 @@ class hr_payroll_employees_detail(osv.osv_memory):
 
         datas = {'ids': context.get('active_ids', [])}
         
-        res = self.read(cr, uid, ids, ['employee_ids', 'fiscalyear_id'], context)
+        res = self.read(cr, uid, ids, ['employee_ids', 'fiscalyear_id'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
         return {
