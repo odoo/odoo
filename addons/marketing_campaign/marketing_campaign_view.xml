@@ -23,7 +23,7 @@
                     <field name="fixed_cost"/>
                     <field name="partner_field_id"/>
                 </group>
-                <field name="activity_ids" nolabel = "1" colspan="4" default_get="{'object_id': object_id}" />
+                <field name="activity_ids" nolabel = "1" colspan="4" default_get="{'default_object_id': object_id}" />
                 <separator string="Status" colspan="4" />
                 <group col="10" colspan="4">
                     <field name="state" readonly="1" select="2" nolabel="1"/>
@@ -251,7 +251,7 @@
 
                 <group colspan="4" col="2" expand="1">
                     <separator string="Transitions" colspan="2"/>
-                    <field name="from_ids" nolabel="1" mode="tree" default_get="{'type_id':'activity_to_id','activity_id':active_id or False}">
+                    <field name="from_ids" nolabel="1" mode="tree" default_get="{'default_activity_to_id': active_id}">
                         <tree string="Incoming Transitions" editable="bottom">
                             <field name="activity_from_id"/>
                             <field name='trigger'/>
@@ -259,7 +259,7 @@
                             <field name="interval_type"/>
                         </tree>
                     </field>
-                    <field name="to_ids" nolabel="1" mode="tree" default_get="{'type_id':'activity_from_id','activity_id':active_id or False}">
+                    <field name="to_ids" nolabel="1" mode="tree" default_get="{'default_activity_from_id': active_id}">
                         <tree string="Outgoing Transitions" editable="bottom">
                             <field name="activity_to_id"/>
                             <field name='trigger'/>

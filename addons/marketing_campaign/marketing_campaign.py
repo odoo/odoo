@@ -118,11 +118,11 @@ you required for the campaign"),
             raise osv.except_osv("Error", "There is no activitity in the campaign")
         actvity_ids = [ act_id.id for act_id in campaign.activity_ids]
         act_obj = self.pool.get('marketing.campaign.activity')
-        act_ids  = act_obj.search(cr, uid, [('id', 'in', actvity_ids), 
+        act_ids  = act_obj.search(cr, uid, [('id', 'in', actvity_ids),
                                                     ('start', '=', True)])
         if not act_ids :
             raise osv.except_osv("Error", "There is no starting activitity in the campaign")
-        act_ids = act_obj.search(cr, uid, [('id', 'in', actvity_ids), 
+        act_ids = act_obj.search(cr, uid, [('id', 'in', actvity_ids),
                                             ('type', '=', 'email')])
         for activity in act_obj.browse(cr, uid, act_ids):
             if not activity.email_template_id.enforce_from_account :
@@ -322,7 +322,6 @@ class marketing_campaign_activity(osv.osv):
     _defaults = {
         'type': lambda *a: 'email',
         'condition': lambda *a: 'True',
-        'object_id' : lambda obj, cr, uid, context  : context.get('object_id',False),
     }
 
     def _check_signal(self, cr, uid, ids, context=None):
@@ -377,8 +376,8 @@ class marketing_campaign_activity(osv.osv):
         return True
 
     def process_wi_email(self, cr, uid, activity, workitem, context=None):
-        return self.pool.get('email.template').generate_mail(cr, uid, 
-                                            activity.email_template_id.id, 
+        return self.pool.get('email.template').generate_mail(cr, uid,
+                                            activity.email_template_id.id,
                                             [workitem.res_id], context=context)
 
     def process_wi_action(self, cr, uid, activity, workitem, context={}):
@@ -387,7 +386,7 @@ class marketing_campaign_activity(osv.osv):
         context['active_id'] = workitem.res_id
         res = server_obj.run(cr, uid, [activity.server_action_id.id], context)
         #server action return False if the action is perfomed except client_action,other and python code
-        return res==False and True or res 
+        return res==False and True or res
 
     def process(self, cr, uid, act_id, wi_id, context={}):
         activity = self.browse(cr, uid, act_id)
@@ -469,14 +468,6 @@ class marketing_campaign_transition(osv.osv):
         ),
     ]
 
-    def default_get(self, cr, uid, fields, context=None):
-        # TODO remove type_id and use directly the fieldname as key (use default_<field> ??)
-        value = super(marketing_campaign_transition, self).default_get(cr, uid,
-                                                                fields, context)
-        if context and 'type_id' in context:
-            value[context['type_id']] = context['activity_id']
-        return value
-
 
 marketing_campaign_transition()
 
@@ -485,16 +476,15 @@ class marketing_campaign_workitem(osv.osv):
     _description = "Campaign Workitem"
 
     def _res_name_get(self, cr, uid, ids, field_name, arg, context=None):
-        # FIXME better code
-        res = {}
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.res_id:
-                try:
-                    res[obj.id] = self.pool.get(obj.object_id.model).name_get(cr, uid, [obj.res_id], context=context)[0][1]
-                except:
-                    res[obj.id] = '/'
-            else:
-                res[obj.id] = '/'
+        res = dict.fromkeys(ids, '/')
+        for wi in self.browse(cr, uid, ids, context=context):
+            if not wi.res_id:
+                continue
+
+            proxy = self.pool.get(wi.object_id.model)
+            ng = proxy.name_get(cr, uid, [wi.res_id], context=context)
+            if ng:
+                res[wi.id] = ng[0][1]
         return res
 
     _columns = {
@@ -635,10 +625,11 @@ class marketing_campaign_workitem(osv.osv):
 
     def preview(self, cr, uid, ids, context):
         res = {}
-        wi_obj = self.browse(cr, uid, ids)[0]
+        wi_obj = self.browse(cr, uid, ids[0], context)
         if wi_obj.activity_id.type == 'email':
             data_obj = self.pool.get('ir.model.data')
             data_id = data_obj._get_id(cr, uid, 'email_template', 'email_template_preview_form')
+            view_id = 0
             if data_id:
                 view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
             res = {
@@ -655,18 +646,17 @@ class marketing_campaign_workitem(osv.osv):
                 'context': "{'template_id':%d,'rel_model_ref':%d}"%
                                 (wi_obj.activity_id.email_template_id.id,
                                  wi_obj.res_id)
-                                 
             }
 
         elif wi_obj.activity_id.type == 'paper':
             datas = {'ids': [wi_obj.res_id],
                      'model': wi_obj.object_id.model}
-            res = { 
+            res = {
                 'type' : 'ir.actions.report.xml',
                 'report_name': wi_obj.activity_id.report_id.report_name,
                 'datas' : datas,
-                'nodestroy': True, 
-                }
+                'nodestroy': True,
+            }
         return res
 
 marketing_campaign_workitem()
@@ -677,16 +667,16 @@ class email_template(osv.osv):
         'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
     }
 email_template()
-    
+
 class email_template_preview(osv.osv_memory):
     _inherit = "email_template.preview"
-    
+
     def _default_rel_model(self, cr, uid, context=None):
         if 'rel_model_ref' in context :
             return context['rel_model_ref']
         else :
             return False
-            
+
     _defaults = {
         'rel_model_ref' : _default_rel_model
     }
@@ -696,11 +686,11 @@ email_template_preview()
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        if not context:
+        if context is None:
             context = {}
-        if context and 'object_id' in context and context['object_id']:
-            model = self.pool.get('ir.model').browse(cr, uid,
-                                                    context['object_id']).model
+        object_id = context.get('object_id')
+        if object_id:
+            model = self.pool.get('ir.model').browse(cr, uid, object_id).model
             args.append(('model', '=', model))
         return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
 
