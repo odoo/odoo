@@ -7,10 +7,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Year Salary">
-                <group height="260" width="500">
-			    	<field name="fiscalyear_id"/>
-			    	<newline/>
-			    	<field name="employee_ids" />
+                <group  width="500">
+			    	<field name="fiscalyear_id" />
+			    	<separator string="Employee" colspan="4"/>
+			    	<field name="employee_ids"  nolabel="1" colspan="2" />
 			    	<newline/>
 					<button icon='gtk-cancel' special="cancel" 
 	        			string="Close" />
