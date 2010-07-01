@@ -120,7 +120,7 @@ class document_file(osv.osv):
         res_model = vals.get('res_model', False)
         res_id = vals.get('res_id', 0)
         if op == 'write':
-            for file in self.browse(cr, uid, ids):
+            for file in self.browse(cr, uid, ids): # FIXME fields_only
                 if not name:
                     name = file.name
                 if not parent_id:
@@ -162,7 +162,7 @@ class document_file(osv.osv):
             ids2 = []
             result = False
             for fbro in self.browse(cr, uid, ids, context=context):
-                if fbro.parent_id != vals['parent_id']:
+                if fbro.parent_id.id != vals['parent_id']:
                     fnode = nodes.node_file(None,None,nctx,fbro)
                     res = fnode.move_to(cr, fbro, dbro, True)
                     if isinstance(res, dict):
