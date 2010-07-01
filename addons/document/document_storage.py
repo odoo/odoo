@@ -115,7 +115,9 @@ class nodefd_db(StringIO, nodes.node_descriptor):
             mode = mode[:-1]
         
         if mode in ('r', 'r+'):
-            StringIO.__init__(self, ira_browse.db_datas)
+            cr.execute('SELECT db_datas FROM ir_attachment WHERE id = %s', ira_browse.id)
+            data = cr.fetchone()[0]
+            StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
             StringIO.__init__(self, None)
             # at write, we start at 0 (= overwrite), but have the original
@@ -136,15 +138,67 @@ class nodefd_db(StringIO, nodes.node_descriptor):
         try:
             if self.mode in ('w', 'w+', 'r+'):
                 out = self.getvalue()
-                cr.execute('UPDATE ir_attachment SET db_datas = %s, file_size=%d WHERE id = %s',
+                cr.execute("UPDATE ir_attachment SET db_datas = decode(%s,'escape'), file_size=%s WHERE id = %s",
                     (out, len(out), par.file_id))
             elif self.mode == 'a':
                 out = self.getvalue()
                 cr.execute("UPDATE ir_attachment " \
-                    "SET db_datas = COALESCE(db_datas,'') || %s, " \
-                    "    file_size = COALESCE(file_size, 0) + %d " \
+                    "SET db_datas = COALESCE(db_datas,'') || decode(%s, 'escape'), " \
+                    "    file_size = COALESCE(file_size, 0) + %s " \
                     " WHERE id = %s",
                     (out, len(out), par.file_id))
+            cr.commit()
+        except Exception, e:
+            logging.getLogger('document.storage').exception('Cannot update db file #%d for close:', par.file_id)
+            raise
+        finally:
+            cr.close()
+        StringIO.close(self)
+
+class nodefd_db64(StringIO, nodes.node_descriptor):
+    """ A descriptor to db data, base64 (the old way)
+    
+        It stores the data in base64 encoding at the db. Not optimal, but
+        the transparent compression of Postgres will save the day.
+    """
+    def __init__(self, parent, ira_browse, mode):
+        nodes.node_descriptor.__init__(self, parent)
+        if mode.endswith('b'):
+            mode = mode[:-1]
+        
+        if mode in ('r', 'r+'):
+            StringIO.__init__(self, base64.decodestring(ira_browse.db_datas))
+        elif mode in ('w', 'w+'):
+            StringIO.__init__(self, None)
+            # at write, we start at 0 (= overwrite), but have the original
+            # data available, in case of a seek()
+        elif mode == 'a':
+            StringIO.__init__(self, None)
+        else:
+            logging.getLogger('document.storage').error("Incorrect mode %s specified", mode)
+            raise IOError(errno.EINVAL, "Invalid file mode")
+        self.mode = mode
+
+    def close(self):
+        # we now open a *separate* cursor, to update the data.
+        # FIXME: this may be improved, for concurrency handling
+        par = self._get_parent()
+        uid = par.context.uid
+        cr = pooler.get_db(par.context.dbname).cursor()
+        try:
+            if self.mode in ('w', 'w+', 'r+'):
+                out = self.getvalue()
+                cr.execute('UPDATE ir_attachment SET db_datas = %s::bytea, file_size=%s WHERE id = %s',
+                    (base64.encodestring(out), len(out), par.file_id))
+            elif self.mode == 'a':
+                out = self.getvalue()
+                # Yes, we're obviously using the wrong representation for storing our
+                # data as base64-in-bytea
+                cr.execute("UPDATE ir_attachment " \
+                    "SET db_datas = encode( (COALESCE(decode(encode(db_datas,'escape'),'base64'),'') || decode(%s, 'base64')),'base64')::bytea , " \
+                    "    file_size = COALESCE(file_size, 0) + %s " \
+                    " WHERE id = %s",
+                    (base64.encodestring(out), len(out), par.file_id))
             cr.commit()
         except Exception, e:
             logging.getLogger('document.storage').exception('Cannot update db file #%d for close:', par.file_id)
@@ -239,7 +293,7 @@ class document_storage(osv.osv):
             # TODO: we need a better api for large files
             if self._debug:
                 self._doclog.debug("Trying to obtain db_datas for ir.attachment[%d]", ira.id)
-            return nodefd_db(file_node, ira_browse=ira, mode=mode)
+            return nodefd_db64(file_node, ira_browse=ira, mode=mode)
 
         elif boo.type == 'realstore':
             if not ira.store_fname:
