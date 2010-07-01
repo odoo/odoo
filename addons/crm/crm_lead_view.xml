@@ -292,13 +292,11 @@
 
                 <separator orientation="vertical"/>
                 <filter icon="terp-go-today" string="Today"
-                    domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), \
-                            ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 23:59:59'))]"
-                    help="Todays' Opportunities" />
+                    domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('create_date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                    help="Todays' Leads" />
                 <filter icon="terp-go-week" string="7 Days"
-                    help="Opportunities during last 7 days"
-                    domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d')),\
-                     ('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                    help="Leads creating during last 7 days"
+                    domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"
                 />
                 <separator orientation="vertical"/>
                 <field name="name"/>
