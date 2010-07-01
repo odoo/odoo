@@ -148,7 +148,8 @@ class invoice_create(wizard.interface):
                            " WHERE account_id=%s"
                            "   AND id IN %s"
                            "   AND product_id=%s"
-                           "   AND to_invoice=%s",
+                           "   AND to_invoice=%s"
+                           " ORDER BY account_analytic_line.date",
                            (account.id, tuple(data['ids']), product_id, factor_id))
                 line_ids = cr.dictfetchall()
                 note = []
@@ -159,7 +160,7 @@ class invoice_create(wizard.interface):
                         details.append(line['date'])
                     if data['form']['time']:
                         if line['product_uom_id']:
-                            details.append("%s %s" % (line['unit_amount'], pool.get('product.uom').browse(cr, uid, [line['product_uom_id']])[0].name))
+                            details.append("%s %s" % (line['unit_amount'], pool.get('product.uom').browse(cr, uid, [line['product_uom_id']],context2)[0].name))
                         else:
                             details.append("%s" % (line['unit_amount'], ))
                     if data['form']['name']:
