@@ -941,6 +941,44 @@ class node_file(node_class):
     def _get_ttag(self,cr):
         return 'file-%d' % self.file_id
 
+    def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
+        if ndir_node.context != self.context:
+            raise NotImplementedError("Cannot move files between contexts")
+        
+        doc_obj = self.context._dirobj.pool.get('ir.attachment')
+        if not fil_obj:
+            dbro = doc_obj.browse(cr, self.context.uid, self.file_id, context=self.context.context)
+        else:
+            dbro = fil_obj
+            assert dbro.id == self.file_id
+
+        if not dbro:
+            raise IndexError("Cannot locate doc %d", self.file_id)
+        
+        if (not self.parent):
+            # there *must* be a parent node for this one
+            self.parent = self.context.get_dir_node(cr, dbro.parent_id.id)
+        
+        if self.parent != ndir_node:
+            logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
+            raise NotImplementedError('Cannot move file to another dir')
+        
+        ret = {}
+        if new_name and (new_name != dbro.name):
+            stobj = self.context._dirobj.pool.get('document.storage')
+            r2 = stobj.simple_rename(cr, self.context.uid, self, new_name, self.context.context)
+            ret.update(r2)
+        
+        del dbro
+        
+        if not in_write:
+            # We have to update the data ourselves
+            if ret:
+                doc_obj.write(cr, self.context.uid, [self.file_id,], ret, self.context.context)
+            ret = True
+            
+        return ret
+
 class node_content(node_class):
     our_type = 'content'
     def __init__(self, path, parent, context, cnt, dctx = None, act_id=None):
