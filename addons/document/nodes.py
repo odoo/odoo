@@ -57,6 +57,22 @@ class node_context(object):
         assert self._dirobj
         self.rootdir = False #self._dirobj._get_root_directory(cr,uid,context)
 
+    def __eq__(self, other):
+        if not type(other) == node_context:
+            return False
+        if self.dbname != other.dbname:
+            return False
+        if self.uid != other.uid:
+            return False
+        if self.context != other.context:
+            return False
+        if self.rootdir != other.rootdir:
+            return False
+        return True
+    
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def get_uri(self, cr,  uri):
         """ Although this fn passes back to doc.dir, it is needed since
         it is a potential caching point """            
@@ -68,7 +84,7 @@ class node_context(object):
             duri = duri[1:] 
         return ndir
         
-    def get_dir_node(cr, dbro):
+    def get_dir_node(self, cr, dbro):
         """Create (or locate) a node for a directory
             @param dbro a browse object of document.directory
         """
@@ -81,7 +97,7 @@ class node_context(object):
         else:
             raise ValueError("dir node for %s type", dbro.type)
 
-    def get_file_node(cr, fbro):
+    def get_file_node(self, cr, fbro):
         """ Create or locate a node for a static file
             @param fbro a browse object of an ir.attachment
         """
@@ -152,6 +168,12 @@ class node_class(object):
             self.dctx = parent.dctx.copy()
         self.displayname = 'Object'
     
+    def __eq__(self, other):
+        return NotImplemented
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def full_path(self):
         """ Return the components of the full path for some
             node. 
@@ -369,7 +391,17 @@ class node_dir(node_database):
                     print e
                     pass
 
-    
+    def __eq__(self, other):
+        if not self.context == other.context:
+            return False
+        if type(self) != type(other):
+            return False
+        # Two directory nodes, for the same document.directory, may have a 
+        # different context! (dynamic folders)
+        if self.dctx != other.dctx:
+            return False
+        return self.dir_id == other.dir_id
+
     def get_data(self, cr):
         res = ''
         for child in self.children(cr):            
@@ -493,6 +525,17 @@ class node_res_dir(node_class):
         for dfld in dirr.dctx_ids:
             self.dctx_dict['dctx_' + dfld.field] = dfld.expr
 
+    def __eq__(self, other):
+        if not self.context == other.context:
+            return False
+        if type(self) != type(other):
+            return False
+        # Two nodes, for the same document.directory, may have a 
+        # different context! (dynamic folders)
+        if self.dctx != other.dctx:
+            return False
+        return self.dir_id == other.dir_id
+
     def children(self, cr, domain=None):
         return self._child_get(cr, domain=domain)
 
@@ -595,6 +638,21 @@ class node_res_obj(node_class):
                     pass
         else:
             self.res_id = res_id
+
+    def __eq__(self, other):
+        if not self.context == other.context:
+            return False
+        if type(self) != type(other):
+            return False
+        if not self.res_model == other.res_model:
+            return False
+        if not self.res_id == other.res_id:
+            return False
+        if self.domain != other.domain:
+            return False
+        if self.dctx != other.dctx:
+            return False
+        return self.dir_id == other.dir_id
 
     def children(self, cr, domain=None):        
         return self._child_get(cr, domain=domain) + self._file_get(cr)
@@ -792,6 +850,15 @@ class node_file(node_class):
                 self.storage_id = par.storage_id.id
                 break
             par = par.parent_id
+
+    def __eq__(self, other):
+        if not self.context == other.context:
+            return False
+        if type(self) != type(other):
+            return False
+        if self.dctx != other.dctx:
+            return False
+        return self.file_id == other.file_id
 
 
     def open_data(self, cr, mode):
