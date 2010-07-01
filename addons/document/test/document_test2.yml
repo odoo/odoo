@@ -18,11 +18,28 @@
     I create an attachment into the root folder (w. empty fields, test that
     defaults work)
 -
+    !record {model: ir.attachment, id: file_test1 }:
+        name: Test file
+-
     I delete the attachment from the root folder
+-
+    !delete {model: ir.attachment, id: file_test1, search: }
 -
     I create an attachment into the Testing folder.
 -
+    !record {model: ir.attachment, id: file_test2 }:
+        name: Test file 2
+        parent_id: dir_tests
+-
     I update the attachment with data, namely "abcd"
+-
+    !record {model: ir.attachment, id: file_test2 }:
+        datas: abcd
+-
+    I test that the datas of the attachment are correct
+-
+    !assert {model: ir.attachment, id: file_test2 }:
+        - datas == 'abcd'
 -
     I rename the attachment.
 -
