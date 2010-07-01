@@ -114,10 +114,10 @@ class nodefd_db(StringIO, nodes.node_descriptor):
         if mode.endswith('b'):
             mode = mode[:-1]
         
-        if mode == 'r':
+        if mode in ('r', 'r+'):
             StringIO.__init__(self, ira_browse.db_datas)
-        elif mode == 'w':
-            StringIO.__init__(self, ira_browse.db_datas)
+        elif mode in ('w', 'w+'):
+            StringIO.__init__(self, None)
             # at write, we start at 0 (= overwrite), but have the original
             # data available, in case of a seek()
         elif mode == 'a':
@@ -134,7 +134,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
         uid = par.context.uid
         cr = pooler.get_db(par.context.dbname).cursor()
         try:
-            if self.mode == 'w':
+            if self.mode in ('w', 'w+', 'r+'):
                 out = self.getvalue()
                 cr.execute('UPDATE ir_attachment SET db_datas = %s, file_size=%d WHERE id = %s',
                     (out, len(out), par.file_id))
