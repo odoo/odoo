@@ -378,16 +378,21 @@ class document_storage(osv.osv):
                 self._doclog.debug('Cannot index file:', exc_info=True)
                 pass
 
+            try:
+                icont_u = ustr(icont)
+            except UnicodeError:
+                icont_u = ''
+
             # a hack: /assume/ that the calling write operation will not try
             # to write the fname and size, and update them in the db concurrently.
             # We cannot use a write() here, because we are already in one.
             cr.execute('UPDATE ir_attachment SET store_fname = %s, file_size = %s, index_content = %s, file_type = %s WHERE id = %s',
-                (store_fname, filesize, ustr(icont), mime, file_node.file_id))
+                (store_fname, filesize, icont_u, mime, file_node.file_id))
             file_node.content_length = filesize
             file_node.content_type = mime
             return True
         except Exception, e :
-            self._doclog.warning( "Couldn't save data:", exc_info=True)
+            self._doclog.warning("Couldn't save data:", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
             raise except_orm(_('Error at doc write!'), str(e))
