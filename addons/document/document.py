@@ -159,12 +159,13 @@ class document_file(osv.osv):
             nctx = nodes.get_node_context(cr,uid,context)
             dirobj = self.pool.get('document.directory')
             dbro = dirobj.browse(cr, uid, vals['parent_id'], context=context)
+            dnode = nctx.get_dir_node(cr, dbro)
             ids2 = []
             result = False
             for fbro in self.browse(cr, uid, ids, context=context):
                 if fbro.parent_id.id != vals['parent_id']:
-                    fnode = nodes.node_file(None,None,nctx,fbro)
-                    res = fnode.move_to(cr, fbro, dbro, True)
+                    fnode = nctx.get_file_node(cr, fbro)
+                    res = fnode.move_to(cr, dnode, fbro, dbro, True)
                     if isinstance(res, dict):
                         vals2 = vals.copy()
                         vals2.update(res)
@@ -176,9 +177,11 @@ class document_file(osv.osv):
                     elif res == False:
                         pass
             ids = ids2
+        if 'file_size' in vals: # only write that field using direct SQL calls
+            del vals['file_size']
         if len(ids):
             result = super(document_file,self).write(cr, uid, ids, vals, context=context)
-        cr.commit()
+        cr.commit() # ?
         return result
 
     def create(self, cr, uid, vals, context=None):
@@ -219,11 +222,15 @@ class document_file(osv.osv):
         else:
             datas = vals.get('datas', False)
 
-        vals['file_size'] = datas and len(datas) or 0
+        if datas:
+            vals['file_size'] = len(datas)
+        else:
+            if vals.get('file_size'):
+                del vals['file_size']
         if not self._check_duplication(cr, uid, vals):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
         result = super(document_file, self).create(cr, uid, vals, context)
-        cr.commit()
+        cr.commit() # ?
         return result
 
     def unlink(self, cr, uid, ids, context={}):
