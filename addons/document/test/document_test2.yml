@@ -40,6 +40,8 @@
 -
     !assert {model: ir.attachment, id: file_test2 }:
         - datas == "abcd\n"
+        - file_size == 5
+        - file_type == 'text/plain'
 -
     I rename the attachment.
 -
@@ -56,6 +58,7 @@
 -
     !record {model: ir.attachment, id: attach_3rd }:
         name: 'Res country attachment.txt'
+        parent_id: dir_tests
         datas: 'defg'
         res_model: res.country
         res_id: !eval ref("base.za")
