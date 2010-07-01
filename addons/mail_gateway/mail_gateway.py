@@ -371,16 +371,14 @@ class mailgate_tool(osv.osv_memory):
                         if part.get_content_subtype() == 'html':
                             body = tools.ustr(tools.html2plaintext(content))
                         elif part.get_content_subtype() == 'plain':
-                            body = tools.ustr(content)
+                            body = content
                 elif part.get_content_maintype() in ('application', 'image', 'text'):
                     filename = part.get_filename();
                     if filename :
                         attachments[filename] = part.get_payload(decode=True)
                     else:
                         res = part.get_payload(decode=True)
-                        if encoding:
-                            res = tools.ustr(res, encoding)
-                        body += res
+                        body += tools.ustr(res)
 
             msg['body'] = body
             msg['attachments'] = attachments

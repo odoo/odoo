@@ -171,14 +171,13 @@ class account_followup_print_all(osv.osv_memory):
         data = self.read(cr, uid, ids, [])[0]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-
         if data['email_conf']:
             mail_notsent = ''
             msg_sent = ''
             msg_unsent = ''
             count = 0
             data_user = user_obj.browse(cr, uid, uid)
-            move_lines = line_obj.browse(cr, uid, data['partner_ids'][0][2])
+            move_lines = line_obj.browse(cr, uid, data['partner_ids'])
             partners = []
             dict_lines = {}
             for line in move_lines:

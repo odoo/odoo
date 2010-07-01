@@ -992,6 +992,7 @@ class calendar_event(osv.osv):
             if datas.get('rrule_type'):
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
+                    cr.execute("UPDATE %s set exrule=Null where id=%s" % (self._table, event))
                 elif datas.get('rrule_type') == 'custom':
                     if datas.get('interval', 0) < 0:
                         raise osv.except_osv('Warning!', 'Interval can not be Negative')
