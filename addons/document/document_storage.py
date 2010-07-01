@@ -480,7 +480,7 @@ class document_storage(osv.osv):
             path = storage_bo.path
             return ( storage_bo.id, 'file', os.path.join(path, fname))
         else:
-            raise TypeError("No %s storage" % boo.type)
+            raise TypeError("No %s storage" % storage_bo.type)
 
     def do_unlink(self, cr, uid, unres):
         for id, ktype, fname in unres:
@@ -493,6 +493,42 @@ class document_storage(osv.osv):
                 self._doclog.warning("Unknown unlink key %s" % ktype)
 
         return True
+
+    def simple_rename(self, cr, uid, file_node, new_name, context=None):
+        """ A preparation for a file rename.
+            It will not affect the database, but merely check and perhaps
+            rename the realstore file.
+            
+            @return the dict of values that can safely be be stored in the db.
+        """
+        sbro = self.browse(cr, uid, file_node.storage_id, context=context)
+        assert sbro, "The file #%d didn't provide storage" % file_node.file_id
+        
+        if sbro.type in ('filestore', 'db'):
+            # nothing to do for a rename, allow to change the db field
+            return { 'name': new_name, 'datas_fname': new_name }
+        elif sbro.type == 'realstore':
+            fname = fil_bo.store_fname
+            if not fname:
+                return ValueError("Tried to rename a non-stored file")
+            path = storage_bo.path
+            oldpath = os.path.join(path, fname)
+            
+            for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?', '..'):
+                if ch in new_name:
+                    raise ValueError("Invalid char %s in name %s" %(ch, new_name))
+                
+            file_node.fix_ppath(cr, ira)
+            npath = file_node.full_path() or []
+            dpath = [path,]
+            dpath.extend(npath[:-1])
+            dpath.append(new_name)
+            newpath = os.path.join(*dpath)
+            # print "old, new paths:", oldpath, newpath
+            os.rename(oldpath, newpath)
+            return { 'name': new_name, 'datas_fname': new_name, 'store_fname': new_name }
+        else:
+            raise TypeError("No %s storage" % boo.type)
 
 
 document_storage()
