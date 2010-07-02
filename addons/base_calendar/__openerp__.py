@@ -24,10 +24,10 @@
     "version" : "1.0", 
     "depends" : ["base"], 
     'description': """Full featured calendar system that supports:
-
+    - Calendar of events
     - Alerts (create requests)
-    - Recurring events (*)
-    - Invitations to others people""",
+    - Recurring events
+    - Invitations to people""",
     "author" : "Tiny",
     'category': 'Generic Modules/Others',
     'website': 'http://www.openerp.com',

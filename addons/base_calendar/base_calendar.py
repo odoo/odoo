@@ -375,7 +375,7 @@ property or property parameter."),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
      }
     _defaults = {
-        'state': lambda *x: 'needs-action',
+        'state': 'needs-action',
     }
     
     def copy(self, cr, uid, id, default=None, context=None):
@@ -524,8 +524,7 @@ property or property parameter."),
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values 
         """
-
-        self.write(cr, uid, ids, {'state': 'tentative'}, context)
+        return self.write(cr, uid, ids, {'state': 'tentative'}, context)
 
     def do_accept(self, cr, uid, ids, context=None, *args):
         """
@@ -561,7 +560,7 @@ property or property parameter."),
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values """
 
-        self.write(cr, uid, ids, {'state': 'declined'}, context)
+        return self.write(cr, uid, ids, {'state': 'declined'}, context)
 
     def create(self, cr, uid, vals, context=None):
         """ Overrides orm create method.
@@ -608,11 +607,11 @@ are both optional, but if one occurs, so MUST the other"""),
 true, it will allow you to hide the event alarm information without removing it.")
     }
     _defaults = {
-        'trigger_interval': lambda *x: 'minutes',
-        'trigger_duration': lambda *x: 5,
-        'trigger_occurs': lambda *x: 'before',
-        'trigger_related': lambda *x: 'start',
-        'active': lambda *x: 1,
+        'trigger_interval': 'minutes',
+        'trigger_duration': 5,
+        'trigger_occurs': 'before',
+        'trigger_related': 'start',
+        'active': 1,
     }
 
     def do_alarm_create(self, cr, uid, ids, model, date, context=None):
@@ -753,8 +752,8 @@ class calendar_alarm(osv.osv):
      }
 
     _defaults = {
-        'action': lambda *x: 'email',
-        'state': lambda *x: 'run',
+        'action': 'email',
+        'state': 'run',
      }
 
     def create(self, cr, uid, vals, context=None):
@@ -1043,7 +1042,10 @@ class calendar_event(osv.osv):
         'location': fields.char('Location', size=264, help="Location of Event", states={'done': [('readonly', True)]}), 
         'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], \
                                                 'Show as', states={'done': [('readonly', True)]}),
-        'base_calendar_url': fields.char('Caldav URL', size=264),
+        'base_calendar_url': fields.char('Caldav URL', size=264), 
+        'state': fields.selection([('tentative', 'Tentative'),
+                        ('confirmed', 'Confirmed'),
+                        ('cancelled', 'Cancelled')], 'State', readonly=True),
         'exdate': fields.text('Exception Date/Times', help="This property \
 defines the list of date/time exceptions for arecurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
@@ -1101,13 +1103,14 @@ true, it will allow you to hide the event alarm information without removing it.
     }
 
     _defaults = {
-         'class': lambda *a: 'public',
-         'show_as': lambda *a: 'busy',
-         'freq': lambda *x: 'None',
-         'select1': lambda *x: 'date',
-         'interval': lambda *x: 1,
-         'active': lambda *x: 1,
-    }
+            'state': 'tentative', 
+            'class': 'public',
+            'show_as': 'busy',
+            'freq': 'None',
+            'select1': 'date',
+            'interval': 1,
+            'active': 1,
+            }
 
     def open_event(self, cr, uid, ids, context=None):
         """
@@ -1535,6 +1538,39 @@ true, it will allow you to hide the event alarm information without removing it.
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
         return res
+    
+    def do_tentative(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as Tentative
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar attendee’s IDs
+        @param *args: Get Tupple value
+        @param context: A standard dictionary for contextual values 
+        """
+        return self.write(cr, uid, ids, {'state': 'tentative'}, context)
+    
+    def do_cancel(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as Tentative
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar attendee’s IDs
+        @param *args: Get Tupple value
+        @param context: A standard dictionary for contextual values 
+        """
+        return self.write(cr, uid, ids, {'state': 'cancelled'}, context)
+
+    def do_confirm(self, cr, uid, ids, context=None, *args):
+        """ Makes event invitation as Tentative
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar attendee’s IDs
+        @param *args: Get Tupple value
+        @param context: A standard dictionary for contextual values 
+        """
+        return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
 
 calendar_event()
 
