@@ -19,18 +19,16 @@
 #
 ##############################################################################
 
-import operator
 from osv import osv, fields
 from osv.orm import intersect
 import tools.sql
 from tools.translate import _
 
-
 class account_analytic_account(osv.osv):
     _name = "account.analytic.account"
     _inherit = "account.analytic.account"
 
-    def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context={}):
+    def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if parent_ids:
@@ -46,7 +44,7 @@ class account_analytic_account(osv.osv):
                 
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
 
-    def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context={}):
+    def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res2 = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
@@ -92,7 +90,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
         return res
 
-    def _hours_qtt_non_invoiced_calc (self, cr, uid, ids, name, arg, context={}):
+    def _hours_qtt_non_invoiced_calc (self, cr, uid, ids, name, arg, context=None):
         res = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if parent_ids:
@@ -117,7 +115,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    def _hours_quantity_calc(self, cr, uid, ids, name, arg, context={}):
+    def _hours_quantity_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if parent_ids:
@@ -141,7 +139,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    def _total_cost_calc(self, cr, uid, ids, name, arg, context={}):
+    def _total_cost_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if parent_ids:
@@ -158,7 +156,7 @@ class account_analytic_account(osv.osv):
         return self._compute_currency_for_level_tree(cr, uid, ids, parent_ids, res, context)
  
     # TODO Take care of pricelist and purchase !
-    def _ca_theorical_calc(self, cr, uid, ids, name, arg, context={}):
+    def _ca_theorical_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res2 = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
@@ -202,7 +200,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
         return res
 
-    def _last_worked_date_calc (self, cr, uid, ids, name, arg, context={}):
+    def _last_worked_date_calc (self, cr, uid, ids, name, arg, context = None):
         res = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if parent_ids:
@@ -223,7 +221,7 @@ class account_analytic_account(osv.osv):
             res[id] = res.get(id, '')
         return res
 
-    def _last_invoice_date_calc (self, cr, uid, ids, name, arg, context={}):
+    def _last_invoice_date_calc (self, cr, uid, ids, name, arg, context=None):
         res = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if parent_ids:
@@ -247,7 +245,7 @@ class account_analytic_account(osv.osv):
             res[id] = res.get(id, '')
         return res
 
-    def _last_worked_invoiced_date_calc (self, cr, uid, ids, name, arg, context={}):
+    def _last_worked_invoiced_date_calc (self, cr, uid, ids, name, arg, context=None):
         res = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if parent_ids:
@@ -268,7 +266,7 @@ class account_analytic_account(osv.osv):
             res[id] = res.get(id, '')
         return res
 
-    def _remaining_hours_calc(self, cr, uid, ids, name, arg, context={}):
+    def _remaining_hours_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids):
             if account.quantity_max != 0:
@@ -279,7 +277,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context={}):
+    def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids):
             res[account.id] = account.hours_quantity - account.hours_qtt_non_invoiced
@@ -289,7 +287,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    def _revenue_per_hour_calc(self, cr, uid, ids, name, arg, context={}):
+    def _revenue_per_hour_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids):
             if account.hours_qtt_invoiced == 0:
@@ -300,7 +298,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    def _real_margin_rate_calc(self, cr, uid, ids, name, arg, context={}):
+    def _real_margin_rate_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids):
             if account.ca_invoiced == 0:
@@ -313,7 +311,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    def _remaining_ca_calc(self, cr, uid, ids, name, arg, context={}):
+    def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids):
             if account.amount_max != 0:
@@ -324,7 +322,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    def _real_margin_calc(self, cr, uid, ids, name, arg, context={}):
+    def _real_margin_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids):
             res[account.id] = account.ca_invoiced + account.total_cost
@@ -332,7 +330,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    def _theorical_margin_calc(self, cr, uid, ids, name, arg, context={}):
+    def _theorical_margin_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids):
             res[account.id] = account.ca_theorical + account.total_cost
@@ -426,6 +424,7 @@ class account_analytic_account_summary_user(osv.osv):
             string='Total Time'),
         'user' : fields.many2one('res.users', 'User'),
     }
+    
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
         cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
@@ -730,7 +729,6 @@ class account_analytic_account_summary_month(osv.osv):
         return res
 
 account_analytic_account_summary_month()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
