@@ -57,6 +57,11 @@
                     <page string="General">
                         <field name="unit_price"/>
                         <field name="currency_id"/>
+                        <separator string="Teacher Information" colspan="4"/>
+                        <field name="partner_id"/>
+                        <field name="address_id"/>
+                        <field name="teacher_confirmed"/>
+                        <field name="country_id" />
                         <separator string="Event description" colspan="4"/>
                         <field name="parent_id" domain="[('parent_id','child_of','Event')]"/>
                         <field name="active"/>
@@ -97,6 +102,10 @@
                         <field name="register_current"/>
                         <field name="register_prospect"/>
                     </page>
+                    <page string="Notes">
+                        <separator string="Notes" colspan="4"/>
+                        <field name="note" colspan="4" nolabel="1"/>
+                    </page>
                     </notebook>
             </form>
             </field>
@@ -129,7 +138,8 @@
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_begin" string="Event Organization">
                     <field name="name"/>
-                    <field name="type"/>
+                    <field name="partner_id"/>
+                    <field name="type" widget="selection"/>
                 </calendar>
             </field>
         </record>

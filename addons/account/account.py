@@ -2057,7 +2057,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
     def _get_def_cparent(self, cr, uid, context):
         acc_obj=self.pool.get('account.account')
         tmpl_obj=self.pool.get('account.account.template')
-        #print "Searching for ",context
         tids=tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
         if not tids or not tids[0]['parent_id']:
             return False
@@ -2099,7 +2098,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
             # 'tax_ids': [(6,0,tax_ids)], todo!!
             'company_id': company_id,
             }
-        # print "Creating:", vals
         new_account = acc_obj.create(cr, uid, vals)
         return {'type':'state', 'state': 'end' }
 
