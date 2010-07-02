@@ -45,17 +45,17 @@ class crm_send_new_email_attachment(osv.osv_memory):
 
 crm_send_new_email_attachment()
 
-class crm_send_new_email(osv.osv_memory):
+class crm_send_new_email2(osv.osv_memory):
     """ Sends new email for the case"""
     _name = "crm.send.mail"
     _description = "Send new email"
 
     _columns = {
-        'email_to' : fields.char('To', size=64, required=True),
-        'email_from' : fields.char('From', size=64, required=True),
-        'email_cc' : fields.char('CC', size=128, help="Carbon Copy: list of recipients that will receive"\
+        'email_to' : fields.char('To', size=512, required=True),
+        'email_from' : fields.char('From', size=128, required=True),
+        'email_cc' : fields.char('CC', size=512, help="Carbon Copy: list of recipients that will receive"\
                                     " a copy of this mail, and future communication related to this case"),
-        'subject': fields.char('Subject', size=128, required=True),
+        'subject': fields.char('Subject', size=512, required=True),
         'text': fields.text('Message', required=True),
         'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),
 
@@ -72,7 +72,6 @@ class crm_send_new_email(osv.osv_memory):
         """
 
         hist_obj = self.pool.get('mailgate.message')
-        smtp_pool = self.pool.get('email.smtpclient')
 
         if not context:
             context = {}
@@ -130,10 +129,11 @@ class crm_send_new_email(osv.osv_memory):
             if not flag:
                 raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
             if flag:
-                case_pool._history(cr, uid, [case], _('Send'), history=True, \
+                case_pool.history(cr, uid, [case], _('Send'), history=True, \
                                 email=obj.email_to, details=body, \
                                 subject=obj.subject, email_from=email_from, \
-                                message_id=message_id, references=ref_id or message_id, attach=attach)
+                                email_cc=email_cc, message_id=message_id, \
+                                references=ref_id or message_id, attach=attach)
                 if obj.state == 'unchanged':
                     pass
                 elif obj.state == 'done':
@@ -248,13 +248,7 @@ class crm_send_new_email(osv.osv_memory):
 
         if not context.get('model'):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
-        model = context.get('model')
-        mod_obj = self.pool.get(model)
-        if context.get('mail') == 'reply':
-            return True
-        if tools.config.get('email_from'):
-            return True
         return True
 
-crm_send_new_email()
+crm_send_new_email2()
 
