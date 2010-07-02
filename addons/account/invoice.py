@@ -767,6 +767,8 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         context = {}
         for inv in self.browse(cr, uid, ids):
+            if not inv.journal_id.invoice_sequence_id:
+                raise osv.except_osv(_('Error !'), _('Please define invoice sequence on invoice journal'))
             if not inv.invoice_line:
                 raise osv.except_osv(_('No Invoice Lines !'), _('Please create some invoice lines.'))
             if inv.move_id:
