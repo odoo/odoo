@@ -128,7 +128,6 @@ class report_timesheet_task_user(osv.osv):
 
       }
 
-
     def init(self, cr):
        cr.execute(""" create or replace view report_timesheet_task_user as (
         select
@@ -156,4 +155,3 @@ class report_timesheet_task_user(osv.osv):
 report_timesheet_task_user()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

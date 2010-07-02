@@ -96,11 +96,12 @@
             <field name="view_id" ref="board_crm_statistical_form"/>
         </record>
 
+	    <menuitem icon="terp-graph" id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
 
         <menuitem
-            name="Statistics Dashboard" parent="menu_board_crm_config"
+            name="Statistics Dashboard" parent="board.menu_dasboard"
             action="open_board_statistical_dash"
-            sequence="2"
+            sequence="0"
             id="menu_board_statistics_dash"
             icon="terp-graph"/>
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -132,12 +132,6 @@ class report_custom(report_rml):
 
 #       file('/tmp/terp.xml','wb+').write(xml)
 #       end_time = time.clock()
-#       print "db:", mid_time-start_time
-#       print "addition:", mid_time2-mid_time
-#       print "buyer costs:", mid_time3-mid_time2
-#       print "seller costs:", mid_time4-mid_time3
-#       print "rest:", end_time-mid_time4
-#       print "total:", end_time-start_time
         return self.post_process_xml_data(cr, uid, xml, context)
 
 report_custom('report.auction.total', 'auction.lots', '', 'addons/auction/report/total.xsl')

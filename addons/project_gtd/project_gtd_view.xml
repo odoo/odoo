@@ -13,6 +13,7 @@
             </tree>
         </field>
     </record>
+
     <record model="ir.ui.view" id="view_gtd_context_form">
         <field name="name">project.gtd.context.form</field>
         <field name="model">project.gtd.context</field>
@@ -25,6 +26,7 @@
             </form>
         </field>
     </record>
+
     <record model="ir.actions.act_window" id="open_gtd_context_tree">
         <field name="name">Contexts</field>
         <field name="res_model">project.gtd.context</field>
@@ -70,6 +72,7 @@
     </record>
 
     <menuitem name="Timeboxes" id="menu_open_gtd_time_timeboxes" parent="project.menu_tasks_config" action="open_gtd_timebox_tree"/>
+
     <record model="ir.ui.view" id="project_task_tree">
         <field name="name">project.task.tree.timebox</field>
         <field name="model">project.task</field>

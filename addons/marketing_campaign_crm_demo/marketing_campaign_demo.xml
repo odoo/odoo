@@ -19,7 +19,7 @@
             <field eval="&quot;&quot;&quot;[]&quot;&quot;&quot;" name="domain"/>
             <field name="parent_id" ref="document_directory_marketingcampaign"/>
             <field eval="&quot;&quot;&quot;ressource&quot;&quot;&quot;" name="type"/>
-            <field name="ressource_type_id" ref="model_marketing_campaign"/>
+            <field name="ressource_type_id" ref="marketing_campaign.model_marketing_campaign"/>
         </record>
 
         <!-- Email tempalte -->
@@ -163,7 +163,7 @@
             <field name="type">ir.actions.report.xml</field>
             <field name="model">crm.lead</field>
             <field name="report_name">crm.lead.demo</field>
-            <field name="report_rml">marketing_campaign/report/crm_lead_mc_demo_report.rml</field>
+            <field name="report_rml">marketing_campaign_crm_demo/crm_lead_mc_demo_report.rml</field>
             <field name="report_type">pdf</field>
         </record>
 
@@ -171,6 +171,7 @@
         <record id="marketing_campaign_openerpondemandfreetrial0" model="marketing.campaign">
             <field name="name">OpenERP OnDemand Free Trial 2010</field>
             <field name="object_id" ref="crm.model_crm_lead"/>
+            <field name="partner_field_id" ref="crm.field_crm_lead_partner_id"/>
         </record>
 
             <!-- Activity -->

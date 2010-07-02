@@ -20,6 +20,7 @@
 ##############################################################################
 
 from mx import DateTime
+from datetime import datetime, timedelta
 from osv import osv, fields
 from tools.translate import _
 import ir
@@ -100,8 +101,8 @@ class mrp_routing_workcenter(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing workcenters."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
-            help="Time in hours for doing one cycle."),
-        'hour_nbr': fields.float('Number of Hours', required=True, help="Cost per hour"),
+            help="Number of operations this workcenter can do."),
+        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for doing one cycle."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
@@ -373,8 +374,6 @@ def rounding(f, r):
 
 class many2many_domain(fields.many2many):
     def set(self, cr, obj, id, name, values, user=None, context=None):
-        if not values:
-            return
         return super(many2many_domain, self).set(cr, obj, id, name, values, user=user,
                 context=context)
 
@@ -393,8 +392,6 @@ class many2many_domain(fields.many2many):
 
 class one2many_domain(fields.one2many):
     def set(self, cr, obj, id, field, values, user=None, context=None):
-        if not values:
-            return
         return super(one2many_domain, self).set(cr, obj, id, field, values,
                                             user=user, context=context)
 
@@ -417,7 +414,6 @@ class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name  = 'date_planned'
-    _log_create = True
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
         """ Calculates total hours and total no. of cycles for a production order.
@@ -486,10 +482,10 @@ class mrp_production(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True,
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
-        'move_lines': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consumme', domain=[('state','not in', ('done', 'cancel'))]),
-        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consummed Products', domain=[('state','in', ('done', 'cancel'))]),
-        'move_created_ids': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','not in', ('done', 'cancel'))]),
-        'move_created_ids2': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))]),
+        'move_lines': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consumme', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
+        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consummed Products', domain=[('state','in', ('done', 'cancel'))], readonly=True),
+        'move_created_ids': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
+        'move_created_ids2': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))], readonly=True),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
         'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
@@ -509,7 +505,18 @@ class mrp_production(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
     _order = 'date_planned asc, priority desc';
-
+    
+    def _check_qty(self, cr, uid, ids):
+        orders = self.browse(cr, uid, ids)
+        for order in orders:
+            if order.product_qty <= 0:
+                return False
+        return True
+    
+    _constraints = [
+        (_check_qty, 'Order quantity cannot be negative or zero !', ['product_qty']),
+    ]
+    
     def unlink(self, cr, uid, ids, context=None):
         productions = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -639,15 +646,23 @@ class mrp_production(osv.osv):
         """ Changes the production state to Ready and location id of stock move.
         @return: True
         """
-        for (id,name) in self.name_get(cr, uid, ids):
-            message = _('Manufacturing Order ') + " '" + name + "' "+ _("is ready to produce.")
-            self.log(cr, uid, id, message)
         move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state': 'ready'})
-        for production in self.browse(cr, uid, ids):
+
+        for (production_id,name) in self.name_get(cr, uid, ids):
+            production = self.browse(cr, uid, production_id)
             if production.move_prod_id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
+
+            message = ("%s %s %s %s %s %s") % (
+                    _('Manufacturing Order '),
+                    name,
+                    _("scheduled the"),
+                    datetime.strptime(production.date_planned,'%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d'),
+                    _("for"),
+                    production.product_id.name)
+            self.log(cr, uid, production_id, message)
         return True
 
     def action_production_end(self, cr, uid, ids):
@@ -681,9 +696,10 @@ class mrp_production(osv.osv):
         @param production_mode: specify production mode (consume/consume&produce).
         @return: True
         """
+       
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id)
-
+        
         raw_product_todo = []
         final_product_todo = []
 
@@ -693,6 +709,7 @@ class mrp_production(osv.osv):
                 continue
             produced_qty += produced_product.product_qty
 
+
         if production_mode in ['consume','consume_produce']:
             consumed_products = {}
             for consumed_product in production.move_lines2:
@@ -701,12 +718,13 @@ class mrp_production(osv.osv):
                 if not consumed_products.get(consumed_product.product_id.id, False):
                     consumed_products[consumed_product.product_id.id] = 0
                 consumed_products[consumed_product.product_id.id] -= consumed_product.product_qty
-
+                
             for raw_product in production.move_lines:
                 for f in production.product_lines:
                     if f.product_id.id==raw_product.product_id.id:
                         consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
                         rest_qty = production_qty * f.product_qty / production.product_qty - consumed_qty
+                         
                         if rest_qty > 0:
                             stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
 
@@ -855,7 +873,7 @@ class mrp_production(osv.osv):
                 'company_id': production.company_id.id,
             }
             res_final_id = move_obj.create(cr, uid, data)
-
+             
             self.write(cr, uid, [production.id], {'move_created_ids': [(6, 0, [res_final_id])]})
             moves = []
             for line in production.product_lines:

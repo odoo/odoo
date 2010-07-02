@@ -58,8 +58,7 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_auction_manager_form"/>
         </record>
-        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
-        <menuitem name="Auction" id="menu_board_auction" parent="base.dashboard" />
+        <menuitem icon="terp-graph" name="Dashboard" id="menu_board_auction" parent="auction_report_menu" sequence="0"/>
         <menuitem
             name="Auction Member"
             action="open_board_auction"

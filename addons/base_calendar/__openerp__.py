@@ -24,10 +24,10 @@
     "version" : "1.0", 
     "depends" : ["base"], 
     'description': """Full featured calendar system that supports:
-
+    - Calendar of events
     - Alerts (create requests)
-    - Recurring events (*)
-    - Invitations to others people""",
+    - Recurring events
+    - Invitations to people""",
     "author" : "Tiny",
     'category': 'Generic Modules/Others',
     'website': 'http://www.openerp.com',
@@ -42,7 +42,7 @@
         'wizard/base_calendar_set_exrule_view.xml',
         'base_calendar_view.xml'
     ],
-   # "test" : ['test/base_calendar_test.yml'],
+    "test" : ['test/base_calendar_test.yml'],
     "installable" : True,
     "active" : False,
 }
