@@ -93,7 +93,7 @@ class node_context(object):
             return node_dir(fullpath, None ,self, dbro)
         elif dbro.type == 'ressource':
             assert dbro.ressource_parent_type_id == False
-            return node_res_dir(fullparh, None, self, dbro)
+            return node_res_dir(fullpath, None, self, dbro)
         else:
             raise ValueError("dir node for %s type", dbro.type)
 
@@ -161,6 +161,9 @@ class node_class(object):
         self.mimetype = 'application/octet-stream'
         self.create_date = None
         self.write_date = None
+        self.unixperms = 0660
+        self.uuser = 'user'
+        self.ugroup = 'group'
         self.content_length = 0
         # dynamic context:
         self.dctx = {}
@@ -196,6 +199,16 @@ class node_class(object):
     def child(self,cr, name, domain=None):
         print "node_class.child()"
         return None
+
+    def get_uri(self, cr, uri):
+        duri = uri
+        ndir = self
+        while duri:
+            ndir = ndir.child(cr, duri[0])
+            if not ndir:
+                return False
+            duri = duri[1:]
+        return ndir
 
     def path_get(self):
         print "node_class.path_get()"
@@ -300,6 +313,7 @@ class node_database(node_class):
     our_type = 'database'
     def __init__(self, path=[], parent=False, context=None):
         super(node_database,self).__init__(path, parent, context)
+        self.unixperms = 040750
 
     def children(self, cr, domain=None):
         res = self._child_get(cr, domain=domain) + self._file_get(cr)
@@ -365,6 +379,7 @@ class node_dir(node_database):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr and (dirr.write_date or dirr.create_date) or False
         self.content_length = 0
+        self.unixperms = 040750
         if dctx:
             self.dctx.update(dctx)
         dc2 = self.context.context
@@ -507,6 +522,7 @@ class node_res_dir(node_class):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
+        self.unixperms = 040750
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
         self.resm_id = dirr.ressource_id
         self.namefield = dirr.resource_field.name or 'name'
@@ -616,6 +632,7 @@ class node_res_obj(node_class):
         # TODO: the write date should be MAX(file.write)..
         self.write_date = parent.write_date
         self.content_length = 0
+        self.unixperms = 040750
         self.res_model = res_model
         self.domain = parent.domain
         self.displayname = path
@@ -986,6 +1003,7 @@ class node_content(node_class):
         self.create_date = False
         self.write_date = False
         self.content_length = False
+        self.unixperms = 0640
         self.extension = cnt.extension
         self.report_id = cnt.report_id and cnt.report_id.id
         #self.mimetype = cnt.extension.
