@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -49,7 +49,7 @@ class node_context(object):
         context """
     cached_roots = {}
 
-    def __init__(self, cr, uid, context=None):        
+    def __init__(self, cr, uid, context=None):
         self.dbname = cr.dbname
         self.uid = uid
         self.context = context
@@ -69,21 +69,21 @@ class node_context(object):
         if self.rootdir != other.rootdir:
             return False
         return True
-    
+
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def get_uri(self, cr,  uri):
         """ Although this fn passes back to doc.dir, it is needed since
-        it is a potential caching point """            
-        (ndir, duri) =  self._dirobj._locate_child(cr, self.uid, self.rootdir, uri, None, self)          
-        while duri:                    
-            ndir = ndir.child(cr, duri[0])            
+        it is a potential caching point """
+        (ndir, duri) =  self._dirobj._locate_child(cr, self.uid, self.rootdir, uri, None, self)
+        while duri:
+            ndir = ndir.child(cr, duri[0])
             if not ndir:
-                return False            
-            duri = duri[1:] 
+                return False
+            duri = duri[1:]
         return ndir
-        
+
     def get_dir_node(self, cr, dbro):
         """Create (or locate) a node for a directory
             @param dbro a browse object of document.directory
@@ -107,7 +107,7 @@ class node_context(object):
 
 class node_descriptor(object):
     """A file-like interface to the data contents of a node.
-    
+
        This class is NOT a node, but an /open descriptor/ for some
        node. It can hold references to a cursor or a file object,
        because the life of a node_descriptor will be the open period
@@ -123,13 +123,13 @@ class node_descriptor(object):
         assert isinstance(parent, node_class)
         self.name = parent.displayname
         self.__parent = parent
-    
+
     def _get_parent(self):
         return self.__parent
 
     def open(self, **kwargs):
         raise NotImplementedError
-    
+
     def close(self):
         raise NotImplementedError
 
@@ -147,7 +147,7 @@ class node_descriptor(object):
 
 class node_class(object):
     """ this is a superclass for our inodes
-        It is an API for all code that wants to access the document files. 
+        It is an API for all code that wants to access the document files.
         Nodes have attributes which contain usual file properties
         """
     our_type = 'baseclass'
@@ -167,7 +167,7 @@ class node_class(object):
         if parent:
             self.dctx = parent.dctx.copy()
         self.displayname = 'Object'
-    
+
     def __eq__(self, other):
         return NotImplemented
 
@@ -176,7 +176,7 @@ class node_class(object):
 
     def full_path(self):
         """ Return the components of the full path for some
-            node. 
+            node.
             The returned list only contains the names of nodes.
         """
         if self.parent:
@@ -200,15 +200,15 @@ class node_class(object):
     def path_get(self):
         print "node_class.path_get()"
         return False
-    
+
     def get_data(self,cr):
         raise TypeError('no data for %s'% self.type)
-        
+
     def open_data(self, cr, mode):
         """ Open a node_descriptor object for this node.
-        
+
         @param the mode of open, eg 'r', 'w', 'a', like file.open()
-        
+
         This operation may lock the data for this node (and accross
         other node hierarchies), until the descriptor is close()d. If
         the node is locked, subsequent opens (depending on mode) may
@@ -223,7 +223,7 @@ class node_class(object):
 
     def get_etag(self,cr):
         """ Get a tag, unique per object + modification.
-    
+
             see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
         return self._get_ttag(cr) + ':' + self._get_wtag(cr)
 
@@ -233,14 +233,14 @@ class node_class(object):
             wtime = time.mktime(time.strptime(self.write_date,'%Y-%m-%d %H:%M:%S'))
         else: wtime = time.time()
         return str(wtime)
-    
+
     def _get_ttag(self,cr):
         """ Get a unique tag for this type/id of object.
             Must be overriden, so that each node is uniquely identified.
         """
         print "node_class.get_ttag()",self
         raise RuntimeError("get_etag stub()")
-    
+
     def get_dav_props(self, cr):
         """ If this class has special behaviour for GroupDAV etc, export
         its capabilities """
@@ -260,25 +260,25 @@ class node_class(object):
         @param ndir_node the collection that this node should be moved under
         @param new_name a name to rename this node to. If omitted, the old
             name is preserved
-        @param fil_obj, can be None, is the browse object for the file, 
+        @param fil_obj, can be None, is the browse object for the file,
             if already available.
-        @param ndir_obj must be the browse object to the new doc.directory 
+        @param ndir_obj must be the browse object to the new doc.directory
             location, where this node should be moved to.
         in_write: When called by write(), we shouldn't attempt to write the
             object, but instead return the dict of vals (avoid re-entrance).
             If false, we should write all data to the object, here, as if the
             caller won't do anything after calling move_to()
-        
+
         Return value:
             True: the node is moved, the caller can update other values, too.
-            False: the node is either removed or fully updated, the caller 
+            False: the node is either removed or fully updated, the caller
                 must discard the fil_obj, not attempt to write any more to it.
             dict: values to write back to the object. *May* contain a new id!
-        
+
         Depending on src and target storage, implementations of this function
         could do various things.
         Should also consider node<->content, dir<->dir moves etc.
-        
+
         Move operations, as instructed from APIs (eg. request from DAV) could
         use this function.
         """
@@ -295,17 +295,17 @@ class node_class(object):
 
 class node_database(node_class):
     """ A node representing the database directory
-        
+
     """
     our_type = 'database'
     def __init__(self, path=[], parent=False, context=None):
         super(node_database,self).__init__(path, parent, context)
 
     def children(self, cr, domain=None):
-        res = self._child_get(cr, domain=domain) + self._file_get(cr)        
+        res = self._child_get(cr, domain=domain) + self._file_get(cr)
         return res
 
-    def child(self, cr, name, domain=None):        
+    def child(self, cr, name, domain=None):
         res = self._child_get(cr, name, domain=None)
         if res:
             return res[0]
@@ -319,7 +319,7 @@ class node_database(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('parent_id','=',parent_id)]                              
+        where = [('parent_id','=',parent_id)]
         if name:
             where.append(('name','=',name))
         if not domain:
@@ -327,16 +327,16 @@ class node_database(node_class):
 
         where2 = where + domain + [('type', '=', 'directory')]
         ids = dirobj.search(cr, uid, where2, context=ctx)
-        res = []        
-        for dirr in dirobj.browse(cr, uid, ids, context=ctx):            
+        res = []
+        for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             res.append(node_dir(dirr.name, self, self.context,dirr))
-        
+
         where2 = where + domain + [('type', '=', 'ressource'), ('ressource_parent_type_id','=',False)]
-        ids = dirobj.search(cr, uid, where2, context=ctx)        
-        for dirr in dirobj.browse(cr, uid, ids, context=ctx):                       
+        ids = dirobj.search(cr, uid, where2, context=ctx)
+        for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             res.append(node_res_dir(dirr.name, self, self.context, dirr))
-        
-        fil_obj = dirobj.pool.get('ir.attachment')        
+
+        fil_obj = dirobj.pool.get('ir.attachment')
         ids = fil_obj.search(cr, uid, where, context=ctx)
         if ids:
             for fil in fil_obj.browse(cr, uid, ids, context=ctx):
@@ -360,7 +360,7 @@ class node_database(node_class):
 
     def _get_ttag(self,cr):
         return 'db-%s' % cr.dbname
-        
+
 
 class node_dir(node_database):
     our_type = 'collection'
@@ -396,7 +396,7 @@ class node_dir(node_database):
             return False
         if not self.context == other.context:
             return False
-        # Two directory nodes, for the same document.directory, may have a 
+        # Two directory nodes, for the same document.directory, may have a
         # different context! (dynamic folders)
         if self.dctx != other.dctx:
             return False
@@ -404,26 +404,26 @@ class node_dir(node_database):
 
     def get_data(self, cr):
         res = ''
-        for child in self.children(cr):            
-            res += child.get_data(cr)  
+        for child in self.children(cr):
+            res += child.get_data(cr)
         return res
 
-    
+
 
     def _file_get(self, cr, nodename=False):
-        return super(node_dir,self)._file_get(cr, nodename, self.dir_id)       
+        return super(node_dir,self)._file_get(cr, nodename, self.dir_id)
 
-    
+
 
     def _child_get(self, cr, name=None, domain=None):
         return super(node_dir,self)._child_get(cr, name, self.dir_id, domain=domain)
 
     def rmcol(self, cr):
         uid = self.context.uid
-        directory = self.context._dirobj.browse(cr, uid, self.dir_id) 
-        res = False       
+        directory = self.context._dirobj.browse(cr, uid, self.dir_id)
+        res = False
         if not directory:
-            raise OSError(2, 'Not such file or directory.')        
+            raise OSError(2, 'Not such file or directory.')
         if directory._table_name=='document.directory':
             if self.children(cr):
                 raise OSError(39, 'Directory not empty.')
@@ -433,12 +433,12 @@ class node_dir(node_database):
         return res
 
     def create_child_collection(self, cr, objname):
-        object2 = False            
+        object2 = False
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        obj = dirobj.browse(cr, uid, self.dir_id)            
+        obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
             raise OSError(1, 'Operation not permited.')
 
@@ -448,11 +448,11 @@ class node_dir(node_database):
                 'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
                 'ressource_id': object2 and object2.id or False,
                 'parent_id' : obj and obj.id or False
-        }                 
-        
+        }
+
         return dirobj.create(cr, uid, val)
-        
-    
+
+
     def create_child(self, cr, path, data):
         """ API function to create a child file object and node
             Return the node_* created
@@ -487,8 +487,8 @@ class node_dir(node_database):
         if self.write_date:
             wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
         else: wtime = time.time()
-        return str(wtime)    
-    
+        return str(wtime)
+
     def _get_ttag(self,cr):
         return 'dir-%d' % self.dir_id
 
@@ -513,13 +513,13 @@ class node_res_dir(node_class):
         self.resm_id = dirr.ressource_id
         self.namefield = dirr.resource_field.name or 'name'
         self.displayname = dirr.name
-        # Important: the domain is evaluated using the *parent* dctx!        
+        # Important: the domain is evaluated using the *parent* dctx!
         self.domain = dirr.domain
         self.ressource_tree = dirr.ressource_tree
         # and then, we add our own vars in the dctx:
         if dctx:
             self.dctx.update(dctx)
-    
+
         # and then, we prepare a dctx dict, for deferred evaluation:
         self.dctx_dict = {}
         for dfld in dirr.dctx_ids:
@@ -530,7 +530,7 @@ class node_res_dir(node_class):
             return False
         if not self.context == other.context:
             return False
-        # Two nodes, for the same document.directory, may have a 
+        # Two nodes, for the same document.directory, may have a
         # different context! (dynamic folders)
         if self.dctx != other.dctx:
             return False
@@ -539,7 +539,7 @@ class node_res_dir(node_class):
     def children(self, cr, domain=None):
         return self._child_get(cr, domain=domain)
 
-    def child(self,cr, name, domain=None):        
+    def child(self,cr, name, domain=None):
         res = self._child_get(cr, name, domain=domain)
         if res:
             return res[0]
@@ -548,7 +548,7 @@ class node_res_dir(node_class):
     def _child_get(self, cr, name = None, domain=None):
         """ return virtual children of resource, based on the
             foreign object.
-        
+
             Note that many objects use NULL for a name, so we should
             better call the name_search(),name_get() set of methods
         """
@@ -572,28 +572,28 @@ class node_res_dir(node_class):
                 raise RuntimeError("incorrect domain expr: %s" % self.domain)
         if self.resm_id:
             where.append(('id','=',self.resm_id))
-    
+
         if name:
             where.append((self.namefield,'=',name))
-        
+
         # print "Where clause for %s" % self.res_model, where
         if self.ressource_tree:
             object2 = False
             if self.resm_id:
-                object2 = dirobj.pool.get(self.res_model).browse(cr, uid, self.resm_id) or False                
-            if obj._parent_name in obj.fields_get(cr, uid):                    
+                object2 = dirobj.pool.get(self.res_model).browse(cr, uid, self.resm_id) or False
+            if obj._parent_name in obj.fields_get(cr, uid):
                 where.append((obj._parent_name,'=',object2 and object2.id or False))
-                
+
         resids = obj.search(cr, uid, where, context=ctx)
-        res = []        
+        res = []
         for bo in obj.browse(cr, uid, resids, context=ctx):
             if not bo:
                 continue
             name = getattr(bo, self.namefield)
             if not name:
                 continue
-                # Yes! we can't do better but skip nameless records.     
-             
+                # Yes! we can't do better but skip nameless records.
+
             res.append(node_res_obj(name, self.dir_id, self, self.context, self.res_model, bo))
         return res
 
@@ -610,7 +610,7 @@ class node_res_obj(node_class):
     def __init__(self, path, dir_id, parent, context, res_model, res_bo, res_id = None):
         super(node_res_obj,self).__init__(path, parent,context)
         assert parent
-        #todo: more info from dirr            
+        #todo: more info from dirr
         self.dir_id = dir_id
         self.mimetype = 'application/x-directory'
                         # 'httpd/unix-directory'
@@ -620,15 +620,15 @@ class node_res_obj(node_class):
         self.content_length = 0
         self.res_model = res_model
         self.domain = parent.domain
-        self.displayname = path  
-        self.dctx_dict = parent.dctx_dict      
-        if res_bo:            
-            self.res_id = res_bo.id            
+        self.displayname = path
+        self.dctx_dict = parent.dctx_dict
+        if res_bo:
+            self.res_id = res_bo.id
             dc2 = self.context.context
             dc2.update(self.dctx)
             dc2['res_model'] = res_model
             dc2['res_id'] = res_bo.id
-            dc2['this'] = res_bo            
+            dc2['this'] = res_bo
             for fld,expr in self.dctx_dict.items():
                 try:
                     self.dctx[fld] = safe_eval(expr, dc2)
@@ -654,11 +654,11 @@ class node_res_obj(node_class):
             return False
         return self.dir_id == other.dir_id
 
-    def children(self, cr, domain=None):        
+    def children(self, cr, domain=None):
         return self._child_get(cr, domain=domain) + self._file_get(cr)
 
-    def child(self, cr, name, domain=None):            
-        res = self._child_get(cr, name, domain=domain)                
+    def child(self, cr, name, domain=None):
+        res = self._child_get(cr, name, domain=domain)
         if res:
             return res[0]
         res = self._file_get(cr, name)
@@ -713,7 +713,7 @@ class node_res_obj(node_class):
                 return ('vevent-collection','http://groupdav.org/')
         return None
 
-    def _child_get(self, cr, name=None, domain=None):        
+    def _child_get(self, cr, name=None, domain=None):
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -721,38 +721,38 @@ class node_res_obj(node_class):
         directory = dirobj.browse(cr, uid, self.dir_id)
         obj = dirobj.pool.get(self.res_model)
         where = []
-        res = []        
+        res = []
         if name:
-            where.append(('name','=',name))   
-       
+            where.append(('name','=',name))
+
         # Directory Structure display in tree structure
-        if self.res_id and directory.ressource_tree:  
-            where1 = []                 
-            if obj._parent_name in obj.fields_get(cr, uid):                    
+        if self.res_id and directory.ressource_tree:
+            where1 = []
+            if obj._parent_name in obj.fields_get(cr, uid):
                 where1 = where + [(obj._parent_name, '=', self.res_id)]
-            resids = obj.search(cr, uid, where1, context=ctx)                        
+            resids = obj.search(cr, uid, where1, context=ctx)
             for bo in obj.browse(cr, uid, resids, context=ctx):
                 namefield = directory.resource_field.name or 'name'
                 if not bo:
                     continue
                 res_name = getattr(bo, namefield)
                 if not res_name:
-                    continue                
-                res.append(node_res_obj(res_name, self.dir_id, self, self.context, self.res_model, res_bo = bo))        
-        
-        
-        where2 = where + [('parent_id','=',self.dir_id) ]        
-        ids = dirobj.search(cr, uid, where2, context=ctx) 
+                    continue
+                res.append(node_res_obj(res_name, self.dir_id, self, self.context, self.res_model, res_bo = bo))
+
+
+        where2 = where + [('parent_id','=',self.dir_id) ]
+        ids = dirobj.search(cr, uid, where2, context=ctx)
         for dirr in dirobj.browse(cr, uid, ids, context=ctx):
             if dirr.type == 'directory':
                 res.append(node_res_obj(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
             elif dirr.type == 'ressource':
                 # child resources can be controlled by properly set dctx
                 res.append(node_res_dir(dirr.name,self,self.context, dirr, {'active_id': self.res_id}))
-        
 
-       
-        
+
+
+
         fil_obj = dirobj.pool.get('ir.attachment')
         where3 = where2  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
         # print "where clause for dir_obj", where2
@@ -760,20 +760,20 @@ class node_res_obj(node_class):
         if ids:
             for fil in fil_obj.browse(cr, uid, ids, context=ctx):
                 res.append(node_file(fil.name, self, self.context, fil))
-    
-        
-        # Get Child Ressource Directories                
-        if directory.ressource_type_id and directory.ressource_type_id.id:              
-            where4 = where + [('ressource_parent_type_id','=',directory.ressource_type_id.id)]            
+
+
+        # Get Child Ressource Directories
+        if directory.ressource_type_id and directory.ressource_type_id.id:
+            where4 = where + [('ressource_parent_type_id','=',directory.ressource_type_id.id)]
             where5 = where4 + [('ressource_id','=',0)]
-            dirids = dirobj.search(cr,uid, where5)            
+            dirids = dirobj.search(cr,uid, where5)
             where5 = where4 + [('ressource_id','=',self.res_id)]
-            dirids = dirids + dirobj.search(cr,uid, where5)            
+            dirids = dirids + dirobj.search(cr,uid, where5)
             for dirr in dirobj.browse(cr, uid, dirids, context=ctx):
                 if dirr.type == 'directory' and not dirr.parent_id:
                     res.append(node_res_obj(dirr.name, dirr.id, self, self.context, self.res_model, res_bo = None, res_id = self.res_id))
                 if dirr.type == 'ressource':
-                    res.append(node_res_dir(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))                
+                    res.append(node_res_dir(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))
         return res
 
     def create_child_collection(self, cr, objname):
@@ -781,26 +781,26 @@ class node_res_obj(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        res_obj = dirobj.pool.get(self.context.context['res_model'])           
-        
-        object2 = res_obj.browse(cr, uid, self.context.context['res_id']) or False            
-        
-        obj = dirobj.browse(cr, uid, self.dir_id)            
+        res_obj = dirobj.pool.get(self.context.context['res_model'])
+
+        object2 = res_obj.browse(cr, uid, self.context.context['res_id']) or False
+
+        obj = dirobj.browse(cr, uid, self.dir_id)
         if obj and (obj.type == 'ressource') and not object2:
             raise OSError(1, 'Operation not permited.')
 
-        
+
         val = {
                 'name': objname,
                 'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
                 'ressource_id': object2 and object2.id or False,
                 'parent_id' : False
-        }        
-        if (obj and (obj.type in ('directory'))) or not object2:                
-            val['parent_id'] =  obj and obj.id or False            
-        
+        }
+        if (obj and (obj.type in ('directory'))) or not object2:
+            val['parent_id'] =  obj and obj.id or False
+
         return dirobj.create(cr, uid, val)
-    
+
     def create_child(self, cr, path, data):
         """ API function to create a child file object and node
             Return the node_* created
@@ -840,7 +840,7 @@ class node_file(node_class):
         self.write_date = fil.write_date or fil.create_date
         self.content_length = fil.file_size
         self.displayname = fil.name
-        
+
         # This only propagates the problem to get_data. Better
         # fix those files to point to the root dir.
         self.storage_id = None
@@ -873,17 +873,17 @@ class node_file(node_class):
         uid = self.context.uid
         document_obj = self.context._dirobj.pool.get('ir.attachment')
         if self.type in ('collection','database'):
-            return False  
-        document = document_obj.browse(cr, uid, self.file_id, context=self.context.context)        
+            return False
+        document = document_obj.browse(cr, uid, self.file_id, context=self.context.context)
         res = False
         if document and document._table_name == 'ir.attachment':
             res = document_obj.unlink(cr, uid, [document.id])
-        return res                 
+        return res
 
     def fix_ppath(self, cr, fbro):
         """Sometimes we may init this w/o path, parent.
         This function fills the missing path from the file browse object
-        
+
         Note: this may be an expensive operation, do on demand. However,
         once caching is in, we might want to do that at init time and keep
         this object anyway
@@ -892,7 +892,7 @@ class node_file(node_class):
             return
         assert fbro
         uid = self.context.uid
-        
+
         dirpath = []
         if fbro.parent_id:
             dirobj = self.context._dirobj.pool.get('document.directory')
@@ -901,14 +901,14 @@ class node_file(node_class):
             dirpath.append(fbro.datas_fname)
         else:
             dirpath.append(fbro.name)
-        
+
         if len(dirpath)>1:
             self.path = dirpath
         else:
-            self.path = dirpath[0]   
-    
+            self.path = dirpath[0]
+
     def get_data(self, cr, fil_obj = None):
-        """ Retrieve the data for some file. 
+        """ Retrieve the data for some file.
             fil_obj may optionally be specified, and should be a browse object
             for the file. This is useful when the caller has already initiated
             the browse object. """
@@ -928,7 +928,7 @@ class node_file(node_class):
         return self.content_length
 
     def set_data(self, cr, data, fil_obj = None):
-        """ Store data at some file. 
+        """ Store data at some file.
             fil_obj may optionally be specified, and should be a browse object
             for the file. This is useful when the caller has already initiated
             the browse object. """
@@ -944,7 +944,7 @@ class node_file(node_class):
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
         if ndir_node.context != self.context:
             raise NotImplementedError("Cannot move files between contexts")
-        
+
         doc_obj = self.context._dirobj.pool.get('ir.attachment')
         if not fil_obj:
             dbro = doc_obj.browse(cr, self.context.uid, self.file_id, context=self.context.context)
@@ -954,29 +954,29 @@ class node_file(node_class):
 
         if not dbro:
             raise IndexError("Cannot locate doc %d", self.file_id)
-        
+
         if (not self.parent):
             # there *must* be a parent node for this one
             self.parent = self.context.get_dir_node(cr, dbro.parent_id.id)
-        
+
         if self.parent != ndir_node:
             logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
             raise NotImplementedError('Cannot move file to another dir')
-        
+
         ret = {}
         if new_name and (new_name != dbro.name):
             stobj = self.context._dirobj.pool.get('document.storage')
             r2 = stobj.simple_rename(cr, self.context.uid, self, new_name, self.context.context)
             ret.update(r2)
-        
+
         del dbro
-        
+
         if not in_write:
             # We have to update the data ourselves
             if ret:
                 doc_obj.write(cr, self.context.uid, [self.file_id,], ret, self.context.context)
             ret = True
-            
+
         return ret
 
 class node_content(node_class):
@@ -997,14 +997,14 @@ class node_content(node_class):
 
     def open(self, cr, mode=False):
         raise DeprecationWarning()
-    
+
     def fill_fields(self, cr, dctx = None):
         """ Try to read the object and fill missing fields, like mimetype,
             dates etc.
             This function must be different from the constructor, because
             it uses the db cursor.
         """
-        
+
         cr.execute('SELECT DISTINCT mimetype FROM document_directory_content_type WHERE active AND code = %s;',
                 (self.extension,))
         res = cr.fetchall()
