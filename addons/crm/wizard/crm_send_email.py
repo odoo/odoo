@@ -23,7 +23,6 @@
 from osv import osv, fields
 from tools.translate import _
 import base64
-import time
 import tools
 from crm import crm
 
@@ -157,7 +156,7 @@ class crm_send_new_email2(osv.osv_memory):
         if not context.get('model'):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
 
-        res = super(crm_send_new_email, self).default_get(cr, uid, fields, context=context)
+        res = super(crm_send_new_email2, self).default_get(cr, uid, fields, context=context)
 
         if context.get('mail') == 'reply':
             res.update(self.get_reply_defaults(cr, uid, fields, context=context))
