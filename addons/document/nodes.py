@@ -343,19 +343,8 @@ class node_database(node_class):
                 res.append(node_file(fil.name, self, self.context, fil))
         return res
 
-    def _file_get(self,cr, nodename=False, directory_id=False):
+    def _file_get(self,cr, nodename=False):
         res = []
-        cntobj = self.context._dirobj.pool.get('document.directory.content')
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        where = [('directory_id','=',directory_id) ]
-        ids = cntobj.search(cr, uid, where, context=ctx)
-        for content in cntobj.browse(cr, uid, ids, context=ctx):
-            res3 = cntobj._file_get(cr, self, nodename, content)
-            if res3:
-                res.extend(res3)
-
         return res
 
     def _get_ttag(self,cr):
@@ -408,12 +397,21 @@ class node_dir(node_database):
             res += child.get_data(cr)
         return res
 
-
-
     def _file_get(self, cr, nodename=False):
-        return super(node_dir,self)._file_get(cr, nodename, self.dir_id)
+        res = super(node_dir,self)._file_get(cr, nodename)
+        
+        cntobj = self.context._dirobj.pool.get('document.directory.content')
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        where = [('directory_id','=',self.dir_id) ]
+        ids = cntobj.search(cr, uid, where, context=ctx)
+        for content in cntobj.browse(cr, uid, ids, context=ctx):
+            res3 = cntobj._file_get(cr, self, nodename, content)
+            if res3:
+                res.extend(res3)
 
-
+        return res
 
     def _child_get(self, cr, name=None, domain=None):
         return super(node_dir,self)._child_get(cr, name, self.dir_id, domain=domain)
