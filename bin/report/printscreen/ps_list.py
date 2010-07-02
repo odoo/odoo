@@ -214,8 +214,6 @@ class report_printscreen_list(report_int):
                     line[f] = new_d1
                 if line.get('__group'):
                     col = etree.SubElement(node_line, 'col', para='group', tree='no')
-                    if fields[f]['type'] =='integer':
-                        col.set('tree','float')
                 else:
                     col = etree.SubElement(node_line, 'col', para='yes', tree='no')
                 if line[f] != None:
