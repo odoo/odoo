@@ -158,7 +158,7 @@
                     <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Type"  domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Storage" domain="[]" context="{'group_by':'storage_id'}"/>                        
+                        <filter string="Storage" domain="[]" context="{'group_by':'storage_id'}"/>
                     </group>
                </search>
             </field>
@@ -299,7 +299,7 @@
         <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree colors="blue:type in ('url',)"> 
+            <tree colors="blue:type in ('url',)">
                 <field name="name"/>
                 <field name="type"/>
                 <field name="datas_fname"/>
@@ -318,7 +318,7 @@
         <field name="name">Document</field>
         <field name="view_type">form</field>
     </record>
-    <menuitem name="Documents" id="menu_document_doc" parent="knowledge.menu_document" sequence="5"/>
+    <menuitem name="Documents" id="menu_document_doc" parent="knowledge.menu_document" sequence="0"/>
     <menuitem
         name="Documents"
         action="action_document_file_form"
@@ -392,7 +392,7 @@
         src_model="document.directory"/>
 
 
-    
+
 
 </data>
 </openerp>
