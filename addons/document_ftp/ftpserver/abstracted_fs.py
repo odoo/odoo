@@ -249,8 +249,6 @@ class abstracted_fs(object):
         except Exception,e:
             self._log.exception('Cannot create dir "%s" at node %s', basename, repr(node))
             raise OSError(1, 'Operation not permited.')
-        finally:
-            if cr: cr.close()
 
     def close_cr(self, data):
         if data and data[0]:
