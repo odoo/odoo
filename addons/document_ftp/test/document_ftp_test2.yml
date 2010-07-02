@@ -145,8 +145,13 @@
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
+        from ftplib import error_perm
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
-        assert ftp.nlst("test-name.txt") == []
+        try:
+            res = ftp.nlst("test-name.txt")
+            assert res == []
+        except error_perm, e:
+            pass
         assert ftp.nlst("test-renamed.txt") == ['test-renamed.txt']
 -
     I create a new folder 'Test-Folder2' through FTP
@@ -203,7 +208,7 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
         # TODO speed
-        assert len(ftp.nlst() > 1000)
+        assert len(ftp.nlst()) > 1000
 -
     I read the 1000 files, check speed
     # TODO
