@@ -1199,6 +1199,7 @@ class account_move(osv.osv):
     #
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
+
     def validate(self, cr, uid, ids, context={}):
         if context and ('__last_update' in context):
             del context['__last_update']
@@ -1283,11 +1284,11 @@ class account_move(osv.osv):
                     'state': 'draft'
                 }, context, check=False)
                 ok = False
-            if ok:
-                list_ids = []
-                for tmp in move.line_id:
-                    list_ids.append(tmp.id)
-                self.pool.get('account.move.line').create_analytic_lines(cr, uid, list_ids, context)
+        if ok:
+            list_ids = []
+            for tmp in move.line_id:
+                list_ids.append(tmp.id)
+            self.pool.get('account.move.line').create_analytic_lines(cr, uid, list_ids, context)
         return ok
 account_move()
 
