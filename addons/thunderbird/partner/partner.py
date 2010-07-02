@@ -198,7 +198,7 @@ class tinythunderbird_partner(osv.osv):
         return super(tinythunderbird_partner, self).unlink(cr, uid, ids,context)
 
     def thunderbird_objectsearch(self,cr,user,vals):
-        obj_list= [('crm.claim', 'Claim'), ('crm.lead','Lead'), ('crm.meeting','Meeting'), ('crm.opportunity','Opportunity'), ('crm.phonecall','Phonecall'), ('crm.fundraising','Fund raising'), ('crm.helpdesk','Helpdesk')]
+        obj_list= [('crm.lead','Lead'),('project.issue','Project Issue'), ('hr.applicant','HR Recruitment')]
         object=[]
         model_obj = self.pool.get('ir.model')
         for obj in obj_list:
