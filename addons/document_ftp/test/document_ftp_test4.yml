@@ -1,16 +1,54 @@
 -
     In order to check dynamic folder functionality of document + FTP
--
-    I create two partners 'Partner1' and 'Partner2'
--|
+- |
+    I create two partners 'Partner1' and 'Partner2'.
     I create three partner categories: 'none', 'pat1' and 'all'
     I attach Partner1 to pat1, Partner1+Partner2 to 'all'
+-
+    !record {model: res.partner.category, id: tpat_categ_none }:
+        name: 'No partners'
+-
+    !record {model: res.partner.category, id: tpat_categ_pat1 }:
+        name: 'Pat 1'
+-
+    !record {model: res.partner.category, id: tpat_categ_all }:
+        name: 'All Partner1+2'
+-
+    !record {model: res.partner, id: tpartner1 }:
+        name: Partner 1
+        category_id:
+            - tpat_categ_pat1
+            - tpat_categ_all
+-
+    !record {model: res.partner, id: tpartner_2 }:
+        name: 'Partner 2'
+        category_id:
+            - tpat_categ_all
 -
     I create a resource folder of partners, by the (none, pat1, all) 
     categories.
 -
+    !record {model: document.directory, id: dir_tests2 }:
+        name: Partners Testing
+        parent_id: document.dir_root
+        type: ressource
+        ressource_type_id: base.model_res_partner_category
+        domain: []
+-
+    I commit (because FTP operations are on different transaction)
+-
+    !python {model: document.directory, id: }: |
+        cr.commit()
+-
     I browse through ftp in the resource folder, checking that three
     categories are there.
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Partners Testing')
+        dirs = ftp.nlst()
+        dirs.sort()
+        assert dirs == [ 'All Partner1+2', 'No partners', 'Pat 1' ]
 -
     I create a 'partners' folder by the first resource one.
 -
