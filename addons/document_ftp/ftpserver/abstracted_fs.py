@@ -319,6 +319,7 @@ class abstracted_fs(object):
     def get_node_cr_uid(self, node):
         """ Get cr, uid, pool from a node
         """
+        assert node
         db = pooler.get_db(node.context.dbname)
         return db.cursor(), node.context.uid
         
