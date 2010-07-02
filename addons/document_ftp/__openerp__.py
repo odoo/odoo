@@ -39,7 +39,9 @@
     ],
     'demo_xml': [],
     'test': [
-        'test/document_ftp_test.yml',
+        'test/document_ftp_test2.yml',
+        # 'test/document_ftp_test2.yml',
+        'test/document_ftp_test4.yml',
     ],
     'installable': True,
     'active': False,
