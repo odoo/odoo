@@ -5,6 +5,7 @@ from tarfile import filemode
 import StringIO
 import base64
 import logging
+import errno
 
 import glob
 import fnmatch
@@ -70,11 +71,20 @@ class abstracted_fs(object):
      - (str) root: the user home directory.
      - (str) cwd: the current working directory.
      - (str) rnfr: source file to be renamed.
+
     """
+
+    def __init__(self):
+        self.root = None
+        self.cwd = '/'
+        self.cwd_node = None
+        self.rnfr = None
+        self._log = logging.getLogger('FTP.fs')
 
     # Ok
     def db_list(self):
-        #return pooler.pool_dic.keys()
+        """Get the list of available databases, with FTPd support
+        """
         s = netsvc.ExportService.getService('db')
         result = s.exp_list(document=True)
         self.db_name_list = []
@@ -102,97 +112,58 @@ class abstracted_fs(object):
                 #    pooler.close_db(db_name)        
         return self.db_name_list
 
-    # Ok
-    def __init__(self):
-        self.root = None
-        self.cwd = '/'
-        self.rnfr = None
-        self._log = logging.getLogger('FTP.fs')
-
-    # --- Pathname / conversion utilities
-
-    # Ok
     def ftpnorm(self, ftppath):
         """Normalize a "virtual" ftp pathname (tipically the raw string
-        coming from client) depending on the current working directory.
+        coming from client).
 
-        Example (having "/foo" as current working directory):
-        'x' -> '/foo/x'
-
-        Note: directory separators are system independent ("/").
-        Pathname returned is always absolutized.
+        Pathname returned is relative!.
         """
-        if os.path.isabs(ftppath):
-            p = os.path.normpath(ftppath)
-        else:
-            p = os.path.normpath(os.path.join(self.cwd, ftppath))
+        p = os.path.normpath(ftppath)
         # normalize string in a standard web-path notation having '/'
-        # as separator.
+        # as separator. xrg: is that really in the spec?
         p = p.replace("\\", "/")
         # os.path.normpath supports UNC paths (e.g. "//a/b/c") but we
         # don't need them.  In case we get an UNC path we collapse
         # redundant separators appearing at the beginning of the string
         while p[:2] == '//':
             p = p[1:]
-        # Anti path traversal: don't trust user input, in the event
-        # that self.cwd is not absolute, return "/" as a safety measure.
-        # This is for extra protection, maybe not really necessary.
-        if not os.path.isabs(p):
-            p = "/"
+        if p == '.':
+            return ''
         return p
 
-    # Ok
-    def ftp2fs(self, path_orig, data):
-        path = self.ftpnorm(path_orig)
-        if not data or (path and path=='/'):
-            return None               
-        path2 = filter(None,path.split('/'))[1:]
-        (cr, uid) = data
-        if len(path2):     
-            path2[-1]=_to_unicode(path2[-1])
-       
-        ctx = get_node_context(cr, uid, {})
-        res = ctx.get_uri(cr, path2[:])
-        if not res:
-            raise OSError(2, 'Not such file or directory.')
-        return res
+    def get_cwd(self):
+        """ return the cwd, decoded in utf"""
+        return _to_decode(self.cwd)
 
-    # Ok
+    def ftp2fs(self, path_orig, data):
+        raise DeprecationWarning()
+
     def fs2ftp(self, node):        
+        """ Return the string path of a node, in ftp form
+        """
         res='/'
         if node:
             paths = node.full_path()
-            paths = map(lambda x: '/' +x, paths)
-            res = os.path.normpath(''.join(paths))
-            res = res.replace("\\", "/")        
-            while res[:2] == '//':
-                res = res[1:]
-            res = '/' + node.context.dbname + '/' + _to_decode(res)            
+            res = '/' + node.context.dbname + '/' +  \
+                _to_decode(os.path.join(*paths))
             
-        #res = node and ('/' + node.cr.dbname + '/' + _to_decode(self.ftpnorm(node.path))) or '/'
         return res
 
-    # Ok
     def validpath(self, path):
         """Check whether the path belongs to user's home directory.
-        Expected argument is a "real" filesystem pathname.
-
-        If path is a symbolic link it is resolved to check its real
-        destination.
-
-        Pathnames escaping from user's root directory are considered
-        not valid.
+        Expected argument is a datacr tuple
         """
-        return path and True or False
+        # TODO: are we called for "/" ?
+        return isinstance(path, tuple) and path[1] and True or False
 
     # --- Wrapper methods around open() and tempfile.mkstemp
 
-    def create(self, node, objname, mode):
+    def create(self, datacr, objname, mode):
         """ Create a children file-node under node, open it
             @return open node_descriptor of the created node
         """
         objname = _to_unicode(objname) 
-        cr = self.get_node_cr(node)
+        cr , node, rem = datacr
         try:
             child = node.child(cr, objname)
             if child:
@@ -200,10 +171,8 @@ class abstracted_fs(object):
                     raise OSError(1, 'Operation not permited.')
 
                 ret = child.open_data(cr, mode)
-                cr.close()
                 return ret
-        except OSError:
-            cr.close()
+        except EnvironmentError:
             raise
         except Exception,e:
             self._log.exception('Cannot locate item %s at node %s', objname, repr(node))
@@ -215,19 +184,13 @@ class abstracted_fs(object):
         except Exception,e:
             self._log.exception('Cannot create item %s at node %s', objname, repr(node))
             raise OSError(1, 'Operation not permited.')
-        finally:
-            if cr:
-                cr.close()
 
-    def open(self, node, mode):
-        if not node:
+    def open(self, datacr, mode):
+        if not (datacr and datacr[1]):
             raise OSError(1, 'Operation not permited.')
         # Reading operation
-        cr = self.get_node_cr(node)
-        try:
-            res = node.open_data(cr, mode)
-        finally:
-            cr.close()
+        cr, node, rem = datacr
+        res = node.open_data(cr, mode)
         return res
 
     # ok, but need test more
@@ -258,26 +221,26 @@ class abstracted_fs(object):
 
 
     # Ok
-    def chdir(self, path):        
-        if not path:
+    def chdir(self, datacr):
+        if (not datacr) or datacr == (None, None, None):
             self.cwd = '/'
+            self.cwd_node = None
             return None        
-        if path.type in ('collection','database'):
-            self.cwd = self.fs2ftp(path)
-        elif path.type in ('file'):            
-            parent_path = path.full_path()[:-1]            
-            self.cwd = os.path.normpath(''.join(parent_path))
-        else:
-            raise OSError(1, 'Operation not permited.')
+        if not datacr[1]:
+            raise OSError(1, 'Operation not permitted')
+        if datacr[1].type not in  ('collection','database'):
+            raise OSError(2, 'Path is not a directory')
+        self.cwd = '/'+datacr[1].context.dbname + '/'
+        self.cwd += '/'.join(datacr[1].full_path())
+        self.cwd_node = datacr[1]
 
     # Ok
-    def mkdir(self, node, basename):
+    def mkdir(self, datacr, basename):
         """Create the specified directory."""
-        cr = False
+        cr, node, rem = datacr or (None, None, None)
         if not node:
             raise OSError(1, 'Operation not permited.')
         
-        cr = self.get_node_cr(node)
         try:
             basename =_to_unicode(basename)
             cdir = node.create_child_collection(cr, basename)
@@ -290,31 +253,87 @@ class abstracted_fs(object):
             if cr: cr.close()
 
     def close_cr(self, data):
-        if data:
+        if data and data[0]:
             data[0].close()
         return True
 
-    def get_cr(self, path):
-        path = self.ftpnorm(path)
-        if path=='/':
-            return None
-        dbname = path.split('/')[1]
-        if dbname not in self.db_list():
-            return None
-        try:
-            db = pooler.get_db(dbname)
-        except Exception:
-            raise OSError(1, 'Operation not permited.')
-        cr = db.cursor()
-        try:
-            uid = security.login(dbname, self.username, self.password)
-        except Exception:
-            cr.close()
-            raise
-        if not uid:
-            cr.close()
-            raise OSError(2, 'Authentification Required.')
-        return cr, uid
+    def get_cr(self, pathname):
+        raise DeprecationWarning()
+    
+    def get_crdata(self, line, mode='file'):
+        """ Get database cursor, node and remainder data, for commands
+        
+        This is the helper function that will prepare the arguments for
+        any of the subsequent commands.
+        It returns a tuple in the form of:
+        @code        ( cr, node, rem_path=None )
+        
+        @param line An absolute or relative ftp path, as passed to the cmd.
+        @param mode A word describing the mode of operation, so that this
+                    function behaves properly in the different commands.
+        """
+        path = self.ftpnorm(line)
+        if self.cwd_node is None:
+            if not os.path.isabs(path):
+                path = os.path.join(self.root, path)
+
+            if path == '/' and mode in ('list', 'cwd'):
+                return (None, None, None )
+
+        path = os.path.normpath(path) # again, for '/db/../ss'
+        if path == '.': path = ''
+
+        if os.path.isabs(path) and self.cwd_node is not None \
+                and path.startswith(self.cwd):
+            # make relative, so that cwd_node is used again
+            path = path[len(self.cwd):]
+            if path.startswith('/'):
+                path = path[1:]
+
+        p_parts = path.split('/') # hard-code the unix sep here, by spec.
+
+        assert '..' not in p_parts
+
+        rem_path = None
+        if mode in ('create',):
+            rem_path = p_parts[-1]
+            p_parts = p_parts[:-1]
+
+        if os.path.isabs(path):
+            # we have to start from root, again
+            p_parts = p_parts[1:]
+            dbname = p_parts[0]
+            if dbname not in self.db_list():
+                return None
+            try:
+                db = pooler.get_db(dbname)
+            except Exception:
+                raise OSError(1, 'Database cannot be used.')
+            cr = db.cursor()
+            try:
+                uid = security.login(dbname, self.username, self.password)
+            except Exception:
+                cr.close()
+                raise
+            if not uid:
+                cr.close()
+                raise OSError(2, 'Authentification Required.')
+            n = get_node_context(cr, uid, {})
+            node = n.get_uri(cr, p_parts[1:])
+            return (cr, node, rem_path)
+        else:
+            # we never reach here if cwd_node is not set
+            if p_parts and p_parts[-1] == '':
+                p_parts = p_parts[:-1]
+            cr, uid = self.get_node_cr_uid(self.cwd_node)
+            if p_parts:
+                node = self.cwd_node.get_uri(cr, p_parts)
+            else:
+                node = self.cwd_node
+            if node is False and mode not in ('???'):
+                cr.close()
+                raise IOError(errno.ENOENT, 'Path does not exist')
+            return (cr, node, rem_path)
 
     def get_node_cr_uid(self, node):
         """ Get cr, uid, pool from a node
@@ -331,16 +350,21 @@ class abstracted_fs(object):
         """
         return self.get_node_cr_uid(node)[0]
         
-    def listdir(self, path):
+    def listdir(self, datacr):
         """List the content of a directory."""
         class false_node(object):
-            write_date = None
-            create_date = None
+            write_date = 0.0
+            create_date = 0.0
+            unixperms = 040550
+            content_length = 0L
+            uuser = 'root'
+            ugroup = 'root'
             type = 'database'
+            
             def __init__(self, db):
-                self.path = '/'+db
+                self.path = db
 
-        if path is None:
+        if datacr[1] is None:
             result = []
             for db in self.db_list():
                 try:
@@ -348,76 +372,57 @@ class abstracted_fs(object):
                 except osv.except_osv:
                     pass
             return result
-        cr = self.get_node_cr(path)
-        res = path.children(cr)
-        cr.close()
+        cr, node, rem = datacr
+        res = node.children(cr)
         return res
 
-    def rmdir(self, node):
+    def rmdir(self, datacr):
         """Remove the specified directory."""
+        cr, node, rem = datacr
         assert node
         cr = self.get_node_cr(node)
-        try:
-            node.rmcol(cr)
-            cr.commit()
-        finally:
-            cr.close()
+        node.rmcol(cr)
+        cr.commit()
 
-    def remove(self, node):
-        assert node
-        if node.type == 'collection':
-            return self.rmdir(node)
-        elif node.type == 'file':
-            return self.rmfile(node)
+    def remove(self, datacr):
+        assert datacr[1]
+        if datacr[1].type == 'collection':
+            return self.rmdir(datacr)
+        elif datacr[1].type == 'file':
+            return self.rmfile(datacr)
         raise OSError(1, 'Operation not permited.')
 
-    def rmfile(self, node):
+    def rmfile(self, datacr):
         """Remove the specified file."""
-        assert node
-        cr = self.get_node_cr(node)
-        try:
-            node.rm(cr)
-            cr.commit()
-        finally:
-            cr.close()
+        assert datacr[1]
+        cr = datacr[0]
+        datacr[1].rm(cr)
+        cr.commit()
 
-    def rename(self, src, dst_basedir, dst_basename):
+    def rename(self, src, datacr):
         """ Renaming operation, the effect depends on the src:
             * A file: read, create and remove
             * A directory: change the parent and reassign childs to ressource
         """
-        cr = self.get_node_cr(src)
+        cr = datacr[0]
         try:
-            nname = _to_unicode(dst_basename)
-            ret = src.move_to(cr, dst_basedir, new_name=nname)
+            nname = _to_unicode(datacr[2])
+            ret = src.move_to(cr, datacr[1], new_name=nname)
             # API shouldn't wait for us to write the object
             assert (ret is True) or (ret is False)
             cr.commit()
         except Exception,err:
             self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, dst_basename, dst_basedir)
             raise OSError(1,'Operation not permited.')
-        finally:
-            if cr: cr.close()
 
-
-
-    # Nearly Ok
     def stat(self, node):
-        r = list(os.stat('/'))
-        if self.isfile(node):
-            r[0] = 33188
-        r[6] = self.getsize(node)
-        r[7] = self.getmtime(node)
-        r[8] =  self.getmtime(node)
-        r[9] =  self.getmtime(node)
-        return os.stat_result(r)
-    lstat = stat
+        raise NotImplementedError()
 
     # --- Wrapper methods around os.path.*
 
     # Ok
     def isfile(self, node):
-        if node and (node.type not in ('collection','database')):
+        if node and (node.type in ('file','content')):
             return True
         return False
 
@@ -426,7 +431,6 @@ class abstracted_fs(object):
         """Return True if path is a symbolic link."""
         return False
 
-    # Ok
     def isdir(self, node):
         """Return True if path is a directory."""
         if node is None:
@@ -435,19 +439,20 @@ class abstracted_fs(object):
             return True
         return False
 
-    # Ok
-    def getsize(self, node):
+    def getsize(self, datacr):
         """Return the size of the specified file in bytes."""
-        result = 0L
-        if node.type=='file':
-            result = node.content_length or 0L
-        return result
+        if not (datacr and datacr[1]):
+            return 0L
+        if datacr[1].type in ('file', 'content'):
+            return datacr[1].content_length or 0L
+        return 0L
 
     # Ok
-    def getmtime(self, node):
+    def getmtime(self, datacr):
         """Return the last modified time as a number of seconds since
         the epoch."""
         
+        node = datacr[1]
         if node.write_date or node.create_date:
             dt = (node.write_date or node.create_date)[:19]
             result = time.mktime(time.strptime(dt, '%Y-%m-%d %H:%M:%S'))
@@ -468,7 +473,9 @@ class abstracted_fs(object):
         """Return True if path refers to an existing path, including
         a broken or circular symbolic link.
         """
+        raise DeprecationWarning()
         return path and True or False
+
     exists = lexists
 
     # Ok, can be improved
@@ -487,23 +494,21 @@ class abstracted_fs(object):
 
     # note: the following operations are no more blocking
 
-    # Ok
-    def get_list_dir(self, path):
+    def get_list_dir(self, datacr):
         """"Return an iterator object that yields a directory listing
         in a form suitable for LIST command.
         """        
-        if self.isdir(path):
-            listing = self.listdir(path)
+        if not datacr:
+            return None
+        elif self.isdir(datacr[1]):
+            listing = self.listdir(datacr)
             #listing.sort()
-            return self.format_list(path and path.path or '/', listing)
+            return self.format_list(datacr[0], datacr[1], listing)
         # if path is a file or a symlink we return information about it
-        elif self.isfile(path):
-            basedir, filename = os.path.split(path.path)
-            self.lstat(path)  # raise exc in case of problems
-            return self.format_list(basedir, [path])
+        elif self.isfile(datacr[1]):
+            par = datacr[1].parent
+            return self.format_list(datacr[0], par, [datacr[1]])
 
-
-    # Ok
     def get_stat_dir(self, rawline, datacr):
         """Return an iterator object that yields a list of files
         matching a dirname pattern non-recursively in a form
@@ -526,13 +531,12 @@ class abstracted_fs(object):
                     listing.sort()
                 return self.format_list(basedir, listing)
 
-    # Ok    
-    def format_list(self, basedir, listing, ignore_err=True):
+    def format_list(self, cr, parent_node, listing, ignore_err=True):
         """Return an iterator object that yields the entries of given
         directory emulating the "/bin/ls -lA" UNIX command output.
 
-         - (str) basedir: the absolute dirname.
-         - (list) listing: the names of the entries in basedir
+         - (str) basedir: the parent directory node. Can be None
+         - (list) listing: a list of nodes
          - (bool) ignore_err: when False raise exception if os.lstat()
          call fails.
 
@@ -548,35 +552,35 @@ class abstracted_fs(object):
         drwxrwxrwx   1 owner   group          0 Aug 31 18:50 e-books
         -rw-rw-rw-   1 owner   group        380 Sep 02  3:40 module.py
         """
-        for file in listing:
-            try:
-                st = self.lstat(file)
-            except os.error:
-                if ignore_err:
-                    continue
-                raise
-            perms = filemode(st.st_mode)  # permissions
-            nlinks = st.st_nlink  # number of links to inode
-            if not nlinks:  # non-posix system, let's use a bogus value
-                nlinks = 1
-            size = st.st_size  # file size
-            uname = "owner"
-            gname = "group"
+        for node in listing:
+            perms = filemode(node.unixperms)  # permissions
+            nlinks = 1
+            size = node.content_length or 0L
+            uname = node.uuser
+            gname = node.ugroup
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
-                mname=_get_month_name(time.strftime("%m", time.localtime(st.st_mtime)))               
-                mtime = mname+' '+time.strftime("%d %H:%M", time.localtime(st.st_mtime))
+                st_mtime = node.write_date or 0.0
+                if isinstance(st_mtime, basestring):
+                    st_mtime = time.strptime(st_mtime, '%Y-%m-%d %H:%M:%S')
+                elif isinstance(st_mtime, float):
+                    st_mtime = time.localtime(st_mtime)
+                mname=_get_month_name(time.strftime("%m", st_mtime ))
+                mtime = mname+' '+time.strftime("%d %H:%M", st_mtime)
             except ValueError:
                 mname=_get_month_name(time.strftime("%m"))
                 mtime = mname+' '+time.strftime("%d %H:%M")            
+            fpath = node.path
+            if isinstance(fpath, (list, tuple)):
+                fpath = fpath[-1]
             # formatting is matched with proftpd ls output            
-            path=_to_decode(file.path) #file.path.encode('ascii','replace').replace('?','_')                    
+            path=_to_decode(fpath)
             yield "%s %3s %-8s %-8s %8s %s %s\r\n" %(perms, nlinks, uname, gname,
-                                                     size, mtime, path.split('/')[-1])
+                                                     size, mtime, path)
 
     # Ok
-    def format_mlsx(self, basedir, listing, perms, facts, ignore_err=True):
+    def format_mlsx(self, cr, basedir, listing, perms, facts, ignore_err=True):
         """Return an iterator object that yields the entries of a given
         directory or of a single file in a form suitable with MLSD and
         MLST commands.
@@ -609,15 +613,9 @@ class abstracted_fs(object):
         if 'd' in perms:
             permdir += 'p'
         type = size = perm = modify = create = unique = mode = uid = gid = ""
-        for file in listing:                        
-            try:
-                st = self.stat(file)
-            except OSError:
-                if ignore_err:
-                    continue
-                raise
+        for node in listing:
             # type + perm
-            if stat.S_ISDIR(st.st_mode):
+            if self.isdir(node):
                 if 'type' in facts:
                     type = 'type=dir;'                    
                 if 'perm' in facts:
@@ -628,29 +626,37 @@ class abstracted_fs(object):
                 if 'perm' in facts:
                     perm = 'perm=%s;' %permfile
             if 'size' in facts:
-                size = 'size=%s;' %st.st_size  # file size
+                size = 'size=%s;' % (node.content_length or 0L)
             # last modification time
             if 'modify' in facts:
                 try:
-                    modify = 'modify=%s;' %time.strftime("%Y%m%d%H%M%S",
-                                           time.localtime(st.st_mtime))
+                    st_mtime = node.write_date or 0.0
+                    if isinstance(st_mtime, basestring):
+                        st_mtime = time.strptime(st_mtime, '%Y-%m-%d %H:%M:%S')
+                    elif isinstance(st_mtime, float):
+                        st_mtime = time.localtime(st_mtime)
+                    modify = 'modify=%s;' %time.strftime("%Y%m%d%H%M%S", st_mtime)
                 except ValueError:
                     # stat.st_mtime could fail (-1) if last mtime is too old
                     modify = ""
             if 'create' in facts:
                 # on Windows we can provide also the creation time
                 try:
-                    create = 'create=%s;' %time.strftime("%Y%m%d%H%M%S",
-                                           time.localtime(st.st_ctime))
+                    st_ctime = node.create_date or 0.0
+                    if isinstance(st_ctime, basestring):
+                        st_ctime = time.strptime(st_ctime, '%Y-%m-%d %H:%M:%S')
+                    elif isinstance(st_mtime, float):
+                        st_ctime = time.localtime(st_ctime)
+                    create = 'create=%s;' %time.strftime("%Y%m%d%H%M%S",st_ctime)
                 except ValueError:
                     create = ""
             # UNIX only
             if 'unix.mode' in facts:
-                mode = 'unix.mode=%s;' %oct(st.st_mode & 0777)
+                mode = 'unix.mode=%s;' %oct(node.unixperms & 0777)
             if 'unix.uid' in facts:
-                uid = 'unix.uid=%s;' %st.st_uid
+                uid = 'unix.uid=%s;' % node.uuser
             if 'unix.gid' in facts:
-                gid = 'unix.gid=%s;' %st.st_gid
+                gid = 'unix.gid=%s;' % node.ugroup
             # We provide unique fact (see RFC-3659, chapter 7.5.2) on
             # posix platforms only; we get it by mixing st_dev and
             # st_ino values which should be enough for granting an
@@ -659,10 +665,12 @@ class abstracted_fs(object):
             # Implementors who want to provide unique fact on other
             # platforms should use some platform-specific method (e.g.
             # on Windows NTFS filesystems MTF records could be used).
-            if 'unique' in facts:
-                unique = "unique=%x%x;" %(st.st_dev, st.st_ino)
-            path=_to_decode(file.path)
-            path = path and path.split('/')[-1] or None
+            # if 'unique' in facts: todo
+            #    unique = "unique=%x%x;" %(st.st_dev, st.st_ino)
+            path = node.path
+            if isinstance (path, (list, tuple)):
+                path = path[-1]
+            path=_to_decode(path)
             yield "%s%s%s%s%s%s%s%s%s %s\r\n" %(type, size, perm, modify, create,
                                                 mode, uid, gid, unique, path)
 
