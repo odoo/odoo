@@ -207,7 +207,6 @@
                         <field name="date" select="1"/>
                         <field name="user_id" widget="selection"/>
             		</group>
-            		<separator orientation="vertical"/>
             		<newline/>
             		<group string="Group By..." expand="0">
             			<filter string="General Account" context="{'group_by':'general_account_id'}"/>
@@ -342,7 +341,6 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('journal_id','=',active_id)]</field>
         </record>
         <menuitem action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_entries"/>
         <!-- <record id="action_account_analytic_journal_open_form" model="ir.actions.act_window">
