@@ -666,7 +666,7 @@ class marketing_campaign_workitem(osv.osv):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy':True,
-                'context': "{'template_id':%d,'rel_model_ref':%d}"%
+                'context': "{'template_id':%d,'default_rel_model_ref':%d}"%
                                 (wi_obj.activity_id.email_template_id.id,
                                  wi_obj.res_id)
             }
@@ -690,21 +690,6 @@ class email_template(osv.osv):
         'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
     }
 email_template()
-
-class email_template_preview(osv.osv_memory):
-    _inherit = "email_template.preview"
-
-    def _default_rel_model(self, cr, uid, context=None):
-        if 'rel_model_ref' in context :
-            return context['rel_model_ref']
-        else :
-            return False
-
-    _defaults = {
-        'rel_model_ref' : _default_rel_model
-    }
-
-email_template_preview()
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
