@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-from osv import orm
 import time
+
+from osv import fields,osv
 
 class account_analytic_default(osv.osv):
     _name = 'account.analytic.default'
@@ -38,7 +38,7 @@ class account_analytic_default(osv.osv):
         'date_start': fields.date('Start Date'),
         'date_stop': fields.date('End Date'),
     }
-    def account_get(self, cr, uid, product_id=None, partner_id=None, user_id=None, date=None, context={}):
+    def account_get(self, cr, uid, product_id=None, partner_id=None, user_id=None, date=None, context=None):
         domain = []
         if product_id:
             domain += ['|',('product_id','=',product_id)]
@@ -71,7 +71,7 @@ class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
     _description = 'Invoice Line'
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition=False, price_unit=False, address_invoice_id=False, currency_id=False, context={}):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition, price_unit, address_invoice_id, currency_id=currency_id, context=context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context)
         if rec:
@@ -101,7 +101,7 @@ class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
 
     # Method overridden to set the analytic account by default on criterion match
-    def invoice_line_create(self, cr, uid, ids, context={}):
+    def invoice_line_create(self, cr, uid, ids, context=None):
         create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
         if not ids:
             return create_ids
@@ -116,7 +116,5 @@ class sale_order_line(osv.osv):
         return create_ids
 
 sale_order_line()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
