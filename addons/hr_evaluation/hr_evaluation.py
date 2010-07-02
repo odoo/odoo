@@ -38,7 +38,8 @@ class hr_evaluation_plan(osv.osv):
         'active': fields.boolean('Active')
     }
     _defaults = {
-        'active' : lambda *a: True,
+        'active' : True,
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 hr_evaluation_plan()
 
@@ -172,6 +173,16 @@ class hr_evaluation(osv.osv):
         'state' : lambda *a: 'draft',
     }
 
+    def name_get(self, cr, uid, ids, context={}):
+        if not len(ids):
+            return []
+        reads = self.browse(cr, uid, ids, context)
+        res = []
+        for record in reads:
+            name = record.plan_id.name
+            res.append((record['id'], name))
+        return res
+
     def onchange_employee_id(self, cr, uid, ids, employee_id, context={}):
         employee_obj=self.pool.get('hr.employee')
         evaluation_plan_id=''
@@ -251,6 +262,9 @@ class survey_request(osv.osv):
     _columns = {
         'is_evaluation':fields.boolean('Is Evaluation?'),
     }
+    _defaults = {
+        'state': 'waiting_answer',
+        }
 
 survey_request()
 
@@ -264,7 +278,7 @@ class hr_evaluation_interview(osv.osv):
         'evaluation_id' : fields.many2one('hr_evaluation.evaluation', 'Evaluation Type'),
     }
     _defaults = {
-        'is_evaluation': lambda *a: True,
+        'is_evaluation': True,
     }
 
     def survey_req_waiting_answer(self, cr, uid, ids, context={}):
@@ -274,12 +288,13 @@ class hr_evaluation_interview(osv.osv):
     def survey_req_done(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        self.write(cr, uid, ids, { 'state' : 'done'})
         hr_eval_obj = self.pool.get('hr_evaluation.evaluation')
         for id in self.browse(cr, uid, ids, context=context):
             flag = False
             wating_id = 0
             tot_done_req = 0
+            if not id.evaluation_id.id:
+                raise osv.except_osv(_('Warning !'),_("You cannot start evaluation without Evaluation."))
             records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id],context=context)[0].survey_request_ids
             for child in records:
                 if child.state == "draft" :
@@ -292,8 +307,9 @@ class hr_evaluation_interview(osv.osv):
             if not flag and wating_id:
                 self.survey_req_waiting_answer(cr, uid, [wating_id], context)
             hr_eval_obj.write(cr, uid, [id.evaluation_id.id], {'progress' :tot_done_req * 100 / len(records)}, context=context)
-
+        self.write(cr, uid, ids, { 'state' : 'done'})
         return True
+
     def survey_req_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, { 'state' : 'draft'}, context=context)
         return True

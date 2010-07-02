@@ -291,6 +291,7 @@
                 <form string="Interview Evaluation">
                     <group col="4" colspan="4">
                         <field name="survey_id"/>
+                        <field name="evaluation_id"/>
                         <group col="2" colspan="2">
                             <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
                                 icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
