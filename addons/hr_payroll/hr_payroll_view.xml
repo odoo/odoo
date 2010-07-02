@@ -486,23 +486,8 @@
                             </group>
                         </page>
                         <page string="Accounting Details">
-                            <group col="2" colspan="3">
-                                <separator colspan="4" string="Accounting Informations"/>
-                                <field name="move_ids" colspan="2" nolabel="1" readonly="1">
-                                    <tree string="Accounting Vouchers">
-                                        <field name="sequence"/>
-                                        <field name="name"/>
-                                        <field name="move_id"/>
-                                    </tree>
-                                    <form string="Accounting Vouchers">
-                                        <field name="sequence"/>
-                                        <field name="name"/>
-                                        <field name="move_id"/>
-                                    </form>
-                                </field>
-                            </group>
                             <group col="2" colspan="1">
-                                <separator colspan="4" string="Other Informations"/>
+                                <separator colspan="2" string="Other Informations"/>
                                 <field name="paid" readonly="1"/>
                                 <field name="company_id"/>
                                 <field name="register_id"/>
@@ -511,12 +496,6 @@
                             </group>
                             <separator colspan="4" string="Description"/>
                             <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Account Lines">
-                            <field name="move_line_ids" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Payment Lines">
-                            <field name="move_payment_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
