@@ -1544,7 +1544,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of calendar attendee’s IDs
+        @param ids: List of Event IDs
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values 
         """
@@ -1555,7 +1555,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of calendar attendee’s IDs
+        @param ids: List of Event IDs
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values 
         """
@@ -1566,7 +1566,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of calendar attendee’s IDs
+        @param ids: List of Event IDs
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values 
         """
