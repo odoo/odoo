@@ -349,7 +349,6 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     """
 
     html = ustr(html)
-    urls = []
 
     from lxml.etree import Element, tostring
     try:
@@ -376,7 +375,6 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
         url = link.get('href')
         if url:
             i += 1
-            urls.append(dict(url=ustr(url), tag=ustr(link), title=ustr(title)))
             link.tag = 'span'
             link.text = '%s [%s]' % (link.text, i)
             url_index.append(url)
@@ -822,27 +820,39 @@ class cache(object):
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
-def get_encodings():
-    yield 'utf8'
+def get_encodings(hint_encoding='utf-8'):
+    fallbacks = {
+        'latin1': 'latin9',
+        'iso-8859-1': 'iso8859-15',
+        'cp1252': '1252',
+    }
+    if hint_encoding:
+        yield hint_encoding
+        if hint_encoding.lower() in fallbacks:
+            yield fallbacks[hint_encoding.lower()]
+
+    # some defaults (also taking care of pure ASCII)
+    for charset in ['utf8','latin1']:
+        if not (hint_encoding) or (charset.lower() != hint_encoding.lower()):
+            yield charset
+
     from locale import getpreferredencoding
     prefenc = getpreferredencoding()
-    if prefenc:
+    if prefenc and prefenc.lower() != 'utf-8':
         yield prefenc
-
-        prefenc = {
-            'latin1': 'latin9',
-            'iso-8859-1': 'iso8859-15',
-            'cp1252': '1252',
-        }.get(prefenc.lower())
+        prefenc = fallbacks.get(prefenc.lower())
         if prefenc:
             yield prefenc
 
 
-def ustr(value):
+def ustr(value, hint_encoding='utf-8'):
     """This method is similar to the builtin `str` method, except
-    it will return Unicode string.
+       it will return unicode() string.
 
     @param value: the value to convert
+    @param hint_encoding: an optional encoding that was detected
+                          upstream and should be tried first to
+                          decode ``value``.
 
     @rtype: unicode
     @return: unicode string
@@ -854,12 +864,7 @@ def ustr(value):
     if isinstance(value, unicode):
         return value
 
-    try:
-        return unicode(value)
-    except Exception:
-        pass
-
-    for ln in get_encodings():
+    for ln in get_encodings(hint_encoding):
         try:
             return unicode(value, ln)
         except Exception:
