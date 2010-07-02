@@ -28,5 +28,5 @@
 #
 ##############################################################################
 
-./module_graph.py $@ | dot -Tpng -o > module_graph.png
+`dirname $0`/module_graph.py $@ | dot -Tpng -o > module_graph.png
 
