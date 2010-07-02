@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,26 +15,27 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
 {
-    'name': 'Event Project - Create Retro-Planning to manage your Events',
-    'version': '0.1',
-    'category': 'Generic Modules/Association',
-    'description': """Organization and management of events.
-
-    This module allows you to create retro planning for managing your events.
-""",
-    'author': 'Tiny',
-    'depends': ['project_retro_planning', 'event'],
+    "name" : "marketing_campaign_crm_demo",
+    "version" : "1.0",
+    "depends" : ["marketing_campaign",
+                 "crm",
+                ],
+    "author" : "OpenERP SA",
+    "category": 'Generic Modules/Marketing',
+    "description": """Demo data for the module marketing_campaign.""",
+    'website': 'http://www.openerp.com',
     'init_xml': [],
-    'update_xml': ['wizard/event_project_view.xml', 'event_view.xml'],
-    'demo_xml': [],
+    'update_xml': [],
+    'demo_xml': [
+        'marketing_campaign_demo.xml',
+    ],
     'installable': True,
     'active': False,
-    'certificate': '0069726863885',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -14,29 +14,12 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="marketing_campaign.view_marketing_campaign_activity_form"/>
         <field name="arch" type="xml">
-            <field name="type" position="after">
-                <group colspan="2" ><!--attrs="{'invisible':[('type','!=','mailchimp')]}"-->
-                    <field name="mailchimp_account_id" attrs="{'required':[('type','=','mailchimp')]}" domain="[('state','=','approved')]" on_change="onchange_mailchimp(mailchimp_account_id)"/>
-                    <field name="mailchimp_list" attrs="{'required':[('type','=','mailchimp')]}" on_change="onchange_mailchimp_list(mailchimp_account_id,mailchimp_list)"/>
-                </group>                
-            </field>
-        </field>
-    </record>
-
-
-
-    <record model="ir.ui.view" id="view_marketing_campaign_form_inherit">
-        <field name="name">marketing.campaign.form.inherit</field>
-        <field name="model">marketing.campaign</field>
-        <field name="type">form</field>
-        <field name="inherit_id" ref="marketing_campaign.view_marketing_campaign_form"/>
-        <field name="arch" type="xml">
-            <field name="type" position="after">
+            <xpath expr='//field[@name="type"]/following-sibling::group' position='inside'>
                 <group colspan="2" attrs="{'invisible':[('type','!=','mailchimp')]}">
                     <field name="mailchimp_account_id" attrs="{'required':[('type','=','mailchimp')]}" domain="[('state','=','approved')]" on_change="onchange_mailchimp(mailchimp_account_id)"/>
                     <field name="mailchimp_list" attrs="{'required':[('type','=','mailchimp')]}" on_change="onchange_mailchimp_list(mailchimp_account_id,mailchimp_list)"/>
                 </group>                
-            </field>
+            </xpath>
         </field>
     </record>
 
