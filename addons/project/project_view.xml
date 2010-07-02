@@ -42,7 +42,6 @@
                                 <field name="project_escalation_id"/>
                                 <field name="warn_manager"/>
                             </group>
-
                             <newline/>
                             <group col="9" colspan="8">
                                 <field name="state" select="1"/>
@@ -517,6 +516,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="task_type_tree"/>
         </record>
+
         <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_tasks_config" sequence="1"/>
 
@@ -544,7 +544,6 @@
                 </page>
             </field>
         </record>
-
 
       <!--     User Form-->
       <record id="view_project_users_form_simple" model="ir.ui.view">
