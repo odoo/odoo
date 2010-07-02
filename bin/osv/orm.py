@@ -1767,7 +1767,7 @@ class orm_memory(orm_template):
         for id in self.datas:
             if self.datas[id]['internal.date_access'] < max:
                 tounlink.append(id)
-        self.unlink(cr, uid, tounlink)
+        self.unlink(cr, 1, tounlink)
         if len(self.datas)>self._max_count:
             sorted = map(lambda x: (x[1]['internal.date_access'], x[0]), self.datas.items())
             sorted.sort()
