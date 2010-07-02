@@ -54,9 +54,7 @@ class account_analytic_default(osv.osv):
             domain += ['|',('date_stop','>=',date),('date_stop','=',False)]
         best_index = -1
         res = False
-        print "domain---",domain
         for rec in self.browse(cr, uid, self.search(cr, uid, domain, context=context), context=context):
-            print "innn for--",rec
             index = 0
             if rec.product_id: index+=1
             if rec.partner_id: index+=1
@@ -66,7 +64,6 @@ class account_analytic_default(osv.osv):
             if index>best_index:
                 res = rec
                 best_index = index
-        print "res--",res
         return res
 account_analytic_default()
 
