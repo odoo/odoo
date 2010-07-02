@@ -84,12 +84,12 @@ class marketing_campaign(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'object_id': fields.many2one('ir.model', 'Object', required=True,
-                                      help="Choose the Object on which you want \
+        'object_id': fields.many2one('ir.model', 'Model', required=True,
+                                      help="Choose the model on which you want \
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
                                             domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",
-                                            help="The generated workitems will be linked to the partner related to the record"),
+                                            help="The generated workitems will be linked to the partner related to the record. If the record is the partner itself left this field empty."),
         'mode':fields.selection([('test', 'Test Directly'),
                                 ('test_realtime', 'Test in Realtime'),
                                 ('manual', 'With Manual Confirmation'),
@@ -265,10 +265,14 @@ class marketing_campaign_segment(osv.osv):
                     'state': 'todo',
                     'res_id': o_ids.id
                 }
+
+                partner = None
                 if partner_field:
                     partner = getattr(o_ids, partner_field)
-                    if partner:
-                        wi_vals['partner_id'] = partner.id
+                elif model_obj._name == 'res.partner':
+                    partner = o_ids
+                if partner:
+                    wi_vals['partner_id'] = partner.id
 
                 for act_id in act_ids:
                     wi_vals['activity_id'] = act_id
