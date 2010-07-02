@@ -587,13 +587,12 @@ class marketing_campaign_workitem(osv.osv):
                     #           test    test_realtime     manual      normal (active)
                     # time       Y            N             N           N
                     # signal     N            N             N           N
-                    # auto       Y            Y             N           Y
+                    # auto       Y            Y             Y           Y
                     # 
 
-                    run = False
-                    if transition.trigger != 'signal' and campaign_mode != 'manual':
-                        if transition.trigger == 'auto' or campaign_mode == 'test':
-                            run = True
+                    run = transition.trigger == 'auto' \
+                          or (transition.trigger == 'time' \
+                              and campaign_mode == 'test')
                     if run:
                         new_wi = self.browse(cr, uid, wi_id, context)
                         self._process_one(cr, uid, new_wi, context)
