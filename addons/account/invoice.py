@@ -790,7 +790,7 @@ class account_invoice(osv.osv):
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
-            
+
             entry_type=''
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
@@ -922,7 +922,7 @@ class account_invoice(osv.osv):
             if not number:
                 if obj_inv.journal_id.invoice_sequence_id:
                     sid = obj_inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id=%s', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
+                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
                 else:
                     number = self.pool.get('ir.sequence').get(cr, uid,
                             'account.invoice.' + invtype)
@@ -1028,7 +1028,7 @@ class account_invoice(osv.osv):
 
     def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
         invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id'])
-        
+
         new_ids = []
         for invoice in invoices:
             del invoice['id']
