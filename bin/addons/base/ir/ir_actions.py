@@ -222,6 +222,15 @@ class act_window(osv.osv):
                 res[act.id] = str(form_arch)
         return res
 
+    def _get_help_status(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        for action in self.browse(cr, uid, ids):
+            res[action.id] = True
+            user_ids = map(lambda x:x.id, action.default_user_ids)
+            if uid in user_ids:
+                res[action.id] = False
+        return res
+
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
@@ -247,7 +256,8 @@ class act_window(osv.osv):
         'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
         'menus': fields.char('Menus', size=4096),
-        'help': fields.text('Action description')
+        'help': fields.text('Action description'),
+        'display_help':fields.function(_get_help_status, type='boolean', method=True, string='Display Help')
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',
