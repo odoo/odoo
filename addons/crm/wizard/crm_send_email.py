@@ -130,11 +130,13 @@ class crm_send_new_email(osv.osv_memory):
             if not flag:
                 raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
             if flag:
-                email_dict = {'email_from': email_from, 'email_to': obj.email_to, 'email_cc': email_cc}
-                message = {'subject': obj.subject, 'description': body, 'message_id': message_id, 'ref_id': ref_id ,  'attach': attach}
-                case_pool._history(cr, uid, [case], _('Send'), history=True, emails=email_dict, message=message)
+                case_pool._history(cr, uid, [case], _('Send'), history=True, \
+                                email=obj.email_to, details=body, \
+                                subject=obj.subject, email_from=email_from, \
+                                message_id=message_id, references=ref_id or message_id, attach=attach)
                 if obj.state == 'unchanged':
                     pass
+                elif obj.state == 'done':
                     case_pool.case_close(cr, uid, [case.id])
                 elif obj.state == 'draft':
                     case_pool.case_reset(cr, uid, [case.id])
