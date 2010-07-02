@@ -93,6 +93,8 @@ class project_work(osv.osv):
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
         vals_line = {}
         obj = self.pool.get('hr.analytic.timesheet')
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
@@ -152,7 +154,9 @@ class task(osv.osv):
 
         return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
 
-    def write(self, cr, uid, ids,vals,context={}):
+    def write(self, cr, uid, ids,vals,context=None):
+        if context is None:
+            context = {}
         if (vals.has_key('project_id') and vals['project_id']) or (vals.has_key('name') and vals['name']):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
@@ -178,6 +182,8 @@ class project_project(osv.osv):
     _inherit = "project.project"
 
     def name_get(self, cr, user, ids, context=None):
+        if context is None:
+            context = {}
         result = []
         for project in self.browse(cr, user, ids, context):
             name = "[%s] %s" % (project.category_id and project.category_id.code or '?', project.name)
@@ -187,4 +193,3 @@ class project_project(osv.osv):
 project_project()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
