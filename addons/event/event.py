@@ -176,6 +176,12 @@ class event_event(osv.osv):
         'note': fields.text('Notes', help="Description or Summary of Event"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         "unit_price": fields.float('Cost'),
+        'partner_id': fields.many2one('res.partner','Teacher'),
+        'address_id': fields.many2one('res.partner.address','Location Room'),
+        'teacher_confirmed': fields.boolean('Teacher Confirmed'),
+        'country_id': fields.related('address_id', 'country_id',
+                    type='many2one', relation='res.country', string='Country'),
+
         
     }
 
