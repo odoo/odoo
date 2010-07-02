@@ -857,19 +857,24 @@ def ustr(value, hint_encoding='utf-8'):
     @rtype: unicode
     @return: unicode string
     """
-    orig = value
     if isinstance(value, Exception):
         return exception_to_unicode(value)
 
     if isinstance(value, unicode):
         return value
 
+    if not isinstance(value, basestring):
+        try:
+            return unicode(value)
+        except Exception:
+            raise UnicodeError('unable de to convert %r' % (value,))
+
     for ln in get_encodings(hint_encoding):
         try:
             return unicode(value, ln)
         except Exception:
             pass
-    raise UnicodeError('unable de to convert %r' % (orig,))
+    raise UnicodeError('unable de to convert %r' % (value,))
 
 
 def exception_to_unicode(e):
