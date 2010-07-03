@@ -214,7 +214,7 @@ class crm_case(object):
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool._history(cr, uid, cases, keyword, history=history,\
+        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
                                        message_id=message_id, attach=attach, \

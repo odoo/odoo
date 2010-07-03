@@ -217,7 +217,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         )
 
         if result:
-            case_pool._history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, subject=this.subject, details=body, email_from=email_from, attach=attach)
+            case_pool.history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, subject=this.subject, details=body, email_from=email_from, attach=attach)
         else:
             raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
 
