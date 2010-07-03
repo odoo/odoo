@@ -25,7 +25,7 @@ from osv import fields, osv
 from tools.translate import _
 
 def _employee_get(obj, cr, uid, context=None):
-    ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+    ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)])
     if ids:
         return ids[0]
     return False
@@ -34,15 +34,15 @@ class hr_expense_expense(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default: default = {}
-        default.update( {'invoice_id':False,'date_confirm':False,'date_valid':False,'user_valid':False})
+        default.update({'invoice_id': False, 'date_confirm': False, 'date_valid': False, 'user_valid': False})
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context)
 
-    def _amount(self, cr, uid, ids, field_name, arg, context):
-        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN %s GROUP BY s.id ",(tuple(ids),))
+    def _amount(self, cr, uid, ids, field_name, arg, context=None):
+        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN %s GROUP BY s.id ", (tuple(ids),))
         res = dict(cr.fetchall())
         return res
 
-    def _get_currency(self, cr, uid, context):
+    def _get_currency(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, [uid])[0]
         if user.company_id:
             return user.company_id.currency_id.id
@@ -158,18 +158,17 @@ class hr_expense_expense(osv.osv):
                 'fiscal_position': exp.employee_id.address_id.partner_id.property_account_position.id
             }
             if payment_term_id:
-                to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [],
-                        payment_term_id, None)
+                to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [], payment_term_id, None)
                 if to_update:
                     inv.update(to_update['value'])
             if exp.journal_id:
                 inv['journal_id']=exp.journal_id.id
-            inv_id = invoice_obj.create(cr, uid, inv, {'type':'in_invoice'})
-            invoice_obj.button_compute(cr, uid, [inv_id], {'type':'in_invoice'},
-                    set_total=True)
+            inv_id = invoice_obj.create(cr, uid, inv, {'type': 'in_invoice'})
+            invoice_obj.button_compute(cr, uid, [inv_id], {'type': 'in_invoice'}, set_total=True)
             self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
             res = inv_id
         return res
+
 hr_expense_expense()
 
 class product_product(osv.osv):
@@ -184,7 +183,7 @@ class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
     _description = "Expense Line"
 
-    def _amount(self, cr, uid, ids, field_name, arg, context):
+    def _amount(self, cr, uid, ids, field_name, arg, context=None):
         if not len(ids):
             return {}
         cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id IN %s GROUP BY l.id ",(tuple(ids),))
@@ -204,11 +203,11 @@ class hr_expense_line(osv.osv):
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
-    }
+        }
     _defaults = {
-        'unit_quantity': lambda *a: 1,
-        'date_value' : lambda *a: time.strftime('%Y-%m-%d'),
-    }
+        'unit_quantity': 1,
+        'date_value': time.strftime('%Y-%m-%d'),
+        }
     _order = "sequence"
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
@@ -218,13 +217,11 @@ class hr_expense_line(osv.osv):
         if product_id:
             product=self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v['name']=product.name
-
             # Compute based on pricetype of employee company
             pricetype_id = self.pool.get('hr.employee').browse(cr, uid, employee_id).user_id.company_id.property_valuation_price_type.id
             context['currency_id']=self.pool.get('hr.employee').browse(cr, uid, employee_id).user_id.company_id.currency_id.id
             pricetype=self.pool.get('product.price.type').browse(cr, uid, pricetype_id)
             amount_unit=product.price_get(pricetype.field, context)[product.id]
-
             v['unit_amount']=amount_unit
             if not uom_id:
                 v['uom_id']=product.uom_id.id
