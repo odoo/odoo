@@ -45,37 +45,23 @@
         <field name="arch" type="xml">
             <search string="Leaves">
             	<group>
-                    <filter icon="terp-personal" string="Employee"
-                            domain="[('category_id', '=', False)]"
+                    <filter icon="terp-personal" string="Employee" domain="[('category_id', '=', False)]"
                             help="Leaves by empolyee"/>
-                    <filter icon="terp-stock_symbol-selection" string="Category"
-                            domain="[('employee_id', '=', False)]"
+                    <filter icon="terp-stock_symbol-selection" string="Category" domain="[('employee_id', '=', False)]"
                             help="Leaves by category"/>
 	            	<separator orientation="vertical"/>
 	            	<filter icon="terp-go-year" string="This Year"
-		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-		                    help="Leaves in this year"/>
-	                <filter icon="terp-go-month" string="This Month"
-	                    name="month"
-	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-	                    help="Leaves in this month"/>
-		            <filter icon="terp-go-week"
-	                    string="    7 Days    "
-	                    separator="1"
-	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-	                    help="Leaves during last 7 days"/>
+		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]" help="Leaves in this year"/>
+	                <filter icon="terp-go-month" string="This Month" name="month"
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]" help="Leaves in this month"/>
+		            <filter icon="terp-go-week" string="    7 Days    " separator="1"
+	                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" help="Leaves during last 7 days"/>
 	                <separator orientation="vertical"/>
-	                <filter string="Draft"
-	                	icon="terp-document-new"
-	                	domain="[('state','=','draft')]"
+	                <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]"
 	                	help = "Draft Leaves"/>
-	                <filter string="Waiting Validation"
-	                	icon="terp-gtk-media-pause"
-	                	domain="[('state', '=' ,'confirm')]"
+	                <filter string="Waiting Validation" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]"
 	                	help = "In progress Leaves"/>
-	               	<filter string="Validated"
-	               		icon="terp-camera_test"
-	               		domain="[('state','=','validate')]"
+	               	<filter string="Validated" icon="terp-camera_test" domain="[('state','=','validate')]"
 	               		help = "Pending Leaves"/>
 					<separator orientation="vertical"/>
 					<field name="employee_id" widget="selection"/>
@@ -96,18 +82,14 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Extended options..." colspan="10" col="12">
-                    <filter icon="terp-gtk-stop"
-                            string="Refused"
-                        name="done"
+                    <filter icon="terp-gtk-stop" string="Refused" name="done"
                             domain="[('state','=','refuse')]"/>
                     <separator orientation="vertical"/>
                     <field name="date_from"/>
                     <separator orientation="vertical"/>
                     <field name="holiday_status_id" widget="selection"/>
                     <newline/>
-                    <filter icon="terp-gtk-stop"
-                            string="Cancelled"
-                            domain="[('state','=','cancel')]"/>
+                    <filter icon="terp-gtk-stop" string="Cancelled" domain="[('state','=','cancel')]"/>
                     <separator orientation="vertical"/>
                     <field name="date_to"/>
                     <separator orientation="vertical"/>
@@ -122,7 +104,7 @@
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{"search_default_user_id": uid, 'search_default_month':1,'search_default_Employee':1,'group_by':[]}</field>
+        <field name="context">{"search_default_user_id": uid, 'search_default_month':1, 'search_default_Employee':1, 'group_by':[]} </field>
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 

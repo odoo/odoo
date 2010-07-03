@@ -24,11 +24,10 @@ from report import report_sxw
 import datetime
 
 class expense(report_sxw.rml_parse):
+
     def __init__(self, cr, uid, name, context):
         super(expense, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
-            'time': time,
-        })
+        self.localcontext.update({'time': time, })
 
 report_sxw.report_sxw('report.hr.expense', 'hr.expense.expense', 'addons/hr_expense/report/expense.rml',parser=expense)
 
