@@ -75,7 +75,6 @@ class configmanager(object):
             'smtp_ssl':False,
             'smtp_password': False,
             'stop_after_init': False,   # this will stop the server after initialization
-            'price_accuracy': 2,
             'syslog' : False,
             'log_level': logging.INFO,
             'assert_exit_level': logging.ERROR, # level above which a failed assert will be raised
@@ -141,7 +140,6 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
-        parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='deprecated since v6.0, replaced by module decimal_precision')
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
@@ -257,7 +255,7 @@ class configmanager(object):
 
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout','smtp_ssl',
-                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
+                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',

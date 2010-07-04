@@ -232,7 +232,7 @@ class report_printscreen_list(report_int):
             col.set('tree','float')
             if tsum[f] != None:
                if tsum[f] >= 0.01 :
-                   prec = '%.' +  str(tools.config['price_accuracy'])  + 'f'
+                   prec = '%.2f'
                    total = prec%(tsum[f])
                    txt = str(total or '')
                else:
