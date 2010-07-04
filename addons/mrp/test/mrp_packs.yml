@@ -1,4 +1,4 @@
-- |
+-
   In order to test the Packs in OpenERP, we will try to sell a "Pack of 24
   beers" which is composed of 24 "Beers" and a "Beers Pack".
 - |
@@ -77,8 +77,8 @@
 - |
   I validate the newly created picking.
 - 
-  !python {model: stock.picking}
-    self.draft_validate(cr, uid, [ref("stock_picking_out0")], {
+  !python {model: stock.picking}: |
+    self.draft_validate(cr, uid, [ref("picking_out")], {
         "active_ids": [ref("stock.menu_action_picking_tree")],
         "active_id": ref("stock.menu_action_picking_tree"), }
     )
@@ -87,7 +87,7 @@
   converted to a picking of 24 beers and a pack of beer, so that my
   stock of beers remains exact.
 -
-  !assert {model: stock.picking, id: stock_picking_out0}:
+  !assert {model: stock.picking, id: picking_out}:
     - len(move_ids) == 2
     - move_ids[0].product_id.id <> move_ids[1].product_id.id
     - move_ids[0].product_id.id in (ref('product_product_beers0'), ref('product_product_beerspack0'))
