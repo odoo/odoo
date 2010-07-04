@@ -82,6 +82,7 @@ class configmanager(object):
             'login_message': False,
             'list_db' : True,
             'timezone' : False, # to override the default TZ
+            'test-file' : False,
             'test-disable' : False,
             'test-commit' : False,
         }
@@ -143,6 +144,7 @@ class configmanager(object):
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
+        group.add_option("--test-file", dest="test_file", help="Launch a YML test file.")
         group.add_option("--test-disable", action="store_true", dest="test_disable",
                          default=False, help="Disable loading test files.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
@@ -293,6 +295,7 @@ class configmanager(object):
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
+        self.options["test-file"] =  opt.test_file
         self.options["test-disable"] =  opt.test_disable
         self.options["test-commit"] =  opt.test_commit
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
@@ -467,6 +470,4 @@ config = configmanager()
 # when it starts, to allow doing 'import tools.config' from
 # other python executables without parsing *their* args.
 config.parse_config()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
