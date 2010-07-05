@@ -110,7 +110,6 @@ class ir_translation(osv.osv):
                     'and name=%s ' \
                     'and res_id in %s',
                 (lang, tt, name, tuple(ids)))
-        cr.commit()
         for id in ids:
             self.create(cr, uid, {
                 'lang':lang,
