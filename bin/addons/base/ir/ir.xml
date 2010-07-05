@@ -1481,7 +1481,7 @@
             </field>
         </record>
         <record id="act_ir_actions_todo_form" model="ir.actions.act_window">
-            <field name="name">List of Configuration Wizards</field>
+            <field name="name">Configuration Wizards</field>
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="view_type">form</field>
@@ -1489,7 +1489,7 @@
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" 
-        		parent="base.next_id_4" groups="base.group_extended" sequence="20"/>
+        		parent="next_id_11" groups="base.group_extended" sequence="20"/>
 
         <record id="action_start_configurator" model="ir.actions.server">
           <field name="name">Launch Configuration Wizards</field>
