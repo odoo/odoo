@@ -8,7 +8,7 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-		        <field name="domain">[('user_id','=',uid)]</field>
+            <field name="domain">[('user_id','=',uid)]</field>
             <field name="view_id" ref="hr_holidays.open_allocation_holidays"/>
         </record>
         
@@ -21,6 +21,7 @@
 	        <field name="domain">[('user_id','=',uid)]</field>
 	        <field name="view_id" ref="hr_holidays.view_hr_holidays_remaining_leaves_user_graph"/>
 		</record>
+
         <record id="board_hr_holidays_form" model="ir.ui.view">
             <field name="name">board.hr.holidays.form</field>
             <field name="model">board.board</field>

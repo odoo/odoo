@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,13 +23,17 @@ from osv import fields, osv
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
-    _description = 'Follow-Up'
+    _description = 'Account Follow Up'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-Up'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
+    _defaults = {
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
+                }
+
 followup()
 
 class followup_line(osv.osv):
@@ -42,26 +46,27 @@ class followup_line(osv.osv):
         'start': fields.selection([('days','Net Days'),('end_of_month','End of Month')], 'Type of Term', size=64, required=True),
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
         'description': fields.text('Printed Message', translate=True),
-    }
+                }
+
 followup_line()
 
 class account_move_line(osv.osv):
-    _name = 'account.move.line'
     _inherit = 'account.move.line'
     _columns = {
         'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level'),
         'followup_date': fields.date('Latest Follow-up'),
-    }
+                }
+
 account_move_line()
 
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'follow_up_msg' : fields.text('Follow-up Message', translate=True),
-    }
+                }
 
     _defaults = {
-        'overdue_msg': lambda *a: '''
+        'overdue_msg': '''
 Date : %(date)s
 
 Dear %(partner_name)s,
@@ -75,8 +80,8 @@ Thanks,
 %(user_signature)s
 %(company_name)s
         '''
-    }
+                }
+
 res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

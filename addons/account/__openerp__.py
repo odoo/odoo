@@ -119,7 +119,6 @@ module named account_vouchers
         "wizard/account_bs_report_view.xml"
     ],
     'demo_xml': [
-        #'demo/price_accuracy00.yml',
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',

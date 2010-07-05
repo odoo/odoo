@@ -30,7 +30,7 @@ from report.interface import report_rml
 from report.interface import toxml
 
 one_day = DateTime.RelativeDateTime(days=1)
-month2name = [0,'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+month2name = [0, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 def hour2str(h):
     hours = int(h)
@@ -38,7 +38,10 @@ def hour2str(h):
     return '%02dh%02d' % (hours, minutes)
 
 class report_custom(report_rml):
-    def create_xml(self, cr, uid, ids, datas, context):
+
+    def create_xml(self, cr, uid, ids, datas, context=None):
+        if context is None:
+            context = {}
         month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
         for employee_id in ids:
@@ -67,7 +70,7 @@ class report_custom(report_rml):
                 if attendences and attendences[0]['action'] == 'sign_out':
                     attendences.insert(0, {'name': today.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_in'})
                 if attendences and attendences[-1]['action'] == 'sign_in':
-                    attendences.append({'name' : tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
+                    attendences.append({'name': tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
                 # sum up the attendances' durations
                 for att in attendences:
                     dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
@@ -88,7 +91,6 @@ class report_custom(report_rml):
         %s
         </report>
         ''' % '\n'.join(user_xml)
-
         return xml
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')

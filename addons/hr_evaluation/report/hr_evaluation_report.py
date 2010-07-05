@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import tools
 from osv import fields,osv
 
@@ -75,9 +76,9 @@ class hr_evaluation_report(osv.osv):
                      s.state
                      from
                  hr_evaluation_interview l
-                 left join
+                LEFT JOIN
                      hr_evaluation_evaluation s on (s.id=l.evaluation_id)
-                 group by
+                 GROUP BY
                      s.create_date,
                      date_trunc('day',s.create_date),
                      to_char(s.create_date, 'YYYY-MM-DD'),
@@ -92,5 +93,8 @@ class hr_evaluation_report(osv.osv):
                      s.plan_id
             )
         """)
+
 hr_evaluation_report()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
