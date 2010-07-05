@@ -169,7 +169,8 @@ class rml_parse(object):
             'logo' : user.company_id.logo,
             'lang' : user.company_id.partner_id.lang,
             'translate' : self._translate,
-            'setHtmlImage' : self.set_html_image
+            'setHtmlImage' : self.set_html_image,
+            'time': time,
         }
         self.localcontext.update(context)
         self.rml_header = user.company_id.rml_header
