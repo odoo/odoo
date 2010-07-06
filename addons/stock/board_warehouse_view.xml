@@ -43,8 +43,7 @@
             <field name="view_id" ref="board_warehouse_form"/>
         </record>
 
-		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
-        <menuitem id="menu_board_warehouse_main" name="Warehouse" parent="base.dashboard"/>
-        <menuitem action="open_board_warehouse" icon="terp-graph" id="menu_board_warehouse" parent="menu_board_warehouse_main" sequence="1"/>
+		<menuitem icon="terp-graph" id="menu_dashboard_stock" name="Dashboard" sequence="0" parent="stock.next_id_61"/>
+        <menuitem action="open_board_warehouse" icon="terp-graph" id="menu_board_warehouse" parent="menu_dashboard_stock" sequence="1"/>
     </data>
 </openerp>

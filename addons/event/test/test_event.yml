@@ -63,6 +63,7 @@
     register_min: 0.0
     state: draft
     type: 'event_type_conference0'
+    reply_to: 'info@customer.com'
     
 - |
   we  set the limit of registrations to this event using "Minimum Registrations"  2 and "Maximum Registrations" 10
@@ -172,18 +173,6 @@
      obj_event = self.browse(cr, uid, [ref('event_event_conference0')])[0]
      assert  obj_event.register_current == '2'
      assert obj_event.register_prospect == '1'
-    
-- |
-  We check all registered partners to this event using the wizard "List Register Partners".
-- 
-  !record {model: event.partners.list, id: event_partners_list_0}:
-    {}
-- 
-  I click on "Open Partners" button of "List Register Partners" wizard.
-- 
-  !python {model: event.partners.list}: |
-    self.list_partners(cr, uid, [ref("event_partners_list_0")], {"active_ids":
-      [ref("event.event_event_conference0")]})
 
 - |
   This event is finished by click on "Event Done" button of this event form.

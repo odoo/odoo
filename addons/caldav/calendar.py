@@ -117,7 +117,7 @@ def get_attribute_mapping(cr, uid, calname, context={}):
         res['uid']['type'] = "integer"
     return res
 
-def map_data(cr, uid, obj):
+def map_data(cr, uid, obj, context=None):
     """ Map Data
         @param self: The object pointer
         @param cr: the current row, from the database cursor,"""
@@ -144,7 +144,7 @@ def map_data(cr, uid, obj):
                 model = obj.__attribute__[map_dict].get('object', False)
                 modobj = obj.pool.get(model)
                 for map_vall in map_val:
-                    id = modobj.create(cr, uid, map_vall)
+                    id = modobj.create(cr, uid, map_vall, context=context)
                     ids.append(id)
                 vals[field] = [(6, 0, ids)]
                 continue
@@ -155,7 +155,15 @@ def map_data(cr, uid, obj):
                     continue
                 model = obj.__attribute__[map_dict].get('object', False)
                 modobj = obj.pool.get(model)
-                id = modobj.create(cr, uid, map_val)
+                # check if the record exists or not
+                key1 = map_val.keys()
+                value1 = map_val.values()
+                domain = [(key1[i], '=', value1[i]) for i in range(len(key1)) if value1[i]]
+                exist_id = modobj.search(cr, uid, domain, context=context)
+                if exist_id:
+                    id = exist_id[0]
+                else:
+                    id = modobj.create(cr, uid, map_val, context=context)
                 vals[field] = id
                 continue
             if field_type == 'timedelta':
@@ -245,7 +253,7 @@ class CalDAV(object):
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
                     self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
-        vals = map_data(cr, uid, self)
+        vals = map_data(cr, uid, self, context=context)
         return vals
 
     def create_ics(self, cr, uid, datas, name, ical, context=None):
@@ -874,7 +882,7 @@ class Timezone(CalDAV, osv.osv_memory):
             if child.name.lower() == 'tzid':
                 tzname = child.value
                 self.ical_set(child.name.lower(), tzname, 'value')
-        vals = map_data(cr, uid, self)
+        vals = map_data(cr, uid, self, context=context)
         return vals
 
 Timezone()
@@ -969,7 +977,7 @@ class Alarm(CalDAV, osv.osv_memory):
                         self.ical_set('trigger_related', child.params.get('related')[0].lower(), 'value')
             else:
                 self.ical_set(child.name.lower(), child.value.lower(), 'value')
-        vals = map_data(cr, uid, self)
+        vals = map_data(cr, uid, self, context=context)
         return vals
 
 Alarm()
@@ -1013,7 +1021,7 @@ class Attendee(CalDAV, osv.osv_memory):
                 self.ical_set(para.lower(), ical_data.params[para][0].lower(), 'value')
         if not ical_data.params.get('CN'):
             self.ical_set('cn', ical_data.value, 'value')
-        vals = map_data(cr, uid, self)
+        vals = map_data(cr, uid, self, context=context)
         return vals
 
     def export_cal(self, cr, uid, model, attendee_ids, vevent, context={}):

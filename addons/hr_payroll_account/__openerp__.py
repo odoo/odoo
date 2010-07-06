@@ -38,7 +38,6 @@
     ],
     'update_xml': [
         "hr_payroll_account_view.xml",
-        "hr_payroll_account_workflow.xml"
     ],
     'demo_xml': [
     ],

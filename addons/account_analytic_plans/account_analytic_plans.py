@@ -19,15 +19,9 @@
 #
 ##############################################################################
 from lxml import etree
-
-from mx import DateTime
-from mx.DateTime import now
 import time
 
-import netsvc
-from osv import fields, osv,orm
-import ir
-
+from osv import fields, osv
 import tools
 from tools.translate import _
 
@@ -64,6 +58,7 @@ account_analytic_plan()
 class account_analytic_plan_line(osv.osv):
     _name = "account.analytic.plan.line"
     _description = "Analytic Plan Line"
+    _order = "sequence, id"
     _columns = {
         'plan_id':fields.many2one('account.analytic.plan','Analytic Plan'),
         'name': fields.char('Plan Name', size=64, required=True, select=True),
@@ -73,16 +68,15 @@ class account_analytic_plan_line(osv.osv):
         'max_required': fields.float('Maximum Allowed (%)'),
     }
     _defaults = {
-        'min_required': lambda *args: 100.0,
-        'max_required': lambda *args: 100.0,
+        'min_required': 100.0,
+        'max_required': 100.0,
     }
-    _order = "sequence,id"
 account_analytic_plan_line()
 
 class account_analytic_plan_instance(osv.osv):
-    _name='account.analytic.plan.instance'
+    _name = 'account.analytic.plan.instance'
     _description = 'Analytic Plan Instance'
-    _columns={
+    _columns = {
         'name':fields.char('Analytic Distribution', size=64),
         'code':fields.char('Distribution Code', size=16),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal' ),
@@ -116,7 +110,9 @@ class account_analytic_plan_instance(osv.osv):
                 'account4_ids':False, 'account5_ids':False, 'account6_ids':False})
         return super(account_analytic_plan_instance, self).copy(cr, uid, id, default, context)
 
-    def _default_journal(self, cr, uid, context={}):
+    def _default_journal(self, cr, uid, context=None):
+        if not context:
+            context = {}
         if context.has_key('journal_id') and context['journal_id']:
             journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
             if journal.analytic_journal_id:
@@ -124,10 +120,10 @@ class account_analytic_plan_instance(osv.osv):
         return False
 
     _defaults = {
-        'plan_id': lambda *args: False,
+        'plan_id': False,
         'journal_id': _default_journal,
     }
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         res = []
         for inst in self.browse(cr, uid, ids, context):
             name = inst.name or '/'
@@ -207,7 +203,7 @@ class account_analytic_plan_instance(osv.osv):
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context)
 
-    def write(self, cr, uid, ids, vals, context={}, check=True, update_check=True):
+    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         this = self.browse(cr, uid, ids[0])
         if this.plan_id and not vals.has_key('plan_id'):
             #this instance is a model, so we have to create a new plan instance instead of modifying it
@@ -237,9 +233,9 @@ class account_analytic_plan_instance_line(osv.osv):
         'rate':fields.float('Rate (%)', required=True),
     }
     _defaults = {
-        'rate': lambda *args: 100.0
+        'rate': 100.0
     }
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
         reads = self.read(cr, uid, ids, ['analytic_account_id'], context)
@@ -297,7 +293,7 @@ class account_move_line(osv.osv):
             del(data['analytics_id'])
         return data
 
-    def create_analytic_lines(self, cr, uid, ids, context={}):
+    def create_analytic_lines(self, cr, uid, ids, context=None):
         super(account_move_line, self).create_analytic_lines(cr, uid, ids, context)
         analytic_line_obj = self.pool.get('account.analytic.line')
         for line in self.browse(cr, uid, ids, context):
@@ -333,7 +329,7 @@ class account_invoice(osv.osv):
     _name = "account.invoice"
     _inherit="account.invoice"
 
-    def line_get_convert(self, cr, uid, x, part, date, context={}):
+    def line_get_convert(self, cr, uid, x, part, date, context=None):
         res=super(account_invoice,self).line_get_convert(cr, uid, x, part, date, context)
         res['analytics_id']=x.get('analytics_id',False)
         return res
@@ -399,7 +395,7 @@ class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
 
     # Method overridden to set the analytic account by default on criterion match
-    def invoice_line_create(self, cr, uid, ids, context={}):
+    def invoice_line_create(self, cr, uid, ids, context=None):
         create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
         if ids:
             sale_line_obj = self.browse(cr, uid, ids[0], context)

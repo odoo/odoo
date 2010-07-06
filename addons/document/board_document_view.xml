@@ -50,11 +50,13 @@
             <field name="view_id" ref="board_document_manager_form"/>
          </record>
 
-        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+        <menuitem id="menu_reporting" name="Reporting" sequence="2" parent="knowledge.menu_document"/>
          <menuitem
-            name="Document"
+            name="Dashboard"
             id="menu_board_document"
-            parent="base.dashboard"
+            parent="menu_reporting"
+            sequence="0"
+            icon="terp-graph"
             groups="document.group_document_manager"/>
 
 

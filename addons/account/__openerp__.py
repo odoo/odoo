@@ -21,7 +21,6 @@
 {
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "depends" : ["product", "analytic", "process","board"],
     "author" : "Tiny",
     "category": 'Generic Modules/Accounting',
     "description": """Financial and accounting module that covers:
@@ -42,6 +41,7 @@ The processes like maintaining of general ledger is done through the defined fin
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
 module named account_vouchers
     """,
+    "depends" : ["product", "analytic", "process","board"],
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
@@ -119,7 +119,6 @@ module named account_vouchers
         "wizard/account_bs_report_view.xml"
     ],
     'demo_xml': [
-        #'demo/price_accuracy00.yml',
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',

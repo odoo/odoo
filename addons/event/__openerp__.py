@@ -51,6 +51,7 @@
         'security/event_security.xml',
         'security/ir.model.access.csv',
         'wizard/event_make_invoice_view.xml',
+        'wizard/partner_event_registration_view.xml',
         'board_association_view.xml',
     ],
     'demo_xml': ['event_demo.xml', 'board_association_demo.xml'],

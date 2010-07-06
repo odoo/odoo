@@ -29,7 +29,10 @@ class project_phase(osv.osv):
     _name = "project.phase"
     _description = "Project Phase"
 
-    def _check_recursion(self, cr, uid, ids, context={}):
+    def _check_recursion(self, cr, uid, ids, context=None):
+         if context is None:
+            context = {}
+
          data_phase = self.browse(cr, uid, ids[0], context=context)
          prev_ids = data_phase.previous_phase_ids
          next_ids = data_phase.next_phase_ids
@@ -45,7 +48,7 @@ class project_phase(osv.osv):
          next_ids = [rec.id for rec in next_ids]
          # iter prev_ids
          while prev_ids:
-             cr.execute('select distinct prv_phase_id from project_phase_rel where next_phase_id IN %s',(tuple(prev_ids),))
+             cr.execute('SELECT distinct prv_phase_id FROM project_phase_rel WHERE next_phase_id IN %s', (tuple(prev_ids),))
              prv_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
              if data_phase.id in prv_phase_ids:
                  return False
@@ -55,7 +58,7 @@ class project_phase(osv.osv):
              prev_ids = prv_phase_ids
          # iter next_ids
          while next_ids:
-             cr.execute('select distinct next_phase_id from project_phase_rel where prv_phase_id IN %s',(tuple(next_ids),))
+             cr.execute('SELECT distinct next_phase_id FROM project_phase_rel WHERE prv_phase_id IN %s', (tuple(next_ids),))
              next_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
              if data_phase.id in next_phase_ids:
                  return False
@@ -65,19 +68,19 @@ class project_phase(osv.osv):
              next_ids = next_phase_ids
          return True
 
-    def _check_dates(self, cr, uid, ids, context={}):
+    def _check_dates(self, cr, uid, ids, context=None):
          for phase in self.read(cr, uid, ids, ['date_start', 'date_end'], context=context):
              if phase['date_start'] and phase['date_end'] and phase['date_start'] > phase['date_end']:
                  return False
          return True
 
-    def _check_constraint_start(self, cr, uid, ids, context={}):
+    def _check_constraint_start(self, cr, uid, ids, context=None):
          phase = self.read(cr, uid, ids[0], ['date_start', 'constraint_date_start'], context=context)
          if phase['date_start'] and phase['constraint_date_start'] and phase['date_start'] < phase['constraint_date_start']:
              return False
          return True
 
-    def _check_constraint_end(self, cr, uid, ids, context={}):
+    def _check_constraint_end(self, cr, uid, ids, context=None):
          phase = self.read(cr, uid, ids[0], ['date_end', 'constraint_date_end'], context=context)
          if phase['date_end'] and phase['constraint_date_end'] and phase['date_end'] > phase['constraint_date_end']:
              return False
@@ -97,7 +100,7 @@ class project_phase(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Duration UoM', required=True, help="UoM (Unit of Measure) is the unit of measurement for Duration"),
         'task_ids': fields.one2many('project.task', 'phase_id', "Project Tasks"),
         'resource_ids': fields.one2many('project.resource.allocation', 'phase_id', "Project Resources"),
-        'responsible_id':fields.many2one('res.users', 'Responsible'),
+        'responsible_id': fields.many2one('res.users', 'Responsible'),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the phase is created the state \'Draft\'.\n If the phase is started, the state becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' state.\
                                   \n If the phase is over, the states is set to \'Done\'.')
@@ -116,7 +119,7 @@ class project_phase(osv.osv):
         #(_check_constraint_end, 'Phase must end-before constraint end Date.', ['date_end', 'constraint_date_end']),
     ]
 
-    def onchange_project(self, cr, uid, ids, project, context={}):
+    def onchange_project(self, cr, uid, ids, project, context=None):
         result = {}
         project_obj = self.pool.get('project.project')
         if project:
@@ -126,7 +129,9 @@ class project_phase(osv.osv):
                 return {'value': result}
         return {'value': {'date_start': []}}
 
-    def _check_date_start(self, cr, uid, phase, date_end, context={}):
+    def _check_date_start(self, cr, uid, phase, date_end, context=None):
+       if context is None:
+            context = {}
        """
        Check And Compute date_end of phase if change in date_start < older time.
        """
@@ -147,7 +152,9 @@ class project_phase(osv.osv):
        dt_start = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [phase.id], {'date_start': dt_start, 'date_end': date_end.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
-    def _check_date_end(self, cr, uid, phase, date_start, context={}):
+    def _check_date_end(self, cr, uid, phase, date_start, context=None):
+       if context is None:
+            context = {}
        """
        Check And Compute date_end of phase if change in date_end > older time.
        """
@@ -168,11 +175,11 @@ class project_phase(osv.osv):
        dt_end = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [phase.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'), 'date_end': dt_end}, context=context)
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         resource_calendar_obj = self.pool.get('resource.calendar')
         resource_obj = self.pool.get('resource.resource')
         uom_obj = self.pool.get('product.uom')
-        if not context:
+        if context is None:
             context = {}
         if context.get('scheduler',False):
             return super(project_phase, self).write(cr, uid, ids, vals, context=context)
@@ -191,7 +198,7 @@ class project_phase(osv.osv):
         # Change the date_start and date_end
         # for previous and next phases respectively based on valid condition
         if vals.get('date_start', False) and vals['date_start'] < phase.date_start:
-                dt_start = mx.DateTime.strptime(vals['date_start'],'%Y-%m-%d %H:%M:%S')
+                dt_start = mx.DateTime.strptime(vals['date_start'], '%Y-%m-%d %H:%M:%S')
                 work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
                 if work_times:
                     vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
@@ -214,7 +221,7 @@ class project_phase(osv.osv):
         self.write(cr, uid, ids, {'state': 'open'})
         return True
 
-    def set_pending(self, cr, uid, ids,*args):
+    def set_pending(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'pending'})
         return True
 

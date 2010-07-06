@@ -27,7 +27,7 @@ class auction_pay_sel(osv.osv_memory):
     _description = "Pay Invoice"
     
     _columns= {
-       'amount': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy'])), required=True), 
+       'amount': fields.float('Amount paid', digits= (16, 2), required=True), 
        'dest_account_id':fields.many2one('account.account', 'Payment to Account', required=True, domain= [('type', '=', 'cash')]), 
        'journal_id':fields.many2one('account.journal', 'Journal', required=True), 
        'period_id':fields.many2one('account.period', 'Period', required=True), 

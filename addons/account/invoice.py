@@ -45,11 +45,11 @@ class account_invoice(osv.osv):
             res[invoice.id]['amount_total'] = res[invoice.id]['amount_tax'] + res[invoice.id]['amount_untaxed']
         return res
 
-    def _get_journal(self, cr, uid, context):
+    def _get_journal(self, cr, uid, context=None):
         if context is None:
             context = {}
         type_inv = context.get('type', 'out_invoice')
-        user = self.pool.get('res.users').browse(cr, uid, uid)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         company_id = context.get('company_id', user.company_id.id)
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale_refund', 'in_refund': 'purchase_refund'}
         refund_journal = {'out_invoice': False, 'in_invoice': False, 'out_refund': True, 'in_refund': True}
@@ -63,7 +63,7 @@ class account_invoice(osv.osv):
         else:
             return False
 
-    def _get_currency(self, cr, uid, context):
+    def _get_currency(self, cr, uid, context=None):
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
         if user.company_id:
             return user.company_id.currency_id.id
@@ -81,10 +81,9 @@ class account_invoice(osv.osv):
     def _get_type(self, cr, uid, context=None):
         if context is None:
             context = {}
-        type = context.get('type', 'out_invoice')
-        return type
+        return context.get('type', 'out_invoice')
 
-    def _reconciled(self, cr, uid, ids, name, args, context):
+    def _reconciled(self, cr, uid, ids, name, args, context=None):
         res = {}
         for id in ids:
             res[id] = self.test_paid(cr, uid, [id])
@@ -95,8 +94,11 @@ class account_invoice(osv.osv):
 
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         res = {}
-        data_inv = self.browse(cr, uid, ids)
         cur_obj = self.pool.get('res.currency')
+        data_inv = self.browse(cr, uid, ids)
+        if context is None:
+            context = {}
+
         for inv in data_inv:
             debit = credit = 0.0
             context.update({'date':inv.date_invoice})
@@ -188,7 +190,7 @@ class account_invoice(osv.osv):
             result[invoice.id] = lines
         return result
 
-    def _get_invoice_from_line(self, cr, uid, ids, context={}):
+    def _get_invoice_from_line(self, cr, uid, ids, context=None):
         move = {}
         for line in self.pool.get('account.move.line').browse(cr, uid, ids):
             if line.reconcile_partial_id:
@@ -202,7 +204,7 @@ class account_invoice(osv.osv):
             invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('move_id','in',move.keys())], context=context)
         return invoice_ids
 
-    def _get_invoice_from_reconcile(self, cr, uid, ids, context={}):
+    def _get_invoice_from_reconcile(self, cr, uid, ids, context=None):
         move = {}
         for r in self.pool.get('account.move.reconcile').browse(cr, uid, ids):
             for line in r.line_partial_ids:
@@ -317,12 +319,12 @@ class account_invoice(osv.osv):
     _defaults = {
         'type': _get_type,
         #'date_invoice': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'state': 'draft',
         'journal_id': _get_journal,
         'currency_id': _get_currency,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', context=c),
-        'reference_type': lambda *a: 'none',
-        'check_total': lambda *a: 0.0,
+        'reference_type': 'none',
+        'check_total': 0.0,
         'user_id': lambda s, cr, u, c: u,
     }
 
@@ -339,16 +341,15 @@ class account_invoice(osv.osv):
                     view_id = self.pool.get('ir.ui.view').search(cr,uid,[('name','=','account.invoice.form')])[0]
         return super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         try:
             res = super(account_invoice, self).create(cr, uid, vals, context)
             return res
-        except Exception,e:
+        except Exception, e:
             if '"journal_id" viol' in e.args[0]:
                 raise orm.except_orm(_('Configuration Error!'),
                      _('There is no Accounting Journal of type Sale/Purchase defined!'))
             else:
-                raise
                 raise orm.except_orm(_('UnknownError'), str(e))
 
     def confirm_paid(self, cr, uid, ids, context=None):
@@ -767,6 +768,8 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         context = {}
         for inv in self.browse(cr, uid, ids):
+            if not inv.journal_id.invoice_sequence_id:
+                raise osv.except_osv(_('Error !'), _('Please define invoice sequence on invoice journal'))
             if not inv.invoice_line:
                 raise osv.except_osv(_('No Invoice Lines !'), _('Please create some invoice lines.'))
             if inv.move_id:
@@ -790,7 +793,7 @@ class account_invoice(osv.osv):
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
-            
+
             entry_type=''
             if inv.type in ('in_invoice', 'in_refund'):
                 ref = inv.reference
@@ -922,7 +925,7 @@ class account_invoice(osv.osv):
             if not number:
                 if obj_inv.journal_id.invoice_sequence_id:
                     sid = obj_inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id=%s', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
+                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
                 else:
                     number = self.pool.get('ir.sequence').get(cr, uid,
                             'account.invoice.' + invtype)
@@ -1028,7 +1031,7 @@ class account_invoice(osv.osv):
 
     def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
         invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id'])
-        
+
         new_ids = []
         for invoice in invoices:
             del invoice['id']
@@ -1224,8 +1227,8 @@ class account_invoice_line(osv.osv):
         'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
     }
     _defaults = {
-        'quantity': lambda *a: 1,
-        'discount': lambda *a: 0.0,
+        'quantity': 1,
+        'discount': 0.0,
         'price_unit': _price_unit_default,
     }
 
@@ -1568,4 +1571,7 @@ class res_partner(osv.osv):
     _columns = {
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
+
 res_partner()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

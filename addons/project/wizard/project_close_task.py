@@ -33,9 +33,11 @@ class project_close_task(osv.osv_memory):
     _columns = {
         'email': fields.char('E-Mail', size=64, help="Email Address"),
         'description': fields.text('Description'),
-               }
+        }
 
-    def _get_email(self, cr, uid, context={}):
+    def _get_email(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         email = ''
         if 'task_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['task_id'])
@@ -44,7 +46,9 @@ class project_close_task(osv.osv_memory):
                 email = partner_id.address[0].email
         return email
 
-    def _get_desc(self, cr, uid, context={}):
+    def _get_desc(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'task_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['task_id'])
             return task.description or task.name
@@ -55,7 +59,9 @@ class project_close_task(osv.osv_memory):
        'description': _get_desc,
                }
 
-    def confirm(self, cr, uid, ids, context={}):
+    def confirm(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         if not 'task_id' in context:
             return {}
         close_task = self.read(cr, uid, ids[0], [])

@@ -94,7 +94,6 @@ class StockMove(osv.osv):
                         'location_id': move.location_id.id,
                         'procure_method': prodobj.procure_method,
                         'move_id': mid,
-                        'company_id': line['company_id'],
                     })
                     wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 move_obj.write(cr, uid, [move.id], {

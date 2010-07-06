@@ -1143,7 +1143,7 @@ class account_move(osv.osv):
         return amount
 
     def _centralise(self, cr, uid, move, mode, context=None):
-        assert(mode in ('debit', 'credit'), 'Invalid Mode') #to prevent sql injection
+        assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
         if context is None:
             context = {}
 
@@ -1199,6 +1199,7 @@ class account_move(osv.osv):
     #
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
+
     def validate(self, cr, uid, ids, context={}):
         if context and ('__last_update' in context):
             del context['__last_update']
@@ -1229,13 +1230,7 @@ class account_move(osv.osv):
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
                         raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
 
-            # Check that the move balances, the tolerance for debit/credit must
-            # be smaller than the smallest value according to price accuracy
-            # (hence the +1 below)
-            # Example:
-            #    difference == 0.01 is OK iff price_accuracy <= 1!
-            #    difference == 0.0001 is OK iff price_accuracy <= 3!
-            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):
+            if abs(amount) < 10 ** -4:
                 if not len(line_draft_ids):
                     continue
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
@@ -1283,11 +1278,11 @@ class account_move(osv.osv):
                     'state': 'draft'
                 }, context, check=False)
                 ok = False
-            if ok:
-                list_ids = []
-                for tmp in move.line_id:
-                    list_ids.append(tmp.id)
-                self.pool.get('account.move.line').create_analytic_lines(cr, uid, list_ids, context)
+        if ok:
+            list_ids = []
+            for tmp in move.line_id:
+                list_ids.append(tmp.id)
+            self.pool.get('account.move.line').create_analytic_lines(cr, uid, list_ids, context)
         return ok
 account_move()
 
@@ -2056,7 +2051,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
     def _get_def_cparent(self, cr, uid, context):
         acc_obj=self.pool.get('account.account')
         tmpl_obj=self.pool.get('account.account.template')
-        #print "Searching for ",context
         tids=tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
         if not tids or not tids[0]['parent_id']:
             return False
@@ -2098,7 +2092,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
             # 'tax_ids': [(6,0,tax_ids)], todo!!
             'company_id': company_id,
             }
-        # print "Creating:", vals
         new_account = acc_obj.create(cr, uid, vals)
         return {'type':'state', 'state': 'end' }
 

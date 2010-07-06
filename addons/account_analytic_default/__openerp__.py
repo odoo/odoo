@@ -19,11 +19,10 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'Account Analytic Default',
-    'version': '1.0',
-    'category': 'Generic Modules/Accounting',
+    'name'      : 'Account Analytic Default',
+    'version'   : '1.0',
+    'category'  : 'Generic Modules/Accounting',
     'description': """
 Allows to automatically select analytic accounts based on criterions:
 * Product
@@ -32,14 +31,15 @@ Allows to automatically select analytic accounts based on criterions:
 * Company
 * Date
     """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['account', 'sale'],
-    'init_xml': [],
+    'author'    : 'Tiny',
+    'website'   : 'http://www.openerp.com',
+    'depends'   : ['account', 'sale'],
+    'init_xml'  : [],
     'update_xml': ['security/ir.model.access.csv', 'account_analytic_default_view.xml'],
-    'demo_xml': [],
+    'demo_xml'  : [],
     'installable': True,
     'active': False,
     'certificate': '0074229833581',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

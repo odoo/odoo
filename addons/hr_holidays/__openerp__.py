@@ -21,11 +21,11 @@
 
 
 {
-    "name" : "Human Resources: Holidays management",
-    "version" : "1.5",
-    "author" : "Tiny & Axelor",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
+    "name": "Human Resources: Holidays management",
+    "version": "1.5",
+    "author": "Tiny & Axelor",
+    "category": "Generic Modules/Human Resources",
+    "website": "http://www.openerp.com",
     "description": """Human Ressources: Holidays tracking and workflow
 
     This module allows you to manage leaves and leaves requests.
@@ -64,7 +64,7 @@
         'wizard/hr_holidays_summary_employees_view.xml',
         'board_hr_holidays_view.xml',
         #'process/hr_holidays_process.xml'
-    ],
+        ],
     'demo_xml': ['hr_holidays_demo.xml',],
     'test': ['test/test_hr_holiday.yml'],
     'installable': True,

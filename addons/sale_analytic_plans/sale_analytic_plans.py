@@ -19,16 +19,12 @@
 #
 ##############################################################################
 import time
-from mx import DateTime
 
-import netsvc
 from osv import fields, osv
-import ir
-from tools import config
 
 class sale_order_line(osv.osv):
-    _name='sale.order.line'
-    _inherit='sale.order.line'
+    _name = 'sale.order.line'
+    _inherit = 'sale.order.line'
     _columns = {
         'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
     }
