@@ -1441,7 +1441,7 @@ class stock_move(osv.osv):
         return super(stock_move, self).copy(cr, uid, id, default, context=context)
 
     def _auto_init(self, cursor, context=None):
-        res = super(stock_move, self)._auto_init(cursor, context=contexts)
+        res = super(stock_move, self)._auto_init(cursor, context=context)
         cursor.execute('SELECT indexname \
                 FROM pg_indexes \
                 WHERE indexname = \'stock_move_location_id_location_dest_id_product_id_state\'')
