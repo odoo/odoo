@@ -52,11 +52,15 @@ class partner_event_registration(osv.osv_memory):
         record_ids = context and context.get('active_ids', []) or []
         addr = res_obj.address_get(cr, uid, record_ids)
         contact_id = False
+        email = False
         if addr.has_key('default'):
                 job_ids = self.pool.get('res.partner.job').search(cr, uid, [('address_id', '=', addr['default'])])
                 if job_ids:
-                    contact_id = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0]).contact_id.id
-         
+                    contact = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0])
+                    if contact:
+                        contact_id = contact.contact_id.id
+                        email = contact.email
+                         
         event_obj = self.pool.get('event.event')
         reg_obj = self.pool.get('event.registration')
         mod_obj = self.pool.get('ir.model.data')
@@ -83,6 +87,7 @@ class partner_event_registration(osv.osv_memory):
                         'partner_invoice_id' :  record_ids[0] or False,
                         'event_product': current.event_id.product_id.name,
                         'contact_id': contact_id,
+                        'email_from': email,
                         'nb_register': current.nb_register,
  
                 }, context=context)

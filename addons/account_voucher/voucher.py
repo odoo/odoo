@@ -51,7 +51,7 @@ ir_sequence_type()
 class account_journal(osv.osv):
     _inherit = "account.journal"
     _columns = {
-        'max_amount': fields.float('Verify Transaction', digits=(16, int(config['price_accuracy'])), help="Validate voucher entry twice before posting it, if transection amount more then entered here"),
+        'max_amount': fields.float('Verify Transaction', digits=(16, 2), help="Validate voucher entry twice before posting it, if transection amount more then entered here"),
     }
 account_journal()
 
