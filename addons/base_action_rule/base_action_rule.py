@@ -430,10 +430,11 @@ class ir_cron(osv.osv):
             next = datetime.now().strftime('%Y-%m-%d %H:00:00')
             # Putting nextcall always less than current time in order to call it every time
             cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
-            super(ir_cron, self)._poolJobs(db_name, check=check)
         finally:
             cr.commit()
             cr.close()
+
+        super(ir_cron, self)._poolJobs(db_name, check=check)
 
 ir_cron()
 
