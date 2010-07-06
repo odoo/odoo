@@ -300,9 +300,11 @@ class abstracted_fs(object):
         if os.path.isabs(path):
             # we have to start from root, again
             p_parts = p_parts[1:]
+            if not p_parts:
+                raise IOError(errno.EPERM, 'Cannot perform operation at root dir')
             dbname = p_parts[0]
             if dbname not in self.db_list():
-                return None
+                return IOError(errno.ENOENT,'Invalid database path')
             try:
                 db = pooler.get_db(dbname)
             except Exception:
