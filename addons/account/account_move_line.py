@@ -62,6 +62,9 @@ class account_move_line(osv.osv):
         else:
             query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
 
+        if context.get('journal_ids', False):
+            query += ' AND '+obj+'.journal_id in (%s)' % ','.join(map(str, context['journal_ids']))
+
         if context.get('period_manner','') == 'created':
             #the query have to be build with no reference to periods but thanks to the creation date
             if context.get('periods',False):
