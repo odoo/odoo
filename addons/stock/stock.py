@@ -20,15 +20,13 @@
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import time
 
 from osv import fields, osv
 from tools import config
 from tools.translate import _
-import math
 import netsvc
-import time
 import tools
-
 import decimal_precision as dp
 
 
