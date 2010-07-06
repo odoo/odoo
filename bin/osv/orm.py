@@ -1767,7 +1767,7 @@ class orm_memory(orm_template):
         for id in self.datas:
             if self.datas[id]['internal.date_access'] < max:
                 tounlink.append(id)
-        self.unlink(cr, uid, tounlink)
+        self.unlink(cr, 1, tounlink)
         if len(self.datas)>self._max_count:
             sorted = map(lambda x: (x[1]['internal.date_access'], x[0]), self.datas.items())
             sorted.sort()
@@ -2382,6 +2382,8 @@ class orm(orm_template):
                                             break
                                         i+=1
                                     logger.notifyChannel('orm', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB=%s, def=%s), data moved to table %s !" % (k, self._table, f_pg_type, f._type, newname))
+                                    if f_pg_notnull:
+                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
                                     cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (self._table, k, newname))
                                     cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
                                     cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'","''")))

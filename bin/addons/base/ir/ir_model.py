@@ -244,7 +244,7 @@ class ir_model_fields(osv.osv):
     _description = "Fields"
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
-        'model': fields.char('Object Name', size=64, required=True),
+        'model': fields.char('Object Name', size=64, required=True, select=1),
         'relation': fields.char('Object Relation', size=64),
         'relation_field': fields.char('Relation Field', size=64),
         'model_id': fields.many2one('ir.model', 'Object ID', required=True, select=True, ondelete='cascade'),
@@ -256,7 +256,7 @@ class ir_model_fields(osv.osv):
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
         'translate': fields.boolean('Translate'),
         'size': fields.integer('Size'),
-        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manually Created', required=True, readonly=True),
+        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manually Created', required=True, readonly=True, select=1),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', size=256),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
@@ -321,9 +321,9 @@ ir_model_fields()
 class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)]),
-        'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade'),
+        'name': fields.char('Name', size=64, required=True, select=True),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True),
+        'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade', select=True),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
         'perm_create': fields.boolean('Create Access'),
@@ -462,10 +462,10 @@ class ir_model_data(osv.osv):
     _name = 'ir.model.data'
     __logger = logging.getLogger('addons.base.'+_name)
     _columns = {
-        'name': fields.char('XML Identifier', required=True, size=128),
-        'model': fields.char('Object', required=True, size=64),
-        'module': fields.char('Module', required=True, size=64),
-        'res_id': fields.integer('Resource ID'),
+        'name': fields.char('XML Identifier', required=True, size=128, select=1),
+        'model': fields.char('Object', required=True, size=64, select=1),
+        'module': fields.char('Module', required=True, size=64, select=1),
+        'res_id': fields.integer('Resource ID', select=1),
         'noupdate': fields.boolean('Non Updatable'),
         'date_update': fields.datetime('Update Date'),
         'date_init': fields.datetime('Init Date')
