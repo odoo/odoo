@@ -223,20 +223,12 @@ class act_window(osv.osv):
         return res
 
     def _get_help_status(self, cr, uid, ids, name, arg, context={}):
-#        cr.execute('select uid from ir_act_window_user_rel where act_id=ANY(%s)',(ids,))
-#        user_ids = map(lambda x:x[0],cr.fetchall())
-#        res = {}
-#        for action in ids:
-#            res[action] = True
-#            if uid in user_ids:
-#                res[action] = False
-        res = {}
-        for action in self.browse(cr, uid, ids):
-            res[action.id] = True
-            user_ids = map(lambda x:x.id, action.default_user_ids)
-            if uid in user_ids:
-                res[action.id] = False
-        return res
+        cr.execute(""" select action.id,
+                     CASE WHEN r.uid is NULL THEN True ELSE False END
+                     as help_status from ir_act_window action
+                     LEFT JOIN ir_act_window_user_rel r on
+                     (action.id = r.act_id AND (r.uid IS NULL or r.uid= %s)) WHERE action.id = ANY(%s)""",(uid,ids,))
+        return dict(cr.fetchall())
 
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
@@ -284,6 +276,12 @@ class act_window(osv.osv):
         'auto_refresh': lambda *a: 0,
         'auto_search':lambda *a: True
     }
+    def _auto_init(self, cr, context={}):
+        super(act_window, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_action_uid_index\'')
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX act_window_action_uid_index ON ir_act_window_user_rel (act_id, uid)')
+            cr.commit()
 act_window()
 
 class act_window_view(osv.osv):
