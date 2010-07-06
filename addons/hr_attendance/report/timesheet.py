@@ -22,7 +22,7 @@
 from mx import DateTime
 from mx.DateTime import now
 
-import netsvc
+
 import pooler
 
 from report.interface import report_rml
@@ -35,13 +35,12 @@ def to_hour(h):
     return int(h), int(round((h - int(h)) * 60, 0))
 
 class report_custom(report_rml):
-    def create_xml(self, cr, uid, ids, datas, context):
 
+    def create_xml(self, cr, uid, ids, datas, context=None):
         start_date = DateTime.strptime(datas['form']['init_date'], '%Y-%m-%d')
         end_date = DateTime.strptime(datas['form']['end_date'], '%Y-%m-%d')
         first_monday = start_date - DateTime.RelativeDateTime(days=start_date.day_of_week)
         last_monday = end_date + DateTime.RelativeDateTime(days=7 - end_date.day_of_week)
-
         if last_monday < first_monday:
             first_monday, last_monday = last_monday, first_monday
 
@@ -73,9 +72,9 @@ class report_custom(report_rml):
                     # Fake sign ins/outs at week ends, to take attendances across week ends into account
                     # XXX this is wrong for the first sign-in ever and the last sign out to this date
                     if attendances and attendances[0]['action'] == 'sign_out':
-                        attendances.insert(0, {'name': monday.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_in'})
+                        attendances.insert(0, {'name': monday.strftime('%Y-%m-%d %H:%M:%S'), 'action': 'sign_in'})
                     if attendances and attendances[-1]['action'] == 'sign_in':
-                        attendances.append({'name' : n_monday.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
+                        attendances.append({'name': n_monday.strftime('%Y-%m-%d %H:%M:%S'), 'action': 'sign_out'})
                     # sum up the attendances' durations
                     for att in attendances:
                         dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')

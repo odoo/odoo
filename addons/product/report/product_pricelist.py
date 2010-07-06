@@ -44,9 +44,9 @@ class product_pricelist(report_sxw.rml_parse):
         qtys = 1
 
         for i in range(1,6):
-            if form['qty'+str(i)] > 0 and form['qty'+str(i)] not in vals.values():
-                vals['qty'+str(qtys)] = form['qty'+str(i)]
-                qtys += 1
+#            if form['qty'+str(i)] > 0 and form['qty'+str(i)] not in vals.values():
+            vals['qty'+str(qtys)] = form['qty'+str(i)]
+            qtys += 1
         lst.append(vals)
         return lst
 
@@ -55,8 +55,8 @@ class product_pricelist(report_sxw.rml_parse):
             q = 'qty%d'%i
             if form[q] >0 and form[q] not in self.quantity:
                 self.quantity.append(form[q])
-#            else:
-#                self.quantity.append(0)
+            else:
+                self.quantity.append(0)
         return True
 
     def _get_pricelist(self, pricelist_id):
@@ -93,12 +93,12 @@ class product_pricelist(report_sxw.rml_parse):
                 i = 1
                 for qty in self.quantity:
                     if qty == 0:
-                        val['qty'+str(i)] = ""
+                        val['qty'+str(i)] = 0.0
                     else:
                         val['qty'+str(i)]=self._get_price(self.pricelist, product['id'], qty)
-                        i += 1
+                    i += 1
                 products.append(val)
-            res.append({'name':cat['name'],'products':products})
+            res.append({'name':cat['name'],'products': products})
         return res
 
     def _get_price(self,pricelist_id, product_id,qty):

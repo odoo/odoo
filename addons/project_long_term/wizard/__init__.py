@@ -25,4 +25,3 @@ import project_schedule_tasks
 import working_calendar
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

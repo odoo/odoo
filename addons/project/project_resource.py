@@ -1,9 +1,10 @@
 import pooler
 import datetime
 
-def timeformat_convert(cr, uid, time_string, context={}):
+def timeformat_convert(cr, uid, time_string, context=None):
 #    Function to convert input time string:: 8.5 to output time string 8:30
-
+        if context is None:
+            context = {}
         split_list = str(time_string).split('.')
         hour_part = split_list[0]
         mins_part = split_list[1]

@@ -84,12 +84,12 @@ class marketing_campaign(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'object_id': fields.many2one('ir.model', 'Object', required=True,
-                                      help="Choose the Object on which you want \
+        'object_id': fields.many2one('ir.model', 'Model', required=True,
+                                      help="Choose the model on which you want \
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
                                             domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",
-                                            help="The generated workitems will be linked to the partner related to the record"),
+                                            help="The generated workitems will be linked to the partner related to the record. If the record is the partner itself left this field empty."),
         'mode':fields.selection([('test', 'Test Directly'),
                                 ('test_realtime', 'Test in Realtime'),
                                 ('manual', 'With Manual Confirmation'),
@@ -115,6 +115,7 @@ you required for the campaign"),
     }
 
     def state_running_set(self, cr, uid, ids, *args):
+        # TODO check that all subcampaigns are running
         campaign = self.browse(cr, uid, ids[0])
         if not campaign.activity_ids :
             raise osv.except_osv("Error", "There is no activitity in the campaign")
@@ -135,6 +136,7 @@ you required for the campaign"),
         return True
 
     def state_done_set(self, cr, uid, ids, *args):
+        # TODO check that this campaign is not a subcampaign in running mode.
         segment_ids = self.pool.get('marketing.campaign.segment').search(cr, uid,
                                             [('campaign_id', 'in', ids),
                                             ('state', '=', 'running')])
@@ -144,6 +146,7 @@ you required for the campaign"),
         return True
 
     def state_cancel_set(self, cr, uid, ids, *args):
+        # TODO check that this campaign is not a subcampaign in running mode.
         self.write(cr, uid, ids, {'state': 'cancelled'})
         return True
 
@@ -265,10 +268,14 @@ class marketing_campaign_segment(osv.osv):
                     'state': 'todo',
                     'res_id': o_ids.id
                 }
+
+                partner = None
                 if partner_field:
                     partner = getattr(o_ids, partner_field)
-                    if partner:
-                        wi_vals['partner_id'] = partner.id
+                elif model_obj._name == 'res.partner':
+                    partner = o_ids
+                if partner:
+                    wi_vals['partner_id'] = partner.id
 
                 for act_id in act_ids:
                     wi_vals['activity_id'] = act_id
@@ -284,8 +291,18 @@ class marketing_campaign_activity(osv.osv):
     _name = "marketing.campaign.activity"
     _description = "Campaign Activity"
 
-    _actions_type = [('email', 'E-mail'), ('paper', 'Paper'), ('action', 'Action'),
-                        ('subcampaign', 'Sub-Campaign')]
+    _action_types = [
+        ('email', 'E-mail'),
+        ('paper', 'Paper'),
+        ('action', 'Action'),
+        # TODO implement the subcampaigns. The segment_id on woritems must be
+        # optional (thus campaign_id must be a real many2one, and a constraint
+        # must be set). 
+        # TODO implement the subcampaign out. disallow out transitions from
+        # subcampaign activities ?
+        #('subcampaign', 'Sub-Campaign'),
+    ]
+
     _columns = {
         'name': fields.char('Name', size=128, required=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
@@ -296,8 +313,7 @@ class marketing_campaign_activity(osv.osv):
         'start': fields.boolean('Start',help= "This activity is launched when the campaign starts."),
         'condition': fields.char('Condition', size=256, required=True,
                                  help="Python condition to know if the activity can be launched"),
-        'type': fields.selection(_actions_type,
-                                  'Type', required=True,
+        'type': fields.selection(_action_types, 'Type', required=True,
                                   help="Describe type of action to be performed on the Activity.Eg : Send email,Send paper.."),
         'email_template_id': fields.many2one('email.template','Email Template'),
         'report_id': fields.many2one('ir.actions.report.xml', 'Reports', ),
@@ -312,9 +328,8 @@ class marketing_campaign_activity(osv.osv):
         'from_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_to_id',
                                             'Previous Activities'),
-        'subcampaign_id': fields.many2one('marketing.campaign', 'Sub-Campaign'),
-        'subcampaign_segment_id': fields.many2one('marketing.campaign.segment',
-                                                   'Sub Campaign Segment'),
+        #'subcampaign_id': fields.many2one('marketing.campaign', 'Sub-Campaign',
+        #                                  domain="[('object_id', '=', object_id)]"),
         'variable_cost': fields.float('Variable Cost'),
         'revenue': fields.float('Revenue'),
         'signal': fields.char('Signal', size=128,
@@ -341,14 +356,6 @@ class marketing_campaign_activity(osv.osv):
         ),
     ]
 
-    def __init__(self, *args):
-        # FIXME use self._process_wi_<type>
-        self._actions = {'paper' : self.process_wi_report,
-                    'email' : self.process_wi_email,
-                    'action' : self.process_wi_action,
-        }
-        return super(marketing_campaign_activity, self).__init__(*args)
-
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
                                         context=None, count=False):
         if context == None:
@@ -363,7 +370,7 @@ class marketing_campaign_activity(osv.osv):
         return super(marketing_campaign_activity, self).search(cr, uid, args,
                                            offset, limit, order, context, count)
 
-    def process_wi_report(self, cr, uid, activity, workitem, context={}):
+    def _process_wi_paper(self, cr, uid, activity, workitem, context=None):
         service = netsvc.LocalService('report.%s'%activity.report_id.report_name)
         (report_data, format) = service.create(cr, uid, [], {}, {})
         attach_vals = {
@@ -378,24 +385,36 @@ class marketing_campaign_activity(osv.osv):
         self.pool.get('ir.attachment').create(cr, uid, attach_vals)
         return True
 
-    def process_wi_email(self, cr, uid, activity, workitem, context=None):
+    def _process_wi_email(self, cr, uid, activity, workitem, context=None):
         return self.pool.get('email.template').generate_mail(cr, uid,
                                             activity.email_template_id.id,
                                             [workitem.res_id], context=context)
 
-    def process_wi_action(self, cr, uid, activity, workitem, context={}):
-        context = {}
+    def _process_wi_action(self, cr, uid, activity, workitem, context=None):
+        if context is None:
+            context = {}
         server_obj = self.pool.get('ir.actions.server')
-        context['active_id'] = workitem.res_id
-        res = server_obj.run(cr, uid, [activity.server_action_id.id], context)
-        #server action return False if the action is perfomed except client_action,other and python code
-        return res==False and True or res
 
-    def process(self, cr, uid, act_id, wi_id, context={}):
-        activity = self.browse(cr, uid, act_id)
+        action_context = dict(context,
+                              active_id=workitem.res_id,
+                              active_ids=[workitem.res_id],
+                              active_model=workitem.object_id.model)
+        res = server_obj.run(cr, uid, [activity.server_action_id.id],
+                             context=action_context)
+        # server action return False if the action is perfomed
+        # except client_action, other and python code
+        return res == False and True or res
+
+    def process(self, cr, uid, act_id, wi_id, context=None):
+        activity = self.browse(cr, uid, act_id, context=context)
+        method = '_process_wi_%s' % (activity.type,)
+        action = getattr(self, method, None)
+        if not action:
+            raise NotImplementedError('method %r in not implemented on %r object' % (method, self))
+
         workitem_obj = self.pool.get('marketing.campaign.workitem')
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
-        return self._actions[activity.type](cr, uid, activity, workitem, context)
+        return action(cr, uid, activity, workitem, context)
 
 marketing_campaign_activity()
 
@@ -587,13 +606,12 @@ class marketing_campaign_workitem(osv.osv):
                     #           test    test_realtime     manual      normal (active)
                     # time       Y            N             N           N
                     # signal     N            N             N           N
-                    # auto       Y            Y             N           Y
+                    # auto       Y            Y             Y           Y
                     # 
 
-                    run = False
-                    if transition.trigger != 'signal' and campaign_mode != 'manual':
-                        if transition.trigger == 'auto' or campaign_mode == 'test':
-                            run = True
+                    run = transition.trigger == 'auto' \
+                          or (transition.trigger == 'time' \
+                              and campaign_mode == 'test')
                     if run:
                         new_wi = self.browse(cr, uid, wi_id, context)
                         self._process_one(cr, uid, new_wi, context)
@@ -648,7 +666,7 @@ class marketing_campaign_workitem(osv.osv):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy':True,
-                'context': "{'template_id':%d,'rel_model_ref':%d}"%
+                'context': "{'template_id':%d,'default_rel_model_ref':%d}"%
                                 (wi_obj.activity_id.email_template_id.id,
                                  wi_obj.res_id)
             }
@@ -672,21 +690,6 @@ class email_template(osv.osv):
         'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
     }
 email_template()
-
-class email_template_preview(osv.osv_memory):
-    _inherit = "email_template.preview"
-
-    def _default_rel_model(self, cr, uid, context=None):
-        if 'rel_model_ref' in context :
-            return context['rel_model_ref']
-        else :
-            return False
-
-    _defaults = {
-        'rel_model_ref' : _default_rel_model
-    }
-
-email_template_preview()
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'

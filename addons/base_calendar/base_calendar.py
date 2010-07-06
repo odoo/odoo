@@ -50,15 +50,17 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
 
     if not startdate:
         startdate = datetime.now()
-    rset1 = rrule.rrulestr(rrulestring, dtstart=startdate, forceset=True)
+    if not exdate:
+        exdate = []
+    rset1 = rrule.rrulestr(str(rrulestring), dtstart=startdate, forceset=True)
 
     for date in exdate:
         datetime_obj = todate(date)
         rset1._exdate.append(datetime_obj)
     if exrule:
         rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
-    re_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), rset1._iter())
-    return re_dates
+
+    return list(rset1._iter())
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
     """
@@ -791,61 +793,100 @@ class calendar_alarm(osv.osv):
         @param use_new_cursor: False or the dbname
         @param context: A standard dictionary for contextual values
         """
-
         if not context:
             context = {}
-        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        cr.execute("select alarm.id as id \
-                    from calendar_alarm alarm \
-                    where alarm.state = %s and alarm.trigger_date <= %s", ('run', current_datetime))
-        res = cr.dictfetchall()
-        alarm_ids = map(lambda x: x['id'], res)
-        #attendee_obj = self.pool.get('calendar.attendee')
+        current_datetime = datetime.now()
         request_obj = self.pool.get('res.request')
+        alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
+        
         mail_to = []
-        for alarm in self.browse(cr, uid, alarm_ids):
-            if alarm.action == 'display':
-                value = {
-                   'name': alarm.name,
-                   'act_from': alarm.user_id.id,
-                   'act_to': alarm.user_id.id,
-                   'body': alarm.description,
-                   'trigger_date': alarm.trigger_date,
-                   'ref_doc1': '%s,%s' % (alarm.model_id.model, alarm.res_id)
-                }
-                request_id = request_obj.create(cr, uid, value)
-                request_ids = [request_id]
-                for attendee in alarm.attendee_ids:
-                    if attendee.user_id:
-                        value['act_to'] = attendee.user_id.id
-                        request_id = request_obj.create(cr, uid, value)
-                        request_ids.append(request_id)
-                request_obj.request_send(cr, uid, request_ids)
 
-            if alarm.action == 'email':
-                sub = '[Openobject Remainder] %s' % (alarm.name)
-                body = """
-                Name: %s
-                Date: %s
-                Description: %s
+        for alarm in self.browse(cr, uid, alarm_ids, context=context):
+            next_trigger_date = None
+            update_vals = {}
+            model_obj = self.pool.get(alarm.model_id.model)
+            res_obj = model_obj.browse(cr, uid, alarm.res_id, context=context)
+            re_dates = []
 
-                From:
-                      %s
-                      %s
+            if res_obj.rrule:
+                event_date = datetime.strptime(res_obj.date, '%Y-%m-%d %H:%M:%S')
+                recurrent_dates = get_recurrent_dates(res_obj.rrule, res_obj.exdate, event_date, res_obj.exrule)
 
-                """  % (alarm.name, alarm.trigger_date, alarm.description, \
-                    alarm.user_id.name, alarm.user_id.signature)
-                mail_to = [alarm.user_id.address_id.email]
-                for att in alarm.attendee_ids:
-                    mail_to.append(att.user_id.address_id.email)
-                if mail_to:
-                    tools.email_send(
-                        tools.config.get('email_from', False),
-                        mail_to,
-                        sub,
-                        body
-                    )
-            self.write(cr, uid, [alarm.id], {'state':'done'})
+                trigger_interval = alarm.trigger_interval
+                if trigger_interval == 'days':
+                    delta = timedelta(days=alarm.trigger_duration)
+                if trigger_interval == 'hours':
+                    delta = timedelta(hours=alarm.trigger_duration)
+                if trigger_interval == 'minutes':
+                    delta = timedelta(minutes=alarm.trigger_duration)
+                delta = alarm.trigger_occurs == 'after' and delta or -delta
+
+                for rdate in recurrent_dates:
+                    if rdate + delta > current_datetime:
+                        break
+                    if rdate + delta <= current_datetime:
+                        re_dates.append(rdate.strftime("%Y-%m-%d %H:%M:%S"))
+                rest_dates = recurrent_dates[len(re_dates):]
+                next_trigger_date = rest_dates and rest_dates[0] or None
+
+            else:
+                re_dates = [alarm.trigger_date]
+
+            for r_date in re_dates:
+                ref = alarm.model_id.model + ',' + str(alarm.res_id)
+
+                # search for alreay sent requests
+                if request_obj.search(cr, uid, [('trigger_date', '=', r_date), ('ref_doc1', '=', ref)], context=context):
+                    continue
+
+                if alarm.action == 'display':
+                    value = {
+                       'name': alarm.name,
+                       'act_from': alarm.user_id.id,
+                       'act_to': alarm.user_id.id,
+                       'body': alarm.description,
+                       'trigger_date': r_date,
+                       'ref_doc1': ref
+                    }
+                    request_id = request_obj.create(cr, uid, value)
+                    request_ids = [request_id]
+                    for attendee in res_obj.attendee_ids:
+                        if attendee.user_id:
+                            value['act_to'] = attendee.user_id.id
+                            request_id = request_obj.create(cr, uid, value)
+                            request_ids.append(request_id)
+                    request_obj.request_send(cr, uid, request_ids)
+
+                if alarm.action == 'email':
+                    sub = '[Openobject Reminder] %s' % (alarm.name)
+                    body = """
+Event: %s
+Event Date: %s
+Description: %s
+
+From:
+      %s
+
+----
+%s
+
+"""  % (alarm.name, alarm.trigger_date, alarm.description, \
+                        alarm.user_id.name, alarm.user_id.signature)
+                    mail_to = [alarm.user_id.address_id.email]
+                    for att in alarm.attendee_ids:
+                        mail_to.append(att.user_id.address_id.email)
+                    if mail_to:
+                        tools.email_send(
+                            tools.config.get('email_from', False),
+                            mail_to,
+                            sub,
+                            body
+                        )
+            if next_trigger_date:
+                update_vals.update({'trigger_date': next_trigger_date})
+            else:
+                update_vals.update({'state': 'done'})
+            self.write(cr, uid, [alarm.id], update_vals)
         return True
 
 calendar_alarm()
@@ -1273,13 +1314,12 @@ true, it will allow you to hide the event alarm information without removing it.
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
-                    for rdate in rdates:
-                        r_date = datetime.strptime(rdate, "%Y-%m-%d %H:%M:%S")
+                    for r_date in rdates:
                         if start_date and r_date < start_date:
                             continue
                         if until_date and r_date > until_date:
                             continue
-                        idval = real_id2base_calendar_id(data['id'], rdate)
+                        idval = real_id2base_calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
                         result.append(idval)
                         count += 1
         if result:
@@ -1413,9 +1453,10 @@ true, it will allow you to hide the event alarm information without removing it.
                 new_ids.append(event_id)
 
         res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
-        if vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'):
+        if (vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'))\
+                or (vals.has_key('date') or vals.has_key('duration') or vals.has_key('date_deadline')):
+            # change alarm details
             alarm_obj = self.pool.get('res.alarm')
-            context.update({'alarm_id': vals.get('alarm_id')})
             alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', \
                                             context=context)
         return res
@@ -1544,7 +1585,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of calendar attendee’s IDs
+        @param ids: List of Event IDs
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values 
         """
@@ -1555,7 +1596,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of calendar attendee’s IDs
+        @param ids: List of Event IDs
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values 
         """
@@ -1566,7 +1607,7 @@ true, it will allow you to hide the event alarm information without removing it.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of calendar attendee’s IDs
+        @param ids: List of Event IDs
         @param *args: Get Tupple value
         @param context: A standard dictionary for contextual values 
         """
