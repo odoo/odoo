@@ -21,7 +21,7 @@
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_login(cr, uid, self)
-        ftp.cwd('/Documents')
+        ftp.cwd('Documents')
 -
     I create a "test.txt" file at the server (directly). The file
     should have the "abcd" content
@@ -69,10 +69,13 @@
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
+        import ftplib
         ftp = te.get_ftp_login(cr, uid, self)
         try:
             ftp.cwd('/Not-This')
             assert False, "We should't be able to change here"
+        except ftplib.error_perm:
+            pass
         except OSError, err:
             assert err.errno == 2, err.errno
 -
