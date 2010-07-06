@@ -326,17 +326,22 @@ class general_ledger(rml_parse.rml_parse):
             return currency_total
         
     def get_fiscalyear(self,form):
-        print "formmmmmmmmmm", form
         return pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear_id']).name
     
     def get_account(self,form):
         return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr,self.uid,form['chart_account_id']).name
     
     def get_start_period(self, form):
-        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
+        if form['filter'] == 'filter_period':           
+            if form['period_from']:
+                return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
+        return ''
         
     def get_end_period(self, form):
-        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
+        if form['filter'] == 'filter_period':
+            if form['period_to']:
+                return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
+        return ''
 
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header=False)
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger, header=False)
