@@ -20,7 +20,6 @@
 ##############################################################################
 import time
 
-import netsvc
 from osv import osv, fields
 from tools.translate import _
 
@@ -31,8 +30,11 @@ class hr_si_so_ask(osv.osv_memory):
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
         'last_time': fields.datetime('Your last sign out', required=True),
         'emp_id': fields.char('Empoyee ID', size=32, required=True, readonly=True),
-                }
+        }
+
     def _get_empname(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         emp_id = self.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
         if emp_id:
             employee = self.pool.get('hr.employee').browse(cr, uid, emp_id, context=context)[0].name
@@ -114,7 +116,7 @@ class hr_sign_in_out(osv.osv_memory):
         data = self.read(cr, uid, ids, [])[0]
         att_obj = self.pool.get('hr.attendance')
         emp_id = data['emp_id']
-        att_id = att_obj.search(cr, uid, [('employee_id', '=', emp_id),('action','!=','action')], limit=1, order='name desc')
+        att_id = att_obj.search(cr, uid, [('employee_id', '=', emp_id),('action', '!=', 'action')], limit=1, order='name desc')
         last_att = att_obj.browse(cr, uid, att_id, context=context)
         if last_att:
             last_att = last_att[0]
@@ -152,11 +154,8 @@ class hr_sign_in_out(osv.osv_memory):
         if 'last_time' in data:
             if data['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):
                 raise osv.except_osv(_('UserError'), _('The sign-out date must be in the past'))
-            self.pool.get('hr.attendance').create(cr, uid, {
-                'name': data['last_time'],
-                'action': 'sign_out',
-                'employee_id': emp_id
-            })
+            self.pool.get('hr.attendance').create(cr, uid, {'name': data['last_time'], 'action': 'sign_out',
+                'employee_id': emp_id})
         try:
             success = self.pool.get('hr.employee').attendance_action_change(cr, uid, [emp_id], 'sign_in')
         except:

@@ -13,6 +13,31 @@
 			</field>
 		</field>
 	</record>
+	
+	<record model="ir.ui.view" id="sale_margin_sale_order_line">
+		<field name="name">sale.order.line.margin.view.form</field>
+		<field name="type">form</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form" />
+		<field name="arch" type="xml">
+			<xpath expr="/form/notebook/page/field[@name='order_line']/form/notebook/page/field[@name='price_unit']" position="after">
+				<field name="purchase_price"/>
+			</xpath>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="sale_margin_sale_order_line_form">
+		<field name="name">sale.order.line.tree.margin.view.form</field>
+		<field name="type">form</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form" />
+		<field name="arch" type="xml">
+		   <xpath expr="/form/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+				<field name="purchase_price"/>
+			</xpath>
+		</field>
+	</record>
+	
 	<record model="ir.ui.view" id="sale_margin_sale_order_tree">
 		<field name="name">sale.order.margin.view.tree</field>
 		<field name="type">tree</field>
@@ -24,7 +49,7 @@
 			</field>
 		</field>
 	</record>
-
+   
 	<record model="ir.ui.view" id="sale_margin_sale_order_line_tree">
 		<field name="name">sale.order.margin.line.view.tree</field>
 		<field name="type">tree</field>
@@ -42,7 +67,7 @@
 		<field name="name">picking.margin.view.form</field>
 		<field name="type">form</field>
 		<field name="model">stock.picking</field>
-		<field name="inherit_id" ref="stock.view_picking_out_form" />
+		<field name="inherit_id" ref="stock.view_picking_in_form" />
 		<field name="arch" type="xml">
 			<notebook colspan="4">
 			<page string="Supplier Invoices">

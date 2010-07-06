@@ -69,6 +69,8 @@ class product_product(osv.osv):
         property_obj=self.pool.get('ir.property')
         product_obj=self.browse(cr,uid,ids)[0]
         account_variation = product_obj.categ_id.property_stock_variation
+        account_variation_id = account_variation and account_variation.id or False
+        if not account_variation_id: raise osv.except_osv(_('Error!'), _('Variation Account is not specified for Product Category: %s' % (product_obj.categ_id.name)))
         move_ids = []        
         loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
@@ -82,13 +84,10 @@ class product_product(osv.osv):
                 product = self.browse(cr, uid, rec_id, context=c)
                 qty = product.qty_available
                 diff = product.standard_price - new_price 
-                assert diff, _("Could not find any difference between standard price and new price!")
+                if not diff: raise osv.except_osv(_('Error!'), _("Could not find any difference between standard price and new price!"))
                 if qty:
-                    location_account = account_variation and account_variation.id or False
-                    
                     company_id = location.company_id and location.company_id.id or False                    
-                    assert location_account, _('Inventory Account is not specified for Location: %s' % (location.name))
-                    assert company_id, _('Company is not specified in Location')
+                    if not company_id: raise osv.except_osv(_('Error!'), _('Company is not specified in Location'))
                     #
                     # Accounting Entries
                     #
@@ -129,8 +128,8 @@ class product_product(osv.osv):
                                     'move_id': move_id,
                                     })
                         move_line_obj.create(cr, uid, {
-                                    'name': location.name,
-                                    'account_id': location_account,
+                                    'name': product.categ_id.name,
+                                    'account_id': account_variation_id,
                                     'credit': amount_diff,
                                     'move_id': move_id
                                     })
@@ -155,8 +154,8 @@ class product_product(osv.osv):
                                     'move_id': move_id
                                     })
                         move_line_obj.create(cr, uid, {
-                                    'name': location.name,
-                                    'account_id': location_account,
+                                    'name': product.categ_id.name,
+                                    'account_id': account_variation_id,
                                     'debit': amount_diff,
                                     'move_id': move_id
                                     })                   
@@ -349,7 +348,8 @@ class product_product(osv.osv):
                 if location_info.usage == 'inventory':
                     if fields.get('virtual_available'):
                         res['fields']['virtual_available']['string'] = _('Future P&L')
-                    res['fields']['qty_available']['string'] = _('P&L Qty')
+                    if fields.get('qty_available'):                        
+                        res['fields']['qty_available']['string'] = _('P&L Qty')
 
                 if location_info.usage == 'procurement':
                     if fields.get('virtual_available'):
@@ -428,7 +428,7 @@ class product_category(osv.osv):
         'property_stock_variation': fields.property('account.account', 
             type='many2one',
             relation='account.account',
-            string="Stock variation Account",
+            string="Stock Variation Account",
             method=True, view_load=True,  
             help="This account will be used in product when valuation type is real-time valuation ",),
     }

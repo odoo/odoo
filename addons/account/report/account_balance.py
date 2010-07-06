@@ -123,11 +123,7 @@ class account_balance(report_sxw.rml_parse):
         child_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, ids, ctx)
         if child_ids:
             ids = child_ids
-        print 'on va faire un read'
         accounts = self.pool.get('account.account').read(self.cr, self.uid, ids, ['type','code','name','debit','credit','balance','parent_id'], ctx)
-        print 'on a fait un read'
-        import pdb
-        pdb.set_trace()
         for account in accounts:
             if account['id'] in done:
                 continue

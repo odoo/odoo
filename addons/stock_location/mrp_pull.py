@@ -32,7 +32,7 @@ class procurement_order(osv.osv):
     def check_buy(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids):
             for line in procurement.product_id.flow_pull_ids:
-                print line.location_src_id.name, line.location_id.name, line.type_proc
+                
                 if line.location_id==procurement.location_id:
                     return line.type_proc=='buy'
         return super(procurement_order, self).check_buy(cr, uid, ids)
@@ -58,7 +58,6 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         location_obj = self.pool.get('stock.location')
         wf_service = netsvc.LocalService("workflow")
-
         for proc in proc_obj.browse(cr, uid, ids, context=context):
             line = None
             for line in proc.product_id.flow_pull_ids:
@@ -79,7 +78,7 @@ class procurement_order(osv.osv):
             move_id = self.pool.get('stock.move').create(cr, uid, {
                 'name': line.name,
                 'picking_id': picking_id,
-                'company_id': line.company_id and line.company_id.id or False,
+                'company_id':  line.company_id and line.company_id.id or False,
                 'product_id': proc.product_id.id,
                 'date_planned': proc.date_planned,
                 'product_qty': proc.product_qty,
@@ -104,7 +103,7 @@ class procurement_order(osv.osv):
             proc_id = self.pool.get('procurement.order').create(cr, uid, {
                 'name': line.name,
                 'origin': origin,
-                'company_id': line.company_id and line.company_id.id or False,
+                'company_id':  line.company_id and line.company_id.id or False,
                 'date_planned': proc.date_planned,
                 'product_id': proc.product_id.id,
                 'product_qty': proc.product_qty,

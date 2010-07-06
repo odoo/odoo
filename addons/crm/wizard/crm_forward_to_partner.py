@@ -125,7 +125,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         msg_val = ''
         model_pool = self.pool.get('crm.lead')
-        print history_type
         if history_type == 'info':
             msg_val = self.get_lead_details(cr, uid, res_id, context=context)
 
@@ -188,7 +187,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         this = self.browse(cr, uid, ids[0], context=context)
 
-        smtp_pool = self.pool.get('email.smtpclient')
         case_pool = self.pool.get(model)
         case = case_pool.browse(cr, uid, res_id, context=context)
 
@@ -206,6 +204,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             if this.history == 'latest':
                 msgs = msgs[:1]
             attachments.extend(itertools.chain(*[m.attachment_ids for m in msgs]))
+        attach = [(a.datas_fname or a.name, base64.decodestring(a.datas)) for a in attachments if a.datas]
 
         result = tools.email_send(
             email_from,
@@ -213,12 +212,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             this.subject,
             body,
             openobject_id=str(case.id),
-            attach=[(a.datas_fname or a.name, base64.decodestring(a.datas)) for a in attachments if a.datas],
+            attach=attach,
             reply_to=case.section_id.reply_to,
         )
 
         if result:
-            case_pool._history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, subject=this.subject, details=body, email_from=email_from)
+            case_pool.history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, subject=this.subject, details=body, email_from=email_from, attach=attach)
         else:
             raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
 

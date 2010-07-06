@@ -21,12 +21,12 @@
 
 
 {
-    "name" : "Project Management",
+    "name": "Project Management",
     "version": "1.1",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "analytic", "process", "mail_gateway","board"],
+    "author": "Tiny",
+    "website": "http://www.openerp.com",
+    "category": "Generic Modules/Projects & Services",
+    "depends": ["product", "analytic", "process", "mail_gateway","board"],
     "description": """Project management module that track multi-level projects, tasks,
 work done on tasks, eso. It is able to render planning, order tasks, eso.
  Dashboard for project members that includes:
@@ -35,7 +35,7 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
     * Members list of project
     * Issues
     """,
-    "init_xml" : [],
+    "init_xml": [],
     "update_xml": [
         "security/project_security.xml",
         "wizard/project_task_delegate_view.xml",

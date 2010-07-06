@@ -39,6 +39,7 @@
         'wizard/idea_post_vote_view.xml',
         'idea_view.xml',
         'idea_workflow.xml',
+        'report/report_vote_view.xml',
         'security/idea_security.xml',
         'security/ir.model.access.csv',
     ],

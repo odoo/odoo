@@ -58,8 +58,8 @@ class account_balance_report(osv.osv_memory):
 #        return result
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
-        data['form'].update(self.read(cr, uid, ids, ['display_account',  'company_id',])[0])
-        data['form']['query_line'] = query_line
+        data['form'].update(self.read(cr, uid, ids, ['display_account',])[0])
+        data['form']['query_line'] = query_line + ' AND l.journal_id in (%s)' % ','.join(map(str, data['form']['journal_ids']))
         return { 'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data, 'nodestroy':True, }
 
 account_balance_report()

@@ -64,7 +64,7 @@ class year_salary_report(rml_parse.rml_parse):
         periods = []
         tol_mnths=['Total',0,0,0,0,0,0,0,0,0,0,0,0]     
         emp = pooler.get_pool(self.cr.dbname).get('hr.employee')     
-        emp_ids = form['employee_ids'][0][2]
+        emp_ids = form['employee_ids']
         empll  = emp.browse(self.cr,self.uid, emp_ids)
         fiscalyear_obj = pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear_id'])
         period_ids_l = fiscalyear_obj.period_ids

@@ -86,13 +86,13 @@
                     			icon="terp-dialog-close"
                     			name="done"
                     			domain="[('state','=','done')]"/>
-                      <separator orientation="vertical"/>
+                       <separator orientation="vertical"/>
 	                    <field name="project_id">
 	                        <filter icon="terp-folder-blue"
 	                        		string="My Projects"
-	                        		help="My Projects"
-	                        		domain="[('project_id','=',context.get('project_id', False)]"/>
+	                        		help="My Projects" domain="[('project_id','=',uid)]"/>	
                           </field>
+
                           <field name="user_id" widget="selection">
 	                        <filter icon="terp-personal"
 	                        		string="My Task"
@@ -110,7 +110,7 @@
                         <filter string="Project" name="project" icon="terp-folder-blue" context="{'group_by':'project_id'}"/>
                         <filter string="Assigned to" name="User" icon="terp-personal" context="{'group_by':'user_id'}" />
                         <separator orientation="vertical"/>
-                       <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}" />
+                        <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}" />
                         <filter string="Task" icon="terp-stock_align_left_24" context="{'group_by':'name'}" />
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
@@ -144,6 +144,7 @@
             <field name="search_view_id" ref="view_task_project_user_search"/>
             <field name="context">{'search_default_month':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
+
         <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
 
    <!-- Views and action for project dashboard -->
@@ -181,6 +182,7 @@
         <field name="domain">[('uid','=',uid)]</field>
         <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
     </record>
+
     <!-- Views and action for project issue dashboard -->
        <record id="view_task_by_days_tree" model="ir.ui.view">
         <field name="name">task.by.days.tree</field>
@@ -221,24 +223,24 @@
     <!-- Views and action for project  dashboard -->
     <record id="view_task_by_days_vs_planned_hours_tree" model="ir.ui.view">
         <field name="name">task.by.days.vs.planned.hours.tree</field>
-        <field name="model">task.by.days.vs.planned.hours</field>
+        <field name="model">report.project.task.user</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Task By Days vs Planned Hours" >
                 <field name="day"/>
-                <field name="planned_hour"/>
+                <field name="hours_planned"/>
             </tree>
         </field>
     </record>
 
     <record id="view_task_by_days_vs_planned_hours_graph" model="ir.ui.view">
          <field name="name">task.by.days.vs.planned.hours.graph</field>
-         <field name="model">task.by.days.vs.planned.hours</field>
+         <field name="model">report.project.task.user</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Task By Days vs Planned Hours" type="bar">
                  <field name="day"/>
-                 <field name="planned_hour" operator="+"/>
+                 <field name="hours_planned" operator="+"/>
                  <field name="project_id" group="True"/>
              </graph>
          </field>
@@ -246,7 +248,7 @@
 
     <record id="action_task_by_days_vs_planned_hours_graph" model="ir.actions.act_window">
         <field name="name">Task By Days vs Planned Hours</field>
-        <field name="res_model">task.by.days.vs.planned.hours</field>
+        <field name="res_model">report.project.task.user</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
         <field name="view_id" ref="view_task_by_days_vs_planned_hours_graph"/>

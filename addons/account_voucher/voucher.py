@@ -51,7 +51,7 @@ ir_sequence_type()
 class account_journal(osv.osv):
     _inherit = "account.journal"
     _columns = {
-        'max_amount': fields.float('Verify Transection', digits=(16, int(config['price_accuracy'])), help="Validate voucher entry twice before posting it, if transection amount more then entered here"),
+        'max_amount': fields.float('Verify Transaction', digits=(16, 2), help="Validate voucher entry twice before posting it, if transection amount more then entered here"),
     }
 account_journal()
 
@@ -60,7 +60,7 @@ class account_voucher(osv.osv):
     def _get_period(self, cr, uid, context={}):
         if context.get('period_id', False):
             return context.get('period_id')
-            
+
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
@@ -76,12 +76,12 @@ class account_voucher(osv.osv):
 
     def _get_journal(self, cr, uid, context={}):
         journal_pool = self.pool.get('account.journal')
-        
+
         if context.get('journal_id', False):
             return context.get('journal_id')
-        
+
         type_inv = context.get('type', 'rec_voucher')
-        
+
         ttype = type2journal.get(type_inv, type_inv)
         res = journal_pool.search(cr, uid, [('type', '=', ttype)], limit=1)
 
@@ -116,7 +116,7 @@ class account_voucher(osv.osv):
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','<>','view')]),
         'payment_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=False, states={'proforma':[('readonly',True)]}),
-        'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
+        'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'posted':[('readonly',True)]}),
         'narration':fields.text('Narration', readonly=True, states={'draft':[('readonly',False)]}, required=True),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -131,7 +131,7 @@ class account_voucher(osv.osv):
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Voucher. \
                         \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
-                        \n* The \'Cancelled\' state is used when user cancel voucher.'),                    
+                        \n* The \'Cancelled\' state is used when user cancel voucher.'),
         'amount':fields.float('Amount', readonly=True),
         'number':fields.char('Number', size=32, readonly=True),
         'reference': fields.char('Voucher Reference', size=64),
@@ -147,7 +147,7 @@ class account_voucher(osv.osv):
         'type': _get_type,
         'journal_id':_get_journal,
         'currency_id': _get_currency,
-        
+
         'state': lambda *a: 'draft',
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
         'reference_type': lambda *a: "none",
@@ -159,7 +159,7 @@ class account_voucher(osv.osv):
 #        cur_obj = self.pool.get('res.currency')
 
     def onchange_account(self, cr, uid, ids, account_id):
-        
+
         if not account_id:
             return {
                 'value':{'amount':False}
@@ -176,9 +176,9 @@ class account_voucher(osv.osv):
             return {
                 'value':{'account_id':False}
             }
-            
+
         journal = self.pool.get('account.journal')
-        
+
         if journal_id and (type in ('rec_voucher','bank_rec_voucher','journal_pur_voucher','journal_voucher')):
             account_id = journal.browse(cr, uid, journal_id).default_debit_account_id
             return {
@@ -221,7 +221,7 @@ class account_voucher(osv.osv):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
 
-    def unlink(self, cr, uid, ids, context={}):
+    def unlink(self, cr, uid, ids, context=None):
         vouchers = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
         for t in vouchers:
@@ -229,7 +229,7 @@ class account_voucher(osv.osv):
                 unlink_ids.append(t['id'])
             else:
                 raise osv.except_osv('Invalid action !', 'Cannot delete Voucher(s) which are already opened or paid !')
-        return super(account_voucher, self).unlink(self, cr, uid, unlink_ids)
+        return super(account_voucher, self).unlink(cr, uid, unlink_ids, context=context)
 
     def _get_analytic_lines(self, cr, uid, id):
         inv = self.browse(cr, uid, [id])[0]
@@ -262,12 +262,12 @@ class account_voucher(osv.osv):
         return iml
 
     def action_move_line_create(self, cr, uid, ids, *args):
-    
+
         for inv in self.browse(cr, uid, ids):
-        
+
             if inv.move_id:
                 continue
-                
+
             company_currency = inv.company_id.currency_id.id
 
             line_ids = self.read(cr, uid, [inv.id], ['payment_ids'])[0]['payment_ids']
@@ -386,7 +386,7 @@ class account_voucher(osv.osv):
                 elif line.type == 'cr':
                     move_line['credit'] = line.amount or False
                     amount=line.amount * (-1)
-                
+
                 move_line['analytic_account_id'] = line.account_analytic_id.id or False
                 ml_id=self.pool.get('account.move.line').create(cr, uid, move_line)
 
@@ -433,7 +433,7 @@ class account_voucher(osv.osv):
             'tax_amount': x.get('tax_amount', False),
             'ref':x.get('ref',False)
         }
-        
+
     def _convert_ref(self, cr, uid, ref):
         return (ref or '').replace('/','')
 

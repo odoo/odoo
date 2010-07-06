@@ -78,7 +78,7 @@
                                 <field name="minimum_planned_date"/>
                                 <field name="origin"/>
                                 <field name="state"/>
-                                </tree>
+                            </tree>
                          </field>
                         <separator colspan="4" string=""/>
                          <group col="8" colspan="4">
@@ -117,14 +117,12 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                  <group col='10' colspan='4'>
-                    <filter icon="terp-check" string="Current" domain="[('state','=','draft,in_progress')]" separator="1" help="Current Purchaes Requisition"/>
-                    <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]" separator="1" help="Current Purchaes Requisition"/>
+                    <filter icon="terp-camera_test" string="Current" domain="[('state','=','draft,in_progress')]" separator="1" help="Current Purchaes Requisition"/>
+                    <filter icon="terp-check" string="Done" domain="[('state','=','done')]" separator="1" help="Current Purchaes Requisition"/>
                     <separator orientation="vertical"/>
-                    <field name="name" select="1" string="Requisition Reference"/>
-                    <field name="purchase_ids" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="exclusive" select="1" />
-                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                    <field name="name" string="Requisition Reference"/>
+                    <field name="user_id" />
+                    <field name="exclusive" />
                 </group>
                 <newline/>
                   <group expand="0" string="Group By..." colspan="4" col="10" groups="base.group_extended">

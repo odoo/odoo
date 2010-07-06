@@ -50,9 +50,8 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_sales_manager_form"/>
         </record>
-
-        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
-        <menuitem id="next_id_88" name="Sales" parent="base.dashboard"/><menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="next_id_88" sequence="1"/>
+		<menuitem icon="terp-graph" id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
+        <menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="board.menu_dasboard" sequence="0"/>
 
     </data>
 </openerp>

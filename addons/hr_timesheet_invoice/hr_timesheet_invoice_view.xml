@@ -116,6 +116,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('to_invoice','&lt;&gt;',False)]</field>
+            <field name="context">{"search_default_user_id":uid}</field>
+     <!--   <field name="search_view_id" ref="account.view_account_analytic_account_search"/> -->
         </record>
         <menuitem
             action="action_hr_analytic_timesheet_open_tree"

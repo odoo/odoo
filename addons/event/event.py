@@ -35,7 +35,6 @@ class event_type(osv.osv):
     _columns = {
         'name': fields.char('Event type', size=64, required=True), 
     }
-    
 event_type()
 
 class event_event(osv.osv):    
@@ -44,7 +43,14 @@ class event_event(osv.osv):
     _description = __doc__
     _inherit = 'crm.case.section'
     _order = 'date_begin'
-
+    
+    def _get_currency(self, cr, uid, context):
+        user = self.pool.get('res.users').browse(cr, uid, [uid])[0]
+        if user.company_id:
+            return user.company_id.currency_id.id
+        else:
+            return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]    
+        
     def copy(self, cr, uid, id, default=None, context=None):        
         """ Copy record of Given id       
         @param id: Id of Event Registration type record.
@@ -57,6 +63,14 @@ class event_event(osv.osv):
             'state': 'draft'
         })    
         return super(event_event, self).copy(cr, uid, id, default=default, context=context)
+    
+    def onchange_product(self, cr, uid, ids, product_id):
+        
+        if not product_id:
+            return {'value': {'unit_price': False}}
+        else:
+           unit_price=self.pool.get('product.product').price_get(cr, uid, [product_id])[product_id]
+           return {'value': {'unit_price': unit_price}}
 
     def button_draft(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
@@ -88,6 +102,7 @@ class event_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary of function fields value. 
         """
+        
         register_pool = self.pool.get('event.registration')
         res = {}
         for event in self.browse(cr, uid, ids, context):
@@ -103,11 +118,11 @@ class event_event(osv.osv):
             reg_ids = register_pool.search(cr, uid, [
                        ('event_id', '=', event.id), 
                        ('state', 'in', state)])
+            
             if 'register_current' in fields:
                 res[event.id]['register_current'] = len(reg_ids)
             if 'register_prospect' in fields: 
                 res[event.id]['register_prospect'] = len(reg_ids)
-            
                
         return res
 
@@ -142,6 +157,7 @@ class event_event(osv.osv):
                     register_pool.write(cr, uid, reg_ids, register_values)
         return res
 
+
     _columns = {
         'type': fields.many2one('event.type', 'Type', help="Type of Event like Seminar, Exhibition, Conference, Training."), 
         'register_max': fields.integer('Maximum Registrations', help="Provide Maximun Number of Registrations"), 
@@ -157,14 +173,25 @@ class event_event(osv.osv):
         'mail_registr': fields.text('Registration Email', help='This email will be sent when someone subscribes to the event.'), 
         'mail_confirm': fields.text('Confirmation Email', help="This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."), 
         'product_id': fields.many2one('product.product', 'Product', required=True, help="Product which is provided cost of event. Invoice of event will be created with this Product."),
-        'note': fields.text('Notes', help="Description or Summary of Event")
+        'note': fields.text('Notes', help="Description or Summary of Event"),
+        'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        "unit_price": fields.float('Cost'),
+        'partner_id': fields.many2one('res.partner','Teacher'),
+        'address_id': fields.many2one('res.partner.address','Location Room'),
+        'teacher_confirmed': fields.boolean('Teacher Confirmed'),
+        'country_id': fields.related('address_id', 'country_id',
+                    type='many2one', relation='res.country', string='Country'),
+
+        
     }
 
     _defaults = {
         'state': 'draft', 
-        'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'event.event'), 
+       # 'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'event.event'), 
         'user_id': lambda obj, cr, uid, context: uid, 
+        'currency_id': _get_currency,
     }
+
 
 event_event()
 
@@ -192,13 +219,16 @@ and users by email"),
         "invoice_id": fields.many2one("account.invoice", "Invoice"), 
         'date_closed': fields.datetime('Closed', readonly=True), 
         'ref': fields.reference('Reference', selection=crm._links_get, size=128), 
-        'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128), 
+        'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
     }
-    
     _defaults = {
         'nb_register': 1, 
         'tobe_invoiced':  True, 
         'name': 'Registration', 
+     #   'currency_id': _get_currency,
     }
 
     def _make_invoice(self, cr, uid, reg, lines, context=None):
@@ -224,6 +254,7 @@ and users by email"),
                 'reference': False, 
                 'invoice_line': [(6, 0, lines)], 
                 'comment': "", 
+                'date_invoice': context.get('date_inv', False)
             })
         inv_id = inv_pool.create(cr, uid, val_invoice['value'])   
         inv_pool.button_compute(cr, uid, [inv_id])
@@ -235,7 +266,7 @@ and users by email"),
         res = False
         invoices = {}
         tax_ids=[]
-        
+        new_invoice_ids = []
         inv_lines_pool = self.pool.get('account.invoice.line')
         inv_pool = self.pool.get('account.invoice')
         product_pool = self.pool.get('product.product')
@@ -276,6 +307,7 @@ and users by email"),
             invoices.setdefault(reg.partner_id.id, []).append((reg, inv_line_ids))
            
         for val in invoices.values():
+            res = False
             if grouped:
                 res = self._make_invoice(cr, uid, val[0][0], [v for k , v in val], context=context)
                 
@@ -286,7 +318,9 @@ and users by email"),
                for k , v in val:
                    res = self._make_invoice(cr, uid, k, [v], context=context)
                    self.write(cr, uid, [k.id], {'state': 'done', 'invoice_id': res}, context=context)
-        return res
+            if res: new_invoice_ids.append(res)
+                
+        return new_invoice_ids
 
     def check_confirm(self, cr, uid, ids, context=None):
         """
@@ -302,7 +336,7 @@ and users by email"),
             if total_confirmed <= registration.event_id.register_max or registration.event_id.register_max == 0:
                 self.write(cr, uid, [registration.id], {'state': 'open'}, context=context)
                 self.mail_user(cr, uid, [registration.id])           
-                self._history(cr, uid, [registration.id], _('Open')) 
+                self._history(cr, uid, [registration], _('Open')) 
             else:
                 unconfirmed_ids.append(registration.id)
         if unconfirmed_ids:
@@ -343,6 +377,7 @@ and users by email"),
         
         values['date_deadline']= event.date_begin
         values['description']= event.mail_confirm
+        values['currency_id'] =  event.currency_id.id
         res = super(event_registration, self).create(cr, uid, values, context=context)
         registrations = self.browse(cr, uid, [res], context=context)
         self._history(cr, uid, registrations, _('Created'))
@@ -354,7 +389,6 @@ and users by email"),
             values['date_deadline']= event.date_begin
             values['description']= event.mail_confirm
         return super(event_registration, self).write(cr, uid, ids, values, context=context)
-    
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):
         """
@@ -434,14 +468,16 @@ and users by email"),
             return {'value': {'unit_price': False, 'event_product': False}}
         data_event =  self.pool.get('event.event').browse(cr, uid, event_id)
         
+        context['currency_id'] = data_event.currency_id.id
+        
         if data_event.product_id:
             if not partner_invoice_id:
                 unit_price=self.pool.get('product.product').price_get(cr, uid, [data_event.product_id.id], context=context)[data_event.product_id.id]
-                return {'value': {'unit_price': unit_price, 'event_product': data_event.product_id.name}}
+                return {'value': {'unit_price': unit_price, 'event_product': data_event.product_id.name, 'currency_id': data_event.currency_id.id}}
             data_partner = self.pool.get('res.partner').browse(cr, uid, partner_invoice_id)
             context.update({'partner_id': data_partner})
             unit_price = self.pool.get('product.product')._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': data_partner.property_product_pricelist.id})[data_event.product_id.id]
-            return {'value': {'unit_price': unit_price, 'event_product': data_event.product_id.name}}
+            return {'value': {'unit_price': unit_price, 'event_product': data_event.product_id.name, 'currency_id': data_event.currency_id.id}}
         
         return {'value': {'unit_price': False, 'event_product': False}}
 
@@ -488,7 +524,6 @@ and users by email"),
         return {'value': data}
 
 event_registration()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

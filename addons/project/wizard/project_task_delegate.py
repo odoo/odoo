@@ -33,12 +33,11 @@ class project_task_delegate(osv.osv_memory):
         'new_task_description': fields.text('New Task Description', help="Reinclude the description of the task in the task of the user"),
         'planned_hours': fields.float('Planned Hours',  help="Estimated time to close this task by the delegated user"),
         'planned_hours_me': fields.float('Hours to Validate', required=True, help="Estimated time for you to validate the work done by the user to whom you delegate this task"),
-        'state': fields.selection([('pending','Pending'),
-                                   ('done','Done'),
-                                     ],'Validation State', required=True, help="New state of your own task. Pending will be reopened automatically when the delegated task is closed"),
-            }
+        'state': fields.selection([('pending','Pending'), ('done','Done'), ], 'Validation State', required=True, help="New state of your own task. Pending will be reopened automatically when the delegated task is closed"), }
 
-    def _get_name(self, cr, uid, context={}):
+    def _get_name(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             if task.name.startswith(_('CHECK: ')):
@@ -48,13 +47,17 @@ class project_task_delegate(osv.osv_memory):
             return newname
         return ''
 
-    def _get_plan_hour(self, cr, uid, context={}):
+    def _get_plan_hour(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             return task.remaining_hours
         return 0.0
 
-    def _get_prefix(self, cr, uid, context={}):
+    def _get_prefix(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             if task.name.startswith(_('CHECK: ')):
@@ -64,7 +67,9 @@ class project_task_delegate(osv.osv_memory):
             return _('CHECK: ')+ newname
         return ''
 
-    def _get_new_desc(self, cr, uid, context={}):
+    def _get_new_desc(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'active_id' in context:
             task = self.pool.get('project.task').browse(cr, uid, context['active_id'])
             return task.description
@@ -79,7 +84,9 @@ class project_task_delegate(osv.osv_memory):
        'state': 'pending',
                }
 
-    def validate(self, cr, uid, ids, context={}):
+    def validate(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         task_obj = self.pool.get('project.task')
         delegate_data = self.read(cr, uid, ids, context=context)[0]
         task = task_obj.browse(cr, uid, context['active_id'], context=context)

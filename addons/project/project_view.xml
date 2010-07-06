@@ -39,10 +39,9 @@
                             <group col="2" colspan="2" name="misc">
                                 <separator colspan="2" string="Miscelleanous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                                <field name="warn_manager"/>
                                 <field name="project_escalation_id"/>
+                                <field name="warn_manager"/>
                             </group>
-
                             <newline/>
                             <group col="9" colspan="8">
                                 <field name="state" select="1"/>
@@ -55,11 +54,10 @@
                                 <button
                                     string="New Project Based on Template"
                                     name="duplicate_template"  type="object"
-                                    states="template" icon="gtk-new"/>
+                                    states="template" icon="gtk-new" context="{'parent_id':parent_id}"/>
                             </group>
                         </page>
                         <page string="Members">
-                            <separator colspan="4" string="Project's members"/>
                             <field colspan="4" name="members" nolabel="1"/>
                         </page>
                         <page groups="base.group_extended" string="Partner Info">
@@ -103,6 +101,7 @@
                     <field name="complete_name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Partner"/>
+                    <field name="parent_id" invisible="1"/>
                     <field name="effective_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="state"/>
@@ -117,7 +116,7 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group col='15' colspan='4'>
-                       <filter icon="terp-document-new" string="Draft" domain="[('state', 'in',('draft'))]" help="Draft Projects" default="1"/>
+                       <filter icon="terp-document-new" string="Draft" domain="[('state', 'in',('draft',))]" help="Draft Projects" default="1"/>
                        <filter icon="terp-check" string="Current" name="Current" domain="[('state', 'in',('open','pending'))]" help="Open and Pending Projects" default="1"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-personal" string="Manager" name="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
@@ -129,6 +128,7 @@
                    </group>
                    <newline />
                     <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                    	<filter string="Parent" name="Parent"  icon="terp-personal" domain = "[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Users" name="Users"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner"  icon="terp-personal" domain = "[]" context="{'group_by':'partner_id'}"/>
                       </group>
@@ -431,7 +431,7 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
                         <filter string="Users" name="group_user_id" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="Project" name="group_project_id" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}" default = "1"/>
+                        <filter string="Project" name="group_project_id" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
@@ -493,7 +493,7 @@
                 <form string="Task Stage">
                     <field name="name" select="1"/>
                     <field name="sequence"/>
-                    <field colspan="4" name="description" select="1"/>
+                    <field colspan="4" name="description"/>
                 </form>
             </field>
         </record>
@@ -516,9 +516,10 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="task_type_tree"/>
         </record>
+
         <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>
         <menuitem action="open_task_type_form" id="menu_task_types_view" parent="menu_tasks_config" sequence="1"/>
-        
+
         <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <act_window
@@ -543,7 +544,6 @@
                 </page>
             </field>
         </record>
-
 
       <!--     User Form-->
       <record id="view_project_users_form_simple" model="ir.ui.view">
