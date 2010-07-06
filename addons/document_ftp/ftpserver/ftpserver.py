@@ -2043,11 +2043,17 @@ class FTPHandler(asynchat.async_chat):
             if not datacr:
                 datacr = ( None, None, None )
             if self.fs.isdir(datacr[1]):
-                listing = self.run_as_current_user(self.fs.listdir, datacr)
-                listing = [ x.path[-1] for x in listing ]
+                nodelist = self.run_as_current_user(self.fs.listdir, datacr)
             else:
                 # if path is a file we just list its name
-                listing = [datacr[1].path[-1],]
+                nodelist = [datacr[1],]
+            
+            listing = []
+            for nl in nodelist:
+                if isinstance(nl.path, (list, tuple)):
+                    listing.append(nl.path[-1])
+                else:
+                    listing.append(nl.path)    # assume string
         except IOError, err:
             self.fs.close_cr(datacr)
             self.respond('550 %s.'% err.strerror)

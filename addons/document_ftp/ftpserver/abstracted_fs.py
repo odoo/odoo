@@ -275,8 +275,8 @@ class abstracted_fs(object):
             if not os.path.isabs(path):
                 path = os.path.join(self.root, path)
 
-            if path == '/' and mode in ('list', 'cwd'):
-                return (None, None, None )
+        if path == '/' and mode in ('list', 'cwd'):
+            return (None, None, None )
 
         path = os.path.normpath(path) # again, for '/db/../ss'
         if path == '.': path = ''
@@ -299,12 +299,14 @@ class abstracted_fs(object):
 
         if os.path.isabs(path):
             # we have to start from root, again
-            p_parts = p_parts[1:]
+            while p_parts[0] == '':
+                p_parts = p_parts[1:]
+            # self._log.debug("Path parts: %r ", p_parts)
             if not p_parts:
                 raise IOError(errno.EPERM, 'Cannot perform operation at root dir')
             dbname = p_parts[0]
             if dbname not in self.db_list():
-                return IOError(errno.ENOENT,'Invalid database path')
+                raise IOError(errno.ENOENT,'Invalid database path')
             try:
                 db = pooler.get_db(dbname)
             except Exception:
@@ -320,6 +322,7 @@ class abstracted_fs(object):
                 raise OSError(2, 'Authentification Required.')
             n = get_node_context(cr, uid, {})
             node = n.get_uri(cr, p_parts[1:])
+            # self._log.debug("get_crdata(abs): %r" % ( (cr, node, rem_path),))
             return (cr, node, rem_path)
         else:
             # we never reach here if cwd_node is not set
@@ -333,6 +336,7 @@ class abstracted_fs(object):
             if node is False and mode not in ('???'):
                 cr.close()
                 raise IOError(errno.ENOENT, 'Path does not exist')
+            # self._log.debug("get_crdata(rel): %r" % ( (cr, node, rem_path),))
             return (cr, node, rem_path)
 
     def get_node_cr_uid(self, node):
