@@ -285,14 +285,10 @@ class document_storage(osv.osv):
                     self._doclog.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
                 raise IOError(errno.ENOENT, 'No file can be located')
             fpath = os.path.join(boo.path, ira.store_fname)
-            if self._debug:
-                self._doclog.debug("Trying to read \"%s\".."% fpath)
             return nodefd_file(file_node, path=fpath, mode=mode)
 
         elif boo.type == 'db':
             # TODO: we need a better api for large files
-            if self._debug:
-                self._doclog.debug("Trying to obtain db_datas for ir.attachment[%d]", ira.id)
             return nodefd_db64(file_node, ira_browse=ira, mode=mode)
 
         elif boo.type == 'realstore':
