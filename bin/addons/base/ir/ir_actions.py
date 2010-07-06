@@ -263,7 +263,8 @@ class act_window(osv.osv):
         'menus': fields.char('Menus', size=4096),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.'),
-        'display_help':fields.function(_get_help_status, type='boolean', method=True, string='Display Help')
+        'display_help':fields.function(_get_help_status, type='boolean', method=True, string='Display Help',
+            help='It gives the status if the help message has to be displayed or not when a user performs an action')
 
     }
     _defaults = {
