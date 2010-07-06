@@ -57,6 +57,8 @@ class crm_meeting(osv.osv, crm_case):
         'id': fields.integer('ID'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'write_date': fields.datetime('Write Date' , readonly=True),
+        'date_action_last': fields.datetime('Last Action', readonly=1),
+        'date_action_next': fields.datetime('Next Action', readonly=1),
         # Meeting fields
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \

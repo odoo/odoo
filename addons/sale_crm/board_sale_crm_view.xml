@@ -39,7 +39,7 @@
 			<field name="res_model">account.invoice.report</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree</field>
-			<field name="view_id" ref="view_turnover_by_month_tree"/>
+			<field name="view_id" ref="view_turnover_by_month_graph"/>
 			<field name="domain">[('year','ilike',time.strftime('%Y')),('user_id','=',uid)]</field>
 			<field name="context">{'group_by_no_leaf':1,'group_by':['month']}</field>
         	<field name="search_view_id" ref="account.view_account_invoice_report_search"/>

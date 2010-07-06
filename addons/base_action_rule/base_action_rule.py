@@ -21,8 +21,6 @@
 
 from datetime import datetime
 from osv import fields, osv, orm
-from osv.orm import except_orm
-from osv.osv import osv_pool
 from tools.translate import _
 import mx.DateTime
 import pooler 
@@ -42,17 +40,14 @@ class base_action_rule(osv.osv):
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param context: A standard dictionary for contextual values """
-
         return self.state_get(cr, uid, context=context)
 
-   
     def state_get(self, cr, uid, context={}):
         """ Get State
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param context: A standard dictionary for contextual values """
-
         return [('', '')]
   
     def priority_get(self, cr, uid, context={}):
@@ -61,14 +56,13 @@ class base_action_rule(osv.osv):
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param context: A standard dictionary for contextual values """
-
         return [('', '')]
 
     _columns = {
         'name': fields.many2one('ir.model', 'Object', required=True), 
         'max_level': fields.integer('Max Level', help='Specifies maximum level.'), 
         'create_date': fields.datetime('Create Date', readonly=1), 
-        'active': fields.boolean('Active', help="If the active field is set to true,\
+        'active': fields.boolean('Active', help="If the active field is set to False,\
  it will allow you to hide the rule without removing it."), 
         'sequence': fields.integer('Sequence', help="Gives the sequence order \
 when displaying a list of rules."), 
@@ -85,10 +79,7 @@ specifies you can put a negative number. If you need a delay before the \
 trigger date, like sending a reminder 15 minutes before a meeting."), 
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'), \
                                 ('day', 'Days'), ('month', 'Months')], 'Delay type'), 
-
-
         'trg_user_id':  fields.many2one('res.users', 'Responsible'), 
-
         'trg_partner_id': fields.many2one('res.partner', 'Partner'), 
         'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'), 
         'trg_state_from': fields.selection(_state_get, 'State', size=16), 
@@ -171,10 +162,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
     def _register_hook(self, cr, uid, ids, context=None):
         if not context:
             context = {}
-        model_pool = self.pool.get('ir.model')
         for action_rule in self.browse(cr, uid, ids, context=context):
             model = action_rule.name.model
-            obj_pool = self.pool.get(model)        
+            obj_pool = self.pool.get(model)
             obj_pool.__setattr__('create', self._create(obj_pool.create, model, context=context))
             obj_pool.__setattr__('write', self._write(obj_pool.write, model, context=context))
         return True
@@ -194,7 +184,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         """
         This Function is call by scheduler.
         """
-        rule_pool= self.pool.get('base.action.rule')
+        rule_pool = self.pool.get('base.action.rule')
         rule_ids = rule_pool.search(cr, uid, [], context=context)
         return self._register_hook(cr, uid, rule_ids, context=context)
         
@@ -202,7 +192,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
     def format_body(self, body):
         """ Foramat Action rule's body
             @param self: The object pointer """
-
         return body and tools.ustr(body) or ''
 
     def format_mail(self, obj, body):
@@ -392,7 +381,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                                 obj.date_action_next = dt
                                 model_obj.write(cr, uid, [obj.id], {'date_action_next': dt}, context)
                 else:
-                    ok = action.trg_date_type=='none'
+                    ok = action.trg_date_type == 'none'
 
                 if ok:
                     self.do_action(cr, uid, action, model_obj, obj, context)
@@ -431,7 +420,7 @@ class ir_cron(osv.osv):
     
     def _poolJobs(self, db_name, check=False):
         try:
-            db, pool = pooler.get_db_and_pool(db_name)
+            db = pooler.get_db(db_name)
         except:
             return False
         cr = db.cursor()
@@ -439,8 +428,7 @@ class ir_cron(osv.osv):
             next = datetime.now().strftime('%Y-%m-%d %H:00:00')
             # Putting nextcall always less than current time in order to call it every time
             cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
-            cr.commit()
-            res = super(ir_cron, self)._poolJobs(db_name, check=check)
+            super(ir_cron, self)._poolJobs(db_name, check=check)
         finally:
             cr.commit()
             cr.close()
