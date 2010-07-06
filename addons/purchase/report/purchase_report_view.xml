@@ -179,12 +179,12 @@
     <record model="ir.ui.view" id="view_purchase_by_supplier_graph">
             <field name="name">purchase.by.supplier.graph</field>
             <field name="model">purchase.report</field>
-            <field name="type">tree</field>
+            <field name="type">graph</field>
             <field name="arch" type="xml">
-                <tree string="Purchase by supplier" >
+                <graph string="Purchase by supplier" type="bar">
                     <field name="partner_id"/>
                     <field name="nbr" operator="+"/>
-                </tree>
+                </graph>
             </field>
         </record>
 	<record id="action_purchase_by_supplier" model="ir.actions.act_window">
@@ -200,13 +200,14 @@
     <record model="ir.ui.view" id="view_total_price_by_product_by_state_graph">
             <field name="name">total.price.by.product.by.state.graph</field>
             <field name="model">purchase.report</field>
-            <field name="type">tree</field>
+            <field name="type">graph</field>
             <field name="arch" type="xml">
-                <tree string="Total price by product by state"  >
+                <graph string="Total price by product by state"  type="pie">
                     <field name="product_id"/>
-                    <field name="price_total" operator="+"/>
                     <field name="state" group="True"/>
-                </tree>
+                    <field name="price_total" operator="+"/>
+
+                </graph>
             </field>
         </record>
 	<record id="action_total_price_by_product_by_state" model="ir.actions.act_window">
@@ -221,12 +222,12 @@
     <record model="ir.ui.view" id="view_qty_per_product_graph">
             <field name="name">qty.per.product.graph</field>
             <field name="model">purchase.report</field>
-            <field name="type">tree</field>
+            <field name="type">graph</field>
             <field name="arch" type="xml">
-                <tree string="Qty. per product" >
+                <graph string="Qty. per product" type="bar">
                     <field name="product_id"/>
                     <field name="quantity" operator="+"/>
-                </tree>
+                </graph>
             </field>
         </record>
 	<record id="action_qty_per_product" model="ir.actions.act_window">
