@@ -120,14 +120,20 @@ def _populate_statement(obj, cursor, user, data, context):
         # else:
         ctx['date'] = line_date
         amount = 0.0
+        
+        if line.debit > 0:
+            amount = line.debit
+        elif line.credit > 0:
+            amount = -line.credit
+                
         if line.amount_currency:
             amount = currency_obj.compute(cursor, user, line.currency_id.id,
                 statement.currency.id, line.amount_currency, context=ctx)
-        else:
-            if line.debit > 0:
-                amount=line.debit
-            elif line.credit > 0:
-                amount=-line.credit
+        elif (line.invoice and line.invoice.currency_id.id <> statement.currency.id):
+            amount = currency_obj.compute(cursor, user, line.invoice.currency_id.id,
+                statement.currency.id, amount, context=ctx)
+            
+            
         reconcile_id = statement_reconcile_obj.create(cursor, user, {
             'line_ids': [(6, 0, [line.id])]
             }, context=context)
