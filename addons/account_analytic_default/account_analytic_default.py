@@ -72,8 +72,8 @@ class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
     _description = 'account invoice line'
     
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition=False, price_unit=False, address_invoice_id=False, context={}):
-        res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition, price_unit, address_invoice_id, context)
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fiscal_position=False, price_unit=False, address_invoice_id=False, context={}):
+        res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fiscal_position, price_unit, address_invoice_id, context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context)
         if rec:
             res_prod['value'].update({'account_analytic_id':rec.analytic_id.id})
