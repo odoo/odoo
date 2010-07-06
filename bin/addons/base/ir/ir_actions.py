@@ -223,10 +223,10 @@ class act_window(osv.osv):
         return res
 
     def _get_help_status(self, cr, uid, ids, name, arg, context={}):
-        cr.execute(""" select action.id,
-                     CASE WHEN r.uid is NULL THEN True ELSE False END
-                     as help_status from ir_act_window action
-                     LEFT JOIN ir_act_window_user_rel r on
+        cr.execute(""" SELECT action.id,
+                     CASE WHEN r.uid IS NULL THEN True ELSE False END
+                     AS help_status FROM ir_act_window action
+                     LEFT JOIN ir_act_window_user_rel r ON
                      (action.id = r.act_id AND (r.uid IS NULL or r.uid= %s)) WHERE action.id = ANY(%s)""",(uid,ids,))
         return dict(cr.fetchall())
 
