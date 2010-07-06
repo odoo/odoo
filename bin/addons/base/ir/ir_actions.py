@@ -223,6 +223,13 @@ class act_window(osv.osv):
         return res
 
     def _get_help_status(self, cr, uid, ids, name, arg, context={}):
+#        cr.execute('select uid from ir_act_window_user_rel where act_id=ANY(%s)',(ids,))
+#        user_ids = map(lambda x:x[0],cr.fetchall())
+#        res = {}
+#        for action in ids:
+#            res[action] = True
+#            if uid in user_ids:
+#                res[action] = False
         res = {}
         for action in self.browse(cr, uid, ids):
             res[action.id] = True
