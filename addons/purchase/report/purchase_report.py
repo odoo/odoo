@@ -47,7 +47,7 @@ class purchase_report(osv.osv):
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
         'location_id': fields.many2one('stock.location', 'Destination', readonly=True),
-        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
+        'partner_id':fields.many2one('res.partner', 'Supplier', readonly=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address Contact Name', readonly=True),
         'dest_address_id':fields.many2one('res.partner.address', 'Dest. Address Contact Name',readonly=True),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', readonly=True),

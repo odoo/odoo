@@ -58,12 +58,6 @@ class sale_order_dates(osv.osv):
         'effective_date': fields.function(_get_effective_date, method=True, type='date', store=True,string='Effective Date'),
     }
 sale_order_dates()
-"""
- - date_commitment: min(fields.function using delay on SO lines +
-          date_order)
-        - date_requested: fields.date
-        - Effective date: fields.function the first picking done.
-"""
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
