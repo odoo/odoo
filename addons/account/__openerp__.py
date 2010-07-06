@@ -79,7 +79,7 @@ module named account_vouchers
         'wizard/account_report_general_ledger_view.xml',
         'wizard/account_invoice_state_view.xml',
         'wizard/account_partner_balance_report_view.xml',
-        'wizard/account_balance_report_view.xml',
+        'wizard/account_report_balance_view.xml',
         'wizard/account_move_line_select_view.xml',
         'wizard/account_aged_trial_balance_view.xml',
         'wizard/account_compare_account_balance_report_view.xml',

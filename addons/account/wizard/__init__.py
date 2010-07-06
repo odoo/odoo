@@ -34,11 +34,8 @@ import account_journal_select
 import account_move_bank_reconcile
 import account_subscription_generate
 import account_aged_trial_balance
-#import account_general_ledger_report
-import account_report_general_ledger
 import account_third_party_ledger
 import account_partner_balance_report
-import account_balance_report
 import account_period_close
 import account_fiscalyear_close
 import account_fiscalyear_close_state
@@ -61,6 +58,8 @@ import account_common_journal_report
 import account_report_print_journal
 import account_report_central_journal
 import account_report_general_journal
+import account_report_general_ledger
+import account_report_balance
 
 import account_change_currency
 
