@@ -38,6 +38,7 @@ class account_analytic_default(osv.osv):
         'date_start': fields.date('Start Date'),
         'date_stop': fields.date('End Date'),
     }
+    
     def account_get(self, cr, uid, product_id=None, partner_id=None, user_id=None, date=None, context=None):
         domain = []
         if product_id:
@@ -65,6 +66,7 @@ class account_analytic_default(osv.osv):
                 res = rec
                 best_index = index
         return res
+    
 account_analytic_default()
 
 class account_invoice_line(osv.osv):
@@ -79,6 +81,7 @@ class account_invoice_line(osv.osv):
         else:
             res_prod['value'].update({'account_analytic_id':False})
         return res_prod
+    
 account_invoice_line()
 
 
@@ -105,14 +108,14 @@ class sale_order_line(osv.osv):
         create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
         if not ids:
             return create_ids
-        sale_line_obj = self.browse(cr, uid, ids[0], context)
-        pool_inv_line = self.pool.get('account.invoice.line')
-
-        for line in pool_inv_line.browse(cr, uid, create_ids, context):
-            rec = self.pool.get('account.analytic.default').account_get(cr, uid, line.product_id.id, sale_line_obj.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
+        sale_line = self.browse(cr, uid, ids[0], context)
+        inv_line_obj = self.pool.get('account.invoice.line')
+        anal_def_obj = self.pool.get('account.analytic.default')
+        for line in inv_line_obj.browse(cr, uid, create_ids, context):
+            rec = anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
 
             if rec:
-                pool_inv_line.write(cr, uid, [line.id], {'account_analytic_id':rec.analytic_id.id}, context=context)
+                inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id':rec.analytic_id.id}, context=context)
         return create_ids
 
 sale_order_line()

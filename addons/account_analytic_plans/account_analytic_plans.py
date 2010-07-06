@@ -53,6 +53,7 @@ class account_analytic_plan(osv.osv):
         'name': fields.char('Analytic Plan', size=64, required=True, select=True,),
         'plan_ids': fields.one2many('account.analytic.plan.line','plan_id','Analytic Plans'),
     }
+    
 account_analytic_plan()
 
 class account_analytic_plan_line(osv.osv):
@@ -71,6 +72,7 @@ class account_analytic_plan_line(osv.osv):
         'min_required': 100.0,
         'max_required': 100.0,
     }
+    
 account_analytic_plan_line()
 
 class account_analytic_plan_instance(osv.osv):
@@ -187,16 +189,18 @@ class account_analytic_plan_instance(osv.osv):
             pids = self.pool.get('account.analytic.plan.instance').search(cr, uid, [('name','=',vals['name']),('code','=',vals['code']),('plan_id','<>',False)])
             if pids:
                 raise osv.except_osv(_('Error'), _('A model having this name and code already exists !'))
-
-            res = self.pool.get('account.analytic.plan.line').search(cr, uid, [('plan_id','=',journal.plan_id.id)])
+            
+            acct_anal_acct = self.pool.get('account.analytic.account')
+            acct_anal_plan_line_obj = self.pool.get('account.analytic.plan.line')
+            res = acct_anal_plan_line_obj.search(cr, uid, [('plan_id','=',journal.plan_id.id)])
             for i in res:
                 total_per_plan = 0
-                item = self.pool.get('account.analytic.plan.line').browse(cr, uid, i)
+                item = acct_anal_plan_line_obj.browse(cr, uid, i)
                 temp_list=['account1_ids','account2_ids','account3_ids','account4_ids','account5_ids','account6_ids']
                 for l in temp_list:
                     if vals.has_key(l):
                         for tempo in vals[l]:
-                            if self.pool.get('account.analytic.account').search(cr, uid, [('parent_id','child_of',[item.root_analytic_id.id]),('id','=',tempo[2]['analytic_account_id'])]):
+                            if acct_anal_acct.search(cr, uid, [('parent_id','child_of',[item.root_analytic_id.id]),('id','=',tempo[2]['analytic_account_id'])]):
                                 total_per_plan += tempo[2]['rate']
                 if total_per_plan < item.min_required or total_per_plan > item.max_required:
                     raise osv.except_osv(_('Value Error') ,_('The Total Should be Between %s and %s') % (str(item.min_required), str(item.max_required)))
@@ -252,6 +256,7 @@ class account_journal(osv.osv):
     _columns = {
         'plan_id':fields.many2one('account.analytic.plan', 'Analytic Plans'),
     }
+    
 account_journal()
 
 class account_invoice_line(osv.osv):
@@ -277,6 +282,7 @@ class account_invoice_line(osv.osv):
         if rec and rec.analytics_id:
             res_prod['value'].update({'analytics_id':rec.analytics_id.id})
         return res_prod
+    
 account_invoice_line()
 
 class account_move_line(osv.osv):
@@ -345,6 +351,7 @@ class account_invoice(osv.osv):
             sign = -1
 
         iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id)
+        acct_ins_obj = self.pool.get('account.analytic.plan.instance')
 
         for il in iml:
             if il['analytics_id']:
@@ -353,14 +360,14 @@ class account_invoice(osv.osv):
                     ref = inv.reference
                 else:
                     ref = self._convert_ref(cr, uid, inv.number)
-                obj_move_line=self.pool.get('account.analytic.plan.instance').browse(cr, uid, il['analytics_id'])
-                amount_calc=cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, il['price'], context={'date': inv.date_invoice}) * sign
-                qty=il['quantity']
+                obj_move_line = acct_ins_obj.browse(cr, uid, il['analytics_id'])
+                amount_calc = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, il['price'], context={'date': inv.date_invoice}) * sign
+                qty = il['quantity']
                 il['analytic_lines']=[]
                 for line2 in obj_move_line.account_ids:
-                    amt=amount_calc * (line2.rate/100)
-                    qtty=qty* (line2.rate/100)
-                    al_vals={
+                    amt = amount_calc * (line2.rate/100)
+                    qtty = qty* (line2.rate/100)
+                    al_vals = {
                         'name': il['name'],
                         'date': inv['date_invoice'],
                         'unit_amount':qtty,
@@ -389,6 +396,7 @@ class analytic_default(osv.osv):
     _columns = {
         'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
+    
 analytic_default()
 
 class sale_order_line(osv.osv):
@@ -398,14 +406,15 @@ class sale_order_line(osv.osv):
     def invoice_line_create(self, cr, uid, ids, context=None):
         create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
         if ids:
-            sale_line_obj = self.browse(cr, uid, ids[0], context)
-            pool_inv_line = self.pool.get('account.invoice.line')
-
-            for line in pool_inv_line.browse(cr, uid, create_ids, context):
-                rec = self.pool.get('account.analytic.default').account_get(cr, uid, line.product_id.id, sale_line_obj.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
+            sale_line = self.browse(cr, uid, ids[0], context)
+            inv_line_obj = self.pool.get('account.invoice.line')
+            acct_anal_def_obj = self.pool.get('account.analytic.default')
+            
+            for line in inv_line_obj.browse(cr, uid, create_ids, context):
+                rec = acct_anal_def_obj.account_get(cr, uid, line.product_id.id, sale_line.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
 
                 if rec:
-                    pool_inv_line.write(cr, uid, [line.id], {'analytics_id':rec.analytics_id.id}, context=context)
+                    inv_line_obj.write(cr, uid, [line.id], {'analytics_id':rec.analytics_id.id}, context=context)
         return create_ids
 
 sale_order_line()
