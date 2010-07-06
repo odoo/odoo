@@ -196,7 +196,7 @@ class document_file(osv.osv):
             vals['res_model'] = context.get('default_res_model', False)
         if vals.get('res_id', False) and vals.get('res_model', False) \
                 and not vals.get('partner_id', False):
-            vals['partner_id'] = __get_partner_id(cr, uid, \
+            vals['partner_id'] = self.__get_partner_id(cr, uid, \
                 vals['res_model'], vals['res_id'], context)
 
         datas = None
@@ -222,16 +222,15 @@ class document_file(osv.osv):
             It is a hack that will try to discover if the mentioned record is
             clearly associated with a partner record.
         """
-        if False:
-            obj_model = self.pool.get(vals['res_model'])
-            if obj_model._name == 'res.partner':
-                return res_id
-            elif 'partner_id' in obj_model._columns and obj_model._columns['partner_id']._obj == 'res.partner':
-                bro = obj_model.browse(self, cr, uid, res_id, context=context)
-                return bro.partner_id.id
-            elif 'address_id' in obj_model._columns and obj_model._columns['address_id']._obj == 'res.partner.address':
-                bro = obj_model.browse(self, cr, uid, res_id, context=context)
-                return bro.address_id.partner_id.id
+        obj_model = self.pool.get(res_model)
+        if obj_model._name == 'res.partner':
+            return res_id
+        elif 'partner_id' in obj_model._columns and obj_model._columns['partner_id']._obj == 'res.partner':
+            bro = obj_model.browse(self, cr, uid, res_id, context=context)
+            return bro.partner_id.id
+        elif 'address_id' in obj_model._columns and obj_model._columns['address_id']._obj == 'res.partner.address':
+            bro = obj_model.browse(self, cr, uid, res_id, context=context)
+            return bro.address_id.partner_id.id
         return False
 
     def unlink(self, cr, uid, ids, context={}):
