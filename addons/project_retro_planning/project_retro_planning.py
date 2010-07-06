@@ -19,12 +19,14 @@
 #
 ##############################################################################
 
-from datetime import date,timedelta,datetime
+from datetime import date, timedelta, datetime
 import time
+
 from osv import fields, osv
 
 class project_project(osv.osv):
     _inherit = 'project.project'
+
     def write(self, cr, uid, ids,vals, *args, **kwargs):
         if 'date' in vals and vals['date']:
             data_project = self.browse(cr, uid, ids)
@@ -43,4 +45,3 @@ class project_project(osv.osv):
 
 project_project()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

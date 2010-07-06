@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from mx import DateTime
 import time
 
 from osv import fields, osv
@@ -29,16 +28,16 @@ class hr_action_reason(osv.osv):
     _name = "hr.action.reason"
     _description = "Action Reason"
     _columns = {
-        'name' : fields.char('Reason', size=64, required=True, help='Specifies the reason for Signing In/Signing Out.'),
-        'action_type' : fields.selection([('sign_in', 'Sign in'), ('sign_out', 'Sign out')], "Action's type"),
+        'name': fields.char('Reason', size=64, required=True, help='Specifies the reason for Signing In/Signing Out.'),
+        'action_type': fields.selection([('sign_in', 'Sign in'), ('sign_out', 'Sign out')], "Action's type"),
     }
     _defaults = {
-        'action_type' : lambda *a: 'sign_in',
+        'action_type': 'sign_in',
     }
 hr_action_reason()
 
 def _employee_get(obj, cr, uid, context=None):
-    ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+    ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)])
     if ids:
         return ids[0]
     return False
@@ -51,18 +50,18 @@ class hr_attendance(osv.osv):
         res = dict.fromkeys(ids, '')
         for obj in self.browse(cr, uid, ids, context=context):
             res[obj.id] = time.strftime('%Y-%m-%d', time.strptime(obj.name, '%Y-%m-%d %H:%M:%S'))
-
         return res
+
     _columns = {
-        'name' : fields.datetime('Date', required=True, select=1),
-        'action' : fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'),('action','Action')], 'Action', required=True),
-        'action_desc' : fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
-        'employee_id' : fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
-        'day' : fields.function(_day_compute, method=True, type='char', string='Day', store=True, select=1, size=32),
+        'name': fields.datetime('Date', required=True, select=1),
+        'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
+        'action_desc': fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
+        'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
+        'day': fields.function(_day_compute, method=True, type='char', string='Day', store=True, select=1, size=32),
     }
     _defaults = {
-        'name' : lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'employee_id' : _employee_get,
+        'name': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'employee_id': _employee_get,
     }
 
     def _altern_si_so(self, cr, uid, ids):
@@ -75,7 +74,6 @@ class hr_attendance(osv.osv):
             and name <= (select name from hr_attendance where id=%s)
             order by name desc
             limit 2 '''
-
             cr.execute(sql,(id,id))
             atts = cr.fetchall()
             if not ((len(atts)==1 and atts[0][0] == 'sign_in') or (atts[0][0] != atts[1][0] and atts[0][1] != atts[1][1])):
@@ -113,19 +111,18 @@ class hr_employee(osv.osv):
        'state': fields.function(_state, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
      }
 
-    def _action_check(self, cr, uid, emp_id, dt=False,context={}):
+    def _action_check(self, cr, uid, emp_id, dt=False, context=None):
         cr.execute('select max(name) from hr_attendance where employee_id=%s', (emp_id,))
         res = cr.fetchone()
         return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 
-    def attendance_action_change(self, cr, uid, ids, type='action', context={}, dt=False, *args):
+    def attendance_action_change(self, cr, uid, ids, type='action', context=None, dt=False, *args):
         id = False
         warning_sign = 'sign'
 
         #Special case when button calls this method :type=context
-        if isinstance(type,dict):
+        if isinstance(type, dict):
             type = type.get('type','action')
-
         if type == 'sign_in':
             warning_sign = "Sign In"
         elif type == 'sign_out':
@@ -135,15 +132,15 @@ class hr_employee(osv.osv):
             if not self._action_check(cr, uid, emp['id'], dt, context):
                 raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
 
-            res = {'action' : type, 'employee_id' : emp['id']}
+            res = {'action': type, 'employee_id': emp['id']}
 
             if dt:
                 res['name'] = dt
-
             id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
 
         if type != 'action':
             return id
+
         return True
 
 hr_employee()

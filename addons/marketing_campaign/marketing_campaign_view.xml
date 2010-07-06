@@ -241,10 +241,11 @@
                         <group attrs="{'invisible':[('type','!=','action')]}" >
                             <field name="server_action_id" attrs="{'required':[('type','=','action')]}" domain="[('model_id','=',object_id)]" />
                         </group>
+                        <!--
                         <group attrs="{'invisible':[('type','!=','subcampaign')]}" >
                             <field name="subcampaign_id" attrs="{'required':[('type','=','subcampaign')]}" />
-                            <field name="subcampaign_segment_id" attrs="{'required':[('type','=','subcampaign')]}" />
                         </group>
+                        -->
                     </group>
                 </group>
                 <newline/>

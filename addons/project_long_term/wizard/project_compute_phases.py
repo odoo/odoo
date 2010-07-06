@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import datetime
 from resource.faces import *
 from new import classobj
@@ -48,6 +49,8 @@ class project_compute_phases(osv.osv_memory):
         return self.compute_date(cr, uid, ids, context=context)
 
     def _phase_schedule(self, cr, uid, phase, start_date, calendar_id=False, context=None):
+       if context is None:
+            context = {}
        """Schedule phase with the start date till all the next phases are completed.
 
        Arguements: start_dsate -- start date for the phase
@@ -118,7 +121,7 @@ class project_compute_phases(osv.osv_memory):
                                                    context=ctx)
             # Recursive call till all the next phases scheduled
             for phase in phase.next_phase_ids:
-               if phase.state in ['draft','open','pending']:
+               if phase.state in ['draft', 'open', 'pending']:
                    id_cal = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
                    self._phase_schedule(cr, uid, phase, date_start, id_cal, context=context)
                else:

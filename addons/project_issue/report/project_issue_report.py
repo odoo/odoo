@@ -13,7 +13,9 @@ class project_issue_report(osv.osv):
     _name = "project.issue.report"
     _auto = False
 
-    def _get_data(self, cr, uid, ids, field_name, arg, context={}):
+    def _get_data(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
         """ @param cr: the current row, from the database cursor,
             @param uid: the current users ID for security checks,
             @param ids: List of case and section Datas IDs

@@ -46,7 +46,7 @@ class project_gtd_context(osv.osv):
         'project_default_id': fields.many2one('project.project', 'Default Project', required=True),
     }
     _defaults = {
-        'sequence': lambda *args: 1
+        'sequence': 1
     }
     _order = "sequence, name"
 
@@ -125,15 +125,18 @@ class project_task(osv.osv):
      }
 
     def copy_data(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
         if not default:
             default = {}
-        default['timebox_id']=False
-        default['context_id']=False
+        default['timebox_id'] = False
+        default['context_id'] = False
         return super(project_task,self).copy_data(cr, uid, id, default, context)
 
-    def _get_context(self,cr, uid, ctx):
-        ids = self.pool.get('project.gtd.context').search(cr, uid, [], context=ctx)
+    def _get_context(self,cr, uid, context=None):
+        ids = self.pool.get('project.gtd.context').search(cr, uid, [], context=context)
         return ids and ids[0] or False
+
     _defaults = {
         'context_id': _get_context
     }
@@ -192,7 +195,7 @@ class project_task(osv.osv):
             context_id_info['context_id']['selection'] = attrs_sel
             res['fields'].update(context_id_info)
         return res
+
 project_task()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

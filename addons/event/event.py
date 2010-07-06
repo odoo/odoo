@@ -254,6 +254,7 @@ and users by email"),
                 'reference': False, 
                 'invoice_line': [(6, 0, lines)], 
                 'comment': "", 
+                'date_invoice': context.get('date_inv', False)
             })
         inv_id = inv_pool.create(cr, uid, val_invoice['value'])   
         inv_pool.button_compute(cr, uid, [inv_id])

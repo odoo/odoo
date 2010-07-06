@@ -9,23 +9,17 @@
             <field name="kind">function</field>
         </record>
         
-        <record id="hr_payroll.t2" model="workflow.transition">
-            <field name="act_from" ref="hr_payroll.act_draft"/>
-            <field name="act_to" ref="hr_payroll.act_hr_check"/>
+        <record id="hr_payroll.t4" model="workflow.transition">
+            <field name="act_from" ref="hr_payroll.act_confirm"/>
+            <field name="act_to" ref="act_account_check"/>
             <field name="condition">True</field>
-            <field name="signal">verify_sheet</field>
+            <field name="signal">account_verify_sheet</field>
         </record>
         
         <record id="t3" model="workflow.transition">
-            <field name="act_from" ref="hr_payroll.act_hr_check"/>
-            <field name="act_to" ref="act_account_check"/>
-            <field name="condition">True</field>
-            <field name="signal">verify_twice_sheet</field>
-        </record>
-        
-        <record id="hr_payroll.t5" model="workflow.transition">
             <field name="act_from" ref="act_account_check"/>
-            <field name="act_to" ref="hr_payroll.act_confirm"/>
+            <field name="act_to" ref="hr_payroll.act_done"/>
+            <field name="condition">True</field>
             <field name="signal">final_verify_sheet</field>
         </record>
         
