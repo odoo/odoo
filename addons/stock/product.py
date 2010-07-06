@@ -414,7 +414,6 @@ class product_template(osv.osv):
 
 product_template()
 
-
 class product_category(osv.osv):
 
     _inherit = 'product.category'
