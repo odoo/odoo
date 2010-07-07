@@ -1060,7 +1060,7 @@ class account_move(osv.osv):
         return amount
 
     def _centralise(self, cr, uid, move, mode, context=None):
-        assert(mode in ('debit', 'credit'), 'Invalid Mode') #to prevent sql injection
+        assert (mode in ('debit', 'credit')), 'Invalid Mode' #to prevent sql injection
         if context is None:
             context = {}
 
