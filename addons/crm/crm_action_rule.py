@@ -115,25 +115,21 @@ this if you want the rule to send an email to the partner."),
 
 
     def state_get(self, cr, uid, context={}):
-
-        """@param self: The object pointer
+        """Gets available states for crm
+        @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
-
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
         return res  + crm.AVAILABLE_STATES
 
     def priority_get(self, cr, uid, context={}):
-
         """@param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
-
         res = super(base_action_rule, self).priority_get(cr, uid, context=context)
         return res + crm.AVAILABLE_PRIORITIES
-
 
 base_action_rule()
 

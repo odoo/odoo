@@ -22,7 +22,7 @@
 import time
 from datetime import datetime
 from datetime import timedelta
-
+import base64
 import tools
 from osv import fields
 from osv import osv
@@ -342,7 +342,6 @@ class crm_case(object):
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context={}, attach=False,destination=True):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -359,8 +358,9 @@ class crm_case(object):
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
                 dest = case.section_id.reply_to
-                body = ""
-                body = case.email_last or case.description
+                body = case.description or ""
+                if case.message_ids:
+                    body = case.message_ids[0].description or ""
                 if not destination:
                     src, dest = dest, src
                     if body and case.user_id.signature:
@@ -371,7 +371,7 @@ class crm_case(object):
                 attach_to_send = None
 
                 if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'mailgate.thread'), ('res_id', '=', case.id)])
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
                     attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 

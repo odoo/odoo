@@ -60,7 +60,7 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
     if exrule:
         rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
 
-    return rset1._iter()
+    return list(rset1._iter())
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
     """
@@ -822,6 +822,8 @@ class calendar_alarm(osv.osv):
                 delta = alarm.trigger_occurs == 'after' and delta or -delta
 
                 for rdate in recurrent_dates:
+                    if rdate + delta > current_datetime:
+                        break
                     if rdate + delta <= current_datetime:
                         re_dates.append(rdate.strftime("%Y-%m-%d %H:%M:%S"))
                 rest_dates = recurrent_dates[len(re_dates):]

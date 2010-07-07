@@ -200,7 +200,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
         return res
 
-    def _last_worked_date_calc (self, cr, uid, ids, name, arg, context = None):
+    def _last_worked_date_calc (self, cr, uid, ids, name, arg, context=None):
         res = {}
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)]))
         if parent_ids:
@@ -384,6 +384,7 @@ class account_analytic_account(osv.osv):
         'month_ids': fields.function(_month, method=True, type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_user, method=True, type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
     }
+    
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):
@@ -507,11 +508,11 @@ class account_analytic_account_summary_user(osv.osv):
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
-
+        res_trans_obj = self.pool.get('ir.translation')
         for f in fields_pre:
             if self._columns[f].translate:
                 ids = map(lambda x: x['id'], res)
-                res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
+                res_trans = res_trans_obj._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
                 for r in res:
                     r[f] = res_trans.get(r['id'], False) or r[f]
 
@@ -683,11 +684,12 @@ class account_analytic_account_summary_month(osv.osv):
                 res.extend(cr.dictfetchall())
         else:
             res = map(lambda x: {'id': x}, ids)
-
+            
+        res_trans_obj = self.pool.get('ir.translation')
         for f in fields_pre:
             if self._columns[f].translate:
                 ids = map(lambda x: x['id'], res)
-                res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
+                res_trans = res_trans_obj._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
                 for r in res:
                     r[f] = res_trans.get(r['id'], False) or r[f]
 
