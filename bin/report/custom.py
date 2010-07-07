@@ -24,6 +24,7 @@ import time
 import netsvc
 
 import tools
+from tools.safe_eval import safe_eval as eval
 import print_xml
 import render
 from interface import report_int
@@ -36,6 +37,7 @@ from pychart import *
 import misc
 import cStringIO
 from lxml import etree
+from tools.translate import _
 
 class external_pdf(render.render):
     def __init__(self, pdf):

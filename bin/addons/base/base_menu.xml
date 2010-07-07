@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-administration" id="menu_administration" name="Administration" sequence="20"/>
+        <menuitem icon="terp-administration" id="menu_administration" name="Administration" sequence="50"/>
         <menuitem icon="terp-administration" id="menu_administration_shortcut" parent="menu_administration" name="Custom Shortcuts" sequence="50"/>
         <menuitem id="next_id_4" name="Low Level Objects"
             parent="base.menu_administration" sequence="3"
             groups="base.group_extended"/>
-
         <menuitem id="menu_low_workflow" name="Workflow Items" parent="base.next_id_4"/>
         <menuitem id="menu_custom" name="Customization"
             parent="base.menu_administration" sequence="2"
             groups="base.group_extended"/>
-        <menuitem id="menu_custom_action" name="Actions" parent="base.menu_custom" sequence="20"/>
+        <menuitem id="menu_custom_action" name="Actions" parent="base.menu_custom" groups="base.group_extended" sequence="20"/>
         <menuitem id="menu_config" name="Configuration" parent="base.menu_administration" sequence="1"/>
         <menuitem id="menu_translation" name="Translations" parent="base.menu_administration" sequence="4"/>
         <menuitem id="menu_translation_app" name="Application Terms" parent="base.menu_translation" sequence="4"/>
@@ -23,5 +22,6 @@
             groups="base.group_extended"/>
         <menuitem id="menu_management" name="Modules Management" parent="base.menu_administration" sequence="10"
             groups="base.group_extended"/>
+        <menuitem icon="terp-graph" id="reporting_menu" name="Reporting" sequence="45"/>
     </data>
 </openerp>

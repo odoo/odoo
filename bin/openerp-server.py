@@ -113,8 +113,15 @@ if not ( tools.config["stop_after_init"] or \
     service.netrpc_server.init_servers()
 
 if tools.config['db_name']:
-    for db in tools.config['db_name'].split(','):
-        pooler.get_db_and_pool(db, update_module=tools.config['init'] or tools.config['update'])
+    for dbname in tools.config['db_name'].split(','):
+        db,pool = pooler.get_db_and_pool(dbname, update_module=tools.config['init'] or tools.config['update'], pooljobs=False)
+        if tools.config["test-file"]:
+            logger.notifyChannel("init", netsvc.LOG_INFO, 
+                 'loading test file %s' % (tools.config["test-file"],))
+            cr = db.cursor()
+            tools.convert_yaml_import(cr, 'base', file(tools.config["test-file"]), {}, 'test', True)
+            cr.rollback()
+        pool.get('ir.cron')._poolJobs(db.dbname)
 
 #----------------------------------------------------------
 # translation stuff

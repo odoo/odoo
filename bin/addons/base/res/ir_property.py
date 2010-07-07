@@ -40,8 +40,7 @@ class ir_property(osv.osv):
         return res
 
     def _models_get(self, cr, uid, context=None):
-        return self._models_field_get(cr, uid, 'model_id.model', 'model_id.name',
-                                     context)
+        return self._models_field_get(cr, uid, 'model', 'name', context)
 
     def _models_get2(self, cr, uid, context=None):
         return self._models_field_get(cr, uid, 'relation', 'relation', context)
@@ -64,6 +63,7 @@ class ir_property(osv.osv):
 
         'type' : fields.selection([('char', 'Char'),
                                    ('float', 'Float'),
+                                   ('boolean', 'Boolean'),
                                    ('integer', 'Integer'),
                                    ('integer_big', 'Integer Big'),
                                    ('text', 'Text'),
@@ -85,10 +85,20 @@ class ir_property(osv.osv):
         value = values.pop('value', None)
         if not value:
             return values
-        type_ = values.get('type', 'many2one')
+
+        prop = None
+        type_ = values.get('type')
+        if not type_:
+            if ids:
+                prop = self.browse(cr, uid, ids[0])
+                type_ = prop.type
+            else:
+                type_ = self._defaults['type']
+
         type2field = {
             'char': 'value_text',
             'float': 'value_float',
+            'boolean' : 'value_integer',
             'integer': 'value_integer',
             'integer_big': 'value_integer',
             'text': 'value_text',
@@ -107,9 +117,9 @@ class ir_property(osv.osv):
             elif isinstance(value, (int, long)):
                 field_id = values.get('fields_id')
                 if not field_id:
-                    if not ids:
+                    if not prop:
                         raise ValueError()
-                    field_id = self.browse(cr, uid, ids[0]).fields_id
+                    field_id = prop.fields_id
                 else:
                     field_id = self.pool.get('ir.model.fields').browse(cr, uid, field_id)
 
@@ -138,6 +148,8 @@ class ir_property(osv.osv):
             return record.value_text
         elif record.type == 'float':
             return record.value_float
+        elif record.type == 'boolean':
+            return bool(record.value_integer)
         elif record.type in ('integer', 'integer_big'):
             return record.value_integer
         elif record.type == 'binary':
@@ -147,11 +159,13 @@ class ir_property(osv.osv):
         elif record.type == 'datetime':
             return record.value_datetime
         elif record.type == 'date':
+            if not record.value_datetime:
+                return False
             return time.strftime('%Y-%m-%d', time.strptime(record.value_datetime, '%Y-%m-%d %H:%M:%S'))
 
         return False
 
-    def get(self, cr, uid, name, model, res_id=False, context=None):
+    def get(self, cr, uid, name, model, res_id=False, context={}):
         domain = self._get_domain(cr, uid, name, model, context=context)
         if domain is not None:
             domain = [('res_id', '=', res_id)] + domain
@@ -159,18 +173,27 @@ class ir_property(osv.osv):
             return self.get_by_id(cr, uid, nid, context=context)
         return False
 
+    def _get_domain_default(self, cr, uid, prop_name, model, context=None):
+        domain = self._get_domain(cr, uid, prop_name, model, context=context)
+        if domain is None:
+            return None
+        return ['&', ('res_id', '=', False)] + domain
+
     def _get_domain(self, cr, uid, prop_name, model, context=None):
+        context = context or {}
         cr.execute('select id from ir_model_fields where name=%s and model=%s', (prop_name, model))
         res = cr.fetchone()
         if not res:
             return None
 
-        company = self.pool.get('res.company')
-        cid = company._company_default_get(cr, uid, model, res[0],
-                                           context=context)
+        if 'force_company' in context and context['force_company']:
+            cid = context['force_company']
+        else:
+            company = self.pool.get('res.company')
+            cid = company._company_default_get(cr, uid, model, res[0], context=context)
 
         domain = ['&', ('fields_id', '=', res[0]),
-                '|', ('company_id', '=', cid), ('company_id', '=', False)]
+                  '|', ('company_id', '=', cid), ('company_id', '=', False)]
         return domain
 
 ir_property()

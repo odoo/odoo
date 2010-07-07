@@ -22,6 +22,7 @@
 from report.interface import report_int
 import pooler
 import tools
+from tools.safe_eval import safe_eval as eval
 from lxml  import etree
 from report import render
 import locale
@@ -61,6 +62,7 @@ class report_printscreen_list(report_int):
             context={}
         self.context = context
         self.groupby = context.get('group_by',[])
+        self.groupby_no_leaf = context.get('group_by_no_leaf',False)
         pool = pooler.get_pool(cr.dbname)
         model = pool.get(datas['model'])
         model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
@@ -80,19 +82,27 @@ class report_printscreen_list(report_int):
                 records =  model.read_group(cr, uid, domain, fields_order, groupby , 0, None, context)
                 for rec in records:
                     rec['__group'] = True
+                    rec['__no_leaf'] = self.groupby_no_leaf
                     for f in fields_order:
                         if f not in rec:
                             rec.update({f:False})
+                        elif isinstance(rec[f], tuple):
+                            rec[f] = rec[f][1]
                     rows.append(rec)
                     groupby = (rec.get('__context', {})).get('group_by',[])
                     domain = rec.get('__domain', [])
                     if groupby:
                         get_groupby_data(groupby, domain)
                     else:
+                        if self.groupby_no_leaf:
+                            continue
                         child_ids = model.search(cr, uid, domain)
                         res = model.read(cr, uid, child_ids, result['fields'].keys(), context)
                         rows.extend(res)
-            get_groupby_data(self.groupby, [('id','in',ids)])
+            dom = [('id','in',ids)]
+            if self.groupby_no_leaf and len(ids) and not ids[0]:
+                dom = datas.get('_domain',[])
+            get_groupby_data(self.groupby, dom)
         else:
              rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
              ids2 = map(itemgetter('id'), rows) # getting the ids from read result
@@ -128,8 +138,7 @@ class report_printscreen_list(report_int):
         strmax = (pageSize[0]-40) * 2.8346
         temp = []
         tsum = []
-        count = len(fields_order)
-        for i in range(0, count):
+        for i in range(0, len(fields_order)):
             temp.append(0)
             tsum.append(0)
         ince = -1;
@@ -167,8 +176,6 @@ class report_printscreen_list(report_int):
                 if fields[f]['type']=='many2one' and line[f]:
                     if not line.get('__group'):
                         line[f]= line[f][1]
-                    else:
-                        line[f]= line[f]
                 if fields[f]['type']=='selection' and line[f]:
                     for key, value in fields[f]['selection']:
                         if key == line[f]:
@@ -213,26 +220,28 @@ class report_printscreen_list(report_int):
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
                        col.set('tree','float')
+                    if line.get('__no_leaf') and temp[count] == 1 and f != 'id' and not line['__context']['group_by']:
+                        tsum[count] = float(tsum[count]) + float(line[f])
                     if not line.get('__group') and f != 'id' and temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
                 else:
                      col.text = '/'
         node_line = etree.SubElement(lines, 'row')
-        for f in range(0, count+1):
+        for f in range(0, len(fields_order)):
             col = etree.SubElement(node_line, 'col', para='group', tree='no')
+            col.set('tree','float')
             if tsum[f] != None:
                if tsum[f] >= 0.01 :
-                   prec = '%.' +  str(tools.config['price_accuracy'])  + 'f'
+                   prec = '%.2f'
                    total = prec%(tsum[f])
                    txt = str(total or '')
-                   col.set('tree','float')
                else:
                    txt = str(tsum[f] or '')
             else:
                 txt = '/'
             if f == 0:
                 txt ='Total'
-
+                col.set('tree','no')
             col.text = tools.ustr(txt or '')
 
         transform = etree.XSLT(

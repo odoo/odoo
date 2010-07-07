@@ -40,10 +40,12 @@ class configmanager(object):
     def __init__(self, fname=None):
         self.options = {
             'email_from':False,
-            'interface': '',    # this will bind the server to all interfaces
-            'port': 8069,
-            'netinterface': '',
-            'netport': 8070,
+            'xmlrpc_interface': '',    # this will bind the server to all interfaces
+            'xmlrpc_port': 8069,
+            'netrpc_interface': '',
+            'netrpc_port': 8070,
+            'xmlrpcs_interface': '',    # this will bind the server to all interfaces
+            'xmlrpcs_port': 8071,
             'db_host': False,
             'db_port': False,
             'db_name': False,
@@ -53,7 +55,7 @@ class configmanager(object):
             'reportgz': False,
             'netrpc': True,
             'xmlrpc': True,
-            'soap': False,
+            'xmlrpcs': True,
             'translate_in': None,
             'translate_out': None,
             'language': None,
@@ -73,8 +75,6 @@ class configmanager(object):
             'smtp_ssl':False,
             'smtp_password': False,
             'stop_after_init': False,   # this will stop the server after initialization
-            'price_accuracy': 2,
-            'secure' : False,
             'syslog' : False,
             'log_level': logging.INFO,
             'assert_exit_level': logging.ERROR, # level above which a failed assert will be raised
@@ -82,9 +82,9 @@ class configmanager(object):
             'login_message': False,
             'list_db' : True,
             'timezone' : False, # to override the default TZ
+            'test-file' : False,
             'test-disable' : False,
-            'test-rollback' : True,
-            'test-continue' : False
+            'test-commit' : False,
         }
 
         self.misc = {}
@@ -102,12 +102,30 @@ class configmanager(object):
                           help="save configuration to ~/.openerp_serverrc")
         parser.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
 
-        parser.add_option("-n", "--interface", dest="interface", help="specify the TCP IP address")
-        parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
-        parser.add_option("--net_interface", dest="netinterface", help="specify the TCP IP address for netrpc")
-        parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc", type="int")
-        parser.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable netrpc")
-        parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable xmlrpc")
+        group = optparse.OptionGroup(parser, "XML-RPC Configuration")
+        group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", help="specify the TCP IP address for the XML-RPC protocol")
+        group.add_option("--xmlrpc-port", dest="xmlrpc_port", help="specify the TCP port for the XML-RPC protocol", type="int")
+        group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable the XML-RPC protocol")
+        parser.add_option_group(group)
+
+        title = "XML-RPC Secure Configuration"
+        if not self.has_ssl:
+            title += " (disabled as ssl is unavailable)"
+
+        group = optparse.OptionGroup(parser, title)
+        group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", help="specify the TCP IP address for the XML-RPC Secure protocol")
+        group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", help="specify the TCP port for the XML-RPC Secure protocol", type="int")
+        group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", help="disable the XML-RPC Secure protocol")
+        group.add_option("--cert-file", dest="secure_cert_file", default="server.cert", help="specify the certificate file for the SSL connection")
+        group.add_option("--pkey-file", dest="secure_pkey_file", default="server.pkey", help="specify the private key file for the SSL connection")
+        parser.add_option_group(group)
+
+        group = optparse.OptionGroup(parser, "NET-RPC Configuration")
+        group.add_option("--netrpc-interface", dest="netrpc_interface", help="specify the TCP IP address for the NETRPC protocol")
+        group.add_option("--netrpc-port", dest="netrpc_port", help="specify the TCP port for the NETRPC protocol", type="int")
+        group.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable the NETRPC protocol")
+        parser.add_option_group(group)
+
         parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
         parser.add_option("--without-demo", dest="without_demo",
                           help="load demo data for a module (use \"all\" for all modules)", default=False)
@@ -123,31 +141,16 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
-        parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='deprecated since v6.0, replaced by module decimal_precision')
-        parser.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
 
-        if self.has_ssl:
-            group = optparse.OptionGroup(parser, "SSL Configuration")
-            group.add_option("-S", "--secure", dest="secure",
-                             help="launch server over https instead of http")
-            group.add_option("--cert-file", dest="secure_cert_file",
-                              default="server.cert",
-                              help="specify the certificate file for the SSL connection")
-            group.add_option("--pkey-file", dest="secure_pkey_file",
-                              default="server.pkey",
-                              help="specify the private key file for the SSL connection")
-            parser.add_option_group(group)
-            
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
+        group.add_option("--test-file", dest="test_file", help="Launch a YML test file.")
         group.add_option("--test-disable", action="store_true", dest="test_disable",
                          default=False, help="Disable loading test files.")
-        group.add_option("--test-no-rollback", action="store_false", dest="test_rollback",
-                         default=True, help="Don't rollback after running test.")
-        group.add_option("--test-continue", action="store_true", dest="test_continue",
-                         default=False, help="Display exception but then test should continue.")
+        group.add_option("--test-commit", action="store_true", dest="test_commit",
+                         default=False, help="Commit database changes performed by tests.")
         parser.add_option_group(group)
-        
+
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
@@ -164,8 +167,7 @@ class configmanager(object):
         group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port', type="int")
-        if self.has_ssl:
-            group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
+        group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
         parser.add_option_group(group)
@@ -201,6 +203,13 @@ class configmanager(object):
                          help="specify an alternative addons path.",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         parser.add_option_group(group)
+
+        security = optparse.OptionGroup(parser, 'Security-related options')
+        security.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
+        security.add_option('--enable-code-actions', action='store_true',
+                            dest='server_actions_allow_code', default=False,
+                            help='Enables server actions of state "code". Warning, this is a security risk.')
+        parser.add_option_group(security)
 
     def parse_config(self):
         (opt, args) = self.parser.parse_args()
@@ -246,25 +255,24 @@ class configmanager(object):
         if self.options['pidfile'] in ('None', 'False'):
             self.options['pidfile'] = False
 
-        keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
-                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
-                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path',
-                'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
-
-        if self.has_ssl:
-            keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
-            keys.append('secure')
+        keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
+                'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout','smtp_ssl',
+                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 
+                'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
+                'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
+                'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
+                'secure_cert_file', 'secure_pkey_file'
+                ]
 
         for arg in keys:
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
-                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog', 'list_db']
+                'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
+                'list_db', 'server_actions_allow_code']
 
-        if self.has_ssl and not self.options['secure']:
-            keys.append('secure')
+        keys.append('xmlrpcs')
 
         for arg in keys:
             if getattr(opt, arg) is not None:
@@ -287,9 +295,9 @@ class configmanager(object):
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
+        self.options["test-file"] =  opt.test_file
         self.options["test-disable"] =  opt.test_disable
-        self.options["test-rollback"] =  opt.test_rollback
-        self.options["test-continue"] =  opt.test_continue
+        self.options["test-commit"] =  opt.test_commit
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
 
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
@@ -462,6 +470,4 @@ config = configmanager()
 # when it starts, to allow doing 'import tools.config' from
 # other python executables without parsing *their* args.
 config.parse_config()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

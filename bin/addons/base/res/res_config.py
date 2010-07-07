@@ -77,7 +77,7 @@ class res_config_configurable(osv.osv_memory):
             todo_obj = todos.browse(cr, uid, active_todos[0], context=None)
             todo_groups = map(lambda x:x.id, todo_obj.groups_id)
             if todo_groups:
-                cr.execute("select 1 from res_groups_users_rel where uid=%s and gid=ANY(%s)",(uid, todo_groups,))
+                cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN %s",(uid, tuple(todo_groups),))
                 dont_skip_todo = bool(cr.fetchone())
             if dont_skip_todo:
                 return todos.browse(cr, uid, active_todos[0], context=None)
@@ -121,7 +121,7 @@ class res_config_configurable(osv.osv_memory):
                 'res_model': action.res_model,
                 'type': action.type,
                 'target': action.target,
-                }
+            }
         self.logger.notifyChannel(
             'actions', netsvc.LOG_INFO,
             'all configuration actions have been executed')
@@ -133,6 +133,7 @@ class res_config_configurable(osv.osv_memory):
             .read(cr, uid, current_user_menu.id)
 
     def start(self, cr, uid, ids, context=None):
+        print 'Start'
         ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
         for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
             if (todo.restart=='always') or (todo.restart=='onskip' and (todo.state in ('skip','cancel'))):
@@ -390,6 +391,8 @@ class res_config_installer(osv.osv_memory):
             cr, uid, fields, context, read_access)
 
         for module in self._already_installed(cr, uid, context=context):
+            if module.name not in fields:
+                continue
             fields[module.name].update(
                 readonly=True,
                 help=fields[module.name].get('help', '') +
@@ -408,8 +411,6 @@ class res_config_installer(osv.osv_memory):
             cr, uid,
             modules.search(cr, uid, [('name','in',to_install)]),
             'to install', ['uninstalled'], context=context)
-        cr.commit()
-
         pooler.restart_pool(cr.dbname, update_module=True)
 res_config_installer()
 

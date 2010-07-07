@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright P. Christeas <p_christ@hol.gr> 2008,2009
-#
+# A part of the code comes from the ganeti project:  http://www.mail-archive.com/ganeti-devel@googlegroups.com/msg00713.html#
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -370,7 +370,7 @@ class SecureMultiHTTPHandler(MultiHTTPHandler):
             self.rfile = self.connection.makefile('rb', self.rbufsize)
             self.wfile = self.connection.makefile('wb', self.wbufsize)
             self.log_message("Secure %s connection from %s",self.connection.cipher(),self.client_address)
-        except:
+        except Exception:
             self.request.shutdown(socket.SHUT_RDWR)
             raise
 
@@ -381,7 +381,7 @@ class SecureMultiHTTPHandler(MultiHTTPHandler):
         MultiHTTPHandler.finish(self)
         try:
             self.connection.shutdown(socket.SHUT_RDWR)
-        except:
+        except Exception:
             pass
 
 import threading
@@ -418,7 +418,7 @@ class ConnThreadingMixIn:
         if self.verify_request(request, client_address):
             try:
                 self.process_request(request, client_address)
-            except:
+            except Exception:
                 self.handle_error(request, client_address)
                 self.close_request(request)
 

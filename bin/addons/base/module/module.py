@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -23,6 +24,8 @@ import tarfile
 import re
 import urllib
 import os
+import imp
+import logging
 import tools
 from osv import fields, osv, orm
 import zipfile
@@ -42,7 +45,14 @@ class module_category(osv.osv):
     _description = "Module Category"
 
     def _module_nbr(self,cr,uid, ids, prop, unknow_none,context):
-        cr.execute('select category_id,count(*) from ir_module_module where category_id in ('+','.join(map(str, ids))+') or category_id in (select id from ir_module_category where parent_id in ('+','.join(map(str, ids))+')) group by category_id')
+        cr.execute('SELECT category_id, COUNT(*) \
+                      FROM ir_module_module \
+                     WHERE category_id IN %(ids)s \
+                        OR category_id IN (SELECT id \
+                                             FROM ir_module_category \
+                                            WHERE parent_id IN %(ids)s) \
+                     GROUP BY category_id', {'ids': tuple(ids)}
+                    )
         result = dict(cr.fetchall())
         for id in ids:
             cr.execute('select id from ir_module_category where parent_id=%s', (id,))
@@ -101,9 +111,12 @@ class module(osv.osv):
             try:
                 key = data_id['model']
                 if key=='ir.ui.view':
-                    v = view_obj.browse(cr,uid,data_id.res_id)
-                    aa = v.inherit_id and '* INHERIT ' or ''
-                    res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
+                    try:
+                        v = view_obj.browse(cr,uid,data_id.res_id)
+                        aa = v.inherit_id and '* INHERIT ' or ''
+                        res[mnames[data_id.module]]['views_by_module'] += aa + v.name + ' ('+v.type+')\n'
+                    except:
+                        pass
                 elif key=='ir.actions.report.xml':
                     res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
                 elif key=='ir.ui.menu':
@@ -122,6 +135,8 @@ class module(osv.osv):
         'shortdesc': fields.char('Short Description', size=256, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
         'author': fields.char("Author", size=128, readonly=True),
+        'maintainer': fields.char('Maintainer', size=128, readonly=True),
+        'contributors': fields.text('Contributors', readonly=True),
         'website': fields.char("Website", size=256, readonly=True),
 
         # attention: Incorrect field names !!
@@ -146,11 +161,13 @@ class module(osv.osv):
         ], string='State', readonly=True),
         'demo': fields.boolean('Demo data'),
         'license': fields.selection([
-                ('GPL-2', 'GPL-2'),
+                ('GPL-2', 'GPL Version 2'),
                 ('GPL-2 or any later version', 'GPL-2 or later version'),
-                ('GPL-3', 'GPL-3'),
+                ('GPL-3', 'GPL Version 3'),
                 ('GPL-3 or any later version', 'GPL-3 or later version'),
-                ('Other proprietary', 'Other proprietary')
+                ('AGPL-3', 'Affero GPL-3'),
+                ('Other OSI approved licence', 'Other OSI Approved Licence'),
+                ('Other proprietary', 'Other Proprietary')
             ], string='License', readonly=True),
         'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta", store=True),
         'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
@@ -161,7 +178,7 @@ class module(osv.osv):
     _defaults = {
         'state': lambda *a: 'uninstalled',
         'demo': lambda *a: False,
-        'license': lambda *a: 'GPL-2',
+        'license': lambda *a: 'AGPL-3',
     }
     _order = 'name'
 
@@ -189,6 +206,27 @@ class module(osv.osv):
 
         return super(module, self).unlink(cr, uid, ids, context=context)
 
+    @staticmethod
+    def _check_external_dependencies(terp):
+        depends = terp.get('external_dependencies')
+        if not depends:
+            return
+        for pydep in depends.get('python', []):
+            parts = pydep.split('.')
+            parts.reverse()
+            path = None
+            while parts:
+                part = parts.pop()
+                try:
+                    f, path, descr = imp.find_module(part, path and [path] or None)
+                except ImportError:
+                    raise ImportError('No module named %s' % (pydep,))
+
+        for binary in depends.get('bin', []):
+            if tools.find_in_path(binary) is None:
+                raise Exception('Unable to find %r in path' % (binary,))
+
+
     def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=100):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
@@ -204,6 +242,11 @@ class module(osv.osv):
                 else:
                     od = self.browse(cr, uid, ids2)[0]
                     mdemo = od.demo or mdemo
+            terp = self.get_module_info(module.name)
+            try:
+                self._check_external_dependencies(terp)
+            except Exception, e:
+                raise orm.except_orm(_('Error'), _('Unable %s the module "%s" because an external dependencie is not met: %s' % (newstate, module.name, e.args[0])))
             if not module.dependencies_id:
                 mdemo = module.demo
             if module.state in states_to_update:
@@ -277,6 +320,19 @@ class module(osv.osv):
         self.update_translations(cr, uid, ids)
         return True
 
+    @staticmethod
+    def get_values_from_terp(terp):
+        return {
+            'description': terp.get('description', ''),
+            'shortdesc': terp.get('name', ''),
+            'author': terp.get('author', 'Unknown'),
+            'maintainer': terp.get('maintainer', False),
+            'contributors': ', '.join(terp.get('contributors', [])) or False,
+            'website': terp.get('website', ''),
+            'license': terp.get('license', 'GPL-2'),
+            'certificate': terp.get('certificate') or None,
+        }
+
     # update the list of available packages
     def update_list(self, cr, uid, context={}):
         res = [0, 0] # [update, add]
@@ -284,46 +340,31 @@ class module(osv.osv):
         # iterate through installed modules and mark them as being so
         for mod_name in addons.get_modules():
             ids = self.search(cr, uid, [('name','=',mod_name)])
+            terp = self.get_module_info(mod_name)
+            values = self.get_values_from_terp(terp)
+
             if ids:
                 id = ids[0]
                 mod = self.browse(cr, uid, id)
-                terp = self.get_module_info(mod_name)
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     self.write(cr, uid, id, {'state': 'uninstalled'})
                 if parse_version(terp.get('version', '')) > parse_version(mod.latest_version or ''):
-                    self.write(cr, uid, id, { 'url': ''})
+                    self.write(cr, uid, id, {'url': ''})
                     res[0] += 1
-                self.write(cr, uid, id, {
-                    'description': terp.get('description', ''),
-                    'shortdesc': terp.get('name', ''),
-                    'author': terp.get('author', 'Unknown'),
-                    'website': terp.get('website', ''),
-                    'license': terp.get('license', 'GPL-2'),
-                    'certificate': terp.get('certificate') or None,
-                    })
+                self.write(cr, uid, id, values)
                 cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s', (id,))
-                self._update_dependencies(cr, uid, ids[0], terp.get('depends', []))
-                self._update_category(cr, uid, ids[0], terp.get('category', 'Uncategorized'))
-                continue
-            mod_path = addons.get_module_path(mod_name)
-            if mod_path:
-                terp = self.get_module_info(mod_name)
+            else:
+                mod_path = addons.get_module_path(mod_name)
+                if not mod_path:
+                    continue
                 if not terp or not terp.get('installable', True):
                     continue
 
-                id = self.create(cr, uid, {
-                    'name': mod_name,
-                    'state': 'uninstalled',
-                    'description': terp.get('description', ''),
-                    'shortdesc': terp.get('name', ''),
-                    'author': terp.get('author', 'Unknown'),
-                    'website': terp.get('website', ''),
-                    'license': terp.get('license', 'GPL-2'),
-                    'certificate': terp.get('certificate') or None,
-                })
+                ids = self.search(cr, uid, [('name','=',mod_name)])
+                id = self.create(cr, uid, dict(name=mod_name, state='uninstalled', **values))
                 res[1] += 1
-                self._update_dependencies(cr, uid, id, terp.get('depends', []))
-                self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
+            self._update_dependencies(cr, uid, id, terp.get('depends', []))
+            self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
 
         return res
 
@@ -350,14 +391,7 @@ class module(osv.osv):
             except Exception, e:
                 raise orm.except_orm(_('Error'), _('Can not create the module file:\n %s') % (fname,))
             terp = self.get_module_info(mod.name)
-            self.write(cr, uid, mod.id, {
-                'description': terp.get('description', ''),
-                'shortdesc': terp.get('name', ''),
-                'author': terp.get('author', 'Unknown'),
-                'website': terp.get('website', ''),
-                'license': terp.get('license', 'GPL-2'),
-                'certificate': terp.get('certificate') or None,
-                })
+            self.write(cr, uid, mod.id, self.get_values_from_terp(terp))
             cr.execute('DELETE FROM ir_module_module_dependency ' \
                     'WHERE module_id = %s', (mod.id,))
             self._update_dependencies(cr, uid, mod.id, terp.get('depends',
@@ -422,31 +456,19 @@ class module(osv.osv):
                     tools.trans_load(cr.dbname, f, lang, verbose=False)
 
     def check(self, cr, uid, ids, context=None):
-        logger = netsvc.Logger()
+        logger = logging.getLogger('init')
         for mod in self.browse(cr, uid, ids, context=context):
             if not mod.description:
-                logger.notifyChannel("init", netsvc.LOG_WARNING, 'module %s: description is empty !' % (mod.name,))
+                logger.warn('module %s: description is empty !', mod.name)
 
             if not mod.certificate or not mod.certificate.isdigit():
-                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: no quality certificate' % (mod.name,))
+                logger.info('module %s: no quality certificate', mod.name)
             else:
                 val = long(mod.certificate[2:]) % 97 == 29
                 if not val:
-                    logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module %s: invalid quality certificate: %s' % (mod.name, mod.certificate))
+                    logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
-
-    def create(self, cr, uid, data, context={}):
-        id = super(module, self).create(cr, uid, data, context)
-        if data.get('name'):
-            self.pool.get('ir.model.data').create(cr, uid, {
-                'name': 'module_meta_information',
-                'model': 'ir.module.module',
-                'res_id': id,
-                'module': data['name'],
-                'noupdate': True,
-            })
-        return id
 module()
 
 class module_dependency(osv.osv):

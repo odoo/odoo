@@ -3,6 +3,7 @@
 #    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -56,7 +57,7 @@ class wizard_install_module(wizard.interface):
             terp = mod_obj.get_module_info(module)
             if not terp.get('installable', True):
                 continue
-            
+
             # XXX check if this code is correct...
             fm = imp.find_module(module)
             try:
@@ -65,12 +66,8 @@ class wizard_install_module(wizard.interface):
                 if fm[0]:
                     fm[0].close()
 
-            mod_id = mod_obj.create(cr, uid, {
-                'name': module, 
-                'state': 'uninstalled',
-                'description': terp.get('description', ''),
-                'shortdesc': terp.get('name', ''),
-                'author': terp.get('author', 'Unknown')})
+            values = mod_obj.get_values_from_terp(terp)
+            mod_id = mod_obj.create(cr, uid, dict(name=module, state='uninstalled', **values))
             dependencies = terp.get('depends', [])
             for d in dependencies:
                 cr.execute('insert into ir_module_module_dependency (module_id,name) values (%s, %s)', (mod_id, d))

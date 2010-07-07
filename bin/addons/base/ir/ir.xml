@@ -18,9 +18,6 @@
                         <field name="model" select="1" required="1"/>
                         <field name="res_id"/>
                         <field name="key2" select="2" required="1"/>
-                        <separator string="Values for Event Type" colspan="2"/>
-                        <label string="client_action_multi, client_action_relate" colspan="2"/>
-                        <label string="tree_but_action, client_print_multi"  colspan="2"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Action To Launch" colspan="2"/>
@@ -230,7 +227,7 @@
         </record>
         <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
-		
+
 	<!--		Filters form view-->
 
 		<record id="ir_filters_view_form" model="ir.ui.view">
@@ -248,9 +245,9 @@
                 </form>
             </field>
         </record>
-        
+
         <!--		Filters tree view-->
-        
+
         <record id="ir_filters_view_tree" model="ir.ui.view">
              <field name="name">ir.filters.tree</field>
             <field name="model">ir.filters</field>
@@ -265,7 +262,7 @@
                 </tree>
             </field>
         </record>
-		
+
 		<!--		Filters action-->
 
         <record id="actions_ir_filters_view" model="ir.actions.act_window">
@@ -275,7 +272,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_filters_view_tree"/>
         </record>
-		
+
 		<!--		Filters view menu-->
 
 		<menuitem parent="base.next_id_6" name="Filters"
@@ -609,13 +606,21 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Views">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1"/>
-                    <field name="model" select="1"/>
-                    <field name="field_parent"/>
-                    <field name="priority"/>
-                    <field name="inherit_id" select="1"/>
-                    <field colspan="4" name="arch"/>
+                    <group colspan="2" col="2">
+                        <separator string="General" colspan="2"/>
+                        <field name="name" select="1"/>
+                        <field name="type" select="1"/>
+                        <field name="model" select="1"/>
+                        <field name="priority"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Advanced" colspan="2"/>
+                        <field name="field_parent"/>
+                        <field name="inherit_id" select="1"/>
+                        <field name="xml_id" select="1"/>
+                    </group>
+                    <separator string="View architecture" colspan="4"/>
+                    <field colspan="4" nolabel="1" name="arch"/>
                 </form>
             </field>
         </record>
@@ -628,9 +633,10 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
+                    <field name="xml_id"/>
                     <field name="inherit_id"/>
-                    <field name="priority"/>
                     <field name="field_parent"/>
+                    <field name="priority"/>
                 </tree>
             </field>
         </record>
@@ -649,35 +655,37 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Attachments">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="2">
                         <field name="name" select="1" />
-                        <field name="create_uid" select="2"/>
-                        <field name="create_date" select="2"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Attachment">
-                        <group col="2" colspan="2">
-                            <separator string="Data" colspan="2"/>
+                    <group col="4" colspan="4">
+                        <separator string="Data" colspan="2"/>
+                        <field name="type"/>
+                        <newline />
+                        <group col="2" colspan="4" attrs="{'invisible':[('type','=','url')]}">
                             <field name="datas" filename="datas_fname"/>
                             <field name="datas_fname" select="1"/>
                         </group>
+                        <group col="2" colspan="4" attrs="{'invisible':[('type','=','binary')]}">
+                            <field name="url" widget="url"/>
+                        </group>
+                    </group>
                         <group col="2" colspan="2">
                             <separator string="Attached To" colspan="2"/>
                             <field name="res_model" select="2"/>
                             <field name="res_id"/>
+                            <field name="res_name"/>
                         </group>
-                        <separator string="Preview" colspan="4"/>
-                        <field
-                            name="preview"
-                            widget="picture"
-                            readonly="1"
-                            nolabel="1"
-                            colspan="4"
-                            img_height="400"
-                            img_width="800"/>
+                    <group col="2" groups="base.group_extended">
+                        <separator string="Created" colspan="2"/>
+                        <field name="create_uid" select="2"/>
+                        <field name="create_date" select="2"/>
+                    </group>
                     </page>
                     <page string="Notes">
-                        <field colspan="4" name="description" nolabel="1"/>
+                        <field name="description" nolabel="1" colspan="4"/>
                     </page>
                     </notebook>
                 </form>
@@ -816,6 +824,7 @@
                         <page string="Object">
                             <field name="name" select="1"/>
                             <field name="model" select="1"/>
+                            <field name="osv_memory" select="1"/>
                             <separator colspan="4" string="Fields"/>
                             <field colspan="4" context="{'manual':True}" name="field_id" nolabel="1">
                                 <tree string="Fields Description">
@@ -951,6 +960,39 @@
             </field>
         </record>
 
+
+        <record model="ir.ui.view" id="view_model_data_form">
+            <field name="name">ir.model.data.form</field>
+            <field name="model">ir.model.data</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Module data">
+                    <field name="module" select="1" />
+                    <field name="name" select="1" />
+                    <field name="model" select="1" />
+                    <field name="res_id" select="1" />
+                    <field name="noupdate" select="2" />
+                    <field name="date_update" />
+                    <field name="date_init" />
+                </form>
+            </field>
+        </record>
+
+        <record id="view_model_data_list" model="ir.ui.view">
+            <field name="name">ir.model.data.list</field>
+            <field name="model">ir.model.data</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Module Data">
+                    <field name="module"/>
+                    <field name="name"/>
+                    <field name="model" select="1" />
+                    <field name="res_id"/>
+                    <field name="noupdate"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="action_model_model" model="ir.actions.act_window">
             <field name="name">Objects</field>
             <field name="res_model">ir.model</field>
@@ -958,7 +1000,7 @@
             <field name="context">{'manual':True}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
-        <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom"/>
+        <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom" groups="base.group_extended"/>
         <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
 
         <record id="action_model_fields" model="ir.actions.act_window">
@@ -969,6 +1011,15 @@
             <field name="view_id" ref="view_model_fields_tree"/>
         </record>
         <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
+
+        <record id="action_model_data" model="ir.actions.act_window">
+            <field name="name">Module data</field>
+            <field name="res_model">ir.model.data</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_model_data_list"/>
+        </record>
+        <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_9"
+                  groups="base.group_extended"/>
 
         <!-- Translations -->
 
@@ -1204,11 +1255,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Record rules">
-                    <separator colspan="4" string="Combination of rules"/>
-                    <label align="0.0" angle="2" colspan="4" string="1. Global rules are combined together with a logical AND operator, and with the result of the following steps"/>
-                    <label align="0.0" angle="2" colspan="4" string="2. Group-specific rules are combined together with a logical AND operator"/>
-                    <label align="0.0" angle="2" colspan="4" string="3. If user belongs to several groups, the results from step 2 are combined with logical OR operator"/>
-                    <label align="0.0" angle="2" colspan="4" string="Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"/>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="General"/>
                         <field colspan="4" name="name"/>
@@ -1229,7 +1275,16 @@
                     <group colspan="4" expand="1">
                         <field name="global" select="1"/>
                         <field name="groups" select="1" nolabel="1" colspan="4"/>
-                       </group>
+                    </group>
+                    <separator colspan="4" string="Combination of rules"/>
+                    <label align="0.0" colspan="4"
+                        string="1. Global rules are combined together with a logical AND operator, and with the result of the following steps"/>
+                    <label align="0.0" colspan="4"
+                        string="2. Group-specific rules are combined together with a logical AND operator"/>
+                    <label align="0.0" colspan="4"
+                        string="3. If user belongs to several groups, the results from step 2 are combined with logical OR operator"/>
+                    <label align="0.0" colspan="4"
+                        string="Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"/>
                 </form>
             </field>
         </record>
@@ -1302,14 +1357,14 @@
                             <field name="subject" colspan="4" attrs="{'required':[('state','=','email')]}"/>
                             <field name="message" select="2" colspan="4" attrs="{'required':[('state','=','email')]}"/>
                             <newline/>
-                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e.[[ object.partner_id.name ]]" align="0.0"/>
+                            <label colspan="4" string="Access all the fields related to the current object using expressions, i.e. object.partner_id.name " align="0.0"/>
                         </page>
                         <page string="SMS Configuration" attrs="{'invisible':[('state','!=','sms')]}">
                             <separator colspan="4" string="SMS Configuration"/>
                             <field name="mobile" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','sms')]}"/>
                             <field name="sms" colspan="4" attrs="{'required':[('state','=','sms')]}"/>
                             <newline/>
-                            <label colspan="4" string="Access all the fields related to the current object using expression in double brackets, i.e. [[ object.partner_id.name ]]" align="0.0"/>
+                            <label colspan="4" string="Access all the fields related to the current object using expressions, i.e. object.partner_id.name " align="0.0"/>
                         </page>
                         <page string="Create / Write / Copy" attrs="{'invisible':[('state','!=','object_create'), ('state','!=','object_write'), ('state','!=','object_copy')]}">
                             <separator colspan="4" string="Fields Mapping"/>
@@ -1426,15 +1481,15 @@
             </field>
         </record>
         <record id="act_ir_actions_todo_form" model="ir.actions.act_window">
-            <field name="name">List of Configuration Wizards</field>
+            <field name="name">Configuration Wizards</field>
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="view_type">form</field>
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
-        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"
-            groups="base.group_extended"/>
+        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" 
+        		parent="next_id_11" groups="base.group_extended" sequence="20"/>
 
         <record id="action_start_configurator" model="ir.actions.server">
           <field name="name">Launch Configuration Wizards</field>

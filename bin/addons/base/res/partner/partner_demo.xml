@@ -229,7 +229,6 @@
             <field name="city">Taiwan</field>
             <field name="name">Tang</field>
             <field name="zip">23410</field>
-            <field name="title">M.</field>
             <field model="res.country" name="country_id" search="[('name','=','Taiwan')]"/>
             <field name="street">31 Hong Kong street</field>
             <field name="type">default</field>
@@ -239,7 +238,6 @@
             <field name="city">Hong Kong</field>
             <field name="name">Wong</field>
             <field name="zip">23540</field>
-            <field name="title">M.</field>
             <field model="res.country" name="country_id" search="[('name','=','China')]"/>
             <field name="street">56 Beijing street</field>
             <field name="type">default</field>
@@ -249,7 +247,6 @@
             <field name="city">Bruxelles</field>
             <field name="name">Etienne Lacarte</field>
             <field name="zip">2365</field>
-            <field name="title">M.</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">23 rue du Vieux Bruges</field>
             <field name="type">default</field>
@@ -259,7 +256,6 @@
             <field name="city">Namur</field>
             <field name="name">Jean Guy Lavente</field>
             <field name="zip">2541</field>
-            <field name="title">M.</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">42 rue de la Lesse</field>
             <field name="type">default</field>
@@ -269,17 +265,33 @@
             <field name="city">Wavre</field>
             <field name="name">Sylvie Lelitre</field>
             <field name="zip">5478</field>
-            <field name="title">Ms.</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">69 rue de Chimay</field>
             <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_agrolait"/>
+        </record>
+        <record id="res_partner_address_8delivery" model="res.partner.address">
+            <field name="city">Wavre</field>
+            <field name="name">Paul Lelitre</field>
+            <field name="zip">5478</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">71 rue de Chimay</field>
+            <field name="type">delivery</field>
+            <field name="partner_id" ref="res_partner_agrolait"/>
+        </record>
+        <record id="res_partner_address_8invoice" model="res.partner.address">
+            <field name="city">Wavre</field>
+            <field name="name">Serge Lelitre</field>
+            <field name="zip">5478</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">69 rue de Chimay</field>
+            <field name="type">invoice</field>
             <field name="partner_id" ref="res_partner_agrolait"/>
         </record>
         <record id="res_partner_address_9" model="res.partner.address">
             <field name="city">Paris</field>
             <field name="name">Arthur Grosbonnet</field>
             <field name="zip">75016</field>
-            <field name="title">M.</field>
             <field model="res.country" name="country_id" search="[('name','=','France')]"/>
             <field name="street">1 rue Rockfeller</field>
             <field name="type">default</field>
@@ -289,7 +301,6 @@
             <field name="city">Alencon</field>
             <field name="name">Sebastien LANGE</field>
             <field name="zip">61000</field>
-            <field name="title">M.</field>
             <field name="email">contact@syleam.fr</field>
             <field name="street">1 place de l'Église</field>
             <field name="phone">+33 (0) 2 33 31 22 10</field>
@@ -301,7 +312,6 @@
             <field name="city">Liege</field>
             <field name="name">Karine Lesbrouffe</field>
             <field name="zip">6985</field>
-            <field name="title">Mss</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">2 Impasse de la Soif</field>
             <field name="type">default</field>
@@ -311,7 +321,6 @@
             <field name="city">Shanghai</field>
             <field name="name">Zen</field>
             <field name="zip">4785552</field>
-            <field name="title">M.</field>
             <field model="res.country" name="country_id" search="[('name','=','China')]"/>
             <field name="street">52 Chop Suey street</field>
             <field name="type">default</field>

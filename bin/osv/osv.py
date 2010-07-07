@@ -132,7 +132,7 @@ class osv_pool(netsvc.Service):
                     raise except_osv('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
                 res = pool.execute_cr(cr, uid, obj, method, *args, **kw)
                 if res is None:
-                    self.logger.warning('RPC methods cannot return `None` at the moment!')
+                    self.logger.warning('The method %s of the object %s can not return `None` !', method, obj)
                 cr.commit()
             except Exception:
                 cr.rollback()
@@ -268,7 +268,8 @@ class osv(osv_base, orm.orm):
                             for c in cls.__dict__.get(s, []):
                                 exist = False
                                 for c2 in range(len(new)):
-                                    if new[c2][2]==c[2]:
+                                     #For _constraints, we should check field and methods as well
+                                     if new[c2][2]==c[2] and new[c2][0]==c[0]:
                                         new[c2] = c
                                         exist = True
                                         break

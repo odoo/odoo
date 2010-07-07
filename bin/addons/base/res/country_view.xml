@@ -37,8 +37,9 @@
             <field name="view_type">form</field>
         </record>
 
-        <menuitem id="menu_localisation" name="Localisation" parent="menu_base_config" sequence="30"/>
-        <menuitem action="action_country" id="menu_country_partner" parent="menu_localisation"/>
+        <menuitem id="menu_localisation" name="Localisation" parent="menu_config_address_book" sequence="5"/>
+
+        <menuitem action="action_country" id="menu_country_partner" parent="menu_localisation" sequence="0"/>
 
         <!--
           State
@@ -78,7 +79,7 @@
             <field name="view_id" ref="view_country_state_tree"/>
         </record>
 
-        <menuitem action="action_country_state" id="menu_country_state_partner" parent="menu_localisation"/>
+          <menuitem action="action_country_state" id="menu_country_state_partner" parent="menu_localisation" sequence="1"/>
 
     </data>
 </openerp>

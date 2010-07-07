@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,7 +35,7 @@ class report(object):
         for node in root_node:
             if node.tag == etree.Comment:
                 continue
-            if node.text:
+            if node.text or node.tail:
                 def _sub3(txt):
                     n = node
                     while n.tag != txt.group(2):
@@ -71,9 +71,9 @@ class report(object):
                         n = n.getparent()
                     n.set('rml_loop', txt.group(2))
                     return '[['+txt.group(1)+"''"+txt.group(4)+']]'
-                t = _regex1.sub(_sub1, node.text)
+                t = _regex1.sub(_sub1, node.text or node.tail)
                 if t == " ":
-                    t = _regex11.sub(_sub1, node.text)
+                    t = _regex11.sub(_sub1, node.text  or node.tail)
                 t = _regex3.sub(_sub3, t)
                 node.text = _regex2.sub(_sub2, t)
             self.preprocess_rml(node,type)

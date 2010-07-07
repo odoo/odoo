@@ -31,9 +31,11 @@
 """
 from websrv_lib import *
 import netsvc
+import errno
 import threading
 import tools
 import os
+import select
 import socket
 import xmlrpclib
 
@@ -118,47 +120,41 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
             self.server = ThreadedHTTPServer((interface, port), handler)
             self.server.vdirs = []
             self.server.logRequests = True
-            netsvc.Logger().notifyChannel(
-                "web-services", netsvc.LOG_INFO,
-                "starting HTTPS service at %s port %d" %
-                (interface or '0.0.0.0', port,))
         except Exception, e:
             netsvc.Logger().notifyChannel(
                 'httpd', netsvc.LOG_CRITICAL,
                 "Error occur when starting the server daemon: %s" % (e,))
             raise
 
+    @property
+    def socket(self):
+        return self.server.socket
+
     def attach(self, path, gw):
         pass
 
     def stop(self):
         self.running = False
-        if os.name != 'nt':
-            try:
-                self.server.socket.shutdown(
-                    getattr(socket, 'SHUT_RDWR', 2))
-            except socket.error, e:
-                if e.errno != 57: raise
-                # OSX, socket shutdowns both sides if any side closes it
-                # causing an error 57 'Socket is not connected' on shutdown
-                # of the other side (or something), see
-                # http://bugs.python.org/issue4397
-                netsvc.Logger().notifyChannel(
-                    'server', netsvc.LOG_DEBUG,
-                    '"%s" when shutting down server socket, '
-                    'this is normal under OS X'%e)
-        self.server.socket.close()
+        self._close_socket()
 
     def run(self):
         self.running = True
         while self.running:
-            self.server.handle_request()
+            try:
+                self.server.handle_request()
+            except (socket.error, select.error), e:
+                if self.running or e.args[0] != errno.EBADF:
+                    raise
         return True
 
 class HttpDaemon(BaseHttpDaemon):
     def __init__(self, interface, port):
         super(HttpDaemon, self).__init__(interface, port,
                                          handler=MultiHandler2)
+        netsvc.Logger().notifyChannel(
+            "web-services", netsvc.LOG_INFO,
+            "starting HTTP service at %s port %d" %
+            (interface or '0.0.0.0', port,))
 
 class HttpSDaemon(BaseHttpDaemon):
     def __init__(self, interface, port):
@@ -170,19 +166,23 @@ class HttpSDaemon(BaseHttpDaemon):
                 'httpd-ssl', netsvc.LOG_CRITICAL,
                 "Can not load the certificate and/or the private key files")
             raise
+        netsvc.Logger().notifyChannel(
+            "web-services", netsvc.LOG_INFO,
+            "starting HTTPS service at %s port %d" %
+            (interface or '0.0.0.0', port,))
 
 httpd = None
 httpsd = None
 
 def init_servers():
     global httpd, httpsd
-    if tools.config.get_misc('httpd','enable', True):
-        httpd = HttpDaemon(tools.config.get_misc('httpd','interface', ''), \
-            int(tools.config.get_misc('httpd','port', tools.config.get('port',8069))))
+    if tools.config.get('xmlrpc'):
+        httpd = HttpDaemon(tools.config.get('xmlrpc_interface', ''),
+                           int(tools.config.get('xmlrpc_port', 8069)))
 
-    if tools.config.get_misc('httpsd','enable', False):
-        httpsd = HttpSDaemon(tools.config.get_misc('httpsd','interface', ''), \
-            int(tools.config.get_misc('httpsd','port', 8071)))
+    if tools.config.get('xmlrpcs'):
+        httpsd = HttpSDaemon(tools.config.get('xmlrpcs_interface', ''),
+                             int(tools.config.get('xmlrpcs_port', 8071)))
 
 def reg_http_service(hts, secure_only = False):
     """ Register some handler to httpd.
@@ -230,14 +230,17 @@ class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,SimpleXMLRPCSer
 
 
 def init_xmlrpc():
-    if not tools.config.get_misc('xmlrpc','enable', True):
-        return
-    reg_http_service(HTTPDir('/xmlrpc/',XMLRPCRequestHandler))
-    # Example of http file serving:
-    # reg_http_service(HTTPDir('/test/',HTTPHandler))
-    netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO,
-            "Registered XML-RPC over HTTP")
+    if tools.config.get('xmlrpc', False):
+        # Example of http file serving:
+        # reg_http_service(HTTPDir('/test/',HTTPHandler))
+        reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler))
+        netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO,
+                                      "Registered XML-RPC over HTTP")
 
+    if tools.config.get('xmlrpcs', False):
+        reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler, True))
+        netsvc.Logger().notifyChannel('web-services', netsvc.LOG_INFO,
+                                      "Registered XML-RPC over HTTPS")
 
 class OerpAuthProxy(AuthProxy):
     """ Require basic authentication..
@@ -257,7 +260,7 @@ class OerpAuthProxy(AuthProxy):
             if not db:
                 db = handler.get_db_from_path(path)
             print "Got db:",db
-        except:
+        except Exception:
             if path.startswith('/'):
                 path = path[1:]
             psp= path.split('/')
@@ -282,11 +285,11 @@ class OerpAuthProxy(AuthProxy):
             self.provider.log("Failing authorization after 5 requests w/o password")
             raise AuthRejectedExc("Authorization failed.")
         self.auth_tries += 1
-        raise AuthRequiredExc(atype = 'Basic', realm=self.provider.realm)
+        raise AuthRequiredExc(atype='Basic', realm=self.provider.realm)
 
 import security
 class OpenERPAuthProvider(AuthProvider):
-    def __init__(self,realm = 'OpenERP User'):
+    def __init__(self,realm='OpenERP User'):
         self.realm = realm
 
     def setupAuth(self, multi, handler):

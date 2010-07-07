@@ -6,11 +6,11 @@
  Users Groups
 -->
     <record model="res.groups" id="group_system">
-        <field name="name">Administrator / Configuration</field>
+        <field name="name">Administration / Configuration</field>
     </record>
 
     <record model="res.groups" id="group_erp_manager">
-        <field name="name">Administrator / Access Rights</field>
+        <field name="name">Administration / Access Rights</field>
     </record>
 
     <record model="res.groups" id="group_user">
@@ -18,7 +18,7 @@
     </record>
 
     <record model="res.groups" context="{'noadmin':True}" id="group_multi_company">
-        <field name="name">Multi Companies</field>
+        <field name="name">Useability / Multi Companies</field>
     </record>
 
     <record model="res.groups" context="{'noadmin':True}" id="group_extended">
@@ -51,7 +51,6 @@
     </record>
 
     <record id="base.menu_translation" model="ir.ui.menu">
-        <!-- FIXME: a "Usability / Translations" group ?? -->
         <field eval="[(6,0,[ref('base.group_system')])]" name="groups_id"/>
     </record>
 

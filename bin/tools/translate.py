@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -148,7 +148,7 @@ class GettextAlias(object):
         except:
             return source
 
-        cr.execute('select value from ir_translation where lang=%s and type in (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
+        cr.execute('select value from ir_translation where lang=%s and type IN (%s,%s) and src=%s', (lang, 'code','sql_constraint', source))
         res_trans = cr.fetchone()
         return res_trans and res_trans[0] or source
 _ = GettextAlias()
@@ -446,9 +446,10 @@ def trans_generate(lang, modules, dbname=None):
     query_param = None
     if 'all_installed' in modules:
         query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
-    elif not 'all' in modules:
-        query += ' WHERE module IN (%s)' % ','.join(['%s']*len(modules))
-        query_param = modules
+    query_param = None
+    if 'all' not in modules:
+        query += ' WHERE module IN %s'
+        query_param = (tuple(modules),)
     query += ' ORDER BY module, model, name'
 
     cr.execute(query, query_param)
@@ -584,7 +585,10 @@ def trans_generate(lang, modules, dbname=None):
 
         for constraint in pool.get(model)._constraints:
             msg = constraint[1]
-            push_translation(module, 'constraint', model, 0, encode(msg))
+            # Check presence of __call__ directly instead of using
+            # callable() because it will be deprecated as of Python 3.0
+            if not hasattr(msg, '__call__'):
+                push_translation(module, 'constraint', model, 0, encode(msg))
 
         for field_name,field_def in pool.get(model)._columns.items():
             if field_def.translate:
@@ -596,23 +600,30 @@ def trans_generate(lang, modules, dbname=None):
                 push_translation(module, 'model', name, xml_name, encode(trad))
 
     # parse source code for _() calls
-    def get_module_from_path(path,mod_paths=None):
-        if not mod_paths:
-            # First, construct a list of possible paths
-            def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
-            ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
-            mod_paths=[def_path]
-            for adp in ad_paths:
-                mod_paths.append(adp)
-                if not adp.startswith('/'):
-                    mod_paths.append(os.path.join(def_path,adp))
-                elif adp.startswith(def_path):
-                    mod_paths.append(adp[len(def_path)+1:])
-        
-        for mp in mod_paths:
-            if path.startswith(mp) and (os.path.dirname(path) != mp):
-                path = path[len(mp)+1:]
-                return path.split(os.path.sep)[0]
+    def get_module_from_path(path, mod_paths=None):
+#        if not mod_paths:
+##             First, construct a list of possible paths
+#            def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
+#            ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
+#            mod_paths=[def_path]
+#            for adp in ad_paths:
+#                mod_paths.append(adp)
+#                if not adp.startswith('/'):
+#                    mod_paths.append(os.path.join(def_path,adp))
+#                elif adp.startswith(def_path):
+#                    mod_paths.append(adp[len(def_path)+1:])
+#        for mp in mod_paths:
+#            if path.startswith(mp) and (os.path.dirname(path) != mp):
+#                path = path[len(mp)+1:]
+#                return path.split(os.path.sep)[0]
+        path_dir = os.path.dirname(path[1:])
+        if path_dir:
+            if os.path.exists(os.path.join(tools.config['addons_path'],path[1:])):
+                return path.split(os.path.sep)[1]
+            else:
+                root_addons = os.path.join(tools.config['root_path'], 'addons')
+                if os.path.exists(os.path.join(root_addons,path[1:])):
+                    return path.split(os.path.sep)[1]
         return 'base'   # files that are not in a module are considered as being in 'base' module
 
     modobj = pool.get('ir.module.module')
@@ -699,6 +710,11 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             if not lang_name:
                 lang_name = tools.get_languages().get(lang, lang)
 
+            def fix_xa0(s):
+                if s == '\xa0':
+                    return '\xc2\xa0'
+                return s
+
             lang_info = {
                 'code': lang,
                 'iso_code': iso_lang,
@@ -706,9 +722,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 'translatable': 1,
                 'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
                 'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                'decimal_point' : str(locale.localeconv()['decimal_point']).replace('\xa0', '\xc2\xa0'),
-                'thousands_sep' : str(locale.localeconv()['thousands_sep']).replace('\xa0', '\xc2\xa0'),
+                'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
+                'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
             }
+
             try:
                 lang_obj.create(cr, uid, lang_info)
             finally:
@@ -767,7 +784,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 # the same source
                 obj = pool.get(model)
                 if obj:
-                    if not field in obj._columns:
+                    if field not in obj.fields_get_keys(cr, uid):
                         continue
                     ids = obj.search(cr, uid, [(field, '=', dic['src'])])
 

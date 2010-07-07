@@ -25,31 +25,25 @@ import os
 import tools
 
 view_form_end = """<?xml version="1.0"?>
-<form string="System upgrade done">
-    <separator string="System upgrade done"/>
-    <label align="0.0" string="The modules have been upgraded / installed !" colspan="4"/>
-    <label align="0.0" string="You may have to reinstall some language pack." colspan="4"/>
-    <label align="0.0" string="We suggest you to reload the menu tab (Ctrl+t Ctrl+r)." colspan="4"/>
+<form string="System update done">
+    <separator string="System update completed"/>
+    <label align="0.0" string="The selected modules have been updated / installed !" colspan="4"/>
+    <label align="0.0" string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)." colspan="4"/>
 </form>"""
 
 view_form = """<?xml version="1.0"?>
-<form string="System Upgrade">
+<form string="System Update">
     <image name="gtk-dialog-info" colspan="2"/>
     <group colspan="2" col="4">
-        <label align="0.0" string="Your system will be upgraded." colspan="4"/>
-        <label align="0.0" string="Note that this operation my take a few minutes." colspan="4"/>
+        <label align="0.0" string="Your system will be updated." colspan="4"/>
+        <label align="0.0" string="Note that this operation might take a few minutes." colspan="4"/>
         <separator string="Modules to update"/>
         <field name="module_info" nolabel="1" colspan="4"/>
-        <separator string="Modules to download"/>
-        <field name="module_download" nolabel="1" colspan="4"/>
     </group>
 </form>"""
 
 view_field = {
-    "module_info": {'type': 'text', 'string': 'Modules to update',
-        'readonly': True},
-    "module_download": {'type': 'text', 'string': 'Modules to download',
-        'readonly': True},
+    "module_info": {'type': 'text', 'string': 'Modules to update', 'readonly': True},
 }
 
 class wizard_info_get(wizard.interface):
@@ -59,9 +53,7 @@ class wizard_info_get(wizard.interface):
         ids = mod_obj.search(cr, uid, [
             ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
         res = mod_obj.read(cr, uid, ids, ['name','state'], context)
-        url = mod_obj.download(cr, uid, ids, download=False, context=context)
-        return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res)),
-                'module_download': '\n'.join(url)}
+        return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
 
     def _check_upgrade_module(self,cr,uid,data,context):
         pool = pooler.get_pool(cr.dbname)
@@ -105,7 +97,7 @@ class wizard_info_get(wizard.interface):
             'result': {'type':'form', 'arch':view_form, 'fields': view_field,
                 'state':[
                     ('end', 'Cancel', 'gtk-cancel'),
-                    ('start', 'Start Upgrade', 'gtk-ok', True)
+                    ('start', 'Start update', 'gtk-ok', True)
                 ]
             }
         },
@@ -145,9 +137,7 @@ class wizard_info_get_simple(wizard.interface):
         ids = mod_obj.search(cr, uid, [
             ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
         res = mod_obj.read(cr, uid, ids, ['name','state'], context)
-        url = mod_obj.download(cr, uid, ids, download=False, context=context)
-        return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res)),
-                'module_download': '\n'.join(url)}
+        return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res)),}
 
     def _check_upgrade_module(self,cr,uid,data,context):
         pool = pooler.get_pool(cr.dbname)
@@ -171,7 +161,7 @@ class wizard_info_get_simple(wizard.interface):
                 if dep_mod.state in ('unknown','uninstalled'):
                     unmet_packages.append(dep_mod.name)        
         if len(unmet_packages):
-            raise wizard.except_wizard('Unmet dependency !', 'Following modules are uninstalled or unknown. \n\n'+'\n'.join(unmet_packages))
+            raise wizard.except_wizard('Unmet dependencies!', 'The following modules are not installed or unavailable. \n\n'+'\n'.join(unmet_packages))
         mod_obj.download(cr, uid, ids, context=context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
@@ -191,7 +181,7 @@ class wizard_info_get_simple(wizard.interface):
             'result': {'type':'form', 'arch':view_form, 'fields': view_field,
                 'state':[
                     ('end', 'Cancel', 'gtk-cancel'),
-                    ('start', 'Start Upgrade', 'gtk-ok', True)
+                    ('start', 'Start update', 'gtk-ok', True)
                 ]
             }
         },

@@ -31,6 +31,7 @@
 #   required
 #   size
 #
+from collections import defaultdict
 import string
 import netsvc
 import sys
@@ -39,7 +40,7 @@ from psycopg2 import Binary
 import warnings
 
 import tools
-
+from tools.translate import _
 
 def _symbol_set(symb):
     if symb == None or symb == False:
@@ -62,7 +63,7 @@ class _column(object):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
 
-    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context='', states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
+    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context={}, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
         self.states = states or {}
         self.string = string
         self.readonly = readonly
@@ -245,7 +246,7 @@ class selection(_column):
 
 #
 # Values: (0, 0,  { fields })    create
-#         (1, ID, { fields })    modification
+#         (1, ID, { fields })    update
 #         (2, ID)                remove (delete)
 #         (3, ID)                unlink one (target id or target of relation)
 #         (4, ID)                link
@@ -430,10 +431,10 @@ class one2many(_column):
         context.update(self._context)
         if not values:
             values = {}
-        res = {}
-        for id in ids:
-            res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
+
+        res = defaultdict(list)
+
+        ids2 = obj.pool.get(self._obj).search(cr, user, self._domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             res[r[self._fields_id]].append(r['id'])
         return res
@@ -479,10 +480,10 @@ class one2many(_column):
 
 #
 # Values: (0, 0,  { fields })    create
-#         (1, ID, { fields })    modification
-#         (2, ID)                remove
-#         (3, ID)                unlink
-#         (4, ID)                link
+#         (1, ID, { fields })    update (write fields to ID)
+#         (2, ID)                remove (calls unlink on ID, that will also delete the relationship because of the ondelete)
+#         (3, ID)                unlink (delete the relationship between the two objects but does not delete ID)
+#         (4, ID)                link (add a relationship)
 #         (5, ID)                unlink all
 #         (6, ?, ids)            set a list of links
 #
@@ -491,7 +492,6 @@ class many2many(_column):
     _classic_write = False
     _prefetch = False
     _type = 'many2many'
-
     def __init__(self, obj, rel, id1, id2, string='unknown', limit=None, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
@@ -520,13 +520,24 @@ class many2many(_column):
         if d1:
             d1 = ' and ' + ' and '.join(d1)
         else: d1 = ''
-
-        cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' \
-                FROM '+self._rel+' , '+(','.join(tables))+' \
-                WHERE '+self._rel+'.'+self._id1+' = ANY (%s) \
-                    AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+d1
-                +limit_str+' order by '+obj._table+'.'+obj._order+' offset %s',
-                [ids,]+d2+[offset])
+        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
+                   FROM %(rel)s, %(tbl)s \
+                  WHERE %(rel)s.%(id1)s in %%s \
+                    AND %(rel)s.%(id2)s = %(tbl)s.id \
+                 %(d1)s  \
+                 %(limit)s \
+                  ORDER BY %(tbl)s.%(order)s \
+                 OFFSET %(offset)d' \
+            % {'rel': self._rel,
+               'tbl': obj._table,
+               'id1': self._id1,
+               'id2': self._id2,
+               'd1': d1,
+               'limit': limit_str,
+               'order': obj._order,
+               'offset': offset,
+              }
+        cr.execute(query, [tuple(ids)] + d2)
         for r in cr.fetchall():
             res[r[1]].append(r[0])
         return res
@@ -748,7 +759,7 @@ class related(function):
                 ids=[ids]
             objlst = obj.browse(cr, uid, ids)
             for data in objlst:
-                t_id=None
+                t_id = None
                 t_data = data
                 relation = obj._name
                 for i in range(len(self.arg)):
@@ -779,7 +790,7 @@ class related(function):
         relation = obj._name
         res = {}.fromkeys(ids, False)
 
-        objlst = obj.browse(cr, uid, ids, context=context)
+        objlst = obj.browse(cr, 1, ids, context=context)
         for data in objlst:
             if not data:
                 continue
@@ -806,7 +817,7 @@ class related(function):
         if self._type=='many2one':
             ids = filter(None, res.values())
             if ids:
-                ng = dict(obj.pool.get(self._obj).name_get(cr, uid, ids, context=context))
+                ng = dict(obj.pool.get(self._obj).name_get(cr, 1, ids, context=context))
                 for r in res:
                     if res[r]:
                         res[r] = (res[r], ng[res[r]])
@@ -874,12 +885,17 @@ class serialized(_column):
 class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
+        from orm import browse_record
         prop = obj.pool.get('ir.property')
-        domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
+        domain = prop._get_domain_default(cr, uid, prop_name, obj._name, context)
         ids = prop.search(cr, uid, domain, order='company_id', context=context)
         if not ids:
             return False
-        return prop.get_by_id(cr, uid, ids, context=context) 
+
+        default_value = prop.get_by_id(cr, uid, ids, context=context)
+        if isinstance(default_value, browse_record):
+            return default_value.id
+        return default_value or False
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
@@ -903,7 +919,7 @@ class property(function):
 
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
-        if id_val and id_val != default_val:
+        if id_val is not default_val:
             def_id = self._field_get(cr, uid, obj._name, prop_name)
             company = obj.pool.get('res.company')
             cid = company._company_default_get(cr, uid, obj._name, def_id,
@@ -924,23 +940,16 @@ class property(function):
 
     def _fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
         from orm import browse_record
-        if context is None:
-            context = {}
-
-        property = obj.pool.get('ir.property')
+        properties = obj.pool.get('ir.property')
 
         default_val = self._get_default(obj, cr, uid, prop_name, context)
-        if isinstance(default_val, browse_record):
-            default_val = default_val.id
-        else:
-            default_val = False
 
         nids = self._get_by_id(obj, cr, uid, prop_name, ids, context)
 
         res = {}
         for id in ids:
             res[id] = default_val
-        for prop in property.browse(cr, uid, nids):
+        for prop in properties.browse(cr, uid, nids):
             value = prop.get_by_id(context=context)
             if isinstance(value, browse_record):
                 if not value.exists():

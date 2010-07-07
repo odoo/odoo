@@ -34,6 +34,7 @@ import glob
 
 from distutils.core import setup, Command
 from distutils.command.install import install
+from distutils.sysconfig import get_python_lib
 
 has_py2exe = False
 if os.name == 'nt':
@@ -44,7 +45,7 @@ sys.path.append(join(os.path.abspath(os.path.dirname(__file__)), "bin"))
 
 execfile(join('bin', 'release.py'))
 
-if sys.argv[1] == 'bdist_rpm':
+if 'bdist_rpm' in sys.argv:
     version = version.split('-')[0]
 
 # get python short version
@@ -60,6 +61,7 @@ required_modules = [
     ('pytz', 'Timezone handling library for Python'),
     ('reportlab', 'reportlab module'),
     ('yaml', 'YAML parser and emitter for Python'),
+    ('pywebdav', 'PyWebDAV is a standards compliant WebDAV server and library written in Python'),
 ]
 
 def check_modules():
@@ -121,7 +123,7 @@ def data_files():
         files.append((join(doc_directory, 'migrate', '3.4.0-4.0.0'),
                       filter(isfile, glob.glob('doc/migrate/3.4.0-4.0.0/*'))))
 
-        openerp_site_packages = join('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server')
+        openerp_site_packages = join(get_python_lib(prefix=''), 'openerp-server')
 
         files.append((openerp_site_packages, [join('bin', 'import_xml.rng'),
                                               join('bin', 'server.pkey'),
@@ -133,7 +135,7 @@ def data_files():
                                                    join('python25-compat','SocketServer.py')]))
 
         for addonname, add_path in find_addons():
-            addon_path = join('lib', 'python%s' % py_short_version, 'site-packages', 'openerp-server','addons', addonname)
+            addon_path = join(get_python_lib(prefix=''), 'openerp-server','addons', addonname)
             for root, dirs, innerfiles in os.walk(add_path):
                 innerfiles = filter(lambda fil: os.path.splitext(fil)[1] not in ('.pyc', '.pyd', '.pyo'), innerfiles)
                 if innerfiles:
@@ -176,11 +178,14 @@ options = {
         "compressed": 1,
         "optimize": 2,
         "dist_dir": 'dist',
-        "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-                     "lxml.objectify", "decimal", "xml", "encodings",
-                     "dateutil", "wizard", "pychart", "PIL", "pyparsing",
-                     "pydot", "asyncore","asynchat", "reportlab", "vobject",
-                     "HTMLParser", "select", "yaml"],
+        "packages": [
+                 "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
+                 "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
+                 "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
+                 "pydot", "asyncore","asynchat", "reportlab", "vobject",
+                 "HTMLParser", "select", "mako", "poplib",
+                 "imaplib", "smtplib", "email", "yaml","pywebdav",
+                 ],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }

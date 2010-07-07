@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -42,6 +42,8 @@ from lxml import etree
 import copy
 import locale
 import traceback, sys
+from tools.safe_eval import safe_eval as eval
+import logging
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
@@ -54,7 +56,6 @@ def xml2str(s):
 def _child_get(node, self=None, tagname=None):
     for n in node:
         if self and self.localcontext and n.get('rml_loop'):
-            oldctx = self.localcontext
 
             for ctx in eval(n.get('rml_loop'),{}, self.localcontext):
                 self.localcontext.update(ctx)
@@ -62,7 +63,10 @@ def _child_get(node, self=None, tagname=None):
                     if n.get('rml_except', False):
                         try:
                             eval(n.get('rml_except'), {}, self.localcontext)
-                        except:
+                        except GeneratorExit:
+                            continue
+                        except Exception, e:
+                            logging.getLogger('report').exception(e)
                             continue
                     if n.get('rml_tag'):
                         try:
@@ -71,16 +75,21 @@ def _child_get(node, self=None, tagname=None):
                             n2.tag = tag
                             n2.attrib.update(attr)
                             yield n2
-                        except:
+                        except GeneratorExit:
+                            yield n
+                        except Exception, e:
+                            logging.getLogger('report').exception(e)
                             yield n
                     else:
                         yield n
-            self.localcontext = oldctx
             continue
         if self and self.localcontext and n.get('rml_except'):
             try:
                 eval(n.get('rml_except'), {}, self.localcontext)
-            except:
+            except GeneratorExit:
+                continue
+            except Exception, e:
+                logging.getLogger('report').exception(e)
                 continue
         if self and self.localcontext and n.get('rml_tag'):
             try:
@@ -90,7 +99,10 @@ def _child_get(node, self=None, tagname=None):
                 n2.attrib.update(attr or {})
                 yield n2
                 tagname = ''
-            except:
+            except GeneratorExit:
+                pass
+            except Exception, e:
+                logging.getLogger('report').exception(e)
                 pass
         if (tagname is None) or (n.tag==tagname):
             yield n
@@ -110,7 +122,7 @@ def _process_text(self, txt):
                     expr = sps.pop(0)
                     txt = eval(expr,self.localcontext)
                     if txt and (isinstance(txt, unicode) or isinstance(txt, str)):
-                        txt = unicode(self.localcontext.get('translate', lambda x:x)(txt))
+                        txt = unicode(txt)
                 except Exception,e:
                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 if type(txt)==type('') or type(txt)==type(u''):
@@ -137,7 +149,7 @@ def unit_get(size):
             decimal_point = '.'
             try:
                 decimal_point = locale.nl_langinfo(locale.RADIXCHAR)
-            except:
+            except Exception:
                 decimal_point = locale.localeconv()['decimal_point']
 
             size = size.replace(decimal_point, '.')

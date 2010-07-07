@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -27,12 +28,11 @@ import zipimport
 import osv
 import tools
 import tools.osutil
+from tools.safe_eval import safe_eval as eval
 import pooler
 
 
 import netsvc
-from osv import fields
-import addons
 
 import zipfile
 import release
@@ -63,9 +63,6 @@ ad_paths.append(_ad)    # for get_module_path
 # Modules already loaded
 loaded = []
 
-#Modules whch raised error
-not_loaded = []
-
 class Graph(dict):
 
     def addNode(self, name, deps):
@@ -80,14 +77,15 @@ class Graph(dict):
             Node(name, self)
 
     def update_from_db(self, cr):
+        if not len(self):
+            return
         # update the graph with values from the database (if exist)
         ## First, we set the default values for each package in graph
         additional_data = dict.fromkeys(self.keys(), {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None})
         ## Then we get the values from the database
         cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
                    '  FROM ir_module_module'
-                   ' WHERE name in (%s)' % (','.join(['%s'] * len(self))),
-                    additional_data.keys()
+                   ' WHERE name IN %s',(tuple(additional_data),)
                    )
 
         ## and we update the default values with values from the database
@@ -96,8 +94,6 @@ class Graph(dict):
         for package in self.values():
             for k, v in additional_data[package.name].items():
                 setattr(package, k, v)
-
-
 
     def __iter__(self):
         level = 0
@@ -302,7 +298,7 @@ def load_information_from_description_file(module):
     :param module: The name of the module (sale, purchase, ...)
     """
     for filename in ['__openerp__.py', '__terp__.py']:
-        description_file = addons.get_module_resource(module, filename)
+        description_file = get_module_resource(module, filename)
         if os.path.isfile(description_file):
             return eval(tools.file_open(description_file).read())
 
@@ -340,11 +336,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
             terp_file = get_module_resource(module, '__terp__.py')
 
         if not mod_path or not terp_file:
-            global not_loaded
-            not_loaded.append(module)
-            logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
-            raise osv.osv.except_osv('Error!',"Module '%s' was not found" % (module,))
-
+            logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not found, skipped' % (module))
+            continue
 
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             try:
@@ -354,7 +347,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
                 raise
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
-
+            else:
+                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable, skipped' % (module))
 
     dependencies = dict([(p, deps) for p, deps, data in packages])
     current, later = set([p for p, dep, data in packages]), set()
@@ -644,16 +638,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             try:
                 _load_data(cr, module_name, id_map, mode, 'test')
             except Exception, e:
-                if tools.config.options['test-continue']:
-                    logger.notifyChannel('ERROR', netsvc.LOG_TEST, e)
-                    pass
-                else:
-                    raise
+                logger.notifyChannel('ERROR', netsvc.LOG_TEST, e)
+                pass
             finally:
-                if tools.config.options['test-rollback']:
-                    cr.rollback()
-                else:
+                if tools.config.options['test-commit']:
                     cr.commit()
+                else:
+                    cr.rollback()
 
     def _load_data(cr, module_name, id_map, mode, kind):
         noupdate = (kind == 'demo')
@@ -665,6 +656,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             # TODO manage .csv file with noupdate == (kind == 'init')
             if ext == '.sql':
                 process_sql_file(cr, fp)
+            elif ext == '.csv':
+                noupdate = (kind == 'init')
+                tools.convert_csv_import(cr, module_name, pathname, file.read(), id_map, mode, noupdate)
             elif ext == '.yml':
                 tools.convert_yaml_import(cr, module_name, file, id_map, mode, noupdate)
             else:
@@ -719,14 +713,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             for kind in ('init', 'update'):
                 if package.state=='to upgrade':
                     # upgrading the module information
-                    modobj.write(cr, 1, [mid], {
-                    'description': package.data.get('description', ''),
-                    'shortdesc': package.data.get('name', ''),
-                    'author': package.data.get('author', 'Unknown'),
-                    'website': package.data.get('website', ''),
-                    'license': package.data.get('license', 'GPL-2'),
-                    'certificate': package.data.get('certificate') or None,
-                    })
+                    modobj.write(cr, 1, [mid], modobj.get_values_from_terp(package.data))
                 load_init_update_xml(cr, m, idref, mode, kind)
             load_data(cr, m, idref, mode)
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
@@ -735,7 +722,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 load_demo(cr, m, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
 
-            load_test(cr, m, idref, mode)
+                # launch tests only in demo mode, as most tests will depend
+                # on demo data. Other tests can be added into the regular
+                # 'data' section, but should probably not alter the data,
+                # as there is no rollback.
+                load_test(cr, m, idref, mode)
 
             package_todo.append(package.name)
 
@@ -797,13 +788,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
         graph = create_graph(cr, ['base'], force)
+        if not graph:
+            logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
+            raise osv.osv.except_osv('Could not load base module', 'module base cannot be loaded! (hint: verify addons-path)')
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
-        global not_loaded
-        if not_loaded:
-            #If some module is not loaded don't proceed further
-            not_loaded = []
-            return
         if update_module:
             modobj = pool.get('ir.module.module')
             states = {'installed': 'button_upgrade', 'uninstalled': 'button_install'}
@@ -825,8 +814,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         while True:
             loop_guardrail += 1
             if loop_guardrail > 100:
-                raise ProgrammingError()
-            cr.execute("SELECT name from ir_module_module WHERE state in (%s)" % ','.join(['%s']*len(STATES_TO_LOAD)), STATES_TO_LOAD)
+                raise ValueError('Possible recursive module tree detected, aborting.')
+            cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(STATES_TO_LOAD),))
 
             module_list = [name for (name,) in cr.fetchall() if name not in graph]
             if not module_list:
@@ -842,9 +831,19 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             has_updates = has_updates or r
 
         if has_updates:
-            cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
+            cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
+                model_obj = pool.get(model)
+                if not isinstance(model_obj, osv.osv.osv_memory):
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
+
+            # Temporary warning while we remove access rights on osv_memory objects, as they have
+            # been replaced by owner-only access rights
+            cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
+            for (model, name) in cr.fetchall():
+                model_obj = pool.get(model)
+                if isinstance(model_obj, osv.osv.osv_memory):
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'In-memory object %s (%s) should not have explicit access rules!' % (model, name))
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():
@@ -879,11 +878,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 cr.execute('''delete from
                         ir_ui_menu
                     where
-                        (id not in (select parent_id from ir_ui_menu where parent_id is not null))
+                        (id not IN (select parent_id from ir_ui_menu where parent_id is not null))
                     and
-                        (id not in (select res_id from ir_values where model='ir.ui.menu'))
+                        (id not IN (select res_id from ir_values where model='ir.ui.menu'))
                     and
-                        (id not in (select res_id from ir_model_data where model='ir.ui.menu'))''')
+                        (id not IN (select res_id from ir_model_data where model='ir.ui.menu'))''')
                 cr.commit()
                 if not cr.rowcount:
                     break

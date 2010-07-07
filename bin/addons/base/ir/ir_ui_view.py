@@ -22,6 +22,7 @@
 from osv import fields,osv
 from lxml import etree
 from tools import graph
+from tools.safe_eval import safe_eval as eval
 import tools
 import netsvc
 import os
@@ -66,10 +67,12 @@ class view(osv.osv):
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade'),
         'field_parent': fields.char('Child Field',size=64),
+        'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="XML ID",
+                                  method=True),
     }
     _defaults = {
-        'arch': lambda *a: '<?xml version="1.0"?>\n<tree string="Unknwown">\n\t<field name="name"/>\n</tree>',
-        'priority': lambda *a: 16
+        'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
+        'priority': 16
     }
     _order = "priority"
     _constraints = [
@@ -200,6 +203,10 @@ class view_sc(osv.osv):
         'resource': lambda *a: 'ir.ui.menu',
         'user_id': lambda obj, cr, uid, context: uid,
     }
+    _sql_constraints = [
+        ('shortcut_unique', 'unique(res_id, user_id)', 'Shortcut for this menu already exists!'),
+    ]
+        
 view_sc()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

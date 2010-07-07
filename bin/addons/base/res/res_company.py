@@ -24,7 +24,7 @@ from osv import fields
 import os
 import tools
 from tools.translate import _
-import base64
+from tools.safe_eval import safe_eval as eval
 
 class multi_company_default(osv.osv):
     """
@@ -92,11 +92,18 @@ class res_company(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
 
-        user_preference = context and context.get('user_preference', False) or False
+        if context is None:
+            context = {}
+        user_preference = context.get('user_preference', False)
         if user_preference:
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
+            # TODO: improve this as soon as the client sends the proper
+            # combination of active_id and active_model we'll be able to
+            # use active_id here to restrict to the user being modified instead
+            # of current user.
+            user_id = context.get('user_id', uid)
 
+            user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+            cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
             return cmp_ids
         return super(res_company, self).search(cr, uid, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
@@ -126,12 +133,12 @@ class res_company(osv.osv):
         ids = self._get_company_children(cr, uid, company)
         return ids
 
+    @tools.cache()
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
             return []
         ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
         return ids
-    _get_company_children = tools.cache()(_get_company_children)
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context={}):
         if company_id:
@@ -161,7 +168,6 @@ class res_company(osv.osv):
 
     def write(self, cr, *args, **argv):
         self.cache_restart(cr)
-        # Restart the cache on the company_get method
         return super(res_company, self).write(cr, *args, **argv)
 
     def _get_euro(self, cr, uid, context={}):
@@ -173,7 +179,7 @@ class res_company(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from res_company where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from res_company where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -181,8 +187,9 @@ class res_company(osv.osv):
         return True
 
     def _get_logo(self, cr, uid, ids):
-        file_data = open('../pixmaps/openerp-header.png','rb').read()
-        return base64.encodestring(file_data)
+        return open(os.path.join(
+            tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
+                    'rb') .read().encode('base64')
 
 
     def _get_header2(self,cr,uid,ids):

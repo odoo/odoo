@@ -55,7 +55,7 @@ class res_partner_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from res_partner_category where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from res_partner_category where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -90,18 +90,6 @@ class res_partner_title(osv.osv):
     _order = 'name'
 res_partner_title()
 
-def _contact_title_get(self, cr, uid, context={}):
-    obj = self.pool.get('res.partner.title')
-    ids = obj.search(cr, uid, [('domain', '=', 'contact')])
-    res = obj.read(cr, uid, ids, ['shortcut','name'], context)
-    return [(r['shortcut'], r['name']) for r in res] + [('','')]
-
-def _partner_title_get(self, cr, uid, context={}):
-    obj = self.pool.get('res.partner.title')
-    ids = obj.search(cr, uid, [('domain', '=', 'partner')])
-    res = obj.read(cr, uid, ids, ['shortcut','name'], context)
-    return [(r['shortcut'], r['name']) for r in res] +  [('','')]
-
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [], context=context)
@@ -116,7 +104,7 @@ class res_partner(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
-        'title': fields.selection(_partner_title_get, 'Title', size=32),
+        'title': fields.many2one('res.partner.title','Title'),
         'parent_id': fields.many2one('res.partner','Parent Partner', select=2),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
         'ref': fields.char('Reference', size=64),
@@ -124,7 +112,7 @@ class res_partner(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
         'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
-        'website': fields.char('Website',size=64),
+        'website': fields.char('Website',size=64, help="Website of Partner"),
         'comment': fields.text('Notes'),
         'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),
         'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Categories'),
@@ -136,6 +124,7 @@ class res_partner(osv.osv):
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'city': fields.related('address', 'city', type='char', string='City'),
         'phone': fields.related('address', 'phone', type='char', string='Phone'),
+        'mobile': fields.related('address', 'mobile', type='char', string='Mobile'),
         'country': fields.related('address', 'country_id', type='many2one', relation='res.country', string='Country'),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
         'email': fields.related('address', 'email', type='char', size=240, string='E-mail'),
@@ -157,6 +146,9 @@ class res_partner(osv.osv):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
+
+    def do_share(self, cr, uid, ids, *args):
+        return True
 
     def _check_ean_key(self, cr, uid, ids):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
@@ -222,7 +214,7 @@ class res_partner(osv.osv):
         return True
 
     def address_get(self, cr, uid, ids, adr_pref=['default']):
-        cr.execute('select type,id from res_partner_address where partner_id in ('+','.join(map(str,map(int, ids)))+')')
+        cr.execute('select type,id from res_partner_address where partner_id IN %s',(tuple(ids),))
         res = cr.fetchall()
         adr = dict(res)
         # get the id of the (first) default address if there is one,
@@ -274,10 +266,10 @@ class res_partner_address(osv.osv):
     _description ='Partner Addresses'
     _name = 'res.partner.address'
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
+        'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'function': fields.char('Function', size=64),
-        'title': fields.selection(_contact_title_get, 'Title', size=32),
+        'title': fields.many2one('res.partner.title','Title'),
         'name': fields.char('Contact Name', size=64, select=1),
         'street': fields.char('Street', size=128),
         'street2': fields.char('Street2', size=128),
@@ -290,6 +282,8 @@ class res_partner_address(osv.osv):
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
+        'is_customer_add': fields.related('partner_id', 'customer', type='boolean', string='Customer'),
+        'is_supplier_add': fields.related('partner_id', 'supplier', type='boolean', string='Supplier'),
         'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
 #        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company', store=True),
         'company_id': fields.many2one('res.company', 'Company',select=1),

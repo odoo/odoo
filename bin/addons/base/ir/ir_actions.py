@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields,osv
+from tools.safe_eval import safe_eval as eval
 import tools
 import time
 from tools.config import config
@@ -225,13 +226,19 @@ class act_window(osv.osv):
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
-        'domain': fields.char('Domain Value', size=250),
-        'context': fields.char('Context Value', size=250),
-        'res_model': fields.char('Object', size=64),
-        'src_model': fields.char('Source Object', size=64),
+        'domain': fields.char('Domain Value', size=250, 
+            help="Optional domain filtering of the destination data, as a Python expression"),
+        'context': fields.char('Context Value', size=250, required=True, 
+            help="Context dictionary as Python expression, empty by default (Default: {})"),
+        'res_model': fields.char('Object', size=64, required=True, 
+            help="Model name of the object to open in the view window"),
+        'src_model': fields.char('Source Object', size=64, 
+            help="Optional model name of the objects on which this action should be visible"),
         'target': fields.selection([('current','Current Window'),('new','New Window')], 'Target Window'),
-        'view_type': fields.selection((('tree','Tree'),('form','Form')),string='View Type'),
-        'view_mode': fields.char('View Mode', size=250),
+        'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
+            help="View type: set to 'tree' for a hierarchical tree view, or 'form' for other views"),
+        'view_mode': fields.char('View Mode', size=250, required=True,
+            help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)"),
         'usage': fields.char('Action Usage', size=32),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
         'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views'),
@@ -245,7 +252,9 @@ class act_window(osv.osv):
         'auto_search':fields.boolean('Auto Search'),
         'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
-        'menus': fields.char('Menus', size=4096)
+        'menus': fields.char('Menus', size=4096),
+        'help': fields.text('Action description', 
+            help='Optional help text for the users with a description of the target view, such as its usage and purpose.')
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.act_window',
@@ -369,7 +378,7 @@ class actions_server(osv.osv):
     def _select_signals(self, cr, uid, context={}):
         cr.execute("SELECT distinct w.osv, t.signal FROM wkf w, wkf_activity a, wkf_transition t \
         WHERE w.id = a.wkf_id  AND t.act_from = a.id OR t.act_to = a.id AND t.signal!='' \
-        AND t.signal not in (null, NULL)")
+        AND t.signal NOT IN (null, NULL)")
         result = cr.fetchall() or []
         res = []
         for rs in result:
@@ -445,7 +454,7 @@ class actions_server(osv.osv):
         'type': lambda *a: 'ir.actions.server',
         'sequence': lambda *a: 5,
         'code': lambda *a: """# You can use the following variables
-#    - object
+#    - object or obj
 #    - time
 #    - cr
 #    - uid
@@ -522,7 +531,6 @@ class actions_server(osv.osv):
 
     def run(self, cr, uid, ids, context={}):
         logger = netsvc.Logger()
-
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
             obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
@@ -544,19 +552,27 @@ class actions_server(osv.osv):
                 return self.pool.get(action.action_id.type)\
                     .read(cr, uid, action.action_id.id, context=context)
 
-            if action.state == 'code':
-                localdict = {
-                    'self': self.pool.get(action.model_id.model),
-                    'context': context,
-                    'time': time,
-                    'ids': ids,
-                    'cr': cr,
-                    'uid': uid,
-                    'object':obj
-                }
-                exec action.code in localdict
-                if 'action' in localdict:
-                    return localdict['action']
+            if action.state=='code':
+                if config['server_actions_allow_code']:
+                    localdict = {
+                        'self': self.pool.get(action.model_id.model),
+                        'context': context,
+                        'time': time,
+                        'ids': ids,
+                        'cr': cr,
+                        'uid': uid,
+                        'object':obj,
+                        'obj': obj,
+                        }
+                    eval(action.code, localdict, mode="exec")
+                    if 'action' in localdict:
+                        return localdict['action']
+                else:
+                    netsvc.Logger().notifyChannel(
+                        self._name, netsvc.LOG_ERROR,
+                        "%s is a `code` server action, but "
+                        "it isn't allowed in this configuration.\n\n"
+                        "See server options to enable it"%action)
 
             if action.state == 'email':
                 user = config['email_from']
@@ -570,7 +586,7 @@ class actions_server(osv.osv):
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Partner Email address not Specified!')
                     continue
                 if not user:
-                    raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
+                    raise osv.except_osv(_('Error'), _("Please specify server option --email-from !"))
 
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
@@ -673,7 +689,6 @@ class actions_server(osv.osv):
                 res_id = False
                 obj_pool = self.pool.get(action.srcmodel_id.model)
                 res_id = obj_pool.create(cr, uid, res)
-                cr.commit()
                 if action.record_id:
                     self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
 

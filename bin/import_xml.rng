@@ -32,6 +32,7 @@
             <rng:attribute name="name" />
             <rng:optional><rng:attribute name="id" /></rng:optional>
             <rng:optional><rng:attribute name="eval" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:choice>
                 <rng:empty />
                 <rng:oneOrMore>
@@ -47,11 +48,13 @@
     <rng:define name="assert">
         <rng:element name="assert">
             <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="search" /> </rng:optional>
+            <rng:optional><rng:attribute name="search" /></rng:optional>
+            <rng:optional><rng:attribute name="count" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="id" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:optional><rng:attribute name="severity" /></rng:optional>
-            <rng:oneOrMore>
+            <rng:zeroOrMore>
                 <rng:element name="test">
                     <rng:attribute name="expr"/>
                     <rng:choice>
@@ -59,7 +62,7 @@
                         <rng:empty />
                     </rng:choice>
                 </rng:element>
-            </rng:oneOrMore>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -69,6 +72,7 @@
             <rng:optional><rng:attribute name="ref" /></rng:optional>
             <rng:attribute name="action"/>
             <rng:optional><rng:attribute name="uid"/></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:choice>
                 <rng:empty/>
                 <rng:ref name="value"/>
@@ -197,6 +201,9 @@
             <rng:optional> <rng:attribute name="target"/> </rng:optional>
             <rng:optional> <rng:attribute name="key2"/> </rng:optional>
             <rng:optional> <rng:attribute name="groups"/> </rng:optional>
+            <rng:optional> <rng:attribute name="limit"/> </rng:optional>
+            <rng:optional> <rng:attribute name="usage"/> </rng:optional>
+            <rng:optional> <rng:attribute name="auto_refresh"/> </rng:optional>
             <rng:empty />
         </rng:element>
     </rng:define>
@@ -204,6 +211,7 @@
     <rng:define name="data">
         <rng:element name="data">
             <rng:optional><rng:attribute name="noupdate" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:text/>

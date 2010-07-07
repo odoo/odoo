@@ -192,7 +192,7 @@ class rml_parse(object):
         return text.strip()
 
     def removeParentNode(self, tag=None):
-        raise Exception('Skip')
+        raise GeneratorExit('Skip')
 
     def set_html_image(self,id,model=None,field=None,context=None):
         if not id :
@@ -441,8 +441,8 @@ class report_sxw(report_rml, preprocess.report):
         rml_parser.set_context(objs, data, ids, report_xml.report_type)
         processed_rml = etree.XML(rml)
         if report_xml.header:
-            rml_parser._add_header(processed_rml)
-        processed_rml = self.preprocess_rml(processed_rml,report_xml.report_type)            
+            rml_parser._add_header(processed_rml, self.header)
+        processed_rml = self.preprocess_rml(processed_rml,report_xml.report_type)
         if rml_parser.logo:
             logo = base64.decodestring(rml_parser.logo)
         create_doc = self.generators[report_xml.report_type]

@@ -25,6 +25,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import netsvc
 import tools
+from tools.safe_eval import safe_eval as eval
 import pooler
 from osv import fields, osv
 
@@ -146,16 +147,19 @@ class ir_cron(osv.osv, netsvc.Agent):
     def create(self, cr, uid, vals, context=None):
         res = super(ir_cron, self).create(cr, uid, vals, context=context)        
         cr.commit()
+        self.cancel(cr.dbname)
         self._poolJobs(cr.dbname)
         return res
     def write(self, cr, user, ids, vals, context=None):
         res = super(ir_cron, self).write(cr, user, ids, vals, context=context)
         cr.commit()
+        self.cancel(cr.dbname)
         self._poolJobs(cr.dbname)
         return res
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_cron, self).unlink(cr, uid, ids, context=context)
         cr.commit()
+        self.cancel(cr.dbname)
         self._poolJobs(cr.dbname)
         return res
 ir_cron()

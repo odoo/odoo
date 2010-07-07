@@ -2,12 +2,17 @@
 <openerp>
     <data>
         <menuitem icon="terp-partner" id="menu_base_partner" name="Sales" sequence="0"/>
+
         <menuitem id="menu_address_book" name="Address Book" parent="menu_base_partner" sequence="2"/>
-        <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="9"
+
+        <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="30"
             groups="group_system"/>
 
-        <menuitem id="menu_base_config_partner" name="Partners" parent="menu_base_config" sequence="10" groups="base.group_extended"/>
-        <menuitem id="menu_base_config_contact" name="Contacts" parent="menu_base_config" sequence="20" />
+        <menuitem id="menu_config_address_book" name="Address Book" parent="menu_base_config" sequence="3"
+            groups="group_system"/>
+
+        <menuitem id="menu_config_crm_address_contact" name="Contacts" parent="menu_config_address_book" sequence="4"
+            groups="group_system"/>
 
         <!--
           =====================
@@ -21,10 +26,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contact">
-                    <field name="name" select='1'/>
-                    <field name="partner_id" select='1'/>
-                    <field name="country_id" select='1'/>
-                </search>
+                    <group>
+                        <filter string="Customer" name="customer" icon="terp-personal" domain="[('is_customer_add','=','1')]" />
+                        <filter string="Supplier" name="supplier"  icon="terp-personal" domain="[('is_supplier_add','=','1')]" />
+                        <separator orientation="vertical"/>
+                        <field name="partner_id" />
+                        <field name="name" />
+                        <field name="country_id" />
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                       <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by' : 'partner_id'}" />
+                       <filter string="Country" icon="terp-go-home" domain="[]" context="{'group_by' : 'country_id'}" />
+                       <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
+                   </group>
+                 </search>
             </field>
         </record>
 
@@ -64,7 +80,7 @@
                         <field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
                         <newline/>
                         <field name="name"/>
-                        <field domain="[('domain', '=', 'contact')]" name="title"/>
+                        <field domain="[('domain', '=', 'contact')]" name="title" widget="selection"/>
                         <field name="function"/>
                     </group>
                       <group colspan="2" col="2">
@@ -92,6 +108,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.address</field>
             <field name="view_type">form</field>
+            <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_address_filter"/>
         </record>
         <record id="action_partner_address_form_view1" model="ir.actions.act_window.view">
@@ -122,7 +139,7 @@
             <field name="arch" type="xml">
                 <form string="Contacts">
                     <field name="name" select="1"/>
-                    <field domain="[('domain', '=', 'contact')]" name="title"/>
+                    <field domain="[('domain', '=', 'contact')]" name="title" widget="selection"/>
                     <field name="street"/>
                     <field name="street2"/>
                     <field name="type"/>
@@ -190,7 +207,8 @@
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','partner')]</field>
         </record>
-        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" parent="menu_base_config_partner" sequence="10"/>
+
+        <menuitem action="action_partner_title_partner" id="menu_partner_title_partner" name="Company Title" parent="menu_config_address_book" sequence="0"/>
 
         <record id="action_partner_title_contact" model="ir.actions.act_window">
             <field name="name">Contact Titles</field>
@@ -199,8 +217,8 @@
             <field name="view_type">form</field>
             <field name="domain">[('domain','=','contact')]</field>
         </record>
-        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" parent="menu_base_config_contact" sequence="10"/>
 
+        <menuitem action="action_partner_title_contact" id="menu_partner_title_contact" name="Titles" parent="menu_config_crm_address_contact" sequence="3"/>
         <!--
           =======================
           Partner
@@ -235,13 +253,13 @@
                         <group colspan="5" col="6">
                             <field name="name" select="1"/>
                             <field name="ref"/>
-                            <field domain="[('domain', '=', 'partner')]" name="title" groups="base.group_extended"/>
+                            <field domain="[('domain', '=', 'partner')]" name="title" size="0" groups="base.group_extended" widget="selection"/>
                             <field name="lang"/>
                         </group>
                         <group colspan="1" col="2">
                             <field name="customer" select="1"/>
                             <field name="supplier"/>
-                            <field name="employee"/>
+<!--                            <field name="employee"/>-->
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -250,7 +268,7 @@
                                 <form string="Partner Contacts">
                                     <group colspan="4" col="6">
                                         <field name="name"/>
-                                        <field domain="[('domain', '=', 'contact')]" name="title" size="0"/>
+                                        <field domain="[('domain', '=', 'contact')]" name="title" size="0" widget="selection"/>
                                         <field name="function"/>
                                     </group>
                                     <newline/>
@@ -281,8 +299,10 @@
                                     <field name="email"/>
                                 </tree>
                             </field>
-                            <separator colspan="4" string="Categories"/>
-                            <field colspan="4" name="category_id" nolabel="1" height="90" groups="base.group_extended"/>
+                            <group  groups="base.group_extended">
+                                    <separator colspan="4" string="Categories"/>
+                                    <field  colspan="4" name="category_id" nolabel="1"/>
+                            </group>
                         </page>
                         <page string="Sales &amp; Purchases">
                             <separator string="General Information" colspan="4"/>
@@ -294,8 +314,7 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <newline/>
                         </page>
-                        <page string="History">
-                            <field colspan="4" name="events" nolabel="1" widget="one2many_list"/>
+                        <page string="History" groups="base.group_extended">
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="comment" nolabel="1"/>
@@ -312,28 +331,31 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
-                        <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
-                        <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-                         <filter string="Employees" icon="terp-partner" domain="[('employee','=',1)]" help="Employee Partners"/>
+                        <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                        <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address" select="1"/>
                         <field name="country" select="1"/>
                         <field name="category_id" select="1"/>
-                        <field name="user_id" select="1"/>
+                        <field name="user_id" select="1">
+                            <filter string="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
+                        </field>
+                   </group>
+                   <newline />
+                   <group expand="0" string="Group By...">
+                       <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
                    </group>
                </search>
             </field>
         </record>
 
         <record id="action_partner_form" model="ir.actions.act_window">
-            <field name="name">Partners</field>
+            <field name="name">Customers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_supplier":supplier}</field>
+            <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
         </record>
         <record id="action_partner_form_view1" model="ir.actions.act_window.view">
@@ -360,7 +382,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="domain">[('customer','=',1)]</field>
-            <field name="context">{'default_customer':1}</field>
+            <field name="context">{'default_customer':1, 'search_default_customer':1}</field>
             <field name="filter" eval="True"/>
         </record>
 
@@ -369,8 +391,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('supplier','=',1)]</field>
-            <field name="context">{'default_customer':0, 'default_supplier':1}</field>
+            <field name="domain">[]</field>
+            <field name="context">{'default_customer':0, 'search_default_supplier': 1, 'default_supplier':1}</field>
             <field name="filter" eval="True"/>
         </record>
 
@@ -391,15 +413,6 @@
             <field name="view_type">form</field>
             <field name="domain">[('supplier','&lt;&gt;',1),('customer','&lt;&gt;',1)]</field>
             <field name="filter" eval="True"/>
-        </record>
-
-        <record id="action_partner_customer_form_new" model="ir.actions.act_window">
-            <field name="name">New Partner</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="view_partner_form"/>
         </record>
 
         <record id="view_payterm_form" model="ir.ui.view">
@@ -486,40 +499,6 @@
 
         <!--
           ======================
-          Company Architecture
-          ======================
-        -->
-        <record id="view_partner_tree2" model="ir.ui.view">
-            <field name="name">res.partner.tree</field>
-            <field name="model">res.partner</field>
-            <field name="type">tree</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Partners">
-                    <field name="name"/>
-                    <field name="lang"/>
-                    <field name="ref"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action2" model="ir.actions.act_window">
-            <field name="name">Company Architecture</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_partner_tree2"/>
-        </record>
-        <record id="ir_partner_structure" model="ir.values">
-            <field eval="'client_action_multi'" name="key2"/>
-            <field eval="'res.partner'" name="model"/>
-            <field name="name">Company Architecture</field>
-            <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
-            <field eval="True" name="object"/>
-        </record>
-
-        <!--
-          ======================
           Categories
           ======================
         -->
@@ -559,6 +538,7 @@
                 </tree>
             </field>
         </record>
+        <!--
         <record id="action_partner_category" model="ir.actions.act_window">
             <field name="name">Partners by Categories</field>
             <field name="type">ir.actions.act_window</field>
@@ -569,6 +549,7 @@
         </record>
         <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_address_book" sequence="1"
             groups="base.group_extended"/>
+        -->
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
             <field name="name">Partner Categories</field>
@@ -594,7 +575,8 @@
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" parent="base.menu_base_config_partner"/>
+
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Categories" sequence="2" parent="menu_config_address_book"/>
 
         <act_window domain="[('partner_id', '=', active_id)]"
             id="act_res_partner_event" name="Events"
@@ -604,7 +586,7 @@
             />
 
         <record id="ir_ui_view_sc_partner0" model="ir.ui.view_sc">
-            <field name="name">Partner</field>
+            <field name="name">Address Book</field>
             <field name="resource">ir.ui.menu</field>
             <field name="user_id" ref="base.user_root"/>
              <field name="res_id" ref="menu_partner_form"/>

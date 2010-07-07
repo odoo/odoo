@@ -23,6 +23,7 @@ import re
 import reportlab
 import reportlab.lib.units
 from lxml import etree
+from tools.safe_eval import safe_eval as eval
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
