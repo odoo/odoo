@@ -54,12 +54,11 @@
                             domain="[('date','=', time.strftime('%%Y-%%m-%%d'))]"
                             help="Timesheet dof the day"/>
                         <separator orientation="vertical"/>
-                        <field name="account_id"/>
-                        <field name="user_id" />
-                        <field name="date" />
+                            <field name="account_id"/>
+                            <field name="user_id" />
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By...">
+                    <group expand="1" string="Group By...">
                         <filter string="User" name="group_user_id" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
@@ -79,6 +78,8 @@
                         <field name="journal_id"/>
                         <separator orientation="vertical"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="date" />
                     </group>
                 </search>
             </field>
