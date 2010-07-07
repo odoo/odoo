@@ -748,12 +748,18 @@ class account_invoice(osv.osv):
         obj_inv = self.browse(cr, uid, ids)[0]
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
+                tmp_context = {
+                    'fiscal_year_id' : obj_inv.period_id.fiscalyear_id.id,
+                    'test' : True,
+                }
                 if obj_inv.journal_id.invoice_sequence_id:
                     sid = obj_inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id=%s', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
+                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id=%s', context=tmp_context)
                 else:
-                    number = self.pool.get('ir.sequence').get(cr, uid,
-                            'account.invoice.' + invtype)
+                    number = self.pool.get('ir.sequence').get_id(cr, uid,
+                                                                 'account.invoice.' + invtype,
+                                                                 'code=%s',
+                                                                 context=tmp_context)
                 if invtype in ('in_invoice', 'in_refund'):
                     ref = reference
                 else:
