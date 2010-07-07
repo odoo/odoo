@@ -31,6 +31,35 @@ import time
 # Produce, Buy or Find products and place a move
 #     then wizard for picking lists & move
 #
+
+class mrp_property_group(osv.osv):
+    """
+    Group of mrp properties.
+    """
+    _name = 'mrp.property.group'
+    _description = 'Property Group'
+    _columns = {
+        'name': fields.char('Property Group', size=64, required=True),
+        'description': fields.text('Description'),
+    }
+mrp_property_group()
+
+class mrp_property(osv.osv):
+    """
+    Properties of mrp.
+    """
+    _name = 'mrp.property'
+    _description = 'Property'
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+        'composition': fields.selection([('min','min'),('max','max'),('plus','plus')], 'Properties composition', required=True, help="Not used in computations, for information purpose only."),
+        'group_id': fields.many2one('mrp.property.group', 'Property Group', required=True),
+        'description': fields.text('Description'),
+    }
+    _defaults = {
+        'composition': lambda *a: 'min',
+    }
+mrp_property()
 class procurement_order(osv.osv):
     """
     Procurement Orders
