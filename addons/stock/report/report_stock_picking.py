@@ -72,6 +72,7 @@ class report_stock_picking(osv.osv):
                     sp.address_id as partner_id,
                     to_date(to_char(sp.create_date, 'MM-dd-YYYY'),'MM-dd-YYYY') as date,
                     count(sm.id) as nbr,
+                    count(sp.id) as nbp,
                     sum(sm.product_qty*u.factor) as product_qty,
                     sum(sm.product_uos_qty) as product_uos_qty,
                     sm.product_id as product_id,
