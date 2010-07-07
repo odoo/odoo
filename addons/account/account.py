@@ -136,7 +136,6 @@ class account_account_type(osv.osv):
         'name': fields.char('Acc. Type Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=32, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of account types."),
-        'partner_account': fields.boolean('Partner account'),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True),
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
         'report_type':fields.selection([
@@ -366,11 +365,11 @@ class account_account(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True),
         'type': fields.selection([
+            ('view', 'View'),
+            ('other', 'Regular'),
             ('receivable', 'Receivable'),
             ('payable', 'Payable'),
-            ('view', 'View'),
             ('consolidation', 'Consolidation'),
-            ('other', 'Others'),
             ('closed', 'Closed'),
         ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
             "special effects in Open ERP: view can not have entries, consolidation are accounts that "\

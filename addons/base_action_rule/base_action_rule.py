@@ -127,7 +127,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
     
     def pre_action(self, cr, uid, ids, model, context=None):
         # Searching for action rules
-        cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule LEFT JOIN ir_model model on (model.id = rule.name)")
+        cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
+                        LEFT JOIN ir_model model on (model.id = rule.name) \
+                        where active")
         res = cr.fetchall()
         # Check if any rule matching with current object
         for obj_name, rule_id in res:
@@ -428,10 +430,11 @@ class ir_cron(osv.osv):
             next = datetime.now().strftime('%Y-%m-%d %H:00:00')
             # Putting nextcall always less than current time in order to call it every time
             cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
-            super(ir_cron, self)._poolJobs(db_name, check=check)
         finally:
             cr.commit()
             cr.close()
+
+        super(ir_cron, self)._poolJobs(db_name, check=check)
 
 ir_cron()
 

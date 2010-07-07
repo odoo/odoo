@@ -43,14 +43,14 @@ class thunderbird_installer(osv.osv_memory):
         'thunderbird':fields.boolean('Thunderbird Module ', help="Allows you to select an object that you’d like to add to your email and its attachments."),
         'plugin_file':fields.binary('Thunderbird Plug-in', readonly=True, help="Thunderbird plug-in file. Save as this file and install this plug-in in thunderbird."),
         'pdf_file':fields.binary('Installation Manual', help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
-        'description':fields.text('Description', readonly=True)        
+        'description':fields.text('Description', readonly=True)
         }
 
     _defaults = {
         'thunderbird' : True,
         'name' : 'tiny_plugin-2.0.xpi',
         'pdf_name' : 'Installation Guide to OpenERP Thunderbid Plug-in.pdf',
-        'description' : """ * Save The thunderbird plug­in Follow the following step to install thunderbird plug­in. \n    -> 1. From Menu Bar, Open Tools ­> Add ons. \n    -> 2. Now click on install button and a browser window will appear. \n    -> 3. Just select the (.xpi) file from thunderbird/plugin directory and click ok, a new software installation window will appear and within a short time Install Now  button will be enabled. \n    -> 4. Click on Install Now and restart Thunderbird. \n    -> 5. Now Thunderbird plug­in is installed."""
+        'description' : """ * Save the Thunderbird plug­in. \n * Follow the following step to install Thunderbird plug­in. \n -> 1.From Menu Bar of Thunderbird, open Tools ­> Add ons. \n -> 2. Click on install button and a browser window appears. \n -> 3. Select the plug-in(.xpi file) and click Ok. \n -> 4. Software installation window appears and within a short time “Install Now” button will be enabled  -> 5. Click "Install Now". \n -> 6. Restart Thunderbird."""
         }
 
 thunderbird_installer()

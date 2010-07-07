@@ -39,7 +39,7 @@ class hr_department(osv.osv):
         return res
 
     def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context)
+        res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
     _name = "hr.department"
@@ -53,20 +53,20 @@ class hr_department(osv.osv):
         'manager_id': fields.many2one('res.users', 'Manager', required=True),
         'member_ids': fields.many2many('res.users', 'hr_department_user_rel', 'department_id', 'user_id', 'Members'),
     }
-    
-    _defaults = { 
+
+    _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.department', context=c),
-  }    
+                }
 
     def _get_members(self,cr, uid, context=None):
         mids = self.search(cr, uid, [('manager_id', '=', uid)])
-        result = {uid:1}
-        for m in self.browse(cr, uid, mids, context):
+        result = {uid: 1}
+        for m in self.browse(cr, uid, mids, context=context):
             for user in m.member_ids:
                 result[user.id] = 1
         return result.keys()
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from hr_department where id IN %s',(tuple(ids),))
@@ -122,12 +122,12 @@ class res_users(osv.osv):
             result[user_id] = parent_ids
         return result
 
-    def _parent_search(self, cr, uid, obj, name, args, context):
+    def _parent_search(self, cr, uid, obj, name, args, context=None):
         parent = []
         for arg in args:
             if arg[0] == 'parent_id':
                 parent = arg[2]
-        child_ids = self._child_compute(cr, uid, parent, name, args, {})
+        child_ids = self._child_compute(cr, uid, parent, name, args, context=context)
         if not child_ids:
             return [('id', 'in', [0])]
         return [('id', 'in', child_ids.get(uid,[]))]
@@ -163,7 +163,7 @@ class res_users(osv.osv):
         for arg in args:
             if arg[0] == 'child_ids':
                 parent = arg[2]
-        child_ids = self._child_compute(cr, uid, parent, name, args, {})
+        child_ids = self._child_compute(cr, uid, parent, name, args, context=context)
         if not child_ids:
             return [('id', 'in', [0])]
         return [('id', 'in', child_ids.get(uid,[]))]
