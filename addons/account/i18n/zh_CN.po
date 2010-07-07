@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.6\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-07-06 03:17+0000\n"
+"PO-Revision-Date: 2010-07-06 10:39+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-07-06 03:37+0000\n"
+"X-Launchpad-Export-Date: 2010-07-07 03:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -45,7 +45,7 @@ msgstr "设置过期支付的催款信息"
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement from draft"
-msgstr "从草稿确认"
+msgstr "从草稿确认对帐单"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_asset
@@ -60,7 +60,7 @@ msgstr "在动作定义使用了无效的模块名。"
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr "报表使用的货币"
+msgstr "使用的货币"
 
 #. module: account
 #: wizard_view:account_use_models,init_form:0
@@ -454,7 +454,7 @@ msgstr "特殊计算"
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement with/without reconciliation from draft statement"
-msgstr "从草稿确认将不对账"
+msgstr "从草稿确认与对/不对帐"
 
 #. module: account
 #: wizard_view:account.move.bank.reconcile,init:0
@@ -487,7 +487,7 @@ msgstr "税用在"
 msgid ""
 "Set if the amount of tax must be included in the base amount before "
 "computing the next taxes."
-msgstr "如果这税额必须包含在计算下一个税的基础金额里, 请设置"
+msgstr "如果这税额必须在计算下一个税的基础金额里, 请设置"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
@@ -954,7 +954,7 @@ msgstr "默认借方科目"
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree
 msgid "Entries by Statements"
-msgstr "银行对帐单"
+msgstr "对帐单"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_analyticinvoice0
@@ -1092,7 +1092,7 @@ msgstr "含税价计算代码"
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
 msgid "Tax codes"
-msgstr "税代码"
+msgstr "税事务"
 
 #. module: account
 #: field:account.fiscal.position.template,chart_template_id:0
@@ -1739,7 +1739,7 @@ msgstr "成本分类账的会计期间"
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree2
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree2
 msgid "New Statement"
-msgstr "新银行对帐单"
+msgstr "新对帐单"
 
 #. module: account
 #: wizard_field:account.analytic.account.chart,init,from_date:0
@@ -2581,7 +2581,7 @@ msgstr "应付账"
 #. module: account
 #: wizard_view:populate_statement_from_inv,init:0
 msgid "Import Invoices in Statement"
-msgstr "在银行对帐单里导入发票"
+msgstr "在对帐单里导入发票"
 
 #. module: account
 #: view:account.invoice:0
@@ -2873,12 +2873,12 @@ msgstr "跳过'草稿'状态创建分录"
 #: field:account.invoice.tax,account_id:0
 #: field:account.move.line,tax_code_id:0
 msgid "Tax Account"
-msgstr "税科目"
+msgstr "税事务"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_statemententries0
 msgid "From statement, create entries"
-msgstr "从对账单创建分录"
+msgstr "从对帐单创建分录"
 
 #. module: account
 #: field:account.analytic.account,complete_name:0
@@ -2913,7 +2913,7 @@ msgstr "会计报表"
 #. module: account
 #: rml:account.overdue:0
 msgid "Document: Customer account statement"
-msgstr "文档:客户报表"
+msgstr "文档:客户科目"
 
 #. module: account
 #: view:product.product:0
@@ -3003,7 +3003,7 @@ msgid ""
 "The maturity date of the generated entries for this model. You can chosse "
 "between the date of the creation action or the the date of the creation of "
 "the entries plus the partner payment terms."
-msgstr "这模型在到期日产生分录.  你能从创建日期到到付款期限间选择."
+msgstr "这模型在付款到期日产生分录.  你能从创建日期到到付款期限间选择."
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -3212,7 +3212,7 @@ msgstr "平均汇率"
 #: model:process.node,note:account.process_node_bankstatement0
 #: model:process.node,note:account.process_node_supplierbankstatement0
 msgid "Statement encoding produces payment entries"
-msgstr "产品付款分录清单"
+msgstr "产品付款分录对帐单"
 
 #. module: account
 #: field:account.account,code:0
@@ -3694,7 +3694,7 @@ msgstr "周期性分录科目"
 #: field:account.move.line,date_maturity:0
 #: rml:account.overdue:0
 msgid "Maturity date"
-msgstr "到期日期"
+msgstr "付款到期日"
 
 #. module: account
 #: view:account.subscription:0
@@ -3798,7 +3798,7 @@ msgstr "付款分录"
 #. module: account
 #: help:account.move.line,tax_code_id:0
 msgid "The Account can either be a base tax code or tax code account."
-msgstr "这科目可以选基础税的代码或税代码科目"
+msgstr "可以选基于的税务代码或税务代码"
 
 #. module: account
 #: help:account.automatic.reconcile,init,account_ids:0
@@ -4011,7 +4011,7 @@ msgstr "凭证"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,line_ids:0
 msgid "Statement lines"
-msgstr "银行对帐单明细"
+msgstr "对帐单明细"
 
 #. module: account
 #: field:account.move.line,amount_taxed:0
@@ -4182,7 +4182,7 @@ msgstr "报表上显示的会计年度名称"
 msgid ""
 "This field is used for payable and receivable entries. You can put the limit "
 "date for the payment of this entry line."
-msgstr "这字段用于应付和应收分录. 你可以在付款分录明细放入的限制日期"
+msgstr "这字段用于应付和应收分录. 你可以放入该分录明细的付款限定日期"
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -4552,7 +4552,7 @@ msgstr "将根据选择的模板自动设置你的科目一览表、银行帐号
 #: field:account.bank.statement.line,statement_id:0
 #: field:account.move.line,statement_id:0
 msgid "Statement"
-msgstr "银行对帐单"
+msgstr "对帐单"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form_encode_by_move
@@ -4622,12 +4622,12 @@ msgstr "运行中"
 msgid ""
 "Indicate if the amount of tax must be included in the base amount for the "
 "computation of the next taxes"
-msgstr "表明如果税额必须包含在计算下一个税的基础金额里"
+msgstr "指出如果税额必须在计算下一个税的基础金额里"
 
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
 msgid "Draft statement"
-msgstr "银行对帐单草稿"
+msgstr "对帐单草稿"
 
 #. module: account
 #: field:account.analytic.journal,name:0
@@ -4637,7 +4637,7 @@ msgstr "分录集合名称"
 #. module: account
 #: model:process.transition,note:account.process_transition_invoiceimport0
 msgid "Import invoice from statement"
-msgstr "从银行对帐单导入发票"
+msgstr "从对帐单导入发票"
 
 #. module: account
 #: selection:account.automatic.reconcile,init,power:0
@@ -4730,7 +4730,7 @@ msgstr "已取消"
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_draft_tree
 msgid "Draft statements"
-msgstr "银行对帐单草稿"
+msgstr "对帐单草稿"
 
 #. module: account
 #: wizard_field:populate_statement_from_inv,init,date:0
@@ -5887,7 +5887,7 @@ msgstr "财务结构"
 #. module: account
 #: model:process.process,name:account.process_process_statementprocess0
 msgid "Statement Process"
-msgstr "银行对帐单处理"
+msgstr "对帐单处理"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_reconcile

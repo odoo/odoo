@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     "name" : "Inventory Management",
     "version" : "1.1",
@@ -61,7 +60,6 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "wizard/stock_traceability_view.xml",
         "stock_workflow.xml",
         "stock_incoterms.xml",
-        "stock_wizard.xml",
         "stock_view.xml",
         "stock_report.xml",
         "stock_sequence.xml",

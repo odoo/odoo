@@ -89,6 +89,7 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
+                    <field name="coach_id" invisible="1" />
                 </tree>
             </field>
         </record>
@@ -150,8 +151,19 @@
         <!--
         =======================
         Employee marital status
-        =======================    
+        =======================
         -->
+
+		<record id="hr_hr_employee_marital_status_tree" model="ir.ui.view">
+            <field name="name">hr.hr.employee.marital.status.tree</field>
+            <field name="model">hr.employee.marital.status</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Marital Status">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
 
         <record id="hr_hr_employee_marital_status_form" model="ir.ui.view">
             <field name="name">hr.hr.employee.marital.status</field>
@@ -171,6 +183,7 @@
             <field name="res_model">hr.employee.marital.status</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_hr_employee_marital_status_tree"/>
         </record>
 
         <menuitem action="action_hr_marital_status" id="hr_menu_marital_status"
@@ -307,6 +320,7 @@
                     <group col="6" colspan="4">
                     <field name="name" />
                     <field name="department_id" />
+                    <newline/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     <field name="expected_employees"/>
                     <field name="no_of_employee"/>
@@ -358,7 +372,7 @@
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="department_id" widget="selection">
-                            <filter icon="terp-gtk-select-all" domain="[('department_id','=',context.get('department_id',False))]" help="My Departments Jobs"/>
+                    	<filter icon="terp-gtk-select-all" domain="[('department_id', '=', context.get('department_id', False))]" help="My Departments Jobs"/>
                     </field>
                 </search>
              </field>

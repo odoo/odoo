@@ -40,4 +40,5 @@ This module implement the modification on the invoice form.
     'active': False,
     'certificate': '0070514190381',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
