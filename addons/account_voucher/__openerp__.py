@@ -31,15 +31,10 @@
     """,
     "category" : "Generic Modules/Accounting",
     "website" : "http://tinyerp.com",
-    "depends" : [
-        "base",
-        "account"
-    ],
-    "init_xml" : [
-    ],
+    "depends" : ["account"],
+    "init_xml" : [],
 
-    "demo_xml" : [
-    ],
+    "demo_xml" : [],
 
     "update_xml" : [
         "security/ir.model.access.csv",

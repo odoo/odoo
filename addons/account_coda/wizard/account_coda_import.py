@@ -21,7 +21,6 @@
 ##############################################################################
 
 import time
-from mx import DateTime
 import base64
 
 from osv import fields
@@ -54,7 +53,8 @@ class account_coda_import(osv.osv_memory):
             'coda': fields.binary('Coda File', required=True),
             'note':fields.text('Log'),
     }
-    def coda_parsing(self, cr, uid, ids, context):
+    
+    def coda_parsing(self, cr, uid, ids, context=None):
 
         journal_obj=self.pool.get('account.journal')
         account_period_obj = self.pool.get('account.period')
@@ -65,9 +65,11 @@ class account_coda_import(osv.osv_memory):
         statement_reconcile_obj = self.pool.get('account.bank.statement.reconcile')
         account_coda_obj = self.pool.get('account.coda')
         mod_obj = self.pool.get('ir.model.data')
-
+        
+        if not context:
+            context = {}
+            
         data = self.read(cr, uid, ids)[0]
-
 
         codafile = data['coda']
         journal_code = journal_obj.browse(cr, uid, data['journal_id'], context).code
@@ -265,6 +267,7 @@ class account_coda_import(osv.osv_memory):
         context.update({ 'statment_ids':bkst_list})
         model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'account_coda_note_view')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        
         return {
                 'name': _('Result'),
                 'res_id': ids[0],
@@ -277,7 +280,10 @@ class account_coda_import(osv.osv_memory):
                 'context': context,
                 'type': 'ir.actions.act_window',
         }
-    def action_open_window(self, cr, uid, data, context):
+        
+    def action_open_window(self, cr, uid, data, context=None):
+        if not context:
+            cotext = {}
         return {
             'domain':"[('id','in',%s)]"%(context.get('statment_ids', False)),
             'name': 'Statement',
@@ -287,6 +293,7 @@ class account_coda_import(osv.osv_memory):
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
+        
 account_coda_import()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

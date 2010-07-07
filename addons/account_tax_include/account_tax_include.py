@@ -21,7 +21,6 @@
 import time
 
 from osv import fields, osv
-import decimal_precision as dp
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
@@ -117,7 +116,7 @@ class account_invoice_line(osv.osv):
             return super(account_invoice_line, self)._price_unit_default(cr, uid, context)
         return 0
 
-    def _get_invoice(self, cr, uid, ids, context):
+    def _get_invoice(self, cr, uid, ids, context=None):
         result = {}
         for inv in self.pool.get('account.invoice').browse(cr, uid, ids, context=context):
             for line in inv.invoice_line:
@@ -126,9 +125,9 @@ class account_invoice_line(osv.osv):
 
     _columns = {
         'price_subtotal': fields.function(_amount_line2, method=True, string='Subtotal w/o tax', multi='amount',
-            store={'account.invoice':(_get_invoice,['price_type'],10), 'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None,10)}),
+            store={'account.invoice':(_get_invoice,['price_type'], 10), 'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None,10)}),
         'price_subtotal_incl': fields.function(_amount_line2, method=True, string='Subtotal', multi='amount',
-            store={'account.invoice':(_get_invoice,['price_type'],10), 'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None,10)}),
+            store={'account.invoice':(_get_invoice,['price_type'], 10), 'account.invoice.line': (lambda self, cr, uid, ids, c={}: ids, None,10)}),
                 }
 
     _defaults = {

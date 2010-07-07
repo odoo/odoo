@@ -19,17 +19,16 @@
 #
 ##############################################################################
 
-
 {
     "name" : "Account Cancel",
     "version" : "1.1",
-    "depends" : ["account"],
     "author" : "Tiny",
     "category": 'Generic Modules/Accounting',
     "description": """
-    Module Add Allow cancelling entries field on form view of account journal if it set to true it allows user to cancel entries & invoices.
+    Module adds 'Allow cancelling entries' field on form view of account journal. If set to true it allows user to cancel entries & invoices.
     """,
     'website': 'http://www.openerp.com',
+    "depends" : ["account"],
     'init_xml': [],
     'update_xml': ['account_cancel_view.xml' ],
     'demo_xml': [],
@@ -37,4 +36,5 @@
     'active': False,
 
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
