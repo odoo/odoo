@@ -25,37 +25,6 @@ from tools.translate import _
 import netsvc
 import time
 
-
-class mrp_property_group(osv.osv):
-    """
-    Group of mrp properties.
-    """
-    _name = 'mrp.property.group'
-    _description = 'Property Group'
-    _columns = {
-        'name': fields.char('Property Group', size=64, required=True),
-        'description': fields.text('Description'),
-    }
-mrp_property_group()
-
-class mrp_property(osv.osv):
-    """
-    Properties of mrp.
-    """
-    _name = 'mrp.property'
-    _description = 'Property'
-    _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'composition': fields.selection([('min','min'),('max','max'),('plus','plus')], 'Properties composition', required=True, help="Not used in computations, for information purpose only."),
-        'group_id': fields.many2one('mrp.property.group', 'Property Group', required=True),
-        'description': fields.text('Description'),
-    }
-    _defaults = {
-        'composition': lambda *a: 'min',
-    }
-mrp_property()
-
-# ------------------------------------------------------------------
 # Procurement
 # ------------------------------------------------------------------
 #
@@ -91,9 +60,6 @@ class procurement_order(osv.osv):
             " a make to order method."),
 
         'note': fields.text('Note'),
-
-        'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
-
         'message': fields.char('Latest error', size=64, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
@@ -477,7 +443,7 @@ class stock_warehouse_orderpoint(osv.osv):
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'product_max_qty': fields.float('Max Quantity', required=True,
-            help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
+            help="When the virtual stock goes belong the Mix Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),

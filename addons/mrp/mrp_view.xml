@@ -882,10 +882,40 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/field[@name='move_id']" position="before">
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                    <group colspan="4"  groups="base.group_extended">
+	                    	<separator colspan="4" string="Properties" />
+	                        <field colspan="4" name="property_ids" nolabel="1"/>
+	                 </group>
                 </xpath>
             </field>
         </record>
-
+        
+        <record id="view_procurement_form_inherit" model="ir.ui.view">
+            <field name="name">procurement.order.form.inherit</field>
+            <field name="model">procurement.order</field>
+            <field name="inherit_id" ref="procurement.procurement_form_view"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/field[@name='move_id']" position="before">
+                    <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                </xpath>
+            </field>
+        </record>
+         
+         <record id="view_procurement_form_inherit_property" model="ir.ui.view">
+            <field name="name">procurement.order.form.inherit</field>
+            <field name="model">procurement.order</field>
+            <field name="inherit_id" ref="procurement.procurement_form_view"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/field[@name='close_move']" position="after">
+                    <group colspan="4"  groups="base.group_extended">
+                    	<separator colspan="4" string="Properties" />
+                        <field colspan="4" name="property_ids" nolabel="1"/>
+	                 </group>
+                </xpath>
+            </field>
+        </record>
         <act_window
             id="action_product_bom_structure"
             name="Product BoM Structure"
