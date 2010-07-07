@@ -74,13 +74,10 @@
                             icon="terp-check"
                             domain="[('state','in',('draft','open'))]"
                             help = "Draft and Open Invoices"/>
-                       <filter string="Pro-forma"
-                               icon="terp-check"
-                               domain="[('state','=','proforma'),('state','=','proforma2')]"
-                               help = "Pro-forma Invoices"/>
-                       <filter string="Current"
-                            domain="[('state', '=' ,'open')]"
-                            help = "open Invoices"/>
+                    <filter string="Pro-forma"
+                           icon="terp-check"
+                           domain="[('state','=','proforma'),('state','=','proforma2')]"
+                           help = "Pro-forma Invoices"/>
                     <filter string="Done"
                             icon="terp-dialog-close"
                             domain="[('state','=','paid')]"
