@@ -331,6 +331,8 @@ class procurement_order(osv.osv):
                     })
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
+                    message = _('Procurement ') + " '" + procurement.name + "' "+ _("is running.")
+                    self.log(cr, uid, procurement.id, message)
         self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
         return True
 
@@ -355,8 +357,10 @@ class procurement_order(osv.osv):
             if not (procurement.move_id.state in ('done','assigned','cancel')):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
-                if not cr.fetchone()[0]:
+                if not cr.fetchone()[0]:                    
                     cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock and no minimum orderpoint rule defined.'), procurement.id))
+                    message = _('Procurement ') + " '" + procurement.name + "' "+ _("has an exception.") + _('Not enough stock and no minimum orderpoint rule defined.')
+                    self.log(cr, uid, procurement.id, message)
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):
@@ -434,6 +438,8 @@ class procurement_order(osv.osv):
             if procurement.move_id:
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
+                    message = _('Procurement ') + " '" + procurement.name + "' "+ _("is done.")
+                    self.log(cr, uid, procurement.id, message)
         res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:

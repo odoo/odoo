@@ -82,12 +82,13 @@ class project_task_delegate(osv.osv_memory):
        'prefix': _get_prefix,
        'new_task_description': _get_new_desc,
        'state': 'pending',
-               }
+    }
 
     def validate(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         task_obj = self.pool.get('project.task')
+        user_obj = self.pool.get('res.users')
         delegate_data = self.read(cr, uid, ids, context=context)[0]
         task = task_obj.browse(cr, uid, context['active_id'], context=context)
         newname = delegate_data['prefix'] or ''
@@ -111,6 +112,9 @@ class project_task_delegate(osv.osv_memory):
             task_obj.do_pending(cr, uid, [task.id])
         else:
             task_obj.do_close(cr, uid, [task.id])
+        delegrate_user = user_obj.browse(cr, uid, delegate_data['user_id'], context=context)
+        message = _('Task ') + " '" + delegate_data['name'] + "' "+ _("is Delegated to User:") +" '"+ delegrate_user.name +"' "
+        self.log(cr, uid, task.id, message)
         return {}
 
 project_task_delegate()
