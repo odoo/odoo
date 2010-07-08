@@ -24,7 +24,7 @@ from osv import osv,fields
 class company(osv.osv):
     _inherit = 'res.company'
     _columns = {
-        'schedule_range': fields.float('Scheduler Range', required=True,
+        'schedule_range': fields.float('Scheduler Range Days', required=True,
             help="This is the time frame analysed by the scheduler when "\
             "computing procurements. All procurements that are not between "\
             "today and today+range are skipped for futur computation."),

@@ -137,6 +137,7 @@ class project_phase(osv.osv):
        """
        uom_obj = self.pool.get('product.uom')
        resource_obj = self.pool.get('resource.resource')
+       model_data_obj = self.pool.get('ir.model.data')
        cal_obj = self.pool.get('resource.calendar')
        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
@@ -146,7 +147,7 @@ class project_phase(osv.osv):
             cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:
                 calendar_id = cal_id
-       default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]
+       default_uom_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
        work_times = cal_obj.interval_min_get(cr, uid, calendar_id, date_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
        dt_start = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
@@ -159,6 +160,7 @@ class project_phase(osv.osv):
        Check And Compute date_end of phase if change in date_end > older time.
        """
        uom_obj = self.pool.get('product.uom')
+       model_data_obj = self.pool.get('ir.model.data')
        resource_obj = self.pool.get('resource.resource')
        cal_obj = self.pool.get('resource.calendar')
        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
@@ -169,7 +171,7 @@ class project_phase(osv.osv):
             cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:
                 calendar_id = cal_id
-       default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]
+       default_uom_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
        work_times = cal_obj.interval_get(cr, uid, calendar_id, date_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
        dt_end = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
@@ -179,6 +181,7 @@ class project_phase(osv.osv):
         resource_calendar_obj = self.pool.get('resource.calendar')
         resource_obj = self.pool.get('resource.resource')
         uom_obj = self.pool.get('product.uom')
+        model_data_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
         if context.get('scheduler',False):
@@ -192,7 +195,7 @@ class project_phase(osv.osv):
                 cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
                 if cal_id:
                     calendar_id = cal_id
-        default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')])[0]
+        default_uom_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
         avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
 
         # Change the date_start and date_end

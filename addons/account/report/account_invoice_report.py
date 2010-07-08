@@ -77,84 +77,83 @@ class account_invoice_report(osv.osv):
         tools.drop_view_if_exists(cr, 'account_invoice_report')
         cr.execute("""
             create or replace view account_invoice_report as (
-                 select
-                     min(l.id) as id,
-                     s.date_invoice as date,
-                     to_char(s.date_invoice, 'YYYY') as year,
-                     to_char(s.date_invoice, 'MM') as month,
-                     to_char(s.date_invoice, 'YYYY-MM-DD') as day,
-                     l.product_id as product_id,
-                     sum(case when s.type in ('out_refund','in_invoice') then
-                             l.quantity * u.factor * -1
-                         else
-                             l.quantity * u.factor
-                         end) as product_qty,
-                     s.partner_id as partner_id,
-                     s.reconciled::integer,
-                     s.payment_term as payment_term,
-                     s.period_id as period_id,
-                     u.name as uom_name,
-                     s.currency_id as currency_id,
-                     s.journal_id as journal_id,
-                     s.fiscal_position as fiscal_position,
-                     s.user_id as user_id,
-                     s.company_id as company_id,
-                     sum(case when s.type in ('out_refund','in_invoice') then
-                             l.quantity*l.price_unit * -1
-                         else
-                             l.quantity*l.price_unit
-                         end) as price_total,
-                     sum(case when s.type in ('out_refund','in_invoice') then
-                             l.quantity*l.price_unit * -1
-                         else
-                             l.quantity*l.price_unit
-                         end) / sum(l.quantity * u.factor)::decimal(16,2) as price_average,
-                     count(*) as nbr,
-                     s.type as type,
-                     s.state,
-                     pt.categ_id,
-                     s.date_due as date_due,
-                     s.address_contact_id as address_contact_id,
-                     s.address_invoice_id as address_invoice_id,
-                     s.account_id as account_id,
-                     s.partner_bank as partner_bank,
-                     sum(case when s.type in ('out_refund','in_invoice') then
-                             s.residual * -1
-                         else
-                             s.residual
-                         end) as residual,
-                     case when s.state != 'paid' then null else
-                     extract(epoch from avg(am.date_created-l.create_date))/(24*60*60)::decimal(16,2)
-                     end as delay_to_pay
-                 from account_invoice_line l
-                 left join account_invoice s on (s.id=l.invoice_id)
-                 left join product_template pt on (pt.id=l.product_id)
-                 left join product_uom u on (u.id=l.uos_id),
-                 account_move_line am left join account_invoice i on (i.move_id=am.move_id)
-                 where am.account_id=i.account_id
-                 group by
-                     s.type,
-                     s.date_invoice,
-                     s.partner_id,
-                     l.product_id,
-                     u.name,
-                     l.uos_id,
-                     s.reconciled,
-                     s.user_id,
-                     s.state,
-                     s.residual,
-                     pt.categ_id,
-                     s.company_id,
-                     s.payment_term,
-                     s.period_id,
-                     s.fiscal_position,
-                     s.currency_id,
-                     s.journal_id,
-                     s.date_due,
-                     s.address_contact_id,
-                     s.address_invoice_id,
-                     s.account_id,
-                     s.partner_bank
+                 select min(ail.id) as id,
+                    ai.date_invoice as date,
+                    to_char(ai.date_invoice, 'YYYY') as year,
+                    to_char(ai.date_invoice, 'MM') as month,
+                    to_char(ai.date_invoice, 'YYYY-MM-DD') as day,
+                    ail.product_id,
+                    ai.partner_id as partner_id,
+                    ai.reconciled::integer,
+                    ai.payment_term as payment_term,
+                    ai.period_id as period_id,
+                    u.name as uom_name,
+                    ai.currency_id as currency_id,
+                    ai.journal_id as journal_id,
+                    ai.fiscal_position as fiscal_position,
+                    ai.user_id as user_id,
+                    ai.company_id as company_id,
+                    count(ail.*) as nbr,
+                    ai.type as type,
+                    ai.state,
+                    pt.categ_id,
+                    ai.date_due as date_due,
+                    ai.address_contact_id as address_contact_id,
+                    ai.address_invoice_id as address_invoice_id,
+                    ai.account_id as account_id,
+                    ai.partner_bank as partner_bank,
+                    sum(case when ai.type in ('out_refund','in_invoice') then
+                         ail.quantity * u.factor * -1
+                        else
+                         ail.quantity * u.factor
+                        end) as product_qty,
+                    sum(case when ai.type in ('out_refund','in_invoice') then
+                         ail.quantity*ail.price_unit * -1
+                        else
+                         ail.quantity*ail.price_unit
+                        end) as price_total,
+                    sum(case when ai.type in ('out_refund','in_invoice') then
+                         ail.quantity*ail.price_unit * -1
+                        else
+                         ail.quantity*ail.price_unit
+                        end) / sum(ail.quantity * u.factor)*count(ail.product_id)::decimal(16,2) as price_average,
+                    sum((select extract(epoch from avg(aml.date_created-l.create_date))/(24*60*60)::decimal(16,2)
+                        from account_move_line as aml
+                        left join account_invoice as a ON (a.move_id=aml.move_id)
+                        left join account_invoice_line as l ON (a.id=l.invoice_id)
+                        where a.id=ai.id)) as delay_to_pay,
+                    sum(case when ai.type in ('out_refund','in_invoice') then
+                         ai.residual * -1
+                        else
+                         ai.residual
+                        end) as residual
+                from account_invoice_line as ail
+                left join account_invoice as ai ON (ai.id=ail.invoice_id)
+                left join product_template pt on (pt.id=ail.product_id)
+                left join product_uom u on (u.id=ail.uos_id)
+                group by ail.product_id,
+                    ai.date_invoice,
+                    to_char(ai.date_invoice, 'YYYY'),
+                    to_char(ai.date_invoice, 'MM'),
+                    to_char(ai.date_invoice, 'YYYY-MM-DD'),
+                    ai.partner_id,
+                    ai.reconciled,
+                    ai.payment_term,
+                    ai.period_id,
+                    u.name,
+                    ai.currency_id,
+                    ai.journal_id,
+                    ai.fiscal_position,
+                    ai.user_id,
+                    ai.company_id,
+                    ai.type,
+                    ai.state,
+                    pt.categ_id,
+                    ai.date_due,
+                    ai.address_contact_id,
+                    ai.address_invoice_id,
+                    ai.account_id,
+                    ai.partner_bank
             )
         """)
 account_invoice_report()

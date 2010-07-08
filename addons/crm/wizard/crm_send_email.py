@@ -103,7 +103,7 @@ class crm_send_new_email2(osv.osv_memory):
                 ref_id = hist.ref_id
                 case = model_pool.browse(cr, uid, res_id)
             emails = [obj.email_to]
-            email_cc = (obj.email_cc or '').split(',')
+            email_cc = obj.email_cc and  obj.email_cc.split(',') or ''
             emails = filter(None, emails)
             body = obj.text
 
