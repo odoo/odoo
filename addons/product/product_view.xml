@@ -127,9 +127,9 @@
                             </group>
                             <group colspan="2" col="2" name="store">
                                 <separator string="Storage Localisation" colspan="2"/>
-                                <field name="loc_rack"/>
-                                <field name="loc_row"/>
-                                <field name="loc_case"/>
+                                <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}" />
+                                <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
                             <group colspan="2" col="2" name="misc" groups="base.group_extended">
@@ -310,16 +310,29 @@
             <field name="arch" type="xml">
                 <form string="Units of Measure">
                     <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="category_id" select="1" widget="selection"/>
-                        <field name="active"/>
-                        <field name="uom_factor" on_change="onchange_factor(uom_factor)"/>
-                        <group colspan="2" col="2">
-                            <field name="factor" attrs="{'invisible':[('uom_factor','&lt;&gt;','smaller')]}"/>
-                            <field name="factor_inv" string="Factor Data" attrs="{'invisible':[('uom_factor','&lt;&gt;','bigger')]}"/>
+                        <group col="2"  colspan="2">
+                            <separator string="Unit of Measure Properties" colspan="4"/>
+                            <field name="name" select="1"/>
+                            <field name="category_id" select="1" widget="selection"/>
+                            <field name="active"/>
                         </group>
-                        <newline/>
-                        <field name="rounding"/>
+                        <group col="4"  colspan="4">
+                            <separator string="Ratio &amp; Precision" colspan="4"/>
+                            <group colspan="2" col="2">
+                                 <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                                 <field name="rounding"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                  <group col="2" colspan="2" attrs="{'invisible':[('uom_type','!=','smaller')]}">
+                                        <field name="factor"/>
+                                        <label colspan="2" string="  e.g: 1 * (reference unit) = ratio * (this unit)"/>
+                                   </group>
+                                   <group col="2" colspan="2" attrs="{'invisible':[('uom_type','!=','bigger')]}">
+                                        <field name="factor_inv"/>
+                                        <label colspan="2"  string="  e.g: 1 * (this unit) = ratio * (reference unit)"/>
+                                   </group>
+                            </group>
+                        </group>
                     </group>
                 </form>
             </field>

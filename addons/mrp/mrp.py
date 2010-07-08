@@ -758,9 +758,11 @@ class mrp_production(osv.osv):
                     new_parent_ids.append(final_product.id)
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
-
+        
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
+        message = _('Manufacturing order ') + " '" + production.name + "' "+ _("is finished.")
+        self.log(cr, uid, production_id, message)
         return True
 
     def _costs_generate(self, cr, uid, production):
@@ -926,9 +928,11 @@ class mrp_production(osv.osv):
                     'company_id': production.company_id.id,
                 })
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
-                proc_ids.append(proc_id)
+                proc_ids.append(proc_id)                
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
             self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
+            message = _('Manufacturing order ') + " '" + production.name + "' "+ _("is confirmed.")
+            self.log(cr, uid, production.id, message)
         return picking_id
 
     def force_production(self, cr, uid, ids, *args):

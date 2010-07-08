@@ -330,53 +330,50 @@
             <field name="arch" type="xml">
                 <form string="Account Journal">
                     <group colspan="4" col="6">
-                        <field name="name" select="1" colspan="4"/>
+                        <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="type" on_change="onchange_type(type)"/>
-                        <field name="refund_journal" attrs="{'readonly':[('type','=','general'),('type','=','cash'),('type','=','situation')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <group colspan="2" col="2">
-                                <separator string="Journal View" colspan="4"/>
-                                <field name="view_id" widget="selection"/>
+                            <group col="2" colspan="2">
+                                <group colspan="2" col="2">
+                                    <separator string="Accounts" colspan="4"/>
+                                    <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                </group>
+                                <group colspan="2" col="2">
+                                    <separator string="Journal View" colspan="4"/>
+                                    <field name="view_id" widget="selection"/>
+                                </group>
                             </group>
-
-                            <group colspan="2" col="2">
-                                <separator string="Sequence" colspan="4"/>
-                                <field name="sequence_id"/>
-                            </group>
-
-                            <group colspan="2" col="2">
-                                <separator string="Accounts" colspan="4"/>
-                                <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            </group>
-
-                            <group colspan="2" col="2">
-                                <separator string="Invoicing Data" colspan="4"/>
-                                <field name="invoice_sequence_id"/>
-                                <field name="group_invoice_lines"/>
-                            </group>
-
+                            
                             <group colspan="2" col="2">
                                 <separator string="Company" colspan="4"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_id" groups="base.group_extended"/>
                                 <field name="currency"/>
                             </group>
-                            <group col="2" colspan="2">
-                                <group colspan="2" col="2">
-                                    <separator string="Validations" colspan="4"/>
-                                    <field name="allow_date" groups="base.group_extended"/>
-                                </group>
+                            <group colspan="2" col="2">
+                                <separator string="Validations" colspan="4"/>
+                                <field name="allow_date" groups="base.group_extended"/>
+                            </group>
 
-                                <group colspan="2" col="2">
-                                    <separator string="Other Configuration" colspan="4"/>
-                                    <field name="centralisation" groups="base.group_extended"/>
-                                    <field name="entry_posted"/>
-                                    <!-- <field name="update_posted"/> -->
-                                </group>
+                            <group colspan="2" col="2">
+                                <separator string="Other Configuration" colspan="4"/>
+                                <field name="centralisation" groups="base.group_extended"/>
+                                <field name="entry_posted"/>
+                                 <field name="update_posted"/> 
+                            </group>
+                            
+                            <group colspan="2" col="2">
+                                <separator string="Invoicing Data" colspan="4"/>
+                                <field name="invoice_sequence_id" groups="base.group_extended"/>
+                                <field name="group_invoice_lines"/>
+                            </group>
+                            <group colspan="2" col="2" groups="base.group_extended">
+                                <separator string="Sequence" colspan="4"/>
+                                <field name="sequence_id"/>
                             </group>
                         </page>
                         <page string="Entry Controls" groups="base.group_extended">
@@ -1194,7 +1191,7 @@
 <!--        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_entries" sequence="40"/>-->
 <!--        <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>-->
 
-        <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
+        <!-- <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
@@ -1203,7 +1200,7 @@
             <field name="search_view_id" ref="view_account_move_filter"/>
         </record>
 
-        <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
+        <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>-->
 
         <record id="action_account_moves_sale" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
@@ -2236,22 +2233,6 @@
             action="action_account_fiscal_position_template_form"
             id="menu_action_account_fiscal_position_form_template"
             parent="account_template_folder" sequence="20"/>
-
-        <record id="action_move_journal_line" model="ir.actions.act_window">
-            <field name="name">Journal Entries</field>
-            <field name="res_model">account.move</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_tree"/>
-            <field name="search_view_id" ref="view_account_move_filter"/>
-        </record>
-
-        <menuitem
-            icon="STOCK_JUSTIFY_FILL"
-            action="action_move_journal_line"
-            id="menu_action_move_journal_line_form"
-            parent="account.menu_finance_entries"
-            sequence="5"/>
 
         <record id="action_account_moves_all" model="ir.actions.act_window">
             <field name="name">Journal Items</field>

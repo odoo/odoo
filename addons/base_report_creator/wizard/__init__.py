@@ -21,6 +21,5 @@
 
 import wiz_set_filter_fields
 import report_menu_create
-import report_open
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
