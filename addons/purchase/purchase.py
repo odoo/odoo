@@ -392,6 +392,7 @@ class purchase_order(osv.osv):
                 'address_id': order.dest_address_id.id or order.partner_address_id.id,
                 'invoice_state': istate,
                 'purchase_id': order.id,
+                'move_lines' : [],
             })
             todo_moves = []
             for order_line in order.order_line:
