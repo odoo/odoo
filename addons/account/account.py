@@ -623,7 +623,7 @@ class account_journal(osv.osv):
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
-        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=True),
+        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=False),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
@@ -646,8 +646,58 @@ class account_journal(osv.osv):
                 raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
+    def create_sequence(self, cr, uid, ids, context={}):
+        """
+        Create new entry sequence for every new Joural
+        @param cr: cursor to database
+        @param user: id of current user
+        @param ids: list of record ids to be process
+        @param context: context arguments, like lang, time zone
+        @return: return a result
+        """
+        
+        seq_pool = self.pool.get('ir.sequence')
+        seq_typ_pool = self.pool.get('ir.sequence.type')
+        
+        result = True
+        
+        journal = self.browse(cr, uid, ids[0], context)
+        code = journal.code.lower()     
+        types = {
+            'name':journal.name,
+            'code':code
+        }
+        type_id = seq_typ_pool.create(cr, uid, types)
+        
+        seq = {
+            'name':journal.name,
+            'code':code,
+            'active':True,
+            'prefix':journal.code + "/%(year)s/",
+            'padding':4,
+            'number_increment':1
+        }
+        seq_id = seq_pool.create(cr, uid, seq)
+        
+        res = {}
+        if not journal.sequence_id:
+            res.update({
+                'sequence_id':seq_id
+            })
+        
+        if not journal.invoice_sequence_id:
+            res.update({
+                'invoice_sequence_id':seq_id
+            })
+        
+        result = self.write(cr, uid, [journal.id], res)
+            
+        return result
+        
     def create(self, cr, uid, vals, context={}):
         journal_id = super(account_journal, self).create(cr, uid, vals, context)
+        self.create_sequence(cr, uid, [journal_id], context)
+
 #       journal_name = self.browse(cr, uid, [journal_id])[0].code
 #       periods = self.pool.get('account.period')
 #       ids = periods.search(cr, uid, [('date_stop','>=',time.strftime('%Y-%m-%d'))])

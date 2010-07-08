@@ -41,12 +41,25 @@
             <field name="arch" type="xml">
                 <graph orientation="vertical" string="Leads Analysis" type="bar">
                     <field name="stage_id"/>
-                    <field name="planned_revenue" operator="+"/>
+                    <field name="nbr" operator="+"/>
                     <field group="True" name="user_id"/>
                 </graph>
             </field>
         </record>
 
+        <record id="view_report_crm_opportunity_graph" model="ir.ui.view">
+            <field name="name">crm.opportunity.report.graph</field>
+            <field name="model">crm.lead.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="vertical" string="Leads Analysis" type="bar">
+                    <field name="stage_id"/>
+                    <field name="planned_revenue" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
+        
 <!-- Leads by user and section Search View -->
 
         <record id="view_report_crm_lead_filter" model="ir.ui.view">
@@ -208,7 +221,7 @@
        <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_graph">
             <field name="sequence" eval="2"/>
             <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_report_crm_lead_graph"/>
+            <field name="view_id" ref="view_report_crm_opportunity_graph"/>
             <field name="act_window_id" ref="action_report_crm_opportunity"/>
        </record>
 

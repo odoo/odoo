@@ -168,6 +168,9 @@ and users"),
         """
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Lead ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return res
 
     def case_close(self, cr, uid, ids, *args):
@@ -180,6 +183,9 @@ and users"),
         """
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Lead ') + " '" + name + "' "+ _("is Closed.")
+            self.log(cr, uid, id, message)
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):
@@ -276,7 +282,10 @@ and users"),
             vals.update(res)
 
         res = self.create(cr, uid, vals, context)
-
+        
+        message = _('A Lead created') + " '" + subject + "' " + _("from Mailgate.")
+        self.log(cr, uid, res, message)
+        
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
