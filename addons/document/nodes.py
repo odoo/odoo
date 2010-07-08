@@ -152,6 +152,7 @@ class node_class(object):
         Nodes have attributes which contain usual file properties
         """
     our_type = 'baseclass'
+
     def __init__(self, path, parent, context):
         assert isinstance(context,node_context)
         assert (not parent ) or isinstance(parent,node_class)
@@ -192,6 +193,9 @@ class node_class(object):
         else:
             s.append(self.path)
         return s #map(lambda x: '/' +x, s)
+        
+    def __repr__(self):
+        return "%s@/%s" % (self.our_type, '/'.join(self.full_path()))
 
     def children(self, cr, domain=None):
         print "node_class.children()"
@@ -507,8 +511,10 @@ class node_dir(node_database):
         return 'dir-%d' % self.dir_id
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
-	""" Note /may/ be called with ndir_node = None, to rename the document root.
-	"""
+        """ Move directory. This operation is simple, since the present node is
+        only used for static, simple directories.
+            Note /may/ be called with ndir_node = None, to rename the document root.
+        """
         if ndir_node and (ndir_node.context != self.context):
             raise NotImplementedError("Cannot move directories between contexts")
 
@@ -547,7 +553,7 @@ class node_dir(node_database):
             ret = True
 
         return ret
-	
+
 class node_res_dir(node_class):
     """ A special sibling to node_dir, which does only contain dynamically
         created folders foreach resource in the foreign model.
