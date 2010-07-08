@@ -556,7 +556,8 @@
             <field name="res_model">res.groups</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"/>
+        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"
+            groups="base.group_extended"/>
 
         <record id="view_roles_form" model="ir.ui.view">
             <field name="name">res.roles.form</field>
