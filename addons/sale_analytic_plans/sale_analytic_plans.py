@@ -23,7 +23,6 @@ import time
 from osv import fields, osv
 
 class sale_order_line(osv.osv):
-    _name = 'sale.order.line'
     _inherit = 'sale.order.line'
     _columns = {
         'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
