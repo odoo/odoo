@@ -31,6 +31,7 @@ class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
         'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
+        'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
     }
     
     def check_produce_product(self, cr, uid, procurement, context=[]):

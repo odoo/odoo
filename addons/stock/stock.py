@@ -1008,6 +1008,9 @@ class stock_picking(osv.osv):
         return res
 
     def test_done(self, cr, uid, ids, context=None):
+        """ Test whether the move lines are done or not.
+        @return: True or False
+        """
         ok = False
         for pick in self.browse(cr, uid, ids, context=context):
             if not pick.move_lines:

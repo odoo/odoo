@@ -44,8 +44,8 @@ class stock_inventory_line_split(osv.osv_memory):
         @return: A dictionary which of fields with values. 
         """        
         record_id = context and context.get('active_id',False)
-        res = super(stock_inventory_line_split, self).default_get(cr, uid, fields, context=context)
-        line=  self.pool.get('stock.inventory.line').browse(cr, uid, record_id)        
+        res = {}
+        line = self.pool.get('stock.inventory.line').browse(cr, uid, record_id)        
         if 'product_id' in fields:
             res.update({'product_id':line.product_id.id})       
         return res

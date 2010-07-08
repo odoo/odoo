@@ -393,6 +393,11 @@ class hr_payslip(osv.osv):
                 
                 line_ids += [movel_pool.create(cr, uid, rec)]
                 
+                for contrub in line.category_id.contribute_ids:
+                    print contrib.name, contrub.code, contrub.amount_type, contrib.contribute_per, line.total
+                    
+                
+                
 #                if line.company_contrib > 0:
 #                    company_contrib = line.company_contrib
 ##                    if line.category_id.amount_type == 'per':

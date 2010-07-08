@@ -170,8 +170,8 @@ class product_product(osv.osv):
             context = {}
         res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
         if res: return res
-        if (context.get('location', False)):
-            return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['location'], context).name
+        if (context.get('active_id', False)) and (context.get('active_model') == 'stock.location'):
+            return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
         return res
 
     def get_product_available(self, cr, uid, ids, context=None):
