@@ -60,6 +60,7 @@ class project_compute_phases(osv.osv_memory):
        phase_obj = self.pool.get('project.phase')
        resource_obj = self.pool.get('resource.resource')
        uom_obj = self.pool.get('product.uom')
+       model_data_obj = self.pool.get('ir.model.data')
        phase_resource_obj = False
 
        if context is None:
@@ -81,7 +82,7 @@ class project_compute_phases(osv.osv_memory):
                                                 'vacation': tuple(leaves),
                                                 'efficiency': time_efficiency
                                                 })
-            default_uom_id = uom_obj.search(cr, uid, [('name','=','Hour')])[0]
+            default_uom_id = model_data_obj._get_id(cr, uid, 'product', 'uom_hour')
             avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
             duration = str(avg_hours) + 'H'
             # Create a new project for each phase
