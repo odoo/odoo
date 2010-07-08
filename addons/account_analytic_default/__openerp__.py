@@ -33,7 +33,7 @@ Allows to automatically select analytic accounts based on criterions:
     """,
     'author'    : 'Tiny',
     'website'   : 'http://www.openerp.com',
-    'depends'   : ['account', 'sale'],
+    'depends'   : ['sale'],
     'init_xml'  : [],
     'update_xml': ['security/ir.model.access.csv', 'account_analytic_default_view.xml'],
     'demo_xml'  : [],
