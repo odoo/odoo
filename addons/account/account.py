@@ -638,6 +638,7 @@ class account_journal(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+    
     def write(self, cr, uid, ids, vals, context=None):
         obj=[]
         if 'company_id' in vals:
@@ -719,14 +720,41 @@ class account_journal(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, type):
-        res={}
-        for line in self.browse(cr, uid, ids):
-            if type == 'situation':
-                  res= {'value':{'centralisation': True}}
-            else:
-                  res= {'value':{'centralisation': False}}
-        return res
+    def onchange_type(self, cr, uid, ids, type, currency):
+        data_pool = self.pool.get('ir.model.data')
+        user_pool = self.pool.get('res.users')
+        
+        type_map = {
+            'sale':'account_sp_journal_view',
+            'sale_refund':'account_sp_refund_journal_view',
+            'purchase':'account_sp_journal_view',
+            'purchase_refund':'account_sp_refund_journal_view',
+            'expense':'account_sp_journal_view',
+            'cash':'account_journal_bank_view',
+            'bank':'account_journal_bank_view',
+            'general':'account_journal_view',
+            'situation':'account_journal_view'
+        }
+        
+        res = {}
+        
+        view_id = type_map.get(type, 'general')
+        
+        user = user_pool.browse(cr, uid, uid)
+        if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
+            view_id = 'account_journal_bank_view_multi'
+        
+        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
+        data = data_pool.browse(cr, uid, data_id[0])
+    
+        res.update({
+            'centralisation':type == 'situation',
+            'view_id':data.res_id,
+        })
+        
+        return {
+            'value':res
+        }
 
 account_journal()
 
