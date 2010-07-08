@@ -88,26 +88,12 @@ class report_intrastat(osv.osv):
                             else 0
                         end) as value,
                     sum(
-                        case when uom.category_id != puom.category_id then pt.weight_net * inv_line.quantity
-                        else
-                            case when uom.factor_inv_data > 0
-                                then
-                                    pt.weight_net * inv_line.quantity * uom.factor_inv_data
-                                else
-                                    pt.weight_net * inv_line.quantity / uom.factor
-                            end
-                        end
+                        case when uom.category_id != puom.category_id then (pt.weight_net * inv_line.quantity)
+                        else (pt.weight_net * inv_line.quantity * uom.factor) end
                     ) as weight,
                     sum(
                         case when uom.category_id != puom.category_id then inv_line.quantity
-                        else
-                            case when uom.factor_inv_data > 0
-                                then
-                                    inv_line.quantity * uom.factor_inv_data
-                                else
-                                    inv_line.quantity / uom.factor
-                            end
-                        end
+                        else (inv_line.quantity * uom.factor) end
                     ) as supply_units,
 
                     inv.currency_id as currency_id,
