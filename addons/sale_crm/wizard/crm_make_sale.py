@@ -98,7 +98,7 @@ class crm_make_sale(osv.osv_memory):
                     raise osv.except_osv(_('Data Insufficient!'),_('Customer has no addresses defined!'))
     
                 vals = {
-                    'origin': 'CRM-Opportunity:%s' % str(case.id),
+                    'origin': 'Opportunity:%s' % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
                     'picking_policy': make.picking_policy,
                     'shop_id': make.shop_id.id,
@@ -129,6 +129,8 @@ class crm_make_sale(osv.osv_memory):
     
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
+                message = _('Opportunity ') + " '" + case.name + "' "+ _("is converted to Sales Quotation.")
+                self.log(cr, uid, case.id, message)
     
             if make.close:
                 case_obj.case_close(cr, uid, data)

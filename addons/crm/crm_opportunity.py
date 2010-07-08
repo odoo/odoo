@@ -65,6 +65,9 @@ class crm_opportunity(osv.osv):
         """
         res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'probability' : 100.0, 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Opportunity ') + " '" + name + "' "+ _("is Won.")
+            self.log(cr, uid, id, message)
         return res
 
     def case_cancel(self, cr, uid, ids, *args):
@@ -77,6 +80,9 @@ class crm_opportunity(osv.osv):
         """
         res = super(crm_opportunity, self).case_cancel(cr, uid, ids, args)
         self.write(cr, uid, ids, {'probability' : 0.0})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Opportunity ') + " '" + name + "' "+ _("is Lost.")
+            self.log(cr, uid, id, message)
         return res
     
     def case_open(self, cr, uid, ids, *args):

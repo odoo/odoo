@@ -1843,7 +1843,9 @@ class stock_move(osv.osv):
                         'line_id': line,
                         'ref': move.picking_id and move.picking_id.name,
                         })
-
+            
+            message = _('Move line') + " '" + move.name + "' "+ _("is processed.")
+            self.log(cr, uid, move.id, message)
         # This can be removed
         #tracking_lot = False
         #if context:
@@ -1864,7 +1866,7 @@ class stock_move(osv.osv):
             wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
 
         for (id,name) in picking_obj.name_get(cr, uid, picking_ids):
-            message = _('Document') + " '" + name + "' "+ _("is processed")
+            message = _('Document') + " '" + name + "' "+ _("is processed.")
             self.log(cr, uid, id, message)
         return True
 
@@ -1938,6 +1940,8 @@ class stock_move(osv.osv):
             new_move = self.copy(cr, uid, move.id, default_val)
             #self.write(cr, uid, [new_move], {'move_history_ids':[(4,move.id)]}) #TODO : to track scrap moves
             res += [new_move]
+            message = _('Product ') + " '" + move.product_id.name + "' "+ _("is scraped with") + " '" + str(move.product_qty) + "' "+ _("quantity.")
+            self.log(cr, uid, move.id, message)
         self.action_done(cr, uid, res)
         return res
 
@@ -2064,6 +2068,8 @@ class stock_move(osv.osv):
                     }
 
                     self.write(cr, uid, [move.id], update_val)
+            message = _('Product ') + " '" + move.product_id.name + "' "+ _("is consumed with") + " '" + str(move.product_qty) + "' "+ _("quantity.")
+            self.log(cr, uid, move.id, message)
         self.action_done(cr, uid, res)
 
         return res
@@ -2229,6 +2235,7 @@ class stock_inventory(osv.osv):
 
                 # price = line.product_id.standard_price or 0.0
                 amount = self.pool.get('stock.location')._product_get(cr, uid, line.location_id.id, [pid], {'uom': line.product_uom.id})[pid]
+                #TOCHECK: Why put restriction like new inventory qty should greater available qty ?
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
@@ -2260,6 +2267,8 @@ class stock_inventory(osv.osv):
                             'product_qty': line.product_qty
                         })
                     move_ids.append(self._inventory_line_hook(cr, uid, line, value))
+            message = _('Inventory') + " '" + inv.name + "' "+ _("is done.")
+            self.log(cr, uid, inv.id, message)
             self.write(cr, uid, [inv.id], {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S'), 'move_ids': [(6, 0, move_ids)]})
         return True
 

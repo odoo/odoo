@@ -84,7 +84,7 @@
                             help = "Done Invoices"/>
                   <separator orientation="vertical"/>
                   <field name="partner_id"/>
-                    <field name="user_id" widget="selection">
+                    <field name="user_id" >
                     <filter icon="terp-dolar"
                             string="My Invoices"
                             help="My Invoices"
@@ -107,7 +107,7 @@
                     <filter string="Force Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <newline/>
+                    <separator orientation="vertical"/>
                     <filter string="Day" name="day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" name="month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" name="year" icon="terp-go-year" context="{'group_by':'year'}"/>

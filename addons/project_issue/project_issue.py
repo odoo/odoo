@@ -52,8 +52,26 @@ class project_issue(osv.osv, crm.crm_case):
 
         res = super(project_issue, self).case_open(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Issue ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return res
 
+    def case_close(self, cr, uid, ids, *args):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+
+        res = super(project_issue, self).case_close(cr, uid, ids, *args)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Issue ') + " '" + name + "' "+ _("is Closed.")
+            self.log(cr, uid, id, message)
+        return res
+    
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         if context is None:
             context = {}
@@ -319,6 +337,8 @@ class project_issue(osv.osv, crm.crm_case):
         if res:
             vals.update(res)
         res = self.create(cr, uid, vals, context)
+        message = _('An Issue created') + " '" + subject + "' " + _("from Mailgate.")
+        self.log(cr, uid, res, message)
         self.convert_to_bug(cr, uid, [res], context=context)
 
         attachents = msg.get('attachments', [])
