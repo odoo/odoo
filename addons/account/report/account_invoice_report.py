@@ -113,7 +113,7 @@ class account_invoice_report(osv.osv):
                          ail.quantity*ail.price_unit
                         end) as price_total,
                     sum(ail.quantity*ail.price_unit)/sum(ail.quantity*u.factor)*count(ail.product_id)::decimal(16,2) as price_average,
-                    sum((select extract(epoch from avg(aml.date_created-l.create_date))/(24*60*60)::decimal(16,2)
+                    sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
                         from account_move_line as aml
                         left join account_invoice as a ON (a.move_id=aml.move_id)
                         left join account_invoice_line as l ON (a.id=l.invoice_id)
