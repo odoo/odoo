@@ -221,6 +221,17 @@ def _strerror(err):
     else:
         return err.strerror
 
+def _to_unicode(s):
+    try:
+        return s.decode('utf-8')
+    except UnicodeError:
+        try:
+            return s.decode('latin')
+        except UnicodeError:
+            try:
+                return s.encode('ascii')
+            except UnicodeError:
+                return s
 
 # --- library defined exceptions
 
@@ -2650,15 +2661,18 @@ class FTPHandler(asynchat.async_chat):
         try:
             try:
                 datacr = self.fs.get_crdata(line,'create')
-                oldname = '/'.join(self.fs.rnfr.path)
+                oldname = self.fs.rnfr.path
+                if isinstance(oldname, (list, tuple)):
+                    oldname = '/'.join(oldname)
                 self.run_as_current_user(self.fs.rename, self.fs.rnfr, datacr)
                 self.fs.rnfr = None
-                self.log('OK RNFR/RNTO "%s ==> %s".' %(oldname, line))
+                self.log('OK RNFR/RNTO "%s ==> %s".' % \
+			(_to_unicode(oldname), _to_unicode(line)))
                 self.respond("250 Renaming ok.")
             except EnvironmentError, err:
                 why = _strerror(err)
                 self.log('FAIL RNFR/RNTO "%s ==> %s". %s.' \
-                         %(self.fs.ftpnorm(self.fs.rnfr), line, why))
+                         % (_to_unicode(oldname), _to_unicode(line), why))
                 self.respond('550 %s.' %why)
         finally:
             self.fs.rnfr = None

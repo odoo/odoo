@@ -278,7 +278,7 @@ class abstracted_fs(object):
         if path == '/' and mode in ('list', 'cwd'):
             return (None, None, None )
 
-        path = os.path.normpath(path) # again, for '/db/../ss'
+        path = _to_unicode(os.path.normpath(path)) # again, for '/db/../ss'
         if path == '.': path = ''
 
         if os.path.isabs(path) and self.cwd_node is not None \
