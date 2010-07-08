@@ -170,8 +170,8 @@ your own chart of account.
 
 
         <!--
-		Account Journal
-		-->
+        Account Journal
+        -->
 
         <record id="sales_journal" model="account.journal">
             <field name="name">x Sales Journal</field>
@@ -188,7 +188,6 @@ your own chart of account.
             <field name="name">x Sales Credit Note Journal</field>
             <field name="code">SCNJ</field>
             <field name="type">sale_refund</field>
-            <field name="refund_journal">True</field>
             <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
@@ -211,7 +210,6 @@ your own chart of account.
             <field name="name">x Expenses Credit Notes Journal</field>
             <field name="code">ECNJ</field>
             <field name="type">purchase_refund</field>
-            <field name="refund_journal">True</field>
             <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
@@ -241,8 +239,8 @@ your own chart of account.
         </record>
 
         <!--
-		Product income and expense accounts, default parameters
-	-->
+        Product income and expense accounts, default parameters
+        -->
 
         <record id="property_account_expense_prd" model="ir.property">
             <field name="name">property_account_expense</field>
