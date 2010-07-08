@@ -37,10 +37,14 @@ class module_web(osv.osv):
                 self.create(cr, uid, module)
                 
     def button_install(self, cr, uid, ids, context={}):
-        return self.write(cr, uid, ids, {'state': 'installed'}, context)
+        res = self.write(cr, uid, ids, {'state': 'installed'}, context)
+        if res:
+            return "Installed"
     
     def button_uninstall(self, cr, uid, ids, context={}):
-        return self.write(cr, uid, ids, {'state': 'uninstalled'}, context)
+        res = self.write(cr, uid, ids, {'state': 'uninstalled'}, context)
+        if res:
+            return "Uninstalled"
                 
 module_web()
 
