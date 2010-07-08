@@ -644,8 +644,6 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="category_id"/>
-                        <field name="company_id" select="1"/>
-                        <field name="active" select="1"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Contributions"/>
@@ -654,9 +652,11 @@
                         <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator colspan="2" string="Accounts"/>
-                        <field name="include_in_salary" />
-                        <field name="account_id" attrs="{'required': [('include_in_salary','=',True)]}"/>
+                        <separator colspan="2" string="Other Information"/>
+                        <field name="company_id" select="1"/>
+                        <field name="active" select="1"/>
+<!--                        <field name="include_in_salary" />-->
+<!--                        <field name="account_id" attrs="{'required': [('include_in_salary','=',True)]}"/>-->
                     </group>
                     <notebook colspan="4">
                         <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">

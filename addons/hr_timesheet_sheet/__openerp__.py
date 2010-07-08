@@ -55,9 +55,10 @@ The validation can be configured in the company:
         'process/hr_timesheet_sheet_process.xml',
         'report/timesheet_report_view.xml',
         'board_hr_timesheet_view.xml',
+        'report/hr_timesheet_report_view.xml',
     ],
     'demo_xml': ['hr_timesheet_sheet_demo.xml',
-                
+
                  ],
     'test':['test/test_hr_timesheet_sheet.yml'],
     'installable': True,
