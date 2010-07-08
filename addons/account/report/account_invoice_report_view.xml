@@ -33,7 +33,7 @@
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="residual"  sum="Total Residual" invisible="not context.get('residual_visible',False)"/>
-                <field name="delay_to_pay"  avg="Avg. Delay To Pay"/>
+                <field name="delay_to_pay"  avg="Avg. Delay To Pay" invisible="not context.get('residual_visible',False)"/>
             </tree>
         </field>
     </record>
