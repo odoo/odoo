@@ -16,7 +16,7 @@
                     <field name="online"/>
                     <field name="readonly"/>
                 </group>
-                <group colspan="2" attrs="{'invisible':[('type','=','db')]}">
+                <group colspan="2" attrs="{'invisible':[('type','in',['db', 'db64'])]}">
                     <field name="path"/>
                 </group>
             </form>
@@ -85,15 +85,14 @@
                         <newline/>
                         <field name="resource_field"     domain="[('model_id','=',ressource_type_id), ('ttype', 'in', ('char', 'selection', 'date', 'datetime'))]"/>
                         <field name="ressource_tree"/>
+                        <newline/>
+                        <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     </group>
-                    <group colspan="4" col="4" attrs="{'invisible': [('type','!=','at_record')]}">
+                    <group colspan="4" col="4" attrs="">
                         <field name="ressource_parent_type_id"/>
                         <field name="ressource_id" select="2" readonly="1"/>
                     </group>
                     
-                    <group colspan="4" col="4">
-                        <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
-                    </group>
                 </page>
                 <page string="Generated Files" groups="base.group_extended">
                     <label colspan="4" string="For each entry here, virtual files will appear in this folder." />

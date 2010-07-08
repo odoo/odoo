@@ -232,7 +232,7 @@ class document_storage(osv.osv):
         'group_ids': fields.many2many('res.groups', 'document_storage_group_rel', 'item_id', 'group_id', 'Groups'),
         'dir_ids': fields.one2many('document.directory', 'parent_id', 'Directories'),
         'type': fields.selection([('db', 'Database'), ('filestore', 'Internal File storage'),
-            ('realstore', 'External file storage'), ('virtual', 'Virtual storage')], 'Type', required=True),
+                ('realstore','External file storage'),], 'Type', required=True),
         'path': fields.char('Path', size=250, select=1, help="For file storage, the root path of the storage"),
         'online': fields.boolean('Online', help="If not checked, media is currently offline and its contents not available", required=True),
         'readonly': fields.boolean('Read Only', help="If set, media is for reading only"),
@@ -270,6 +270,8 @@ class document_storage(osv.osv):
         return self.__get_data_3(cr, uid, boo, ira, context)
 
     def get_file(self, cr, uid, id, file_node, mode, context=None):
+        """ Return a file-like object for the contents of some node
+        """
         if context is None:
             context = {}
         boo = self.browse(cr, uid, id, context)
@@ -289,6 +291,9 @@ class document_storage(osv.osv):
 
         elif boo.type == 'db':
             # TODO: we need a better api for large files
+            return nodefd_db(file_node, ira_browse=ira, mode=mode)
+
+        elif boo.type == 'db64':
             return nodefd_db64(file_node, ira_browse=ira, mode=mode)
 
         elif boo.type == 'realstore':
@@ -303,6 +308,9 @@ class document_storage(osv.osv):
                 raise IOError("File not found: %s" % fpath)
             return nodefd_file(file_node, path=fpath, mode=mode)
 
+        elif boo.type == 'virtual':
+            raise ValueError('Virtual storage does not support static files')
+        
         else:
             raise TypeError("No %s storage" % boo.type)
 
@@ -318,13 +326,21 @@ class document_storage(osv.osv):
                 return None
             fpath = os.path.join(boo.path, ira.store_fname)
             return file(fpath, 'rb').read()
-        elif boo.type == 'db':
+        elif boo.type == 'db64':
             # TODO: we need a better api for large files
             if ira.db_datas:
                 out = base64.decodestring(ira.db_datas)
             else:
                 out = ''
             return out
+        elif boo.type == 'db':
+            # We do an explicit query, to avoid type transformations.
+            cr.execute('SELECT db_datas FROM ir_attachment WHERE id = %s', (ira.id,))
+            res = cr.fetchone()
+            if res:
+                return res[0]
+            else:
+                return ''
         elif boo.type == 'realstore':
             if not ira.store_fname:
                 # On a migrated db, some files may have the wrong storage type
@@ -339,6 +355,10 @@ class document_storage(osv.osv):
                 return None
             else:
                 raise IOError("File not found: %s" % fpath)
+
+        elif boo.type == 'virtual':
+            raise ValueError('Virtual storage does not support static files')
+
         else:
             raise TypeError("No %s storage" % boo.type)
 
@@ -387,7 +407,12 @@ class document_storage(osv.osv):
                 raise except_orm(_('Error!'), str(e))
         elif boo.type == 'db':
             filesize = len(data)
-            # will that work for huge data? TODO
+            # will that work for huge data?
+            cr.execute('UPDATE ir_attachment SET db_datas = %s WHERE id = %s',
+                (data, file_node.file_id))
+        elif boo.type == 'db64':
+            filesize = len(data)
+            # will that work for huge data?
             out = base64.encodestring(data)
             cr.execute('UPDATE ir_attachment SET db_datas = %s WHERE id = %s',
                 (out, file_node.file_id))
@@ -419,6 +444,10 @@ class document_storage(osv.osv):
             except Exception,e :
                 self._doclog.warning("Couldn't save data:", exc_info=True)
                 raise except_orm(_('Error!'), str(e))
+
+        elif boo.type == 'virtual':
+            raise ValueError('Virtual storage does not support static files')
+
         else:
             raise TypeError("No %s storage" % boo.type)
 
@@ -467,7 +496,7 @@ class document_storage(osv.osv):
                 return None
             path = storage_bo.path
             return (storage_bo.id, 'file', os.path.join(path, fname))
-        elif storage_bo.type == 'db':
+        elif storage_bo.type in ('db', 'db64'):
             return None
         elif storage_bo.type == 'realstore':
             fname = fil_bo.store_fname
@@ -500,7 +529,7 @@ class document_storage(osv.osv):
         sbro = self.browse(cr, uid, file_node.storage_id, context=context)
         assert sbro, "The file #%d didn't provide storage" % file_node.file_id
         
-        if sbro.type in ('filestore', 'db'):
+        if sbro.type in ('filestore', 'db', 'db64'):
             # nothing to do for a rename, allow to change the db field
             return { 'name': new_name, 'datas_fname': new_name }
         elif sbro.type == 'realstore':

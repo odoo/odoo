@@ -50,7 +50,7 @@ class document_directory(osv.osv):
         'type': fields.selection([ 
             ('directory','Static Directory'),
             ('ressource','Folders per resource'),
-            ('at_record','Single folder under resource')],
+            ],
             'Type', required=True, select=1,
             help="Defines directory's behaviour."),
         
