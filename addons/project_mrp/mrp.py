@@ -26,6 +26,9 @@ import tools
 class procurement_order(osv.osv):
     _name = "procurement.order"
     _inherit = "procurement.order"
+    _columns = {
+        'task_id': fields.many2one('project.task', 'Task')
+    }
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         if context is None:
@@ -93,7 +96,7 @@ class procurement_order(osv.osv):
                 'company_id': procurement.company_id.id,
                 'project_id': project_id,
             },context=context)
-
+        self.write(cr,uid,ids,{'task_id':task_id})    
         return task_id
 
 procurement_order()
