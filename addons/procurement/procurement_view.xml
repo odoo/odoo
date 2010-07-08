@@ -10,7 +10,7 @@
             <field name="model">procurement.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';green:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
+                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
                     <field name="date_planned" widget="date"/>
                     <field name="origin"/>
                     <field name="product_id"/>
@@ -67,10 +67,10 @@
                         <field name="move_id" groups="base.group_extended"/>
                         <field name="date_close"/>
                         <field name="close_move" groups="base.group_extended"/>
-						<group colspan="4"  groups="base.group_extended">
-	                    	<separator colspan="4" string="Properties" />
-	                        <field colspan="4" name="property_ids" nolabel="1"/>
-	                    </group>
+                    	<group colspan="4"  groups="base.group_extended">
+                    		<separator colspan="4" string="Properties" />
+                        	<field colspan="4" name="property_ids" nolabel="1"/>
+	                 </group>                        
                     </page>
                     <page string="Notes">
                         <separator colspan="4" string="Note" />

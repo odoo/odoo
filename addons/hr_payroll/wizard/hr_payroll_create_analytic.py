@@ -28,21 +28,21 @@ class hr_payroll_create_analytic(osv.osv_memory):
    _name = "hr.payroll.create.analytic"
    _columns = {
         'company_id': fields.many2one('res.company', 'Company'),
-        'type': fields.selection([('bydeg','By Employee Function'), ('byallded','By Allownce / Deduction')],'Type'),        
-       } 
-   
+        'type': fields.selection([('bydeg','By Employee Function'), ('byallded','By Allownce / Deduction')],'Type'),
+       }
+
    def do_duplicate(self, cr, uid, ids, context=None):
-       
+
         account_pool =self.pool.get('account.analytic.account')
         func_pool = self.pool.get('hr.employee.grade')
         ad_pool = self.pool.get('hr.allounce.deduction.categoty')
-        data=self.read(cr,uid,ids)[0]
+        data = self.read(cr,uid,ids)[0]
         tpy = data['type']
         company = data['company_id']
-        
+
         function_ids = func_pool.search(cr, uid, [])
         ad_ids = ad_pool.search(cr, uid, [])
-        
+
         if tpy == 'bydeg':
             for function in func_pool.browse(cr, uid, function_ids):
                 res = {
@@ -63,9 +63,9 @@ class hr_payroll_create_analytic(osv.osv_memory):
                         'parent_id': fid
                     }
                     account_pool.create(cr, uid, res)
-                    
-                    
-            
+
+
+
         elif tpy == 'byallded':
             res = {
                 'name':'Basic Salary',
@@ -79,7 +79,7 @@ class hr_payroll_create_analytic(osv.osv_memory):
                     'parent_id': adid
                 }
                 account_pool.create(cr, uid, res)
-            
+
             for ad in ad_pool.browse(cr, uid, ad_ids):
                 res = {
                     'name':ad.name,
@@ -93,6 +93,8 @@ class hr_payroll_create_analytic(osv.osv_memory):
                         'parent_id': adid
                     }
                     account_pool.create(cr, uid, res)
-            
-        return {}   
-hr_payroll_create_analytic()   
+
+        return {}
+hr_payroll_create_analytic()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

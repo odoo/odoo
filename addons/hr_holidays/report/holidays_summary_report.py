@@ -234,8 +234,8 @@ class report_custom(report_rml):
                     continue
                 dept_done=0
                 for d in range(0,len(result)):
-                    emp_id[d]=pooler.get_pool(cr.dbname).get('hr.employee').search(cr, uid, [('user_id','=',result[d][0])])
-                    items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr, uid, emp_id[d], ['id','name'])
+                    emp_id[d]=pooler.get_pool(cr.dbname).get('hr.employee').search(cr, uid, [('user_id', '=', result[d][0])])
+                    items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr, uid, emp_id[d], ['id', 'name'])
                     for item in items:
 #                        if item['id'] in done:
 #                            continue
@@ -261,5 +261,6 @@ class report_custom(report_rml):
         return xml
 
 report_custom('report.holidays.summary', 'hr.holidays', '', 'addons/hr_holidays/report/holidays_summary.xsl')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

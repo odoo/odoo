@@ -29,15 +29,15 @@ class hr_payroll_year_salary(osv.osv_memory):
    _columns = {
         'employee_ids': fields.many2many('hr.employee', 'payroll_year_rel','payroll_year_id','emp_id', 'Employees',required=True),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)  ,
-        'salary_on': fields.selection([('current_month','Current Month Date'),('next_month','Next Month Date')],'Salary On'),   
-       } 
+        'salary_on': fields.selection([('current_month','Current Month Date'),('next_month','Next Month Date')],'Salary On'),
+       }
 
    def _get_fiscalyear(self, cr, uid, ids, context=None):
         fiscal_ids=self.pool.get('account.fiscalyear').search(cr,uid,[],context=context)
         if fiscal_ids:
             return fiscal_ids[0]
         return False
-   
+
    _defaults = {
         'fiscalyear_id':_get_fiscalyear,
         'salary_on': 'current_month'
@@ -54,7 +54,7 @@ class hr_payroll_year_salary(osv.osv_memory):
         """
 
         datas = {'ids': context.get('active_ids', [])}
-        
+
         res = self.read(cr, uid, ids, ['employee_ids', 'fiscalyear_id','salary_on'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
@@ -64,5 +64,7 @@ class hr_payroll_year_salary(osv.osv_memory):
             'datas': datas,
             'nodestroy':True,
        }
-   
+
 hr_payroll_year_salary()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

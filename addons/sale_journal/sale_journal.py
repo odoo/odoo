@@ -148,8 +148,8 @@ class picking_journal(osv.osv):
         'note': fields.text('Note'),
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
+        'date_created': time.strftime('%Y-%m-%d'),
         'user_id': lambda self,cr,uid,context: uid,
         'state': lambda self,cr,uid,context: 'draft',
     }
@@ -161,12 +161,15 @@ class picking_journal(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_cancel', cr)
         return True
+   
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'})
         return True
+    
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
+    
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done', 'date_validation':time.strftime('%Y-%m-%d')})
         return True
@@ -197,18 +200,18 @@ class res_partner(osv.osv):
     _columns = {
         'property_invoice_type': fields.property(
         'sale_journal.invoice.type',
-        type='many2one',
-        relation='sale_journal.invoice.type',
-        string="Invoicing Method",
-        method=True,
-        view_load=True,
-        group_name="Accounting Properties",
-        help="The type of journal used for sales and picking."),
+        type = 'many2one',
+        relation = 'sale_journal.invoice.type',
+        string = "Invoicing Method",
+        method = True,
+        view_load = True,
+        group_name = "Accounting Properties",
+        help = "The type of journal used for sales and picking."),
     }
 res_partner()
 
 class picking(osv.osv):
-    _inherit="stock.picking"
+    _inherit = "stock.picking"
     _columns = {
         'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal',  domain=[('state','!=', 'done')]),
         'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal'),
@@ -217,7 +220,7 @@ class picking(osv.osv):
 picking()
 
 class sale(osv.osv):
-    _inherit="sale.order"
+    _inherit = "sale.order"
     _columns = {
         'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal', domain=[('state','!=', 'done')]),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')

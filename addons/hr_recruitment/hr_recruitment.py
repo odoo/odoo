@@ -277,6 +277,8 @@ class hr_applicant(osv.osv, crm.crm_case):
             vals.update(res)
         res = self.create(cr, uid, vals, context)
         
+        message = _('A Job Request created') + " '" + subject + "' " + _("from Mailgate.")
+        self.log(cr, uid, res, message)
         
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
@@ -338,6 +340,34 @@ class hr_applicant(osv.osv, crm.crm_case):
             @param **args: Return Dictionary of Keyword Value
         """
         return True
+    
+    def case_open(self, cr, uid, ids, *args):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+        res = super(hr_applicant, self).case_open(cr, uid, ids, *args)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Job request for') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
+        return res
+
+    def case_close(self, cr, uid, ids, *args):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+        res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Applicant ') + " '" + name + "' "+ _("is Hired.")
+            self.log(cr, uid, id, message)
+        return res
 
 hr_applicant()
 

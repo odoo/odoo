@@ -21,12 +21,11 @@
 
 
 {
-    "name" : "",
+    "name" : "marketing_campaign",
     "version" : "1.1",
     "depends" : ["marketing",
-                "crm",
-                "document",
-                "email_template"
+                 "document",
+                 "email_template"
                 ],
     "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
@@ -37,6 +36,8 @@ are dynamic and multi-channels. The process:
   miscelleanous actions, etc.
 * Define segments that are selections of target people
 * Launch your campaign to automate communications.
+
+If you need demo data, you can install the module marketing_campaign_crm_demo.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
@@ -50,8 +51,7 @@ are dynamic and multi-channels. The process:
         "security/ir.model.access.csv"
     ],
     'demo_xml': [
-        'marketing_campaign_demo.xml',
-            ],
+    ],
     'installable': True,
     'active': False,
 }

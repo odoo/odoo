@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    d$
 #
@@ -38,7 +38,7 @@
     'depends': [
         'hr',
         'account',
-        'hr_contract', 
+        'hr_contract',
         'hr_holidays',
         'hr_expense'
     ],
@@ -53,10 +53,19 @@
         'wizard/hr_payroll_create_analytic.xml',
         'wizard/hr_payroll_employees_detail.xml',
         'wizard/hr_payroll_year_salary.xml',
-   
+
+    ],
+    'test': [
+             'test/payslip.yml',
+             'test/payment_advice.yml',
+             'test/payroll_register.yml',
+ 
     ],
     'demo_xml': [
+        'hr_payroll_demo.xml'
     ],
     'installable': True,
     'active': False,
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

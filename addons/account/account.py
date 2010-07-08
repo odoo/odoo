@@ -136,7 +136,6 @@ class account_account_type(osv.osv):
         'name': fields.char('Acc. Type Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=32, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of account types."),
-        'partner_account': fields.boolean('Partner account'),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True),
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
         'report_type':fields.selection([
@@ -366,11 +365,11 @@ class account_account(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64, required=True),
         'type': fields.selection([
+            ('view', 'View'),
+            ('other', 'Regular'),
             ('receivable', 'Receivable'),
             ('payable', 'Payable'),
-            ('view', 'View'),
             ('consolidation', 'Consolidation'),
-            ('other', 'Others'),
             ('closed', 'Closed'),
         ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
             "special effects in Open ERP: view can not have entries, consolidation are accounts that "\
@@ -1143,7 +1142,7 @@ class account_move(osv.osv):
         return amount
 
     def _centralise(self, cr, uid, move, mode, context=None):
-        assert(mode in ('debit', 'credit'), 'Invalid Mode') #to prevent sql injection
+        assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
         if context is None:
             context = {}
 
@@ -1199,12 +1198,15 @@ class account_move(osv.osv):
     #
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
+
     def validate(self, cr, uid, ids, context={}):
         if context and ('__last_update' in context):
             del context['__last_update']
-        ok = True
+        
+        valid_moves = [] #Maintains a list of moves which can be responsible to create analytic entries
+
         for move in self.browse(cr, uid, ids, context):
-            #unlink analytic lines on move_lines
+            # Unlink old analytic lines on move_lines
             for obj_line in move.line_id:
                 for obj in obj_line.analytic_lines:
                     self.pool.get('account.analytic.line').unlink(cr,uid,obj.id)
@@ -1213,7 +1215,7 @@ class account_move(osv.osv):
             amount = 0
             line_ids = []
             line_draft_ids = []
-            company_id=None
+            company_id = None
             for line in move.line_id:
                 amount += line.debit - line.credit
                 line_ids.append(line.id)
@@ -1229,52 +1231,60 @@ class account_move(osv.osv):
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
                         raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
 
-            # Check that the move balances, the tolerance for debit/credit must
-            # be smaller than the smallest value according to price accuracy
-            # (hence the +1 below)
-            # Example:
-            #    difference == 0.01 is OK iff price_accuracy <= 1!
-            #    difference == 0.0001 is OK iff price_accuracy <= 3!
-            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):
+            if abs(amount) < 10 ** -4:
+                # If the move is balanced
+                # Add to the list of valid moves
+                # (analytic lines will be created later for valid moves)
+                valid_moves.append(move)
+
+                # Check whether the move lines are confirmed
+                
                 if not len(line_draft_ids):
                     continue
+                # Update the move lines (set them as valid)
+
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
                     'journal_id': move.journal_id.id,
                     'period_id': move.period_id.id,
                     'state': 'valid'
                 }, context, check=False)
-                todo = []
+
                 account = {}
                 account2 = {}
-                if journal.type not in ('purchase','sale'):
-                    continue
+                
+                if journal.type in ('purchase','sale'):
+                    for line in move.line_id:
+                        code = amount = 0
+                        key = (line.account_id.id, line.tax_code_id.id)
+                        if key in account2:
+                            code = account2[key][0]
+                            amount = account2[key][1] * (line.debit + line.credit)
+                        elif line.account_id.id in account:
+                            code = account[line.account_id.id][0]
+                            amount = account[line.account_id.id][1] * (line.debit + line.credit)
+                        if (code or amount) and not (line.tax_code_id or line.tax_amount):
+                            self.pool.get('account.move.line').write(cr, uid, [line.id], {
+                                'tax_code_id': code,
+                                'tax_amount': amount
+                            }, context, check=False)
+            elif journal.centralisation:
+                # If the move is not balanced, it must be centralised...
 
-                for line in move.line_id:
-                    code = amount = 0
-                    key = (line.account_id.id, line.tax_code_id.id)
-                    if key in account2:
-                        code = account2[key][0]
-                        amount = account2[key][1] * (line.debit + line.credit)
-                    elif line.account_id.id in account:
-                        code = account[line.account_id.id][0]
-                        amount = account[line.account_id.id][1] * (line.debit + line.credit)
-                    if (code or amount) and not (line.tax_code_id or line.tax_amount):
-                        self.pool.get('account.move.line').write(cr, uid, [line.id], {
-                            'tax_code_id': code,
-                            'tax_amount': amount
-                        }, context, check=False)
+                # Add to the list of valid moves
+                # (analytic lines will be created later for valid moves)
+                valid_moves.append(move)
+
                 #
-                # Compute VAT
+                # Update the move lines (set them as valid)
                 #
-                continue
-            if journal.centralisation:
                 self._centralise(cr, uid, move, 'debit', context=context)
                 self._centralise(cr, uid, move, 'credit', context=context)
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
                     'state': 'valid'
                 }, context, check=False)
-                continue
             else:
+                # We can't validate it (it's unbalanced)
+                # Setting the lines as draft
                 self.pool.get('account.move.line').write(cr, uid, line_ids, {
                     'journal_id': move.journal_id.id,
                     'period_id': move.period_id.id,
@@ -1282,13 +1292,12 @@ class account_move(osv.osv):
                     #'tax_amount': False,
                     'state': 'draft'
                 }, context, check=False)
-                ok = False
-            if ok:
-                list_ids = []
-                for tmp in move.line_id:
-                    list_ids.append(tmp.id)
-                self.pool.get('account.move.line').create_analytic_lines(cr, uid, list_ids, context)
-        return ok
+        # Create analytic lines for the valid moves
+        for record in valid_moves:
+            self.pool.get('account.move.line').create_analytic_lines(cr, uid, [line.id for line in record.line_id], context)
+
+        return len(valid_moves) > 0
+
 account_move()
 
 class account_move_reconcile(osv.osv):
@@ -2056,7 +2065,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
     def _get_def_cparent(self, cr, uid, context):
         acc_obj=self.pool.get('account.account')
         tmpl_obj=self.pool.get('account.account.template')
-        #print "Searching for ",context
         tids=tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
         if not tids or not tids[0]['parent_id']:
             return False
@@ -2098,7 +2106,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
             # 'tax_ids': [(6,0,tax_ids)], todo!!
             'company_id': company_id,
             }
-        # print "Creating:", vals
         new_account = acc_obj.create(cr, uid, vals)
         return {'type':'state', 'state': 'end' }
 

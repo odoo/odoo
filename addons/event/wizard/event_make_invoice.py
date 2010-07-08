@@ -83,7 +83,7 @@ class event_make_invoice(osv.osv_memory):
         id = mod_obj.read(cr, uid, result, ['res_id'])  
            
         return {
-            'domain': "[('id','=',%s)]" % res, 
+            'domain': "[('id','in',%s)]" % res, 
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',

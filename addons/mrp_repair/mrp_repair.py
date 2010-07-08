@@ -344,7 +344,7 @@ class mrp_repair(osv.osv):
                         'origin': invoice.origin+', '+repair.name,
                         'comment':(comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
                     }
-                    invoice_obj.write(cr, uid, [inv_id], invoice_vals, context=context)
+                    inv_obj.write(cr, uid, [inv_id], invoice_vals, context=context)
                 else:
                     if not repair.partner_id.property_account_receivable:
                         raise osv.except_osv(_('Error !'), _('No account defined for partner "%s".') % repair.partner_id.name )

@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 import netsvc
 
@@ -29,16 +30,15 @@ class messages(osv.osv):
     logger = netsvc.Logger()
 
     _columns = {
-        'from_id':fields.many2one('res.users', 'From', ondelete="CASCADE"),
-        'to_id':fields.many2one('res.users', 'To', ondelete="CASCADE"),
-        'project_id':fields.many2one('project.project', 'Project',
+        'from_id': fields.many2one('res.users', 'From', ondelete="CASCADE"),
+        'to_id': fields.many2one('res.users', 'To', ondelete="CASCADE"),
+        'project_id': fields.many2one('project.project', 'Project',
                                      required=True, ondelete="CASCADE"),
-        'message':fields.text('Message', required=True),
+        'message': fields.text('Message', required=True),
     }
-
     _defaults = {
-        'from_id':lambda self, cr, uid, context: uid,
-        'to_id':None,
+        'from_id': lambda self, cr, uid, context: uid,
+        'to_id': None,
     }
 
     def broadcast(self, cr, uid, project_id, message, context=None):
@@ -67,6 +67,7 @@ class project_with_message(osv.osv):
             'project.messages', 'project_id', 'Messages',
             domain="[('to_id','in',[uid,False])]"),
     }
+
 project_with_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

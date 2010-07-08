@@ -70,23 +70,18 @@ class hr_payslip(osv.osv):
     
     def cancel_sheet(self, cr, uid, ids, context={}):
         move_pool = self.pool.get('account.move')
-
+        slip_move = self.pool.get('hr.payslip.account.move')
+        
+        move_ids = []
         for slip in self.browse(cr, uid, ids, context):
-            if slip.move_id:
-                if slip.move_id.state == 'posted':
-                    move_pool.button_cancel(cr, uid [slip.move_id.id], context)
-                move_pool.unlink(cr, uid, [slip.move_id.id])
-            
-            if slip.adj_move_id:
-                if slip.adj_move_id.state == 'posted':
-                    move_pool.button_cancel(cr, uid [slip.adj_move_id.id], context)
-                move_pool.unlink(cr, uid, [slip.adj_move_id.id])
-                
-            if slip.other_move_id:
-                if slip.other_move_id.state == 'posted':
-                    move_pool.button_cancel(cr, uid [slip.other_move_id.id], context)
-                move_pool.unlink(cr, uid, [slip.other_move_id.id])
-            
+            for line in slip.move_ids:
+                move_ids.append(line.id)
+                if line.move_id:
+                    if line.move_id.state == 'posted':
+                        move_pool.button_cancel(cr, uid [line.move_id.id], context)
+                    move_pool.unlink(cr, uid, [line.move_id.id])
+        
+        slip_move.unlink(cr, uid, move_ids)
         self.write(cr, uid, ids, {'state':'cancel'})
         return True
     
@@ -358,7 +353,7 @@ class hr_payslip(osv.osv):
                 else: 
                     rec['analytic_account_id'] = slip.deg_id.account_id.id
                     
-                if line.type == 'allounce' or line.type == 'otherpay':
+                if line.type == 'allowance' or line.type == 'otherpay':
                     rec['debit'] = amount
                     if not partner.property_account_payable:
                         raise osv.except_osv(_('Integrity Error !'), _('Please Configure Partners Payable Account!!'))
@@ -398,92 +393,97 @@ class hr_payslip(osv.osv):
                 
                 line_ids += [movel_pool.create(cr, uid, rec)]
                 
-                if line.company_contrib > 0:
-                    company_contrib = line.company_contrib
-#                    if line.category_id.amount_type == 'per':
-#                        company_contrib = (amount * line.category_id.contribute_per)
+                for contrub in line.category_id.contribute_ids:
+                    print contrib.name, contrub.code, contrub.amount_type, contrib.contribute_per, line.total
+                    
+                
+                
+#                if line.company_contrib > 0:
+#                    company_contrib = line.company_contrib
+##                    if line.category_id.amount_type == 'per':
+##                        company_contrib = (amount * line.category_id.contribute_per)
 
-                    narration = """Company Contribution of %s Encode same as a Company Expanse @ %s""" % (line.name, company_contrib)
-                    move = {
-                        #'name': slip.name, 
-                        'journal_id': slip.journal_id.id,
-                        'period_id': period_id, 
-                        'date': slip.date,
-                        'ref':slip.number,
-                        'narration': narration
-                    }
-                    company_contrib_move_id = move_pool.create(cr, uid, move)
-                    name = "[%s] - %s / %s - Company Contribution" % (line.code, line.name, slip.employee_id.name)
-                    self.create_voucher(cr, uid, [slip.id], name, company_contrib_move_id)
-                    
-                    ded_deb = {
-                        'move_id':company_contrib_move_id,
-                        'name': name,
-                        'date': slip.date, 
-                        'quantity':1,
-                        'account_id': line.category_id.account_id.id,
-                        'debit': company_contrib,
-                        'credit' : 0.0,
-                        'journal_id': slip.journal_id.id,
-                        'period_id': period_id,
-                        'ref':slip.number
-                    }
-                    line_ids += [movel_pool.create(cr, uid, ded_deb)]
-                    ded_cre = {
-                        'move_id':company_contrib_move_id,
-                        'name': name,
-                        'date': slip.date, 
-                        'quantity':1,
-                        'account_id': line.category_id.register_id.account_id.id,
-                        'debit': 0.0,
-                        'credit' : company_contrib,
-                        'journal_id': slip.journal_id.id,
-                        'period_id': period_id,
-                        'ref':slip.number
-                    }
-                    line_ids += [movel_pool.create(cr, uid, ded_cre)]
-                    
-                    if line.category_id.include_in_salary:
-                        narration = """Company Contribution of %s Deducted from Employee %s""" % (line.name, company_contrib)
-                        move = {
-                            #'name': slip.name, 
-                            'journal_id': slip.journal_id.id,
-                            'period_id': period_id, 
-                            'date': slip.date,
-                            'ref':slip.number,
-                            'narration': narration
-                        }
-                        include_in_salary_move_id = move_pool.create(cr, uid, move)
-                        self.create_voucher(cr, uid, [slip.id], narration, include_in_salary_move_id)
-                        
-                        total_deduct += company_contrib
-                        ded_deb = {
-                            'move_id':include_in_salary_move_id,
-                            'name': name,
-                            'partner_id': partner_id,
-                            'date': slip.date, 
-                            'quantity':1,
-                            'account_id': partner.property_account_receivable.id,
-                            'debit': company_contrib,
-                            'credit' : 0.0,
-                            'journal_id': slip.journal_id.id,
-                            'period_id': period_id,
-                            'ref':slip.number
-                        }
-                        line_ids += [movel_pool.create(cr, uid, ded_deb)]
-                        ded_cre = {
-                            'move_id':include_in_salary_move_id,
-                            'name': name,
-                            'date': slip.date, 
-                            'quantity':1,
-                            'account_id': line.category_id.account_id.id,
-                            'debit': 0.0,
-                            'credit' : company_contrib,
-                            'journal_id': slip.journal_id.id,
-                            'period_id': period_id,
-                            'ref':slip.number
-                        }
-                        line_ids += [movel_pool.create(cr, uid, ded_cre)]
+#                    narration = """Company Contribution of %s Encode same as a Company Expanse @ %s""" % (line.name, company_contrib)
+#                    move = {
+#                        #'name': slip.name, 
+#                        'journal_id': slip.journal_id.id,
+#                        'period_id': period_id, 
+#                        'date': slip.date,
+#                        'ref':slip.number,
+#                        'narration': narration
+#                    }
+#                    company_contrib_move_id = move_pool.create(cr, uid, move)
+#                    name = "[%s] - %s / %s - Company Contribution" % (line.code, line.name, slip.employee_id.name)
+#                    self.create_voucher(cr, uid, [slip.id], name, company_contrib_move_id)
+#                    
+#                    ded_deb = {
+#                        'move_id':company_contrib_move_id,
+#                        'name': name,
+#                        'date': slip.date, 
+#                        'quantity':1,
+#                        'account_id': line.category_id.account_id.id,
+#                        'debit': company_contrib,
+#                        'credit' : 0.0,
+#                        'journal_id': slip.journal_id.id,
+#                        'period_id': period_id,
+#                        'ref':slip.number
+#                    }
+#                    line_ids += [movel_pool.create(cr, uid, ded_deb)]
+#                    ded_cre = {
+#                        'move_id':company_contrib_move_id,
+#                        'name': name,
+#                        'date': slip.date, 
+#                        'quantity':1,
+#                        'account_id': line.category_id.register_id.account_id.id,
+#                        'debit': 0.0,
+#                        'credit' : company_contrib,
+#                        'journal_id': slip.journal_id.id,
+#                        'period_id': period_id,
+#                        'ref':slip.number
+#                    }
+#                    line_ids += [movel_pool.create(cr, uid, ded_cre)]
+#                    
+#                    if line.category_id.include_in_salary:
+#                        narration = """Company Contribution of %s Deducted from Employee %s""" % (line.name, company_contrib)
+#                        move = {
+#                            #'name': slip.name, 
+#                            'journal_id': slip.journal_id.id,
+#                            'period_id': period_id, 
+#                            'date': slip.date,
+#                            'ref':slip.number,
+#                            'narration': narration
+#                        }
+#                        include_in_salary_move_id = move_pool.create(cr, uid, move)
+#                        self.create_voucher(cr, uid, [slip.id], narration, include_in_salary_move_id)
+#                        
+#                        total_deduct += company_contrib
+#                        ded_deb = {
+#                            'move_id':include_in_salary_move_id,
+#                            'name': name,
+#                            'partner_id': partner_id,
+#                            'date': slip.date, 
+#                            'quantity':1,
+#                            'account_id': partner.property_account_receivable.id,
+#                            'debit': company_contrib,
+#                            'credit' : 0.0,
+#                            'journal_id': slip.journal_id.id,
+#                            'period_id': period_id,
+#                            'ref':slip.number
+#                        }
+#                        line_ids += [movel_pool.create(cr, uid, ded_deb)]
+#                        ded_cre = {
+#                            'move_id':include_in_salary_move_id,
+#                            'name': name,
+#                            'date': slip.date, 
+#                            'quantity':1,
+#                            'account_id': line.category_id.account_id.id,
+#                            'debit': 0.0,
+#                            'credit' : company_contrib,
+#                            'journal_id': slip.journal_id.id,
+#                            'period_id': period_id,
+#                            'ref':slip.number
+#                        }
+#                        line_ids += [movel_pool.create(cr, uid, ded_cre)]
 
                 #make an entry line to contribution register
 #                if line.category_id.register_id:

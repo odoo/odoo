@@ -32,10 +32,14 @@ class project_timebox_fill(osv.osv_memory):
                 }
 
     def _get_from_tb(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         ids = self.pool.get('project.gtd.timebox').search(cr, uid, [], context=context)
         return ids and ids[0] or False
 
     def _get_to_tb(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'active_id' in context:
             return context['active_id']
         return False

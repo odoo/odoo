@@ -51,7 +51,7 @@ class crm_lead_report(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             if field_name != 'avg_answers':
                 state = field_name[5:]
-                cr.execute("select count(id) from crm_opportunity where \
+                cr.execute("select count(id) from crm_lead where \
                     section_id =%s and state='%s'"%(case.section_id.id, state))
                 state_cases = cr.fetchone()[0]
                 perc_state = (state_cases / float(case.nbr)) * 100
@@ -146,7 +146,7 @@ class crm_lead_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
-                    (SELECT count(id) FROM mailgate_message WHERE model='crm.lead' AND res_id=c.id) AS email,
+                    (SELECT count(id) FROM mailgate_message WHERE model='crm.lead' AND res_id=c.id AND history=True) AS email,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected,

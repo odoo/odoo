@@ -25,18 +25,18 @@ from osv import fields, osv
 from tools.translate import _
 
 class hr_payroll_employees_detail(osv.osv_memory):
-    
+
    _name ='hr.payroll.employees.detail'
    _columns = {
         'employee_ids': fields.many2many('hr.employee', 'payroll_emp_rel','payroll_id','emp_id', 'Employees',required=True),
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)        
-       } 
+        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)
+       }
    def _get_fiscalyear(self, cr, uid, ids, context={}):
         fiscal_ids=self.pool.get('account.fiscalyear').search(cr,uid,[])
         if fiscal_ids:
             return fiscal_ids[0]
         return False
-   
+
    _defaults = {
         'fiscalyear_id':_get_fiscalyear,
     }
@@ -52,7 +52,7 @@ class hr_payroll_employees_detail(osv.osv_memory):
         """
 
         datas = {'ids': context.get('active_ids', [])}
-        
+
         res = self.read(cr, uid, ids, ['employee_ids', 'fiscalyear_id'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
@@ -62,5 +62,7 @@ class hr_payroll_employees_detail(osv.osv_memory):
             'datas': datas,
             'nodestroy':True,
        }
-   
+
 hr_payroll_employees_detail()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

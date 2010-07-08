@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>        		
+    <data>
 		<record id="view_hr_payroll_year_salary" model="ir.ui.view">
             <field name="name">Salary Register</field>
             <field name="model">hr.payroll.year.salary</field>
@@ -11,21 +11,21 @@
 			   <group col="3" colspan="1">
 				    <field name="fiscalyear_id" select="1" colspan="2"/>
 				    <newline/>
-				    <separator string="Employee" colspan="4"/>
+				    <separator string="Employees" colspan="4"/>
 				    <field name="employee_ids"  nolabel="1" colspan="2"/>
 					<newline/>
-			    	<separator string="Salary Deposit Date Option?" colspan="2"/>		
+			    	<separator string="Salary Deposit Date Option?" colspan="2"/>
 			    	<newline/>
-			    	<field name="salary_on"/>			    		    
+			    	<field name="salary_on"/>
 				</group>
 			    <newline/>
 			    <group>
-					<button icon='gtk-cancel' special="cancel" 
+					<button icon='gtk-cancel' special="cancel"
 		        			string="Close" />
 					<button name="print_report" string="Print Report"
 		        			 type="object" icon="gtk-print" />
 	        	</group>
-			</group>	        			 
+			</group>
 			</form>
             </field>
         </record>
@@ -37,11 +37,11 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-	
+
         <menuitem  id="menu_wizard_print_year_salary"
             icon="STOCK_PRINT"
-            action="action_hr_payroll_year_salary"  
-            parent="menu_hr_payroll_reporting" 
+            action="action_hr_payroll_year_salary"
+            parent="menu_hr_payroll_reporting"
             name="Salary Register"
            />
 

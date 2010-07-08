@@ -19,7 +19,6 @@
 #
 ##############################################################################
 from lxml import etree
-import mx.DateTime
 import datetime
 import time
 
@@ -37,7 +36,7 @@ class project_task_type(osv.osv):
     _order = 'sequence'
 
     _defaults = {
-        'sequence': lambda *args: 1
+        'sequence': 1
     }
 project_task_type()
 
@@ -61,7 +60,9 @@ class project(osv.osv):
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
-    def _complete_name(self, cr, uid, ids, name, args, context={}):
+    def _complete_name(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
             res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
@@ -71,7 +72,9 @@ class project(osv.osv):
         return super(project, self).check_recursion(cursor, user, ids,
                 parent=parent)
 
-    def onchange_partner_id(self, cr, uid, ids, part, context={}):
+    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
+        if context is None:
+            context = {}
         partner_obj = self.pool.get('res.partner')
         if not part:
             return {'value':{'contact_id': False, 'pricelist_id': False}}
@@ -80,7 +83,9 @@ class project(osv.osv):
         pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
 
-    def _progress_rate(self, cr, uid, ids, names, arg, context={}):
+    def _progress_rate(self, cr, uid, ids, names, arg, context=None):
+        if context is None:
+            context = {}
         res = {}.fromkeys(ids, 0.0)
         progress = {}
         if not ids:
@@ -118,11 +123,12 @@ class project(osv.osv):
             if proj.tasks:
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
+
     _columns = {
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
-        'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
+        'category_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying a list of task"),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose."),
@@ -135,17 +141,17 @@ class project(osv.osv):
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
-        'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.'),
+        'project_escalation_id': fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.'),
      }
     _order = "sequence"
     _defaults = {
-        'active': lambda *a: True,
-        'priority': lambda *a: 1,
-        'sequence': lambda *a: 10,
-        'warn_manager': lambda *a: True,
+        'active': True,
+        'priority': 1,
+        'sequence': 10,
+        'warn_manager': True,
     }
     def _check_dates(self, cr, uid, ids):
-         leave = self.read(cr, uid, ids[0],['date_start','date'])
+         leave = self.read(cr, uid, ids[0], ['date_start', 'date'])
          if leave['date_start'] and leave['date']:
              if leave['date_start'] > leave['date']:
                  return False
@@ -162,31 +168,39 @@ class project(osv.osv):
         (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date']),
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
-    def set_template(self, cr, uid, ids, context={}):
+    def set_template(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=False, context=context)
         return res
 
-    def set_done(self, cr, uid, ids, context={}):
+    def set_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'close'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Project ') + " '" + name + "' "+ _("is Closed.")
+            self.log(cr, uid, id, message)
         return True
 
-    def set_cancel(self, cr, uid, ids, context={}):
+    def set_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
         return True
 
-    def set_pending(self, cr, uid, ids, context={}):
+    def set_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
 
-    def set_open(self, cr, uid, ids, context={}):
+    def set_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         return True
 
-    def reset_project(self, cr, uid, ids, context={}):
-        res = self.setActive(cr, uid, ids,value=True, context=context)
+    def reset_project(self, cr, uid, ids, context=None):
+        res = self.setActive(cr, uid, ids, value=True, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Project ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return res
 
-    def copy(self, cr, uid, id, default={}, context={}):
+    def copy(self, cr, uid, id, default={}, context=None):
+        if context is None:
+            context = {}
         proj = self.browse(cr, uid, id, context=context)
         default = default or {}
         context['active_test'] = False
@@ -199,13 +213,16 @@ class project(osv.osv):
             cr.execute('update project_task set active=True where project_id IN %s',(tuple(ids),))
         return res
 
-    def duplicate_template(self, cr, uid, ids, context={}):
+    def duplicate_template(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         project_obj = self.pool.get('project.project')
         data_obj = self.pool.get('ir.model.data')
         task_obj = self.pool.get('project.task')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
-            parent_id = context.get('parent_id',False) # check me where to pass context for parent id ??
+            parent_id = context.get('parent_id', False) # check me where to pass context for parent id ??
+            context.update({'analytic_project_copy': True})
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
@@ -213,13 +230,10 @@ class project(osv.osv):
             result.append(new_id)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             res = cr.fetchall()
-            for (tasks_id,) in res:
-                task_obj.copy(cr, uid, tasks_id, default = {
-                                    'project_id': new_id,
-                                    'active':True}, context=context)
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)], context=context)
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.category_id.id)], context=context)
+            parent_id = self.read(cr, uid, new_id, ['category_id'])['category_id'][0]
             if child_ids:
-                self.duplicate_template(cr, uid, child_ids, context={'parent_id': new_id})
+                self.duplicate_template(cr, uid, child_ids, context={'parent_id': parent_id})
 
         if result and len(result):
             res_id = result[0]
@@ -235,7 +249,7 @@ class project(osv.osv):
                 'view_mode': 'form,tree',
                 'res_model': 'project.project',
                 'view_id': False,
-                'res_id' : res_id,
+                'res_id': res_id,
                 'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': search_view['res_id'],
@@ -244,9 +258,13 @@ class project(osv.osv):
 #        return result
 
     # set active value for a project, its sub projects and its tasks
-    def setActive(self, cr, uid, ids, value=True, context={}):
+    def setActive(self, cr, uid, ids, value=True, context=None):
+        if context is None:
+            context = {}
         task_obj = self.pool.get('project.task')
-        for proj in self.browse(cr, uid, ids, context):
+        for proj in self.browse(cr, uid, ids, context=None):
+            if context is None:
+                context = {}
             self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             tasks_id = [x[0] for x in cr.fetchall()]
@@ -254,7 +272,9 @@ class project(osv.osv):
                 task_obj.write(cr, uid, tasks_id, {'active': value}, context=context)
             child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])
             if child_ids:
-                self.setActive(cr, uid, child_ids, value, context)
+                self.setActive(cr, uid, child_ids, value, context=None)
+                if context is None:
+                    context = {}
         return True
 project()
 
@@ -264,13 +284,17 @@ class task(osv.osv):
     _log_create = True
     _date_name = "date_start"
 
-    def _str_get(self, task, level=0, border='***', context={}):
+    def _str_get(self, task, level=0, border='***', context=None):
+        if context is None:
+            context = {}
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
             (task.description or '')+'\n\n'
 
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
+        if context is None:
+            context = {}
         res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
@@ -279,17 +303,17 @@ class task(osv.osv):
             res[task.id]['progress'] = 0.0
             if (task.remaining_hours + hours.get(task.id, 0.0)):
                 if task.state != 'done':
-                    res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
+                    res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99), 2)
 
-            if task.state in ('done','cancel'):
+            if task.state in ('done', 'cancel'):
                 res[task.id]['progress'] = 100.0
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
         return res
 
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
-        return {'value':{'remaining_hours' : planned - effective}}
+        return {'value':{'remaining_hours': planned - effective}}
 
-    def _default_project(self, cr, uid, context={}):
+    def _default_project(self, cr, uid, context=None):
         if 'project_id' in context and context['project_id']:
             return int(context['project_id'])
         return False
@@ -298,17 +322,21 @@ class task(osv.osv):
     #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
     #]
 
-    def copy_data(self, cr, uid, id, default={},context={}):
+    def copy_data(self, cr, uid, id, default={}, context=None):
+        if context is None:
+            context = {}
         default = default or {}
         default['work_ids'] = []
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-    def _check_dates(self, cr, uid, ids, context={}):
-         task = self.read(cr, uid, ids[0],['date_start', 'date_end'])
-         if task['date_start'] and task['date_end']:
+    def _check_dates(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        task = self.read(cr, uid, ids[0], ['date_start', 'date_end'])
+        if task['date_start'] and task['date_end']:
              if task['date_start'] > task['date_end']:
                  return False
-         return True
+        return True
 
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it."),
@@ -316,7 +344,7 @@ class task(osv.osv):
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
-        'type': fields.many2one('project.task.type', 'Stage'),
+        'type': fields.many2one('project.task.type', 'Stage',),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
@@ -336,19 +364,19 @@ class task(osv.osv):
         'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', store=True, help="Computed as difference of the time estimated by the project manager and the real time to close the task."),
 
         'user_id': fields.many2one('res.users', 'Assigned to'),
-        'delegated_user_id': fields.related('child_ids','user_id',type='many2one', relation='res.users', string='Delegated To'),
+        'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
-        'manager_id': fields.related('project_id','category_id','user_id', type='many2one', relation='res.users', string='Project Manager'),
+        'manager_id': fields.related('project_id', 'category_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
-        'state': lambda *a: 'draft',
-        'priority': lambda *a: '2',
-        'progress': lambda *a: 0,
-        'sequence': lambda *a: 10,
-        'active': lambda *a: True,
-        'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'state': 'draft',
+        'priority': '2',
+        'progress': 0,
+        'sequence': 10,
+        'active': True,
+        'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
         'project_id': _default_project,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
@@ -362,6 +390,8 @@ class task(osv.osv):
     #
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
+        if context is None:
+            context = {}
         obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
         tm = obj_tm and obj_tm.name or 'Hours'
 
@@ -410,6 +440,8 @@ class task(osv.osv):
                 elif project.warn_manager:
                     task_id = ids[0]
                     mail_send = True
+            message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
+            self.log(cr, uid, task.id, message)
             self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
@@ -470,6 +502,8 @@ class task(osv.osv):
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
                 })
+            message = _('Task ') + " '" + task.name + "' "+ _("is Cancelled.")
+            self.log(cr, uid, task.id, message)
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
         return True
 
@@ -477,6 +511,8 @@ class task(osv.osv):
         tasks= self.browse(cr,uid,ids)
         for t in tasks:
             self.write(cr, uid, [t.id], {'state': 'open'})
+            message = _('Task ') + " '" + t.name + "' "+ _("is Open.")
+            self.log(cr, uid, t.id, message)
         return True
 
     def do_draft(self, cr, uid, ids, *args):
@@ -486,6 +522,9 @@ class task(osv.osv):
 
     def do_pending(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'pending'})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Task ') + " '" + name + "' "+ _("is Pending.")
+            self.log(cr, uid, id, message)
         return True
 
     def next_type(self, cr, uid, ids, *args):
@@ -521,11 +560,11 @@ class project_work(osv.osv):
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
         'hours': fields.float('Time Spent'),
         'user_id': fields.many2one('res.users', 'Done by', required=True),
-        'company_id': fields.related('task_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
     }
     _defaults = {
         'user_id': lambda obj, cr, uid, context: uid,
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')
+        'date': time.strftime('%Y-%m-%d %H:%M:%S')
     }
     _order = "date desc"
     def create(self, cr, uid, vals, *args, **kwargs):
@@ -535,7 +574,9 @@ class project_work(osv.osv):
             cr.execute('update project_task set remaining_hours=remaining_hours - %s where id=%s', (vals.get('hours',0.0), vals['task_id']))
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
-    def write(self, cr, uid, ids,vals,context={}):
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
         if 'hours' in vals:
@@ -546,7 +587,7 @@ class project_work(osv.osv):
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for work in self.browse(cr, uid, ids):
             cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
-        return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
+        return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
 project_work()
 
 class config_compute_remaining(osv.osv_memory):
@@ -554,7 +595,7 @@ class config_compute_remaining(osv.osv_memory):
     def _get_remaining(self,cr, uid, ctx):
         task_obj = self.pool.get('project.task')
         if 'active_id' in ctx:
-            return task_obj.browse(cr,uid,ctx['active_id'],context=ctx).remaining_hours
+            return task_obj.browse(cr, uid, ctx['active_id'], context=ctx).remaining_hours
         return False
 
     _columns = {
@@ -605,15 +646,17 @@ class message(osv.osv):
         'description': fields.text('Description'),
     }
 
-    def _default_project(self, cr, uid, context={}):
+    def _default_project(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'project_id' in context and context['project_id']:
             return int(context['project_id'])
         return False
 
     _defaults = {
-        'user_id' : lambda self,cr,uid,ctx : uid,
-        'date' : lambda self,cr,uid,ctx : time.strftime('%Y-%m-%d'),
-        'project_id':_default_project
+        'user_id': lambda self,cr,uid,ctx: uid,
+        'date': lambda self,cr,uid,ctx: time.strftime('%Y-%m-%d'),
+        'project_id': _default_project
     }
 
 message()
@@ -625,5 +668,19 @@ class users(osv.osv):
         'context_project_id': fields.many2one('project.project', 'Project')
      }
 users()
+
+class account_analytic_account(osv.osv):
+
+    _inherit = 'account.analytic.account'
+    _description = 'Analytic Account'
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
+            vals['child_ids'] = []
+        return super(account_analytic_account, self).create(cr, uid, vals, context=context)
+
+account_analytic_account()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

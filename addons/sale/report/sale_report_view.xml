@@ -21,7 +21,7 @@
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_uom_qty" sum="# of Qty"/>
                 <field name="shipped_qty_1"/>
-                <field name="uom_name" invisible="not context.get('set_visible',False)"/>
+                <field name="uom_name" invisible="context.get('set_visible',False)"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay" avg="Commitment Delay"/>

@@ -177,7 +177,7 @@ class Code128(MultiWidthBarcode):
     Code 128 can also encode digits at double density (2 per byte)
     and has a mandatory checksum.  Code 128 is well supported and
     commonly used -- for example, by UPS for tracking labels.
-    
+
     Because of these qualities, Code 128 is probably the best choice
     for a linear symbology today (assuming you have a choice).
 
@@ -185,11 +185,11 @@ class Code128(MultiWidthBarcode):
 
         value (int, or numeric string. required.):
             The value to encode.
-   
+
         xdim (float, default .0075):
             X-Dimension, or width of the smallest element
             Minumum is .0075 inch (7.5 mils).
-            
+
         height (float, see default below):
             Height of the symbol.  Default is the height of the two
             bearer bars (if they exist) plus the greater of .25 inch
@@ -197,14 +197,14 @@ class Code128(MultiWidthBarcode):
 
         quiet (bool, default 1):
             Wether to include quiet zones in the symbol.
-            
+
         lquiet (float, see default below):
             Quiet zone size to left of code, if quiet is true.
             Default is the greater of .25 inch, or 10 xdim
-            
+
         rquiet (float, defaults as above):
             Quiet zone size to right left of code, if quiet is true.
-            
+
     Sources of Information on Code 128:
 
     http://www.semiconductor.agilent.com/barcode/sg/Misc/code_128.html
@@ -223,7 +223,7 @@ class Code128(MultiWidthBarcode):
 
         if type(value) is type(1):
             value = str(value)
-            
+
         for (k, v) in args.items():
             setattr(self, k, v)
 
@@ -288,12 +288,11 @@ class Code128(MultiWidthBarcode):
         if l[1] in tos:
             l[:2] = ['START_' + l[1][-1]]
 
-#        print `l`
 
         # encode into numbers
         start, set, shset = setmap[l[0]]
         e = [start]
-        
+
         l = l[1:-1]
         while l:
             c = l[0]

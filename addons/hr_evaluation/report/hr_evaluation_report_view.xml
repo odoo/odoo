@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
+    <data>
+
     <record id="view_evaluation_report_tree" model="ir.ui.view">
         <field name="name">hr.evaluation.report.tree</field>
         <field name="model">hr.evaluation.report</field>
@@ -43,33 +44,18 @@
             <search string="Evaluations Analysis">
             	<group>
             		<filter icon="terp-go-year" string="365 Days"
-                    	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                    	help="Tasks performed in last 365 days"/>
-                    <filter icon="terp-go-month" string="30 Days"
-                    	name="month"
-                    	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                    	help="Tasks performed in last 30 days"/>
-	                <filter icon="terp-go-week"
-                        string="    7 Days    "
-                        separator="1"
-                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                        help="Tasks during last 7 days"/>
+                    	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date', '&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]" help="Tasks performed in last 365 days"/>
+                    <filter icon="terp-go-month" string="30 Days" name="month" domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]" help="Tasks performed in last 30 days"/>
+	                <filter icon="terp-go-week" string="    7 Days    " separator="1"
+                        domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" help="Tasks during last 7 days"/>
                     <separator orientation="vertical"/>
-                    <filter string="Draft"
-                    	icon="terp-document-new"
-                    	domain="[('state','=','draft')]"
+                    <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]"
                     	help = "Draft Evaluations"/>
-	                <filter string="Plan In Progress"
-	                	icon="terp-camera_test"
-	                	domain="[('state', '=' ,'wait')]"
+	                <filter string="Plan In Progress" icon="terp-camera_test" domain="[('state', '=' ,'wait')]"
 	                	help = "In progress Evaluations"/>
-                   	<filter string="Final Validation"
-                   		icon="terp-check"
-                   		domain="[('state','=','progress')]"
+                   	<filter string="Final Validation" icon="terp-check" domain="[('state','=','progress')]"
                    		help = "Final Validation Evaluations"/>
-                   	<filter icon="terp-dialog-close"
-                        string="Done"
-                        domain="[('state','=','done')]"/>
+                   	<filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
   					<separator orientation="vertical"/>
 	                <field name="employee_id" widget="selection"/>
 	                <field name="plan_id" widget="selection"/>
@@ -86,13 +72,13 @@
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'create_date'}"/>
                     <filter string="Year" icon="terp-go-month" context="{'group_by':'year'}"/>
                 </group>
-                 <newline/>
+                <newline/>
 				<group expand="0" string="Extended options..." groups="base.group_extended">
-                    <field name="rating"/>
-                    <separator orientation="vertical"/>
-                    <field name="deadline"/>
-                    <separator orientation="vertical"/>
-                    <field name="state"/>
+                <field name="rating"/>
+                <separator orientation="vertical"/>
+                <field name="deadline"/>
+                <separator orientation="vertical"/>
+                <field name="state"/>
                 </group>
             </search>
         </field>
@@ -110,5 +96,5 @@
     <menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="10"/>
     <menuitem action="action_evaluation_report_all" id="menu_evaluation_report_all" parent="hr.menu_hr_reporting" sequence="3"/>
 
-</data>
+    </data>
 </openerp>

@@ -22,7 +22,7 @@
 import time
 from datetime import datetime
 from datetime import timedelta
-
+import base64
 import tools
 from osv import fields
 from osv import osv
@@ -214,7 +214,7 @@ class crm_case(object):
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool._history(cr, uid, cases, keyword, history=history,\
+        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
                                        message_id=message_id, attach=attach, \
@@ -342,7 +342,6 @@ class crm_case(object):
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context={}, attach=False,destination=True):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -359,34 +358,35 @@ class crm_case(object):
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
                 dest = case.section_id.reply_to
-                body = ""
-                body = case.email_last or case.description
+                body = case.description or ""
+                if case.message_ids:
+                    body = case.message_ids[0].description or ""
                 if not destination:
                     src, dest = dest, src
                     if body and case.user_id.signature:
                         body += '\n\n%s' % (case.user_id.signature)
 
                 body = self.format_body(body)
-                dest = [dest]
 
                 attach_to_send = None
 
                 if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'mailgate.thread'), ('res_id', '=', case.id)])
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
                     attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
                 # Send an email
+                subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
                 flag = tools.email_send(
                     src,
-                    dest,
-                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
+                    [dest],
+                    subject, 
                     body,
                     reply_to=case.section_id.reply_to,
                     openobject_id=str(case.id),
                     attach=attach_to_send
                 )
-                self._history(cr, uid, [case], _('Send'), history=True, email=dest, details=body, email_from=src)
+                self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
         return True
 
     def _check(self, cr, uid, ids=False, context={}):

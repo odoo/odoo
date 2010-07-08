@@ -92,10 +92,16 @@ class scrum_sprint(osv.osv):
 
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Sprint ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Sprint ') + " '" + name + "' "+ _("is Closed.")
+            self.log(cr, uid, id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context={}):
@@ -205,12 +211,17 @@ class scrum_product_backlog(osv.osv):
 
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Product Backlog ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task').write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
+            message = _('Product Backlog ') + " '" + backlog.name + "' "+ _("is Closed.")
+            self.log(cr, uid, backlog.id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context={}):
@@ -310,7 +321,9 @@ class scrum_meeting(osv.osv):
         meeting_id = self.browse(cr, uid, ids)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
-            self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
+            res = self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
+            if not res:
+                raise osv.except_osv(_('Error !'), _(' Email Not send to the scrum master %s!' % meeting_id.sprint_id.scrum_master_id.name))
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for scrum master defined on sprint.'))
         return True
@@ -321,7 +334,9 @@ class scrum_meeting(osv.osv):
         context.update({'button_send_product_owner': True})
         meeting_id = self.browse(cr, uid, ids)[0]
         if meeting_id.sprint_id.product_owner_id.user_email:
-            self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
+            res = self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
+            if not res:
+                raise osv.except_osv(_('Error !'), _(' Email Not send to the product owner %s!' % meeting_id.sprint_id.product_owner_id.name))
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for product owner defined on sprint.'))
         return True
@@ -339,12 +354,7 @@ class scrum_meeting(osv.osv):
         sub_name = meeting_id.name or 'Scrum Meeting of %s '%meeting_id.date
         flag = tools.email_send(user_email , [email], sub_name, body, reply_to=None, openobject_id=str(meeting_id.id))
         if not flag:
-            if context.get('button_send_product_owner', False):
-                raise osv.except_osv(_('Error !'), _(' Email Not send to the product owner %s!' % meeting_id.sprint_id.product_owner_id.name))
-            raise osv.except_osv(_('Error !'), _(' Email Not send to the scrum master %s!' % meeting_id.sprint_id.scrum_master_id.name))
-        if context.get('button_send_product_owner', False):
-            raise osv.except_osv(_('Information !'), _(' Email send successfully to product owner %s!' % meeting_id.sprint_id.product_owner_id.name))
-        raise osv.except_osv(_('Information!'), _(' Email send successfully to scrum master %s!'% meeting_id.sprint_id.scrum_master_id.name))
+            return False
         return True
 
 scrum_meeting()
