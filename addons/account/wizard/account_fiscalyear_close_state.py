@@ -43,7 +43,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
         @param ids: List of Account fiscalyear close state’s IDs
 
         """
-        for data in  self.read(cr, uid, ids,context=context):
+        for data in  self.read(cr, uid, ids, context=context):
             if not data['sure']:
                 raise osv.except_osv(_('UserError'), _('Closing of states \
 cancelled, please check the box !'))

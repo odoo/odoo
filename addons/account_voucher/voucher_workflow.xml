@@ -28,7 +28,6 @@
             <field name="name">done</field>
             <field name="action">write({'state':'posted'})
             proforma_voucher()</field>
-            <field name="flow_stop">True</field>
             <field name="kind">function</field>
         </record>
         
@@ -36,6 +35,21 @@
             <field name="wkf_id" ref="wkf"/>
             <field name="name">recheck</field>
             <field name="action">write({'state':'recheck'})</field>
+            <field name="kind">function</field>
+        </record>
+        
+        <record id="act_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">cancel</field>
+            <field name="action">cancel_voucher()</field>
+            <field name="kind">function</field>
+        </record>
+        
+        <record id="act_audit" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">audit</field>
+            <field name="action">write({'state':'audit'})</field>
+            <field name="flow_stop">True</field>
             <field name="kind">function</field>
         </record>
         
@@ -65,16 +79,34 @@
             <field name="signal">recheck_voucher</field>
         </record>
         
+        <record id="t10" model="workflow.transition">
+            <field name="act_from" ref="act_done"/>
+            <field name="act_to" ref="act_audit"/>
+            <field name="signal">audit_complete</field>
+        </record>
+        
         <record id="t5" model="workflow.transition">
             <field name="act_from" ref="act_recheck"/>
-            <field name="act_to" ref="act_draft"/>
-            <field name="signal">action_cancel_draft</field>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel_voucher</field>
         </record>
         
         <record id="t6" model="workflow.transition">
             <field name="act_from" ref="act_proforma"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel_voucher</field>
+        </record>
+        
+        <record id="t7" model="workflow.transition">
+            <field name="act_from" ref="act_done"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel_voucher</field>
+        </record>
+        
+        <record id="t8" model="workflow.transition">
+            <field name="act_from" ref="act_cancel"/>
             <field name="act_to" ref="act_draft"/>
-            <field name="signal">action_cancel_draft</field>
+            <field name="signal">cancel_to_draft</field>
         </record>
     </data>
 </openerp>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <menuitem icon="terp-stock" id="menu_stock_root" name="Warehouse" sequence="5"/>
         <menuitem id="menu_stock_warehouse_mgmt" name="Warehouse Management" parent="menu_stock_root" sequence="1"/>
-        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="7"/>
+        <menuitem id="menu_stock_products_moves" name="Products Moves" parent="menu_stock_root" sequence="2"/>
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15"/>
@@ -77,8 +78,8 @@
                     <field name="state"/>
                 </tree>
             </field>
-
         </record>
+
         <record id="view_inventory_form" model="ir.ui.view">
             <field name="name">stock.inventory.form</field>
             <field name="model">stock.inventory</field>
@@ -129,6 +130,7 @@
                 </form>
             </field>
         </record>
+
         <record id="action_inventory_form" model="ir.actions.act_window">
             <field name="name">Periodical Inventory</field>
             <field name="type">ir.actions.act_window</field>
@@ -154,7 +156,7 @@
             <field name="model">stock.tracking</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Tracking/Serial">
+                <form string="Packs">
                     <field name="name" select="1"/>
                     <field name="serial" select="1"/>
                     <field name="date" select="1"/>
@@ -167,7 +169,7 @@
             <field name="model">stock.tracking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Tracking/Serial">
+                <tree string="Packs">
                     <field name="name"/>
                     <field name="serial"/>
                     <field name="date"/>
@@ -176,7 +178,7 @@
             </field>
         </record>
         <record id="action_tracking_form" model="ir.actions.act_window">
-            <field name="name">Tracking Lots</field>
+            <field name="name">Packs</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.tracking</field>
             <field name="view_type">form</field>
@@ -193,7 +195,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:not active" string="Tracking Number">
+                <tree colors="grey:not active" string="Packs">
                     <field name="name" />
                     <field name="serial" />
                     <field name="date" />
@@ -213,7 +215,8 @@
                     <newline/>
                     <field name="author_id" readonly="1"/>
                     <newline/>
-                    <field name="description"/>
+					<separator string="Description" colspan="4"/>
+                    <field colspan="4" name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -406,7 +409,7 @@
             <field name="model">stock.location</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock location">
+                <form string="Stock Location">
                     <field name="name"/>
                     <field name="active" groups="base.group_extended"/>
                     <newline/>
@@ -465,7 +468,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal'">
+                <tree string="Stock Location" colors="blue:usage=='view';darkred:usage=='internal'">
                     <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="stock_real" invisible="'product_id' not in context"/>
@@ -550,12 +553,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Entry Lines">
+                	<group height="200" width="500">
                     <field name="address_id" invisible="True" context="{'contact_display':'partner'}"/>
                     <field name="picking_id" invisible="True"/>
-                    <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('picking_id.address_id','=',address_id)]" name="move_ids" nolabel="1"/><newline/>
+                    <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned']),('picking_id.address_id','=',address_id)]" name="move_ids" nolabel="1"  height="100" width="500"/><newline/>
                     <group colspan="4">
                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
                         <button name="action_move" string="Add" type="object" icon="gtk-add"/>
+                    </group>
                     </group>
                 </form>
                </field>
@@ -597,6 +602,7 @@
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="invoice_state"/>
+                    <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
                     <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.   Do you want to continue?"/>
@@ -622,7 +628,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
-                                <tree colors="grey:state in ('cancel')" string="Stock Moves" editable="top">
+                                <tree colors="grey:scraped == True" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -632,18 +638,18 @@
                                     <button
                                         name="%(stock.track_line)d"
                                         string="Split in production lots"
-                                        groups="base.group_extended" 
+                                        groups="base.group_extended"
                                         type="action" icon="terp-stock_effects-object-colorize"
                                         states="draft,waiting,confirmed,assigned" />
                                     <field groups="base.group_extended" name="tracking_id"/>
-                                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                            groups="base.group_extended" 
-                                            icon="terp-stock_effects-object-colorize" 
-                                            states="draft,assigned,confirmed,done"/>
-                                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
-                                        icon="terp-stock_effects-object-colorize" 
-                                        groups="base.group_extended" 
+                                    <button name="setlast_tracking" string="Put in current pack" type="object"
+                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                        icon="terp-stock_effects-object-colorize"
+                                        groups="base.group_extended"
+                                        states="draft,assigned,confirmed,done"/>
+                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                        groups="base.group_extended"
+                                        icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
@@ -655,6 +661,7 @@
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" />
+                                    <field name="scraped" invisible="1"/>
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -681,14 +688,14 @@
 
                                             <newline/>
                                             <label/>
-                                            <button name="%(track_line)d" string="Split in production lots" 
+                                            <button name="%(track_line)d" string="Split in production lots"
                                              states="draft,waiting,confirmed,assigned"
                                             type="action" icon="terp-stock_effects-object-colorize"
                                               groups="base.group_extended" />
-                                            <button name="%(move_scrap)d" string="Scrap Move Line" type="action" icon="gtk-justify-fill"/>
-                                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
+                                            <button name="%(move_scrap)d" string="Scrap" type="action" icon="gtk-justify-fill"/>
+                                            <button name="%(split_into)d" string="Put in a new pack" type="action"
                                                 states="draft,assigned,confirmed,done"
-                                                groups="base.group_extended" 
+                                                groups="base.group_extended"
                                                 icon="terp-stock_effects-object-colorize" />
                                             <separator colspan="4" string="Move State"/>
                                             <field name="state"/>
@@ -765,6 +772,7 @@
                     <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
+                    <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
                     <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Delivery"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the delivery.    Do you want to continue?"/>
@@ -791,7 +799,7 @@
                         <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}" >
-                                <tree colors="grey:state in ('cancel')" string="Stock Moves" editable="top">
+                                <tree colors="grey:scraped == True" string="Stock Moves">
                                     <field name="name" string="Move Name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -799,15 +807,15 @@
                                     <field name="picking_id" />
                                     <field name="prodlot_id" groups="base.group_extended"/>
                                     <field groups="base.group_extended" name="tracking_id"/>
-                                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                    <button name="setlast_tracking" string="Put in current pack" type="object"
+                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                        groups="base.group_extended"
+                                        icon="terp-stock_effects-object-colorize"
+                                        states="draft,assigned,confirmed,done"/>
+                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                        icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed,done"
                                         groups="base.group_extended"/>
-                                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
-                                        groups="base.group_extended" 
-                                        icon="terp-stock_effects-object-colorize" 
-                                        states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
@@ -819,10 +827,11 @@
                                            type="action" icon="terp-stock_effects-object-colorize"
                                            groups="base.group_extended"
                                            states="draft,waiting,confirmed,assigned" />
-                                       <button name="%(stock.move_scrap)d"
+                                   <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" />
+                                    <field name="scraped" invisible="1"/>
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -848,13 +857,13 @@
                                             <field groups="base.group_extended" name="tracking_id"/>
 
                                             <label/>
-                                            <button name="%(track_line)d" string="Split in production lots" 
-                                            groups="base.group_extended" 
+                                            <button name="%(track_line)d" string="Split in production lots"
+                                            groups="base.group_extended"
                                             states="draft,waiting,confirmed,assigned"
                                             type="action" icon="terp-stock_effects-object-colorize"/>
                                             <label/>
-                                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                              groups="base.group_extended" 
+                                            <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                                groups="base.group_extended"
                                                 icon="terp-stock_effects-object-colorize"
                                                 states="draft,assigned,confirmed,done"/>
                                             <separator colspan="4" string="Move State"/>
@@ -948,7 +957,7 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree_delivery"/>
         </record>
-        <menuitem action="action_picking_tree_delivery" id="menu_action_picking_tree_delivery" parent="menu_stock_warehouse_mgmt" sequence="1"/>
+        <menuitem action="action_picking_tree_delivery" id="menu_action_picking_tree_delivery" parent="menu_stock_warehouse_mgmt" sequence="7"/>
 
         #
         # Sending Products
@@ -967,6 +976,7 @@
                     <field name="min_date"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="invoice_state"/>
+                    <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
                     <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
                 </tree>
@@ -992,7 +1002,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}" >
-                                <tree colors="grey:state in ('cancel')" string="Stock Moves" editable="top">
+                                <tree colors="grey:scraped==True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="UOM"/>
@@ -1006,20 +1016,21 @@
                                         states="draft,assigned,confirmed,done"
                                         groups="base.group_extended"/>
                                     <field name="tracking_id" groups="base.group_extended"/>
-                                  <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                      icon="terp-stock_effects-object-colorize"
-                                      groups="base.group_extended" 
-                                      states="draft,assigned,confirmed,done"/>
-                                <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                    attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
-                                    groups="base.group_extended" 
-                                    icon="terp-stock_effects-object-colorize" 
-                                    states="draft,assigned,confirmed,done"/>
+                                    <button name="setlast_tracking" string="Put in current pack" type="object"
+                                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                        groups="base.group_extended"
+                                        icon="terp-stock_effects-object-colorize"
+                                        states="draft,assigned,confirmed,done"/>
+                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                        icon="terp-stock_effects-object-colorize"
+                                        groups="base.group_extended"
+                                        states="draft,assigned,confirmed,done"/>
                                     <field name="location_id"/>
                                     <field name="date_planned"/>
                                     <field name="state"/>
                                     <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
                                     <button name="action_done" states="confirmed,assigned" string="Done" type="object" icon="gtk-jump-to"/>
+                                    <field name="scraped" invisible="1"/>
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -1046,12 +1057,12 @@
                                             <label/>
                                             <button name="%(track_line)d" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"
                                                 states="draft,assigned,confirmed,done"
-                                                groups="base.group_extended" 
+                                                groups="base.group_extended"
                                              />
                                             <label/>
-                                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                                groups="base.group_extended" 
-                                                icon="terp-stock_effects-object-colorize" 
+                                            <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                                groups="base.group_extended"
+                                                icon="terp-stock_effects-object-colorize"
                                                 states="draft,assigned,confirmed,done"/>
                                             <label/>
                                             <separator colspan="4" string="Move State"/>
@@ -1071,7 +1082,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-apply"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(action_partial_picking)d" states="assigned" string="Picking Done" type="action" icon="gtk-execute"/>
+                                <button name="%(action_partial_picking)d" states="assigned" string="Done" type="action" icon="gtk-execute"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -1121,7 +1132,7 @@
         </record>
 
         <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Outgoing Packings</field>
+            <field name="name">Outgoing Orders</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1162,6 +1173,7 @@
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="invoice_state" groups="base.group_extended"/>
+                    <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
                     <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-ok" help="Receive products"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
@@ -1190,7 +1202,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}" >
-                                <tree colors="grey:state in ('cancel')" string="Stock Moves" editable="top">
+                                <tree colors="grey:scraped==True" string="Stock Moves">
                                     <field name="product_id" readonly="1"/>
                                     <field name="product_qty" readonly="1"/>
                                     <field name="product_uom" string="UOM" readonly="1"/>
@@ -1203,19 +1215,20 @@
                                            type="action" icon="terp-stock_effects-object-colorize"
                                            states="draft,waiting,confirmed,assigned" />
                                     <field name="tracking_id" groups="base.group_extended"/>
-                                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                        groups="base.group_extended" 
+                                    <button name="setlast_tracking" string="Put in current pack" type="object"
+                                        groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                                         states="draft,assigned,confirmed,done"/>
-                                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                                        groups="base.group_extended" 
-                                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                        groups="base.group_extended"
+                                        icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed,done"/>
                                     <field name="state"/>
-                                     <button name="%(stock.move_scrap)d"
+                                    <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" />
+                                    <field name="scraped" invisible="1"/>
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -1238,10 +1251,10 @@
 
                                             <newline/>
                                             <label/>
-                                          	<button groups="base.group_extended" name="267" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"/>
+                                             <button groups="base.group_extended" name="267" string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize"/>
                                             <label/>
                                             <button name="275" string="Split Stock Moves" type="action"
-                                              groups="base.group_extended" 
+                                              groups="base.group_extended"
                                               icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" states="draft,assigned,confirmed,done"/>
                                             <separator colspan="4" string="Move State"/>
                                             <field name="state"/>
@@ -1254,12 +1267,9 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <group col="7" colspan="4">
-                                <label colspan="5"/>
-                                <button name="%(act_stock_picking_move_wizard)d" string="Unreceived Products" type="action" states="draft" icon="gtk-redo"/>
-                            </group>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
+                                 <button name="%(act_stock_picking_move_wizard)d" string="Unreceived Products" type="action" states="draft" icon="gtk-redo"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
@@ -1334,7 +1344,7 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree4"/>
         </record>
-        <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_warehouse_mgmt" sequence="2"/>
+        <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_warehouse_mgmt" sequence="1"/>
 
         <record id="view_picking_internal_search" model="ir.ui.view">
             <field name="name">stock.picking.internal.search</field>
@@ -1354,7 +1364,6 @@
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
                         <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
@@ -1373,7 +1382,7 @@
             <field name="context">{'contact_display': 'partner',"search_default_confirmed":1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
-        <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="4"/>
+        <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="2"/>
 
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
@@ -1392,17 +1401,17 @@
                         states="draft,waiting,confirmed,assigned" />
                     <field name="prodlot_id" groups="base.group_extended"/>
                     <button name="%(track_line)d" string="Split in Production Lots" type="action"
-                        icon="gtk-justify-fill" 
+                        icon="gtk-justify-fill"
                        states="draft,waiting,confirmed,assigned"
                         groups="base.group_extended"/>
                     <field groups="base.group_extended" name="tracking_id"/>
-                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                        groups="base.group_extended" 
+                    <button name="setlast_tracking" string="Put in current pack" type="object"
+                        groups="base.group_extended"
                         icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                         states="draft,assigned,confirmed,done"/>
-                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                        groups="base.group_extended" 
-                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                    <button name="%(split_into)d" string="Put in a new pack" type="action"
+                        groups="base.group_extended"
+                        icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
@@ -1462,15 +1471,15 @@
                                 <newline/>
                                 <group colspan="4" col="4">
                                   <label/>
-                                	<button name="%(track_line)d"
-                                    groups="base.group_extended" 
-                                   states="draft,waiting,confirmed,assigned"
-                                   string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
+                                  <button name="%(track_line)d"
+                                      groups="base.group_extended"
+                                      states="draft,waiting,confirmed,assigned"
+                                      string="Split in production lots" type="action" icon="terp-stock_effects-object-colorize" colspan="2" />
                                   <label/>
-                                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                        groups="base.group_extended" 
-                                		icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-                                		states="draft,assigned,confirmed,done"/>
+                                  <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                      groups="base.group_extended"
+                                      icon="terp-stock_effects-object-colorize"
+                                      states="draft,assigned,confirmed,done"/>
                                 </group>
                             </group>
                         </page>
@@ -1560,14 +1569,14 @@
                         context="{'default_use_exist': picking_id.type=='in'}"
                         groups="base.group_extended"/>
                     <field name="tracking_id" groups="base.group_extended"/>
-                    <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                        groups="base.group_extended" 
-                        icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                    <button name="setlast_tracking" string="Put in current pack" type="object"
+                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                        groups="base.group_extended"
+                        icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
-                    <button name="setlast_tracking" string="Set Last Tracking" type="object"
-                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}" 
-                        groups="base.group_extended" 
-                        icon="terp-stock_effects-object-colorize" 
+                    <button name="%(split_into)d" string="Put in a new pack" type="action"
+                        groups="base.group_extended"
+                        icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
                     <field name="date_planned"/>
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -1611,15 +1620,16 @@
                             <field groups="base.group_extended" name="tracking_id"/>
                             <newline/>
                               <label/>
-	                            <button name="%(track_line)d" string="Split in production lots" 
+                            <button name="%(track_line)d" string="Split in production lots"
                                states="draft,waiting,confirmed,assigned"
-                              groups="base.group_extended" 
+                              groups="base.group_extended"
                               type="action" icon="terp-stock_effects-object-colorize"/>
                               <label/>
-	                            <button name="%(split_into)d" string="Split Stock Moves" type="action"
-                                groups="base.group_extended" 
-	                            	icon="terp-stock_effects-object-colorize" attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
-	                            	states="draft,assigned,confirmed,done"/>
+                               <button name="%(split_into)d" string="Put in a new pack" type="action"
+                                  groups="base.group_extended"
+                                  icon="terp-stock_effects-object-colorize"
+                                  states="draft,assigned,confirmed,done"/>
+                              <label/>
                             <separator colspan="4" string="Move State"/>
                             <field name="state"/>
                             <group col="5" colspan="2">

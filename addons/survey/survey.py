@@ -211,8 +211,8 @@ class survey_question(osv.osv):
             return {}
         val = {}
         cr.execute("select question_id, count(id) as Total_response from \
-                survey_response_line where state='done' and question_id in (%s)\
-                 group by question_id" % ",".join(map(str, map(int, ids))))
+                survey_response_line where state='done' and question_id IN %s\
+                 group by question_id" ,(tuple(ids),))
         ids1 = copy.deepcopy(ids)
         for rec in  cr.fetchall():
             ids1.remove(rec[0])

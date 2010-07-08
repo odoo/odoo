@@ -19,6 +19,6 @@
 #
 ##############################################################################
 import account_voucher_payment
-import account_voucher_unreconcile
+import wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

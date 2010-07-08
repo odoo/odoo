@@ -93,15 +93,14 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         ids = map(lambda x: x.id, accounts)
         if not len(ids):
             return 0.0
-        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount>0", (ids, date1, date2,))
+        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount>0", (tuple(ids), date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
         if not len(ids):
             return 0.0
-        ids = map(lambda x: x.id, accounts)
-        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount<0", (ids,date1, date2,))
+        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN %s AND date>=%s AND date<=%s AND amount<0", (tuple(ids),date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_balance(self, accounts, date1, date2):

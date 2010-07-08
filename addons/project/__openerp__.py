@@ -21,16 +21,21 @@
 
 
 {
-    "name" : "Project Management",
+    "name": "Project Management",
     "version": "1.1",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "analytic", "process", "mail_gateway"],
+    "author": "Tiny",
+    "website": "http://www.openerp.com",
+    "category": "Generic Modules/Projects & Services",
+    "depends": ["product", "analytic", "process", "mail_gateway","board"],
     "description": """Project management module that track multi-level projects, tasks,
 work done on tasks, eso. It is able to render planning, order tasks, eso.
+ Dashboard for project members that includes:
+    * List of my open tasks
+    * List of messages
+    * Members list of project
+    * Issues
     """,
-    "init_xml" : [],
+    "init_xml": [],
     "update_xml": [
         "security/project_security.xml",
         "wizard/project_task_delegate_view.xml",
@@ -41,12 +46,19 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
         "project_report.xml",
         "process/task_process.xml",
         "project_installer.xml",
+        "res_partner_view.xml",
         "report/project_report_view.xml",
         "wizard/project_close_task_view.xml",
+        "board_project_view.xml",
+        'board_project_manager_view.xml'
     ],
     'demo_xml': [
-        'project_demo.xml'
+        'project_demo.xml',
+        'board_project_demo.xml',
     ],
+    'test':[
+            'test/test_project.yml'
+            ],
     'installable': True,
     'active': False,
     'certificate': '0075116868317',

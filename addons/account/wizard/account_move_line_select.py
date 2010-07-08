@@ -43,7 +43,6 @@ class account_move_line_select(osv.osv_memory):
         else:
             fiscalyear_ids = [context['fiscalyear']]
 
-        fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
         fiscalyears = fiscalyear_obj.browse(cr, uid, fiscalyear_ids)
 
         period_ids = []

@@ -26,7 +26,7 @@
     'category': 'Profile',
     'description': """This module is to create Profile for Associates""",
     'author': 'Tiny',
-    'depends': ['membership', 'board_association'],
+    'depends': ['membership', 'event'],
     'update_xml': ['security/ir.model.access.csv', 'profile_association.xml'],
     'demo_xml': [],
     'installable': True,

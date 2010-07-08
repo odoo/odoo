@@ -1,9 +1,10 @@
 import pooler
 import datetime
 
-def timeformat_convert(cr, uid, time_string, context={}):
+def timeformat_convert(cr, uid, time_string, context=None):
 #    Function to convert input time string:: 8.5 to output time string 8:30
-
+        if context is None:
+            context = {}
         split_list = str(time_string).split('.')
         hour_part = split_list[0]
         mins_part = split_list[1]
@@ -18,10 +19,10 @@ def leaves_resource(cr,uid,calendar_id,resource_id=False,resource_calendar=False
         resource_leaves_pool = pool.get('resource.calendar.leaves')
         leaves = []
         if resource_id:
-            resource_leave_ids = resource_leaves_pool.search(cr,uid,['|',('calendar_id','=',calendar_id),('calendar_id','=',resource_calendar),('resource_id','=',resource_id)])
+            resource_leave_ids = resource_leaves_pool.search(cr, uid, ['|',('calendar_id','=',calendar_id),('calendar_id','=',resource_calendar),('resource_id','=',resource_id)])
         else:
-            resource_leave_ids = resource_leaves_pool.search(cr,uid,[('calendar_id','=',calendar_id),('resource_id','=',False)])
-        res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
+            resource_leave_ids = resource_leaves_pool.search(cr, uid, [('calendar_id','=',calendar_id),('resource_id','=',False)])
+        res_leaves = resource_leaves_pool.read(cr, uid, resource_leave_ids, ['date_from','date_to'])
         for leave in range(len(res_leaves)):
                 dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
                 dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
@@ -42,8 +43,8 @@ def compute_working_calendar(cr,uid,calendar_id):
         wk_time = {}
         wktime_list = []
         wktime_cal = []
-        week_ids = resource_week_pool.search(cr,uid,[('calendar_id','=',calendar_id)])
-        week_obj = resource_week_pool.read(cr,uid,week_ids,['dayofweek','hour_from','hour_to'])
+        week_ids = resource_week_pool.search(cr, uid, [('calendar_id','=',calendar_id)])
+        week_obj = resource_week_pool.read(cr, uid, week_ids, ['dayofweek','hour_from','hour_to'])
 
 #     Converting time formats into appropriate format required
 #     and creating a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
@@ -53,8 +54,8 @@ def compute_working_calendar(cr,uid,calendar_id):
                 day = wk[week['dayofweek']]
                 wk_days[week['dayofweek']] = wk[week['dayofweek']]
 
-            hour_from_str = timeformat_convert(cr,uid,week['hour_from'])
-            hour_to_str = timeformat_convert(cr,uid,week['hour_to'])
+            hour_from_str = timeformat_convert(cr, uid, week['hour_from'])
+            hour_to_str = timeformat_convert(cr, uid, week['hour_to'])
             res_str = hour_from_str + '-' + hour_to_str
             wktime_list.append((day,res_str))
 

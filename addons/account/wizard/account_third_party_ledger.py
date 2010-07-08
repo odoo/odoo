@@ -112,7 +112,7 @@ class account_partner_ledger(osv.osv_memory):
             context = {}
         sql = """
             SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql,(data['form']['date1'],))
+        cr.execute(sql, (data['form']['date1'],))
         res = cr.dictfetchall()
         if res:
             if (data['form']['date2'] > res[0]['date_stop'] or data['form']['date2'] < res[0]['date_start']):

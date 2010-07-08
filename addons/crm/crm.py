@@ -22,7 +22,7 @@
 import time
 from datetime import datetime
 from datetime import timedelta
-
+import base64
 import tools
 from osv import fields
 from osv import osv
@@ -118,15 +118,18 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values"""
         if not context:
             context = {}
-
         s = self.get_stage_dict(cr, uid, ids, context=context)
         section = self._name
+        stage = False
+        stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
                 st = case.stage_id.id  or False
                 if st in s[section]:
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
-        return True
+                    data = {'stage_id': s[section][st]}
+                    stage = s[section][st]
+                    self.write(cr, uid, [case.id], data)
+        return stage
 
     def get_stage_dict(self, cr, uid, ids, context=None):
         """This function gives dictionary for stage according to stage levels
@@ -162,12 +165,18 @@ class crm_case(object):
 
         s = self.get_stage_dict(cr, uid, ids, context=context)
         section = self._name
+        stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
                 st = case.stage_id.id or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
+                    data = {'stage_id': s[section][st]}
+                    if s[section][st]:
+                        stage = stage_pool.browse(cr, uid, s[section][st], context=context)
+                        if stage.on_change:
+                            data.update({'probability': stage.probability})
+                    self.write(cr, uid, [case.id], data)
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -181,7 +190,8 @@ class crm_case(object):
         """
         if not part:
             return {'value': {'partner_address_id': False,
-                            'email_from': False,
+                            'email_from': False, 
+                            'phone': False
                             }}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
@@ -200,11 +210,11 @@ class crm_case(object):
         if not add:
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email}}
+        return {'value': {'email_from': address.email, 'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
         mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool._history(cr, uid, cases, keyword, history=history,\
+        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
                                        message_id=message_id, attach=attach, \
@@ -332,7 +342,6 @@ class crm_case(object):
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context={}, attach=False,destination=True):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -349,38 +358,35 @@ class crm_case(object):
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
                 dest = case.section_id.reply_to
-                body = ""
-                body = case.email_last or case.description
+                body = case.description or ""
+                if case.message_ids:
+                    body = case.message_ids[0].description or ""
                 if not destination:
                     src, dest = dest, src
                     if body and case.user_id.signature:
                         body += '\n\n%s' % (case.user_id.signature)
 
                 body = self.format_body(body)
-                dest = [dest]
 
                 attach_to_send = None
 
                 if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'mailgate.thread'), ('res_id', '=', case.id)])
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
                     attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
                 # Send an email
+                subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
                 flag = tools.email_send(
                     src,
-                    dest,
-                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
+                    [dest],
+                    subject, 
                     body,
                     reply_to=case.section_id.reply_to,
                     openobject_id=str(case.id),
                     attach=attach_to_send
                 )
-                self._history(cr, uid, [case], _('Send'), history=True, email=dest, details=body, email_from=src)
-                #if flag:
-                #    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
-                #else:
-                #    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
+                self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
         return True
 
     def _check(self, cr, uid, ids=False, context={}):
@@ -465,7 +471,7 @@ class crm_case_section(osv.osv):
         level = 100
 
         while len(ids):
-            cr.execute('select distinct parent_id from crm_case_section where id =ANY(%s)', (ids,))
+            cr.execute('select distinct parent_id from crm_case_section where id IN %s', (tuple(ids),))
             ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             if not level:
                 return False
@@ -541,7 +547,7 @@ class crm_case_resource_type(osv.osv):
     _rec_name = "name"
 
     _columns = {
-        'name': fields.char('Case Resource Type', size=64, required=True, translate=True),
+        'name': fields.char('Resource Type', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }

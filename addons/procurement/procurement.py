@@ -25,6 +25,12 @@ from tools.translate import _
 import netsvc
 import time
 
+# Procurement
+# ------------------------------------------------------------------
+#
+# Produce, Buy or Find products and place a move
+#     then wizard for picking lists & move
+#
 
 class mrp_property_group(osv.osv):
     """
@@ -54,14 +60,6 @@ class mrp_property(osv.osv):
         'composition': lambda *a: 'min',
     }
 mrp_property()
-
-# ------------------------------------------------------------------
-# Procurement
-# ------------------------------------------------------------------
-#
-# Produce, Buy or Find products and place a move
-#     then wizard for picking lists & move
-#
 class procurement_order(osv.osv):
     """
     Procurement Orders
@@ -91,9 +89,6 @@ class procurement_order(osv.osv):
             " a make to order method."),
 
         'note': fields.text('Note'),
-
-        'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
-
         'message': fields.char('Latest error', size=64, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
@@ -361,7 +356,7 @@ class procurement_order(osv.osv):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
                 if not cr.fetchone()[0]:
-                    cr.execute('update procurement_order set message=%s where id=%s', (_('Stock is not enough and No minimum orderpoint rule defined'), procurement.id))
+                    cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock and no minimum orderpoint rule defined.'), procurement.id))
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):
@@ -477,7 +472,7 @@ class stock_warehouse_orderpoint(osv.osv):
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'product_max_qty': fields.float('Max Quantity', required=True,
-            help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
+            help="When the virtual stock goes belong the Max Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),

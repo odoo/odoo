@@ -44,9 +44,9 @@ class product_pricelist(report_sxw.rml_parse):
         qtys = 1
 
         for i in range(1,6):
-            if form['qty'+str(i)] > 0 and form['qty'+str(i)] not in vals.values():
-                vals['qty'+str(qtys)] = form['qty'+str(i)]
-                qtys += 1
+#            if form['qty'+str(i)] > 0 and form['qty'+str(i)] not in vals.values():
+            vals['qty'+str(qtys)] = form['qty'+str(i)]
+            qtys += 1
         lst.append(vals)
         return lst
 
@@ -55,18 +55,18 @@ class product_pricelist(report_sxw.rml_parse):
             q = 'qty%d'%i
             if form[q] >0 and form[q] not in self.quantity:
                 self.quantity.append(form[q])
-#            else:
-#                self.quantity.append(0)
+            else:
+                self.quantity.append(0)
         return True
 
     def _get_pricelist(self, pricelist_id):
         pool = pooler.get_pool(self.cr.dbname)
-        pricelist = pool.get('product.pricelist').read(self.cr,self.uid,[pricelist_id],['name'])[0]
+        pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['name'])[0]
         return pricelist['name']
 
     def _get_currency(self, pricelist_id):
         pool = pooler.get_pool(self.cr.dbname)
-        pricelist = pool.get('product.pricelist').read(self.cr,self.uid,[pricelist_id],['currency_id'])[0]
+        pricelist = pool.get('product.pricelist').read(self.cr, self.uid, [pricelist_id], ['currency_id'])[0]
         return pricelist['currency_id'][1]
 
     def _get_categories(self, products,form):
@@ -80,11 +80,11 @@ class product_pricelist(report_sxw.rml_parse):
             pro_ids.append(product.id)
             if product.categ_id.id not in cat_ids:
                 cat_ids.append(product.categ_id.id)
-        cats = pool.get('product.category').read(self.cr,self.uid,cat_ids,['name'])
+        cats = pool.get('product.category').read(self.cr, self.uid, cat_ids, ['name'])
         for cat in cats:
-            product_ids=pool.get('product.product').search(self.cr,self.uid,[('id','in',pro_ids),('categ_id','=',cat['id'])])
+            product_ids=pool.get('product.product').search(self.cr, self.uid, [('id','in',pro_ids),('categ_id','=',cat['id'])])
             products = []
-            for product in pool.get('product.product').read(self.cr,self.uid,product_ids,['name','code']):
+            for product in pool.get('product.product').read(self.cr, self.uid, product_ids, ['name','code']):
                 val={
                          'id':product['id'],
                          'name':product['name'],
@@ -93,21 +93,21 @@ class product_pricelist(report_sxw.rml_parse):
                 i = 1
                 for qty in self.quantity:
                     if qty == 0:
-                        val['qty'+str(i)] = ""
+                        val['qty'+str(i)] = 0.0
                     else:
-                        val['qty'+str(i)]=self._get_price(self.pricelist,product['id'],qty)
-                        i += 1
+                        val['qty'+str(i)]=self._get_price(self.pricelist, product['id'], qty)
+                    i += 1
                 products.append(val)
-            res.append({'name':cat['name'],'products':products})
+            res.append({'name':cat['name'],'products': products})
         return res
 
     def _get_price(self,pricelist_id, product_id,qty):
         pool = pooler.get_pool(self.cr.dbname)
-        price_dict = pool.get('product.pricelist').price_get(self.cr,self.uid,[pricelist_id],product_id,qty)
+        price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id,qty)
         if price_dict[pricelist_id]:
             price = self.formatLang(price_dict[pricelist_id])
         else:
-            res = pool.get('product.product').read(self.cr, self.uid,[product_id])
+            res = pool.get('product.product').read(self.cr, self.uid, [product_id])
             price =  self.formatLang(res[0]['list_price'])
         return price
 

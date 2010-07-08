@@ -26,9 +26,9 @@
                     <field name="company_id" invisible="1"/>
                     <field name="name" required="True"/><field name="account_no"/>
                     <field name="currency" widget="selection"/><field name="street"/>
-                    <field name="zip"/>
                     <field name="street2"/>
                     <field name="country_id"/>
+                    <field name="zip"/>
                     <field name="state_id"/>
                     <field name="city"/>
                     <field name="email"/>
@@ -67,7 +67,7 @@
 
     <record id="base_setup_company_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_setup_company"/>
-        <field name="sequence">1</field>
+        <field name="sequence">3</field>
         <field name="restart">onskip</field>
     </record>
   </data>

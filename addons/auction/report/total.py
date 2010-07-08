@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,14 +35,14 @@ class report_custom(report_rml):
     def __init__(self, name, table, tmpl, xsl):
         report_rml.__init__(self, name, table, tmpl, xsl)
 
-    def create_xml(self,cr, uid, ids, datas, context={}):
+    def create_xml(self, cr, uid, ids, datas, context={}):
         service = netsvc.LocalService("object_proxy")
 
 #       start_time = time.clock()
 
 #           lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', ids, ['obj_price','ach_pay_id','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
-        lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', ids, ['obj_price','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
-        auction = service.execute(cr.dbname,uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
+        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', ids, ['obj_price','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
+        auction = service.execute(cr.dbname, uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
 
 #       mid_time = time.clock()
 
@@ -96,7 +96,7 @@ class report_custom(report_rml):
 #       mid_time3 = time.clock()
 
         debit = adj
-        costs = service.execute(cr.dbname,uid, 'auction.lots', 'compute_seller_costs', ids)
+        costs = service.execute(cr.dbname, uid, 'auction.lots', 'compute_seller_costs', ids)
         for cost in costs:
             debit += cost['amount']
 
@@ -132,12 +132,6 @@ class report_custom(report_rml):
 
 #       file('/tmp/terp.xml','wb+').write(xml)
 #       end_time = time.clock()
-#       print "db:", mid_time-start_time
-#       print "addition:", mid_time2-mid_time
-#       print "buyer costs:", mid_time3-mid_time2
-#       print "seller costs:", mid_time4-mid_time3
-#       print "rest:", end_time-mid_time4
-#       print "total:", end_time-start_time
         return self.post_process_xml_data(cr, uid, xml, context)
 
 report_custom('report.auction.total', 'auction.lots', '', 'addons/auction/report/total.xsl')

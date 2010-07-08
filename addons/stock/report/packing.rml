@@ -253,7 +253,7 @@
             <para style="terp_default_9">[ [[ move_lines.product_id.default_code ]] ] [[ move_lines.product_id.name ]] [[ move_lines.product_id.variants or '']] </para>
           </td>
           <td>
-            <para style="terp_default_9">[[ move_lines.tracking_id and  move_lines.tracking_id.name or '' ]]</para>
+            <para style="terp_default_9">[[ (move_lines.tracking_id and move_lines.tracking_id.name) or '/' ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
@@ -281,10 +281,13 @@
     <para style="terp_default_1cm_above_space">[[ (line.state == 'done' or line.state == 'confirmed') and removeParentNode('para') ]]</para>
     <section>
       <para style="terp_default_8">[[ repeatIn([line for line in picking.move_lines if (line.state != 'assigned' )],'move_lines') ]]</para>
-      <blockTable colWidths="257.0,57.0,62.0,46.0,26.0,74.0" style="Move_Line_Content_Other_State">
+      <blockTable colWidths="197.0,68.0,61.0,57,46.0,26.0,74.0" style="Move_Line_Content_Other_State">
         <tr>
           <td>
             <para style="terp_default_9">[ [[ move_lines.product_id.default_code ]] ] [[ move_lines.product_id.name ]] [[ move_lines.product_id.variants or '']]</para>
+          </td>
+          <td>
+            <para style="terp_default_9">[[ (move_lines.tracking_id and move_lines.tracking_id.name) or '/' ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
@@ -303,15 +306,6 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_2">
-        <font color="white"> </font>
-      </para>
     </section>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>

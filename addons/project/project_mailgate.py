@@ -77,7 +77,9 @@ class project_tasks(osv.osv):
         getattr(self,act)(cr, uid, [id])
         return True
 
-    def emails_get(self, cr, uid, ids, context={}):                
+    def message_followers(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         res = []
         if isinstance(ids, (str, int, long)):
             select = [ids]

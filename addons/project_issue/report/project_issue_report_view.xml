@@ -25,11 +25,12 @@
                     <field name="date_closed" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="day" invisible="1"/>
-                    <field name="nbr" string="#Project Issue" sum='#Number of Project Issue'/>
+                    <field name="nbr" string="#Project Issues" sum='#Number of Project Issues'/>
                     <field name="delay_open" avg='Avg Opening Delay'/>
                     <field name="delay_close" avg='Avg Closing Delay'/>
                     <field name="working_hours_open" sum='Open Working Hours'/>
                     <field name="working_hours_close" sum='Close Working hours'/>
+                    <field name="email" sum='# Emails'/>
                   </tree>
             </field>
         </record>
@@ -130,7 +131,7 @@
                   </group>
                    <newline/>
                    <group  expand="0" string="Extended options..." colspan="10" col="12" groups="base.group_extended">
-                    		<field name="partner_id"  />
+                    		<field name="partner_id"/>
                     		<field name="assigned_to" widget="selection"/>
                     		<separator orientation="vertical"/>
                     		<field name="priority" />
@@ -150,7 +151,7 @@
         </record>
 
         <record id="action_project_issue_report" model="ir.actions.act_window">
-            <field name="name">Project Issue</field>
+            <field name="name">Issue Analysis</field>
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">graph,tree</field>

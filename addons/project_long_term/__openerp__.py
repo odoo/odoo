@@ -18,13 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 {
-    "name" : "Long Term Project Management",
+    "name": "Long Term Project Management",
     "version": "1.1",
-    "author" : "Tiny",
-    "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Projects & Services",
-    "depends" : ["project", "resource"],
+    "author": "Tiny",
+    "website": "http://www.openerp.com",
+    "category": "Generic Modules/Projects & Services",
+    "depends": ["project", "resource"],
     "description": """
 
         Long Term Project management module that tracks planning, scheduling, resources allocation.
@@ -36,8 +37,13 @@
             - Schedule Tasks: All the tasks which are in draft,pending and open state are scheduled with taking the phase's start date
 
     """,
-    "init_xml" : [],
-    "demo_xml" : ["project_long_term_demo.xml"],
+    "init_xml": [],
+    "demo_xml": ["project_long_term_demo.xml"],
+    "test": [
+              'test/schedule_project_phases.yml',
+              'test/schedule_project_tasks.yml',
+              'test/schedule_phase_tasks.yml'
+              ],
     "update_xml": [
         "security/ir.model.access.csv",
         "project_long_term_wizard.xml" ,

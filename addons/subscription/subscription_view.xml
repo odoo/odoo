@@ -42,6 +42,10 @@
                         <page string="Documents created">
                             <field colspan="4" name="doc_lines" nolabel="1" widget="one2many_list"/>
                         </page>
+                        <page string="Notes">
+                            <separator string="Notes" colspan="4"/>
+                            <field name="note" colspan="4" nolabel="1"/>
+                    </page>
                     </notebook>
                 </form>
             </field>
@@ -152,6 +156,9 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="document_tree"/>
         </record>
-        <menuitem action="action_document_form" id="menu_action_document_form" parent="subscription.next_id_45"/>
+        <menuitem name="Configuration" parent="base.menu_tools"
+              id="base.menu_lunch_survey_root" sequence="20" />
+        <menuitem id="config_recuuring_event" name="Recurring Events" parent="base.menu_lunch_survey_root" sequence="4"/>
+        <menuitem action="action_document_form" id="menu_action_document_form" parent="config_recuuring_event"/>
     </data>
 </openerp>

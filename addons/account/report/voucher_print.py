@@ -36,10 +36,10 @@ class report_voucher_move(report_sxw.rml_parse):
         })
  	self.user=uid
      
-    def convert(self,amount):
-    	user_id = self.pool.get('res.users').browse(self.cr, self.user,[self.user])[0]
+    def convert(self, amount):
+    	user_id = self.pool.get('res.users').browse(self.cr, self.user, [self.user])[0]
     	cur = user_id.company_id.currency_id.name
-        amt_en = amount_to_text_en.amount_to_text(amount,'en',cur);
+        amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur);
         return amt_en
     
     def debit(self, move_ids):

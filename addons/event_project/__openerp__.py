@@ -31,7 +31,7 @@
     'author': 'Tiny',
     'depends': ['project_retro_planning', 'event'],
     'init_xml': [],
-    'update_xml': ['event_wizard.xml', 'event_view.xml'],
+    'update_xml': ['wizard/event_project_view.xml', 'event_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,

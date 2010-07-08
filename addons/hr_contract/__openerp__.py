@@ -29,7 +29,6 @@
     * Martial status,
     * Security number,
     * Place of birth, birth date, ...
-
     You can assign several contracts per employee.
     """,
     'author': 'Tiny',
@@ -40,7 +39,7 @@
         'security/hr_contract_security.xml',
         'security/ir.model.access.csv',
         'hr_contract_view.xml'
-    ],
+        ],
     'demo_xml': [],
     'test': ['test/test_hr_contract.yml'],
     'installable': True,

@@ -48,67 +48,57 @@ class product_uom(osv.osv):
     _name = 'product.uom'
     _description = 'Product Unit of Measure'
 
-    def _factor(self, cursor, user, ids, name, arg, context):
+    def _factor_inv(self, cursor, user, ids, name, arg, context):
         res = {}
         for uom in self.browse(cursor, user, ids, context=context):
             if uom.factor:
-                if uom.factor_inv_data:
-                    res[uom.id] = uom.factor_inv_data
-                else:
-                    res[uom.id] = round(1 / uom.factor, 6)
+                res[uom.id] = round(1 / uom.factor, 6)
             else:
                 res[uom.id] = 0.0
         return res
 
-    def _factor_inv(self, cursor, user, id, name, value, arg, context):
-        ctx = context.copy()
-        if 'read_delta' in ctx:
-            del ctx['read_delta']
+    def _factor_inv_write(self, cursor, user, id, name, value, arg, context):
         if value:
-            data = 0.0
-            if round(1 / round(1/value, 6), 6) != value:
-                data = value
             self.write(cursor, user, id, {
                 'factor': round(1/value, 6),
-                'factor_inv_data': data,
-                }, context=ctx)
+            }, context=context)
         else:
             self.write(cursor, user, id, {
                 'factor': 0.0,
-                'factor_inv_data': 0.0,
-                }, context=ctx)
+            }, context=context)
+        return True
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
-            help="Unit of Measure of a category can be converted between each others in the same category."),
+            help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
         'factor': fields.float('Ratio', digits=(12, 6), required=True,
-            help='The coefficient for the formula:\n' \
-                    '1 (base unit) = coeff (this unit). Ratio = 1 / Factor.'),
-        'factor_inv': fields.function(_factor, digits=(12, 6),
-            method=True, string='Factor',
-            help='The coefficient for the formula:\n' \
-                    'coeff (base unit) = 1 (this unit). Factor = 1 / Rate.'),
-        'factor_inv_data': fields.float('Factor', digits=(12, 6)),
+            help='How many times this UoM is smaller than the reference UoM in this category:\n'\
+                    '1 * (reference unit) = ratio * (this unit)'),
+        'factor_inv': fields.function(_factor_inv, digits=(12, 6),
+            fnct_inv=_factor_inv_write,
+            method=True, string='Ratio',
+            help='How many times this UoM is bigger than the reference UoM in this category:\n'\
+                    '1 * (this unit) = ratio * (reference unit)', required=True),
         'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
-            help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the unit of measure without removing it."),
-        'uom_factor': fields.selection([('bigger','Bigger than the Default'),
-                                        ('smaller','Smaller than the Default'),
-                                        ('','')],'UoM Factor'),
+            help="The computed quantity will be a multiple of this value. "\
+                 "Use 1.0 for a UoM that cannot be further split, such as a piece."),
+        'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
+        'uom_type': fields.selection([('bigger','Bigger than the reference UoM'),
+                                      ('reference','Reference UoM for this category (ratio=1)'),
+                                      ('smaller','Smaller than the reference UoM')],'UoM Type', required=1),
     }
 
     _defaults = {
-        'factor': lambda *a: 1.0,
-        'factor_inv': lambda *a: 1.0,
-        'active': lambda *a: 1,
-        'rounding': lambda *a: 0.01,
-        'uom_factor': lambda *a: 'smaller',
+        'factor': 1.0,
+        'factor_inv': 1.0,
+        'active': 1,
+        'rounding': 0.01,
+        'uom_type': 'reference',
     }
 
     _sql_constraints = [
-        ('factor_gt_zero', 'CHECK (factor!=0)', 'Value of the factor can never be 0 !'),
-        ('factor_inv_data_gt_zero', 'CHECK (factor_inv_data!=0)', 'Value of the factor_inv_data can never be 0 !'),
+        ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
     ]
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
@@ -124,15 +114,9 @@ class product_uom(osv.osv):
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context={}):
         if from_unit.category_id.id <> to_unit.category_id.id:
             return qty
-        if from_unit.factor_inv_data:
-            amount = qty * from_unit.factor_inv_data
-        else:
-            amount = qty / from_unit.factor
+        amount = qty / from_unit.factor
         if to_unit:
-            if to_unit.factor_inv_data:
-                amount = rounding(amount / to_unit.factor_inv_data, to_unit.rounding)
-            else:
-                amount = rounding(amount * to_unit.factor, to_unit.rounding)
+            amount = rounding(amount * to_unit.factor, to_unit.rounding)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
@@ -145,26 +129,15 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[-1], uoms[0]
         if from_unit.category_id.id <> to_unit.category_id.id:
             return price
-        if from_unit.factor_inv_data:
-            amount = price / from_unit.factor_inv_data
-        else:
-            amount = price * from_unit.factor
+        amount = price * from_unit.factor
         if to_uom_id:
-            if to_unit.factor_inv_data:
-                amount = amount * to_unit.factor_inv_data
-            else:
-                amount = amount / to_unit.factor
+            amount = amount / to_unit.factor
         return amount
 
-    def onchange_factor_inv(self, cursor, user, ids, value):
-        if value == 0.0:
-            return {'value': {'factor': 0}}
-        return {'value': {'factor': round(1/value, 6)}}
-
-    def onchange_factor(self, cursor, user, ids, value):
-        if value == 0.0:
-            return {'value': {'factor_inv': 0}}
-        return {'value': {'factor_inv': round(1/value, 6)}}
+    def onchange_type(self, cursor, user, ids, value):
+        if value == 'reference':
+            return {'value': {'factor': 1, 'factor_inv': 1}}
+        return {}
 
 product_uom()
 
@@ -220,7 +193,7 @@ class product_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from product_category where id =ANY(%s)',(ids,))
+            cr.execute('select distinct parent_id from product_category where id IN %s',(tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -458,7 +431,7 @@ class product_product(osv.osv):
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
-        'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
+        'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
@@ -586,6 +559,7 @@ class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
     _rec_name = 'ean'
+    _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of packaging."),
         'name' : fields.text('Description', size=64),
@@ -609,7 +583,6 @@ class product_packaging(osv.osv):
         'length': fields.float('Length', help='The length of the package'),
     }
 
-    _order = 'sequence'
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):

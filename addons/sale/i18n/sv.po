@@ -1,6 +1,6 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* sale
+# 	* sale
 #
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-17 04:09+0000\n"
+"X-Launchpad-Export-Date: 2010-06-22 04:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -44,7 +44,7 @@ msgstr "Andelsföretag"
 #. module: sale
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Felaktigt namn för modell i händelsedefinitionen."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -70,8 +70,7 @@ msgid "Steps To Deliver a Sale Order"
 msgstr "Steg för att leverera en kundorder"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,qtty:0
-#: rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,qtty:0 rml:sale.order:0
 msgid "Quantity"
 msgstr "Antal"
 
@@ -81,8 +80,7 @@ msgid "You invoice has been successfully created !"
 msgstr "Fakturan har skapats!"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Automatic Declaration"
 msgstr ""
 
@@ -157,9 +155,7 @@ msgid "Manual Designation"
 msgstr "Manuell påskrift"
 
 #. module: sale
-#: view:sale.order:0
-#: field:sale.order,note:0
-#: view:sale.order.line:0
+#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
 #: field:sale.order.line,notes:0
 msgid "Notes"
 msgstr "Anteckningar"
@@ -170,8 +166,7 @@ msgid "Invoice after delivery"
 msgstr "Fakturera efter leverans"
 
 #. module: sale
-#: field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
+#: field:sale.order,amount_tax:0 field:sale.order.line,tax_id:0
 msgid "Taxes"
 msgstr "Moms"
 
@@ -208,7 +203,7 @@ msgstr "Ursprung"
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
 msgid "Invoice Address"
-msgstr "Faktura adress"
+msgstr "Fakturaadress"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
@@ -231,15 +226,14 @@ msgid "Procurement is created after confirmation of sale order."
 msgstr "Anskaffning skapas när kundordern godkönts"
 
 #. module: sale
-#: field:sale.order,project_id:0
-#: field:sale.shop,project_id:0
+#: field:sale.order,project_id:0 field:sale.shop,project_id:0
 msgid "Analytic Account"
 msgstr "Objekt"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "Moms :"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -322,8 +316,7 @@ msgid "Invoice Based on Sales Orders"
 msgstr "Fakturera utgående från kundorder"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop
-#: view:sale.shop:0
+#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
 msgid "Sale Shop"
 msgstr ""
 
@@ -338,19 +331,17 @@ msgid "Order N°"
 msgstr "Ordernummer"
 
 #. module: sale
-#: field:sale.order,order_line:0
-#: view:sale.order.line:0
+#: field:sale.order,order_line:0 view:sale.order.line:0
 msgid "Order Lines"
 msgstr "Kundorderrader"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Disc.(%)"
-msgstr "Rabatt (%)"
+msgstr "Rab.(%)"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
 msgstr "Fakturarader"
@@ -371,6 +362,9 @@ msgid ""
 "Packing list is created when 'Assign' is being clicked after confirming the "
 "sale order. This transaction moves the sale order to packing list."
 msgstr ""
+"Packlista uppstår när 'Tilldelad' klickas efter att ha bekräftat "
+"försäljningenordern. Denna transaktion flyttar försäljningsorder till "
+"plocklista."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree8
@@ -443,15 +437,13 @@ msgid "Order Reference"
 msgstr "Orderreferens"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: view:sale.order.line:0
+#: selection:sale.order,state:0 view:sale.order.line:0
 #: selection:sale.order.line,state:0
 msgid "Done"
 msgstr "Klar"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0
-#: field:sale.shop,pricelist_id:0
+#: field:sale.order,pricelist_id:0 field:sale.shop,pricelist_id:0
 msgid "Pricelist"
 msgstr "Prislista"
 
@@ -468,7 +460,7 @@ msgstr "Fakturera efter leverans"
 #. module: sale
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Ogiltig XML för Vy-arkitektur!"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
@@ -620,8 +612,7 @@ msgid "Taxes :"
 msgstr "Moms :"
 
 #. module: sale
-#: field:sale.order,invoiced_rate:0
-#: field:sale.order.line,invoiced:0
+#: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
 msgid "Invoiced"
 msgstr "Fakturerad"
 
@@ -774,8 +765,7 @@ msgid "Direct Delivery"
 msgstr "Direktleverans"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "Egenskaper"
@@ -807,8 +797,7 @@ msgstr "Beräkna"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form
-#: field:sale.order,shop_id:0
+#: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
 msgid "Shop"
 msgstr "Försäljningställe"
 
@@ -859,8 +848,7 @@ msgid "Delivery Order Only"
 msgstr "Endast leveransorder"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Sales order lines"
 msgstr "Kundorderrader"
 
@@ -875,8 +863,7 @@ msgid "Sales"
 msgstr "Kundorder"
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "Qty"
 msgstr "Antal"
 
@@ -891,8 +878,7 @@ msgid "Other data"
 msgstr "Övrig data"
 
 #. module: sale
-#: wizard_field:sale.advance_payment_inv,init,amount:0
-#: rml:sale.order:0
+#: wizard_field:sale.advance_payment_inv,init,amount:0 rml:sale.order:0
 #: field:sale.order.line,price_unit:0
 msgid "Unit Price"
 msgstr "Pris"
@@ -918,8 +904,7 @@ msgstr "Faktura"
 #: model:process.transition.action,name:sale.process_transition_action_cancel1
 #: model:process.transition.action,name:sale.process_transition_action_cancel2
 #: wizard_button:sale.advance_payment_inv,init,end:0
-#: view:sale.config.picking_policy:0
-#: view:sale.order.line:0
+#: view:sale.config.picking_policy:0 view:sale.order.line:0
 #: wizard_button:sale.order.line.make_invoice,init,end:0
 #: wizard_button:sale.order.make_invoice,init,end:0
 msgid "Cancel"
@@ -934,10 +919,13 @@ msgid ""
 "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
 "for the scheduler to run on the date 'Date Ordered'."
 msgstr ""
+"Visar status för en offert eller kundorder. Status 'undantag' sätts "
+"automatiskt om en faktura eller packlista inte kan skapas. Status 'väntar på "
+"schemalagkörning' sätts när fakturan är godkänd men väntar på den "
+"schemalagda körningen för aktuellt datum."
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "UoM"
 msgstr "Enhet"
 
@@ -978,7 +966,7 @@ msgstr "Godkänn kundordern och skapa en faktura."
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Packing List & Delivery Order"
-msgstr "Packlista och leveransorder"
+msgstr "Plocklista & Leveransorder"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1005,7 +993,7 @@ msgstr "Vill du verkligen skapa fakturor?"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
 msgid "Invoice based on packing lists"
-msgstr "Skapa fakturor utgående från packlistor"
+msgstr "Skapa fakturor baserad på plocklistor"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1049,8 +1037,7 @@ msgid "Ordering Contact"
 msgstr ""
 
 #. module: sale
-#: rml:sale.order:0
-#: field:sale.order.line,name:0
+#: rml:sale.order:0 field:sale.order.line,name:0
 msgid "Description"
 msgstr "Beskrivning"
 
@@ -1108,8 +1095,7 @@ msgstr ""
 "Namn och adress för den kontakt som beställt en kundorder eller offert."
 
 #. module: sale
-#: field:sale.order,partner_id:0
-#: field:sale.order.line,order_partner_id:0
+#: field:sale.order,partner_id:0 field:sale.order.line,order_partner_id:0
 msgid "Customer"
 msgstr "Kund"
 
@@ -1121,8 +1107,7 @@ msgstr "Inköpsprislista"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order
-#: view:sale.order:0
+#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sale Order"
 msgstr "Kundorder"
@@ -1149,8 +1134,7 @@ msgid "Total amount"
 msgstr "Totalt belopp"
 
 #. module: sale
-#: rml:sale.order:0
-#: field:sale.order,date_order:0
+#: rml:sale.order:0 field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "Orderdatum"
 
@@ -1234,8 +1218,7 @@ msgstr ""
 "fakturerats flera gånger (t ex per rad)."
 
 #. module: sale
-#: view:sale.order:0
-#: view:sale.order.line:0
+#: view:sale.order:0 view:sale.order.line:0
 msgid "States"
 msgstr "Stater"
 
@@ -1255,8 +1238,7 @@ msgid "Error: Invalid ean code"
 msgstr "Fel: felaktig ean kod"
 
 #. module: sale
-#: field:sale.order,picked_rate:0
-#: field:sale.order,shipped:0
+#: field:sale.order,picked_rate:0 field:sale.order,shipped:0
 msgid "Picked"
 msgstr "Plockad"
 
@@ -1285,3 +1267,243 @@ msgstr "Mina kundorder"
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sale Order line"
 msgstr "Kundorderrad"
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Dashboard for sales"
+msgstr "Dashboard för kundorder"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sale Dashboard"
+msgstr "Kundorder dashboard"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales of the month"
+msgstr "Försäljning denna månad"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales manager board"
+msgstr "Dashboard för försäljningschef"
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases of the month"
+msgstr "Ärenden denna månad"
+
+#. module: sale
+#: view:board.board:0
+msgid "My open quotations"
+msgstr "Mina öppna offerter"
+
+#. module: sale
+#: view:board.board:0
+msgid "Cases statistics"
+msgstr "Ärendestatistik"
+
+#. module: sale
+#: view:board.board:0
+msgid "Top ten sales of the month"
+msgstr "Top tio kundorder denna månad"
+
+#. module: sale
+#: field:report.sale.order.category,price_average:0
+#: field:report.sale.order.product,price_average:0
+msgid "Average Price"
+msgstr "Snittpris"
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_created
+msgid "Report of Created Sale Order"
+msgstr ""
+
+#. module: sale
+#: view:report.sale.order.category:0
+msgid "Sales Orders by category"
+msgstr "Kundorder per kategori"
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_6
+#: model:ir.report.custom,title:sale.ir_report_custom_6
+msgid "Monthly cumulated sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_product
+msgid "Sales Orders by Products"
+msgstr "Kundorder per produkt"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu1
+msgid "Monthly Sales Turnover Over One Year"
+msgstr "Månatlig omsättning  för ett år"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_product_tree
+#: model:ir.model,name:sale.model_report_turnover_per_product
+#: view:report.turnover.per.product:0
+msgid "Turnover Per Product"
+msgstr "Omsättning per produkt"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_82
+msgid "All Months"
+msgstr "Alla månader"
+
+#. module: sale
+#: field:report.sale.order.category,price_total:0
+#: field:report.sale.order.product,price_total:0
+msgid "Total Price"
+msgstr "Totalt belopp"
+
+#. module: sale
+#: model:ir.model,name:sale.model_report_sale_order_category
+msgid "Sales Orders by Categories"
+msgstr "Kundorder per kategorier"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_sale_list
+#: model:ir.ui.menu,name:sale.menu_report_order_sale_list
+msgid "Sales of the Month"
+msgstr "Försäljning för månaden"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_product
+msgid "Sales by Product (this month)"
+msgstr "Försäljning per produkt (denna månad)"
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_4
+#: model:ir.report.custom,title:sale.ir_report_custom_4
+msgid "Monthly sales turnover over one year"
+msgstr "Månatlig omsättning för ett år"
+
+#. module: sale
+#: model:ir.module.module,shortdesc:sale.module_meta_information
+msgid "Sales Management - Reporting"
+msgstr "Kunderorder - rapporter"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_category_all
+#: view:report.sale.order.category:0
+msgid "Sales by Category of Products"
+msgstr "Försäljning per produktkategori"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu3
+msgid "Monthly Cumulated Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,quantity:0
+#: field:report.sale.order.product,quantity:0
+msgid "# of Products"
+msgstr "st produkter"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_product_tree_all
+#: model:ir.ui.menu,name:sale.menu_report_order_product_all
+#: view:report.sale.order.product:0
+msgid "Sales by Product"
+msgstr "Försäljning per produkt"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_81
+msgid "This Month"
+msgstr "Denna månad"
+
+#. module: sale
+#: field:report.sale.order.category,category_id:0
+msgid "Categories"
+msgstr "Kategorier"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_view_created_sale_order_dashboard
+msgid "Created Sale Orders"
+msgstr "Skapade kundorder"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_80
+msgid "Reporting"
+msgstr "Rapportering"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_turnover_month_tree
+#: model:ir.model,name:sale.model_report_turnover_per_month
+#: view:report.turnover.per.month:0
+msgid "Turnover Per Month"
+msgstr "Omsättning per månad"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.ir_ui_menu2
+msgid "Daily Sales Turnover Over One Year"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.next_id_83
+msgid "Graphs"
+msgstr "Diagram"
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "Manual in progress"
+msgstr ""
+
+#. module: sale
+#: field:report.turnover.per.month,turnover:0
+#: field:report.turnover.per.product,turnover:0
+msgid "Total Turnover"
+msgstr "Total omsättning"
+
+#. module: sale
+#: selection:report.sale.order.category,state:0
+#: selection:report.sale.order.product,state:0
+msgid "In progress"
+msgstr "Pågående"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_category_tree
+#: model:ir.ui.menu,name:sale.menu_report_order_category
+msgid "Sales by Category of Product (this month)"
+msgstr "Försäljning per produktkategori (denna månad)"
+
+#. module: sale
+#: model:ir.report.custom,name:sale.ir_report_custom_5
+#: model:ir.report.custom,title:sale.ir_report_custom_5
+msgid "Daily sales turnover over one year"
+msgstr ""
+
+#. module: sale
+#: field:report.sale.order.category,name:0
+#: field:report.sale.order.product,name:0
+#: field:report.turnover.per.month,name:0
+msgid "Month"
+msgstr "Månad"
+
+#. module: sale
+#: field:report.sale.order.category,count:0
+#: field:report.sale.order.product,count:0
+msgid "# of Lines"
+msgstr "rader"
+
+#. module: sale
+#: field:report.sale.order.created,create_date:0
+msgid "Create Date"
+msgstr "Skapad datum"
+
+#. module: sale
+#: view:report.sale.order.created:0
+msgid "Created Sales orders"
+msgstr "Skapade kundorder"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_so_pipeline
+#: view:sale.order:0
+msgid "Sales by State"
+msgstr "Försäljning per stat"

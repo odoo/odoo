@@ -20,13 +20,8 @@
 ##############################################################################
 
 from osv import osv,fields
-import tools
-import netsvc
-from mx import DateTime
-import time
 import datetime
 from tools.translate import _
-
 
 def strToDate(dt):
         dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
@@ -72,7 +67,7 @@ class account_budget_post_dotation(osv.osv):
         res={}
         for line in self.browse(cr, uid, ids):
             if line.period_id:
-                obj_period=self.pool.get('account.period').browse(cr, uid,line.period_id.id)
+                obj_period=self.pool.get('account.period').browse(cr, uid, line.period_id.id)
 
                 total_days=strToDate(obj_period.date_stop) - strToDate(obj_period.date_start)
                 budget_id=line.post_id and line.post_id.id or False
@@ -84,7 +79,7 @@ class account_budget_post_dotation(osv.osv):
 
                 tot_planned=0.00
                 for record in res1:
-                    obj_lines = self.pool.get('crossovered.budget.lines').browse(cr, uid,record[0])
+                    obj_lines = self.pool.get('crossovered.budget.lines').browse(cr, uid, record[0])
                     count_days = min(strToDate(obj_period.date_stop),strToDate(obj_lines.date_to)) - max(strToDate(obj_period.date_start), strToDate(obj_lines.date_from))
                     days_in_period = count_days.days +1
                     count_days = strToDate(obj_lines.date_to) - strToDate(obj_lines.date_from)
@@ -102,7 +97,7 @@ class account_budget_post_dotation(osv.osv):
         'post_id': fields.many2one('account.budget.post', 'Item', select=True),
         'period_id': fields.many2one('account.period', 'Period'),
         'amount': fields.float('Amount', digits=(16,2)),
-        'tot_planned':fields.function(_tot_planned,method=True, string='Total Planned Amount',type='float',store=True),
+        'tot_planned':fields.function(_tot_planned, method=True, string='Total Planned Amount', type='float', store=True),
     }
 
 account_budget_post_dotation()
@@ -114,25 +109,18 @@ class crossovered_budget(osv.osv):
     _columns = {
         'name': fields.char('Name', size=50, required=True,states={'done':[('readonly',True)]}),
         'code': fields.char('Code', size=20, required=True,states={'done':[('readonly',True)]}),
-        'creating_user_id': fields.many2one('res.users','Responsible User'),
-        'validating_user_id': fields.many2one('res.users','Validate User', readonly=True),
-        'date_from': fields.date('Start Date',required=True,states={'done':[('readonly',True)]}),
-        'date_to': fields.date('End Date',required=True,states={'done':[('readonly',True)]}),
+        'creating_user_id': fields.many2one('res.users', 'Responsible User'),
+        'validating_user_id': fields.many2one('res.users', 'Validate User', readonly=True),
+        'date_from': fields.date('Start Date', required=True, states={'done':[('readonly',True)]}),
+        'date_to': fields.date('End Date', required=True, states={'done':[('readonly',True)]}),
         'state' : fields.selection([('draft','Draft'),('confirm','Confirmed'),('validate','Validated'),('done','Done'),('cancel', 'Cancelled')], 'Status', select=True, required=True, readonly=True),
-        'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines',states={'done':[('readonly',True)]} ),
+        'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines', states={'done':[('readonly',True)]} ),
     }
 
     _defaults = {
         'state': lambda *a: 'draft',
         'creating_user_id': lambda self,cr,uid,context: uid,
     }
-
-#   def action_set_to_draft(self, cr, uid, ids, *args):
-#       self.write(cr, uid, ids, {'state': 'draft'})
-#       wf_service = netsvc.LocalService('workflow')
-#       for id in ids:
-#           wf_service.trg_create(uid, self._name, id, cr)
-#       return True
 
     def budget_confirm(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
@@ -186,10 +174,10 @@ class crossovered_budget_lines(osv.osv):
             res[line.id] = result
         return res
 
-    def _prac(self, cr, uid, ids,name,args,context):
+    def _prac(self, cr, uid, ids, name, args, context):
         res={}
         for line in self.browse(cr, uid, ids):
-            res[line.id]=self._prac_amt(cr,uid,[line.id],context=context)[line.id]
+            res[line.id]=self._prac_amt(cr, uid, [line.id], context=context)[line.id]
 
         return res
 
@@ -223,14 +211,14 @@ class crossovered_budget_lines(osv.osv):
             res[line.id]=theo_amt
         return res
 
-    def _theo(self, cr, uid, ids,name,args,context):
+    def _theo(self, cr, uid, ids, name, args, context):
         res={}
         for line in self.browse(cr, uid, ids):
-            res[line.id]=self._theo_amt(cr,uid,[line.id],context=context)[line.id]
+            res[line.id]=self._theo_amt(cr, uid, [line.id], context=context)[line.id]
 
         return res
 
-    def _perc(self, cr, uid, ids,name,args,context):
+    def _perc(self, cr, uid, ids, name, args, context):
         res = {}
         for line in self.browse(cr, uid, ids):
             if line.theoritical_amount<>0.00:
@@ -244,13 +232,13 @@ class crossovered_budget_lines(osv.osv):
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account',required=True),
         'general_budget_id': fields.many2one('account.budget.post', 'Budgetary Position',required=True),
-        'date_from': fields.date('Start Date',required=True),
-        'date_to': fields.date('End Date',required=True),
+        'date_from': fields.date('Start Date', required=True),
+        'date_to': fields.date('End Date', required=True),
         'paid_date': fields.date('Paid Date'),
-        'planned_amount':fields.float('Planned Amount',required=True,digits=(16,2)),
-        'practical_amount':fields.function(_prac,method=True, string='Practical Amount',type='float',digits=(16,2)),
-        'theoritical_amount':fields.function(_theo,method=True, string='Theoritical Amount',type='float',digits=(16,2)),
-        'percentage':fields.function(_perc,method=True, string='Percentage',type='float'),
+        'planned_amount':fields.float('Planned Amount', required=True, digits=(16,2)),
+        'practical_amount':fields.function(_prac, method=True, string='Practical Amount', type='float', digits=(16,2)),
+        'theoritical_amount':fields.function(_theo, method=True, string='Theoritical Amount', type='float', digits=(16,2)),
+        'percentage':fields.function(_perc, method=True, string='Percentage', type='float'),
     }
 crossovered_budget_lines()
 

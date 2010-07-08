@@ -29,7 +29,7 @@
             <field name="arch" type="xml">
                 <form string="Helpdesk Support">
                     <group colspan="4" col="7">
-                        <field name="name" select="1"/>
+                        <field name="name" select="1" string="Query"/>
                         <field name="section_id" widget="selection"/>
                         <field name="user_id" select="1"/>
                         <button name="remind_user"
@@ -71,62 +71,27 @@
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1"/>
-                                <button name="case_close"
-                                states="open,draft,pending" string="Close"
-                                type="object" icon="gtk-close" />
                                 <button name="case_open"
-                                states="draft,pending" string="Open"
-                                type="object" icon="gtk-go-forward" />
-                                <button name="case_cancel"
-                                states="draft,open,pending" string="Cancel"
-                                type="object" icon="gtk-cancel" />
+                                    states="draft,pending" string="Open"
+                                    type="object" icon="gtk-go-forward" />
                                 <button name="case_pending"
-                                states="draft,open" string="Pending"
-                                type="object" icon="gtk-media-pause" />
+                                    states="draft,open" string="Pending"
+                                    type="object" icon="gtk-media-pause" />
                                 <button name="case_escalate"
-                                states="open,draft,pending"
-                                string="Escalate" type="object"
-                                icon="gtk-go-up" />
+                                    states="open,draft,pending"
+                                    string="Escalate" type="object"
+                                    icon="gtk-go-up" />
+                                <button name="case_close"
+                                    states="open,draft,pending" string="Close"
+                                    type="object" icon="gtk-jump-to" />
+                                <button name="case_cancel"
+                                    states="draft,open,pending" string="Cancel"
+                                    type="object" icon="gtk-cancel" />
                                 <button name="case_reset"
-                                states="done,cancel"
-                                string="Reset to Draft" type="object"
-                                icon="gtk-convert" />
+                                    states="done,cancel"
+                                    string="Reset to Draft" type="object"
+                                    icon="gtk-convert" />
                             </group>
-                        </page>
-                        <page string="History" groups="base.group_extended">
-                            <group colspan="2" col="2">
-                                <separator colspan="4" string="Dates"/>
-                                <field name="create_date"/>
-                                <field name="date_closed"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator colspan="4" string="Misc"/>
-                                <field name="id" select="1"/>
-                                <field name="active"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator colspan="4" string="Estimates"/>
-                                <field name="planned_cost"/>
-                            </group>
-                            <newline/>
-                            <group colspan="4" col="2">
-                                <separator colspan="4" string="References"/>
-                                <field colspan="4" name="ref"/>
-                                <field colspan="4" name="ref2"/>
-                            </group>
-                            <field colspan="4" name="log_ids" nolabel="1">
-                                <tree string="Logs">
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </tree>
-                                <form string="Logs">
-                                    <separator string="Action Information" colspan="4"/>
-                                    <field name="name" colspan="4"/>
-                                    <field name="date"/>
-                                    <field name="user_id"/>
-                                </form>
-                            </field>
                         </page>
                         <page string="Emails" groups="base.group_extended">
                             <group colspan="4">
@@ -165,6 +130,41 @@
                                 context="{'mail':'new', 'model': 'crm.helpdesk'}"
                                 icon="gtk-go-forward" type="action" />
                         </page>
+                        <page string="History" groups="base.group_extended">
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Dates"/>
+                                <field name="create_date"/>
+                                <field name="date_closed"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Misc"/>
+                                <field name="id" select="1"/>
+                                <field name="active"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator colspan="4" string="Estimates"/>
+                                <field name="planned_cost"/>
+                            </group>
+                            <newline/>
+                            <group colspan="4" col="2">
+                                <separator colspan="4" string="References"/>
+                                <field colspan="4" name="ref"/>
+                                <field colspan="4" name="ref2"/>
+                            </group>
+                            <field colspan="4" name="log_ids" nolabel="1">
+                                <tree string="Logs">
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </tree>
+                                <form string="Logs">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
+                                </form>
+                            </field>
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -179,24 +179,18 @@
             <field name="arch" type="xml">
                 <tree string="Helpdesk Support Tree"
                     colors="black:state=='open';blue:state=='pending';grey:state in ('cancel','close')">
-                    <field name="id"/>
-                    <field name="name" string="Query Description" />
+                    <field name="name" string="Query" />
                     <field name="partner_id" string="Partner"/>
                     <field name="date" string="Date"/>
                     <field name="date_deadline"/>
                     <field name="user_id"/>
                     <field name="section_id"/>
                     <field name="priority"/>
+                    <field name="som" invisible="1"/>
                     <field name="state"/>
-                    <button name="case_close" string="Done"
-                        states="open,draft,pending" type="object"
-                        icon="gtk-close" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_pending" string="Pending"
                         states="draft,open" type="object"
                         icon="gtk-media-pause" />
@@ -204,6 +198,12 @@
                         groups="base.group_extended"
                         states="open,draft,pending" type="object"
                         icon="gtk-go-up" />
+                    <button name="case_close" string="Done"
+                        states="open,draft,pending" type="object"
+                        icon="gtk-close" />
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
@@ -255,12 +255,30 @@
                     </field>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Customer" icon="terp-personal"
-                            domain="[]" context="{'group_by':'partner_id'}" />
+                        <filter string="Partner" icon="terp-partner"
+                           domain="[]" help="Partner"
+                           context="{'group_by':'partner_id'}" />
+                        <filter string="Responsible" icon="terp-personal"
+                           domain="[]" help="Responsible User"
+                           context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+"
+                           domain="[]" help="Sales Team"
+                           context="{'group_by':'section_id'}" />
+                        <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
                             context="{'group_by':'state'}" />
                         <filter string="Priority" icon="terp-rating-rated"
                             domain="[]" context="{'group_by':'priority'}" />
+                        <filter string="State of Mind"
+                            icon="terp-face-plain"
+                            domain="[]" context="{'group_by':'som'}" />
+                        <separator orientation="vertical"/>
+                        <filter string="Date" icon="terp-go-month"
+                           domain="[]" help="Request Date"
+                           context="{'group_by':'date'}" />
+                       <filter string="Deadline" icon="terp-go-month"
+                           domain="[]"
+                           context="{'group_by':'date_deadline'}" />
                     </group>
                 </search>
             </field>

@@ -147,7 +147,7 @@ class mrp_repair(osv.osv):
         'deliver_bool': lambda *a: True,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
-        'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr,uid,[('type','=','sale')])[0]
+        'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr, uid, [('type','=','sale')])[0]
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -344,7 +344,7 @@ class mrp_repair(osv.osv):
                         'origin': invoice.origin+', '+repair.name,
                         'comment':(comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
                     }
-                    invoice_obj.write(cr, uid, [inv_id], invoice_vals, context=context)
+                    inv_obj.write(cr, uid, [inv_id], invoice_vals, context=context)
                 else:
                     if not repair.partner_id.property_account_receivable:
                         raise osv.except_osv(_('Error !'), _('No account defined for partner "%s".') % repair.partner_id.name )

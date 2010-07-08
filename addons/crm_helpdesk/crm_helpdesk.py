@@ -21,6 +21,7 @@
 
 from crm import crm
 from osv import fields, osv
+import time
 
 class crm_helpdesk(osv.osv, crm.crm_case):
     """ Helpdesk Cases """
@@ -28,10 +29,8 @@ class crm_helpdesk(osv.osv, crm.crm_case):
     _name = "crm.helpdesk"
     _description = "Helpdesk Cases"
     _order = "id desc"
-    _inherits = {'mailgate.thread': 'thread_id'}
-
+    _inherit = ['mailgate.thread']
     _columns = {
-            'thread_id': fields.many2one('mailgate.thread', 'Thread', required=False), 
             'id': fields.integer('ID', readonly=True), 
             'name': fields.char('Name', size=128, required=True), 
             'active': fields.boolean('Active', required=False), 
@@ -77,7 +76,9 @@ class crm_helpdesk(osv.osv, crm.crm_case):
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
+                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+            'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)]),
+            'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
     }
 
     _defaults = {
@@ -87,6 +88,7 @@ class crm_helpdesk(osv.osv, crm.crm_case):
         'partner_address_id': crm.crm_case._get_default_partner_address, 
         'email_from': crm.crm_case. _get_default_email, 
         'state': lambda *a: 'draft', 
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': crm.crm_case. _get_section, 
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c), 
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 

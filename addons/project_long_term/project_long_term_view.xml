@@ -107,23 +107,7 @@
                                 <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                             </group>
                         </page>
-                        <page string="Other Info">
-                           <group colspan="2" col="2">
-                                <separator string="Constraints" colspan="2"/>
-                                <field name="constraint_date_start"/>
-                                <field name="constraint_date_end"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator string="Scheduling" colspan="2"/>
-                                <field name="sequence"/>
-                            </group>
-                           <separator colspan="4" string="Previous Phases"/>
-                           <field colspan="4" name="previous_phase_ids" nolabel="1"/>
-                           <separator colspan="4" string="Next Phases"/>
-                           <field colspan="4" name="next_phase_ids" nolabel="1"/>
-                        </page>
                         <page string="Task Detail">
-                            <separator colspan="4" string="Project's Tasks"/>
                             <field colspan="4" name="task_ids" context="{'default_project_id' :project_id}" nolabel="1">
                                  <tree editable="bottom" string="Project's Tasks">
                                     <field name="name"/>
@@ -157,6 +141,21 @@
                                   </form>
                              </field>
                                <button name="%(action_project_schedule_tasks)d" string="Schedule Tasks" type="action" icon="gtk-jump-to"/>
+                        </page>
+                        <page string="Other Info">
+                           <group colspan="2" col="2">
+                                <separator string="Constraints" colspan="2"/>
+                                <field name="constraint_date_start"/>
+                                <field name="constraint_date_end"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Scheduling" colspan="2"/>
+                                <field name="sequence"/>
+                            </group>
+                           <separator colspan="4" string="Previous Phases"/>
+                           <field colspan="4" name="previous_phase_ids" nolabel="1"/>
+                           <separator colspan="4" string="Next Phases"/>
+                           <field colspan="4" name="next_phase_ids" nolabel="1"/>
                         </page>
                     </notebook>
                     <newline/>
@@ -247,6 +246,16 @@
              <field name="context">{'search_default_responsible_id':uid}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
+
+        <record id="act_project_phase_list" model="ir.actions.act_window">
+            <field name="name">Project Phases</field>
+            <field name="res_model">project.phase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+ 			<field name="context">{'search_default_responsible_id':uid}</field>
+            <field name="search_view_id" ref="view_project_phase_search"/>
+        </record>
+
 
     # ------------------------------------------------------
     # Project

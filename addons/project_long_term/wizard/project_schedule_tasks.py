@@ -40,6 +40,8 @@ class project_schedule_task(osv.osv_memory):
                 }
 
     def default_get(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         res = super(project_schedule_task, self).default_get(cr, uid, fields_list, context)
         self.compute_date(cr, uid, context=context)
         return res
@@ -70,6 +72,8 @@ class project_schedule_task(osv.osv_memory):
         return resource_objs
 
     def compute_date(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         """
         Schedule the tasks according to resource available and priority.
         """
@@ -131,9 +135,9 @@ class project_schedule_task(osv.osv_memory):
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
                     if each_task.user_id:
-                       for resource in resources:
-                            if resource.__name__ == each_task.user_id.name:
-                               task = create_tasks(i, hours, priorty, resource)
+                       for resrce in resources:
+                            if resrce.__name__ == each_task.user_id.name:
+                               task = create_tasks(i, hours, priorty, resrce)
                     else:
                         task = create_tasks(i, hours, priorty)
                     i += 1
@@ -152,7 +156,7 @@ class project_schedule_task(osv.osv_memory):
                                                                     'date_end': e_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                     'user_id': user_id[0]},
                                                                     context=ctx)
-                loop_no +=1
+                loop_no += 1
         return {}
 
 project_schedule_task()

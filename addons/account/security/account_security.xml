@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><openerp><data noupdate="0">
+<?xml version="1.0" encoding="utf-8"?>
+<openerp><data>
 
     <record id="group_account_invoice" model="res.groups">
         <field name="name">Finance / Invoice</field>
@@ -24,7 +25,11 @@
         <field eval="[(6,0,[ref('group_account_manager')])]" name="groups_id"/>
     </record>
 
-    <record id="menu_finance_invoice" model="ir.ui.menu">
+    <record id="menu_finance_receivables" model="ir.ui.menu">
+        <field eval="[(6,0,[ref('group_account_invoice')])]" name="groups_id"/>
+    </record>
+
+    <record id="menu_finance_payables" model="ir.ui.menu">
         <field eval="[(6,0,[ref('group_account_invoice')])]" name="groups_id"/>
     </record>
 

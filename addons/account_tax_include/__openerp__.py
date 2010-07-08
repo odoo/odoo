@@ -35,8 +35,10 @@ This module implement the modification on the invoice form.
     'init_xml': [],
     'update_xml': ['account_tax_include_view.xml'],
     'demo_xml': [],
+    'test': ['test/account_tax_include.yml'],
     'installable': True,
     'active': False,
     'certificate': '0070514190381',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -99,7 +99,7 @@
 
                             <group colspan="2" col="2" name="status">
                                 <separator string="Status" colspan="2"/>
-                                <field name="categ_id" select="1" groups="base.group_extended"/>
+                                <field name="categ_id" select="1"/>
                                 <field name="state"/>
                                 <field groups="base.group_extended" name="product_manager"/>
                             </group>
@@ -251,6 +251,11 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
         </record>
+        <menuitem
+            action="product_category_action"
+            id="product.menu_products_category"
+            parent="base.menu_product"
+            sequence="0"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Products Categories</field>
             <field name="type">ir.actions.act_window</field>
@@ -293,7 +298,6 @@
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="factor"/>
-                    <field name="factor_inv"/>
                     <field name="rounding"/>
                 </tree>
             </field>
@@ -305,14 +309,31 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Units of Measure">
-                    <field name="name" select="1"/>
-                    <field name="category_id" select="1"/>
-                    <field name="factor" select="1" attrs="{'readonly':[('uom_factor','=','bigger')]}"/>
-                    <field name="factor_inv_data" select="1" string="Factor Data" attrs="{'readonly':[('uom_factor','=','smaller')]}"/>
-                    <field name="factor_inv" invisible="1"/>
-                    <field name="rounding"/>
-                    <field name="uom_factor"/>
-                    <field name="active"/>
+                    <group col="6" colspan="4">
+                        <group col="2"  colspan="2">
+                            <separator string="Unit of Measure Properties" colspan="4"/>
+                            <field name="name" select="1"/>
+                            <field name="category_id" select="1" widget="selection"/>
+                            <field name="active"/>
+                        </group>
+                        <group col="4"  colspan="4">
+                            <separator string="Ratio &amp; Precision" colspan="4"/>
+                            <group colspan="2" col="2">
+                                 <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                                 <field name="rounding"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                  <group col="2" colspan="2" attrs="{'invisible':[('uom_type','!=','smaller')]}">
+                                        <field name="factor"/>
+                                        <label colspan="2" string="  e.g: 1 * (reference unit) = ratio * (this unit)"/>
+                                   </group>
+                                   <group col="2" colspan="2" attrs="{'invisible':[('uom_type','!=','bigger')]}">
+                                        <field name="factor_inv"/>
+                                        <label colspan="2"  string="  e.g: 1 * (this unit) = ratio * (reference unit)"/>
+                                   </group>
+                            </group>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>

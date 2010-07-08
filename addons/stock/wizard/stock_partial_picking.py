@@ -34,11 +34,11 @@ class stock_partial_picking(osv.osv_memory):
 
     def view_init(self, cr, uid, fields_list, context=None):
         res = super(stock_partial_picking, self).view_init(cr, uid, fields_list, context=context)
-        pick_obj = self.pool.get('stock.picking')        
+        pick_obj = self.pool.get('stock.picking')
         if not context:
             context={}
         moveids = []
-        for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):            
+        for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
                     continue
@@ -54,17 +54,18 @@ class stock_partial_picking(osv.osv_memory):
                         self._columns['move%s_product_price'%(m.id)] = fields.float("Price")
                     if 'move%s_product_currency'%(m.id) not in self._columns:
                         self._columns['move%s_product_currency'%(m.id)] = fields.many2one('res.currency',string="Currency")
-        return res   
+        return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
-        result = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)        
+        result = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
         pick_obj = self.pool.get('stock.picking')
-        picking_ids = context.get('active_ids', False) 
+        picking_ids = context.get('active_ids', False)
         _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
-                    	<field name="date" colspan="4" />
+                    	<field name="date" />
+                    	<separator colspan="4"/>
                         <separator colspan="4" string="Move Detail"/>
-                    	"""
+                        """
         _moves_fields = result['fields']
         if picking_ids and view_type in ['form']:
             for pick in pick_obj.browse(cr, uid, picking_ids, context):
@@ -74,32 +75,32 @@ class stock_partial_picking(osv.osv_memory):
                     _moves_fields.update({
                         'move%s_product_id'%(m.id)  : {
                                     'string': _('Product'),
-                                    'type' : 'many2one', 
-                                    'relation': 'product.product', 
-                                    'required' : True, 
-                                    'readonly' : True,                                    
+                                    'type' : 'many2one',
+                                    'relation': 'product.product',
+                                    'required' : True,
+                                    'readonly' : True,
                                     },
                         'move%s_product_qty'%(m.id) : {
                                     'string': _('Quantity'),
                                     'type' : 'float',
-                                    'required': True,                                    
+                                    'required': True,
                                     },
                         'move%s_product_uom'%(m.id) : {
                                     'string': _('Product UOM'),
-                                    'type' : 'many2one', 
-                                    'relation': 'product.uom', 
-                                    'required' : True, 
-                                    'readonly' : True,                                    
+                                    'type' : 'many2one',
+                                    'relation': 'product.uom',
+                                    'required' : True,
+                                    'readonly' : True,
                                     }
-                    })                
-                    
+                    })
+
                     _moves_arch_lst += """
                         <group colspan="4" col="10">
                         <field name="move%s_product_id" nolabel="1"/>
                         <field name="move%s_product_qty" string="Qty" />
                         <field name="move%s_product_uom" nolabel="1" />
                     """%(m.id, m.id, m.id)
-                    if (m.product_id.cost_method == 'average'):                        
+                    if (m.product_id.cost_method == 'average'):
                         _moves_fields.update({
                             'move%s_product_price'%(m.id) : {
                                     'string': _('Price'),
@@ -107,9 +108,9 @@ class stock_partial_picking(osv.osv_memory):
                                     },
                             'move%s_product_currency'%(m.id): {
                                     'string': _('Currency'),
-                                    'type' : 'float',      
-                                    'type' : 'many2one', 
-                                    'relation': 'res.currency',                                    
+                                    'type' : 'float',
+                                    'type' : 'many2one',
+                                    'relation': 'res.currency',
                                     }
                         })
                         _moves_arch_lst += """
@@ -123,14 +124,14 @@ class stock_partial_picking(osv.osv_memory):
                 <separator string="" colspan="4" />
                 <label string="" colspan="2"/>
                 <group col="2" colspan="2">
-        		<button icon='gtk-cancel' special="cancel"
-        			string="_Cancel" />
-        		<button name="do_partial" string="_Deliver"
-        			colspan="1" type="object" icon="gtk-apply" />
-        	</group>                	
+                <button icon='gtk-cancel' special="cancel"
+                    string="_Cancel" />
+                <button name="do_partial" string="_Validate"
+                    colspan="1" type="object" icon="gtk-apply" />
+            </group>
         </form>"""
         result['arch'] = _moves_arch_lst
-        result['fields'] = _moves_fields           
+        result['fields'] = _moves_fields
         return result
 
     def default_get(self, cr, uid, fields, context=None):
@@ -138,13 +139,13 @@ class stock_partial_picking(osv.osv_memory):
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values 
-        @param context: A standard dictionary 
-        @return: A dictionary which of fields with values. 
-        """ 
+        @param fields: List of fields for which we want default values
+        @param context: A standard dictionary
+        @return: A dictionary which of fields with values.
+        """
 
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
-        pick_obj = self.pool.get('stock.picking')        
+        pick_obj = self.pool.get('stock.picking')
         if not context:
             context={}
         moveids = []
@@ -178,22 +179,22 @@ class stock_partial_picking(osv.osv_memory):
                         res['move%s_product_price'%(m.id)] = price
                     if 'move%s_product_currency'%(m.id) in fields:
                         res['move%s_product_currency'%(m.id)] = currency
-        return res   
+        return res
 
-    def do_partial(self, cr, uid, ids, context): 
+    def do_partial(self, cr, uid, ids, context):
         """ Makes partial moves and pickings done.
         @param self: The object pointer.
         @param cr: A database cursor
         @param uid: ID of the user currently logged in
-        @param fields: List of fields for which we want default values 
-        @param context: A standard dictionary 
-        @return: A dictionary which of fields with values. 
-        """    
-        pick_obj = self.pool.get('stock.picking')    
+        @param fields: List of fields for which we want default values
+        @param context: A standard dictionary
+        @return: A dictionary which of fields with values.
+        """
+        pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context)
         partial_datas = {
-            'delivery_date' : partial.date         
+            'delivery_date' : partial.date
         }
         for pick in pick_obj.browse(cr, uid, picking_ids):
             for m in pick.move_lines:
@@ -205,15 +206,15 @@ class stock_partial_picking(osv.osv_memory):
                     'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id)).id
                 }
 
-                if (m.product_id.cost_method == 'average'):   
-                    partial_datas['move%s'%(m.id)].update({             
+                if (m.product_id.cost_method == 'average'):
+                    partial_datas['move%s'%(m.id)].update({
                         'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
                         'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id
-                    })          
+                    })
         res = pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
         return {}
- 
-stock_partial_picking()    
+
+stock_partial_picking()
 
 
 
