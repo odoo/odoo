@@ -2560,8 +2560,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Bank Journals
-        view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Cash Journal View')])[0]
-        view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Multi-Currency Cash Journal View')])[0]
+        view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: why put  fix name
+        view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fix name
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
         current_num = 1
