@@ -1080,20 +1080,36 @@ class orm_template(object):
             res.extend(self.pool.get(parent).fields_get_keys(cr, user, fields, context))
         return res
 
-    def fields_get(self, cr, user, fields=None, context=None, read_access=True):
+    def fields_get(self, cr, user, allfields=None, context=None, read_access=True):
         if context is None:
             context = {}
         res = {}
         translation_obj = self.pool.get('ir.translation')
         model_access_obj = self.pool.get('ir.model.access')
         for parent in self._inherits:
-            res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
+            res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
 
         if self._columns.keys():
             for f in self._columns.keys():
-                if fields and f not in fields:
+                if allfields and f not in allfields:
                     continue
                 res[f] = {'type': self._columns[f]._type}
+                # This additional attributes for M2M and function field is added
+                # because we need to display tooltip with this additional information
+                # when client is started in debug mode.
+                if isinstance(self._columns[f], fields.function):
+                    res[f]['function'] = self._columns[f]._fnct and self._columns[f]._fnct.func_name or False
+                    res[f]['store'] = self._columns[f].store
+                    if isinstance(self._columns[f].store, dict):
+                        res[f]['store'] = str(self._columns[f].store)
+                    res[f]['fnct_search'] = self._columns[f]._fnct_search and self._columns[f]._fnct_search.func_name or False
+                    res[f]['fnct_inv'] = self._columns[f]._fnct_inv and self._columns[f]._fnct_inv.func_name or False
+                    res[f]['fnct_inv_arg'] = self._columns[f]._fnct_inv_arg or False
+                    res[f]['func_obj'] = self._columns[f]._obj or False
+                    res[f]['func_method'] = self._columns[f]._method
+                if isinstance(self._columns[f], fields.many2many):
+                    res[f]['related_columns'] = list((self._columns[f]._id1, self._columns[f]._id2))
+                    res[f]['third_table'] = self._columns[f]._rel
                 for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
                         'change_default', 'translate', 'help', 'select', 'selectable'):
                     if getattr(self._columns[f], arg):
@@ -1136,10 +1152,10 @@ class orm_template(object):
             #TODO : read the fields from the database
             pass
 
-        if fields:
+        if allfields:
             # filter out fields which aren't in the fields list
             for r in res.keys():
-                if r not in fields:
+                if r not in allfields:
                     del res[r]
         return res
 
