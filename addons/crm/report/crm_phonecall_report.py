@@ -53,7 +53,7 @@ class crm_phonecall_report(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             if field_name != 'avg_answers':
                 state = field_name[5:]
-                cr.execute("select count(*) from crm_opportunity where \
+                cr.execute("select count(*) from crm_lead where \
                     section_id =%s and state='%s'"%(case.section_id.id, state))
                 state_cases = cr.fetchone()[0]
                 perc_state = (state_cases / float(case.nbr)) * 100
