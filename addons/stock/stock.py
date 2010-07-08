@@ -2229,6 +2229,7 @@ class stock_inventory(osv.osv):
 
                 # price = line.product_id.standard_price or 0.0
                 amount = self.pool.get('stock.location')._product_get(cr, uid, line.location_id.id, [pid], {'uom': line.product_uom.id})[pid]
+                #TOCHECK: Why put restriction like new inventory qty should greater available qty ?
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
