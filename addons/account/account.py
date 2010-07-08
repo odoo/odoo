@@ -720,8 +720,10 @@ class account_journal(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, type):
+    def onchange_type(self, cr, uid, ids, type, currency):
         data_pool = self.pool.get('ir.model.data')
+        user_pool = self.pool.get('res.users')
+        
         type_map = {
             'sale':'account_sp_journal_view',
             'sale_refund':'account_sp_refund_journal_view',
@@ -737,6 +739,11 @@ class account_journal(osv.osv):
         res = {}
         
         view_id = type_map.get(type, 'general')
+        
+        user = user_pool.browse(cr, uid, uid)
+        if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
+            view_id = 'account_journal_bank_view_multi'
+        
         data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
         data = data_pool.browse(cr, uid, data_id[0])
     
