@@ -34,29 +34,8 @@ def _get_month_name(month):
     elif month==11:return 'Nov'
     elif month==12:return 'Dec'
 
-def _to_unicode(s):
-    try:
-        return s.decode('utf-8')
-    except UnicodeError:
-        try:
-            return s.decode('latin')
-        except UnicodeError:
-            try:
-                return s.encode('ascii')
-            except UnicodeError:
-                return s
+from ftpserver import _to_decode, _to_unicode
 
-def _to_decode(s):
-    try:
-        return s.encode('utf-8')
-    except UnicodeError:
-        try:
-            return s.encode('latin')
-        except UnicodeError:
-            try:
-                return s.decode('ascii')
-            except UnicodeError:
-                return s  
 
 class abstracted_fs(object):
     """A class used to interact with the file system, providing a high

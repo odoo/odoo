@@ -225,13 +225,29 @@ def _to_unicode(s):
     try:
         return s.decode('utf-8')
     except UnicodeError:
-        try:
-            return s.decode('latin')
-        except UnicodeError:
-            try:
-                return s.encode('ascii')
-            except UnicodeError:
-                return s
+        pass
+    try:
+        return s.decode('latin')
+    except UnicodeError:
+        pass
+    try:
+        return s.encode('ascii')
+    except UnicodeError:
+        return s
+
+def _to_decode(s):
+    try:
+        return s.encode('utf-8')
+    except UnicodeError:
+        pass
+    try:
+        return s.encode('latin')
+    except UnicodeError:
+        pass
+    try:
+        return s.decode('ascii')
+    except UnicodeError:
+        return s
 
 # --- library defined exceptions
 
@@ -2080,7 +2096,7 @@ class FTPHandler(asynchat.async_chat):
         data = ''
         if listing:
             listing.sort()
-            data = '\r\n'.join(listing) + '\r\n'
+            data =  ''.join([ _to_decode(x) + '\r\n' for x in listing ])
         self.log('OK NLST "%s". Transfer starting.' %line)
         self.push_dtp_data(data)
 
