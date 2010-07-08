@@ -416,7 +416,7 @@ class abstracted_fs(object):
             assert (ret is True) or (ret is False)
             cr.commit()
         except Exception,err:
-            self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, dst_basename, dst_basedir)
+            self._log.exception('Cannot rename "%s" to "%s" at "%s"', src, datacr[2], datacr[1])
             raise OSError(1,'Operation not permited.')
 
     def stat(self, node):
