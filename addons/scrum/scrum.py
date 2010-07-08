@@ -92,10 +92,16 @@ class scrum_sprint(osv.osv):
 
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Sprint ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Sprint ') + " '" + name + "' "+ _("is Closed.")
+            self.log(cr, uid, id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context={}):
@@ -205,12 +211,17 @@ class scrum_product_backlog(osv.osv):
 
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Product Backlog ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
             self.pool.get('project.task').write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
+            message = _('Product Backlog ') + " '" + backlog.name + "' "+ _("is Closed.")
+            self.log(cr, uid, backlog.id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context={}):
