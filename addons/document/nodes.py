@@ -506,6 +506,48 @@ class node_dir(node_database):
     def _get_ttag(self,cr):
         return 'dir-%d' % self.dir_id
 
+    def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
+	""" Note /may/ be called with ndir_node = None, to rename the document root.
+	"""
+        if ndir_node and (ndir_node.context != self.context):
+            raise NotImplementedError("Cannot move directories between contexts")
+
+        dir_obj = self.context._dirobj
+        if not fil_obj:
+            dbro = dir_obj.browse(cr, self.context.uid, self.dir_id, context=self.context.context)
+        else:
+            dbro = dir_obj
+            assert dbro.id == self.dir_id
+
+        if not dbro:
+            raise IndexError("Cannot locate dir %d", self.dir_id)
+
+        if (not self.parent) and ndir_node:
+            if not dbro.parent_id:
+                raise IOError(errno.EPERM, "Cannot move the root directory!")
+            self.parent = self.context.get_dir_node(cr, dbro.parent_id.id)
+            assert self.parent
+        
+        # TODO: test if parent is writable.
+
+        if self.parent != ndir_node:
+            logger.debug('Cannot move dir %r from %r to %r', self, self.parent, ndir_node)
+            raise NotImplementedError('Cannot move dir to another dir')
+
+        ret = {}
+        if new_name and (new_name != dbro.name):
+            ret['name'] = new_name
+
+        del dbro
+
+        if not in_write:
+            # We have to update the data ourselves
+            if ret:
+                dir_obj.write(cr, self.context.uid, [self.dir_id,], ret, self.context.context)
+            ret = True
+
+        return ret
+	
 class node_res_dir(node_class):
     """ A special sibling to node_dir, which does only contain dynamically
         created folders foreach resource in the foreign model.
@@ -975,6 +1017,9 @@ class node_file(node_class):
         if (not self.parent):
             # there *must* be a parent node for this one
             self.parent = self.context.get_dir_node(cr, dbro.parent_id.id)
+            assert self.parent
+        
+        # TODO: test if parent is writable.
 
         if self.parent != ndir_node:
             logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
