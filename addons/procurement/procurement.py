@@ -472,7 +472,7 @@ class stock_warehouse_orderpoint(osv.osv):
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'product_max_qty': fields.float('Max Quantity', required=True,
-            help="When the virtual stock goes belong the Mix Quantity, Open ERP generates "\
+            help="When the virtual stock goes belong the Max Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),
