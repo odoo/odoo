@@ -143,7 +143,6 @@ class crm_phonecall_report(osv.osv):
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 from
                     crm_phonecall c
-                where c.categ_id in (select res_id from ir_model_data where (name = 'categ_phone1' or name ='categ_phone2') and model = 'crm.case.categ')
             )""")
 
 crm_phonecall_report()
