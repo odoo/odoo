@@ -27,18 +27,18 @@ class account_voucher_unreconcile(osv.osv_memory):
     def trans_unrec(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        obj_voucher = self.pool.get('account.voucher')
-        obj_reconcile = self.pool.get('account.move.reconcile')
+        voucher_pool = self.pool.get('account.voucher')
+        reconcile_pool = self.pool.get('account.move.reconcile')
         if context.get('active_id'):
             voucher = obj_voucher.browse(cr, uid, context.get('active_id'), context=context)
             recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
                     recs = [line.reconcile_id.id]
-        
+            
             for rec in recs:
                 obj_reconcile.unlink(cr, uid, rec)
-                
+            
         return {}
 
 account_voucher_unreconcile()
