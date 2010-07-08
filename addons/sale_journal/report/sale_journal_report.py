@@ -41,7 +41,7 @@ class sale_journal_report(osv.osv):
             ('done', 'Done'), 
             ('cancel', 'Cancel')
         ], 'Order State', readonly=True), 
-        'journal_id':fields.many2one('sale_journal.sale.journal', 'Journal', readonly=True), 
+        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal', readonly=True), 
         'quantity': fields.float('Quantities', readonly=True), 
         'price_total': fields.float('Total Price', readonly=True), 
         'price_average': fields.float('Average Price', readonly=True), 
@@ -86,7 +86,7 @@ class sale_journal_picking_report(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True), 
-        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'), 
+        'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'), 
                           ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True), 
 
         'invoice_state':fields.selection([
@@ -103,7 +103,7 @@ class sale_journal_picking_report(osv.osv):
             ('cancel', 'cancel'), 
         ], 'State', readonly=True), 
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoicing method', readonly=True), 
-        'journal_id':fields.many2one('sale_journal.picking.journal', 'Journal', readonly=True), 
+        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal', readonly=True), 
         'quantity': fields.float('Quantities', readonly=True), 
         'price_total': fields.float('Total Price', readonly=True), 
         'price_average': fields.float('Average Price', readonly=True), 
