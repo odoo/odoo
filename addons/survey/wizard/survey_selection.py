@@ -67,11 +67,16 @@ class survey_name_wiz(osv.osv_memory):
         user_rec = user_obj.read(cr, uid, uid)
         for sur in surv_obj.browse(cr, uid, surv_obj.search(cr, uid, [])):
             if sur.state == 'open':
+                res = False
                 for i in group_id:
                     if i in user_rec['groups_id']:
-                        result.append((sur.id, sur.title))
+                        res = True
+                        break
                     elif sur.id in user_rec['survey_id']:
-                        result.append((sur.id, sur.title))
+                        res = True
+                        break
+                if res:
+                    result.append((sur.id, sur.title))
         return result
 
     _columns = {
