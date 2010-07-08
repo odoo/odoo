@@ -194,10 +194,10 @@ class payroll_register(osv.osv):
 #        'advice_ids':fields.one2many('hr.payroll.advice', 'register_id', 'Bank Advice'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
-        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, int(config['price_accuracy']))),
-        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, int(config['price_accuracy']))),
-        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, int(config['price_accuracy']))),
-        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits=(16, int(config['price_accuracy']))),
+        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 4)),
+        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 4)),
+        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, 4)),
+        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits=(16, 4)),
         'note': fields.text('Description'),
     }
 
@@ -366,8 +366,8 @@ class payroll_advice_line(osv.osv):
         'advice_id':fields.many2one('hr.payroll.advice', 'Bank Advice', required=False),
         'name':fields.char('Bank Account A/C', size=64, required=True, readonly=False),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'amount': fields.float('Amount', digits=(16, int(config['price_accuracy']))),
-        'bysal': fields.float('By Salary', digits=(16, int(config['price_accuracy']))),
+        'amount': fields.float('Amount', digits=(16, 4)),
+        'bysal': fields.float('By Salary', digits=(16, 4)),
         'flag':fields.char('D/C', size=8, required=True, readonly=False),
     }
     _defaults = {
@@ -434,10 +434,10 @@ class contrib_register(osv.osv):
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'register_line_ids':fields.one2many('hr.contibution.register.line', 'register_id', 'Register Line', readonly=True),
-        'yearly_total_by_emp': fields.function(_total_contrib, method=True, multi='dc', store=True, string='Total By Employee', digits=(16, int(config['price_accuracy']))),
-        'yearly_total_by_comp': fields.function(_total_contrib, method=True, multi='dc', store=True,  string='Total By Company', digits=(16, int(config['price_accuracy']))),
-        'monthly_total_by_emp': fields.function(_total_contrib, method=True, multi='dc', store=True, string='Total By Employee', digits=(16, int(config['price_accuracy']))),
-        'monthly_total_by_comp': fields.function(_total_contrib, method=True, multi='dc', store=True,  string='Total By Company', digits=(16, int(config['price_accuracy']))),
+        'yearly_total_by_emp': fields.function(_total_contrib, method=True, multi='dc', store=True, string='Total By Employee', digits=(16, 4)),
+        'yearly_total_by_comp': fields.function(_total_contrib, method=True, multi='dc', store=True,  string='Total By Company', digits=(16, 4)),
+        'monthly_total_by_emp': fields.function(_total_contrib, method=True, multi='dc', store=True, string='Total By Employee', digits=(16, 4)),
+        'monthly_total_by_comp': fields.function(_total_contrib, method=True, multi='dc', store=True,  string='Total By Company', digits=(16, 4)),
         'note': fields.text('Description'),
     }
     _defaults = {
@@ -466,9 +466,9 @@ class contrib_register_line(osv.osv):
         'code':fields.char('Code', size=64, required=False, readonly=False),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'period_id': fields.many2one('account.period', 'Period'),
-        'emp_deduction': fields.float('Employee Deduction', digits=(16, int(config['price_accuracy']))),
-        'comp_deduction': fields.float('Company Deduction', digits=(16, int(config['price_accuracy']))),
-        'total': fields.function(_total, method=True, store=True,  string='Total', digits=(16, int(config['price_accuracy']))),
+        'emp_deduction': fields.float('Employee Deduction', digits=(16, 4)),
+        'comp_deduction': fields.float('Company Deduction', digits=(16, 4)),
+        'total': fields.function(_total, method=True, store=True,  string='Total', digits=(16, 4)),
     }
 contrib_register_line()
 
@@ -522,7 +522,7 @@ class company_contribution(osv.osv):
         'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Heads', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
-        'include_in_salary':fields.boolean('Included in Salary ?', help='If company contribute on this deduction then should company contribution is also deducted from Employee Salary'),
+#        'include_in_salary':fields.boolean('Included in Salary ?', help='If company contribute on this deduction then should company contribution is also deducted from Employee Salary'),
         'gratuity':fields.boolean('Use for Gratuity ?', required=False),
         'line_ids':fields.one2many('company.contribution.line', 'contribution_id', 'Calculations', required=False),
         'register_id':fields.property(
@@ -537,19 +537,20 @@ class company_contribution(osv.osv):
         ),
         'amount_type':fields.selection([
             ('fix','Fixed Amount'),
+            ('per','Percentage'),
             ('func','Function Calculation'),
         ],'Amount Type', select=True),
-        'contribute_per':fields.float('Contribution', digits=(16, int(config['price_accuracy'])), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
-        'account_id':fields.property(
-            'account.account',
-            type='many2one',
-            relation='account.account',
-            string="Account",
-            method=True,
-            view_load=True,
-            help="Expanse account where company expanse will be encoded",
-            required=False
-        ),
+        'contribute_per':fields.float('Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
+#        'account_id':fields.property(
+#            'account.account',
+#            type='many2one',
+#            relation='account.account',
+#            string="Account",
+#            method=True,
+#            view_load=True,
+#            help="Expanse account where company expanse will be encoded",
+#            required=False
+#        ),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'active':fields.boolean('Active', required=False),
         'note': fields.text('Description'),
@@ -596,13 +597,13 @@ class company_contribution_line(osv.osv):
         'contribution_id':fields.many2one('company.contribution', 'Contribution', required=False),
         'name':fields.char('Name', size=64, required=False, readonly=False),
         'umo_id':fields.many2one('product.uom', 'Unite', required=False),
-        'from_val': fields.float('From', digits=(16, int(config['price_accuracy']))),
-        'to_val': fields.float('To', digits=(16, int(config['price_accuracy']))),
+        'from_val': fields.float('From', digits=(16, 4)),
+        'to_val': fields.float('To', digits=(16, 4)),
         'amount_type':fields.selection([
             ('fix','Fixed Amount'),
         ],'Amount Type', select=True),
         'sequence':fields.integer('Sequence'),
-        'value': fields.float('Value', digits=(16, int(config['price_accuracy']))),
+        'value': fields.float('Value', digits=(16, 4)),
     }
 company_contribution_line()
 
@@ -730,8 +731,8 @@ class hr_payslip(osv.osv):
             ('cancel','Reject'),
         ],'State', select=True, readonly=True),
         'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits=(16, 2)),
-        'leaves': fields.float('Leaved Deduction', readonly=True,  digits=(16, 2)),
-        'basic': fields.float('Basic Salary - Leaves', readonly=True,  digits=(16, 2)),
+        'leaves': fields.float('Leave Deductions', readonly=True,  digits=(16, 2)),
+        'basic': fields.float('Net Basic', readonly=True,  digits=(16, 2)),
         'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 2)),
         'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 2)),
         'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, 2)),
@@ -1213,9 +1214,9 @@ class hr_payslip_line(osv.osv):
         'amount': fields.float('Amount / Percentage', digits=(16, 4)),
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account', required=False),
         'account_id':fields.many2one('account.account', 'General Account', required=True),
-        'total': fields.float('Sub Total', readonly=True, digits=(16, int(config['price_accuracy']))),
+        'total': fields.float('Sub Total', readonly=True, digits=(16, 4)),
         #'total': fields.function(_calculate, method=True, type='float', string='Label', store=True),
-        'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, int(config['price_accuracy']))),
+        'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
         'expanse_id': fields.many2one('hr.expense.expense', 'Expense'),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),
@@ -1251,13 +1252,13 @@ class hr_payslip_line_line(osv.osv):
         'slipline_id':fields.many2one('hr.payslip.line', 'Slip Line', required=False),
         'name':fields.char('Name', size=64, required=False, readonly=False),
         'umo_id':fields.many2one('product.uom', 'Unite', required=False),
-        'from_val': fields.float('From', digits=(16, int(config['price_accuracy']))),
-        'to_val': fields.float('To', digits=(16, int(config['price_accuracy']))),
+        'from_val': fields.float('From', digits=(16, 4)),
+        'to_val': fields.float('To', digits=(16, 4)),
         'amount_type':fields.selection([
             ('fix','Fixed Amount'),
         ],'Amount Type', select=True),
         'sequence':fields.integer('Sequence'),
-        'value': fields.float('Value', digits=(16, int(config['price_accuracy']))),
+        'value': fields.float('Value', digits=(16, 4)),
     }
 hr_payslip_line_line()
 

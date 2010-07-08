@@ -33,7 +33,7 @@ class hr_employee_category(osv.osv):
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
     }
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from hr_employee_category where id IN %s', (tuple(ids), ))
@@ -53,9 +53,10 @@ class hr_employee_marital_status(osv.osv):
     _name = "hr.employee.marital.status"
     _description = "Employee Marital Status"
     _columns = {
-        'name': fields.char('Marital Status', size=30, required=True),
+        'name': fields.char('Marital Status', size=32, required=True),
         'description': fields.text('Status Description'),
     }
+
 hr_employee_marital_status()
 
 class hr_job(osv.osv):
@@ -95,11 +96,11 @@ class hr_employee(osv.osv):
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Birthday"),
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
-        'sinid': fields.char('SIN No', size=32),
+        'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
         'otherid': fields.char('Other ID', size=32),
         'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
         'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
-        'bank_account': fields.char('Bank Account', size=56),
+        'bank_account': fields.char('Bank Account', size=64),
         'partner_id': fields.related('company_id', 'partner_id', type='many2one', relation='res.partner', readonly=True),
         'department_id':fields.many2one('hr.department','Department'),
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
@@ -127,7 +128,7 @@ class hr_employee(osv.osv):
         'photo': _get_photo,
     }
 
-    def _check_recursion(self, cr, uid, ids):
+    def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
             cr.execute('select distinct parent_id from hr_employee where id IN %s',(tuple(ids),))
