@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:47:44+0000\n"
-"PO-Revision-Date: 2010-06-03 12:47:44+0000\n"
+"POT-Creation-Date: 2010-07-09 12:44:59+0000\n"
+"PO-Revision-Date: 2010-07-09 12:44:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Waiting Schedule"
-msgstr ""
+msgstr "В ожидании расписания"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -86,7 +86,7 @@ msgstr ""
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Automatic Declaration"
-msgstr ""
+msgstr "Автоматическое обьявление"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -117,7 +117,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
 msgid "sale.config.picking_policy"
-msgstr ""
+msgstr "sale.config.picking_policy"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
@@ -255,6 +255,11 @@ msgstr "Доп. информация"
 #: rml:sale.order:0
 msgid "Fax :"
 msgstr ""
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Draft"
+msgstr "Черновик"
 
 #. module: sale
 #: field:sale.order.line,price_net:0
@@ -726,9 +731,10 @@ msgid "on order"
 msgstr "в заказе"
 
 #. module: sale
-#: selection:sale.order.line,state:0
-msgid "Draft"
-msgstr "Черновик"
+#: wizard_view:sale.order.line.make_invoice,init:0
+#: wizard_view:sale.order.make_invoice,init:0
+msgid "Do you really want to create the invoice(s) ?"
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1075,12 +1081,6 @@ msgstr "Позиции заказа"
 #: view:sale.order:0
 msgid "Create Invoice"
 msgstr "Создать счет"
-
-#. module: sale
-#: wizard_view:sale.order.line.make_invoice,init:0
-#: wizard_view:sale.order.make_invoice,init:0
-msgid "Do you really want to create the invoices ?"
-msgstr "Вы действительно хотите создать эти счета?"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0

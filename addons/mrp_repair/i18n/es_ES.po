@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:51:55+0000\n"
-"PO-Revision-Date: 2010-06-03 12:51:55+0000\n"
+"POT-Creation-Date: 2010-07-09 12:48:38+0000\n"
+"PO-Revision-Date: 2010-07-09 12:48:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -178,6 +178,11 @@ msgstr "Orden de reparación Nº :"
 #: rml:repair.order:0
 msgid "Lot Number"
 msgstr "Número de lote"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "Borrador"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -365,9 +370,9 @@ msgid "Add"
 msgstr "Añadir"
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Draft"
-msgstr "Borrador"
+#: wizard_view:mrp.repair.make_invoice,init:0
+msgid "Do you really want to create the invoice(s) ?"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_form
@@ -527,11 +532,6 @@ msgstr "Este campo le permite cambiar el flujo del pedido de reparación. Si el 
 #: rml:repair.order:0
 msgid "Unit Price"
 msgstr "Precio unitario"
-
-#. module: mrp_repair
-#: wizard_view:mrp.repair.make_invoice,init:0
-msgid "Do you really want to create the invoices ?"
-msgstr "¿Realmente desea crear las facturas?"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0

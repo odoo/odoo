@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:47:44+0000\n"
-"PO-Revision-Date: 2010-06-03 12:47:44+0000\n"
+"POT-Creation-Date: 2010-07-09 12:44:59+0000\n"
+"PO-Revision-Date: 2010-07-09 12:44:59+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: stock
+#: field:product.product,track_outgoing:0
+msgid "Track Outgoing Lots"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -551,11 +556,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_calendar_delivery
 #: model:ir.ui.menu,name:stock.menu_picking_calendar_delivery
 msgid "Calendar of Deliveries"
-msgstr ""
-
-#. module: stock
-#: field:product.product,track_incoming:0
-msgid "Track Incomming Lots"
 msgstr ""
 
 #. module: stock
@@ -1335,6 +1335,11 @@ msgid "Validate"
 msgstr "Проверить"
 
 #. module: stock
+#: field:product.product,track_incoming:0
+msgid "Track Incoming Lots"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_DIALOG_WARNING"
 msgstr ""
@@ -2018,11 +2023,6 @@ msgstr "Партии"
 #: selection:stock.picking,move_type:0
 msgid "All at once"
 msgstr "Все сразу"
-
-#. module: stock
-#: field:product.product,track_outgoing:0
-msgid "Track Outging Lots"
-msgstr "Отслеживать исходящие партии"
 
 #. module: stock
 #: code:addons/stock/product.py:0

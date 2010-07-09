@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:47:44+0000\n"
-"PO-Revision-Date: 2010-06-03 12:47:44+0000\n"
+"POT-Creation-Date: 2010-07-09 12:44:58+0000\n"
+"PO-Revision-Date: 2010-07-09 12:44:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -191,7 +191,7 @@ msgstr "Подтверить черновики счетов"
 #. module: account
 #: help:account.payment.term.line,days2:0
 msgid "Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."
-msgstr ""
+msgstr "Установите значение дня месяца -1 для последнего дня текущего месяца. В случае положительного значения, значение дня будет соответствовать дню следующего месяца. Установите значение 0 для чистых дней (иначе счет идет с начала месяца)."
 
 #. module: account
 #: view:account.move:0
@@ -252,7 +252,7 @@ msgstr "Вычислить код (если тип=код)"
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "You have to provide an account for the write off entry !"
-msgstr ""
+msgstr "Вы должны указать счет для проводки списания!"
 
 #. module: account
 #: view:account.move:0
@@ -331,7 +331,7 @@ msgstr "Фиксированный"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Внимание!"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -649,7 +649,7 @@ msgstr "Счет налога"
 #: code:addons/account/account.py:0
 #, python-format
 msgid "Bank Journal "
-msgstr ""
+msgstr "Журнал банковских операций "
 
 #. module: account
 #: constraint:account.payment.term.line:0
@@ -667,7 +667,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "You can not use this general account in this journal !"
-msgstr ""
+msgstr "Вы не можете использовать этот общий счет в этом журнале!"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_aged_trial_balance
@@ -1209,23 +1209,6 @@ msgstr "Один контрагент на страницу"
 #: field:account.account.template,child_parent_ids:0
 msgid "Children"
 msgstr "Потомки"
-
-#. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            # Check that the move balances, the tolerance for debit/credit must\n"
-"            # be smaller than the smallest value according to price accuracy\n"
-"            # (hence the +1 below)\n"
-"            # Example:\n"
-"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
-"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
-"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -1922,7 +1905,7 @@ msgstr "Расходы и доходы"
 #. module: account
 #: constraint:account.account:0
 msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать взаимно подчиненные счета."
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -4669,6 +4652,11 @@ msgid "Analytic costs to reinvoice purchases, timesheets, ..."
 msgstr ""
 
 #. module: account
+#: view:ir.sequence:0
+msgid "Fiscal Year Sequence"
+msgstr ""
+
+#. module: account
 #: field:account.account,tax_ids:0
 #: field:account.account.template,tax_ids:0
 msgid "Default Taxes"
@@ -6240,6 +6228,32 @@ msgstr "Текущая дата"
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Sale"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            # Check that the move balances, the tolerance for debit/credit must\n"
+"            # be smaller than the smallest value according to price accuracy\n"
+"            # (hence the +1 below)\n"
+"            # Example:\n"
+"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
+"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
+"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
+"                # If the move is balanced\n"
+"                # Add to the list of valid moves\n"
+"                # (analytic lines will be created later for valid moves)\n"
+"                valid_moves.append(move)\n"
+"\n"
+"                # Check whether the move lines are confirmed\n"
+"                \n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                # Update the move lines (set them as valid)\n"
+"\n"
+"                self.pool.get('account.move.line"
 msgstr ""
 
 #. module: account

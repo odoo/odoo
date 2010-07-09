@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:33:41+0000\n"
-"PO-Revision-Date: 2010-06-03 12:33:41+0000\n"
+"POT-Creation-Date: 2010-07-09 12:31:11+0000\n"
+"PO-Revision-Date: 2010-07-09 12:31:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: stock
+#: field:product.product,track_outgoing:0
+msgid "Track Outgoing Lots"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -80,7 +85,7 @@ msgstr "STOCK_ZOOM_100"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "UoM"
-msgstr ""
+msgstr "Meeteenheid"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.return_picking
@@ -114,7 +119,7 @@ msgstr "U kunt dit record niet verwijderen!"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Amount"
-msgstr ""
+msgstr "Hoeveelheid"
 
 #. module: stock
 #: view:stock.picking:0
@@ -146,7 +151,7 @@ msgstr "Relatie"
 #. module: stock
 #: help:product.product,track_incoming:0
 msgid "Force to use a Production Lot during receptions"
-msgstr "Forceer om een productie-eenheid te gebruiken tijdens goederenontvangst."
+msgstr "Forceer het gebruik van een batchnummer bij goederenontvangst"
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -159,7 +164,7 @@ msgstr "Notatie"
 #: field:stock.production.lot.revision,lot_id:0
 #: field:stock.report.prodlots,prodlot_id:0
 msgid "Production lot"
-msgstr "Seriegrootte"
+msgstr "Batchnummer"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -317,7 +322,7 @@ msgstr "STOCK_FLOPPY"
 #. module: stock
 #: view:stock.production.lot.revision:0
 msgid "Production Lot Revisions"
-msgstr "Herziening productie-eenheden"
+msgstr "Batchnummer herzieningen"
 
 #. module: stock
 #: view:stock.location:0
@@ -388,7 +393,7 @@ msgstr "Leveringslocatie"
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 msgid "Production Lots"
-msgstr "Productie-eenheden"
+msgstr "Batchnummers"
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -443,7 +448,7 @@ msgstr "Locatieadres"
 #. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
-msgstr "Productie-eenheid wordt gebruikt om een serienummer aan de productie toe te voegen."
+msgstr "Batchnummers worden gebruikt om productie-eenheden te identificeren."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_13
@@ -515,7 +520,7 @@ msgstr "Voorraadlocatie"
 #. module: stock
 #: help:product.product,track_production:0
 msgid "Force to use a Production Lot during production order"
-msgstr "Forceer deze op een productie-eenheid te gebruiken tijdens de productieorder"
+msgstr "Forceer het gebruik van een batchnummer bij productieorders"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -554,11 +559,6 @@ msgid "Calendar of Deliveries"
 msgstr "Leveringskalender"
 
 #. module: stock
-#: field:product.product,track_incoming:0
-msgid "Track Incomming Lots"
-msgstr "Traceer inkomende pakketten"
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
 msgid "Stock by Location"
 msgstr "Voorraad per locatie"
@@ -571,7 +571,7 @@ msgstr "STOCK_SAVE_AS"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by production lots"
-msgstr "Voorraadrapport met productie-eenheden"
+msgstr "Voorraadrapport met batchnummers"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -769,7 +769,7 @@ msgstr "Factuurcontrole"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
 msgid "Production lot revisions"
-msgstr "Heroverweeg productie-eenheden"
+msgstr "Batchnummer herzieningen"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1335,6 +1335,11 @@ msgid "Validate"
 msgstr "Bevestig"
 
 #. module: stock
+#: field:product.product,track_incoming:0
+msgid "Track Incoming Lots"
+msgstr ""
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_DIALOG_WARNING"
 msgstr "STOCK_DIALOG_WARNING"
@@ -1673,7 +1678,7 @@ msgstr "Revisiedatum"
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "Lot"
-msgstr "Overdoos"
+msgstr "Batch"
 
 #. module: stock
 #: wizard_view:inventory.merge.stock.zero,init:0
@@ -1863,7 +1868,7 @@ msgstr "Magazijnen"
 #. module: stock
 #: help:product.product,track_outgoing:0
 msgid "Force to use a Production Lot during deliveries"
-msgstr "Forceer om productie-eenheiden te gebruiken om te leveren"
+msgstr "Forceer het gebruik van batchnummers bij leveringen"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1942,7 +1947,7 @@ msgstr ""
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Variants"
-msgstr ""
+msgstr "Varianten"
 
 #. module: stock
 #: field:stock.location,posx:0
@@ -2022,17 +2027,12 @@ msgstr "STOCK_MEDIA_PAUSE"
 #. module: stock
 #: view:product.product:0
 msgid "Lots"
-msgstr "Aantallen"
+msgstr "Batches"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "All at once"
 msgstr "Allen te gelijk"
-
-#. module: stock
-#: field:product.product,track_outgoing:0
-msgid "Track Outging Lots"
-msgstr "Uitgaande voorraadeenheden"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -2073,7 +2073,7 @@ msgstr "Bericht !"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Lot Inventory"
-msgstr "Partijvoorraad"
+msgstr "Batchvoorraad"
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
@@ -2271,7 +2271,7 @@ msgstr "terp-project"
 #: model:ir.ui.menu,name:stock.menu_stock_report_prodlots
 #: view:stock.report.prodlots:0
 msgid "Stock by Lots"
-msgstr "In voorraad per verpakkingseenheid"
+msgstr "Voorraad per batch"
 
 #. module: stock
 #: field:stock.move,auto_validate:0
@@ -2377,7 +2377,7 @@ msgstr "STOCK_REVERT_TO_SAVED"
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Production Lots"
-msgstr "Traceerd productie-eenheden"
+msgstr "Traceer productiebatches"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -2423,7 +2423,7 @@ msgstr "stock.picking.move.wizard"
 #: field:stock.move,prodlot_id:0
 #: view:stock.production.lot:0
 msgid "Production Lot"
-msgstr "Productie-eenheid."
+msgstr "Productie batch"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_traceability

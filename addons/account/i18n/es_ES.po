@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:51:55+0000\n"
-"PO-Revision-Date: 2010-06-03 12:51:55+0000\n"
+"POT-Creation-Date: 2010-07-09 12:48:38+0000\n"
+"PO-Revision-Date: 2010-07-09 12:48:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -387,7 +387,7 @@ msgstr "Diferencia debe"
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
 msgid "Tax"
-msgstr "Contribución"
+msgstr "Impuesto"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -516,7 +516,7 @@ msgstr "Estado"
 #: model:ir.actions.act_window,name:account.action_invoice_tree13
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree13
 msgid "Unpaid Supplier Refunds"
-msgstr "Facturas de abono de proveedor sin pagar"
+msgstr "Facturas rectificativas (abono) de proveedor sin pagar"
 
 #. module: account
 #: view:account.tax:0
@@ -914,7 +914,7 @@ msgstr "Cuenta de la empresa"
 #. module: account
 #: wizard_view:account.subscription.generate,init:0
 msgid "Generate entries before:"
-msgstr "Generar asientos antes:"
+msgstr "Generar asientos hasta:"
 
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
@@ -1211,23 +1211,6 @@ msgid "Children"
 msgstr "Hijos"
 
 #. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            # Check that the move balances, the tolerance for debit/credit must\n"
-"            # be smaller than the smallest value according to price accuracy\n"
-"            # (hence the +1 below)\n"
-"            # Example:\n"
-"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
-"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
-"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Fiscal Position Taxes Mapping"
 msgstr "Mapeo de impuestos posición fiscal"
@@ -1399,7 +1382,7 @@ msgstr "Asiento estándar"
 #. module: account
 #: help:account.account,currency_mode:0
 msgid "This will select how the current currency rate for outgoing transactions is computed. In most countries the legal method is \"average\" but only a few software systems are able to manage this. So if you import from another software system you may have to use the rate at date. Incoming transactions always use the rate at date."
-msgstr "Permite seleccionar la forma en que la tasa de la moneda actual de las transacciones de salida se calcula. En la mayoría de los países el método legal es \"Promedio\", pero sólo unos pocos sistemas de software son capaces de gestionarlo. Por lo tanto, si la importación procede de otro sistema de software, es posible que tenga que utilizar la tasa \"En fecha\". Las transacciones de entrada siempre utilizan la tasa \"En fecha\"."
+msgstr "Permite seleccionar la forma en que se calcula la tasa de la divisa actual en las transacciones de salida. En la mayoría de los países el método legal es \"Promedio\", pero sólo unos pocos sistemas de software son capaces de gestionarlo. Por lo tanto, si la importación procede de otro sistema de software, es posible que tenga que utilizar la tasa \"En fecha\". Las transacciones de entrada siempre utilizan la tasa \"En fecha\"."
 
 #. module: account
 #: field:account.account,company_currency_id:0
@@ -1676,7 +1659,7 @@ msgstr "Desajuste"
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,amount_currency:0
 msgid "With Currency"
-msgstr "Con moneda"
+msgstr "Con divisa"
 
 #. module: account
 #: field:res.partner,debit:0
@@ -2136,7 +2119,7 @@ msgstr "Fecha inicial"
 #. module: account
 #: model:account.journal,name:account.refund_expenses_journal
 msgid "x Expenses Credit Notes Journal"
-msgstr "x Diario facturas de abono de gastos"
+msgstr "x Diario facturas rectificativas (abono) de gastos"
 
 #. module: account
 #: field:account.analytic.journal,type:0
@@ -2162,7 +2145,7 @@ msgstr "Base imponible"
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
-msgstr "Cuenta impuestos de factura"
+msgstr "Cuenta impuestos de facturas"
 
 #. module: account
 #: view:account.move.line:0
@@ -2287,7 +2270,7 @@ msgstr "Informe analítico de diario"
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr "Facturas de abono de cliente"
+msgstr "Facturas rectificativas (abono) de cliente"
 
 #. module: account
 #: rml:account.vat.declaration:0
@@ -2314,7 +2297,7 @@ msgstr "Nombre diario-período"
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
-msgstr "Nombre impuesto del caso"
+msgstr "Nombre código de impuesto"
 
 #. module: account
 #: help:account.journal,entry_posted:0
@@ -2376,7 +2359,7 @@ msgstr ""
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,period_id:0
 msgid "Opening Entries Period"
-msgstr "Periodo asientos de apertura"
+msgstr "Período asientos de apertura"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_validate_account_moves
@@ -2407,7 +2390,7 @@ msgstr "Anterior"
 #: field:account.model.line,currency_id:0
 #: field:account.move.line,currency_id:0
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Divisa"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -2494,7 +2477,7 @@ msgstr "¡No ha sido posible encontrar un período válido!"
 #. module: account
 #: wizard_field:account.invoice.refund,init,period:0
 msgid "Force period"
-msgstr "Forzar periodo"
+msgstr "Forzar período"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -2580,7 +2563,7 @@ msgstr "Fecha factura"
 #: help:account.third_party_ledger.report,init,periods:0
 #: help:account.vat.declaration,init,periods:0
 msgid "All periods if empty"
-msgstr "Todos los periodos si está vacío"
+msgstr "Todos los períodos si está vacío."
 
 #. module: account
 #: model:account.account.type,name:account.account_type_liability
@@ -2843,7 +2826,7 @@ msgstr "Asientos conciliados"
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_amount:0
 msgid "The amount in the currency of the journal"
-msgstr "La cantidad en la moneda del diario"
+msgstr "El importe en la divisa del diario."
 
 #. module: account
 #: wizard_field:account.general.ledger.report,checktype,landscape:0
@@ -3302,7 +3285,7 @@ msgstr "1cm 27.7cm 20cm 27.7cm"
 #: model:ir.actions.act_window,name:account.action_invoice_tree12
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree12
 msgid "Draft Supplier Refunds"
-msgstr "Facturas de abono de proveedor en borrador"
+msgstr "Facturas rectificativas (abono) de proveedor en borrador"
 
 #. module: account
 #: model:process.node,name:account.process_node_accountingstatemententries0
@@ -3409,7 +3392,7 @@ msgstr "Tasa de divisas de salida"
 #: model:ir.actions.act_window,name:account.action_invoice_tree10
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree10
 msgid "Draft Customer Refunds"
-msgstr "Facturas de abono de cliente en borrador"
+msgstr "Facturas rectificativas (abono) de cliente en borrador"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -3449,7 +3432,7 @@ msgstr "Documento"
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr "El movimiento de esta línea del asiento."
+msgstr "El asiento de este apunte."
 
 #. module: account
 #: field:account.invoice.line,uos_id:0
@@ -3604,7 +3587,7 @@ msgstr ""
 #: selection:account.partner.balance.report,init,state:0
 #: selection:account.third_party_ledger.report,init,state:0
 msgid "By Date and Period"
-msgstr "Por fecha y periodo"
+msgstr "Por fecha y período"
 
 #. module: account
 #: code:addons/account/wizard/wizard_state_open.py:0
@@ -3730,7 +3713,7 @@ msgstr "Nombre impuesto"
 #. module: account
 #: wizard_view:account.fiscalyear.close.state,init:0
 msgid " Close states of Fiscal year and periods"
-msgstr " Cerrar estados de ejercicio fiscal y periodos"
+msgstr " Cerrar estados de ejercicio fiscal y períodos"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term
@@ -3906,7 +3889,7 @@ msgstr "Línea de factura"
 #: help:account.account,currency_id:0
 #: help:account.account.template,currency_id:0
 msgid "Force all moves for this account to have this secondary currency."
-msgstr "Fuerza a todos los movimientos de esta cuenta que tengan esta moneda secundaria."
+msgstr "Fuerza a todos los movimientos de esta cuenta que tengan esta divisa secundaria."
 
 #. module: account
 #: wizard_view:account.move.validate,init:0
@@ -3950,7 +3933,7 @@ msgstr "Titular de la cuenta bancaria"
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
 msgid "Filter on Periods"
-msgstr "Filtrar por periodos"
+msgstr "Filtrar por períodos"
 
 #. module: account
 #: field:res.partner,property_account_receivable:0
@@ -4024,7 +4007,7 @@ msgstr "Impreso"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4_new
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4_new
 msgid "New Supplier Refund"
-msgstr "Nueva factura de abono de proveedor"
+msgstr "Nueva factura rectificativa (abono) de proveedor"
 
 #. module: account
 #: view:account.model:0
@@ -4096,7 +4079,7 @@ msgstr "Este plazo de pago se utilizará en lugar del plazo por defecto para la 
 #. module: account
 #: wizard_field:account.invoice.pay,init,name:0
 msgid "Entry Name"
-msgstr "Núm. asiento"
+msgstr "Descripción"
 
 #. module: account
 #: help:account.invoice,account_id:0
@@ -4141,7 +4124,7 @@ msgstr "Codificación asiento"
 #: wizard_view:account.invoice.refund,init:0
 #: model:ir.actions.wizard,name:account.wizard_invoice_refund
 msgid "Credit Note"
-msgstr "Factura de abono"
+msgstr "Factura rectificativa (abono)"
 
 #. module: account
 #: model:ir.actions.todo,note:account.config_fiscalyear
@@ -4299,7 +4282,7 @@ msgstr "Secuencia del asiento"
 #: selection:account.account,type:0
 #: selection:account.account.template,type:0
 msgid "Closed"
-msgstr "Cerrado"
+msgstr "Cierre"
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -4349,7 +4332,7 @@ msgstr "Movimiento"
 #. module: account
 #: help:account.period,special:0
 msgid "These periods can overlap."
-msgstr "Estos periodos se pueden solapar."
+msgstr "Estos períodos se pueden solapar."
 
 #. module: account
 #: help:product.template,property_account_expense:0
@@ -4385,7 +4368,7 @@ msgstr ""
 #: selection:account.partner.balance.report,init,state:0
 #: selection:account.third_party_ledger.report,init,state:0
 msgid "By Period"
-msgstr "Por periodo"
+msgstr "Por período"
 
 #. module: account
 #: help:account.invoice,date_invoice:0
@@ -4477,7 +4460,7 @@ msgstr "Cuenta a pagar"
 #: field:account.account,currency_id:0
 #: field:account.account.template,currency_id:0
 msgid "Secondary Currency"
-msgstr "Moneda secundaria"
+msgstr "Divisa secundaria"
 
 #. module: account
 #: field:account.account,credit:0
@@ -4508,7 +4491,7 @@ msgstr "Indica si el cálculo del impuesto está basado en el valor calculado po
 #: field:account.tax,account_paid_id:0
 #: field:account.tax.template,account_paid_id:0
 msgid "Refund Tax Account"
-msgstr "Cuenta impuestos de devoluciones"
+msgstr "Cuenta impuestos de reintegros"
 
 #. module: account
 #: field:account.tax.code,child_ids:0
@@ -4593,7 +4576,7 @@ msgstr "Importe desajuste"
 #: wizard_field:account.partner.balance.report,init,state:0
 #: wizard_field:account.third_party_ledger.report,init,state:0
 msgid "Date/Period Filter"
-msgstr "Filtrar fecha/periodo"
+msgstr "Filtrar por fecha/período"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -4616,7 +4599,7 @@ msgstr "Secuencias de diarios separadas"
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_currency:0
 msgid "The currency of the journal"
-msgstr "La moneda del diario"
+msgstr "La divisa del diario"
 
 #. module: account
 #: view:account.journal.column:0
@@ -4675,6 +4658,11 @@ msgstr "Buscar asientos"
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to reinvoice purchases, timesheets, ..."
 msgstr "Costes analíticos para refacturar compras, hojas de servicios, ..."
+
+#. module: account
+#: view:ir.sequence:0
+msgid "Fiscal Year Sequence"
+msgstr ""
 
 #. module: account
 #: field:account.account,tax_ids:0
@@ -4743,7 +4731,7 @@ msgstr "Aceptar"
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr "La moneda utilizada para introducir asientos"
+msgstr "La divisa utilizada para introducir asientos."
 
 #. module: account
 #: rml:account.invoice:0
@@ -4862,7 +4850,7 @@ msgstr "Fijado"
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Credit Notes"
-msgstr "Facturas de abono"
+msgstr "Facturas rectificativas (abono)"
 
 #. module: account
 #: field:account.config.wizard,date2:0
@@ -4933,7 +4921,7 @@ msgstr "Línea del modelo de asiento"
 #. module: account
 #: view:account.tax.template:0
 msgid "Account Tax Template"
-msgstr "Plantilla de impuesto"
+msgstr "Plantilla de impuestos"
 
 #. module: account
 #: help:account.model,name:0
@@ -5055,7 +5043,7 @@ msgstr "Por fecha"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Facturas de abono de proveedor"
+msgstr "Facturas rectificativas (abono) de proveedor"
 
 #. module: account
 #: help:account.model.line,date:0
@@ -5631,7 +5619,7 @@ msgstr "_Cancelar"
 #: wizard_view:account.partner.balance.report,init:0
 #: wizard_view:account.third_party_ledger.report,init:0
 msgid "Select Date-Period"
-msgstr "Seleccionar fecha-periodo"
+msgstr "Seleccionar fecha-período"
 
 #. module: account
 #: rml:account.analytic.account.inverted.balance:0
@@ -5660,7 +5648,7 @@ msgstr "Periodo hasta"
 #: model:ir.actions.act_window,name:account.action_invoice_tree3_new
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3_new
 msgid "New Customer Refund"
-msgstr "Nueva factura de abono de cliente"
+msgstr "Nueva factura rectificativa (abono) de cliente"
 
 #. module: account
 #: help:wizard.multi.charts.accounts,seq_journal:0
@@ -5883,7 +5871,7 @@ msgstr "Pagado"
 #: model:ir.actions.act_window,name:account.action_invoice_tree11
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree11
 msgid "Unpaid Customer Refunds"
-msgstr "Facturas de abono de cliente sin pagar"
+msgstr "Facturas rectificativas (abono) de cliente sin pagar"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -6101,7 +6089,7 @@ msgstr "¡Faltan impuestos!"
 #. module: account
 #: rml:account.invoice:0
 msgid "Refund"
-msgstr "Factura de abono"
+msgstr "Factura rectificativa (abono)"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -6123,7 +6111,7 @@ msgstr "Definición de diario analítico"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Created Entries"
-msgstr "Omitir el estado 'Borrador ' para los asientos creados"
+msgstr "Omitir estado 'Borrador ' al crear asientos"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -6251,6 +6239,32 @@ msgid "Journal Sale"
 msgstr "Diario de ventas"
 
 #. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            # Check that the move balances, the tolerance for debit/credit must\n"
+"            # be smaller than the smallest value according to price accuracy\n"
+"            # (hence the +1 below)\n"
+"            # Example:\n"
+"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
+"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
+"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
+"                # If the move is balanced\n"
+"                # Add to the list of valid moves\n"
+"                # (analytic lines will be created later for valid moves)\n"
+"                valid_moves.append(move)\n"
+"\n"
+"                # Check whether the move lines are confirmed\n"
+"                \n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                # Update the move lines (set them as valid)\n"
+"\n"
+"                self.pool.get('account.move.line"
+msgstr ""
+
+#. module: account
 #: wizard_field:account.fiscalyear.close,init,fy_id:0
 #: wizard_field:account.fiscalyear.close.state,init,fy_id:0
 msgid "Fiscal Year to close"
@@ -6337,7 +6351,7 @@ msgstr "Este cuenta se utilizará en lugar de la cuenta por defecto como la cuen
 #: field:account.tax.code,code:0
 #: field:account.tax.code.template,code:0
 msgid "Case Code"
-msgstr "Código caso"
+msgstr "Código"
 
 #. module: account
 #: selection:account.automatic.reconcile,init,power:0
@@ -6353,7 +6367,7 @@ msgstr "Cuenta de ingresos"
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr "Periodo de apertura/cierre"
+msgstr "Período de apertura/cierre"
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -6483,7 +6497,7 @@ msgstr "Dejarlo vacío para todos los ejercicios fiscales abiertos"
 #: rml:account.invoice:0
 #: selection:account.invoice,type:0
 msgid "Supplier Refund"
-msgstr "Factura de abono de proveedor"
+msgstr "Factura rectificativa (abono) de proveedor"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0

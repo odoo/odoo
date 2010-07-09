@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:34:33+0000\n"
-"PO-Revision-Date: 2010-06-03 12:34:33+0000\n"
+"POT-Creation-Date: 2010-07-09 12:32:00+0000\n"
+"PO-Revision-Date: 2010-07-09 12:32:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: stock
+#: field:product.product,track_outgoing:0
+msgid "Track Outgoing Lots"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -108,7 +113,7 @@ msgstr "Pakkimislist"
 #: code:addons/stock/report_stock.py:0
 #, python-format
 msgid "You cannot delete any record!"
-msgstr ""
+msgstr "Sa ei saa kustutada ühtegi kirjet!"
 
 #. module: stock
 #: rml:lot.stock.overview:0
@@ -554,11 +559,6 @@ msgid "Calendar of Deliveries"
 msgstr "Tarnete kalender"
 
 #. module: stock
-#: field:product.product,track_incoming:0
-msgid "Track Incomming Lots"
-msgstr "Jälgi saabuvaid partiisid"
-
-#. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
 msgid "Stock by Location"
 msgstr "Ladu asukoha järgi"
@@ -733,7 +733,7 @@ msgstr "Pakkeleht:"
 #: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "Kasutaja Viga"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -744,7 +744,7 @@ msgstr "STOCK_MEDIA_RECORD"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You can only delete draft moves."
-msgstr ""
+msgstr "Sa saad kustutada ainult liigutamise mustandeid."
 
 #. module: stock
 #: view:stock.picking:0
@@ -937,7 +937,7 @@ msgstr "Seda kontot kasutatakse lao sisendväärtuse hindamiseks"
 #: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Invoice state"
-msgstr ""
+msgstr "Arve olek"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -985,7 +985,7 @@ msgstr "Kaasosade asukohtade omadused"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Delivered Qty"
-msgstr ""
+msgstr "Tarnitud kogus"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1033,13 +1033,13 @@ msgstr "Arvet pole loodud"
 #: code:addons/stock/wizard/inventory_merge.py:0
 #, python-format
 msgid "Merging is only allowed on draft inventories."
-msgstr ""
+msgstr "Liitmine on lubatud ainult mustand inventuuridele."
 
 #. module: stock
 #: code:addons/stock/wizard/inventory_merge.py:0
 #, python-format
 msgid "Please select at least two inventories."
-msgstr ""
+msgstr "Palun vali vähemalt kaks inventuuri."
 
 #. module: stock
 #: wizard_view:stock.partial_picking,end2:0
@@ -1083,7 +1083,7 @@ msgstr "terp-partner"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You can not remove a lot line !"
-msgstr ""
+msgstr "Sa ei saa eemaldada partii rida!"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form_draft
@@ -1136,7 +1136,7 @@ msgstr "Informatsioon"
 #: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Provide the quantities of the returned products."
-msgstr ""
+msgstr "Määra tagastatud toodete kogused."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1195,7 +1195,7 @@ msgstr "Saadaval liikumised"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Received Qty"
-msgstr ""
+msgstr "Laekunud kogus"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1312,7 +1312,7 @@ msgstr "STOCK_REFRESH"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Products: "
-msgstr ""
+msgstr "Tooted: "
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1333,6 +1333,11 @@ msgstr "STOCK_FIND_AND_REPLACE"
 #: view:stock.picking:0
 msgid "Validate"
 msgstr "Valideeri"
+
+#. module: stock
+#: field:product.product,track_incoming:0
+msgid "Track Incoming Lots"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1420,7 +1425,7 @@ msgstr "Täida saamata toodetest"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "P&L Qty"
-msgstr ""
+msgstr "Kasumi ja kahjumi kogus"
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
@@ -1543,7 +1548,7 @@ msgstr "Planeeritud kuupäev"
 #: code:addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "No production sequence defined"
-msgstr ""
+msgstr "Tootmisjada pole määratletud"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
@@ -1740,7 +1745,7 @@ msgstr "Omadused"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Error, no partner !"
-msgstr ""
+msgstr "Viga, puudub partner!"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -1842,7 +1847,7 @@ msgstr "Teostamise kuupäev"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Please put a partner on the picking list if you want to generate invoice."
-msgstr ""
+msgstr "Palun sisesta partner noppelehele, kui sa soovid genereerida arvet."
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -2030,11 +2035,6 @@ msgid "All at once"
 msgstr "Kõik korraga"
 
 #. module: stock
-#: field:product.product,track_outgoing:0
-msgid "Track Outging Lots"
-msgstr "Jälgi väljuvaid partiisid"
-
-#. module: stock
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Productions"
@@ -2044,7 +2044,7 @@ msgstr ""
 #: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Return lines"
-msgstr ""
+msgstr "Tagastusread"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -2068,7 +2068,7 @@ msgstr "STOCK_FIND"
 #: code:addons/stock/wizard/wizard_inventory.py:0
 #, python-format
 msgid "Message !"
-msgstr ""
+msgstr "Sõnum!"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2113,7 +2113,7 @@ msgstr "Mitte-Euroopa kliendid"
 #: code:addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Viga!"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
@@ -2156,7 +2156,7 @@ msgstr "STOCK_MEDIA_PLAY"
 #: code:addons/stock/wizard/inventory_merge_zero.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Hoiatus"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_delivery
@@ -2252,7 +2252,7 @@ msgstr "Seadistused"
 #: code:addons/stock/wizard/inventory_merge_zero.py:0
 #, python-format
 msgid "Please select one and only one inventory !"
-msgstr ""
+msgstr "Palun vali ainult üks inventuur!"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -2384,7 +2384,7 @@ msgstr "Jälgi tootmispartiisid"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Unplanned Qty"
-msgstr ""
+msgstr "Planeerimata kogus"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2407,7 +2407,7 @@ msgstr ""
 #: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Viga"
 
 #. module: stock
 #: help:product.template,property_stock_procurement:0
@@ -2446,7 +2446,7 @@ msgstr "Tarnija arve"
 #: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "to be invoiced"
-msgstr ""
+msgstr "arveldamiseks"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -2549,7 +2549,7 @@ msgstr "Ülesvoolu jälgitavus"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Produced Qty"
-msgstr ""
+msgstr "Toodetud kogus"
 
 #. module: stock
 #: field:product.category,property_stock_account_input_categ:0

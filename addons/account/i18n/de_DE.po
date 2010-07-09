@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:37:59+0000\n"
-"PO-Revision-Date: 2010-06-03 12:37:59+0000\n"
+"POT-Creation-Date: 2010-07-09 12:35:21+0000\n"
+"PO-Revision-Date: 2010-07-09 12:35:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -312,7 +312,7 @@ msgstr "Buchungen nach Buchungsposten"
 #. module: account
 #: help:account.journal,view_id:0
 msgid "Gives the view used when writing or browsing entries in this journal. The view tell Open ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."
-msgstr "zeigt die Ansicht des Journalberichtes. Open ERP wird gezeigt welche Felder sichtbar sein sollen, welche erforderlich sind oder keine Schreibrechte habe und in der Reihenfolge der Auftragsnummern. Sie können einen eigenen View für eine schnellere Buchungsbearbeitung herstellen."
+msgstr ""
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -1213,23 +1213,6 @@ msgstr "Ein Partner pro Seite"
 #: field:account.account.template,child_parent_ids:0
 msgid "Children"
 msgstr "(Sub-)"
-
-#. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            # Check that the move balances, the tolerance for debit/credit must\n"
-"            # be smaller than the smallest value according to price accuracy\n"
-"            # (hence the +1 below)\n"
-"            # Example:\n"
-"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
-"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
-"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -3718,7 +3701,7 @@ msgstr "Buchen OP Ausgleich"
 #. module: account
 #: wizard_view:account.wizard_paid_open,init:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr "(Rechnungen müssen ausgeglichen werden)"
+msgstr "(Rechnungen dürfen nicht ausgeglichen sein, wenn diese wieder geöffnet werden sollen)"
 
 #. module: account
 #: view:account.invoice:0
@@ -4682,6 +4665,11 @@ msgid "Analytic costs to reinvoice purchases, timesheets, ..."
 msgstr "Analytische Kosten für die Weiterberechnung von Ausgaben, Zeitaufzeichnungen, ..."
 
 #. module: account
+#: view:ir.sequence:0
+msgid "Fiscal Year Sequence"
+msgstr ""
+
+#. module: account
 #: field:account.account,tax_ids:0
 #: field:account.account.template,tax_ids:0
 msgid "Default Taxes"
@@ -5404,7 +5392,7 @@ msgstr "Warnung"
 #. module: account
 #: rml:account.overdue:0
 msgid "VAT:"
-msgstr "USt.:"
+msgstr "UID:"
 
 #. module: account
 #: rml:account.analytic.account.cost_ledger:0
@@ -5840,7 +5828,7 @@ msgstr "Ausgewählte Buchungen haben keine Entwurfspositionen"
 #. module: account
 #: wizard_button:account.wizard_paid_open,init,end:0
 msgid "No"
-msgstr "Nummer"
+msgstr "Nein"
 
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
@@ -6254,6 +6242,32 @@ msgstr "Aktuelles Datum"
 #: selection:account.move,type:0
 msgid "Journal Sale"
 msgstr "Journal Verkäufe"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            # Check that the move balances, the tolerance for debit/credit must\n"
+"            # be smaller than the smallest value according to price accuracy\n"
+"            # (hence the +1 below)\n"
+"            # Example:\n"
+"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
+"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
+"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
+"                # If the move is balanced\n"
+"                # Add to the list of valid moves\n"
+"                # (analytic lines will be created later for valid moves)\n"
+"                valid_moves.append(move)\n"
+"\n"
+"                # Check whether the move lines are confirmed\n"
+"                \n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                # Update the move lines (set them as valid)\n"
+"\n"
+"                self.pool.get('account.move.line"
+msgstr ""
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,fy_id:0

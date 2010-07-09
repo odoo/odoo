@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:37:08+0000\n"
-"PO-Revision-Date: 2010-06-03 12:37:08+0000\n"
+"POT-Creation-Date: 2010-07-09 12:34:31+0000\n"
+"PO-Revision-Date: 2010-07-09 12:34:31+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -254,6 +254,11 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "Fax :"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Draft"
 msgstr ""
 
 #. module: sale
@@ -726,8 +731,9 @@ msgid "on order"
 msgstr ""
 
 #. module: sale
-#: selection:sale.order.line,state:0
-msgid "Draft"
+#: wizard_view:sale.order.line.make_invoice,init:0
+#: wizard_view:sale.order.make_invoice,init:0
+msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: sale
@@ -1074,12 +1080,6 @@ msgstr ""
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.order:0
 msgid "Create Invoice"
-msgstr ""
-
-#. module: sale
-#: wizard_view:sale.order.line.make_invoice,init:0
-#: wizard_view:sale.order.make_invoice,init:0
-msgid "Do you really want to create the invoices ?"
 msgstr ""
 
 #. module: sale

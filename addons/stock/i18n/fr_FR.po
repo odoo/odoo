@@ -4,16 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:36:16+0000\n"
-"PO-Revision-Date: 2010-06-03 12:36:16+0000\n"
+"POT-Creation-Date: 2010-07-09 12:33:41+0000\n"
+"PO-Revision-Date: 2010-07-09 12:33:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: stock
+#: field:product.product,track_outgoing:0
+msgid "Track Outgoing Lots"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -552,11 +557,6 @@ msgstr "Ce journal sera utilisé pour les mouvements de compte générés par le
 #: model:ir.ui.menu,name:stock.menu_picking_calendar_delivery
 msgid "Calendar of Deliveries"
 msgstr "Calendrier des livraisons"
-
-#. module: stock
-#: field:product.product,track_incoming:0
-msgid "Track Incomming Lots"
-msgstr "Tracer les lots entrants"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
@@ -1265,7 +1265,7 @@ msgstr "Compte de Stock Sortant"
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
-msgstr "Automatique aucun pas ajouter"
+msgstr "Automatique aucune étape ajoutée"
 
 #. module: stock
 #: wizard_view:stock.location.products,init:0
@@ -1333,6 +1333,11 @@ msgstr "STOCK_FIND_AND_REPLACE"
 #: view:stock.picking:0
 msgid "Validate"
 msgstr "Valider"
+
+#. module: stock
+#: field:product.product,track_incoming:0
+msgid "Track Incoming Lots"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2028,11 +2033,6 @@ msgstr "Lots"
 #: selection:stock.picking,move_type:0
 msgid "All at once"
 msgstr "Tout en une fois"
-
-#. module: stock
-#: field:product.product,track_outgoing:0
-msgid "Track Outging Lots"
-msgstr "Tracer les lots sortants"
 
 #. module: stock
 #: code:addons/stock/product.py:0

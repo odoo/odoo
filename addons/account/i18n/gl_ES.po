@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:37:07+0000\n"
-"PO-Revision-Date: 2010-06-03 12:37:07+0000\n"
+"POT-Creation-Date: 2010-07-09 12:34:31+0000\n"
+"PO-Revision-Date: 2010-07-09 12:34:31+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1211,23 +1211,6 @@ msgid "Children"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            # Check that the move balances, the tolerance for debit/credit must\n"
-"            # be smaller than the smallest value according to price accuracy\n"
-"            # (hence the +1 below)\n"
-"            # Example:\n"
-"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
-"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
-"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Fiscal Position Taxes Mapping"
 msgstr ""
@@ -2351,7 +2334,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,invoice_sequence_id:0
 msgid "Invoice Sequence"
-msgstr ""
+msgstr "Secuencia de factura"
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,init:0
@@ -4096,7 +4079,7 @@ msgstr ""
 #. module: account
 #: wizard_field:account.invoice.pay,init,name:0
 msgid "Entry Name"
-msgstr ""
+msgstr "Descripción"
 
 #. module: account
 #: help:account.invoice,account_id:0
@@ -4666,6 +4649,11 @@ msgstr ""
 #: model:process.node,note:account.process_node_analytic0
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to reinvoice purchases, timesheets, ..."
+msgstr ""
+
+#. module: account
+#: view:ir.sequence:0
+msgid "Fiscal Year Sequence"
 msgstr ""
 
 #. module: account
@@ -5679,7 +5667,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_fiscalyear_seq
 msgid "Maintains Invoice sequences with Fiscal Year"
-msgstr ""
+msgstr "Mantén secuencias de facturas con exercicio fiscal"
 
 #. module: account
 #: wizard_field:account.invoice.pay,addendum,comment:0
@@ -6240,6 +6228,32 @@ msgstr ""
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Sale"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            # Check that the move balances, the tolerance for debit/credit must\n"
+"            # be smaller than the smallest value according to price accuracy\n"
+"            # (hence the +1 below)\n"
+"            # Example:\n"
+"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
+"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
+"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
+"                # If the move is balanced\n"
+"                # Add to the list of valid moves\n"
+"                # (analytic lines will be created later for valid moves)\n"
+"                valid_moves.append(move)\n"
+"\n"
+"                # Check whether the move lines are confirmed\n"
+"                \n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                # Update the move lines (set them as valid)\n"
+"\n"
+"                self.pool.get('account.move.line"
 msgstr ""
 
 #. module: account

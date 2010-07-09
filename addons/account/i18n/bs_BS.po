@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:26:02+0000\n"
-"PO-Revision-Date: 2010-06-03 12:26:02+0000\n"
+"POT-Creation-Date: 2010-07-09 12:23:53+0000\n"
+"PO-Revision-Date: 2010-07-09 12:23:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -419,7 +419,7 @@ msgstr "U redu"
 #: field:account.tax,child_depend:0
 #: field:account.tax.template,child_depend:0
 msgid "Tax on Children"
-msgstr ""
+msgstr "Dječiji porez"
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -1102,7 +1102,7 @@ msgstr "Datum ispisa :"
 #: wizard_field:account.partner.balance.report,init,date2:0
 #: wizard_field:account.third_party_ledger.report,init,date2:0
 msgid "End date"
-msgstr ""
+msgstr "Krajnji datum"
 
 #. module: account
 #: field:account.invoice.tax,base_amount:0
@@ -1209,23 +1209,6 @@ msgstr "Jedan partner po stranici"
 #: field:account.account.template,child_parent_ids:0
 msgid "Children"
 msgstr "Potomci"
-
-#. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            # Check that the move balances, the tolerance for debit/credit must\n"
-"            # be smaller than the smallest value according to price accuracy\n"
-"            # (hence the +1 below)\n"
-"            # Example:\n"
-"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
-"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
-"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -3173,7 +3156,7 @@ msgstr "Efektivni datum"
 #. module: account
 #: help:account.tax.template,sequence:0
 msgid "The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important."
-msgstr ""
+msgstr "Polje sekvence koristi se da se poredaju porezni retci od najniže sekvence prema višima. Red je bitan ako imate porez koji ima više podporeza. U ovom slućaju, redosljed evaluacije je bitan."
 
 #. module: account
 #: field:account.journal.column,view_id:0
@@ -3922,7 +3905,7 @@ msgstr "Današnji datum"
 #. module: account
 #: help:account.move.line,amount_currency:0
 msgid "The amount expressed in an optional other currency if it is a multi-currency entry."
-msgstr ""
+msgstr "Iznos izražen u opcionalnoj drugoj valuti ako je viševalutni unos."
 
 #. module: account
 #: field:account.tax,parent_id:0
@@ -4091,7 +4074,7 @@ msgstr "Broj znamenki"
 #. module: account
 #: help:res.partner,property_payment_term:0
 msgid "This payment term will be used instead of the default one for the current partner"
-msgstr ""
+msgstr "Ovi uvjeti plaćanja će se koristiti umjesto podrazumijevanih za trenutnog partnera."
 
 #. module: account
 #: wizard_field:account.invoice.pay,init,name:0
@@ -4506,7 +4489,7 @@ msgstr "Konto za povrat poreza"
 #: field:account.tax.code,child_ids:0
 #: field:account.tax.code.template,child_ids:0
 msgid "Child Codes"
-msgstr ""
+msgstr "Podšifre"
 
 #. module: account
 #: field:account.invoice,move_name:0
@@ -4669,6 +4652,11 @@ msgid "Analytic costs to reinvoice purchases, timesheets, ..."
 msgstr "Analitički troškovi za refakturiranje nabave, timesheet-ovi,..."
 
 #. module: account
+#: view:ir.sequence:0
+msgid "Fiscal Year Sequence"
+msgstr ""
+
+#. module: account
 #: field:account.account,tax_ids:0
 #: field:account.account.template,tax_ids:0
 msgid "Default Taxes"
@@ -4682,7 +4670,7 @@ msgstr ""
 #. module: account
 #: help:account.account.type,sign:0
 msgid "Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts."
-msgstr ""
+msgstr "Omogućuje da mijenjate predznak bilanse prikazane na izvještaju, tako da vidite pozitivne iznose (umjesto negativnih) na kontima troškova"
 
 #. module: account
 #: help:account.config.wizard,code:0
@@ -4915,7 +4903,7 @@ msgstr "Datoteka izvoda"
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequences"
-msgstr ""
+msgstr "Sekvenca fiskalne godine"
 
 #. module: account
 #: view:account.model.line:0
@@ -5090,7 +5078,7 @@ msgstr "Unos stavaka po prijenosu"
 #. module: account
 #: wizard_view:account.analytic.account.chart,init:0
 msgid "Analytic Account Charts"
-msgstr ""
+msgstr "Analitički kontni planovi"
 
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,result_selection:0
@@ -5892,7 +5880,7 @@ msgstr "Jeste li sigurni?"
 #: rml:account.invoice:0
 #: view:account.invoice:0
 msgid "PRO-FORMA"
-msgstr "Predračun"
+msgstr "PRO-FORMA"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
@@ -6243,6 +6231,32 @@ msgid "Journal Sale"
 msgstr "Nalog za knjiženje prodaje"
 
 #. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            # Check that the move balances, the tolerance for debit/credit must\n"
+"            # be smaller than the smallest value according to price accuracy\n"
+"            # (hence the +1 below)\n"
+"            # Example:\n"
+"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
+"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
+"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
+"                # If the move is balanced\n"
+"                # Add to the list of valid moves\n"
+"                # (analytic lines will be created later for valid moves)\n"
+"                valid_moves.append(move)\n"
+"\n"
+"                # Check whether the move lines are confirmed\n"
+"                \n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                # Update the move lines (set them as valid)\n"
+"\n"
+"                self.pool.get('account.move.line"
+msgstr ""
+
+#. module: account
 #: wizard_field:account.fiscalyear.close,init,fy_id:0
 #: wizard_field:account.fiscalyear.close.state,init,fy_id:0
 msgid "Fiscal Year to close"
@@ -6515,7 +6529,7 @@ msgstr "Mapiranje konta"
 #. module: account
 #: help:product.category,property_account_expense_categ:0
 msgid "This account will be used to value outgoing stock for the current product category"
-msgstr ""
+msgstr "Ovaj konto će se koristiti za vrijednost izlazne količine trenutne kategorije proizvoda"
 
 #. module: account
 #: help:account.tax,base_sign:0

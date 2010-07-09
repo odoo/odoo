@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:34:32+0000\n"
-"PO-Revision-Date: 2010-06-03 12:34:32+0000\n"
+"POT-Creation-Date: 2010-07-09 12:32:00+0000\n"
+"PO-Revision-Date: 2010-07-09 12:32:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -851,7 +851,7 @@ msgstr "Välja nimi"
 #: field:account.tax.code,sign:0
 #: field:account.tax.code.template,sign:0
 msgid "Sign for parent"
-msgstr ""
+msgstr "Logi vanemana"
 
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
@@ -1209,23 +1209,6 @@ msgstr "Üks partner lehekohta"
 #: field:account.account.template,child_parent_ids:0
 msgid "Children"
 msgstr "Alam"
-
-#. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            # Check that the move balances, the tolerance for debit/credit must\n"
-"            # be smaller than the smallest value according to price accuracy\n"
-"            # (hence the +1 below)\n"
-"            # Example:\n"
-"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
-"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
-"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
@@ -1681,7 +1664,7 @@ msgstr "Valuutaga"
 #. module: account
 #: field:res.partner,debit:0
 msgid "Total Payable"
-msgstr ""
+msgstr "Võlg kokku"
 
 #. module: account
 #: wizard_button:account.fiscalyear.close.state,init,close:0
@@ -2476,7 +2459,7 @@ msgstr "Loo 3 kuupikkused perioodid"
 #. module: account
 #: view:account.invoice:0
 msgid "(keep empty to use the current period)"
-msgstr "(jätke tühjaks, et kasutada praegusel perioodil)"
+msgstr "(jätke tühjaks, et kasutada käesolevat perioodi)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree8
@@ -3268,7 +3251,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:0
 #, python-format
 msgid "The account entries lines are not in valid state."
-msgstr ""
+msgstr "Konto kirjete read ei ole õiges olekus."
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -3319,7 +3302,7 @@ msgstr ""
 #: view:product.template:0
 #: view:res.partner:0
 msgid "Accounting"
-msgstr ""
+msgstr "Raamatupidamine"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
@@ -4571,7 +4554,7 @@ msgstr "Kliendi arved"
 #. module: account
 #: field:res.partner,debit_limit:0
 msgid "Payable Limit"
-msgstr ""
+msgstr "Võla limiit"
 
 #. module: account
 #: wizard_field:account.move.line.reconcile,init_full,writeoff:0
@@ -4666,6 +4649,11 @@ msgstr "Otsi kirjeid"
 #: model:process.node,note:account.process_node_analytic0
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to reinvoice purchases, timesheets, ..."
+msgstr ""
+
+#. module: account
+#: view:ir.sequence:0
+msgid "Fiscal Year Sequence"
 msgstr ""
 
 #. module: account
@@ -6204,7 +6192,7 @@ msgstr ""
 #. module: account
 #: wizard_view:account.move.validate,init:0
 msgid "Validate Account Entries"
-msgstr "Kinnita konokirjed"
+msgstr "Kinnita kontokirjed"
 
 #. module: account
 #: selection:account.print.journal.report,init,sort_selection:0
@@ -6240,6 +6228,32 @@ msgstr "Tänane kuupäev"
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Sale"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            # Check that the move balances, the tolerance for debit/credit must\n"
+"            # be smaller than the smallest value according to price accuracy\n"
+"            # (hence the +1 below)\n"
+"            # Example:\n"
+"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
+"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
+"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
+"                # If the move is balanced\n"
+"                # Add to the list of valid moves\n"
+"                # (analytic lines will be created later for valid moves)\n"
+"                valid_moves.append(move)\n"
+"\n"
+"                # Check whether the move lines are confirmed\n"
+"                \n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                # Update the move lines (set them as valid)\n"
+"\n"
+"                self.pool.get('account.move.line"
 msgstr ""
 
 #. module: account
@@ -6637,5 +6651,5 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_overdue
 #: view:res.company:0
 msgid "Overdue Payments"
-msgstr "Tasumatta Maksed"
+msgstr "Tasumata Maksed"
 

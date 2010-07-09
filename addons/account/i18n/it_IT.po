@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:40:34+0000\n"
-"PO-Revision-Date: 2010-06-03 12:40:34+0000\n"
+"POT-Creation-Date: 2010-07-09 12:37:57+0000\n"
+"PO-Revision-Date: 2010-07-09 12:37:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Entries Encoding"
-msgstr "Codifica delle registrazioni"
+msgstr "Movimenti contabili"
 
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
@@ -1211,23 +1211,6 @@ msgid "Children"
 msgstr "Sottoconto"
 
 #. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            # Check that the move balances, the tolerance for debit/credit must\n"
-"            # be smaller than the smallest value according to price accuracy\n"
-"            # (hence the +1 below)\n"
-"            # Example:\n"
-"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
-"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
-"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Fiscal Position Taxes Mapping"
 msgstr ""
@@ -1353,7 +1336,7 @@ msgstr ""
 #. module: account
 #: field:account.payment.term,line_ids:0
 msgid "Terms"
-msgstr "Periodi"
+msgstr "Condizioni"
 
 #. module: account
 #: rml:account.vat.declaration:0
@@ -2099,7 +2082,7 @@ msgstr "Importo debito"
 #. module: account
 #: help:account.invoice,residual:0
 msgid "Remaining amount due."
-msgstr ""
+msgstr "Importo rimanente dovuto"
 
 #. module: account
 #: wizard_button:account.account.balance.report,checktype,report:0
@@ -3454,7 +3437,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.line,uos_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Unità di misura"
 
 #. module: account
 #: field:account.chart.template,property_account_receivable:0
@@ -3520,7 +3503,7 @@ msgstr "Imposta come bozza"
 #: help:account.invoice,origin:0
 #: help:account.invoice.line,origin:0
 msgid "Reference of the document that produced this invoice."
-msgstr ""
+msgstr "Riferimento al documento che ha prodotto questa fattura."
 
 #. module: account
 #: selection:account.account,type:0
@@ -3626,7 +3609,7 @@ msgstr "Note"
 #. module: account
 #: help:account.invoice,reconciled:0
 msgid "The account moves of the invoice have been reconciled with account moves of the payment(s)."
-msgstr ""
+msgstr "I movimenti contabili della fattura sono stati riconciliati con movimenti contabili del/i pagamento/i."
 
 #. module: account
 #: rml:account.invoice:0
@@ -4081,7 +4064,7 @@ msgstr "Manuale"
 #. module: account
 #: view:account.invoice:0
 msgid "Compute Taxes"
-msgstr ""
+msgstr "Calcola tasse"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,code_digits:0
@@ -4101,7 +4084,7 @@ msgstr ""
 #. module: account
 #: help:account.invoice,account_id:0
 msgid "The partner account used for this invoice."
-msgstr ""
+msgstr "Il conto del partner utilizzato per questa fattura."
 
 #. module: account
 #: help:account.tax.code,notprintable:0
@@ -4382,7 +4365,7 @@ msgstr ""
 #. module: account
 #: help:account.invoice,date_invoice:0
 msgid "Keep empty to use the current date"
-msgstr ""
+msgstr "Lasciare vuoto per utilizzare la data corrente"
 
 #. module: account
 #: rml:account.overdue:0
@@ -4666,6 +4649,11 @@ msgstr "Ricerca movimenti"
 #: model:process.node,note:account.process_node_analytic0
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to reinvoice purchases, timesheets, ..."
+msgstr ""
+
+#. module: account
+#: view:ir.sequence:0
+msgid "Fiscal Year Sequence"
 msgstr ""
 
 #. module: account
@@ -5085,7 +5073,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_move_line_form_encode_by_move
 #: model:ir.ui.menu,name:account.menu_encode_entries_by_move
 msgid "Entries Encoding by Move"
-msgstr "Codifica delle registrazioni per movimento"
+msgstr "Registrazioni per movimento"
 
 #. module: account
 #: wizard_view:account.analytic.account.chart,init:0
@@ -5100,7 +5088,7 @@ msgstr ""
 #. module: account
 #: field:account.tax,price_include:0
 msgid "Tax Included in Price"
-msgstr ""
+msgstr "Tassa compresa nel prezzo"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_tree2
@@ -6240,6 +6228,32 @@ msgstr "Data corrente"
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Sale"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            # Check that the move balances, the tolerance for debit/credit must\n"
+"            # be smaller than the smallest value according to price accuracy\n"
+"            # (hence the +1 below)\n"
+"            # Example:\n"
+"            #    difference == 0.01 is OK iff price_accuracy <= 1!\n"
+"            #    difference == 0.0001 is OK iff price_accuracy <= 3!\n"
+"            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):\n"
+"                # If the move is balanced\n"
+"                # Add to the list of valid moves\n"
+"                # (analytic lines will be created later for valid moves)\n"
+"                valid_moves.append(move)\n"
+"\n"
+"                # Check whether the move lines are confirmed\n"
+"                \n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                # Update the move lines (set them as valid)\n"
+"\n"
+"                self.pool.get('account.move.line"
 msgstr ""
 
 #. module: account

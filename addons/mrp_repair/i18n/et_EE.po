@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:34:32+0000\n"
-"PO-Revision-Date: 2010-06-03 12:34:32+0000\n"
+"POT-Creation-Date: 2010-07-09 12:32:00+0000\n"
+"PO-Revision-Date: 2010-07-09 12:32:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -178,6 +178,11 @@ msgstr "Remondikorralduse N° :"
 #: rml:repair.order:0
 msgid "Lot Number"
 msgstr "Seerianumber"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "Mustand"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -365,9 +370,9 @@ msgid "Add"
 msgstr "Lisa"
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Draft"
-msgstr "Mustand"
+#: wizard_view:mrp.repair.make_invoice,init:0
+msgid "Do you really want to create the invoice(s) ?"
+msgstr ""
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_form
@@ -527,11 +532,6 @@ msgstr "See väli võimaldab sul muuta remondikorralduse töövoogu. Kui valitud
 #: rml:repair.order:0
 msgid "Unit Price"
 msgstr "Ühiku hind"
-
-#. module: mrp_repair
-#: wizard_view:mrp.repair.make_invoice,init:0
-msgid "Do you really want to create the invoices ?"
-msgstr "Kas soovid tõesti luua arved ?"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0

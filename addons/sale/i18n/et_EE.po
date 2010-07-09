@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.10\n"
+"Project-Id-Version: OpenERP Server 5.0.11\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-03 12:34:33+0000\n"
-"PO-Revision-Date: 2010-06-03 12:34:33+0000\n"
+"POT-Creation-Date: 2010-07-09 12:32:00+0000\n"
+"PO-Revision-Date: 2010-07-09 12:32:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -97,7 +97,7 @@ msgstr "Arveldamata ja kohaletoimetatud read"
 #. module: sale
 #: view:sale.order:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Sea mustandiks"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -257,6 +257,11 @@ msgid "Fax :"
 msgstr "Faks :"
 
 #. module: sale
+#: selection:sale.order.line,state:0
+msgid "Draft"
+msgstr "Mustand"
+
+#. module: sale
 #: field:sale.order.line,price_net:0
 msgid "Net Price"
 msgstr "Netohind"
@@ -308,7 +313,7 @@ msgstr "Kinnita"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You must first cancel all packing attached to this sale order."
-msgstr ""
+msgstr "Sa pead kõigepealt tühistama kõik pakkimised, mis sellele müügikorraldusele lisatud."
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -356,7 +361,7 @@ msgstr "Korraldus Nr."
 #: field:sale.order,order_line:0
 #: view:sale.order.line:0
 msgid "Order Lines"
-msgstr ""
+msgstr "Korralduse read"
 
 #. module: sale
 #: rml:sale.order:0
@@ -378,7 +383,7 @@ msgstr "Sunni omistamine"
 #. module: sale
 #: view:sale.order:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "Maksuvaba summa"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_packing0
@@ -405,7 +410,7 @@ msgstr "Kui sa valid Tarnepoliitikaks 'Automaatne arve pärast tarnimist' siis a
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Viga !"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
@@ -458,7 +463,7 @@ msgstr "Kinnita korraldus"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Vigane toiming!"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -683,7 +688,7 @@ msgstr "Arveldamata read"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "No Customer Defined !"
-msgstr ""
+msgstr "Klienti pole määratud!"
 
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
@@ -726,9 +731,10 @@ msgid "on order"
 msgstr "korraldusel"
 
 #. module: sale
-#: selection:sale.order.line,state:0
-msgid "Draft"
-msgstr "Mustand"
+#: wizard_view:sale.order.line.make_invoice,init:0
+#: wizard_view:sale.order.make_invoice,init:0
+msgid "Do you really want to create the invoice(s) ?"
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -766,7 +772,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Maksuvaba summa"
 
 #. module: sale
 #: field:sale.order.line,state:0
@@ -793,7 +799,7 @@ msgstr "Toote müügid"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "invalid mode for test_state"
-msgstr ""
+msgstr "vigane viis test_olekule"
 
 #. module: sale
 #: rml:sale.order:0
@@ -1033,7 +1039,7 @@ msgstr "Pakkelehe kinnitamine liigutab need kohaletoimetamise korraldusele. Seda
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You cannot cancel a sale order line that has already been invoiced !"
-msgstr ""
+msgstr "Sa ei saa tühistada müügikorralduse rida, mis on juba arveldatud!"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1075,12 +1081,6 @@ msgstr "Müügikorralduse read"
 #: view:sale.order:0
 msgid "Create Invoice"
 msgstr "Loo arve"
-
-#. module: sale
-#: wizard_view:sale.order.line.make_invoice,init:0
-#: wizard_view:sale.order.make_invoice,init:0
-msgid "Do you really want to create the invoices ?"
-msgstr "Kas soovid tõesti luua arved ?"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
@@ -1200,13 +1200,13 @@ msgstr "Klient"
 #. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
-msgstr ""
+msgstr "Ostmise hinnakirjad"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Cannot delete Sale Order(s) which are already confirmed !"
-msgstr ""
+msgstr "Ei saa kustutada juba kinnitatud müügikorraldust!"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1263,7 +1263,7 @@ msgstr "Seadista noppepoliitika müügikorraldusele"
 #. module: sale
 #: model:process.node,name:sale.process_node_order0
 msgid "Order"
-msgstr ""
+msgstr "Korraldus"
 
 #. module: sale
 #: rml:sale.order:0
@@ -1315,7 +1315,7 @@ msgstr "See on nimekiri arvetest, mis on genereeritud sellele müügikorraldusel
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "States"
-msgstr ""
+msgstr "Olekud"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
