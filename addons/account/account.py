@@ -638,6 +638,7 @@ class account_journal(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+    
     def write(self, cr, uid, ids, vals, context=None):
         obj=[]
         if 'company_id' in vals:
@@ -719,14 +720,41 @@ class account_journal(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, type):
-        res={}
-        for line in self.browse(cr, uid, ids):
-            if type == 'situation':
-                  res= {'value':{'centralisation': True}}
-            else:
-                  res= {'value':{'centralisation': False}}
-        return res
+    def onchange_type(self, cr, uid, ids, type, currency):
+        data_pool = self.pool.get('ir.model.data')
+        user_pool = self.pool.get('res.users')
+        
+        type_map = {
+            'sale':'account_sp_journal_view',
+            'sale_refund':'account_sp_refund_journal_view',
+            'purchase':'account_sp_journal_view',
+            'purchase_refund':'account_sp_refund_journal_view',
+            'expense':'account_sp_journal_view',
+            'cash':'account_journal_bank_view',
+            'bank':'account_journal_bank_view',
+            'general':'account_journal_view',
+            'situation':'account_journal_view'
+        }
+        
+        res = {}
+        
+        view_id = type_map.get(type, 'general')
+        
+        user = user_pool.browse(cr, uid, uid)
+        if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
+            view_id = 'account_journal_bank_view_multi'
+        
+        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
+        data = data_pool.browse(cr, uid, data_id[0])
+    
+        res.update({
+            'centralisation':type == 'situation',
+            'view_id':data.res_id,
+        })
+        
+        return {
+            'value':res
+        }
 
 account_journal()
 
@@ -2385,6 +2413,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
+        data_pool = self.pool.get('ir.model.data')
 
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
@@ -2495,7 +2524,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Creating Journals
         vals_journal={}
-        view_id = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Journal View')])[0]
+        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')])
+        data = data_pool.browse(cr, uid, data_id[0])
+        view_id = data.res_id
+        
         seq_id = obj_sequence.search(cr, uid, [('name','=','Account Journal')])[0]
 
         if obj_multi.seq_journal:
@@ -2532,8 +2564,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Bank Journals
-        view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Cash Journal View')])[0]
-        view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Multi-Currency Cash Journal View')])[0]
+        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
+        data = data_pool.browse(cr, uid, data_id[0])
+        view_id_cash = data.res_id
+        #view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: why put  fix name
+        
+        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view_multi')])
+        data = data_pool.browse(cr, uid, data_id[0])
+        ref_acc_bank = data.res_id
+        #ref_acc_bank = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fix name
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
         current_num = 1

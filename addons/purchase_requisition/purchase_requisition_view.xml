@@ -41,7 +41,6 @@
                     <field name="origin"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </group>
-
                 <notebook colspan="4">
                     <page string="Products">
                         <field name="line_ids" colspan="4" nolabel="1">
@@ -83,7 +82,8 @@
                         <separator colspan="4" string=""/>
                          <group col="8" colspan="4">
                           <label colspan="6"  string=""/>
-                        <button name="%(action_purchase_requisition_partner)d" string="Requests for Quotation" type="action" icon="gtk-execute" />
+                        <button name="%(action_purchase_requisition_partner)d" string="Requests for Quotation" type="action" icon="gtk-execute" 
+                           attrs="{'readonly': [('state', '=', 'done')]}" />
                         </group>
                    </page>
                     <page string="Notes">
@@ -168,6 +168,17 @@
             </field>
         </field>
     </record>
-
+    
+    <record model="ir.ui.view" id="procurement_normal_form_view_inherit">
+        <field name="name">procurement.form.inherit</field>
+        <field name="type">form</field>
+        <field name="model">procurement.order</field>
+        <field name="inherit_id" ref="procurement.procurement_form_view"/>
+        <field name="arch" type="xml">
+             <xpath expr="/form/notebook/page/field[@name='close_move']" position="after">
+                <field name="requisition_id"/>
+            </xpath>
+        </field>
+    </record>
     </data>
 </openerp>

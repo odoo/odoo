@@ -19,9 +19,18 @@
 #
 ##############################################################################
 
-import event
-import wizard
-import report
-import res_partner
+from osv import fields,osv
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+
+    _columns = {
+        'speaker': fields.boolean('Speaker'),
+        'event_ids': fields.one2many('event.event','main_speaker_id',readonly=True),
+        'event_registration_ids': fields.one2many('event.registration','partner_id',readonly=True),
+    }
+
+res_partner()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

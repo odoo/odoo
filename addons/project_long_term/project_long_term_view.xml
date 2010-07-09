@@ -31,7 +31,34 @@
                     <field name="resource_id"/>
                     <field name="phase_id"/>
                     <field name="useability"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
                 </tree>
+            </field>
+        </record>
+        
+        <record id="view_project_resource_allocation_calendar" model="ir.ui.view">
+            <field name="name">project.resource.allocation.calendar</field>
+            <field name="model">project.resource.allocation</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar color="resource_id" date_stop="date_end" date_start="date_start" string="Resource Allocations">
+                    <field name="resource_id"/>
+                    <field name="useability"/>
+                </calendar>
+            </field>
+        </record>
+ 
+        <record id="view_project_resource_allocation_gantt" model="ir.ui.view">
+            <field name="name">project.resource.allocation.gantt</field>
+            <field name="model">project.resource.allocation</field>
+            <field name="type">gantt</field>
+            <field name="arch" type="xml">
+                <gantt color="resource_id" date_stop="date_end" date_start="date_start" string="Resource Allocations">
+                    <level object="resource.resource" link="resource_id" domain="[]">
+                        <field name="useability"/>
+                    </level>
+                </gantt>
             </field>
         </record>
 
@@ -58,7 +85,7 @@
             <field name="name">Resource Allocations</field>
             <field name="res_model">project.resource.allocation</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,gantt</field>
              <field name="context">{'search_default_resource': 1} </field>
             <!--<field name="search_view_id" ref="view_project_phase_search"/>-->
         </record>

@@ -223,7 +223,7 @@ class account_invoice(osv.osv):
     _log_create = True
     _columns = {
         'name': fields.char('Description', size=64, select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'origin': fields.char('Source Document', size=64, help="Reference of the document that produced this invoice."),
+        'origin': fields.char('Source Document', size=64, help="Reference of the document that produced this invoice.", readonly=True, states={'draft':[('readonly',False)]}),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -234,7 +234,7 @@ class account_invoice(osv.osv):
         'number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
-            required=True),
+            required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'comment': fields.text('Additional Information', translate=True),
 
         'state': fields.selection([
@@ -250,8 +250,8 @@ class account_invoice(osv.osv):
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
             \n* The \'Done\' state is set automatically when invoice is paid.\
             \n* The \'Cancelled\' state is used when user cancel invoice.'),
-        'date_invoice': fields.date('Date Invoiced', states={'open':[('readonly',True)], 'close':[('readonly',True)]}, help="Keep empty to use the current date"),
-        'date_due': fields.date('Due Date', states={'open':[('readonly',True)], 'close':[('readonly',True)]},
+        'date_invoice': fields.date('Date Invoiced', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, help="Keep empty to use the current date"),
+        'date_due': fields.date('Due Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]},
             help="If you use payment terms, the due date will be computed automatically at the generation "\
                 "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. The payment term may compute several due dates, for example 50% now, 50% in one month."),
         'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}),
@@ -291,7 +291,7 @@ class account_invoice(osv.osv):
             multi='all'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
         'check_total': fields.float('Total', digits_compute=dp.get_precision('Account'), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
         'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean',
             store={
@@ -300,7 +300,7 @@ class account_invoice(osv.osv):
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             }, help="The Ledger Postings of the invoice have been reconciled with Ledger Postings of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
-            help='The bank account to pay to or to be paid from'),
+            help='The bank account to pay to or to be paid from', readonly=True, states={'draft':[('readonly',False)]}),
         'move_lines':fields.function(_get_lines , method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
             store={
@@ -312,9 +312,9 @@ class account_invoice(osv.osv):
             },
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
-        'move_name': fields.char('Ledger Posting', size=64),
-        'user_id': fields.many2one('res.users', 'Salesman'),
-        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
+        'move_name': fields.char('Ledger Posting', size=64, readonly=True, states={'draft':[('readonly',False)]}),
+        'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True, states={'draft':[('readonly',False)]})
     }
     _defaults = {
         'type': _get_type,
@@ -1241,6 +1241,7 @@ class account_invoice_line(osv.osv):
         return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
+        print "2222*", uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context
         if context is None:
             context = {}
         company_id = context.get('company_id',False)

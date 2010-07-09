@@ -528,6 +528,7 @@ class Calendar(CalDAV, osv.osv):
                                 })
                 self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower(), context=context)
                 val = self.parse_ics(cr, uid, child, cal_children=cal_children, context=context)
+                val.update({'user_id': uid})
                 vals.append(val)
                 obj = self.pool.get(cal_children[child.name.lower()])
         if hasattr(obj, 'check_import'):
@@ -1052,7 +1053,8 @@ class Attendee(CalDAV, osv.osv_memory):
                     if cn_val:
                         attendee_add.params['CN'] = cn_val
             if not attendee['email']:
-                raise osv.except_osv(_('Error !'), _('Attendee must have an Email Id'))
+                attendee_add.value = 'MAILTO:'
+                #raise osv.except_osv(_('Error !'), _('Attendee must have an Email Id'))
             elif attendee['email']:
                 attendee_add.value = 'MAILTO:' + attendee['email']
         return vevent

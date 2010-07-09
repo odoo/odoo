@@ -372,7 +372,7 @@ class mrp_repair(osv.osv):
                             name = operation.name
 
                         if operation.product_id.property_account_income:
-                            account_id = operation.product_id.property_account_income
+                            account_id = operation.product_id.property_account_income.id
                         elif operation.product_id.categ_id.property_account_income_categ:
                             account_id = operation.product_id.categ_id.property_account_income_categ.id
                         else:

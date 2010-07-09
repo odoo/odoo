@@ -160,7 +160,7 @@ class project_issue(osv.osv, crm.crm_case):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
-        'email_cc': fields.text('Watchers Emails', size=252, help="These people\
+        'email_cc': fields.char('Watchers Emails', size=256, help="These people\
  will receive a copy of the future" \
 " communication between partner and users by email"),
         'date_open': fields.datetime('Opened', readonly=True),
