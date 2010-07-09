@@ -31,6 +31,13 @@ import collections
 import binascii
 import tools
 
+
+CRM_LEAD_PENDING_STATES = (
+    crm.AVAILABLE_STATES[2][0], # Cancelled
+    crm.AVAILABLE_STATES[3][0], # Done
+    crm.AVAILABLE_STATES[4][0], # Pending
+)
+
 class crm_lead(osv.osv, crm_case):
     """ CRM Lead Case """
     _name = "crm.lead"
@@ -95,6 +102,10 @@ class crm_lead(osv.osv, crm_case):
         return res
 
     _columns = {
+        # Overridden from res.partner.address:
+        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', 
+            select=True, help="Optional linked partner, usually after conversion of the lead"),
+        
         # From crm.case
         'name': fields.char('Name', size=64),
         'active': fields.boolean('Active', required=False),
@@ -334,8 +345,8 @@ and users"),
         # previous state, so we have to loop:
         for case in self.browse(cr, uid, ids, context=context):
             values = dict(vals)
-            if case.state == crm.AVAILABLE_STATES[4][0]: #pending
-                values.update(state=crm.AVAILABLE_STATES[1][0]) #open
+            if case.state in CRM_LEAD_PENDING_STATES:
+                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
 
         return res

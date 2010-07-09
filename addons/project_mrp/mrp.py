@@ -26,12 +26,16 @@ import tools
 class procurement_order(osv.osv):
     _name = "procurement.order"
     _inherit = "procurement.order"
+    _columns = {
+        'task_id': fields.many2one('project.task', 'Task')
+    }
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         for procurement in self.browse(cr, uid, ids):
             sline = self.pool.get('sale.order.line')
+            product_obj=self.pool.get('product.product')
             content = ''
             sale_order = self.pool.get('sale.order')
             so_ref =  procurement.name.split(':')[0]
@@ -69,6 +73,7 @@ class procurement_order(osv.osv):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
 
             name_task = ('','')
+            planned_hours=0.0
             if procurement.product_id.type == 'service':
                 proc_name = procurement.name
                 if procurement.origin == proc_name:
@@ -77,12 +82,12 @@ class procurement_order(osv.osv):
                 name_task = (procurement.origin, proc_name or '')
             else:
                 name_task = (procurement.product_id.name or procurement.origin, procurement.name or '')
-
+            planned_hours= procurement.product_id.sale_delay +procurement.product_id. produce_delay   
             task_id = self.pool.get('project.task').create(cr, uid, {
                 'name': '%s:%s' % name_task,
                 'date_deadline': procurement.date_planned,
-                'planned_hours': procurement.product_qty,
-                'remaining_hours': procurement.product_qty,
+                'planned_hours':planned_hours,
+                'remaining_hours': planned_hours,
                 'user_id': procurement.product_id.product_manager.id,
                 'notes': "b"+(l and l.order_id.note or ''),
                 'procurement_id': procurement.id,
@@ -93,7 +98,8 @@ class procurement_order(osv.osv):
                 'company_id': procurement.company_id.id,
                 'project_id': project_id,
             },context=context)
-
+            self.write(cr, uid, [procurement.id],{'task_id':task_id}) 
+            product_obj.write(cr,uid,[procurement.product_id.id],{'user_id':uid,'project_id':project_id})
         return task_id
 
 procurement_order()
