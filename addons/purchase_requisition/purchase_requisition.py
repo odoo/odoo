@@ -155,14 +155,17 @@ product_product()
 class procurement_order(osv.osv):
 
     _inherit = 'procurement.order'
-
+    _columns = {
+        'requisition_id' : fields.many2one('purchase.requisition','Latest Requisition')
+    }
     def make_po(self, cr, uid, ids, context=None):
         sequence_obj = self.pool.get('ir.sequence')
         res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         for proc_id, po_id in res.items():
             procurement = self.browse(cr, uid, proc_id)
+            requisition_id=False
             if procurement.product_id.purchase_requisition:
-                self.pool.get('purchase.requisition').create(cr, uid, {
+                requisition_id=self.pool.get('purchase.requisition').create(cr, uid, {
                     'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
                     'origin': procurement.name,
                     'date_end': procurement.date_planned,
@@ -174,6 +177,7 @@ class procurement_order(osv.osv):
                     })],
                     'purchase_ids': [(6,0,[po_id])]
                 })
+            self.write(cr,uid,proc_id,{'requisition_id':requisition_id})    
         return res
 
 procurement_order()
