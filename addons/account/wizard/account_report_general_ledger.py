@@ -24,7 +24,7 @@ from osv import fields, osv
 from tools.translate import _
 
 class account_report_general_ledger(osv.osv_memory):
-    _inherit = "account.common.journal.report"
+    _inherit = "account.common.report"
     _name = "account.report.general.ledger"
     _description = "General Ledger Report"
 
@@ -44,9 +44,8 @@ class account_report_general_ledger(osv.osv_memory):
     }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
         data['form'].update(self.read(cr, uid, ids, ['display_account',  'landscape',  'soldeinit', 'amount_currency', 'sortby'])[0])
-#        data['form']['query_get'] = query_line
+        data['form']['query_line'] = query_line
         if data['form']['landscape'] == True:
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True, }
         else:

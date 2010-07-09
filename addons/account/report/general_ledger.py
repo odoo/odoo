@@ -35,7 +35,7 @@ import pooler
 class general_ledger(rml_parse.rml_parse):
     _name = 'report.account.general.ledger'
 
-    def set_context(self, objects, data, ids, report_type = None):
+    def set_context(self, objects, data, ids, report_type=None):
         self.borne_date = self.get_min_date(data['form'])
         new_ids = []
         if (data['model'] == 'account.account'):
