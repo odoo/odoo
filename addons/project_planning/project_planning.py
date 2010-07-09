@@ -498,7 +498,10 @@ class report_account_analytic_planning_stat(osv.osv):
 WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.id, line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
             else:
                 cr.execute('SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s', (line.account_id.id, line.planning_id.date_from, line.planning_id.date_to))
-            result[line.id] = cr.fetchone()[0] * div2
+                
+        sum = cr.fetchone()
+        if sum and sum[0]:
+            result[line.id] = sum[0] * div2
         return result
 
     def _sum_amount_tasks(self, cr, uid, ids, name, args, context=None):
@@ -527,13 +530,15 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
                 WHERE
                 ''' + where + '''
                     project_id IN (select id from project_project where category_id=%s) AND
-                    date_close>=%s AND
-                    date_close<=%s''', (
+                    date_end>=%s AND
+                    date_end<=%s''', (
                 line.account_id.id,
                 line.planning_id.date_from,
                 line.planning_id.date_to)
             )
-            result[line.id] = cr.fetchone()[0] /div * div2
+            sum = cr.fetchone()
+            if sum and sum[0]:
+                result[line.id] = sum[0] /div * div2
         return result
 
     _columns = {

@@ -26,8 +26,8 @@
     "depends": ["project"],
     "author": "Tiny",
     "description": """
-    This module provides the functionality to send messages within a project.'
-    A user can send messages individually to other user also he can broadcast
+    This module provides the functionality to send messages within a project.
+    A user can send messages individually to other user. He can even broadcast
     it to all the users.
     """,
     'website': 'http://www.openerp.com',

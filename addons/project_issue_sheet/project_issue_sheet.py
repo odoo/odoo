@@ -29,6 +29,7 @@ class project_issue(osv.osv):
         'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
         'analytic_account_id': fields.related('project_id', 'category_id', string='Analytic Account')
     }
+    
 project_issue()
 
 class account_analytic_line(osv.osv):
