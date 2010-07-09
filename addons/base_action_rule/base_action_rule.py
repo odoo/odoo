@@ -22,7 +22,8 @@
 from datetime import datetime
 from osv import fields, osv, orm
 from tools.translate import _
-import mx.DateTime
+from datetime import datetime
+from datetime import timedelta
 import pooler 
 import re
 import time
@@ -354,23 +355,23 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
                 base = False
                 if hasattr(obj, 'create_date') and action.trg_date_type=='create':
-                    base = mx.DateTime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                    base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
                 elif hasattr(obj, 'create_date') and action.trg_date_type=='action_last':
                     if hasattr(obj, 'date_action_last') and obj.date_action_last:
-                        base = mx.DateTime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
+                        base = datetime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
                     else:
-                        base = mx.DateTime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                        base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
                 elif hasattr(obj, 'date_deadline') and action.trg_date_type=='deadline' \
                                 and obj.date_deadline:
-                    base = mx.DateTime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
+                    base = datetime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
                 elif hasattr(obj, 'date') and action.trg_date_type=='date' and obj.date:
-                    base = mx.DateTime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
+                    base = datetime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
                 if base:
                     fnct = {
-                        'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval), 
-                        'day': lambda interval: mx.DateTime.RelativeDateTime(days=interval), 
-                        'hour': lambda interval: mx.DateTime.RelativeDateTime(hours=interval), 
-                        'month': lambda interval: mx.DateTime.RelativeDateTime(months=interval), 
+                        'minutes': lambda interval: timedelta(minutes=interval), 
+                        'day': lambda interval: timedelta(days=interval), 
+                        'hour': lambda interval: timedelta(hours=interval), 
+                        'month': lambda interval: timedelta(months=interval), 
                     }
                     d = base + fnct[action.trg_date_range_type](action.trg_date_range)
                     dt = d.strftime('%Y-%m-%d %H:%M:%S')

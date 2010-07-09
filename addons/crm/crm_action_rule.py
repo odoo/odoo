@@ -24,7 +24,6 @@ import re
 import os
 import base64
 import tools
-import mx.DateTime
 
 from tools.translate import _
 from osv import fields
