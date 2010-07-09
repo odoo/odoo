@@ -828,7 +828,7 @@ class sale_order_line(osv.osv):
         'discount': fields.float('Discount (%)', digits=(16, 2), readonly=True, states={'draft':[('readonly',False)]}),
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
         'notes': fields.text('Notes'),
-        'th_weight': fields.float('Weight'),
+        'th_weight': fields.float('Weight', readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
                 help=' * The \'Draft\' state is set automatically when sale order in draft state. \
                     \n* The \'Confirmed\' state is set automatically when sale order in confirm state. \
@@ -837,7 +837,7 @@ class sale_order_line(osv.osv):
                     \n* The \'Cancelled\' state is set automatically when user cancel sale order.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
-        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
+        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft':[('readonly',False)]}),
     }
     _order = 'sequence, id'
     _defaults = {
@@ -851,10 +851,17 @@ class sale_order_line(osv.osv):
         'type': 'make_to_stock',
         'product_packaging': False
     }
-
+    
+    def call_make_invoices(self, cr, uid, ids, context):
+        line_make_invoice_obj = self.pool.get("sale.order.line.make.invoice")
+        context.update({'active_ids' : ids,'active_id' : ids})
+        invoice_call = line_make_invoice_obj.make_invoices(cr, uid, ids, context)
+        return True
+    
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+       
         def _get_line_qty(line):
             if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
                 if line.product_uos:
@@ -925,7 +932,7 @@ class sale_order_line(osv.osv):
         for sid in sales.keys():
             wf_service.trg_write(uid, 'sale.order', sid, cr)
         return create_ids
-
+        
     def button_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

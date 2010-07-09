@@ -396,12 +396,12 @@
                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                             <separator colspan="4" string="States"/>
                             <field name="state"/>
-                            <button colspan="1"
-                              name="%(action_view_sale_order_line_make_invoice)d"
-                              string="Make Invoice"
-                              type="action"
-                              icon="terp-document-new" />
-                            <group col="2" colspan="2">
+                            <group col="3" colspan="2">
+                            	<button colspan="1"
+	                              name="call_make_invoices"
+	                              string="Create Invoice"
+	                              type="object"
+	                              icon="terp-document-new" />
                                 <button name="button_done"
                                     states="confirmed,exception"
                                     string="Done" type="object"
