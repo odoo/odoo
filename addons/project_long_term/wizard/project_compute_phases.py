@@ -61,7 +61,6 @@ class project_compute_phases(osv.osv_memory):
        resource_obj = self.pool.get('resource.resource')
        uom_obj = self.pool.get('product.uom')
        phase_resource_obj = False
-
        if context is None:
            context = {}
        if phase:
@@ -134,14 +133,13 @@ class project_compute_phases(osv.osv_memory):
 
         if context is None:
             context = {}
-        project_obj = self.pool.get('project.project')
         phase_obj = self.pool.get('project.phase')
         data = self.read(cr, uid, ids, [], context=context)[0]
         if not data['project_id'] and data['target_project'] == 'one':
             raise osv.except_osv(_('Error!'), _('Please Specify Project to be schedule'))
         if data['project_id']:        # If project mentioned find its phases
-            project_id = project_obj.browse(cr, uid, data['project_id'], context=context)
-            phase_ids = phase_obj.search(cr, uid, [('project_id', '=', project_id.id),
+            project_id = data['project_id']
+            phase_ids = phase_obj.search(cr, uid, [('project_id', '=', project_id),
                                                   ('state', 'in', ['draft', 'open', 'pending']),
                                                   ('previous_phase_ids', '=', False)
                                                   ])
