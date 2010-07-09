@@ -176,11 +176,13 @@ class event_event(osv.osv):
         'note': fields.text('Notes', help="Description or Summary of Event"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         "unit_price": fields.float('Cost'),
-        'partner_id': fields.many2one('res.partner','Teacher'),
+        'main_speaker_id': fields.many2one('res.partner','Main Speaker'),
+        'speaker_ids':fields.many2many('res.partner', 'event_speaker_rel', 'speaker_id', 'partner_id', 'Other Speakers'),
         'address_id': fields.many2one('res.partner.address','Location Room'),
-        'teacher_confirmed': fields.boolean('Teacher Confirmed'),
+        'speaker_confirmed': fields.boolean('Speaker Confirmed'),
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country'),
+        'language': fields.char('Language',size=64),
 
         
     }
