@@ -30,8 +30,8 @@
             </field>
         </record>
 
-	<record id="action_account_general_ledger_menu" model="ir.actions.act_window">
-            <field name="name">Account General Ledger</field>
+	<record id="action_account_general_ledger_menu" model="ir.actions.act_window">  <!-- rename id -->
+            <field name="name">General Ledger</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.report.general.ledger</field>
             <field name="view_type">form</field>
@@ -39,6 +39,16 @@
             <field name="view_id" ref="account_report_general_ledger_view"/>
             <field name="target">new</field>
     	</record>
+
+		<record model="ir.values" id="action_account_general_ledger_values">
+            <field name="model_id" ref="account.model_account_account" />
+            <field name="object" eval="1" />
+            <field name="name">General Ledger</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_general_ledger_menu'))" />
+            <field name="key">action</field>
+            <field name="model">account.account</field>
+		</record>
 
         <menuitem
         	icon="STOCK_PRINT"
