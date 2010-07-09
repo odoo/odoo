@@ -58,10 +58,10 @@ class purchase_report(osv.osv):
         'delay_pass':fields.float('Days to Deliver', digits=(16,2), readonly=True, group_operator="avg"),
         'quantity': fields.float('# of Products', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
-        'price_average': fields.float('Unit Price', readonly=True, group_operator="avg"),
+        'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'negociation': fields.float('Purchase-Standard Price', readonly=True, group_operator="avg"),
         'price_standard': fields.float('Products Value', readonly=True, group_operator="sum"),
-        'nbr': fields.integer('# of PO Lines', readonly=True),
+        'nbr': fields.integer('# of Lines', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
 
