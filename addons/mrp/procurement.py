@@ -40,8 +40,11 @@ class procurement_order(osv.osv):
         """
         properties = [x.id for x in procurement.property_ids]
         bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
-        if not bom_id:
+        if not bom_id:            
             cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
+            for (id, name) in self.name_get(cr, uid, procurement.id):
+                message = _('Procurement ') + " '" + name + "' "+ _("has an exception.") + _('No BoM defined for this product !')
+                self.log(cr, uid, id, message)
             return False
         return True
     

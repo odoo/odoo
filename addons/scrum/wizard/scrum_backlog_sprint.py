@@ -19,6 +19,7 @@
 #
 ##############################################################################
 from osv import osv, fields
+from tools.translate import _
 
 class backlog_sprint_assign(osv.osv_memory):
     _name = 'backlog.assign.sprint'
@@ -35,6 +36,7 @@ class backlog_sprint_assign(osv.osv_memory):
 
     def assign_sprint(self, cr, uid, ids, context=None):
         backlog_obj = self.pool.get('scrum.product.backlog')
+        sprint_obj = self.pool.get('scrum.sprint')
         task = self.pool.get('project.task')
         backlog_ids = []
         if context is None:
@@ -43,7 +45,7 @@ class backlog_sprint_assign(osv.osv_memory):
         for backlog in backlog_obj.browse(cr, uid, context['active_ids'], context=context):
             backlog_ids.append(backlog.id)
             if data['convert_to_task']:
-                task.create(cr, uid, {
+                task_id = task.create(cr, uid, {
                     'product_backlog_id': backlog.id,
                     'name': backlog.name,
                     'description': backlog.note,
@@ -52,8 +54,13 @@ class backlog_sprint_assign(osv.osv_memory):
                     'planned_hours':backlog.expected_hours,
                     'remaining_hours':backlog.expected_hours,
                 })
+                message = _('Product Backlog') + " '" + backlog.name + "' "+ _("is converted into Task %d."%(task_id,))
+                self.log(cr, uid, backlog.id, message)
             if data['state_open'] and backlog.state == "draft":
                 backlog_obj.write(cr, uid, backlog.id, {'state':'open'})
+            sprint = sprint_obj.browse(cr, uid, data['sprint_id'], context=context)
+            message = _('Product Backlog') + " '" + backlog.name + "' "+ _("is assigned sprint:%s"%(sprint.name))
+            self.log(cr, uid, backlog.id, message)
         backlog_obj.write(cr, uid, backlog_ids, {'sprint_id': data['sprint_id']}, context=context)
         return {}
 

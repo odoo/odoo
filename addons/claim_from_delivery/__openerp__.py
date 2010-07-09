@@ -21,7 +21,7 @@
     "name" : "Claim from delivery",
     "version" : "1.0",
     "author" : "Tiny",
-    "category" : "Enterprise Specific Modules/Food Industries",
+    "category" : "Generic Modules/Inventory Control",
     "depends" : ["base", "crm_claim", "stock"],
     "init_xml" : [],
     "demo_xml" : [],
@@ -31,5 +31,6 @@
     "active": False,
     "installable": True
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

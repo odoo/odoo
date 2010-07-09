@@ -174,6 +174,9 @@ class project(osv.osv):
 
     def set_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'close'}, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Project ') + " '" + name + "' "+ _("is Closed.")
+            self.log(cr, uid, id, message)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
@@ -190,6 +193,9 @@ class project(osv.osv):
 
     def reset_project(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=True, context=context)
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Project ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return res
 
     def copy(self, cr, uid, id, default={}, context=None):
@@ -434,6 +440,8 @@ class task(osv.osv):
                 elif project.warn_manager:
                     task_id = ids[0]
                     mail_send = True
+            message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
+            self.log(cr, uid, task.id, message)
             self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
@@ -494,6 +502,8 @@ class task(osv.osv):
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
                 })
+            message = _('Task ') + " '" + task.name + "' "+ _("is Cancelled.")
+            self.log(cr, uid, task.id, message)
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
         return True
 
@@ -501,6 +511,8 @@ class task(osv.osv):
         tasks= self.browse(cr,uid,ids)
         for t in tasks:
             self.write(cr, uid, [t.id], {'state': 'open'})
+            message = _('Task ') + " '" + t.name + "' "+ _("is Open.")
+            self.log(cr, uid, t.id, message)
         return True
 
     def do_draft(self, cr, uid, ids, *args):
@@ -510,6 +522,9 @@ class task(osv.osv):
 
     def do_pending(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'pending'})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Task ') + " '" + name + "' "+ _("is Pending.")
+            self.log(cr, uid, id, message)
         return True
 
     def next_type(self, cr, uid, ids, *args):
