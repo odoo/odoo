@@ -61,7 +61,8 @@ class account_invoice_refund(osv.osv_memory):
             date = False
             period = False
             description = False
-            for inv in inv_obj.browse(cr, uid, context['active_ids'], context=context):
+            company = self.pool.get('res.users').browse(cr, uid, uid).company_id
+            for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
                     raise osv.except_osv(_('Error !'), _('Can not %s draft/proforma/cancel invoice.') % (mode))
                 if form['period'] :
@@ -77,11 +78,8 @@ class account_invoice_refund(osv.osv_memory):
                                             and name = 'company_id'")
                             result_query = cr.fetchone()
                             if result_query:
-                                cr.execute("""SELECT id
-                                          from account_period where date(%s)
-                                          between date_start AND  date_stop \
-                                          and company_id = %s limit 1 """,
-                                          (date, self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id,))
+                                cr.execute("""select p.id from account_fiscalyear y, account_period p where y.id=p.fiscalyear_id \
+                                    and date(%s) between p.date_start AND p.date_stop and y.company_id = %s limit 1""", (date, company.id,))
                             else:
                                 cr.execute("""SELECT id
                                         from account_period where date(%s)
@@ -154,7 +152,7 @@ class account_invoice_refund(osv.osv_memory):
                             'tax_line': tax_lines,
                             'period_id': period,
                             'name': description
-                            })
+                        })
 
                         for field in ('address_contact_id', 'address_invoice_id', 'partner_id',
                                 'account_id', 'currency_id', 'payment_term', 'journal_id'):
