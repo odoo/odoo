@@ -78,7 +78,7 @@ class account_invoice_refund(osv.osv_memory):
                                             and name = 'company_id'")
                             result_query = cr.fetchone()
                             if result_query:
-                                cr.execute("""select p.id, p.name from account_fiscalyear y, account_period p where y.id=p.fiscalyear_id \
+                                cr.execute("""select p.id from account_fiscalyear y, account_period p where y.id=p.fiscalyear_id \
                                     and date(%s) between p.date_start AND p.date_stop and y.company_id = %s limit 1""", (date, company.id,))
                             else:
                                 cr.execute("""SELECT id
