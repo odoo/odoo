@@ -183,7 +183,7 @@ class account_cash_statement(osv.osv):
             ('open','Open')], 'State', required=True, states={'confirm': [('readonly', True)]}, readonly="1"),
         'total_entry_encoding':fields.function(_get_sum_entry_encoding, method=True, store=True, string="Cash Transaction", help="Total cash transactions"),
         'closing_date':fields.datetime("Closed On"),
-        'balance_end': fields.function(_end_balance, method=True, store=True, string='Balance', help="Closing balance based on transactions"),
+        'balance_end': fields.function(_end_balance, method=True, store=True, string='Balance', help="Closing balance based on Opening Balance and Transactions"),
         'balance_end_cash': fields.function(_balance_end_cash, method=True, store=True, string='Balance', help="Closing balance based on cashBox"),
         'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
         'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
@@ -313,7 +313,7 @@ class account_cash_statement(osv.osv):
         self.write(cr, uid, ids, vals)
         return True
 
-    def button_confirm(self, cr, uid, ids, context={}):
+    def button_confirm_cash(self, cr, uid, ids, context={}):
         
         """ Check the starting and ending detail of  statement 
         @return: True 
@@ -324,7 +324,7 @@ class account_cash_statement(osv.osv):
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         account_bank_statement_line_obj = self.pool.get('account.bank.statement.line')
-
+        
         company_currency_id = res_users_obj.browse(cr, uid, uid, context=context).company_id.currency_id.id
 
         for st in self.browse(cr, uid, ids, context):
