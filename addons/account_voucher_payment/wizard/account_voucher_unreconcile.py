@@ -18,19 +18,31 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields, osv
+
+import netsvc
+from osv import osv
+from osv import fields
 
 class account_voucher_unreconcile(osv.osv_memory):
     _name = "account.voucher.unreconcile"
     _description = "Account voucher unreconcile"
     
+    _columns = {
+        'remove':fields.boolean('Want to remove accounting entries too ?', required=False),
+    }
+    
+    _defaults = {
+        'remove': lambda *a: True,
+    }
+    
     def trans_unrec(self, cr, uid, ids, context=None):
+        res = self.browse(cr, uid, ids[0])
         if context is None:
             context = {}
         voucher_pool = self.pool.get('account.voucher')
         reconcile_pool = self.pool.get('account.move.reconcile')
         if context.get('active_id'):
-            voucher = obj_voucher.browse(cr, uid, context.get('active_id'), context=context)
+            voucher = voucher_pool.browse(cr, uid, context.get('active_id'), context)
             recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
@@ -38,6 +50,10 @@ class account_voucher_unreconcile(osv.osv_memory):
             
             for rec in recs:
                 obj_reconcile.unlink(cr, uid, rec)
+            
+            if res.remove:
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'account.voucher', context.get('active_id'), 'cancel_voucher', cr)
             
         return {}
 

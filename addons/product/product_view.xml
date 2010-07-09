@@ -127,9 +127,9 @@
                             </group>
                             <group colspan="2" col="2" name="store">
                                 <separator string="Storage Localisation" colspan="2"/>
-                                <field name="loc_rack"/>
-                                <field name="loc_row"/>
-                                <field name="loc_case"/>
+                                <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}" />
+                                <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
                             <group colspan="2" col="2" name="misc" groups="base.group_extended">

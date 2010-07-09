@@ -330,53 +330,50 @@
             <field name="arch" type="xml">
                 <form string="Account Journal">
                     <group colspan="4" col="6">
-                        <field name="name" select="1" colspan="4"/>
+                        <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="type" on_change="onchange_type(type)"/>
-                        <field name="refund_journal" attrs="{'readonly':[('type','=','general'),('type','=','cash'),('type','=','situation')]}"/>
+                        <field name="type" on_change="onchange_type(type, currency)"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <group colspan="2" col="2">
-                                <separator string="Journal View" colspan="4"/>
-                                <field name="view_id" widget="selection"/>
+                            <group col="2" colspan="2">
+                                <group colspan="2" col="2">
+                                    <separator string="Accounts" colspan="4"/>
+                                    <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                </group>
+                                <group colspan="2" col="2">
+                                    <separator string="Journal View" colspan="4"/>
+                                    <field name="view_id" widget="selection"/>
+                                </group>
                             </group>
-
-                            <group colspan="2" col="2">
-                                <separator string="Sequence" colspan="4"/>
-                                <field name="sequence_id"/>
-                            </group>
-
-                            <group colspan="2" col="2">
-                                <separator string="Accounts" colspan="4"/>
-                                <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            </group>
-
-                            <group colspan="2" col="2">
-                                <separator string="Invoicing Data" colspan="4"/>
-                                <field name="invoice_sequence_id"/>
-                                <field name="group_invoice_lines"/>
-                            </group>
-
+                            
                             <group colspan="2" col="2">
                                 <separator string="Company" colspan="4"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="user_id" groups="base.group_extended"/>
                                 <field name="currency"/>
                             </group>
-                            <group col="2" colspan="2">
-                                <group colspan="2" col="2">
-                                    <separator string="Validations" colspan="4"/>
-                                    <field name="allow_date" groups="base.group_extended"/>
-                                </group>
+                            <group colspan="2" col="2">
+                                <separator string="Validations" colspan="4"/>
+                                <field name="allow_date" groups="base.group_extended"/>
+                            </group>
 
-                                <group colspan="2" col="2">
-                                    <separator string="Other Configuration" colspan="4"/>
-                                    <field name="centralisation" groups="base.group_extended"/>
-                                    <field name="entry_posted"/>
-                                    <!-- <field name="update_posted"/> -->
-                                </group>
+                            <group colspan="2" col="2">
+                                <separator string="Other Configuration" colspan="4"/>
+                                <field name="centralisation" groups="base.group_extended"/>
+                                <field name="entry_posted"/>
+                                 <field name="update_posted"/> 
+                            </group>
+                            
+                            <group colspan="2" col="2">
+                                <separator string="Invoicing Data" colspan="4"/>
+                                <field name="invoice_sequence_id" groups="base.group_extended"/>
+                                <field name="group_invoice_lines"/>
+                            </group>
+                            <group colspan="2" col="2" groups="base.group_extended">
+                                <separator string="Sequence" colspan="4"/>
+                                <field name="sequence_id"/>
                             </group>
                         </page>
                         <page string="Entry Controls" groups="base.group_extended">
@@ -1212,7 +1209,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="domain">[('journal_id.type', 'in', ['sale', 'sale_refund'])]</field>
+            <field name="domain">[('journal_id.type', 'in', ['sale', 'purchase_refund'])]</field>
         </record>
 
         <menuitem action="action_account_moves_sale" id="menu_eaction_account_moves_sale" parent="menu_finance_receivables"/>
@@ -1224,7 +1221,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="domain">[('journal_id.type', 'in', ['purchase', 'purchase_refund'])]</field>
+            <field name="domain">[('journal_id.type', 'in', ['purchase', 'sale_refund'])]</field>
             <field name="context">{'journal_id':1}</field>
         </record>
 

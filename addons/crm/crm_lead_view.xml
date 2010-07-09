@@ -43,16 +43,15 @@
                 <group colspan="4" col="7">
                     <field name="name" required="1" string="Name"/>
                     <field name="priority"/>
-                    <field name="date_deadline"/>
                     <button
                          name="convert_opportunity"
                          string="Convert to Opportunity"
                          help="Convert to Opportunity"
                          icon="gtk-index"
+                         colspan="2"
                          type="object"/>
                     <newline />
-                    <field name="section_id" colspan="1"
-                        widget="selection" />
+                    <field name="section_id" widget="selection" />
                     <field name="user_id" />
                     <field name="stage_id" widget="selection"
                         domain="[('object_id.model', '=', 'crm.lead')]" />

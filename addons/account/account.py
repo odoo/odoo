@@ -623,7 +623,7 @@ class account_journal(osv.osv):
         'centralisation': fields.boolean('Centralised counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
         'update_posted': fields.boolean('Allow Cancelling Entries', help="Check this box if you want to allow the cancellation the entries related to this journal or of the invoice related to this journal"),
         'group_invoice_lines': fields.boolean('Group invoice lines', help="If this box is checked, the system will try to group the accounting lines when generating them from invoices."),
-        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=True),
+        'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=False),
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
@@ -638,6 +638,7 @@ class account_journal(osv.osv):
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+    
     def write(self, cr, uid, ids, vals, context=None):
         obj=[]
         if 'company_id' in vals:
@@ -646,8 +647,58 @@ class account_journal(osv.osv):
                 raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
+    def create_sequence(self, cr, uid, ids, context={}):
+        """
+        Create new entry sequence for every new Joural
+        @param cr: cursor to database
+        @param user: id of current user
+        @param ids: list of record ids to be process
+        @param context: context arguments, like lang, time zone
+        @return: return a result
+        """
+        
+        seq_pool = self.pool.get('ir.sequence')
+        seq_typ_pool = self.pool.get('ir.sequence.type')
+        
+        result = True
+        
+        journal = self.browse(cr, uid, ids[0], context)
+        code = journal.code.lower()     
+        types = {
+            'name':journal.name,
+            'code':code
+        }
+        type_id = seq_typ_pool.create(cr, uid, types)
+        
+        seq = {
+            'name':journal.name,
+            'code':code,
+            'active':True,
+            'prefix':journal.code + "/%(year)s/",
+            'padding':4,
+            'number_increment':1
+        }
+        seq_id = seq_pool.create(cr, uid, seq)
+        
+        res = {}
+        if not journal.sequence_id:
+            res.update({
+                'sequence_id':seq_id
+            })
+        
+        if not journal.invoice_sequence_id:
+            res.update({
+                'invoice_sequence_id':seq_id
+            })
+        
+        result = self.write(cr, uid, [journal.id], res)
+            
+        return result
+        
     def create(self, cr, uid, vals, context={}):
         journal_id = super(account_journal, self).create(cr, uid, vals, context)
+        self.create_sequence(cr, uid, [journal_id], context)
+
 #       journal_name = self.browse(cr, uid, [journal_id])[0].code
 #       periods = self.pool.get('account.period')
 #       ids = periods.search(cr, uid, [('date_stop','>=',time.strftime('%Y-%m-%d'))])
@@ -669,14 +720,41 @@ class account_journal(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, type):
-        res={}
-        for line in self.browse(cr, uid, ids):
-            if type == 'situation':
-                  res= {'value':{'centralisation': True}}
-            else:
-                  res= {'value':{'centralisation': False}}
-        return res
+    def onchange_type(self, cr, uid, ids, type, currency):
+        data_pool = self.pool.get('ir.model.data')
+        user_pool = self.pool.get('res.users')
+        
+        type_map = {
+            'sale':'account_sp_journal_view',
+            'sale_refund':'account_sp_refund_journal_view',
+            'purchase':'account_sp_journal_view',
+            'purchase_refund':'account_sp_refund_journal_view',
+            'expense':'account_sp_journal_view',
+            'cash':'account_journal_bank_view',
+            'bank':'account_journal_bank_view',
+            'general':'account_journal_view',
+            'situation':'account_journal_view'
+        }
+        
+        res = {}
+        
+        view_id = type_map.get(type, 'general')
+        
+        user = user_pool.browse(cr, uid, uid)
+        if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
+            view_id = 'account_journal_bank_view_multi'
+        
+        data_id = data_pool.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
+        data = data_pool.browse(cr, uid, data_id[0])
+    
+        res.update({
+            'centralisation':type == 'situation',
+            'view_id':data.res_id,
+        })
+        
+        return {
+            'value':res
+        }
 
 account_journal()
 
@@ -2482,8 +2560,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Bank Journals
-        view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Cash Journal View')])[0]
-        view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Multi-Currency Cash Journal View')])[0]
+        view_id_cash = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal View')])[0] #TOFIX: why put  fix name
+        view_id_cur = self.pool.get('account.journal.view').search(cr, uid, [('name','=','Bank/Cash Journal (Multi-Currency) View')])[0] #TOFIX: why put fix name
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
         current_num = 1
