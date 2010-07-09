@@ -399,17 +399,21 @@
                             <group col="3" colspan="2">
                             	<button colspan="1"
 	                              name="call_make_invoices"
+	                              states="confirmed"
 	                              string="Create Invoice"
 	                              type="object"
-	                              icon="terp-document-new" />
+	                              icon="terp-document-new"
+	                              attrs="{'invisible': [('invoiced', '=', 1)]}" />
                                 <button name="button_done"
                                     states="confirmed,exception"
                                     string="Done" type="object"
-                                    icon="gtk-jump-to" />
+                                    icon="gtk-jump-to" 
+                                    attrs="{'invisible': [('invoiced', '=', 0)]}"/>
                                 <button name="button_cancel"
                                     states="confirmed,exception"
                                     string="Cancel" type="object"
-                                    icon="gtk-cancel" />
+                                    icon="gtk-cancel"
+                                    attrs="{'invisible': [('invoiced', '=', 1)]}" />
                             </group>
                         </page>
 <!--                        <page string="Properties" groups="base.group_extended">-->
@@ -492,6 +496,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
+            <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
         </record>
 
