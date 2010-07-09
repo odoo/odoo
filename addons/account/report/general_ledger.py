@@ -38,10 +38,11 @@ class general_ledger(rml_parse.rml_parse):
     def set_context(self, objects, data, ids, report_type=None):
         self.borne_date = self.get_min_date(data['form'])
         new_ids = ids
+        self.query = data['form']['query_line']
         if (data['model'] == 'ir.ui.menu'):
             new_ids = [data['form']['chart_account_id']]
         objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
-        super(general_ledger, self).set_context(objects, data, new_ids, report_type)
+        super(general_ledger, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def __init__(self, cr, uid, name, context=None):
         if context is None:
@@ -122,7 +123,6 @@ class general_ledger(rml_parse.rml_parse):
 
         res = []
         ctx = self.context.copy()
-        self.query = form['query_line']
         if account and account.child_consol_ids: # add ids of consolidated childs also of selected account
             ctx['consolidate_childs'] = True
             ctx['account_id'] = account.id

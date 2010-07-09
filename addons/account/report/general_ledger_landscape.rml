@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-   <template pageSize="(1120.5,767.8)" title="Test" author="Martin Simon" allowSplitting="20" >
+   <template pageSize="(1120.5,767.8)" title="General Ledger" author="Openerp" allowSplitting="20" >
     <pageTemplate id="first">
       <frame id="first" x1="22.0" y1="31.0" width="1080" height="680"/>
 			<pageGraphics>
@@ -177,7 +177,7 @@
       <font color="white"> </font>
     </para>
    <para>[[ repeatIn(objects, 'a') ]]</para>
-   
+
    <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -187,7 +187,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    
+
     <blockTable colWidths="60.0,60.0,60.0,60.0,59.0,59.0,59.0,59.0,59.0" style="Table_Sub_Header_Content">
       <tr>
         <td><para style="terp_tblheader_General_Centre">Start Date</para></td>
@@ -214,7 +214,7 @@
         <td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]] </para></td>
       </tr>
     </blockTable>
-    
+
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -224,7 +224,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-  
+
    	<blockTable colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_header" repeatRows="1">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
        <tr>
           <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
@@ -240,13 +240,13 @@
           <td><para style="P12"><font color="white"> </font></para><para style="P4">Currency</para></td>
        </tr>
     </blockTable>
-    
-    
-    
-     <section> 
-    
+
+
+
+     <section>
+
       <para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-    
+
       <blockTable rowHeights="0.65cm" colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
       	<tr>
         	<td>
@@ -286,9 +286,9 @@
 			<td><para style="P4_content">[[ formatLang(line['amount_currency'] or '')]] [[ line['currency_code'] ]]</para></td>
 		</tr>
 	  </blockTable>
-	
+
 	</section>
-     
+
     <blockTable colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
        <tr>
           <td><para style="P12"><font color="white"> </font></para><para style="date">Date</para></td>
@@ -303,11 +303,11 @@
           <td><para style="P12"><font color="white"> </font></para><para style="P4">Balance</para></td>
        </tr>
 	</blockTable>
-	
+
 	<section>
-	
+
 		<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-		
+
 		<blockTable rowHeights="0.65cm" colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_content">[[data['form']['amount_currency'] == False or removeParentNode('blockTable')]]
         	<tr>
          		<td>
@@ -344,7 +344,7 @@
 				<td><para style="P4_content">[[ formatLang(line['progress']) ]]</para></td>
 			</tr>
 		</blockTable>
-	
+
 	</section>
  </story>
 </document>
