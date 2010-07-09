@@ -25,7 +25,6 @@ from osv import osv, fields
 from tools.translate import _
 
 class account_balance_report(osv.osv_memory):
-    
     _inherit = "account.common.report"
     _name = 'account.balance.report'
     _description = 'Account Balance Report'
@@ -33,11 +32,11 @@ class account_balance_report(osv.osv_memory):
         'display_account': fields.selection([('bal_all','All'), ('bal_mouvement','With movements'),
                          ('bal_solde','With balance is not equal to 0'),
                          ],'Display accounts', required=True),
-    }
+                }
 
     _defaults = {
         'display_account': 'bal_all'
-    }
+                }
 
 #    def default_get(self, cr, uid, fields, context=None):
 #        """ To get default values for the object.
@@ -60,7 +59,7 @@ class account_balance_report(osv.osv_memory):
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         data['form'].update(self.read(cr, uid, ids, ['display_account',])[0])
         data['form']['query_line'] = query_line
-        return { 'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data, 'nodestroy':True, }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data, 'nodestroy':True, }
 
 account_balance_report()
 

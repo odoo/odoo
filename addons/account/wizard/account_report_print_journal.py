@@ -18,8 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import osv, fields
-from tools.translate import _
 
 class account_print_journal(osv.osv_memory):
     _inherit = "account.common.journal.report"
@@ -30,17 +30,23 @@ class account_print_journal(osv.osv_memory):
         'sort_selection': fields.selection([('date', 'Date'),
                                             ('ref', 'Reference Number'),],
                                               'Entries Sorted By', required=True),
-    }
-
+                }
     _defaults = {
         'sort_selection': 'date',
-    }
+                }
 
-        
+    def pre_print_report(self, cr, uid, ids, data, query_line, context=None):
+        if context is None:
+            context = {}
+        data['form'].update(self.read(cr, uid, ids, ['sort_selection'])[0])
+        return super(account_print_journal, self).pre_print_report(cr, uid, ids, data, query_line, context=context)
+
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context)
+        if context is None:
+            context = {}
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
         return { 'type': 'ir.actions.report.xml', 'report_name': 'account.journal.period.print', 'datas': data, 'nodestroy':True, }
-        
+
 account_print_journal()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
