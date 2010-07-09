@@ -193,7 +193,7 @@
 -
     I check that test3.txt is removed.
 -
-    I create 1000 files through FTP
+    I create 200 files through FTP
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
@@ -201,21 +201,21 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
         fdata = StringIO('abcd')
         # TODO speed
-        for i in range(0, 1000):
+        for i in range(0, 200):
             fdata.seek(0)
             ftp.storbinary('STOR test-name%s.txt' %i, fdata)
 -
-    I list the 1000 files, check speed
+    I list the 200 files, check speed
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
         # TODO speed
-        assert len(ftp.nlst()) > 1000
+        assert len(ftp.nlst()) > 200
 -
-    I read the 1000 files, check speed
+    I read the 200 files, check speed
     # TODO
 -
-    I move the 1000 files to 'Test-Folder2'
+    I move the 200 files to 'Test-Folder2'
     # TODO
 -
