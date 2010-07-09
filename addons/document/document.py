@@ -154,32 +154,39 @@ class document_file(osv.osv):
             return False
         if not self._check_duplication(cr, uid, vals, ids, 'write'):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
-        if 'parent_id' in vals:
-            # perhaps this file is changing directory
+        if ('parent_id' in vals) or ('name' in vals):
+            # perhaps this file is renaming or changing directory
             nctx = nodes.get_node_context(cr,uid,context)
             dirobj = self.pool.get('document.directory')
-            dbro = dirobj.browse(cr, uid, vals['parent_id'], context=context)
-            dnode = nctx.get_dir_node(cr, dbro)
+            if 'parent_id' in vals:
+                dbro = dirobj.browse(cr, uid, vals['parent_id'], context=context)
+                dnode = nctx.get_dir_node(cr, dbro)
+            else:
+                dbro = None
+                dnode = None
             ids2 = []
             result = False
             for fbro in self.browse(cr, uid, ids, context=context):
-                if fbro.parent_id.id != vals['parent_id']:
-                    fnode = nctx.get_file_node(cr, fbro)
-                    res = fnode.move_to(cr, dnode, fbro, dbro, True)
-                    if isinstance(res, dict):
-                        vals2 = vals.copy()
-                        vals2.update(res)
-                        wid = res.get('id', fbro.id)
-                        result = super(document_file,self).write(cr,uid,wid,vals2,context=context)
-                        # TODO: how to handle/merge several results?
-                    elif res == True:
+                if ('parent_id' not in vals or fbro.parent_id.id == vals['parent_id']) \
+                    and ('name' not in vals or fbro.name == vals['name']) :
                         ids2.append(fbro.id)
-                    elif res == False:
-                        pass
+                        continue
+                fnode = nctx.get_file_node(cr, fbro)
+                res = fnode.move_to(cr, dnode or fnode.parent, vals.get('name', fbro.name), fbro, dbro, True)
+                if isinstance(res, dict):
+                    vals2 = vals.copy()
+                    vals2.update(res)
+                    wid = res.get('id', fbro.id)
+                    result = super(document_file,self).write(cr,uid,wid,vals2,context=context)
+                    # TODO: how to handle/merge several results?
+                elif res == True:
+                    ids2.append(fbro.id)
+                elif res == False:
+                    pass
             ids = ids2
         if 'file_size' in vals: # only write that field using direct SQL calls
             del vals['file_size']
-        if len(ids):
+        if len(ids) and len(vals):
             result = super(document_file,self).write(cr, uid, ids, vals, context=context)
         cr.commit() # ?
         return result

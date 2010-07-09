@@ -270,6 +270,8 @@ class document_directory(osv.osv):
             raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
 
+    # TODO def unlink(...
+
 document_directory()
 
 class document_directory_dctx(osv.osv):

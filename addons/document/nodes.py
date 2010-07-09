@@ -102,8 +102,11 @@ class node_context(object):
         """ Create or locate a node for a static file
             @param fbro a browse object of an ir.attachment
         """
-        # TODO: fill the parent
-        return node_file(None,None,self,fbro)
+        parent = None
+        if fbro.parent_id:
+            parent = self.get_dir_node(cr, fbro.parent_id)
+
+        return node_file(fbro.name,parent,self,fbro)
 
 
 class node_descriptor(object):
@@ -190,6 +193,8 @@ class node_class(object):
             s = []
         if isinstance(self.path,list):
             s+=self.path
+        elif path is None:
+            s.append('')
         else:
             s.append(self.path)
         return s #map(lambda x: '/' +x, s)
@@ -1015,7 +1020,7 @@ class node_file(node_class):
             dbro = doc_obj.browse(cr, self.context.uid, self.file_id, context=self.context.context)
         else:
             dbro = fil_obj
-            assert dbro.id == self.file_id
+            assert dbro.id == self.file_id, "%s != %s for %r" % (dbro.id, self.file_id, self)
 
         if not dbro:
             raise IndexError("Cannot locate doc %d", self.file_id)
@@ -1027,12 +1032,27 @@ class node_file(node_class):
         
         # TODO: test if parent is writable.
 
-        if self.parent != ndir_node:
-            logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
-            raise NotImplementedError('Cannot move file to another dir')
 
         ret = {}
+        if self.parent != ndir_node:
+            if not (isinstance(self.parent, node_dir) and isinstance(ndir_node, node_dir)):
+                logger.debug('Cannot move file %r from %r to %r', self, self.parent, ndir_node)
+                raise NotImplementedError('Cannot move files between dynamic folders')
+
+            if not ndir_obj:
+                ndir_obj = self.context._dirobj.browse(cr, self.context.uid, \
+                        ndir_node.dir_id, context=self.context.context)
+
+            assert ndir_obj.id == ndir_node.dir_id
+
+            stobj = self.context._dirobj.pool.get('document.storage')
+            r2 = stobj.simple_move(cr, self.context.uid, self, ndir_obj, \
+                        context=self.context.context)
+            ret.update(r2)
+
         if new_name and (new_name != dbro.name):
+            if len(ret):
+                raise NotImplementedError("Cannot rename and move") # TODO
             stobj = self.context._dirobj.pool.get('document.storage')
             r2 = stobj.simple_rename(cr, self.context.uid, self, new_name, self.context.context)
             ret.update(r2)
