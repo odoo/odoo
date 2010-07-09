@@ -555,6 +555,56 @@ class document_storage(osv.osv):
         else:
             raise TypeError("No %s storage" % boo.type)
 
+    def simple_move(self, cr, uid, file_node, ndir_bro, context=None):
+        """ A preparation for a file move.
+            It will not affect the database, but merely check and perhaps
+            move the realstore file.
+            
+            @param ndir_bro a browse object of document.directory, where this
+                    file should move to.
+            @return the dict of values that can safely be be stored in the db.
+        """
+        sbro = self.browse(cr, uid, file_node.storage_id, context=context)
+        assert sbro, "The file #%d didn't provide storage" % file_node.file_id
+
+        par = ndir_bro
+        psto = None
+        while par:
+            if par.storage_id:
+                psto = par.storage_id.id
+                break
+            par = par.parent_id
+        if file_node.storage_id != psto:
+            self._doclog.debug('Cannot move file %r from %r to %r', file_node, file_node.parent, ndir_bro.name)
+            raise NotImplementedError('Cannot move files between storage media')
+
+        if sbro.type in ('filestore', 'db', 'db64'):
+            # nothing to do for a rename, allow to change the db field
+            return { 'parent_id': ndir_bro.id }
+        elif sbro.type == 'realstore':
+            raise NotImplementedError("Cannot move in realstore, yet") # TODO
+            fname = fil_bo.store_fname
+            if not fname:
+                return ValueError("Tried to rename a non-stored file")
+            path = storage_bo.path
+            oldpath = os.path.join(path, fname)
+            
+            for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?', '..'):
+                if ch in new_name:
+                    raise ValueError("Invalid char %s in name %s" %(ch, new_name))
+                
+            file_node.fix_ppath(cr, ira)
+            npath = file_node.full_path() or []
+            dpath = [path,]
+            dpath.extend(npath[:-1])
+            dpath.append(new_name)
+            newpath = os.path.join(*dpath)
+            # print "old, new paths:", oldpath, newpath
+            os.rename(oldpath, newpath)
+            return { 'name': new_name, 'datas_fname': new_name, 'store_fname': new_name }
+        else:
+            raise TypeError("No %s storage" % boo.type)
+
 
 document_storage()
 
