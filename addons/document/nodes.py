@@ -193,7 +193,7 @@ class node_class(object):
             s = []
         if isinstance(self.path,list):
             s+=self.path
-        elif path is None:
+        elif self.path is None:
             s.append('')
         else:
             s.append(self.path)
