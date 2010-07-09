@@ -425,6 +425,7 @@ class purchase_order(osv.osv):
                 'invoice_state': istate,
                 'purchase_id': order.id,
                 'company_id': order.company_id.id,
+                'move_lines' : [],
             })
             todo_moves = []
             for order_line in order.order_line:
