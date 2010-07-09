@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 import pooler
@@ -30,6 +31,8 @@ class journal_print(report_sxw.rml_parse):
         if context is None:
             context = {}
         super(journal_print, self).__init__(cr, uid, name, context=context)
+        self.period_ids = []
+        self.journal_ids = []
         self.localcontext.update( {
             'time': time,
             'lines': self.lines,
@@ -50,9 +53,10 @@ class journal_print(report_sxw.rml_parse):
             self.query_get_clause = 'AND '
             self.query_get_clause += data['form']['query_line'] or ''
             objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
-        self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
-        res = self.cr.fetchall()
-        self.period_ids, self.journal_ids = zip(*res)
+        if new_ids:
+            self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
+            res = self.cr.fetchall()
+            self.period_ids, self.journal_ids = zip(*res)
         return super(journal_print, self).set_context(objects, data, ids, report_type)
 
     # returns a list of period objs
@@ -110,8 +114,8 @@ class journal_print(report_sxw.rml_parse):
                         'WHERE period_id IN %s '
                         'AND journal_id IN %s '+self.query_get_clause +'',
                         (tuple(periods), tuple(journals)))
-
-        return self.cr.fetchone()[0] or 0.0
+        res = self.cr.fetchone()[0]
+        return  res or 0.0
 
     def _sum_credit(self, period_id=None, journal_id=None):
         periods = period_id or self.period_ids

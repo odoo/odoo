@@ -38,15 +38,18 @@ class journal_print(report_sxw.rml_parse):
             self.query_get_clause += data['form']['query_line'] or ''
             self.sort_selection = data['form']['sort_selection']
             objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
-        self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
-        res = self.cr.fetchall()
-        self.period_ids, self.journal_ids = zip(*res)
+        if new_ids:
+            self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
+            res = self.cr.fetchall()
+            self.period_ids, self.journal_ids = zip(*res)
         return super(journal_print, self).set_context(objects, data, ids, report_type)
 
     def __init__(self, cr, uid, name, context=None):
         if context is None:
             context = {}
         super(journal_print, self).__init__(cr, uid, name, context=context)
+        self.period_ids = []
+        self.journal_ids = []
         self.localcontext.update( {
             'time': time,
             'lines': self.lines,
