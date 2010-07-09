@@ -20,23 +20,30 @@
 ##############################################################################
 
 import time
+
 from report import report_sxw
 import pooler
-
 #
 # Use period and Journal for selection or resources
 #
 class journal_print(report_sxw.rml_parse):
 
-    def set_context(self, objects, data, ids, report_type = None):
+    def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
+        self.query_get_clause = ''
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
-        objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
-        self.query_get_clause = data['form']['query_line'] or ''
-        super(journal_print, self).set_context(objects, data, new_ids, report_type)
+            self.query_get_clause = 'AND '
+            self.query_get_clause += data['form']['query_line'] or ''
+            objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
+        self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
+        res = self.cr.fetchall()
+        self.period_ids, self.journal_ids = zip(*res)
+        return super(journal_print, self).set_context(objects, data, ids, report_type)
 
-    def __init__(self, cr, uid, name, context):
+    def __init__(self, cr, uid, name, context=None):
+        if context is None:
+            context = {}
         super(journal_print, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
@@ -47,22 +54,22 @@ class journal_print(report_sxw.rml_parse):
             'get_end_date': self.get_end_date
         })
 
-    def lines(self, period_id, journal_id, *args):
-        self.cr.execute('SELECT a.code, a.name, SUM(debit) AS debit, SUM(credit) AS credit from account_move_line l LEFT JOIN account_account a ON (l.account_id=a.id) WHERE '+self.query_get_clause+' AND l.period_id=%s AND l.journal_id=%s GROUP BY a.id, a.code, a.name', (period_id, journal_id))
+    def lines(self, period_id, journal_id):
+        self.cr.execute('SELECT a.code, a.name, SUM(debit) AS debit, SUM(credit) AS credit from account_move_line l LEFT JOIN account_account a ON (l.account_id=a.id) WHERE l.period_id=%s AND l.journal_id=%s '+self.query_get_clause+' GROUP BY a.id, a.code, a.name', (period_id, journal_id))
         res = self.cr.dictfetchall()
         return res
 
     def _sum_debit(self, period_id, journal_id):
-        self.cr.execute('SELECT SUM(debit) FROM account_move_line l WHERE '+self.query_get_clause+' AND period_id=%s AND journal_id=%s', (period_id, journal_id))
+        self.cr.execute('SELECT SUM(debit) FROM account_move_line l WHERE period_id=%s AND journal_id=%s '+self.query_get_clause+' ', (period_id, journal_id))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, period_id, journal_id):
-        self.cr.execute('SELECT SUM(credit) FROM account_move_line l WHERE '+self.query_get_clause+' AND period_id=%s AND journal_id=%s', (period_id, journal_id))
+        self.cr.execute('SELECT SUM(credit) FROM account_move_line l WHERE period_id=%s AND journal_id=%s '+self.query_get_clause+'', (period_id, journal_id))
         return self.cr.fetchone()[0] or 0.0
-    
+
     def get_start_date(self, form):
         return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
-        
+
     def get_end_date(self, form):
         return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
 

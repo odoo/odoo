@@ -18,16 +18,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from operator import itemgetter
-import pooler
 import time
-from report import report_sxw
 
+import pooler
+from report import report_sxw
 #
 # Use period and Journal for selection or resources
 #
 class journal_print(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context):
+    def __init__(self, cr, uid, name, context=None):
+        if context is None:
+            context = {}
         super(journal_print, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
             'time': time,
@@ -43,15 +44,16 @@ class journal_print(report_sxw.rml_parse):
 
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
+        self.query_get_clause = ''
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
+            self.query_get_clause = 'AND '
+            self.query_get_clause += data['form']['query_line'] or ''
+            objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
         self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
         res = self.cr.fetchall()
         self.period_ids, self.journal_ids = zip(*res)
-        self.query_get_clause = data['form']['query_line'] or ''
-        objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
-        super(journal_print, self).set_context(objects, data, ids, report_type)
-
+        return super(journal_print, self).set_context(objects, data, ids, report_type)
 
     # returns a list of period objs
     def periods(self, journal_period_objs):
@@ -72,9 +74,10 @@ class journal_print(report_sxw.rml_parse):
                         'SUM(l.debit) AS debit, SUM(l.credit) AS credit '
                         'FROM account_move_line l '
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
-                        'WHERE '+self.query_get_clause +' AND period_id=%s AND journal_id IN %s '
+                        'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +''
                         'GROUP BY j.id, j.code, j.name',
                         (period_id, tuple(self.journal_ids)))
+
         res = self.cr.dictfetchall()
         return res
 
@@ -83,16 +86,18 @@ class journal_print(report_sxw.rml_parse):
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
-                        'WHERE '+self.query_get_clause +' AND period_id=%s AND journal_id IN %s ',
+                        'WHERE period_id=%s AND journal_id IN %s '+ self.query_get_clause +'',
                         (period_id, tuple(journals)))
+
         return self.cr.fetchone()[0] or 0.0
+
 
     def _sum_credit_period(self, period_id, journal_id=None):
         journals = journal_id or self.journal_ids
         if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
-                        'WHERE '+self.query_get_clause +' AND period_id=%s AND journal_id IN %s ',
+                        'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +' ',
                         (period_id, tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
@@ -102,9 +107,10 @@ class journal_print(report_sxw.rml_parse):
         if not (journals and periods):
             return 0.0
         self.cr.execute('SELECT SUM(debit) FROM account_move_line l '
-                        'WHERE '+self.query_get_clause +' AND period_id IN %s '
-                        'AND journal_id IN %s ',
+                        'WHERE period_id IN %s '
+                        'AND journal_id IN %s '+self.query_get_clause +'',
                         (tuple(periods), tuple(journals)))
+
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, period_id=None, journal_id=None):
@@ -113,16 +119,16 @@ class journal_print(report_sxw.rml_parse):
         if not (periods and journals):
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
-                        'WHERE '+self.query_get_clause +' AND period_id IN %s '
-                        'AND journal_id IN %s ',
+                        'WHERE period_id IN %s '
+                        'AND journal_id IN %s '+self.query_get_clause +'',
                         (tuple(periods), tuple(journals)))
         return self.cr.fetchone()[0] or 0.0
 
     def get_start_date(self, form):
         return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
-        
+
     def get_end_date(self, form):
         return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
-  
+
 report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
