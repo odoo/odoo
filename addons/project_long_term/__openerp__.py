@@ -25,7 +25,7 @@
     "author": "Tiny",
     "website": "http://www.openerp.com",
     "category": "Generic Modules/Projects & Services",
-    "depends": ["project", "resource"],
+    "depends": ["resource", "project"],
     "description": """
 
         Long Term Project management module that tracks planning, scheduling, resources allocation.

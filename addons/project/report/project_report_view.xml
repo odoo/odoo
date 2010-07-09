@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+    
         <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
 
         <record id="view_task_project_user_tree" model="ir.ui.view">
@@ -42,13 +43,13 @@
             <field name="model">report.project.task.user</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-            <graph string="Tasks Analysis" type="bar">
-                 <field name="name"/>
-                 <field name="state" group="True"/>
-                 <field name="no_of_days" operator="+"/>
-             </graph>
-         </field>
-    </record>
+	            <graph string="Tasks Analysis" type="bar">
+	                 <field name="name"/>
+	                 <field name="state" group="True"/>
+	                 <field name="no_of_days" operator="+"/>
+	             </graph>
+         	</field>
+    	</record>
 
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
@@ -174,7 +175,7 @@
          </field>
     </record>
 
-   <record id="action_project_vs_remaining_hours_graph" model="ir.actions.act_window">
+    <record id="action_project_vs_remaining_hours_graph" model="ir.actions.act_window">
         <field name="name">Project and remaining hours</field>
         <field name="res_model">project.vs.remaining.hours</field>
         <field name="view_type">form</field>
@@ -184,7 +185,7 @@
     </record>
 
     <!-- Views and action for project issue dashboard -->
-       <record id="view_task_by_days_tree" model="ir.ui.view">
+    <record id="view_task_by_days_tree" model="ir.ui.view">
         <field name="name">task.by.days.tree</field>
         <field name="model">task.by.days</field>
         <field name="type">tree</field>

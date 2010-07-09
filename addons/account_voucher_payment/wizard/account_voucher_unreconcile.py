@@ -49,7 +49,7 @@ class account_voucher_unreconcile(osv.osv_memory):
                     recs = [line.reconcile_id.id]
             
             for rec in recs:
-                obj_reconcile.unlink(cr, uid, rec)
+                reconcile_pool.unlink(cr, uid, rec)
             
             if res.remove:
                 wf_service = netsvc.LocalService("workflow")

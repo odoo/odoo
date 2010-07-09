@@ -1,4 +1,4 @@
- #-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -19,36 +19,18 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
-from tools.translate import _
+from osv import fields,osv
 
-class project_issue(osv.osv):
-    _inherit = 'project.issue'
-    _description = 'project issue'
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+
     _columns = {
-        'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
-        'analytic_account_id': fields.related('project_id', 'category_id', string='Analytic Account')
-    }
-    
-project_issue()
-
-class account_analytic_line(osv.osv):
-    _inherit = 'account.analytic.line'
-    _description = 'account analytic line'
-    _columns = {
-        'create_date' : fields.datetime('Create Date', readonly=True),
-                }
-
-account_analytic_line()
-
-class hr_analytic_issue(osv.osv):
-
-    _inherit = 'hr.analytic.timesheet'
-    _description = 'hr analytic timesheet'
-    _columns = {
-        'issue_id' : fields.many2one('project.issue', 'Issue'),
+        'speaker': fields.boolean('Speaker'),
+        'event_ids': fields.one2many('event.event','main_speaker_id',readonly=True),
+        'event_registration_ids': fields.one2many('event.registration','partner_id',readonly=True),
     }
 
-hr_analytic_issue()
+res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

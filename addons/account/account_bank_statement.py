@@ -159,7 +159,7 @@ class account_bank_statement(osv.osv):
         'period_id': _get_period,
     }
 
-    def button_confirm(self, cr, uid, ids, context={}):
+    def button_confirm_bank(self, cr, uid, ids, context={}):
         done = []
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
