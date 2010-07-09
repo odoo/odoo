@@ -53,8 +53,7 @@ class account_voucher(osv.osv):
             
             company_currency = inv.company_id.currency_id.id
             diff_currency_p = inv.currency_id.id <> company_currency
-            ref = inv.reference
-            
+
             journal = journal_pool.browse(cr, uid, inv.journal_id.id)
             if journal.sequence_id:
                 name = sequence_pool.get_id(cr, uid, journal.sequence_id.id)
@@ -84,7 +83,7 @@ class account_voucher(osv.osv):
                 'journal_id': inv.journal_id.id,
                 'period_id': inv.period_id.id,
                 'partner_id': False,
-                'ref': ref,
+                'ref': inv.reference,
                 'date': inv.date
             }
             if diff_currency_p:
@@ -113,7 +112,7 @@ class account_voucher(osv.osv):
                      'journal_id': inv.journal_id.id,
                      'period_id': inv.period_id.id,
                      'partner_id': line.partner_id.id or False,
-                     'ref': ref,
+                     'ref': line.ref,
                      'date': inv.date,
                      'analytic_account_id': False
                 }
@@ -143,14 +142,15 @@ class account_voucher(osv.osv):
                     })
                     amount = line.amount
                 
-                if line.invoice_id:
-                    move_line.update({
-                        'invoice_id':line.invoice_id.id
-                    })
-                    invoice_pool.pay_and_reconcile(cr, uid, [line.invoice_id.id], amount, inv.account_id.id, inv.period_id.id, inv.journal_id.id, False, False, False)
-                    
                 move_line_id = move_line_pool.create(cr, uid, move_line)
                 line_ids += [move_line_id]
+                
+                if line.invoice_id:
+                    rec_ids = [move_line_id]
+                    for move_line in line.invoice_id.move_id.line_id:
+                        if line.account_id.id == move_line.account_id.id:
+                            rec_ids += [move_line.id]
+                    move_line_pool.reconcile_partial(cr, uid, rec_ids)
             
             rec = {
                 'move_id': move_id,
@@ -196,7 +196,9 @@ class account_voucher_line(osv.osv):
                 residual = currency_pool.compute(cr, uid, invoice.currency_id.id, currency_id, invoice.residual)
             
             res.update({
-                'amount': residual
+                'amount': residual,
+                'account_id': invoice.account_id.id,
+                'ref':invoice.number
             })
             
         return {
@@ -230,22 +232,5 @@ class account_voucher_line(osv.osv):
             'value' : {'type' : type, 'amount':balance}
         }
 account_voucher_line()
-
-class account_invoice(osv.osv):
-    _inherit = "account.invoice"
-
-    def action_cancel(self, cr, uid, ids, *args):
-        res = super(account_invoice, self).action_cancel(cr, uid, ids, *args)
-        invoices = self.read(cr, uid, ids, ['move_id'])
-        voucher_db = self.pool.get('account.voucher')
-        voucher_ids = voucher_db.search(cr, uid, [])
-        voucher_obj = voucher_db.browse(cr, uid, voucher_ids)
-        move_db = self.pool.get('account.move')
-        move_ids = move_db.search(cr, uid, [])
-        move_obj = move_db.browse(cr, uid, move_ids)
-        return res
-
-account_invoice()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

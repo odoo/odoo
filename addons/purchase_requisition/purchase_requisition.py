@@ -39,7 +39,7 @@ class purchase_requisition(osv.osv):
         'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', required=True, help="Purchase Tender (exclusive):On the confirmation of a purchase order, it cancels the remaining purchase order.Multiple Requisitions:It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders'),
+        'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }

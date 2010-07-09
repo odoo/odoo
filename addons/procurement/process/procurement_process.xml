@@ -3,7 +3,7 @@
     <data>
 
         <!--
-            Process
+           Process Node from where the Procurement flow starts
         -->
 
         <record id="process_process_procurementprocess0" model="process.process">
@@ -11,11 +11,6 @@
             <field name="model_id" ref="procurement.model_procurement_order"/>
             <field eval="1" name="active"/>
         </record>
-
-        <!--
-            Process Node
-        -->
-
         
     </data>
 </openerp>

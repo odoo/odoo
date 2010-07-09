@@ -212,9 +212,21 @@ class account_voucher(osv.osv):
         self.write(cr, uid, ids, {'state':'posted'})
         return True
     
-    def action_cancel_draft(self, cr, uid, ids, *args):
+    def action_cancel_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
+    
+    def audit_pass(self, cr, uid, ids, context={}):
+        move_pool = self.pool.get('account.move')
+        result = True
+        audit_pass = []
+        for voucher in self.browse(cr, uid, ids):
+            if voucher.move_id and voucher.move_id.state == 'draft':
+                result = result and move_pool.button_validate(cr, uid, [voucher.move_id.id])
+            audit_pass += [voucher.id]
+        
+        self.write(cr, uid, audit_pass, {'state':'audit'})
+        return result
         
     def cancel_voucher(self, cr, uid, ids, context={}):
         move_pool = self.pool.get('account.move')
@@ -258,7 +270,6 @@ class account_voucher(osv.osv):
             
             company_currency = inv.company_id.currency_id.id
             diff_currency_p = inv.currency_id.id <> company_currency
-            ref = inv.reference
             
             journal = journal_pool.browse(cr, uid, inv.journal_id.id)
             if journal.sequence_id:
@@ -289,7 +300,7 @@ class account_voucher(osv.osv):
                 'journal_id': inv.journal_id.id,
                 'period_id': inv.period_id.id,
                 'partner_id': False,
-                'ref': ref,
+                'ref': inv.reference,
                 'date': inv.date
             }
             if diff_currency_p:
@@ -318,7 +329,7 @@ class account_voucher(osv.osv):
                      'journal_id': inv.journal_id.id,
                      'period_id': inv.period_id.id,
                      'partner_id': line.partner_id.id or False,
-                     'ref': ref,
+                     'ref': line.ref,
                      'date': inv.date,
                      'analytic_account_id': False
                 }
