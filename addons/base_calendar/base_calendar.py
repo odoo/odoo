@@ -378,6 +378,7 @@ property or property parameter."),
      }
     _defaults = {
         'state': 'needs-action',
+        'user_id': lambda self, cr, uid, ctx: uid,
     }
     
     def copy(self, cr, uid, id, default=None, context=None):
