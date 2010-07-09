@@ -1,3 +1,85 @@
+2010-07-09: 5.0.12
+==================
+
+Bugfixes (server)
+-----------------
+
+ * Not linked to a bug report:
+   * Compute should work when to_currency is not supplied
+   * base.i18n: overdue_msg is not part of base module (second time I'm fixing it)
+   * base.i18n: base.pot: follow_up_msg is not part of base module (second time I'm fixing it)
+   * base.i18n: follow_up_msg is not part of base module (second time I'm fixing it)
+   * server/ir_translation: don't commit when updating translations, to preserve transactions\!
+   * report_sxw: provide time module in report context, as documented in tech doc and tech memento
+   * orm: correct computation of parent_store for specific cases with duplicate/copy()
+   * remove the "No LSB modules are available." error
+   * Work on a copy of the local context
+ * https://launchpad.net/bugs/597170
+ * https://launchpad.net/bugs/516030
+   * translations: improved fix for translations and cache. Credits and thanks to Numerigraphe for seeing this!
+ * https://launchpad.net/bugs/581137
+   * osv: Fix parent_store computation
+ * https://launchpad.net/bugs/524424
+   * orm: proper recursive copy of translations through one2many relationships during copy()
+ * https://launchpad.net/bugs/594496
+   * User Preferences : context_get corrected
+ * https://launchpad.net/bugs/595758
+   * Regression Corrected for single level _inherits.
+ * https://launchpad.net/bugs/591710
+   * Missing attributes(limit,usage,auto_refresh) added on RNG validation for act_window
+
+Bugfixes (addons)
+-----------------
+
+ * Not linked to a bug report:
+   * Avoid to copy the default move lines on the stock picking during
+   * Pass the fiscal year in the context to use the right sequence if we have defined a fiscal year on the sequence of the account invoice.
+   * Redefine the form view for the sequence object with the fiscal years
+   * Account : When Payment is done by bank statement with a different currency, amount should be converted to company currency
+   * l10n_be, vat periodic declaration: fixed the version of the xsd used in the xsi
+   * account: centralize movement fixed
+   * account_followup: efficiency problem fixed. The report always timed out when there were lots of unreconciled entries (even if we selected only one partner to followup)
+   * l10n_be: vat declaration: the tax code 91 can only be send for the declaration of December
+   * analytic account :wrong parameter for query
+ * https://launchpad.net/bugs/596893
+ * https://launchpad.net/bugs/522941
+ * https://launchpad.net/bugs/596940
+   * Product packaging sequence was not used for _order
+ * https://launchpad.net/bugs/592241
+   * sale: test refferd to cash account by name instead of reference
+ * https://launchpad.net/bugs/582988
+   * Account : Validation of moves should create relavent account analytic entries
+ * https://launchpad.net/bugs/590700
+   * Report_Analytic_planning : Correcting the report query
+ * https://launchpad.net/bugs/602051
+   * account_analytic_default, sale : currection in product_id_change method.
+ * https://launchpad.net/bugs/593582
+   * Account : Aged trial balance report corrected
+ * https://launchpad.net/bugs/531507
+   * account: fiscalyear closing wizard: entries of account with defferal method=='unreconciled' that are reconciled on a next fiscalyear
+ * https://launchpad.net/bugs/594495
+   * Account:act_window of invoices from partner corrected
+ * https://launchpad.net/bugs/597680
+   * Account : Bank statement problem corrected for partial payments
+ * https://launchpad.net/bugs/599402
+   * Project : Copy() corrected after a regression from SQL Injection fix
+ * https://launchpad.net/bugs/595364
+ * https://launchpad.net/bugs/591096
+   * account: corrected aged partner balance after latest security improvements
+ * https://launchpad.net/bugs/602643
+   * Product : partner_ref corrected
+
+
+Improvements
+------------
+
+ * account: correct assert typo to make it useful
+ * sale,mrp_repair :Minor edit on notification messages.
+ * remove junk i18n files
+
+
+
+
 2010-06-07: 5.0.11
 ==================
 
