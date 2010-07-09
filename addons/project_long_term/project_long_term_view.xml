@@ -54,7 +54,7 @@
             <field name="model">project.resource.allocation</field>
             <field name="type">gantt</field>
             <field name="arch" type="xml">
-                <gantt color="resource_id" date_stop="date_end" date_start="date_start" string="Resource Allocations">
+                <gantt color="phase_id" date_stop="date_end" date_start="date_start" string="Resource Allocations">
                     <level object="resource.resource" link="resource_id" domain="[]">
                         <field name="useability"/>
                     </level>
