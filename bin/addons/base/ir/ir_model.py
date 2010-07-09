@@ -488,11 +488,24 @@ class ir_model_data(osv.osv):
 
     @tools.cache()
     def _get_id(self, cr, uid, module, xml_id):
-        ids = self.search(cr, uid, [('module','=',module),('name','=', xml_id)])
+        """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
+        ids = self.search(cr, uid, [('module','=',module), ('name','=', xml_id)])
         if not ids:
             raise ValueError('No references to %s.%s' % (module, xml_id))
         # the sql constraints ensure us we have only one result
         return ids[0]
+
+    @tools.cache()
+    def get_object_reference(self, cr, uid, module, xml_id):
+        """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
+        data_id = self._get_id(cr, uid, module, xml_id)
+        res = self.read(cr, uid, data_id, ['model', 'res_id'])
+        return (res['model'], res['res_id'])
+
+    def get_object(self, cr, uid, module, xml_id, context=None):
+        """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
+        res_model, res_id = self.get_object_reference(cr, uid, module, xml_id)
+        return self.pool.get(res_model).browse(cr, uid, res_id, context=context)
 
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
@@ -525,6 +538,7 @@ class ir_model_data(osv.osv):
                 result3 = cr.fetchone()
                 if not result3:
                     self._get_id.clear_cache(cr.dbname, uid, module, xml_id)
+                    self.get_object_reference.clear_cache(cr.dbname, uid, module, xml_id)
                     cr.execute('delete from ir_model_data where id=%s', (action_id2,))
                     res_id = False
                 else:
