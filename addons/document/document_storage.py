@@ -27,6 +27,7 @@ import base64
 import errno
 import logging
 from StringIO import StringIO
+import psycopg2
 
 from tools.misc import ustr
 from tools.translate import _
@@ -115,7 +116,8 @@ class nodefd_db(StringIO, nodes.node_descriptor):
             mode = mode[:-1]
         
         if mode in ('r', 'r+'):
-            cr.execute('SELECT db_datas FROM ir_attachment WHERE id = %s', ira_browse.id)
+            cr = ira_browse._cr # reuse the cursor of the browse object, just now
+            cr.execute('SELECT db_datas FROM ir_attachment WHERE id = %s',(ira_browse.id,))
             data = cr.fetchone()[0]
             StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
@@ -137,16 +139,18 @@ class nodefd_db(StringIO, nodes.node_descriptor):
         cr = pooler.get_db(par.context.dbname).cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
-                out = self.getvalue()
-                cr.execute("UPDATE ir_attachment SET db_datas = decode(%s,'escape'), file_size=%s WHERE id = %s",
-                    (out, len(out), par.file_id))
+                data = self.getvalue()
+                out = psycopg2.Binary(data)
+                cr.execute("UPDATE ir_attachment SET db_datas = %s, file_size=%s WHERE id = %s",
+                    (out, len(data), par.file_id))
             elif self.mode == 'a':
-                out = self.getvalue()
+                data = self.getvalue()
+                out = psycopg2.Binary(data)
                 cr.execute("UPDATE ir_attachment " \
-                    "SET db_datas = COALESCE(db_datas,'') || decode(%s, 'escape'), " \
+                    "SET db_datas = COALESCE(db_datas,'') || %s, " \
                     "    file_size = COALESCE(file_size, 0) + %s " \
                     " WHERE id = %s",
-                    (out, len(out), par.file_id))
+                    (out, len(data), par.file_id))
             cr.commit()
         except Exception, e:
             logging.getLogger('document.storage').exception('Cannot update db file #%d for close:', par.file_id)
@@ -408,8 +412,9 @@ class document_storage(osv.osv):
         elif boo.type == 'db':
             filesize = len(data)
             # will that work for huge data?
+            out = psycopg2.Binary(data)
             cr.execute('UPDATE ir_attachment SET db_datas = %s WHERE id = %s',
-                (data, file_node.file_id))
+                (out, file_node.file_id))
         elif boo.type == 'db64':
             filesize = len(data)
             # will that work for huge data?
