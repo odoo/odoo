@@ -57,18 +57,20 @@
                     <page string="General">
                         <field name="unit_price"/>
                         <field name="currency_id"/>
-                        <separator string="Teacher Information" colspan="4"/>
-                        <field name="partner_id"/>
+                        <separator string="Speaker Information" colspan="4"/>
+                        <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
                         <field name="address_id"/>
-                        <field name="teacher_confirmed"/>
+                        <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4"/>
                         <field name="country_id" />
+                        <field name="speaker_confirmed"/>
+                        <field name="language"/>
                         <separator string="Event description" colspan="4"/>
                         <field name="parent_id" domain="[('parent_id','child_of','Event')]"/>
                         <field name="active"/>
                         <field name="register_min"/>
                         <field name="register_max"/>
                         <separator string="Notes" colspan="4"/>
-                        <field name="note" colspan="4" nolabel="1"/>
+                        <!--field name="note" colspan="4" nolabel="1"/-->
                         <field name="state" select="1"/>
                         <group col="4" colspan="2">
                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
@@ -120,9 +122,11 @@
             <field name="arch" type="xml">
                 <tree string="Events" colors="red:register_min>register_current;black:register_min&lt;=register_current">
                     <field name="name" string="Name"/>
-                    <field name="user_id"/>
+                    <field name="main_speaker_id"/>
+                    <field name="language"/>
                     <field name="type"/>
                     <field name="date_begin"/>
+                    <field name="date_end"/>
                     <field name="register_min"/>
                     <field name="register_current"/>
                     <field name="state"/>

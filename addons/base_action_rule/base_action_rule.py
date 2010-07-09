@@ -22,7 +22,8 @@
 from datetime import datetime
 from osv import fields, osv, orm
 from tools.translate import _
-import mx.DateTime
+from datetime import datetime
+from datetime import timedelta
 import pooler 
 import re
 import time
@@ -105,7 +106,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
         'act_mail_to_email': fields.char('Mail to these Emails', size=128, \
         help="Email-id of the persons whom mail is to be sent"), 
         'act_mail_body': fields.text('Mail body', help="Content of mail"), 
-        'regex_name': fields.char('Regular Expression on Model Name', size=128), 
+        'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for mathching name of the resource\
+\ne.g.: urgent.* will search for records having name starting with urgent\
+\nNote: This is case sensitive search."), 
         'server_action_id': fields.many2one('ir.actions.server', 'Server Action', help="Describes the action name.\neg:on which object which action to be taken on basis of which condition"), 
         'filter_id':fields.many2one('ir.filters', 'Filter', required=False), 
         'domain':fields.char('Domain', size=124, required=False, readonly=False),
@@ -352,23 +355,23 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
                 base = False
                 if hasattr(obj, 'create_date') and action.trg_date_type=='create':
-                    base = mx.DateTime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                    base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
                 elif hasattr(obj, 'create_date') and action.trg_date_type=='action_last':
                     if hasattr(obj, 'date_action_last') and obj.date_action_last:
-                        base = mx.DateTime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
+                        base = datetime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
                     else:
-                        base = mx.DateTime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
+                        base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
                 elif hasattr(obj, 'date_deadline') and action.trg_date_type=='deadline' \
                                 and obj.date_deadline:
-                    base = mx.DateTime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
+                    base = datetime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
                 elif hasattr(obj, 'date') and action.trg_date_type=='date' and obj.date:
-                    base = mx.DateTime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
+                    base = datetime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
                 if base:
                     fnct = {
-                        'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval), 
-                        'day': lambda interval: mx.DateTime.RelativeDateTime(days=interval), 
-                        'hour': lambda interval: mx.DateTime.RelativeDateTime(hours=interval), 
-                        'month': lambda interval: mx.DateTime.RelativeDateTime(months=interval), 
+                        'minutes': lambda interval: timedelta(minutes=interval), 
+                        'day': lambda interval: timedelta(days=interval), 
+                        'hour': lambda interval: timedelta(hours=interval), 
+                        'month': lambda interval: timedelta(months=interval), 
                     }
                     d = base + fnct[action.trg_date_range_type](action.trg_date_range)
                     dt = d.strftime('%Y-%m-%d %H:%M:%S')
