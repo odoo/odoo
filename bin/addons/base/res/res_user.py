@@ -207,9 +207,9 @@ class users(osv.osv):
         address_obj = self.pool.get('res.partner.address')
         for user in self.browse(cr, uid, ids, context=context):
             if user.address_id:
-                address_obj.write(cr, uid, user.address_id.id, {'email': value or None}, context=context)
+                address_obj.write(cr, 1, user.address_id.id, {'email': value or None}) # no context to avoid potential security issues as superuser
             else:
-                address_id = address_obj.create(cr, uid, {'name': user.name, 'email': value or None}, context=context)
+                address_id = address_obj.create(cr, 1, {'name': user.name, 'email': value or None}) # no context to avoid potential security issues as superuser
                 self.write(cr, uid, ids, {'address_id': address_id}, context)
         return True
 
