@@ -317,7 +317,7 @@ class calendar_attendee(osv.osv):
         obj = self.pool.get('res.lang')
         ids = obj.search(cr, uid, [])
         res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
-        res = [((r['code']).replace('_', '-'), r['name']) for r in res]
+        res = [((r['code']).replace('_', '-').lower(), r['name']) for r in res]
         return res
 
     _columns = {
