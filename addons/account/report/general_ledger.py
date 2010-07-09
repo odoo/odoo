@@ -37,11 +37,9 @@ class general_ledger(rml_parse.rml_parse):
 
     def set_context(self, objects, data, ids, report_type=None):
         self.borne_date = self.get_min_date(data['form'])
-        new_ids = []
-        if (data['model'] == 'account.account'):
-            new_ids = 'active_ids' in data['form']['context'] and data['form']['context']['active_ids'] or []
-        else:
-            new_ids.append(data['form']['chart_account_id'])
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = [data['form']['chart_account_id']]
         objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         super(general_ledger, self).set_context(objects, data, new_ids, report_type)
 
