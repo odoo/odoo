@@ -20,23 +20,32 @@
 ##############################################################################
 
 import time
+
 import pooler
 from report import report_sxw
-
 #
 # Use period and Journal for selection or resources
 #
 class journal_print(report_sxw.rml_parse):
 
-    def set_context(self, objects, data, ids, report_type = None):
+    def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
+        self.query_get_clause = ''
+        self.sort_selection = 'date'
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'active_ids' in data['form'] and data['form']['active_ids'] or []
-        objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
-        self.query_get_clause = data['form']['query_line'] or ''
-        super(journal_print, self).set_context(objects, data, new_ids, report_type)
+            self.query_get_clause = 'AND '
+            self.query_get_clause += data['form']['query_line'] or ''
+            self.sort_selection = data['form']['sort_selection']
+            objects = self.pool.get('account.journal.period').browse(self.cr, self.uid, new_ids)
+        self.cr.execute('SELECT period_id, journal_id FROM account_journal_period WHERE id IN %s', (tuple(new_ids),))
+        res = self.cr.fetchall()
+        self.period_ids, self.journal_ids = zip(*res)
+        return super(journal_print, self).set_context(objects, data, ids, report_type)
 
-    def __init__(self, cr, uid, name, context={}):
+    def __init__(self, cr, uid, name, context=None):
+        if context is None:
+            context = {}
         super(journal_print, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
             'time': time,
@@ -48,32 +57,38 @@ class journal_print(report_sxw.rml_parse):
             'get_account': self.get_account
         })
 
-    def lines(self, period_id, journal_id, sort_selection='date', *args):
+    def lines(self, period_id, journal_id=[]):
         obj_jperiod = self.pool.get('account.journal.period')
         obj_mline = self.pool.get('account.move.line')
-        self.cr.execute('update account_journal_period set state=%s where journal_id=%s and period_id=%s and state=%s', ('printed',journal_id,period_id,'draft'))
+        self.cr.execute('update account_journal_period set state=%s where journal_id IN %s and period_id=%s and state=%s', ('printed', self.journal_ids, period_id, 'draft'))
         self.cr.commit()
-        self.cr.execute('SELECT id FROM account_move_line l WHERE '+self.query_get_clause+' AND period_id=%s AND journal_id=%s ORDER BY %s', (period_id, journal_id, sort_selection))
+        self.cr.execute('SELECT id FROM account_move_line l WHERE period_id=%s AND journal_id IN %s ' + self.query_get_clause + ' ORDER BY '+ self.sort_selection + '' ,(period_id, self.journal_ids ))
         ids = map(lambda x: x[0], self.cr.fetchall())
         return obj_mline.browse(self.cr, self.uid, ids)
 
-    def _sum_debit(self, period_id, journal_id):
-        self.cr.execute('SELECT SUM(debit) FROM account_move_line l WHERE '+self.query_get_clause+' AND period_id=%s AND journal_id=%s', (period_id, journal_id))
+    def _sum_debit(self, period_id, journal_id=[]):
+        self.cr.execute('SELECT SUM(debit) FROM account_move_line l WHERE period_id=%s AND journal_id IN %s '+ self.query_get_clause +'', (period_id, self.journal_ids))
         return self.cr.fetchone()[0] or 0.0
 
-    def _sum_credit(self, period_id, journal_id):
-        self.cr.execute('SELECT SUM(credit) FROM account_move_line l WHERE '+self.query_get_clause+' AND period_id=%s AND journal_id=%s', (period_id, journal_id))
+    def _sum_credit(self, period_id, journal_id=[]):
+        self.cr.execute('SELECT SUM(credit) FROM account_move_line l WHERE period_id=%s AND journal_id IN %s '+ self.query_get_clause +'', (period_id, self.journal_ids))
         return self.cr.fetchone()[0] or 0.0
-    
+
     def get_start_period(self, form):
-        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
-        
+        if 'period_from' in form and form['period_from']:
+            return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
+        return ''
+
     def get_end_period(self, form):
-        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
-    
+        if 'period_to' in form and form['period_to']:
+            return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
+        return ''
+
     def get_account(self, form):
-        return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr,self.uid,form['chart_account_id']).name
+        if 'chart_account_id' in form and form['chart_account_id']:
+            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr,self.uid,form['chart_account_id']).name
+        return ''
 
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header=False)
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
