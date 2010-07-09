@@ -22,10 +22,9 @@ import time
 
 from osv import fields, osv
 from tools.translate import _
-import tools
 
 class account_report_general_ledger(osv.osv_memory):
-    _inherit = "account.common.report"
+    _inherit = "account.common.journal.report"
     _name = "account.report.general.ledger"
     _description = "General Ledger Report"
 
@@ -35,7 +34,7 @@ class account_report_general_ledger(osv.osv_memory):
         'soldeinit': fields.boolean("Include initial balances"),
         'amount_currency': fields.boolean("With Currency"),
         'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort By', required=True),
-    }
+                }
 
     _defaults = {
             'display_account' : 'bal_all',
@@ -45,13 +44,13 @@ class account_report_general_ledger(osv.osv_memory):
     }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
         data['form'].update(self.read(cr, uid, ids, ['display_account',  'landscape',  'soldeinit', 'amount_currency', 'sortby'])[0])
-        data['form']['query_get'] = query_line
+#        data['form']['query_get'] = query_line
         if data['form']['landscape'] == True:
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True, }
         else:
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data, 'nodestroy':True, }
-
 
 account_report_general_ledger()
 

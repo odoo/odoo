@@ -23,10 +23,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
 
 import time
+
 from report import report_sxw
-import xml
 import rml_parse
 import pooler
 
@@ -34,9 +36,7 @@ class general_ledger(rml_parse.rml_parse):
     _name = 'report.account.general.ledger'
 
     def set_context(self, objects, data, ids, report_type = None):
-        ##
         self.borne_date = self.get_min_date(data['form'])
-        ##
         new_ids = []
         if (data['model'] == 'account.account'):
             new_ids = 'active_ids' in data['form']['context'] and data['form']['context']['active_ids'] or []
@@ -45,7 +45,9 @@ class general_ledger(rml_parse.rml_parse):
         objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         super(general_ledger, self).set_context(objects, data, new_ids, report_type)
 
-    def __init__(self, cr, uid, name, context):
+    def __init__(self, cr, uid, name, context=None):
+        if context is None:
+            context = {}
         super(general_ledger, self).__init__(cr, uid, name, context=context)
         self.date_borne = {}
         self.query = ""
@@ -122,7 +124,7 @@ class general_ledger(rml_parse.rml_parse):
 
         res = []
         ctx = self.context.copy()
-        self.query = form['query_get']
+        self.query = form['query_line']
         if account and account.child_consol_ids: # add ids of consolidated childs also of selected account
             ctx['consolidate_childs'] = True
             ctx['account_id'] = account.id
@@ -324,19 +326,19 @@ class general_ledger(rml_parse.rml_parse):
         else:
             currency_total = self.tot_currency = 0.0
             return currency_total
-        
+
     def get_fiscalyear(self,form):
         return pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear_id']).name
-    
+
     def get_account(self,form):
         return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr,self.uid,form['chart_account_id']).name
-    
+
     def get_start_period(self, form):
-        if form['filter'] == 'filter_period':           
+        if form['filter'] == 'filter_period':
             if form['period_from']:
                 return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
         return ''
-        
+
     def get_end_period(self, form):
         if form['filter'] == 'filter_period':
             if form['period_to']:
