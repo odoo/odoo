@@ -80,7 +80,8 @@ class crm_meeting(osv.osv, crm_case):
 
     _defaults = {
         'state': lambda *a: 'draft', 
-        'active': lambda *a: 1, 
+        'active': lambda *a: 1,
+        'user_id': lambda self, cr, uid, ctx: uid,
     }
 
     def open_meeting(self, cr, uid, ids, context=None):
