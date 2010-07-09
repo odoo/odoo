@@ -7,7 +7,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Select Date-Period">
-
+            	<group height="430" width="800">
                <field name="chart_account_id" widget='selection'/>
                <field name="fiscalyear_id"/>
                <group colspan="2" name='Journals'>
@@ -17,7 +17,6 @@
                     </page>
                 </notebook>
                 </group>
-
                 <group colspan="2" name='Filters'>
                 <notebook tabpos="up">
                     <page string="Filters">
@@ -34,6 +33,7 @@
                <newline/>
                 <button icon="gtk-cancel" special="cancel" string="Cancel" colspan="2"/>
                 <button icon="gtk-print" name="check_report" string="Print" type="object" colspan="2"/>
+                </group>
             </form>
             </field>
         </record>
@@ -82,8 +82,6 @@
             <field name="target">new</field>
         </record>
 -->
-
-
 
     </data>
 </openerp>
