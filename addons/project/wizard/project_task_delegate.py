@@ -102,19 +102,20 @@ class project_task_delegate(osv.osv_memory):
             'description': delegate_data['new_task_description'] or '',
             'child_ids': [],
             'work_ids': []
-        })
+        }, context)
         task_obj.write(cr, uid, [task.id], {
             'remaining_hours': delegate_data['planned_hours_me'],
             'planned_hours': delegate_data['planned_hours_me'] + (task.effective_hours or 0.0),
             'name': newname,
-        })
+        }, context)
         if delegate_data['state'] == 'pending':
-            task_obj.do_pending(cr, uid, [task.id])
+            task_obj.do_pending(cr, uid, [task.id], context)
         else:
-            task_obj.do_close(cr, uid, [task.id])
-        delegrate_user = user_obj.browse(cr, uid, delegate_data['user_id'], context=context)
-        message = _('Task ') + " '" + delegate_data['name'] + "' "+ _("is Delegated to User:") +" '"+ delegrate_user.name +"' "
-        self.log(cr, uid, task.id, message)
+            context.update({'mail_send': False} )
+            task_obj.do_close(cr, uid, [task.id], context)
+            delegrate_user = user_obj.browse(cr, uid, delegate_data['user_id'], context=context)
+            message = _('Task ') + " '" + delegate_data['name'] + "' "+ _("is Delegated to User:") +" '"+ delegrate_user.name +"' "
+            self.log(cr, uid, task.id, message)
         return {}
 
 project_task_delegate()

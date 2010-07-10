@@ -18,8 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from lxml import etree
-import datetime
 import time
 
 from tools.translate import _
@@ -38,6 +38,7 @@ class project_task_type(osv.osv):
     _defaults = {
         'sequence': 1
     }
+    
 project_task_type()
 
 class project(osv.osv):
@@ -46,10 +47,8 @@ class project(osv.osv):
     _inherits = {'account.analytic.account':"category_id"}
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        if context is None:
-            context = {}
         if user == 1:
-                return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
+            return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
         if context and context.has_key('user_prefence') and context['user_prefence']:
                 cr.execute("""SELECT project.id FROM project_project project
                            LEFT JOIN account_analytic_account account ON account.id = project.category_id
@@ -61,8 +60,6 @@ class project(osv.osv):
             context=context, count=count)
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
             res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
@@ -73,8 +70,6 @@ class project(osv.osv):
                 parent=parent)
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
-        if context is None:
-            context = {}
         partner_obj = self.pool.get('res.partner')
         if not part:
             return {'value':{'contact_id': False, 'pricelist_id': False}}
@@ -84,8 +79,6 @@ class project(osv.osv):
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
-        if context is None:
-            context = {}
         res = {}.fromkeys(ids, 0.0)
         progress = {}
         if not ids:
@@ -143,13 +136,16 @@ class project(osv.osv):
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
         'project_escalation_id': fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.'),
      }
+    
     _order = "sequence"
+    
     _defaults = {
         'active': True,
         'priority': 1,
         'sequence': 10,
         'warn_manager': True,
     }
+    
     def _check_dates(self, cr, uid, ids):
          leave = self.read(cr, uid, ids[0], ['date_start', 'date'])
          if leave['date_start'] and leave['date']:
@@ -168,6 +164,7 @@ class project(osv.osv):
         (_check_dates, 'Error! project start-date must be lower then project end-date.', ['date_start', 'date']),
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
+    
     def set_template(self, cr, uid, ids, context=None):
         res = self.setActive(cr, uid, ids, value=False, context=context)
         return res
@@ -255,16 +252,11 @@ class project(osv.osv):
                 'search_view_id': search_view['res_id'],
                 'nodestroy': True
                 }
-#        return result
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context=None):
-        if context is None:
-            context = {}
         task_obj = self.pool.get('project.task')
         for proj in self.browse(cr, uid, ids, context=None):
-            if context is None:
-                context = {}
             self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             tasks_id = [x[0] for x in cr.fetchall()]
@@ -273,9 +265,8 @@ class project(osv.osv):
             child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])
             if child_ids:
                 self.setActive(cr, uid, child_ids, value, context=None)
-                if context is None:
-                    context = {}
         return True
+    
 project()
 
 class task(osv.osv):
@@ -285,16 +276,12 @@ class task(osv.osv):
     _date_name = "date_start"
 
     def _str_get(self, task, level=0, border='***', context=None):
-        if context is None:
-            context = {}
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
             (task.description or '')+'\n\n'
 
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        if context is None:
-            context = {}
         res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
@@ -314,6 +301,8 @@ class task(osv.osv):
         return {'value':{'remaining_hours': planned - effective}}
 
     def _default_project(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'project_id' in context and context['project_id']:
             return int(context['project_id'])
         return False
@@ -323,15 +312,11 @@ class task(osv.osv):
     #]
 
     def copy_data(self, cr, uid, id, default={}, context=None):
-        if context is None:
-            context = {}
         default = default or {}
         default['work_ids'] = []
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         task = self.read(cr, uid, ids[0], ['date_start', 'date_end'])
         if task['date_start'] and task['date_end']:
              if task['date_start'] > task['date_end']:
@@ -346,7 +331,7 @@ class task(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
         'type': fields.many2one('project.task.type', 'Stage',),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
-                                  help='If the task is created the state \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
+                                  help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
         'date_start': fields.datetime('Starting Date'),
         'date_end': fields.datetime('Ending Date'),
@@ -370,6 +355,7 @@ class task(osv.osv):
         'manager_id': fields.related('project_id', 'category_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
+    
     _defaults = {
         'state': 'draft',
         'priority': '2',
@@ -380,6 +366,7 @@ class task(osv.osv):
         'project_id': _default_project,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
+    
     _order = "sequence, priority, date_start, id"
 
     _constraints = [
@@ -388,10 +375,9 @@ class task(osv.osv):
     #
     # Override view according to the company definition
     #
+    
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
-        if context is None:
-            context = {}
         obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
         tm = obj_tm and obj_tm.name or 'Hours'
 
@@ -424,6 +410,10 @@ class task(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids)
+        task_id = ids[0]
+        cntx = {}
+        if len(args):
+            cntx = args[0]
         for task in tasks:
             project = task.project_id
             if project:
@@ -437,8 +427,7 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
-                elif project.warn_manager:
-                    task_id = ids[0]
+                elif project.warn_manager and cntx.get('mail_send',False):
                     mail_send = True
             message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
             self.log(cr, uid, task.id, message)
@@ -454,11 +443,11 @@ class task(osv.osv):
         if mail_send:
             model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_project_close_task')])
             resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
-            args[0].update({'task_id': task_id})
+            cntx.update({'task_id': task_id})
             return {
                 'name': _('Email Send to Customer'),
                 'view_type': 'form',
-                'context': args[0], # improve me
+                'context': cntx, # improve me
                 'view_mode': 'tree,form',
                 'res_model': 'close.task',
                 'views': [(resource_id,'form')],
@@ -466,7 +455,9 @@ class task(osv.osv):
                 'target': 'new',
                 'nodestroy': True
                     }
-        return True
+        else:
+            self.write(cr, uid, [task_id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+        return False
 
     def do_reopen(self, cr, uid, ids, *args):
         request = self.pool.get('res.request')
@@ -562,11 +553,14 @@ class project_work(osv.osv):
         'user_id': fields.many2one('res.users', 'Done by', required=True),
         'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
     }
+    
     _defaults = {
         'user_id': lambda obj, cr, uid, context: uid,
         'date': time.strftime('%Y-%m-%d %H:%M:%S')
     }
+    
     _order = "date desc"
+    
     def create(self, cr, uid, vals, *args, **kwargs):
         if 'hours' in vals and (not vals['hours']):
             vals['hours'] = 0.00
@@ -588,10 +582,12 @@ class project_work(osv.osv):
         for work in self.browse(cr, uid, ids):
             cr.execute('update project_task set remaining_hours=remaining_hours + %s where id=%s', (work.hours, work.task_id.id))
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
+    
 project_work()
 
 class config_compute_remaining(osv.osv_memory):
     _name='config.compute.remaining'
+    
     def _get_remaining(self,cr, uid, ctx):
         task_obj = self.pool.get('project.task')
         if 'active_id' in ctx:
@@ -638,6 +634,7 @@ config_compute_remaining()
 class message(osv.osv):
     _name = "project.message"
     _description = "Message"
+    
     _columns = {
         'subject': fields.char('Subject', size=128, required="True"),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
@@ -655,7 +652,7 @@ class message(osv.osv):
 
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
-        'date': lambda self,cr,uid,ctx: time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
         'project_id': _default_project
     }
 
@@ -667,6 +664,7 @@ class users(osv.osv):
     _columns = {
         'context_project_id': fields.many2one('project.project', 'Project')
      }
+    
 users()
 
 class account_analytic_account(osv.osv):
