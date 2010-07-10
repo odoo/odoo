@@ -51,7 +51,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree,form</field>
 			<field name="view_id" ref="view_report_crm_oppor_graph"/>
-            <field name="domain">['&amp;', ('user_id','=',uid), '!' , '&amp;', ('state', '=', 'done'), ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+            <field name="domain">['&amp;', '&amp;', ('user_id','=',uid), ('type', '=', 'opportunity'), '!' , '&amp;', ('state', '=', 'done'),  ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="act_sales_pipeline">
@@ -84,11 +84,11 @@
 						</child1>
 						<child2>
 							<action
-                                string="Revenues by stage"
+                                string="Planned Revenues by Stage"
                                 name="%(act_my_oppor_stage)d"
                                 colspan="4"/>
                             <action
-                                string="Win/Lost Ratio for the last Year"
+                                string="Win/Lost Ratio for the Last Year"
                                 name="%(act_sales_pipeline)d"
                                 colspan="4"/>
                         </child2>
