@@ -51,17 +51,17 @@
                                 <button name="dummy_button" string="Compute" type="object" /-->
                             </group>
 
-                            <group colspan="4" col="9" groups="base.group_extended">
-                            <separator colspan="4" string="Validation of the Sale"/>
-                                <newline/>
-                                <field name="state_2" />
-                                <button name="button_validate"
-                                        string="Accept"
-                                        type="object"
-                                     icon="gtk-ok"
-                                    states="paid, draft"
-                                        attrs="{'invisible':[('state_2','=','accepted')]}"/>
-                              </group>
+<!--                            <group colspan="4" col="9" groups="base.group_extended">-->
+<!--                            <separator colspan="4" string="Validation of the Sale"/>-->
+<!--                                <newline/>-->
+<!--                                <field name="state_2" />-->
+<!--                                <button name="button_validate"-->
+<!--                                        string="Accept"-->
+<!--                                        type="object"-->
+<!--                                     icon="gtk-ok"-->
+<!--                                    states="paid, draft"-->
+<!--                                        attrs="{'invisible':[('state_2','=','accepted')]}"/>-->
+<!--                              </group>-->
                             <separator colspan="4" string="Actions"/>
                             <group colspan="4" col="6">
                                 <field name="state"/>
@@ -92,14 +92,14 @@
                                 <field name="type_rec"  colspan="4"/>
                             </group>
                             <group colspan="4">
-                                <separator string="Invoicing" colspan="4"/>
-                                <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
-                                <field name="sale_journal" domain="[('type','=','sale')]" widget="selection"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection"/>
-                                <field name="invoice_id"/>
-                                <group colspan="2" col="4">
-                                    <button name="invoice" icon="gtk-execute" string="Create _Invoice" states="paid"/>
-                                </group>
+<!--                                <separator string="Invoicing" colspan="4"/>-->
+                                <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)" invisible="1"/>
+                                <field name="sale_journal" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
+<!--                                <field name="invoice_id"/>-->
+<!--                                <group colspan="2" col="4">-->
+<!--                                    <button name="invoice" icon="gtk-execute" string="Create _Invoice" states="paid"/>-->
+<!--                                </group>-->
                             </group>
 
                             <field name="statement_ids" colspan="4" nolabel="1">
@@ -188,7 +188,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">['|',('state_2','=','to_verify'),('state','=','advance')]</field>
+            <field name="domain">['|',('state','=','advance')]</field>
             <field name="context">{"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_pos_order_filter"/>
 

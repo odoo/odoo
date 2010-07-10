@@ -311,8 +311,8 @@ class pos_order(osv.osv):
         'pickings': fields.one2many('stock.picking', 'pos_order', 'Picking', readonly=True),
         'picking_id': fields.many2one('stock.picking', 'Last Output Picking', readonly=True),
         'first_name': fields.char('First Name', size=64),
-        'state_2': fields.function(_get_v,type='selection',selection=[('to_verify', 'To Verify'), ('accepted', 'Accepted'),
-            ('refused', 'Refused')], string='State', readonly=True, method=True, store=True),
+#        'state_2': fields.function(_get_v,type='selection',selection=[('to_verify', 'To Verify'), ('accepted', 'Accepted'),
+#            ('refused', 'Refused')], string='State', readonly=True, method=True, store=True),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
         'sale_journal': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True, ),
@@ -355,7 +355,7 @@ class pos_order(osv.osv):
         'sale_manager': lambda self, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'price_type': lambda *a: 'tax_excluded',
-        'state_2': lambda *a: 'to_verify',
+#        'state_2': lambda *a: 'to_verify',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
         'date_order': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_validity': lambda *a: (DateTime.now() + DateTime.RelativeDateTime(months=+6)).strftime('%Y-%m-%d'),
@@ -558,26 +558,26 @@ class pos_order(osv.osv):
             raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
         return True
 
-    def button_validate(self, cr, uid, ids, *args):
-                
-        """ Check the access for the sale order  and update the date_validation
-        @return: True
-        """        
-        res_obj = self.pool.get('res.company')
-        try:
-            part_company=res_obj.browse(cr,uid,uid) and res_obj.browse(cr,uid,uid).parent_id and res_obj.browse(cr,uid,uid).parent_id.id or None
-        except Exception, e:
-            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
-        if part_company:
-            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
-        for order in self.browse(cr, uid, ids):
-            if not order.date_validation:
-                cr.execute("select max(date) from account_bank_statement_line where pos_statement_id=%d"%(order.id))
-                val=cr.fetchone()
-                val=val and val[0] or None
-                if val:
-                    cr.execute("Update pos_order set date_validation='%s', state_2 ='%s' where id = %d"%(val, 'accepted', order.id))
-        return True
+#    def button_validate(self, cr, uid, ids, *args):
+#                
+#        """ Check the access for the sale order  and update the date_validation
+#        @return: True
+#        """        
+#        res_obj = self.pool.get('res.company')
+#        try:
+#            part_company=res_obj.browse(cr,uid,uid) and res_obj.browse(cr,uid,uid).parent_id and res_obj.browse(cr,uid,uid).parent_id.id or None
+#        except Exception, e:
+#            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
+#        if part_company:
+#            raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
+#        for order in self.browse(cr, uid, ids):
+#            if not order.date_validation:
+#                cr.execute("select max(date) from account_bank_statement_line where pos_statement_id=%d"%(order.id))
+#                val=cr.fetchone()
+#                val=val and val[0] or None
+#                if val:
+#                    cr.execute("Update pos_order set date_validation='%s', state_2 ='%s' where id = %d"%(val, 'accepted', order.id))
+#        return True
 
 
     def cancel_order(self, cr, uid, ids, context=None):
@@ -603,8 +603,8 @@ class pos_order(osv.osv):
         if not order.num_sale and data['num_sale']:
             self.write(cr,uid,order_id,{'num_sale': data['num_sale']})
         ids_new=[]
-        if order.invoice_wanted and not order.partner_id:
-            raise osv.except_osv(_('Error'), _('Cannot create invoice without a partner.'))
+#        if order.invoice_wanted and not order.partner_id:
+#            raise osv.except_osv(_('Error'), _('Cannot create invoice without a partner.'))
         args = {
             'amount': data['amount'],
             }
@@ -705,7 +705,8 @@ class pos_order(osv.osv):
         product_obj= self.pool.get('product.product')
         inv_ids = []
 
-        for order in self.browse(cr, uid, ids, context):
+#        for order in self.browse(cr, uid, ids, context):
+        for order in self.pool.get('pos.order').browse(cr, uid, ids, context):
             curr_c = order.user_salesman_id.company_id
             if order.invoice_id:
                 inv_ids.append(order.invoice_id.id)
