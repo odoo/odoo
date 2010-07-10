@@ -652,7 +652,7 @@ class crm_case_section_custom(osv.osv):
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
-        'parent_id': fields.many2one('crm.case.section', 'Parent Section'), 
+        'parent_id': fields.many2one('crm.case.section.custom', 'Parent Section'), 
         'note': fields.text('Notes'),
     }
 
@@ -668,7 +668,7 @@ class crm_case_section_custom(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('SELECT DISTINCT parent_id FROM crm_case_section '\
+            cr.execute('SELECT DISTINCT parent_id FROM crm_case_section_custom '\
                        'WHERE id IN %s',
                        (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))

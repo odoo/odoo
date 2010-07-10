@@ -45,7 +45,7 @@ class crm_case_custom_create_menu(osv.osv_memory):
         """
         data_obj = self.pool.get('ir.model.data')
         for this in self.browse(cr, uid, ids, context=context):
-            domain = [('section_id', '=', this.section_id)]
+            domain = [('section_id', '=', this.section_id.id)]
             view_mode = [this.view_tree and 'tree', this.view_form and 'form', this.view_calendar and 'calendar']
             view_mode = filter(None , view_mode)
             action_id = self.pool.get('ir.actions.act_window').create(cr,uid, {
