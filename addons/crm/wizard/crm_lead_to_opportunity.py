@@ -86,7 +86,8 @@ class crm_lead2opportunity(osv.osv_memory):
             if lead.partner_id:
                 msg_ids = [ x.id for x in lead.message_ids]
                 self.pool.get('mailgate.message').write(cr, uid, msg_ids, {'partner_id': lead.partner_id.id}, context=context)
-
+            message = _('Lead ') + " '" + lead.name + "' "+ _("is converted to Opportunity.")
+            self.log(cr, uid, lead.id, message)
         value = {
             'name': _('Opportunity'), 
             'view_type': 'form', 
@@ -99,6 +100,7 @@ class crm_lead2opportunity(osv.osv_memory):
             'type': 'ir.actions.act_window', 
             'search_view_id': res['res_id']
         }
+        
         return value
 
     _columns = {

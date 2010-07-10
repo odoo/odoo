@@ -234,7 +234,7 @@ class account_invoice(osv.osv):
         'number': fields.char('Invoice Number', size=32, readonly=True, help="Unique number of the invoice, computed automatically when the invoice is created."),
         'reference': fields.char('Invoice Reference', size=64, help="The partner reference of this invoice."),
         'reference_type': fields.selection(_get_reference_type, 'Reference Type',
-            required=True),
+            required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'comment': fields.text('Additional Information', translate=True),
 
         'state': fields.selection([
@@ -312,8 +312,8 @@ class account_invoice(osv.osv):
             },
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
-        'move_name': fields.char('Ledger Posting', size=64),
-        'user_id': fields.many2one('res.users', 'Salesman'),
+        'move_name': fields.char('Ledger Posting', size=64, readonly=True, states={'draft':[('readonly',False)]}),
+        'user_id': fields.many2one('res.users', 'Salesman', readonly=True, states={'draft':[('readonly',False)]}),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
     }
     _defaults = {

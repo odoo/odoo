@@ -58,7 +58,7 @@
                             <field name="move_ids" colspan="4" nolabel="1" readonly="1"/>
                         </page>
                     </notebook>
-                    <group col="8" colspan="4">
+                    <group col="10" colspan="4">
                         <field name="state"/>
                         <button name="open_voucher" string="Pro-forma" states="draft" icon="terp-check"/>
                         <button name="proforma_voucher" string="Create" states="proforma" icon="terp-document-new"/>
@@ -199,12 +199,28 @@
         </record>
 
         <act_window
-            domain="[('journal_id', '=', active_id)]"
+            domain="[('journal_id','=',active_id)]"
             id="act_journal_voucher_open"
             name="Voucher Entries"
             context="{'journal_id': active_id, 'type':type}"
             res_model="account.voucher"
             src_model="account.journal"/>
+        
+        <record model="ir.actions.act_window" id="action_review_voucher_list">
+            <field name="name">Vouchers Entries</field>
+            <field name="res_model">account.voucher</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="view_voucher_tree"/>
+            <field name="domain">[('state','=','posted')]</field>
+            <field name="context">{'state':'posted'}</field>
+            <field name="search_view_id" ref="view_voucher_filter_new"/>
+        </record>
 
+        <menuitem 
+            id="menu_action_review_voucher_list"
+            action="action_review_voucher_list" 
+            parent="account.periodical_processing_journal_entries_validation" sequence="2"/>
+        
         </data>
 </openerp>

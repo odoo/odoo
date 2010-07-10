@@ -31,6 +31,13 @@ import collections
 import binascii
 import tools
 
+
+CRM_LEAD_PENDING_STATES = (
+    crm.AVAILABLE_STATES[2][0], # Cancelled
+    crm.AVAILABLE_STATES[3][0], # Done
+    crm.AVAILABLE_STATES[4][0], # Pending
+)
+
 class crm_lead(osv.osv, crm_case):
     """ CRM Lead Case """
     _name = "crm.lead"
@@ -95,6 +102,10 @@ class crm_lead(osv.osv, crm_case):
         return res
 
     _columns = {
+        # Overridden from res.partner.address:
+        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null', 
+            select=True, help="Optional linked partner, usually after conversion of the lead"),
+        
         # From crm.case
         'name': fields.char('Name', size=64),
         'active': fields.boolean('Active', required=False),
@@ -168,6 +179,9 @@ and users"),
         """
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Lead ') + " '" + name + "' "+ _("is Open.")
+            self.log(cr, uid, id, message)
         return res
 
     def case_close(self, cr, uid, ids, *args):
@@ -180,6 +194,9 @@ and users"),
         """
         res = super(crm_lead, self).case_close(cr, uid, ids, args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Lead ') + " '" + name + "' "+ _("is Closed.")
+            self.log(cr, uid, id, message)
         return res
 
     def convert_opportunity(self, cr, uid, ids, context=None):
@@ -276,7 +293,10 @@ and users"),
             vals.update(res)
 
         res = self.create(cr, uid, vals, context)
-
+        
+        message = _('A Lead created') + " '" + subject + "' " + _("from Mailgate.")
+        self.log(cr, uid, res, message)
+        
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -325,8 +345,8 @@ and users"),
         # previous state, so we have to loop:
         for case in self.browse(cr, uid, ids, context=context):
             values = dict(vals)
-            if case.state == crm.AVAILABLE_STATES[4][0]: #pending
-                values.update(state=crm.AVAILABLE_STATES[1][0]) #open
+            if case.state in CRM_LEAD_PENDING_STATES:
+                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
 
         return res

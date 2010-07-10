@@ -24,6 +24,10 @@ from osv import fields, osv
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
     _columns = {
-        'partner_id': fields.related('address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
+        'partner_id': fields.related('address_id', 'partner_id', type='many2one', relation="res.partner", string="Partner"), 
         }
+
 stock_picking()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
