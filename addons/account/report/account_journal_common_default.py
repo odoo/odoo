@@ -26,6 +26,8 @@ class account_journal_common_default(object):
     def _sum_debit(self, period_id=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
+        if period_id and isinstance(period_id, int):
+            period_id = [period_id]
         if not journal_id:
             journal_id = self.journal_ids
         if not period_id:
@@ -40,6 +42,8 @@ class account_journal_common_default(object):
     def _sum_credit(self, period_id=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):
             journal_id = [journal_id]
+        if period_id and isinstance(period_id, int):
+            period_id = [period_id]
         if not journal_id:
             journal_id = self.journal_ids
         if not period_id:
