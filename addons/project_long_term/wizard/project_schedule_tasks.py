@@ -160,4 +160,5 @@ class project_schedule_task(osv.osv_memory):
         return {}
 
 project_schedule_task()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

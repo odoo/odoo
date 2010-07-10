@@ -1,10 +1,29 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 import pooler
 import datetime
 
-def timeformat_convert(cr, uid, time_string, context=None):
+def timeformat_convert(cr, uid, time_string):
 #    Function to convert input time string:: 8.5 to output time string 8:30
-        if context is None:
-            context = {}
         split_list = str(time_string).split('.')
         hour_part = split_list[0]
         mins_part = split_list[1]
@@ -12,7 +31,7 @@ def timeformat_convert(cr, uid, time_string, context=None):
         converted_string = hour_part + ':' + str(round_mins)[0:2]
         return converted_string
 
-def leaves_resource(cr,uid,calendar_id,resource_id=False,resource_calendar=False):
+def leaves_resource(cr, uid, calendar_id, resource_id=False, resource_calendar=False):
 #    To get the leaves for the resource_ids working on phase
 
         pool = pooler.get_pool(cr.dbname)
@@ -31,20 +50,20 @@ def leaves_resource(cr,uid,calendar_id,resource_id=False,resource_calendar=False
                 leaves.sort()
         return leaves
 
-def compute_working_calendar(cr,uid,calendar_id):
+def compute_working_calendar(cr, uid, calendar_id):
 #     To change the format of working calendar to bring it into 'faces' format
 
         pool = pooler.get_pool(cr.dbname)
         resource_week_pool = pool.get('resource.calendar.week')
         time_range = "8:00-8:00"
         non_working = ""
-        wk = {"0":"mon","1":"tue","2":"wed","3":"thu","4":"fri","5":"sat","6":"sun"}
+        wk = {"0":"mon", "1":"tue", "2":"wed", "3":"thu", "4":"fri", "5":"sat", "6":"sun"}
         wk_days = {}
         wk_time = {}
         wktime_list = []
         wktime_cal = []
         week_ids = resource_week_pool.search(cr, uid, [('calendar_id','=',calendar_id)])
-        week_obj = resource_week_pool.read(cr, uid, week_ids, ['dayofweek','hour_from','hour_to'])
+        week_obj = resource_week_pool.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'])
 
 #     Converting time formats into appropriate format required
 #     and creating a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
@@ -80,3 +99,5 @@ def compute_working_calendar(cr,uid,calendar_id):
             wktime_cal.append((non_working[:-1],time_range))
 
         return wktime_cal
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

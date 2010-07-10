@@ -118,6 +118,7 @@ class report_project_task_user(osv.osv):
                     t.type
 
         """)
+
 report_project_task_user()
 
 #This class is generated for project deshboard purpose
@@ -162,6 +163,7 @@ class project_vs_remaining_hours(osv.osv):
                  GROUP BY pur.uid,aaa.state,aaa.name
             )
         """)
+
 project_vs_remaining_hours()
 
 class task_by_days(osv.osv):
@@ -192,6 +194,7 @@ class task_by_days(osv.osv):
                     to_char(pt.create_date, 'YYYY-MM-DD'),pt.state,pt.project_id
             )
         """)
+
 task_by_days()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
