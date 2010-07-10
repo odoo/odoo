@@ -61,7 +61,6 @@ class base_action_rule(osv.osv):
 
     _columns = {
         'name': fields.many2one('ir.model', 'Object', required=True), 
-        'max_level': fields.integer('Max Level', help='Specifies maximum level.'), 
         'create_date': fields.datetime('Create Date', readonly=1), 
         'active': fields.boolean('Active', help="If the active field is set to False,\
  it will allow you to hide the rule without removing it."), 
@@ -111,19 +110,16 @@ the rule to mark CC(mail to any other person defined in actions)."),
 \nNote: This is case sensitive search."), 
         'server_action_id': fields.many2one('ir.actions.server', 'Server Action', help="Describes the action name.\neg:on which object which action to be taken on basis of which condition"), 
         'filter_id':fields.many2one('ir.filters', 'Filter', required=False), 
-        'domain':fields.char('Domain', size=124, required=False, readonly=False),
     }
 
     _defaults = {
         'active': lambda *a: True, 
-        'max_level': lambda *a: 15, 
         'trg_date_type': lambda *a: 'none', 
         'trg_date_range_type': lambda *a: 'day', 
         'act_mail_to_user': lambda *a: 0, 
         'act_remind_partner': lambda *a: 0, 
         'act_remind_user': lambda *a: 0, 
         'act_mail_to_watchers': lambda *a: 0, 
-        'domain': lambda *a: '[]'
     }
     
     _order = 'sequence'
@@ -249,9 +245,13 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param uid: the current user’s ID for security checks,
             @param context: A standard dictionary for contextual values """
         ok = True 
-        if eval(action.domain):
-            obj_ids = obj._table.search(cr, uid, eval(action.domain), context=context)
-            if not obj.id in obj_ids:
+        if action.filter_id:
+            if action.name.model == action.filter_id.model_id:
+                context.update(eval(action.filter_id.context))
+                obj_ids = obj._table.search(cr, uid, eval(action.filter_id.domain), context=context)
+                if not obj.id in obj_ids:
+                    ok = False
+            else:
                 ok = False
         if hasattr(obj, 'user_id'):
             ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==obj.user_id.id)
@@ -344,9 +344,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if not scrit:
             scrit = []
         for action in self.browse(cr, uid, ids):
-            level = action.max_level
-            if not level:
-                break
             model_obj = self.pool.get(action.name.model)
             for obj in objects:
                 ok = self.do_check(cr, uid, action, obj, context=context)
@@ -391,7 +388,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 if ok:
                     self.do_action(cr, uid, action, model_obj, obj, context)
                     break
-            level -= 1
         context.update({'action': False})
         return True
 

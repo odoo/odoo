@@ -17,8 +17,6 @@
                     <field name="name" select="1"/>
                     <field name="active"/>
                     <field name="sequence"/>
-                    <field name="max_level" />
-                    <field name="domain"/>
                     <field name="filter_id"/>
                     <notebook colspan="4">
                         <page string="Conditions">
@@ -96,10 +94,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Action Rule">
-                    <field name="name" colspan="4"/>
                     <field name="sequence"/>
-                    <field name="max_level"/>
-                    <field name="domain"/>
+                    <field name="name" colspan="4"/>
+                    <field name="filter_id"/>
                 </tree>
             </field>
            </record>
