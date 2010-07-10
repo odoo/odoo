@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import module
 import module_web
+import module
 import wizard
 import report
 

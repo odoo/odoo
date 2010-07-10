@@ -121,6 +121,14 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Web Dependencies">
+                            <field colspan="4" name="web_dependencies_id" nolabel="1">
+                                <tree string="Dependencies">
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
                         <page string="Features" attrs="{'invisible':[('state','!=','installed')]}">
                             <separator string="Created Menus" colspan="4"/>
                             <field colspan="4" name="menus_by_module" nolabel="1"/>
