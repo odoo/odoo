@@ -58,7 +58,8 @@
              'test/purchase_from_order.yml',
              'test/purchase_from_manual.yml',
 #             'test/purchase_from_picking.yml',
-             'purchase_unit_test.xml'
+             'purchase_unit_test.xml',
+             'test/procurement_buy.yml',
     ],
     'demo': ['purchase_demo.xml'],
     'installable': True,
