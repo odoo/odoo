@@ -70,28 +70,28 @@ class journal_print(report_sxw.rml_parse, account_journal_common_default):
         ids = map(lambda x: x[0], self.cr.fetchall())
         return obj_mline.browse(self.cr, self.uid, ids)
 
-    def _sum_debit(self, period_id, journal_id=[]):
-        self.cr.execute('SELECT SUM(debit) FROM account_move_line l WHERE period_id=%s AND journal_id IN %s '+ self.query_get_clause +'', (period_id, self.journal_ids))
-        return self.cr.fetchone()[0] or 0.0
+#    def _sum_debit(self, period_id, journal_id=[]):
+#        self.cr.execute('SELECT SUM(debit) FROM account_move_line l WHERE period_id=%s AND journal_id IN %s '+ self.query_get_clause +'', (period_id, self.journal_ids))
+#        return self.cr.fetchone()[0] or 0.0
+#
+#    def _sum_credit(self, period_id, journal_id=[]):
+#        self.cr.execute('SELECT SUM(credit) FROM account_move_line l WHERE period_id=%s AND journal_id IN %s '+ self.query_get_clause +'', (period_id, self.journal_ids))
+#        return self.cr.fetchone()[0] or 0.0
 
-    def _sum_credit(self, period_id, journal_id=[]):
-        self.cr.execute('SELECT SUM(credit) FROM account_move_line l WHERE period_id=%s AND journal_id IN %s '+ self.query_get_clause +'', (period_id, self.journal_ids))
-        return self.cr.fetchone()[0] or 0.0
+#    def get_start_period(self, form):
+#        if 'period_from' in form and form['period_from']:
+#            return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
+#        return ''
+#
+#    def get_end_period(self, form):
+#        if 'period_to' in form and form['period_to']:
+#            return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
+#        return ''
 
-    def get_start_period(self, form):
-        if 'period_from' in form and form['period_from']:
-            return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
-        return ''
-
-    def get_end_period(self, form):
-        if 'period_to' in form and form['period_to']:
-            return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
-        return ''
-
-    def get_account(self, form):
-        if form and 'chart_account_id' in form and form['chart_account_id']:
-            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr,self.uid,form['chart_account_id']).name
-        return ''
+#    def get_account(self, form):
+#        if form and 'chart_account_id' in form and form['chart_account_id']:
+#            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr,self.uid,form['chart_account_id']).name
+#        return ''
 
 report_sxw.report_sxw('report.account.journal.period.print', 'account.journal.period', 'addons/account/report/account_journal.rml', parser=journal_print, header=False)
 
