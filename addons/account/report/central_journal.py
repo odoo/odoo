@@ -22,11 +22,12 @@
 import time
 
 from report import report_sxw
+from account_journal_common_default import account_journal_common_default
 import pooler
 #
 # Use period and Journal for selection or resources
 #
-class journal_print(report_sxw.rml_parse):
+class journal_print(report_sxw.rml_parse, account_journal_common_default):
 
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
@@ -62,19 +63,19 @@ class journal_print(report_sxw.rml_parse):
         res = self.cr.dictfetchall()
         return res
 
-    def _sum_debit(self, period_id, journal_id):
-        self.cr.execute('SELECT SUM(debit) FROM account_move_line l WHERE period_id=%s AND journal_id=%s '+self.query_get_clause+' ', (period_id, journal_id))
-        return self.cr.fetchone()[0] or 0.0
-
-    def _sum_credit(self, period_id, journal_id):
-        self.cr.execute('SELECT SUM(credit) FROM account_move_line l WHERE period_id=%s AND journal_id=%s '+self.query_get_clause+'', (period_id, journal_id))
-        return self.cr.fetchone()[0] or 0.0
-
-    def get_start_date(self, form):
-        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
-
-    def get_end_date(self, form):
-        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
+#    def _sum_debit(self, period_id, journal_id):
+#        self.cr.execute('SELECT SUM(debit) FROM account_move_line l WHERE period_id=%s AND journal_id=%s '+self.query_get_clause+' ', (period_id, journal_id))
+#        return self.cr.fetchone()[0] or 0.0
+#
+#    def _sum_credit(self, period_id, journal_id):
+#        self.cr.execute('SELECT SUM(credit) FROM account_move_line l WHERE period_id=%s AND journal_id=%s '+self.query_get_clause+'', (period_id, journal_id))
+#        return self.cr.fetchone()[0] or 0.0
+#
+#    def get_start_date(self, form):
+#        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
+#
+#    def get_end_date(self, form):
+#        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
 
 report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/central_journal.rml', parser=journal_print, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

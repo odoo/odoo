@@ -22,11 +22,12 @@
 import time
 
 import pooler
+from account_journal_common_default import account_journal_common_default
 from report import report_sxw
 #
 # Use period and Journal for selection or resources
 #
-class journal_print(report_sxw.rml_parse):
+class journal_print(report_sxw.rml_parse, account_journal_common_default):
 
     def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
