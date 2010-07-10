@@ -251,7 +251,6 @@ class project(osv.osv):
                 de = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
                 diff = de-ds
                 date_end = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
-                print "date_end---",date_end,diff,time.strftime('%Y-%m-%d %H:%M:%S')
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
@@ -415,7 +414,6 @@ class task(osv.osv):
             project = self.pool.get('project.project').read(cr, uid, vals['project_id'], ['state'])
             if project and project['state'] == 'template':
                 vals.update({'active': False})
-        print vals
         return super(task,self).create(cr, uid, vals, *args, **kwargs)
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
