@@ -34,7 +34,6 @@
         'crm',
         'project',
         'hr_timesheet_sheet',
-        'resource'
     ],
     'init_xml': [
         'project_issue_data.xml'

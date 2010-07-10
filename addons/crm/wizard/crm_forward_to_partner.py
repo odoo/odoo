@@ -48,7 +48,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
     _defaults = {
         'name' : 'email',
-        'history': 'latest',
+        'history': 'info',
         'add_cc': True,
         'email_from': lambda self, cr, uid, *a: self.pool.get('res.users')._get_email_from(cr, uid, uid)[uid]
     }

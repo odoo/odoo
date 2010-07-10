@@ -30,5 +30,7 @@ import crm_phonecall_to_partner
 import crm_phonecall_to_opportunity
 import crm_partner_to_opportunity
 
+import crm_custom_create_menu
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

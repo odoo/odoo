@@ -114,7 +114,7 @@ class project_phase(osv.osv):
         'responsible_id': lambda obj,cr,uid,context: uid,
         'state': 'draft',
         'sequence': 10,
-        'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', 'Day')], context=c)[0]
+        'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', 'day')], context=c)[0]
     }
     _order = "name"
     _constraints = [

@@ -84,10 +84,10 @@ class project_work(osv.osv):
         timeline_id = obj_timesheet.create(cr, uid, vals=vals_line, context=kwargs['context'])
 
         # Compute based on pricetype
-        amount_unit=obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
+        amount_unit = obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
             prod_id, amount, unit, context=kwargs['context'])
-
-        vals_line['amount'] = (-1) * vals['hours']* (amount_unit['value']['amount'] or 0.0)
+        if amount_unit:
+            vals_line['amount'] = (-1) * vals['hours']* (amount_unit.get('value',{}).get('amount',0.0) or 0.0)
         obj_timesheet.write(cr, uid, [timeline_id], vals_line, {})
         vals['hr_analytic_timesheet_id'] = timeline_id
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
@@ -120,8 +120,10 @@ class project_work(osv.osv):
                 unit = False
                 amount_unit=obj.on_change_unit_amount(cr, uid, line_id,
                     vals_line['product_id'], vals_line['unit_amount'], unit, context=context)
-
-                vals_line['amount'] = (-1) * vals['hours'] * (amount_unit['value']['amount'] or 0.0)
+                
+                if amount_unit:
+                     vals_line['amount'] = (-1) * vals['hours'] * (amount_unit.get('value',{}).get('amount',0.0) or 0.0)
+                     
             obj.write(cr, uid, [line_id], vals_line, context=context)
 
         return super(project_work,self).write(cr, uid, ids, vals, context)

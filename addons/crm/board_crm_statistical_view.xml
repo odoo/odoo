@@ -36,7 +36,7 @@
             <field name="arch" type="xml">
                 <graph string="Opportunities By Stage" type="bar">
                     <field name="stage_id"/>
-                    <field name="nbr" operator="+"/>
+                    <field name="planned_revenue" operator="+"/>
                     <field name="user_id" group="True"/>
                 </graph>
             </field>
@@ -60,7 +60,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="act_oppor_stage_user">
-            <field name="res_model">Number of Opportunities by stage</field>
+            <field name="res_model">Planned revenue by user and stage</field>
             <field name="res_model">crm.lead.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
@@ -93,7 +93,7 @@
                         <child2>
 
                             <action
-                                string="Number of Opportunities by Stage and User"
+                                string="Planned Revenue by Stage and User"
                                 name="%(act_oppor_stage_user)d"
                                 colspan="4"/>
 

@@ -85,6 +85,8 @@ Create dashboard for CRM that includes:
 
         'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_send_email_view.xml',
+        'wizard/crm_custom_create_menu_view.xml',
+
         'crm_view.xml',
 
         'crm_action_rule_view.xml',

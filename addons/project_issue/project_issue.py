@@ -144,7 +144,6 @@ class project_issue(osv.osv, crm.crm_case):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'date_deadline': fields.date('Deadline'),
-        'date_closed': fields.datetime('Closed', readonly=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
@@ -390,7 +389,6 @@ class project_issue(osv.osv, crm.crm_case):
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
         return res
-
 
     def msg_send(self, cr, uid, id, *args, **argv):
 
