@@ -88,7 +88,7 @@ class journal_print(report_sxw.rml_parse):
         return ''
 
     def get_account(self, form):
-        if 'chart_account_id' in form and form['chart_account_id']:
+        if form and 'chart_account_id' in form and form['chart_account_id']:
             return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr,self.uid,form['chart_account_id']).name
         return ''
 

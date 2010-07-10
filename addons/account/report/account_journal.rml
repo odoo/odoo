@@ -222,7 +222,7 @@
         <td><para style="terp_default_Centre_8">[[ data and 'form' in data and data['form']['date_from'] or '' ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ data and 'form' in data and data['form']['date_to'] or '']]</para></td>
         <td><para style="terp_default_Centre_8">[[ data and 'form' in data and data['form']['sort_selection'] or 'date' ]]</para></td>
-        <td><para style="terp_default_Centre_8">[[ get_account(data) ]]</para></td>
+        <td><para style="terp_default_Centre_8">[[ get_account(data and 'form' in data and data['form'] or None) ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ data and 'form' in data and data['form']['filter'] or 'No Filter' ]]</para></td>
