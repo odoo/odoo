@@ -427,6 +427,9 @@
                     <field name="balance_end_real"/>
                     <field name="balance_end"/>
                     <field name="state"/>
+                    <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
+                    <button type="object" string="Confirm" name="button_confirm_bank" states="open" icon="terp-gtk-go-back-rtl"/>
+                    <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="terp-gtk-stop"/>
                 </tree>
             </field>
         </record>
@@ -465,7 +468,7 @@
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1"/>
                         <field name="period_id"/>
                         <field name="balance_start"/>
-                    <field name="balance_end_real"/>
+                        <field name="balance_end_real"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Transaction">
@@ -505,7 +508,7 @@
                         <field name="state"/>
                         <field name="balance_end"/>
                         <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
+                        <button name="button_confirm_bank" states="draft" string="Confirm" type="object"  icon="terp-camera_test"/>
                         <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="terp-gtk-stop"/>
                     </group>
                 </form>
@@ -517,6 +520,18 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_bank_statement_tree"/>
+            <field name="act_window_id" ref="action_bank_statement_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_bank_statement_form_bank">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_bank_statement_form"/>
+            <field name="act_window_id" ref="action_bank_statement_tree"/>
         </record>
         <menuitem string="Bank Statements" action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_bank_and_cash" sequence="7"/>
 
@@ -2267,7 +2282,7 @@
                         <field name="user_id" select="1"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft" icon="terp-camera_test"/>
-                    <button type="object" string="Confirm" name="button_confirm" states="open" icon="terp-gtk-go-back-rtl"/>
+                    <button type="object" string="Confirm" name="button_confirm_cash" states="open" icon="terp-gtk-go-back-rtl"/>
                     <button type="object" string="Cancel" name="button_cancel" states="confirm" icon="terp-gtk-stop"/>
                 </tree>
             </field>
@@ -2285,7 +2300,7 @@
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" domain="[('type','=','cash')]" select="1" />
                         <field name="user_id" select="1" readonly="1"/>
                         <field name="period_id" select="1"/>
-                        <field name="balance_end_real"/>
+<!--                        <field name="balance_end_real"/>-->
                     </group>
 
                     <notebook colspan="4">
@@ -2318,7 +2333,7 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Cash Box">
+                        <page string="CashBox">
                             <group col="2" colspan="2" expand="1">
                                 <field name="starting_details_ids" nolabel="1" colspan="2" attrs="{'readonly':[('state','=','draft')]}">
                                     <tree string = "Opening Balance" editable="bottom">
@@ -2349,7 +2364,7 @@
                             </group>
                         </page>
                         <page string="Accounting Entries" attrs="{'invisible': [('state','!=','confirm')]}">
-                            <field colspan="4" name="move_line_ids" nolabel="1"/>
+                            <field colspan="4" name="move_line_ids" nolabel="1" string="Accounting Entries"/>
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
@@ -2360,18 +2375,18 @@
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Opening Balance" colspan="4"/>
-                            <field name="balance_start"/>
+                            <field name="balance_start" readonly="1" string="Opening Balance"/>
                             <field name="total_entry_encoding"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator string="Closing Balance" colspan="4"/>
-                            <field name="balance_end" string="Approx"/>
-                            <field name="balance_end_cash" string="Cash Balance"/>
+                            <field name="balance_end" string="Calculated Balance"/>
+                            <field name="balance_end_cash" string="CashBox Balance"/>
                         </group>
                     </group>
                     <group col="8" colspan="4">
                         <field name="state" colspan="4"/>
-                        <button name="button_confirm" states="open" string="Close CashBox" icon="terp-check" type="object"/>
+                        <button name="button_confirm_cash" states="open" string="Close CashBox" icon="terp-check" type="object"/>
                         <button name="button_open" states="draft" string="Open CashBox" icon="terp-document-new" type="object"/>
                         <button name="button_cancel" states="confirm,open" string="Cancel" icon="terp-gtk-stop" type="object" groups="base.group_extended"/>
                     </group>

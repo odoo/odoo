@@ -425,6 +425,7 @@ class purchase_order(osv.osv):
                 'invoice_state': istate,
                 'purchase_id': order.id,
                 'company_id': order.company_id.id,
+                'move_lines' : [],
             })
             todo_moves = []
             for order_line in order.order_line:
@@ -720,7 +721,7 @@ purchase_order_line()
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Latest Requisition'),
+        'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
     }
 
     def action_po_assign(self, cr, uid, ids, context={}):

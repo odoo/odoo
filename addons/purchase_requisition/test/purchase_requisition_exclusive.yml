@@ -60,11 +60,11 @@
   5 Laptop ACER, and a purchase order on the default supplier for this product.
 -    
  !python {model: purchase.requisition}: |
-    requisition_ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0002')])
+    requisition_ids =self.search(cr, uid, [('origin','=','Laptop ACER1')])
     ids=len(requisition_ids)
     assert len(requisition_ids), "Purchase requisition  hasn't Created"
 -
-  On the purchase tender, I create a new purchase order for the supplier 'DistriPC' by clicking on
+  On the purchase requisition, I create a new purchase order for the supplier 'DistriPC' by clicking on
   the button 'New Request for Quotation'. This opens a window to ask me the supplier and I set DistriPC .
 - 
   I Create  purchase.requisition.partner .
@@ -77,15 +77,15 @@
 - 
   !python {model: purchase.requisition.partner}: |
     req_obj = self.pool.get('purchase.requisition')
-    ids =req_obj.search(cr, uid, [('origin','=','TEST/TENDER/0002')])
+    ids =req_obj.search(cr, uid, [('origin','=','Laptop ACER1')])
     self.create_order(cr, uid, [ref("purchase_requisition_partner_0")], {"lang":
       'en_US', "active_model": "purchase.requisition", "tz": False, "record_id":
       1, "active_ids": ids, "active_id": ids[0], })
 -
-  I set the purchase tender as 'Exclusive'      
+  I set the purchase requisition as 'Exclusive'      
 - 
   !python {model: purchase.requisition}: |
-    ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0002')])
+    ids =self.search(cr, uid, [('origin','=','Laptop ACER1')])
     self.write(cr,uid,ids[0],{'exclusive': 'exclusive' })
 -
   I confirm and validate the Request for Quotation of ASUStek.      
@@ -93,7 +93,7 @@
  !python {model: purchase.order}: |
     partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','ASUStek')])[0]
     req_obj = self.pool.get('purchase.requisition')
-    ids =req_obj.search(cr, uid, [('origin','=','TEST/TENDER/0002')])    
+    ids =req_obj.search(cr, uid, [('origin','=','Laptop ACER1')])    
     purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','in',ids)])[0]
     import netsvc
     wf_service = netsvc.LocalService("workflow")  
@@ -106,7 +106,7 @@
   !python {model: purchase.order}: |
    partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]
    req_obj = self.pool.get('purchase.requisition')
-   ids =req_obj.search(cr, uid, [('origin','=','TEST/TENDER/0002')])     
+   ids =req_obj.search(cr, uid, [('origin','=','Laptop ACER1')])     
    purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','in',ids)])[0]
    state=self.browse(cr,uid,purchase_id).state
    assert (state=='cancel')

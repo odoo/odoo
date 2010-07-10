@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+    
         <menuitem
             icon="terp-project" id="base.menu_main_pm"
             name="Project" sequence="10"
@@ -148,6 +149,7 @@
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Partner"/>
+                    <field name="parent_id" invisible="1"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>
@@ -252,18 +254,19 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
+                            <group col="2" colspan="2">
+                                <field
+                                    name="planned_hours"
+                                    widget="float_time"
+                                    attrs="{'readonly':[('state','!=','draft')]}"
+                                    on_change="onchange_planned(planned_hours, effective_hours)"/>
+                                <field name="effective_hours" widget="float_time"/>
+                            </group>
                             <group col="3" colspan="2">
-                            <field
-                                name="planned_hours"
-                                widget="float_time"
-                                attrs="{'readonly':[('state','!=','draft')]}"
-                                on_change="onchange_planned(planned_hours, effective_hours)"/>
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_config_compute_remaining)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
-                            </group>
-                            <group col="2" colspan="2">
-                            <field name="delay_hours" widget="float_time"/>
-                            <field name="effective_hours" widget="float_time"/>
+
+                                <field name="delay_hours" widget="float_time"/>
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
@@ -647,5 +650,6 @@
         <act_window domain="[('user_id', '=', active_id),('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
         <act_window domain="[('project_id', '=', active_id)]" id="act_project_messages" name="Messages" res_model="project.message" src_model="project.project"/>
+        
     </data>
 </openerp>

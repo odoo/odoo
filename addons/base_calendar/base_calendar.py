@@ -317,7 +317,7 @@ class calendar_attendee(osv.osv):
         obj = self.pool.get('res.lang')
         ids = obj.search(cr, uid, [])
         res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
-        res = [((r['code']).replace('_', '-'), r['name']) for r in res]
+        res = [((r['code']).replace('_', '-').lower(), r['name']) for r in res]
         return res
 
     _columns = {
@@ -378,6 +378,10 @@ property or property parameter."),
      }
     _defaults = {
         'state': 'needs-action',
+        'user_id': lambda self, cr, uid, ctx: uid,
+        'role': 'req-participant',
+        'rsvp':  True,
+        'cutype': 'individual',
     }
     
     def copy(self, cr, uid, id, default=None, context=None):
@@ -542,13 +546,13 @@ property or property parameter."),
             context = {}
 
         for vals in self.browse(cr, uid, ids, context=context):
-            user = vals.user_id
-            if user:
-                mod_obj = self.pool.get(vals.ref._name)
-                if vals.ref:
-                    if vals.ref.user_id.id != user.id:
-                        defaults = {'user_id': user.id}
-                        new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
+            #user = vals.user_id
+            #if user:
+            #    mod_obj = self.pool.get(vals.ref._name)
+            #    if vals.ref:
+            #        if vals.ref.user_id.id != user.id:
+            #            defaults = {'user_id': user.id}
+            #            new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
 
         return True
@@ -1416,6 +1420,8 @@ true, it will allow you to hide the event alarm information without removing it.
                     until_date = arg[2]
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
                                  offset, limit, order, context, count)
+        #Search Event ID which are invitted
+        
         return self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
 
 

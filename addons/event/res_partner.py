@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,16 +15,22 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import xmlrpclib
+from osv import fields,osv
 
-sock = xmlrpclib.ServerProxy('http://localhost:8069/xmlrpc/wizard')
-wiz_id = sock.create('trunk', 1, 'admin', 'procurement.order.compute.all')
-sock.execute('trunk', 1, 'admin', wiz_id, {'form': {'po_cycle': 1.0, 'po_lead': 1.0, 'user_id': 3, 'schedule_cycle': 1.0, 'picking_lead': 1.0, 'security_lead': 50.0, 'automatic': False}, 'ids': [], 'report_type': 'pdf', 'model': 'ir.ui.menu', 'id': False}, 'compute', {})
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
 
+    _columns = {
+        'speaker': fields.boolean('Speaker'),
+        'event_ids': fields.one2many('event.event','main_speaker_id',readonly=True),
+        'event_registration_ids': fields.one2many('event.registration','partner_id',readonly=True),
+    }
+
+res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

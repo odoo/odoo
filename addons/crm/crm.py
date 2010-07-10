@@ -268,12 +268,13 @@ class crm_case(object):
         """
         cases = self.browse(cr, uid, ids)
         for case in cases:
-            data = {'active': True, 'user_id': False}
+            data = {'active': True}
 
             if case.section_id.parent_id:
                 data['section_id'] = case.section_id.parent_id.id
-                if case.section_id.parent_id.user_id:
-                    data['user_id'] = case.section_id.parent_id.user_id.id
+                if case.section_id.parent_id.change_responsible:
+                    if case.section_id.parent_id.user_id:
+                        data['user_id'] = case.section_id.parent_id.user_id.id
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate, You are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
@@ -439,6 +440,7 @@ class crm_case_section(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to \
                         true, it will allow you to hide the sales team without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
+        'change_responsible': fields.boolean('Change Responsible', help="Set responsible of this Sales team on escalation to this team"),
         'user_id': fields.many2one('res.users', 'Responsible User'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put \
