@@ -31,6 +31,7 @@ keep track for the wiki groups, pages, and history
     'author': 'Tiny & Axelor',
     'website': 'http://openerp.com',
     'depends': ['knowledge'],
+    'web_depends': ['widget_wiki'],
     'init_xml': [],
     'update_xml': [
         'wizard/wiki_wiki_page_open_view.xml',

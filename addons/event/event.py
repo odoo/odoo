@@ -454,7 +454,7 @@ and users by email"),
 
         contact_id = self.pool.get('res.partner.contact').browse(cr, uid, contact)
         data['badge_name'] = contact_id.name
-        data['badge_title'] = contact_id.title
+        data['badge_title'] = contact_id.title.name
         if partner:
             partner_addresses = self.pool.get('res.partner.address').search(cr, uid, [('partner_id', '=', partner)])
             job_ids = self.pool.get('res.partner.job').search(cr, uid, [('contact_id', '=', contact), ('address_id', 'in', partner_addresses)])
@@ -471,7 +471,9 @@ and users by email"),
         data_event =  self.pool.get('event.event').browse(cr, uid, event_id)
         
         context['currency_id'] = data_event.currency_id.id
-        
+        if data_event.user_id.id:
+            return {'value': {'user_id':data_event.user_id.id}}
+
         if data_event.product_id:
             if not partner_invoice_id:
                 unit_price=self.pool.get('product.product').price_get(cr, uid, [data_event.product_id.id], context=context)[data_event.product_id.id]
@@ -516,6 +518,7 @@ and users by email"),
         data_event =  self.pool.get('event.event').browse(cr, uid, event_id)
 
         if data_event.product_id:
+            data['event_product']=data_event.product_id.name
             if not partner_invoice_id:
                 data['unit_price']=self.pool.get('product.product').price_get(cr, uid, [data_event.product_id.id], context=context)[data_event.product_id.id]
                 return {'value': data}
