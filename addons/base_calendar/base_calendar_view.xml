@@ -76,13 +76,26 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Invitation details">
-                    <field name="email" string="Invitation To"/>
-                    <field name="user_id" string="Internal User" />
-                    <field name="partner_address_id" string="Contact" />
-                    <field name="role" />
+                    <field name="sent_by_uid" string="Invitation From" />
+                    <field name="role" string="My Role"/>                    
+                    <field name="cutype" string="Invitation type"/>
                     <field name="state" />
-                    <field name="cutype" invisible="1"/>
-                    <field name="rsvp" invisible="1"/>
+                    <field name="rsvp" string="Required to Join"/>
+                    <button name="do_tentative" states="needs-action,declined,accepted"                                
+                                string="Uncertain" type="object"
+                                icon="terp-crm" />
+                    <button name="do_accept" string="Accept"
+                        states="needs-action,tentative,declined"
+                        type="object" icon="gtk-apply" />
+                    <button name="do_decline" string="Decline"
+                        states="needs-action,tentative,accepted"
+                        type="object" icon="gtk-cancel" />
+                    <button
+                        name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                        string="Delegate" type="action"
+                        icon="gtk-sort-descending"
+                        states="needs-action,tentative,declined,accepted"
+                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                 </tree>
             </field>
         </record>

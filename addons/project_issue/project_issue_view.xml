@@ -154,9 +154,9 @@
                 <tree string="Issue Tracker Tree"  colors="red:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="id"/>
                     <field name="create_date"/>
-                    <field name="project_id" invisible="1"/>
                     <field name="name"/>
                     <field name="partner_id"/>
+                    <field name="project_id" />
                     <field name="priority" string="Severity"/>
                     <field name="stage_id" string="Resolution"/>
                     <button icon="gtk-go-back" string="" name="stage_previous" type="object"

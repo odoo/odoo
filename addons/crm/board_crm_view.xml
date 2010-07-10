@@ -4,23 +4,38 @@
 		<record model="board.note.type" id="note_crm_type">
 			<field name="name">CRM Configuration</field>
 		</record>
+
 		<record model="ir.ui.view" id="view_crm_opportunity_user_graph1">
 			<field name="name">crm.opportunity.user.graph1</field>
 			<field name="model">crm.lead.report</field>
 			<field name="type">graph</field>
 			<field name="arch" type="xml">
-				<graph string="Opportunities by User and Section" type="pie">
-					<field name="state"/>
+				<graph string="Opportunities by User and Section" type="bar">
+					<field name="stage_id"/>
 					<field name="nbr" operator="+"/>
+					<field name="user_id" group="True"/>
 				</graph>
 			</field>
 		</record>
-		<record model="ir.actions.act_window" id="act_my_leads">
+		
+        <record id="view_report_crm_oppor_graph" model="ir.ui.view">
+            <field name="name">crm.lead.report.graph</field>
+            <field name="model">crm.lead.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="vertical" string="Opportunity Analysis" type="bar">
+                   <field name="stage_id"/>
+                    <field name="planned_revenue" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+		<record model="ir.actions.act_window" id="act_my_oppor">
 			<field name="res_model">crm.lead</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
-            <field name="domain">[('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+            <field name="domain">[('user_id','=',uid),('state','=','open'), ('type', '=', 'opportunity')]</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="act_my_meetings">
@@ -31,12 +46,12 @@
             <field name="domain">[('user_id','=',uid),('state','!=','cancel'),('date','ilike',time.strftime("%Y-%m"))]</field>
 		</record>
 
-		<record model="ir.actions.act_window" id="act_my_leads_stage">
+		<record model="ir.actions.act_window" id="act_my_oppor_stage">
 			<field name="res_model">crm.lead.report</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree,form</field>
-			<field name="view_id" ref="view_report_crm_lead_graph"/>
-            <field name="domain">[('user_id','=',uid),('state','!=','pending'),('state','!=','cancel')]</field>
+			<field name="view_id" ref="view_report_crm_oppor_graph"/>
+            <field name="domain">['&amp;', ('user_id','=',uid), '!' , '&amp;', ('state', '=', 'done'), ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="act_sales_pipeline">
@@ -44,7 +59,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree,form</field>
 			<field name="view_id" ref="view_crm_opportunity_user_graph1"/>
-			<field name="domain">[('user_id','=',uid),('state','!=','pending'),('state','!=','cancel'),('type', '=', 'opportunity')]</field>
+			<field name="domain">['&amp;', ('state', '=', 'done') , '&amp;', ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%Y-%m-%d')), ('type', '=', 'opportunity')]</field>
 		</record>
 
 		<record model="ir.ui.view" id="board_crm_form">
@@ -56,8 +71,8 @@
 					<hpaned>
 						<child1>
 							<action
-								string="My Opportunities"
-								name="%(act_my_leads)d"
+								string="My Open Opportunities"
+								name="%(act_my_oppor)d"
 								colspan="4"
 								height="150"
 								width="510"/>
@@ -70,10 +85,10 @@
 						<child2>
 							<action
                                 string="Revenues by stage"
-                                name="%(act_my_leads_stage)d"
+                                name="%(act_my_oppor_stage)d"
                                 colspan="4"/>
                             <action
-                                string="My Sales Pipeline"
+                                string="Win/Lost Ratio for the last Year"
                                 name="%(act_sales_pipeline)d"
                                 colspan="4"/>
                         </child2>
