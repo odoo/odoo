@@ -20,6 +20,7 @@
 ##############################################################################
 
 from lxml import etree
+from datetime import date, datetime
 import time
 
 from tools.translate import _
@@ -170,6 +171,9 @@ class project(osv.osv):
         return res
 
     def set_done(self, cr, uid, ids, context=None):
+        task_obj = self.pool.get('project.task')
+        for task in self.read(cr, uid, ids, ['tasks'])[0]['tasks']:
+            task_obj.write(cr, uid, task, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _('Project ') + " '" + name + "' "+ _("is Closed.")
@@ -198,16 +202,37 @@ class project(osv.osv):
     def copy(self, cr, uid, id, default={}, context=None):
         if context is None:
             context = {}
+            
+        task_obj = self.pool.get('project.task')
         proj = self.browse(cr, uid, id, context=context)
         default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
         if not default.get('name', False):
-            default['name'] = proj.name+_(' (copy)')
+            default['name'] = proj.name+_(' (copy)')        
         res = super(project, self).copy(cr, uid, id, default, context)
+        
+        task_ids = task_obj.search(cr, uid, [('project_id','=', res), ('active','=',False)])
+        tasks = task_obj.browse(cr, uid, task_ids)
+        for task in tasks:
+            date_deadline = None
+            date_end = None
+            if task.date_start:
+                ds = date(*time.strptime(task.date_start,'%Y-%m-%d %H:%M:%S')[:3])
+                if task.date_deadline:
+                    dd = date(*time.strptime(task.date_deadline,'%Y-%m-%d')[:3])
+                    diff = dd-ds
+                    date_deadline = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
+                if task.date_end:
+                    de = date(*time.strptime(task.date_end,'%Y-%m-%d %H:%M:%S')[:3])
+                    diff = de-ds
+                    date_end = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
+            task_obj.write(cr, uid, task.id, {'active':True, 
+                                              'date_start':time.strftime('%Y-%m-%d %H:%M:%S'),
+                                              'date_deadline':date_deadline,
+                                              'date_end':date_end})
+        
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
-        if ids:
-            cr.execute('update project_task set active=True where project_id IN %s',(tuple(ids),))
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
@@ -220,13 +245,22 @@ class project(osv.osv):
         for proj in self.browse(cr, uid, ids, context=context):
             parent_id = context.get('parent_id', False) # check me where to pass context for parent id ??
             context.update({'analytic_project_copy': True})
+            date_end = None
+            if proj.date:
+                ds = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
+                de = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
+                diff = de-ds
+                date_end = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
+                print "date_end---",date_end,diff,time.strftime('%Y-%m-%d %H:%M:%S')
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
-                                    'parent_id':parent_id}, context=context)
+                                    'parent_id':parent_id,
+                                    'date_start':time.strftime('%Y-%m-%d'),
+                                    'date': date_end
+                                    }, context=context)
             result.append(new_id)
-            cr.execute('select id from project_task where project_id=%s', (proj.id,))
-            res = cr.fetchall()
+            
             child_ids = self.search(cr, uid, [('parent_id','=', proj.category_id.id)], context=context)
             parent_id = self.read(cr, uid, new_id, ['category_id'])['category_id'][0]
             if child_ids:
@@ -274,7 +308,7 @@ class task(osv.osv):
     _description = "Task"
     _log_create = True
     _date_name = "date_start"
-
+    
     def _str_get(self, task, level=0, border='***', context=None):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
@@ -376,6 +410,14 @@ class task(osv.osv):
     # Override view according to the company definition
     #
     
+    def create(self, cr, uid, vals, *args, **kwargs):
+        if vals['project_id']:
+            project = self.pool.get('project.project').read(cr, uid, vals['project_id'], ['state'])
+            if project and project['state'] == 'template':
+                vals.update({'active': False})
+        print vals
+        return super(task,self).create(cr, uid, vals, *args, **kwargs)
+    
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
         obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
@@ -410,7 +452,6 @@ class task(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids)
-        task_id = ids[0]
         cntx = {}
         if len(args):
             cntx = args[0]
@@ -427,11 +468,9 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
-                elif project.warn_manager and cntx.get('mail_send',False):
+                elif project.warn_manager and cntx.get('mail_send',True):
                     mail_send = True
-            message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
-            self.log(cr, uid, task.id, message)
-            self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+                    
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
                     reopen = True
@@ -440,23 +479,25 @@ class task(osv.osv):
                             reopen = False
                     if reopen:
                         self.do_reopen(cr, uid, [parent_id.id])
-        if mail_send:
-            model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_project_close_task')])
-            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
-            cntx.update({'task_id': task_id})
-            return {
-                'name': _('Email Send to Customer'),
-                'view_type': 'form',
-                'context': cntx, # improve me
-                'view_mode': 'tree,form',
-                'res_model': 'close.task',
-                'views': [(resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'nodestroy': True
-                    }
-        else:
-            self.write(cr, uid, [task_id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+            if mail_send:
+                model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_project_close_task')])
+                resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
+                cntx.update({'task_id': task.id})
+                return {
+                    'name': _('Email Send to Customer'),
+                    'view_type': 'form',
+                    'context': cntx, # improve me
+                    'view_mode': 'tree,form',
+                    'res_model': 'close.task',
+                    'views': [(resource_id,'form')],
+                    'type': 'ir.actions.act_window',
+                    'target': 'new',
+                    'nodestroy': True
+                        }
+            else:
+                self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+                message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
+                self.log(cr, uid, task.id, message)
         return False
 
     def do_reopen(self, cr, uid, ids, *args):

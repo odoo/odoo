@@ -45,7 +45,7 @@
                             </group>
                             <newline/>
                             <group col="9" colspan="8">
-                                <field name="state" select="1"/>
+                                <field name="state" select="1" readonly="1"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
                                 <button name="set_open" string="Reactivate Project" type="object" states="pending,cancelled,done" icon="gtk-ok"/>
                                 <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
@@ -117,7 +117,6 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group col='15' colspan='4'>
-                       <filter icon="terp-document-new" string="Draft" domain="[('state', 'in',('draft',))]" help="Draft Projects" default="1"/>
                        <filter icon="terp-check" string="Current" name="Current" domain="[('state', 'in',('open','pending'))]" help="Open and Pending Projects" default="1"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-personal" string="Manager" name="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
@@ -322,7 +321,7 @@
                             <field name="partner_id"/>
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <group col="4" colspan="2">
-                                <field name="type" widget="selection" />
+                                <field name="type" widget="selection" readonly="1"/>
                                 <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                                 <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                             </group>
