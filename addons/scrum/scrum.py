@@ -254,7 +254,7 @@ class scrum_product_backlog(osv.osv):
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
         'progress': fields.function(_calc_progress, method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done (Time spent on tasks)"),
+        'effective_hours': fields.function(_calc_effective, method=True, string='Spent Hours', help="Computed using the sum of the time spent on every related tasks"),
         'expected_hours': fields.float('Planned Hours', help='Estimated total time to do the Backlog'),
         'create_date': fields.datetime("Creation Date", readonly=True),
         'task_hours': fields.function(_calc_task, method=True, string='Task Hours', help='Estimated time of the total hours of the tasks')
