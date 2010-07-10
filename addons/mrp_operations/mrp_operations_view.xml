@@ -4,6 +4,41 @@
     <menuitem id="menu_mrp_planning" name="Planning"
         parent="base.menu_mrp_root" sequence="2"
         groups="base.group_extended"/>
+        
+    <record id="mrp_production_form_inherit_view" model="ir.ui.view">
+	    <field name="name">mrp.production.form.inherit</field>
+	    <field name="model">mrp.production</field>
+	    <field name="type">form</field>
+	    <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+	    <field name="arch" type="xml">
+	       <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/form/field[@name='hour']" position="after">
+	           <group colspan="8" col="8">
+                   <field name="state"/>
+                   <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
+                   <button name="button_start_working" string="Start" states="draft" icon="gtk-go-forward"/>
+                   <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
+                   <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-cancel"/>
+                   <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
+                   <button name="button_done" string="Finished" states="startworking" icon="gtk-ok"/>
+               </group>
+	       </xpath>
+	    </field>
+    </record>
+    
+    <record id="mrp_production_form_inherit_view2" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit2</field>
+        <field name="model">mrp.production</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+           <xpath expr="/form/notebook/page/field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
+               <field name="state"/>
+               <button name="button_start_working" string="Start working" states="draft,pause" icon="gtk-go-forward"/>
+               <button name="button_done" string="Finished" states="startworking" icon="gtk-jump-to"/>
+           </xpath>
+        </field>
+    </record>
+    
     <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
         <field name="name">mrp.production.workcenter.line.tree</field>
         <field name="model">mrp.production.workcenter.line</field>
@@ -150,7 +185,7 @@
     </record>
 
 
-    <!-- Action for tree view of workcenter line   -->
+    <!-- Action for All Operations   -->
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_form">
         <field name="name">Work Orders</field>
@@ -158,20 +193,8 @@
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,gantt,calendar,graph</field>
-        <field name="domain">[('id','=',active_id)]</field>
         <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
     </record>
-
-    <!-- Action for All Operations   -->
-
-    <record model="ir.actions.act_window" id="mrp_production_wc_action">
-        <field name="name">All Work Orders</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp.production.workcenter.line</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form,graph,calendar,gantt</field>
-    </record>
-
 
     <record model="ir.actions.act_window" id="mrp_production_wc_action_planning">
         <field name="name">Work Orders Planning</field>
