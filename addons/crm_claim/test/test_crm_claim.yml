@@ -21,11 +21,6 @@
   !assert {model: crm.claim, id: crm_claim_damagedproduct0}:
     - state == 'draft'
 - |
-  Now I make sure that claim is at "Accepted" stage.
-- 
-  !assert {model: crm.claim, id: crm_claim.crm_claim_damagedproduct0}:
-    stage_id: crm_claim.stage_claim1
-- |
   I can change that stage by next button right on it
 -
   !python {model: crm.claim}: |
