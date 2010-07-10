@@ -1489,18 +1489,13 @@
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
+        <wizard id="wizard_configuration" model="ir.module.module" name="module.configuration" string="Start Configuration"/>
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" 
         		parent="next_id_11" groups="base.group_extended" sequence="20"/>
-
-        <record id="action_start_configurator" model="ir.actions.server">
-          <field name="name">Launch Configuration Wizards</field>
-          <field name="model_id" ref="model_res_config"/>
-          <field name="state">code</field>
-          <field name="code">action = self.start(cr, uid, [])</field>
-        </record>
+       
         <menuitem
-            action="action_start_configurator" name="Start Configuration"
+            action="wizard_configuration" name="Start Configuration"
             id="menu_configurator_module" parent="next_id_11"
-            type="server"/>
+            type="wizard"/>
     </data>
 </openerp>
