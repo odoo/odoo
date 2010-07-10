@@ -228,7 +228,14 @@ class procurement_order(osv.osv):
         return False
 
     def check_produce_service(self, cr, uid, procurement, context=[]):
-        return True
+        """ Checks project_mrp install or not.
+         @return: True or False"""
+        obj_module = self.pool.get('ir.module.module')
+        module_id = obj_module.search(cr, uid, [('name', '=', 'project_mrp'),('state', '=', 'installed')])
+        if module_id:
+            return True
+        cr.execute('update procurement_order set message=%s where id=%s', (_('Project_mrp module not installed !'), procurement.id))
+        return False
 
     def check_produce_product(self, cr, uid, procurement, context=[]):
         """ Finds BoM of a product if not found writes exception message.
@@ -344,6 +351,10 @@ class procurement_order(osv.osv):
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context={}):
+        """
+           This method may be overrided by objects that override procurement.order
+           for computing their own purpose
+        @return: True"""
         return True
 
     def _check_make_to_stock_product(self, cr, uid, procurement, context={}):
