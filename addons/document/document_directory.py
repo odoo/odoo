@@ -39,19 +39,23 @@ class document_directory(osv.osv):
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
-        'file_type': fields.char('Content Type', size=32),
         'domain': fields.char('Domain', size=128, help="Use a domain if you want to apply an automatic filter on visible resources."),
         'user_id': fields.many2one('res.users', 'Owner'),
         'storage_id': fields.many2one('document.storage', 'Storage'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
-        'parent_id': fields.many2one('document.directory', 'Parent Item'),
+        'parent_id': fields.many2one('document.directory', 'Parent Directory', select=1),
         'child_ids': fields.one2many('document.directory', 'parent_id', 'Children'),
         'file_ids': fields.one2many('ir.attachment', 'parent_id', 'Files'),
         'content_ids': fields.one2many('document.directory.content', 'directory_id', 'Virtual Files'),
-        'type': fields.selection([('directory','Static Directory'),('ressource','Other Resources')], 'Type', required=True),
-        'ressource_type_id': fields.many2one('ir.model', 'Directories Mapped to Objects',
-            help="Select an object here and Open ERP will create a mapping for each of these " \
-                 "objects, using the given domain, when browsing through FTP."),
+        'type': fields.selection([ 
+            ('directory','Static Directory'),
+            ('ressource','Folders per resource'),
+            ],
+            'Type', required=True, select=1,
+            help="Defines directory's behaviour."),
+        
+        'ressource_type_id': fields.many2one('ir.model', 'Resource model',
+            help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
         'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model',
             help="If you put an object here, this directory template will appear bellow all of these objects. " \
@@ -60,7 +64,7 @@ class document_directory(osv.osv):
         'ressource_tree': fields.boolean('Tree Structure',
             help="Check this if you want to use the same tree structure as the object selected in the system."),
         'dctx_ids': fields.one2many('document.directory.dctx', 'dir_id', 'Context fields'),
-        'company_id': fields.many2one('res.company', 'Company'),        
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
 
@@ -102,7 +106,8 @@ class document_directory(osv.osv):
     }
     _sql_constraints = [
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),
-        ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!')
+        ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!'),
+        ('dir_parented', 'check(parent_id IS NOT NULL OR storage_id IS NOT NULL)', 'Directory must have a parent or a storage')
     ]
     def name_get(self, cr, uid, ids, context={}):
         res = []
@@ -190,17 +195,8 @@ class document_directory(osv.osv):
         """
         if not context:
                 context = {}
-        lang = context.get('lang',False)
-        if not lang:
-            user = self.pool.get('res.users').browse(cr, uid, uid)
-            lang = user.context_lang 
-            context['lang'] = lang
             
-        try: #just instrumentation
-                return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
-        except Exception,e:
-                print "exception: ",e
-                raise
+        return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
 
 
     def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
@@ -273,6 +269,8 @@ class document_directory(osv.osv):
         if vals.get('name',False) and (vals.get('name').find('/')+1 or vals.get('name').find('@')+1 or vals.get('name').find('$')+1 or vals.get('name').find('#')+1) :
             raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
         return super(document_directory,self).create(cr, uid, vals, context)
+
+    # TODO def unlink(...
 
 document_directory()
 
