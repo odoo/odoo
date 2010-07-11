@@ -198,6 +198,22 @@ class document_directory(osv.osv):
             
         return nodes.get_node_context(cr, uid, context).get_uri(cr, uri)
 
+    def get_dir_permissions(self, cr, uid, ids ):
+        """Check what permission user 'uid' has on directory 'id'
+        """
+        assert len(ids) == 1
+        id = ids[0]
+        
+        cr.execute( "SELECT count(dg.item_id) AS needs, count(ug.uid) AS has " \
+                " FROM document_directory_group_rel dg " \
+                "   LEFT OUTER JOIN res_groups_users_rel ug " \
+                "   ON (dg.group_id = ug.gid AND ug.uid = %s) " \
+                " WHERE dg.item_id = %s ", (uid, id))
+        needs, has = cr.fetchone()
+        if needs and not has:
+            return 1  # still allow to descend into.
+        else:
+            return 7
 
     def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
         """ try to locate the node in uri,

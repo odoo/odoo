@@ -163,6 +163,7 @@ class node_class(object):
         self.context = context
         self.type=self.our_type
         self.parent = parent
+        self.uidperms = 5   # computed permissions for our uid, in unix bits
         self.mimetype = 'application/octet-stream'
         self.create_date = None
         self.write_date = None
@@ -316,6 +317,33 @@ class node_class(object):
     def get_domain(self, cr, filters):
         return []
 
+    def check_perms(self, perms):
+        """ Check the permissions of the current node.
+        
+        @param perms either an integers of the bits to check, or
+                a string with the permission letters
+
+        Permissions of nodes are (in a unix way):
+        1, x : allow descend into dir
+        2, w : allow write into file, or modification to dir
+        4, r : allow read of file, or listing of dir contents
+        8, u : allow remove (unlink)
+        """
+        
+        if isinstance(perms, str):
+            pe2 = 0
+            chars = { 'x': 1, 'w': 2, 'r': 4, 'u': 8 }
+            for c in perms:
+                pe2 = pe2 | chars[c]
+            perms = pe2
+        elif isinstance(perms, int):
+            if perms < 0 or perms > 15:
+                raise ValueError("Invalid permission bits")
+        else:
+            raise ValueError("Invalid permission attribute")
+        
+        return ((self.uidperms & perms) == perms)
+
 class node_database(node_class):
     """ A node representing the database directory
 
@@ -324,6 +352,7 @@ class node_database(node_class):
     def __init__(self, path=[], parent=False, context=None):
         super(node_database,self).__init__(path, parent, context)
         self.unixperms = 040750
+        self.uidperms = 5
 
     def children(self, cr, domain=None):
         res = self._child_get(cr, domain=domain) + self._file_get(cr)
@@ -374,6 +403,16 @@ class node_database(node_class):
     def _get_ttag(self,cr):
         return 'db-%s' % cr.dbname
 
+def mkdosname(company_name, default='noname'):
+    """ convert a string to a dos-like name"""
+    if not company_name:
+        return default
+    badchars = ' !@#$%^`~*()+={}[];:\'"/?.<>'
+    n = ''
+    for c in company_name[:8]:
+        n += (c in badchars and '_') or c
+    return n
+    
 
 class node_dir(node_database):
     our_type = 'collection'
@@ -390,6 +429,9 @@ class node_dir(node_database):
         self.write_date = dirr and (dirr.write_date or dirr.create_date) or False
         self.content_length = 0
         self.unixperms = 040750
+        self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
+        self.uidperms = dirr.get_dir_permissions()
         if dctx:
             self.dctx.update(dctx)
         dc2 = self.context.context
