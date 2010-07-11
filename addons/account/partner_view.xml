@@ -10,9 +10,9 @@
                 <form string="Fiscal Position">
                     <field name="name" select="1"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+					<separator string="Mapping" colspan="4"/>
                     <newline/>
-                    <field name="note" colspan="4"/>
-                    <field name="tax_ids" colspan="4" widget="one2many_list">
+                    <field name="tax_ids" colspan="2" widget="one2many_list" nolabel="1">
                         <tree string="Tax Mapping" editable="bottom">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
@@ -22,7 +22,7 @@
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </form>
                     </field>
-                    <field name="account_ids" colspan="4" widget="one2many_list">
+                    <field name="account_ids" colspan="2" widget="one2many_list" nolabel="1">
                         <tree string="Account Mapping" editable="bottom">
                             <field name="account_src_id"/>
                             <field name="account_dest_id"/>
@@ -32,6 +32,8 @@
                             <field name="account_dest_id"/>
                         </form>
                     </field>
+                    <separator string="Notes" colspan="4"/>
+                    <field name="note" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -70,8 +72,8 @@
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <notebook>
-                <page string="Accounting" position="inside">
+                <page string="Notes" position="before">
+                <page string="Accounting">
                     <group col="2" colspan="2">
                         <separator string="Customer Accounting Properties" colspan="2"/>
                         <field name="property_account_receivable" groups="account.group_account_user" />
@@ -119,7 +121,7 @@
                         </tree>
                     </field>
                 </page>
-                </notebook>
+                </page>
             </field>
         </record>
 

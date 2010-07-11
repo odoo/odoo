@@ -9,7 +9,7 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 class employees_salary_report(rml_parse.rml_parse):
-    
+
     def __init__(self, cr, uid, name, context):
         super(employees_salary_report, self).__init__(cr, uid, name, context)
         self.localcontext.update({
@@ -25,7 +25,7 @@ class employees_salary_report(rml_parse.rml_parse):
             'get_other':self.get_other,
             'get_monthly_total':self.get_monthly_total,
         })
-        
+
         self.mnths =[]
         self.allow_list =[]
         self.deduct_list = []
@@ -34,17 +34,17 @@ class employees_salary_report(rml_parse.rml_parse):
         self.curr_fiscal_year_name=''
         self.period_ids = []
         self.total=0.00
-    
+
     def get_periods(self,form):
         self.mnths =[]
         fiscalyear = pooler.get_pool(self.cr.dbname).get('account.fiscalyear')
         curr_fiscalyear_id = form['fiscalyear_id']
         curr_fiscalyear = fiscalyear.read(self.cr,self.uid,[form['fiscalyear_id']],['date_start','date_stop'])[0]
-        
+
 #       Get start year-month-date and end year-month-date
-        fy = int(curr_fiscalyear['date_start'][0:4])    
+        fy = int(curr_fiscalyear['date_start'][0:4])
         ly = int(curr_fiscalyear['date_stop'][0:4])
-        
+
         fm = int(curr_fiscalyear['date_start'][5:7])
         lm = int(curr_fiscalyear['date_stop'][5:7])
         no_months = (ly-fy)*12+lm-fm + 1
@@ -56,7 +56,7 @@ class employees_salary_report(rml_parse.rml_parse):
         for count in range(0,no_months):
             m = datetime.date(cy, cm, 1).strftime('%b')
             mnth_name.append(m)
-            self.mnths.append(str(cm)+'-'+str(cy))     
+            self.mnths.append(str(cm)+'-'+str(cy))
             if cm == 12:
                 cm = 0
                 cy = ly
@@ -68,10 +68,10 @@ class employees_salary_report(rml_parse.rml_parse):
         return fiscalyear_obj.read(self.cr,self.uid,[fiscalyear_id],['name'])[0]['name']
 
     def get_employee(self,form):
-        result = []   
-        periods = []    
-        emp = pooler.get_pool(self.cr.dbname).get('hr.employee')     
-        emp_ids = form['employee_ids'][0][2]
+        result = []
+        periods = []
+        emp = pooler.get_pool(self.cr.dbname).get('hr.employee')
+        emp_ids = form['employee_ids']
         result = emp.browse(self.cr,self.uid, emp_ids)
         fiscalyear_obj = pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear_id'])
         period_ids_l = fiscalyear_obj.period_ids
@@ -79,7 +79,7 @@ class employees_salary_report(rml_parse.rml_parse):
             periods.append(period.id)
         self.period_ids = ','.join(map(str, periods))
         return result
-    
+
     def get_employee_detail(self,obj):
         self.month_total_list =['Net Total (Allowances with Basic - Deductions)',0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00]
         self.allow_list =[]
@@ -88,7 +88,7 @@ class employees_salary_report(rml_parse.rml_parse):
         allowance_cat_ids =[]
         deduction_cat_ids = []
         other_cat_ids =[]
-        self.total = 0.00        
+        self.total = 0.00
         payment_category = self.pool.get('hr.allounce.deduction.categoty')
         payslip = self.pool.get('hr.payslip')
         allowance_cat_ids = payment_category.search( self.cr, self.uid, [('type','=','allow')])
@@ -140,7 +140,7 @@ class employees_salary_report(rml_parse.rml_parse):
                  if other_flag:
                      self.other_list.append(res)
         return None
-    
+
     def cal_monthly_amt(self,emp_id,category):
         tot = 0.0
         cnt = 1
@@ -208,7 +208,7 @@ class employees_salary_report(rml_parse.rml_parse):
             if not res:
                 result.append(0.00)
             res = {}
-            cnt = cnt + 1 
+            cnt = cnt + 1
         cnt = 1
         result.append(tot)
         tot = 0.0
@@ -219,17 +219,17 @@ class employees_salary_report(rml_parse.rml_parse):
 
     def get_deduct(self):
         return self.deduct_list
-    
+
     def get_other(self):
         return self.other_list
-    
+
     def get_total(self):
         return self.total
-    
+
     def get_monthly_total(self):
         return self.month_total_list
-    
+
 report_sxw.report_sxw('report.employees.salary', 'hr.payslip', 'hr_payroll/report/report_employees_detail.rml', parser=employees_salary_report)
-       
-       
-               
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -8,12 +8,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="Registration Confirmation">
-                  <field name="msg"/>
-                  <separator string="" colspan="4"/>
-                <group colspan="4" col="6">
-                    <button  icon="gtk-close" special="cancel" string="Close"/>
-                    <button icon="gtk-ok" name="confirm" string="Confirm Anyway" type="object"/>
-                </group>
+                    <field name="msg" nolabel="1" colspan="4"/>
+                    <separator string="" colspan="4"/>
+                    <group colspan="4" col="6">
+                        <button  icon="gtk-close" special="cancel" string="Close"/>
+                        <button icon="gtk-ok" name="confirm" string="Confirm Anyway" type="object"/>
+                    </group>
             </form>
             </field>
         </record>

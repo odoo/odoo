@@ -45,7 +45,7 @@ class account_bank_statement(osv.osv):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'nodestroy': True
-                }
+        }
 
     def _default_journal_id(self, cr, uid, context={}):
         if context.get('journal_id', False):
@@ -159,7 +159,7 @@ class account_bank_statement(osv.osv):
         'period_id': _get_period,
     }
 
-    def button_confirm(self, cr, uid, ids, context={}):
+    def button_confirm_bank(self, cr, uid, ids, context={}):
         done = []
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
@@ -303,6 +303,13 @@ class account_bank_statement(osv.osv):
                                 _('Ledger Posting line "%s" is not valid') % line.name)
 
                 if move.reconcile_id and move.reconcile_id.line_ids:
+                    ## Search if move has already a partial reconciliation
+                    previous_partial = False
+                    for line_reconcile_move in move.reconcile_id.line_ids:
+                        if line_reconcile_move.reconcile_partial_id:
+                            previous_partial = True
+                            break
+                    ##
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
                     if abs(move.reconcile_amount-move.amount)<0.0001:
@@ -312,8 +319,14 @@ class account_bank_statement(osv.osv):
                         for entry in move.reconcile_id.line_new_ids:
                             writeoff_acc_id = entry.account_id.id
                             break
-
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
+                        ## If we have already a partial reconciliation
+                        ## We need to make a partial reconciliation
+                        ## To add this amount to previous paid amount
+                        if previous_partial:
+                            account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
+                        ## If it's the first reconciliation, we do a full reconciliation as regular
+                        else:
+                            account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
                     #except:
@@ -556,9 +569,9 @@ account_bank_statement_reconcile_line()
 
 class account_bank_statement_line(osv.osv):
 
-    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id,
-            context={}):
+    def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id, context={}):
         res = {'value': {}}
+        
         if not partner_id:
             return res
         line = self.browse(cursor, user, line_id)
@@ -591,6 +604,10 @@ class account_bank_statement_line(osv.osv):
             balance = res_currency_obj.compute(cursor, user, company_currency_id,
                 currency_id, balance, context=context)
             res['value']['amount'] = balance
+        
+        if context.get('amount', 0) > 0:
+            res['value']['amount'] = context.get('amount')
+            
         return res
 
     def _reconcile_amount(self, cursor, user, ids, name, args, context=None):

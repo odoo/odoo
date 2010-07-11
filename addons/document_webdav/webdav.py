@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (c) 1999 Christian Scholz (ruebe@aachen.heimat.de)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -23,15 +24,9 @@ import xml.dom.minidom
 domimpl = xml.dom.minidom.getDOMImplementation()
 import urlparse
 import urllib
-from osv import osv
+from DAV import utils
+from DAV.propfind import PROPFIND
 import tools
-try:
-    from DAV import utils
-    from DAV.propfind import PROPFIND
-except ImportError:
-    raise osv.except_osv('PyWebDAV Import Error!','Please install pywebdav \
-from http://pywebdav.googlecode.com')
-
 
 
 super_mk_prop_response = PROPFIND.mk_prop_response
@@ -54,7 +49,9 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
     href=doc.createElement("D:href")
-    huri=doc.createTextNode(uparts[0]+'://'+'/'.join(uparts[1:2]) + urllib.quote(fileloc))
+    davpath = self._dataclass.parent.get_davpath()
+    hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
+    huri=doc.createTextNode(hurl)
     href.appendChild(huri)
     re.appendChild(href)
 
@@ -117,5 +114,45 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     return re
     
 
+def mk_propname_response(self,uri,propnames,doc):
+    """ make a new <prop> result element for a PROPNAME request 
+
+    This will simply format the propnames list.
+    propnames should have the format {NS1 : [prop1, prop2, ...], NS2: ...}
+
+    """
+    re=doc.createElement("D:response")
+
+    # write href information
+    uparts=urlparse.urlparse(uri)
+    fileloc=uparts[2]
+    href=doc.createElement("D:href")
+    davpath = self._dataclass.parent.get_davpath()
+    hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
+    huri=doc.createTextNode(hurl)
+    href.appendChild(huri)
+    re.appendChild(href)
+
+    ps=doc.createElement("D:propstat")
+    nsnum=0
+
+    for ns,plist in propnames.items():
+        # write prop element
+        pr=doc.createElement("D:prop")
+        nsp="ns"+str(nsnum)
+        pr.setAttribute("xmlns:"+nsp,ns)
+        nsnum=nsnum+1
+
+    # write propertynames
+    for p in plist:
+        pe=doc.createElement(nsp+":"+p)
+        pr.appendChild(pe)
+
+    ps.appendChild(pr)
+    re.appendChild(ps)
+
+    return re
+
 PROPFIND.mk_prop_response = mk_prop_response
+PROPFIND.mk_propname_response = mk_propname_response
 

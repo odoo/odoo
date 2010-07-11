@@ -34,25 +34,32 @@ class account_followup_print(osv.osv_memory):
                 }
 
     def _get_followup(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        if context.get('active_model', 'ir.ui.menu') == 'account_followup.followup':
+            return context.get('active_id', False)
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        tmp = self.pool.get('account_followup.followup').search(cr, uid, [('company_id', '=', company_id)])
-        return tmp and tmp[0] or False
+        followp_id = self.pool.get('account_followup.followup').search(cr, uid, [('company_id', '=', company_id)], context=context)
+        return followp_id and followp_id[0] or False
 
     def do_continue(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
+
+        if context is None:
+            context = {}
         data = self.read(cr, uid, ids, [])[0]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context.update({'followup_id': data['followup_id'], 'date':data['date']})
         return {
-                'name': _('Select partners'),
-                'view_type': 'form',
-                'context': context,
-                'view_mode': 'tree,form',
-                'res_model': 'account.followup.print.all',
-                'views': [(resource_id,'form')],
-                'type': 'ir.actions.act_window',
-                'target': 'new',
+            'name': _('Select Partners'),
+            'view_type': 'form',
+            'context': context,
+            'view_mode': 'tree,form',
+            'res_model': 'account.followup.print.all',
+            'views': [(resource_id,'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
             }
 
     _defaults = {
@@ -74,10 +81,12 @@ class account_followup_print_all(osv.osv_memory):
         'summary': fields.text('Summary', required=True, readonly=True)
                 }
     def _get_summary(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         return context.get('summary', '')
 
     def _get_partners(self, cr, uid, context=None):
-        return self._get_partners_followp(cr, uid, [], context)['partner_ids']
+        return self._get_partners_followp(cr, uid, [], context=context)['partner_ids']
 
     def _get_msg(self, cr, uid, context=None):
         return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
@@ -168,17 +177,19 @@ class account_followup_print_all(osv.osv_memory):
         move_obj = self.pool.get('account.move.line')
         user_obj = self.pool.get('res.users')
         line_obj = self.pool.get('account_followup.stat')
+
+        if context is None:
+            context = {}
         data = self.read(cr, uid, ids, [])[0]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-
         if data['email_conf']:
             mail_notsent = ''
             msg_sent = ''
             msg_unsent = ''
             count = 0
             data_user = user_obj.browse(cr, uid, uid)
-            move_lines = line_obj.browse(cr, uid, data['partner_ids'][0][2])
+            move_lines = line_obj.browse(cr, uid, data['partner_ids'])
             partners = []
             dict_lines = {}
             for line in move_lines:
@@ -253,8 +264,9 @@ class account_followup_print_all(osv.osv_memory):
             context.update({'summary': summary})
         else:
             context.update({'summary': '\n\n\nE-Mail has not been sent to any partner. If you want to send it, please tick send email confirmation on wizard.'})
+
         return {
-            'name': _('Summary'),
+            'name': _('Follwoup Summary'),
             'view_type': 'form',
             'context': context,
             'view_mode': 'tree,form',
@@ -266,13 +278,15 @@ class account_followup_print_all(osv.osv_memory):
                     }
 
     def do_print(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         data = self.read(cr, uid, ids, [])[0]
         res = self._get_partners_followp(cr, uid, ids, context)['to_update']
         to_update = res
         data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
         date = 'date' in context and context['date'] or data['date']
         for id in to_update.keys():
-            if to_update[id]['partner_id'] in data['partner_ids'][0][2]:
+            if to_update[id]['partner_id'] in data['partner_ids']:
                 cr.execute(
                     "UPDATE account_move_line "\
                     "SET followup_line_id=%s, followup_date=%s "\
@@ -285,6 +299,7 @@ class account_followup_print_all(osv.osv_memory):
              'model': 'account_followup.followup',
              'form': data
                  }
+
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account_followup.followup.print',

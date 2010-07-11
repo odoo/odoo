@@ -1,6 +1,6 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* document
+# 	* document
 #
 msgid ""
 msgstr ""
@@ -155,8 +155,7 @@ msgid "File Information"
 msgstr "Bestandsinformatie"
 
 #. module: document
-#: field:document.directory,file_ids:0
-#: view:ir.attachment:0
+#: field:document.directory,file_ids:0 view:ir.attachment:0
 msgid "Files"
 msgstr "Bestanden"
 
@@ -166,8 +165,7 @@ msgid "Stored Filename"
 msgstr "Opgeslagen bestandsnaam"
 
 #. module: document
-#: field:document.directory,write_uid:0
-#: field:ir.attachment,write_uid:0
+#: field:document.directory,write_uid:0 field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Laatste wijziging door gebruiker"
 
@@ -226,8 +224,7 @@ msgid "Directory Type"
 msgstr "Soort map"
 
 #. module: document
-#: field:document.directory,group_ids:0
-#: field:ir.attachment,group_ids:0
+#: field:document.directory,group_ids:0 field:ir.attachment,group_ids:0
 msgid "Groups"
 msgstr "Groepen"
 
@@ -265,8 +262,7 @@ msgid "Notes"
 msgstr "Notities"
 
 #. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,index_content:0
+#: view:ir.attachment:0 field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Geïndexeerde inhoud"
 
@@ -336,8 +332,7 @@ msgid "Directory"
 msgstr "Map"
 
 #. module: document
-#: field:document.directory,user_id:0
-#: field:ir.attachment,user_id:0
+#: field:document.directory,user_id:0 field:ir.attachment,user_id:0
 msgid "Owner"
 msgstr "Eigenaar"
 
@@ -364,8 +359,7 @@ msgid "Content Type"
 msgstr "Soort inhoud"
 
 #. module: document
-#: view:document.directory:0
-#: view:ir.attachment:0
+#: view:document.directory:0 view:ir.attachment:0
 msgid "Security"
 msgstr "Beveiliging"
 
@@ -404,8 +398,7 @@ msgid "Domain"
 msgstr "Domein"
 
 #. module: document
-#: field:document.directory,write_date:0
-#: field:ir.attachment,write_date:0
+#: field:document.directory,write_date:0 field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Wijzigingsdatum"
 
@@ -489,3 +482,165 @@ msgstr "Dochters"
 #: view:document.directory:0
 msgid "Contents"
 msgstr "Inhoud"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_partner
+msgid "Files Per Month"
+msgstr "Bestanden per maand"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_wall
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_shame
+#: view:report.document.wall:0
+msgid "Wall of Shame"
+msgstr "Wall of Shame"
+
+#. module: document
+#: model:ir.model,name:document.model_report_files_partner
+msgid "Files details by Partners"
+msgstr ""
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all
+msgid "All Months"
+msgstr "Alle maanden"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_myfile
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_myfile
+msgid "My files"
+msgstr "Mijn bestanden"
+
+#. module: document
+#: view:report.document.user:0
+msgid "Files by users"
+msgstr "Bestanden per gebruiker"
+
+#. module: document
+#: view:report.files.partner:0
+msgid "Files per Month"
+msgstr "Bestanden per maand"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_my_document_tree1
+msgid "My files (All months)"
+msgstr "Mijn bestanden (alle maanden)"
+
+#. module: document
+#: field:report.document.wall,file_name:0
+msgid "Last Posted File Name"
+msgstr "Laatst geposte bestandnaam"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report
+msgid "Reporting"
+msgstr "Overzichten"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_wall
+msgid "Users that did not inserted documents since one month"
+msgstr "Gebruikers die de laatste maand geen documenten hebben toegevoegd"
+
+#. module: document
+#: view:report.files.partner:0
+msgid "Files By Partner"
+msgstr "Bestanden per relatie"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this
+msgid "This Month"
+msgstr "Deze maand"
+
+#. module: document
+#: field:report.document.user,user:0 field:report.document.wall,user:0
+msgid "User"
+msgstr "Gebruiker"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_all_userfile
+#: model:ir.ui.menu,name:document.menu_action_view_my_document_report_this_userfile
+msgid "All Users files"
+msgstr "Alls gebruikersbestanden"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_my_document_tree
+msgid "My files (This months)"
+msgstr "Mijn bestanden (deze maanden)"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_user
+msgid "Files details by Users"
+msgstr "Bestandsdetails per gebruiker"
+
+#. module: document
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
+#: field:report.files.partner,nbr:0
+msgid "# of Files"
+msgstr "# bestanden"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_user_graph
+msgid "Files By Users"
+msgstr "Bestanden per gebruikers"
+
+#. module: document
+#: model:ir.module.module,shortdesc:report_document.module_meta_information
+msgid "Document Management - Reporting"
+msgstr "Documentbeheer - Overzichten"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files (All months)"
+msgstr "Alle gebruikersbestanden (alle maanden)"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_file
+msgid "Files details by Directory"
+msgstr "Bestandsdetails per map"
+
+#. module: document
+#: field:report.document.user,change_date:0
+#: field:report.files.partner,change_date:0
+msgid "Modified Date"
+msgstr "Wijzigingsdatum"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_size_month
+#: view:report.document.file:0
+msgid "File Size by Month"
+msgstr "Bestandsgrootte per maand"
+
+#. module: document
+#: field:report.document.user,file_title:0
+#: field:report.files.partner,file_title:0
+msgid "File Name"
+msgstr "Bestandsnaam"
+
+#. module: document
+#: field:report.document.file,month:0 field:report.document.user,month:0
+#: field:report.document.user,name:0 field:report.document.wall,month:0
+#: field:report.document.wall,name:0 field:report.files.partner,name:0
+msgid "Month"
+msgstr "Maand"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
+#: view:report.document.user:0
+msgid "Files by Month"
+msgstr "Bestanden per maand"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_document_by_resourcetype_graph
+#: view:report.document.user:0
+msgid "Files by Resource Type"
+msgstr "Bestanden per soort bron"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree
+msgid "All Users files (This month)"
+msgstr "Alle gebruikersbestanden (deze maand)"
+
+#. module: document
+#: field:report.document.wall,last:0
+msgid "Last Posted Time"
+msgstr "Laatste plaatsing"

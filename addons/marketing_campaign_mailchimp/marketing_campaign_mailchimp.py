@@ -22,11 +22,9 @@ import urllib
 import urllib2
 import simplejson as json
 import time
-from datetime import datetime
-
 
 from osv import fields, osv
-from marketing_campaign.marketing_campaign import _intervalTypes
+
 mailchimp_url = 'http://%s.api.mailchimp.com/1.2'
 
 class mailchimp_account(osv.osv):
@@ -150,7 +148,7 @@ class marketing_campaign_activity(osv.osv):
             return {}
         return {'value':{}}
 
-    def process_wi_mailchimp(self, cr, uid, activity, workitem, context={}):
+    def _process_wi_mailchimp(self, cr, uid, activity, workitem, context=None):
         mailchimp_account_id = activity.mailchimp_account_id.id
         list_name = activity.mailchimp_list
         mc_acc_obj = self.pool.get('mailchimp.account')
@@ -193,18 +191,15 @@ class marketing_campaign_activity(osv.osv):
                     'merge_vars[address][city]' : model_obj.city and model_obj.city or '',
                     'merge_vars[phone]' : model_obj.phone and model_obj.phone or '',
                     })
-                res = mc_acc_obj.get_response(cr, uid, mailchimp_account_id, 'listSubscribe', params)
-                # handle mailchimp error
+                mc_acc_obj.get_response(cr, uid, mailchimp_account_id, 'listSubscribe', params)
+                # TODO handle mailchimp error
             return True
-        else : 
+        else :
             return {'error_msg' : "Invalid Email Address"}
-    
+
     def __init__(self, *args):
-        res = super(marketing_campaign_activity, self).__init__(*args)
-        self._actions.update({'mailchimp' : self.process_wi_mailchimp})
-        self._actions_type.append(('mailchimp', 'Mailchimp'))
-        return res 
-    
+        super(marketing_campaign_activity, self).__init__(*args)
+        self._action_types.append(('mailchimp', 'Mailchimp'))
 
 marketing_campaign_activity()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

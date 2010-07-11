@@ -24,8 +24,12 @@
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
-    'description': """claim""",
-    'author': 'Tiny',
+    'description': """
+This modules allows you to track your customers/suppliers claims and flames.
+It is fully integrated with the email gateway so that you can create
+automatically new claims based on incoming emails.
+    """,
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['crm'],
     'init_xml': [

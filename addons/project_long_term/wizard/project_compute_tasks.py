@@ -69,7 +69,7 @@ class project_compute_tasks(osv.osv_memory):
                 resource_id = resource_obj.search(cr, uid, [('user_id', '=', user.id)], context=context)
                 if resource_id:
 #                    resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
-                    resource = resource_obj.read(cr, uid, resource_id, ['calendar_id','time_efficiency'], context=context)[0]
+                    resource = resource_obj.read(cr, uid, resource_id, ['calendar_id', 'time_efficiency'], context=context)[0]
                     if resource.get('calendar_id', False):
                        leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id[0], resource['calendar_id'] and resource['calendar_id'][0] or False)
                     time_efficiency = resource.get('time_efficiency')
@@ -126,7 +126,7 @@ class project_compute_tasks(osv.osv_memory):
                 s_date = t.start.to_datetime()
                 e_date = t.end.to_datetime()
                 if loop_no == 0:
-                    project_obj.write(cr, uid, [project_id], {'date' : e_date}, context=context)
+                    project_obj.write(cr, uid, [project_id], {'date': e_date}, context=context)
                 else:
                     ctx = context.copy()
                     ctx.update({'scheduler': True})

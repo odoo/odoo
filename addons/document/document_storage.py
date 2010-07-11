@@ -24,6 +24,8 @@ from osv import osv, fields
 import os
 import tools
 import base64
+import logging
+
 from tools.misc import ustr
 from tools.translate import _
 
@@ -96,7 +98,7 @@ class document_storage(osv.osv):
     """
     _name = 'document.storage'
     _description = 'Storage Media'
-    _log_create=True
+    _doclog = logging.getLogger('document')
 
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
@@ -153,7 +155,7 @@ class document_storage(osv.osv):
                 # On a migrated db, some files may have the wrong storage type
                 # try to fix their directory.
                 if ira.file_size:
-                    netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
+                    self._doclog.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
                 return None
             fpath = os.path.join(boo.path, ira.store_fname)
             return file(fpath, 'rb').read()
@@ -169,7 +171,7 @@ class document_storage(osv.osv):
                 # On a migrated db, some files may have the wrong storage type
                 # try to fix their directory.
                 if ira.file_size:
-                    netsvc.Logger().notifyChannel('document',netsvc.LOG_WARNING,"ir.attachment #%d does not have a filename, trying the name." %ira.id)
+                    self._doclog.warning("ir.attachment #%d does not have a filename, trying the name." %ira.id)
                 sfname = ira.name
             fpath = os.path.join(boo.path,ira.store_fname or ira.name)
             if os.path.exists(fpath):
@@ -189,7 +191,6 @@ class document_storage(osv.osv):
         if not context:
             context = {}
         boo = self.browse(cr, uid, id, context)
-        logger = netsvc.Logger()
         if fil_obj:
             ira = fil_obj
         else:
@@ -197,7 +198,7 @@ class document_storage(osv.osv):
 
         if not boo.online:
             raise RuntimeError('media offline')
-        logger.notifyChannel('document', netsvc.LOG_DEBUG, "Store data for ir.attachment #%d" % ira.id)
+        self._doclog.debug( "Store data for ir.attachment #%d" % ira.id)
         store_fname = None
         fname = None
         if boo.type == 'filestore':
@@ -216,14 +217,14 @@ class document_storage(osv.osv):
                 fp = file(fname, 'wb')
                 fp.write(data)
                 fp.close()
-                logger.notifyChannel('document', netsvc.LOG_DEBUG, "Saved data to %s" % fname)
+                self._doclog.debug( "Saved data to %s" % fname)
                 filesize = len(data) # os.stat(fname).st_size
                 store_fname = os.path.join(flag, filename)
 
                 # TODO Here, an old file would be left hanging.
 
-            except Exception, e :
-                netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "Couldn't save data: %s" % str(e))
+            except Exception, e:
+                self._doclog.warning( "Couldn't save data to %s", path, exc_info=True)
                 raise except_orm(_('Error!'), str(e))
         elif boo.type == 'db':
             filesize = len(data)
@@ -252,14 +253,12 @@ class document_storage(osv.osv):
                 fp = file(fname,'wb')
                 fp.write(data)
                 fp.close()
-                logger.notifyChannel('document',netsvc.LOG_DEBUG,"Saved data to %s" % fname)
+                self._doclog.debug("Saved data to %s", fname)
                 filesize = len(data) # os.stat(fname).st_size
                 store_fname = os.path.join(*npath)
                 # TODO Here, an old file would be left hanging.
             except Exception,e :
-                import traceback
-                traceback.print_exc()
-                netsvc.Logger().notifyChannel('document',netsvc.LOG_WARNING,"Couldn't save data: %s" % e)
+                self._doclog.warning("Couldn't save data:", exc_info=True)
                 raise except_orm(_('Error!'), str(e))
         else:
             raise TypeError("No %s storage" % boo.type)
@@ -273,8 +272,8 @@ class document_storage(osv.osv):
             try:
                 mime, icont = cntIndex.doIndex(data, ira.datas_fname,
                 ira.file_type or None, fname)
-            except Exception, e:
-                logger.notifyChannel('document', netsvc.LOG_DEBUG, 'Cannot index file: %s' % str(e))
+            except Exception:
+                self._doclog.debug('Cannot index file:', exc_info=True)
                 pass
 
             # a hack: /assume/ that the calling write operation will not try
@@ -286,7 +285,7 @@ class document_storage(osv.osv):
             file_node.content_type = mime
             return True
         except Exception, e :
-            netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "Couldn't save data: %s" % str(e))
+            self._doclog.warning( "Couldn't save data:", exc_info=True)
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
             raise except_orm(_('Error at doc write!'), str(e))
@@ -321,9 +320,9 @@ class document_storage(osv.osv):
                 try:
                     os.unlink(fname)
                 except Exception, e:
-                    netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "Could not remove file %s, please remove manually." % fname)
+                    self._doclog.warning("Could not remove file %s, please remove manually.", fname, exc_info=True)
             else:
-                netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "Unknown unlink key %s" % ktype)
+                self._doclog.warning("Unknown unlink key %s" % ktype)
 
         return True
 

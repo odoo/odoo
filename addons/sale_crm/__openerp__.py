@@ -40,6 +40,7 @@ crm modules.
     'init_xml': [],
     'update_xml': ['wizard/crm_make_sale_view.xml',
                    'sale_crm_view.xml',
+                   'board_sale_crm_view.xml',
                    'process/sale_crm_process.xml',
                    'security/sale_crm_security.xml',
                    ],

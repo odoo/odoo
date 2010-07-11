@@ -84,15 +84,17 @@ class project_work(osv.osv):
         timeline_id = obj_timesheet.create(cr, uid, vals=vals_line, context=kwargs['context'])
 
         # Compute based on pricetype
-        amount_unit=obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
+        amount_unit = obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
             prod_id, amount, unit, context=kwargs['context'])
-
-        vals_line['amount'] = (-1) * vals['hours']* (amount_unit['value']['amount'] or 0.0)
+        if amount_unit:
+            vals_line['amount'] = (-1) * vals['hours']* (amount_unit.get('value',{}).get('amount',0.0) or 0.0)
         obj_timesheet.write(cr, uid, [timeline_id], vals_line, {})
         vals['hr_analytic_timesheet_id'] = timeline_id
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
         vals_line = {}
         obj = self.pool.get('hr.analytic.timesheet')
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
@@ -118,8 +120,10 @@ class project_work(osv.osv):
                 unit = False
                 amount_unit=obj.on_change_unit_amount(cr, uid, line_id,
                     vals_line['product_id'], vals_line['unit_amount'], unit, context=context)
-
-                vals_line['amount'] = (-1) * vals['hours'] * (amount_unit['value']['amount'] or 0.0)
+                
+                if amount_unit:
+                     vals_line['amount'] = (-1) * vals['hours'] * (amount_unit.get('value',{}).get('amount',0.0) or 0.0)
+                     
             obj.write(cr, uid, [line_id], vals_line, context=context)
 
         return super(project_work,self).write(cr, uid, ids, vals, context)
@@ -152,7 +156,9 @@ class task(osv.osv):
 
         return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
 
-    def write(self, cr, uid, ids,vals,context={}):
+    def write(self, cr, uid, ids,vals,context=None):
+        if context is None:
+            context = {}
         if (vals.has_key('project_id') and vals['project_id']) or (vals.has_key('name') and vals['name']):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
@@ -178,6 +184,8 @@ class project_project(osv.osv):
     _inherit = "project.project"
 
     def name_get(self, cr, user, ids, context=None):
+        if context is None:
+            context = {}
         result = []
         for project in self.browse(cr, user, ids, context):
             name = "[%s] %s" % (project.category_id and project.category_id.code or '?', project.name)
@@ -187,4 +195,3 @@ class project_project(osv.osv):
 project_project()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

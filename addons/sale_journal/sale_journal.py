@@ -18,10 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
 
 from osv import osv, fields
 import netsvc
-import time
 from tools.translate import _
 
 class sale_journal_invoice_type(osv.osv):
@@ -34,8 +34,8 @@ class sale_journal_invoice_type(osv.osv):
         'invoicing_method': fields.selection([('simple','Non grouped'),('grouped','Grouped')], 'Invoicing method', required=True),
     }
     _defaults = {
-        'active': lambda *a: True,
-        'invoicing_method': lambda *a:'simple'
+        'active': True,
+        'invoicing_method': 'simple'
     }
 sale_journal_invoice_type()
 
@@ -53,18 +53,21 @@ class sale_journal(osv.osv):
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
+            ('cancel','Cancel'),
+            ('confirm','Confirm'),
             ('done','Done'),
         ], 'State', required=True, readonly=True),
         'note': fields.text('Note'),
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
+        'date_created': time.strftime('%Y-%m-%d'),
         'user_id': lambda self,cr,uid,context: uid,
         'state': lambda self,cr,uid,context: 'draft',
     }
-    
+
     def button_sale_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'cancel'})
         for id in ids:
             sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
             for saleid in sale_ids:
@@ -72,10 +75,11 @@ class sale_journal(osv.osv):
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'cancel', cr)
             for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale order of Journal') + " '" + name + "' "+ _("is cancelled")
-                self.log(cr, uid, id, message)  
+                self.log(cr, uid, id, message)
         return True
-    
+
     def button_sale_confirm(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'confirm'})
         for id in ids:
             sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
             for saleid in sale_ids:
@@ -83,30 +87,45 @@ class sale_journal(osv.osv):
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'order_confirm', cr)
             for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is confirmed")
-                self.log(cr, uid, id, message)    
+                self.log(cr, uid, id, message)
         return True
 
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'})
         for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is opened")
-                self.log(cr, uid, id, message)  
+                self.log(cr, uid, id, message)
         return True
-    
+
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
         for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is in draft state")
-                self.log(cr, uid, id, message)  
+                self.log(cr, uid, id, message)
         return True
-    
+
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done', 'date_validation':time.strftime('%Y-%m-%d')})
         for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is closed")
-                self.log(cr, uid, id, message)  
+                self.log(cr, uid, id, message)
         return True
     
+    def copy(self, cr, uid, id, default=None, context=None):
+        """Overrides orm copy method
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case’s IDs
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+        default.update({'sale_stats_ids': []})
+        return super(sale_journal, self).copy(cr, uid, id, default=default, context=context)
+
 sale_journal()
 
 class picking_journal(osv.osv):
@@ -123,32 +142,53 @@ class picking_journal(osv.osv):
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
+            ('cancel','Cancel'),
             ('done','Done'),
         ], 'Creation date', required=True, readonly=True),
         'note': fields.text('Note'),
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': time.strftime('%Y-%m-%d'),
+        'date_created': time.strftime('%Y-%m-%d'),
         'user_id': lambda self,cr,uid,context: uid,
         'state': lambda self,cr,uid,context: 'draft',
     }
     def button_picking_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'cancel'})
         for id in ids:
             pick_ids = self.pool.get('stock.picking').search(cr, uid, [('journal_id','=',id)])
             for pickid in pick_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_cancel', cr)
         return True
+   
     def button_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'open'})
         return True
+    
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
+    
     def button_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done', 'date_validation':time.strftime('%Y-%m-%d')})
         return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        """Overrides orm copy method
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case’s IDs
+        @param context: A standard dictionary for contextual values
+        """
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+        default.update({'picking_stats_ids': []})
+        return super(picking_journal, self).copy(cr, uid, id, default=default, context=context)
+    
 picking_journal()
 
 #==============================================
@@ -160,29 +200,29 @@ class res_partner(osv.osv):
     _columns = {
         'property_invoice_type': fields.property(
         'sale_journal.invoice.type',
-        type='many2one',
-        relation='sale_journal.invoice.type',
-        string="Invoicing Method",
-        method=True,
-        view_load=True,
-        group_name="Accounting Properties",
-        help="The type of journal used for sales and picking."),
+        type = 'many2one',
+        relation = 'sale_journal.invoice.type',
+        string = "Invoicing Method",
+        method = True,
+        view_load = True,
+        group_name = "Accounting Properties",
+        help = "The type of journal used for sales and picking."),
     }
 res_partner()
 
 class picking(osv.osv):
-    _inherit="stock.picking"
+    _inherit = "stock.picking"
     _columns = {
-        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal'),
+        'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal',  domain=[('state','!=', 'done')]),
         'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal'),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
     }
 picking()
 
 class sale(osv.osv):
-    _inherit="sale.order"
+    _inherit = "sale.order"
     _columns = {
-        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal'),
+        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal', domain=[('state','!=', 'done')]),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')
     }
     def action_ship_create(self, cr, uid, ids, *args):

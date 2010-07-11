@@ -1,3 +1,25 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2009  Sharoon Thomas
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 from osv import osv, fields
 from html2text import html2text
 import re
@@ -97,9 +119,12 @@ class email_template_account(osv.osv):
                                                         context
                                                         )['name'],
          'state':lambda * a:'draft',
+         'smtpport':lambda *a:25,
+         'smtpserver':lambda *a:'localhost',
+         'company':lambda *a:'yes',
          'user':lambda self, cursor, user, context:user,
-         'send_pref':lambda * a: 'html',
-         'smtptls':lambda * a:True,
+         'send_pref':lambda *a: 'html',
+         'smtptls':lambda *a:True,
      }
     
     _sql_constraints = [
@@ -266,7 +291,7 @@ class email_template_account(osv.osv):
         return result
     
     def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, context=None):
-        #TODO: Replace all this crap with a single email object
+        #TODO: Replace all this with a single email object
         if body is None:
             body = {}
         if payload is None:
@@ -320,19 +345,20 @@ class email_template_account(osv.osv):
                         msg.attach(part)
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
-                    return error
+                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 try:
                     #print msg['From'],toadds
                     serv.sendmail(msg['From'], addresses_l['all'], msg.as_string())
                 except Exception, error:
                     logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Server Send Error\nDescription: %s") % (id, error))
-                    return error
+                    return {'error_msg': "Server Send Error\nDescription: %s"%error}
                 #The mail sending is complete
                 serv.close()
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_INFO, _("Mail from Account %s successfully Sent.") % (id))
                 return True
             else:
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Account not approved") % id)
+                return {'error_msg':"Mail from Account %s failed. Probable Reason:Account not approved"% id}
                                 
     def extracttime(self, time_as_string):
         """
@@ -394,7 +420,6 @@ class email_template_account(osv.osv):
         return date_as_date
         
     def send_receive(self, cr, uid, ids, context=None):
-        self.get_mails(cr, uid, ids, context)
         for id in ids:
             ctx = context.copy()
             ctx['filters'] = [('account_id', '=', id)]

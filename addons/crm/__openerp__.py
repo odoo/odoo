@@ -69,8 +69,10 @@ Create dashboard for CRM that includes:
         'crm_opportunity_data.xml',
         'crm_phonecall_data.xml',
     ],
-
     'update_xml': [
+        'security/crm_security.xml',
+        'security/ir.model.access.csv',
+
         'wizard/crm_lead_to_partner_view.xml',
         'wizard/crm_lead_to_opportunity_view.xml',
 
@@ -83,6 +85,8 @@ Create dashboard for CRM that includes:
 
         'wizard/crm_forward_to_partner_view.xml',
         'wizard/crm_send_email_view.xml',
+        'wizard/crm_custom_create_menu_view.xml',
+
         'crm_view.xml',
 
         'crm_action_rule_view.xml',
@@ -97,9 +101,6 @@ Create dashboard for CRM that includes:
 
         'crm_opportunity_view.xml',
         'crm_opportunity_menu.xml',
-
-        'security/crm_security.xml',
-        'security/ir.model.access.csv',
 
         'report/crm_lead_report_view.xml',
         'report/crm_phonecall_report_view.xml',
@@ -122,7 +123,7 @@ Create dashboard for CRM that includes:
     ],
     'test': [
             'test/test_crm_lead.yml',
-            'test/test_crm_meeting.yml',
+            #'test/test_crm_meeting.yml',
             'test/test_crm_opportunity.yml',
             'test/test_crm_phonecall.yml',
              ],

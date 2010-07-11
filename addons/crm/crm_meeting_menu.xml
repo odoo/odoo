@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
+<data>
 
     <act_window
         id="crm_case_categ_meet_create_partner"
@@ -105,7 +105,7 @@
          <field name="view_mode">tree,form</field>
          <field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view" />
         <field name="domain">[('ref','like','crm.meeting,')]</field>
-         <field name="context">{'default_sent_by_uid': uid}</field>
+         <field name="context">{"search_default_user_id":uid}</field>
      </record>
 
     <menuitem id="menu_attendee_invitations"

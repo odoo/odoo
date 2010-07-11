@@ -21,11 +21,7 @@
       FAQs, quality manuals, technical references, etc.
 
       '
--
-    I Get Help on this current page by clicking on "Basic wiki Editing" wizard
--
-    !python {model: wiki.wiki}: |
-      self.open_wiki_page(cr, uid, [ref("wiki_wiki_openerpwikiediting0")], context)
+
 -
     I create Index on this current page by clicking on "Create Index" wizard
 -
@@ -61,7 +57,7 @@
       menu_parent_id: base.menu_base_partner
       page: wiki.wiki_wiki_openerpwikiediting0
 -
-    I will check that menu is generated properly
+    I fill in the form and create the menu
 -
     !python {model: wiki.create.menu}: |
       ids = self.search(cr, uid, [])

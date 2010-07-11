@@ -53,7 +53,7 @@ class crm_phonecall_report(osv.osv):
         for case in self.browse(cr, uid, ids, context):
             if field_name != 'avg_answers':
                 state = field_name[5:]
-                cr.execute("select count(*) from crm_opportunity where \
+                cr.execute("select count(*) from crm_lead where \
                     section_id =%s and state='%s'"%(case.section_id.id, state))
                 state_cases = cr.fetchone()[0]
                 perc_state = (state_cases / float(case.nbr)) * 100
@@ -114,12 +114,11 @@ class crm_phonecall_report(osv.osv):
         """ Phone Calls By User And Section
             @param cr: the current row, from the database cursor,
         """
-
         tools.drop_view_if_exists(cr, 'crm_phonecall_report')
         cr.execute("""
             create or replace view crm_phonecall_report as (
                 select
-                    min(c.id) as id,
+                    id,
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
@@ -135,33 +134,15 @@ class crm_phonecall_report(osv.osv):
                     c.duration,
                     c.company_id,
                     c.priority,
-                    (select 1) as nbr,
+                    1 as nbr,
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
                     date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
-                    avg(extract('epoch' from (c.date_open-c.create_date)))/(3600*24) as  delay_open
-                    
+                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
+                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 from
                     crm_phonecall c
-                where c.categ_id in (select res_id from ir_model_data where (name = 'categ_phone1' or name ='categ_phone2'))
-                group by 
-                    to_char(c.create_date, 'YYYY'),
-                    to_char(c.create_date, 'MM'),\
-                    c.state,
-                    c.user_id,
-                    c.section_id,
-                    c.categ_id,
-                    c.partner_id,
-                    c.company_id,
-                    c.duration,
-                    c.priority,
-                    to_char(c.date_open, 'YYYY-MM-DD'),
-                    to_char(c.date_closed, 'YYYY-mm-dd'),
-                    c.stage_id,
-                    to_char(c.create_date, 'YYYY-MM-DD'),
-                    c.create_date
             )""")
 
 crm_phonecall_report()

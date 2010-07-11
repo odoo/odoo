@@ -26,8 +26,8 @@ class project_task(osv.osv):
     _name = "project.task"
     _inherit = ["calendar.todo", "project.task"]
     _columns = {
-        'write_date' : fields.datetime('Write Date'),
-        'create_date' : fields.datetime('Create Date'),
+        'write_date': fields.datetime('Write Date'),
+        'create_date': fields.datetime('Create Date'),
         'attendee_ids': fields.many2many('calendar.attendee', \
                                          'task_attendee_rel', 'task_id', 'attendee_id', 'Attendees'),
                 }
@@ -37,7 +37,9 @@ class project_task(osv.osv):
         vals = todo_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
 
-    def check_import(self, cr, uid, vals, context={}):
+    def check_import(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         ids = []
         for val in vals:
             obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
@@ -65,7 +67,9 @@ class project_task(osv.osv):
                 ids.append(task_id)
         return ids
 
-    def export_cal(self, cr, uid, ids, context={}):
+    def export_cal(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         task_datas = self.read(cr, uid, ids, [], context ={'read': True})
         tasks = []
         for task in task_datas:
@@ -75,8 +79,7 @@ class project_task(osv.osv):
         todo_obj = self.pool.get('basic.calendar.todo')
         ical = todo_obj.export_cal(cr, uid, tasks, context={'model': self._name})
         calendar_val = ical.serialize()
-        calendar_val = calendar_val.replace('"', '').strip()
-        return calendar_val
+        return calendar_val.replace('"', '').strip()
 
 project_task()
 

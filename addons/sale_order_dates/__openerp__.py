@@ -34,11 +34,11 @@ Add commitment, requested and effective dates on the sale order.
     ],
 
     'update_xml': [
-        'sale_view.xml',
+        'sale_order_dates_view.xml',
     ],
     'demo_xml': [
-    ], 
-    'test': [], 
+    ],
+    'test': [],
     'installable': True,
     'active': False,
 }

@@ -23,26 +23,30 @@ from osv import osv
 from osv import fields
 import urllib,re
 import random, time
+from tools.translate import _
 
 def geo_find(addr):
-    import urllib,re
-    regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
-    url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
-    xml = urllib.urlopen(url).read()
-    if '<error>' in xml:
-        print 'Error'
-        return None
-    result = re.search(regex, xml, re.M|re.I)
-    if not result:
-        print 'No Regex', xml
-        return None
-    return float(result.group(1)),float(result.group(2))
+    try: 
+        regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
+        url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
+        xml = urllib.urlopen(url).read()
+        if '<error>' in xml:
+            return None
+        result = re.search(regex, xml, re.M|re.I)
+        if not result:
+            return None
+        return float(result.group(1)),float(result.group(2))
+    except Exception, e:
+        raise osv.except_osv(_('Network error'), 
+                             _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
+    
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
-        'partner_latitude': fields.float('Geo Latitude', digits=(16,2)),
-        'partner_longitude': fields.float('Geo Longitude', digits=(16,2)),
+        'partner_latitude': fields.float('Geo Latitude'),
+        'partner_longitude': fields.float('Geo Longitude'),
+        'date_assign': fields.date('Assignation Date'),
         'partner_weight': fields.integer('Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
     }
@@ -50,19 +54,17 @@ class res_partner(osv.osv):
         'partner_weight': lambda *args: 0
     }
     def geo_localize(self, cr, uid, ids, context=None):
-        regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
         for partner in self.browse(cr, uid, ids, context=context):
+            if not partner.address:
+                continue
             part = partner.address[0]
             addr = ', '.join(filter(None, [part.street, part.street2, (part.zip or '')+' '+(part.city or ''), part.state_id and part.state_id.name, part.country_id and part.country_id.name]))
-            result = geo_find(addr)
+            result = geo_find(addr.encode('utf8'))
             if result:
-                print 'Write', {
-                    'partner_latitude': result[0],
-                    'partner_longitude': result[1]
-                }
                 self.write(cr, uid, [partner.id], {
                     'partner_latitude': result[0],
-                    'partner_longitude': result[1]
+                    'partner_longitude': result[1],
+                    'date_assign': time.strftime('%Y-%m-%d')
                 }, context=context)
         return True
 res_partner()
@@ -70,23 +72,48 @@ res_partner()
 class crm_lead(osv.osv):
     _inherit = "crm.lead"
     _columns = {
-        'partner_latitude': fields.float('Geo Latitude', digits=(16,2)),
-        'partner_longitude': fields.float('Geo Longitude', digits=(16,2)),
+        'partner_latitude': fields.float('Geo Latitude'),
+        'partner_longitude': fields.float('Geo Longitude'),
         'partner_assigned_id': fields.many2one('res.partner','Assigned Partner'),
         'date_assign': fields.date('Assignation Date')
     }
+    def forward_to_partner(self, cr, uid, ids, context=None):
+        fobj = self.pool.get('crm.lead.forward.to.partner')
+        for lead in self.browse(cr, uid, ids, context=context):
+            context = {'active_id': lead.id, 'active_ids': [lead.id], 'active_model': 'crm.lead'}
+            if lead.partner_assigned_id:
+                email = False
+                if lead.partner_assigned_id.address:
+                    email = lead.partner_assigned_id.address[0].email
+                if not email:
+                    raise osv.except_osv(_('Error !'), _('No email on the partner assigned to this opportunity'))
+
+                values = fobj.default_get(cr, uid, ['name', 'email_from'], context=context)
+                if not values.get('email_from'):
+                    raise osv.except_osv(_('Error !'), _('Please set an email address in your user preferences'))
+                values.update({
+                    'history': 'whole',
+                    'email_to': email,
+                    'message': fobj._get_case_history(cr, uid, 'whole', lead.id, context) or False,
+                    })
+                forward = fobj.create(cr, uid, values, context)
+                fobj.action_forward(cr, uid, [forward], context)
+            else:
+                raise osv.except_osv(_('Error !'), _('No partner assigned to this opportunity'))
+        return True
+
     def assign_partner(self, cr, uid, ids, context=None):
+        ok = False
         for part in self.browse(cr, uid, ids, context=context):
             if not part.country_id:
                 continue
             addr = ', '.join(filter(None, [part.street, part.street2, (part.zip or '')+' '+(part.city or ''), part.state_id and part.state_id.name, part.country_id and part.country_id.name]))
-            result = geo_find(addr)
+            result = geo_find(addr.encode('utf8'))
             if result:
                 self.write(cr, uid, [part.id], {
                     'partner_latitude': result[0],
                     'partner_longitude': result[1]
                 }, context=context)
-                
                 part_ids = self.pool.get('res.partner').search(cr, uid, [
                     ('partner_weight','>',0),
                     ('partner_latitude','>',result[0]-2), ('partner_latitude','<',result[0]+2),
@@ -108,6 +135,7 @@ class crm_lead(osv.osv):
                     if mypartner<=t[1]:
                         self.write(cr, uid, [part.id], {'partner_assigned_id': t[0], 'date_assign': time.strftime('%Y-%m-%d')}, context=context)
                         break
-        return True
+            ok = True
+        return ok
 crm_lead()
 

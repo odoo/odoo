@@ -20,18 +20,16 @@
 ##############################################################################
 
 from mx import DateTime
-from osv import fields
-from osv import osv
 import time
-import netsvc
-
-import ir
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+from osv import osv, fields
+import netsvc
+import ir
 import pooler
 from tools import config
 from tools.translate import _
-
 import decimal_precision as dp
 from osv.orm import browse_record, browse_null
 
@@ -67,7 +65,7 @@ class purchase_order(osv.osv):
             res[order.id]['amount_total']=res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
-    def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context):
+    def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context=None):
         if not value: return False
         if type(ids)!=type([]):
             ids=[ids]
@@ -79,7 +77,7 @@ class purchase_order(osv.osv):
                     (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
         return True
 
-    def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context):
+    def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context=None):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
@@ -132,7 +130,7 @@ class purchase_order(osv.osv):
                 res[r] = 100.0 * res[r][0] / res[r][1]
         return res
 
-    def _get_order(self, cr, uid, ids, context={}):
+    def _get_order(self, cr, uid, ids, context=None):
         result = {}
         for line in self.pool.get('purchase.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
@@ -148,16 +146,16 @@ class purchase_order(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True, select=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}),
-        'origin': fields.char('Source Document', size=64, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
+        'name': fields.char('Order Reference', size=64, required=True, select=True, help="unique number of the purchase order,computed automatically when the purchase order is created"),
+        'origin': fields.char('Source Document', size=64,
             help="Reference of the document that generated this purchase order request."
         ),
         'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, size=64),
         'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="Date on which this document has been created."),
-        'date_approve':fields.date('Date Approved', readonly=1),
+        'date_approve':fields.date('Date Approved', readonly=1, help="Date on which purchase order has been approved"),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True,
-            states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}),
+            states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},domain="[('partner_id', '=', partner_id)]"),
         'dest_address_id':fields.many2one('res.partner.address', 'Destination Address',
             states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
             help="Put an address if you want to deliver directly from the supplier to the customer." \
@@ -170,11 +168,11 @@ class purchase_order(osv.osv):
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)],'done':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True, help="An invoice generated for a purchase order"),
         'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
-        'shipped':fields.boolean('Received', readonly=True, select=True),
+        'shipped':fields.boolean('Received', readonly=True, select=True, help="It indicates that a picking has been done"),
         'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float'),
-        'invoiced': fields.function(_invoiced, method=True, string='Invoiced & Paid', type='boolean'),
+        'invoiced': fields.function(_invoiced, method=True, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Picking')], 'Invoicing Control', required=True,
             help="From Order: a draft invoice will be pre-generated based on the purchase order. The accountant " \
@@ -186,27 +184,27 @@ class purchase_order(osv.osv):
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Purchase Price'), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
-            }, multi="sums"),
+            }, multi="sums", help="The amount without tax"),
         'amount_tax': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Purchase Price'), string='Taxes',
             store={
                 'purchase.order.line': (_get_order, None, 10),
-            }, multi="sums"),
+            }, multi="sums", help="The tax amount"),
         'amount_total': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Purchase Price'), string='Total',
             store={
                 'purchase.order.line': (_get_order, None, 10),
-            }, multi="sums"),
+            }, multi="sums",help="The total amount"),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
     }
     _defaults = {
-        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'date_order': time.strftime('%Y-%m-%d'),
+        'state': 'draft',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
-        'shipped': lambda *a: 0,
-        'invoice_method': lambda *a: 'order',
-        'invoiced': lambda *a: 0,
+        'shipped': 0,
+        'invoice_method': 'order',
+        'invoiced': 0,
         'partner_address_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['default'])['default'],
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
@@ -277,8 +275,6 @@ class purchase_order(osv.osv):
                     todo.append(line.id)
         current_name = self.name_get(cr, uid, ids)[0][1]
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
-        message = _('confirm Order') + " ' " + po.name
-        self.log(cr,uid,po,message)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
             for line in po.order_line:
@@ -429,6 +425,7 @@ class purchase_order(osv.osv):
                 'invoice_state': istate,
                 'purchase_id': order.id,
                 'company_id': order.company_id.id,
+                'move_lines' : [],
             })
             todo_moves = []
             for order_line in order.order_line:
@@ -631,6 +628,7 @@ class purchase_order_line(osv.osv):
     _table = 'purchase_order_line'
     _name = 'purchase.order.line'
     _description = 'Purchase Order Line'
+
     def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
@@ -710,18 +708,20 @@ class purchase_order_line(osv.osv):
         if not uom:
             res['value']['price_unit'] = 0.0
         return res
+
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
         for (id,name) in self.name_get(cr, uid, ids):
             message = _('Purchase order line') + " '" + name + "' "+ _("is confirmed")
             self.log(cr, uid, id, message)
         return True
+
 purchase_order_line()
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     _columns = {
-        'purchase_id': fields.many2one('purchase.order', 'Latest Requisition'),
+        'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
     }
 
     def action_po_assign(self, cr, uid, ids, context={}):
@@ -798,7 +798,7 @@ class procurement_order(osv.osv):
             res[procurement.id] = purchase_id
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': purchase_id})
         return res
+
 procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

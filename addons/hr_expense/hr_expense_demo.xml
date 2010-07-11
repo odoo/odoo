@@ -58,6 +58,7 @@
 			<field name="uom_id" ref="product.product_uom_unit"/>
 			<field eval="1.0" name="unit_quantity"/>
 		</record>
+
 		<record id="hr_expense_line_basicpcserverforseagate0" model="hr.expense.line">
 			<field name="name">Basic PC - Server for Seagate</field>
 			<field name="date_value">2010-05-03</field>
@@ -68,7 +69,9 @@
 			<field name="uom_id" ref="product.product_uom_unit"/>
 			<field eval="1.0" name="unit_quantity"/>
 		</record>
+
 	</data>
+
 	<data noupdate="1">
 		<record id="hr_expense_expense_septemberexpenses1" model="hr.expense.expense">
 			<field name="currency_id" ref="base.EUR"/>
@@ -79,6 +82,7 @@
 			<field name="date">2010-04-20</field>
 			<field name="state">draft</field>
 		</record>
+
 		<record id="hr_expense_line_hotelexpensesthymbra0" model="hr.expense.line">
 			<field name="name">Hotel Expenses - Thymbra</field>
 			<field name="date_value">2010-05-03</field>
@@ -89,17 +93,17 @@
 			<field name="uom_id" ref="product.product_uom_unit"/>
 			<field eval="5.0" name="unit_quantity"/>
 		</record>
-                <record id="hr_expense_line_car_travel" model="hr.expense.line">
-                        <field name="name">Bruxelles - Paris</field>
-                        <field name="date_value">2010-05-03</field>
-                        <field name="analytic_account" ref="account.analytic_thymbra"/>
-                        <field name="product_id" ref="product_product_expense_car"/>
-                        <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'Travel Expenses')]"/>
-                        <field eval="0.30" name="unit_amount"/>
-                        <field name="uom_id" ref="product.product_uom_km"/>
-                        <field eval="622.0" name="unit_quantity"/>
-                </record>
 
+        <record id="hr_expense_line_car_travel" model="hr.expense.line">
+                <field name="name">Bruxelles - Paris</field>
+                <field name="date_value">2010-05-03</field>
+                <field name="analytic_account" ref="account.analytic_thymbra"/>
+                <field name="product_id" ref="product_product_expense_car"/>
+                <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'Travel Expenses')]"/>
+                <field eval="0.30" name="unit_amount"/>
+                <field name="uom_id" ref="product.product_uom_km"/>
+                <field eval="622.0" name="unit_quantity"/>
+        </record>
 
 	</data>
 </openerp>

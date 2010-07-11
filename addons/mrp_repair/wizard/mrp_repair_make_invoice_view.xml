@@ -10,12 +10,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create invoices">
-				    <separator colspan="4" string="Do you really want to create the invoices ?" />  
-				    <field name="group"/>
-				    <newline/>  
-				    <group col="2" colspan="4">
-                		<button icon='gtk-cancel' special="cancel"
-                			string="Cancel" />
+    		        <separator colspan="4" string="Do you really want to create the invoice(s) ?" />  
+			        <field name="group"/>
+                    <newline/>  
+                    <group col="2" colspan="4">                        
+                		<button icon='gtk-close' special="cancel"
+                			string="Close" />
                 		<button name="make_invoices" string="Create Invoice"
                 			colspan="1" type="object" icon="gtk-ok" />
                 	</group>

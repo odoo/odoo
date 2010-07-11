@@ -23,7 +23,6 @@ from osv import fields, osv
 from tools.translate import _
 from mx.DateTime import now
 
-
 class crm_make_sale(osv.osv_memory):
     """ Make sale  order for crm """
 
@@ -42,10 +41,12 @@ class crm_make_sale(osv.osv_memory):
         if not context:
             context = {}
             
-        data = context and context.get('active_ids', []) or []
-        case_obj = self.pool.get('crm.lead')
-        case = case_obj.read(cr, uid, data, ['partner_id'])
-        return  case[0]['partner_id']
+        active_id = context and context.get('active_id', False) or False
+        if not active_id:
+            return False
+        lead_obj = self.pool.get('crm.lead')
+        lead = lead_obj.read(cr, uid, active_id, ['partner_id'])
+        return  lead['partner_id']
     
     def makeOrder(self, cr, uid, ids, context=None):
         """
@@ -61,15 +62,13 @@ class crm_make_sale(osv.osv_memory):
             context = {}
             
         mod_obj = self.pool.get('ir.model.data')
-
-
-        result = mod_obj._get_id(cr, uid, 'sale', 'view_sales_order_filter')
-        id = mod_obj.read(cr, uid, result, ['res_id'])
-
         case_obj = self.pool.get('crm.lead')
         sale_obj = self.pool.get('sale.order')
         partner_obj = self.pool.get('res.partner')
         sale_line_obj = self.pool.get('sale.order.line')
+        
+        result = mod_obj._get_id(cr, uid, 'sale', 'view_sales_order_filter')
+        id = mod_obj.read(cr, uid, result, ['res_id'])
         
         data = context and context.get('active_ids', []) or []
              
@@ -99,7 +98,7 @@ class crm_make_sale(osv.osv_memory):
                     raise osv.except_osv(_('Data Insufficient!'),_('Customer has no addresses defined!'))
     
                 vals = {
-                    'origin': 'CRM-Opportunity:%s' % str(case.id),
+                    'origin': 'Opportunity:%s' % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
                     'picking_policy': make.picking_policy,
                     'shop_id': make.shop_id.id,
@@ -130,6 +129,8 @@ class crm_make_sale(osv.osv_memory):
     
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
+                message = _('Opportunity ') + " '" + case.name + "' "+ _("is converted to Sales Quotation.")
+                self.log(cr, uid, case.id, message)
     
             if make.close:
                 case_obj.case_close(cr, uid, data)
@@ -147,8 +148,6 @@ class crm_make_sale(osv.osv_memory):
                     'res_id': new_ids and new_ids[0]
 
                 }
-
-                
             else:
                 value = {
                     'domain': str([('id', 'in', new_ids)]),
@@ -157,24 +156,24 @@ class crm_make_sale(osv.osv_memory):
                     'res_model': 'sale.order',
                     'view_id': False,
                     'type': 'ir.actions.act_window',
-                    'res_id':new_ids
+                    'res_id': new_ids
                     }
             return value
 
     _columns = {
-                'shop_id': fields.many2one('sale.shop', 'Shop', required = True),
-                'partner_id': fields.many2one('res.partner', 'Customer',  required = True,  help = 'Use this partner if there is no partner on the case'),
-                'picking_policy': fields.selection([('direct','Partial Delivery'),
-                                                    ('one','Complete Delivery')], 'Picking Policy', required = True),
-                'product_ids': fields.many2many('product.product', 'product_sale_rel',\
-                                 'sale_id', 'product_id', 'Products'),
-                'analytic_account': fields.many2one('account.analytic.account', 'Analytic Account'),   
-                'close': fields.boolean('Close Case', help = 'Check this to close the case after having created the sale order.'),              
-               }
+        'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
+        'partner_id': fields.many2one('res.partner', 'Customer', required=True, help='Use this partner if there is no partner on the Opportunity'),
+        'picking_policy': fields.selection([('direct','Partial Delivery'),
+                                            ('one','Complete Delivery')], 'Picking Policy', required=True),
+        'product_ids': fields.many2many('product.product', 'product_sale_rel',\
+                         'sale_id', 'product_id', 'Products'),
+        'analytic_account': fields.many2one('account.analytic.account', 'Analytic Account'),   
+        'close': fields.boolean('Close Case', help='Check this to close the case after having created the sale order.'),              
+    }
     _defaults = {
-                 'partner_id': _selectPartner,
-                 'close': lambda *a: 1
-                 }
+         'partner_id': _selectPartner,
+         'close': 1
+    }
     
 crm_make_sale()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

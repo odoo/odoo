@@ -18,12 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
 {
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "depends" : ["product", "analytic", "process","board"],
     "author" : "Tiny",
     "category": 'Generic Modules/Accounting',
     "description": """Financial and accounting module that covers:
@@ -44,6 +41,7 @@ The processes like maintaining of general ledger is done through the defined fin
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
 module named account_vouchers
     """,
+    "depends" : ["product", "analytic", "process","board"],
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
@@ -115,13 +113,12 @@ module named account_vouchers
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
         'report/account_report_view.xml',
-        'report/account_analytic_report_view.xml',
-        'report/account_account_report_view.xml',
         'report/account_analytic_entries_report_view.xml',
         'board_account_view.xml',
+        "wizard/account_pl_report_view.xml",
+        "wizard/account_bs_report_view.xml"
     ],
     'demo_xml': [
-        #'demo/price_accuracy00.yml',
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
