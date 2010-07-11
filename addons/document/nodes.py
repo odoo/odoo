@@ -375,6 +375,13 @@ class node_database(node_class):
         where = [('parent_id','=',parent_id)]
         if name:
             where.append(('name','=',name))
+            is_allowed = self.check_perms(1)
+        else:
+            is_allowed = self.check_perms(5)
+        
+        if not is_allowed:
+            raise IOError(errno.EPERM, "Permission into directory denied")
+
         if not domain:
             domain = []
 
@@ -459,14 +466,18 @@ class node_dir(node_database):
         return self.dir_id == other.dir_id
 
     def get_data(self, cr):
-        res = ''
-        for child in self.children(cr):
-            res += child.get_data(cr)
-        return res
+        #res = ''
+        #for child in self.children(cr):
+        #    res += child.get_data(cr)
+        return None
 
     def _file_get(self, cr, nodename=False):
         res = super(node_dir,self)._file_get(cr, nodename)
         
+        is_allowed = self.check_perms(nodename and 1 or 5)
+        if not is_allowed:
+            raise IOError(errno.EPERM, "Permission into directory denied")
+
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -479,7 +490,7 @@ class node_dir(node_database):
                 res.extend(res3)
 
         return res
-
+    
     def _child_get(self, cr, name=None, domain=None):
         return super(node_dir,self)._child_get(cr, name, self.dir_id, domain=domain)
 
@@ -489,6 +500,9 @@ class node_dir(node_database):
         res = False
         if not directory:
             raise OSError(2, 'Not such file or directory.')
+        if not self.check_perms('u'):
+            raise IOError(errno.EPERM,"Permission denied")
+
         if directory._table_name=='document.directory':
             if self.children(cr):
                 raise OSError(39, 'Directory not empty.')
@@ -499,6 +513,9 @@ class node_dir(node_database):
 
     def create_child_collection(self, cr, objname):
         object2 = False
+        if not self.check_perms(2):
+            raise IOError(errno.EPERM,"Permission denied")
+
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -522,6 +539,9 @@ class node_dir(node_database):
         """ API function to create a child file object and node
             Return the node_* created
         """
+        if not self.check_perms(2):
+            raise IOError(errno.EPERM,"Permission denied")
+
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -564,6 +584,9 @@ class node_dir(node_database):
         """
         if ndir_node and (ndir_node.context != self.context):
             raise NotImplementedError("Cannot move directories between contexts")
+
+        if (not self.check_perms('u')) or (not ndir_node.check_perms('w')):
+            raise IOError(errno.EPERM,"Permission denied")
 
         dir_obj = self.context._dirobj
         if not fil_obj:
@@ -619,6 +642,9 @@ class node_res_dir(node_class):
         self.write_date = dirr.write_date or dirr.create_date
         self.content_length = 0
         self.unixperms = 040750
+        self.uuser = (dirr.user_id and dirr.user_id.login) or 'nobody'
+        self.ugroup = mkdosname(dirr.company_id and dirr.company_id.name, default='nogroup')
+        self.uidperms = dirr.get_dir_permissions()
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
         self.resm_id = dirr.ressource_id
         self.namefield = dirr.resource_field.name or 'name'
@@ -685,6 +711,12 @@ class node_res_dir(node_class):
 
         if name:
             where.append((self.namefield,'=',name))
+            is_allowed = self.check_perms(1)
+        else:
+            is_allowed = self.check_perms(5)
+
+        if not is_allowed:
+            raise IOError(errno.EPERM,"Permission denied")
 
         # print "Where clause for %s" % self.res_model, where
         if self.ressource_tree:
@@ -729,6 +761,9 @@ class node_res_obj(node_class):
         self.write_date = parent.write_date
         self.content_length = 0
         self.unixperms = 040750
+        self.uidperms = parent.uidperms & 0x15
+        self.uuser = parent.uuser
+        self.ugroup = parent.ugroup
         self.res_model = res_model
         self.domain = parent.domain
         self.displayname = path
@@ -779,6 +814,10 @@ class node_res_obj(node_class):
 
     def _file_get(self,cr, nodename=False):
         res = []
+        is_allowed = self.check_perms((nodename and 1) or 5)
+        if not is_allowed:
+            raise IOError(errno.EPERM,"Permission denied")
+
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -826,6 +865,11 @@ class node_res_obj(node_class):
 
     def _child_get(self, cr, name=None, domain=None):
         dirobj = self.context._dirobj
+
+        is_allowed = self.check_perms((name and 1) or 5)
+        if not is_allowed:
+            raise IOError(errno.EPERM,"Permission denied")
+
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
@@ -889,6 +933,10 @@ class node_res_obj(node_class):
 
     def create_child_collection(self, cr, objname):
         dirobj = self.context._dirobj
+        is_allowed = self.check_perms(2)
+        if not is_allowed:
+            raise IOError(errno.EPERM,"Permission denied")
+
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
@@ -916,6 +964,10 @@ class node_res_obj(node_class):
         """ API function to create a child file object and node
             Return the node_* created
         """
+        is_allowed = self.check_perms(2)
+        if not is_allowed:
+            raise IOError(errno.EPERM,"Permission denied")
+
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
@@ -952,6 +1004,16 @@ class node_file(node_class):
         self.write_date = fil.write_date or fil.create_date
         self.content_length = fil.file_size
         self.displayname = fil.name
+        
+        self.uidperms = 14
+        if parent:
+            if not parent.check_perms('x'):
+                self.uidperms = 0
+            elif not parent.check_perms('w'):
+                self.uidperms = 4
+    
+        self.uuser = (fil.user_id and fil.user_id.login) or 'nobody'
+        self.ugroup = mkdosname(fil.company_id and fil.company_id.name, default='nogroup')
 
         # This only propagates the problem to get_data. Better
         # fix those files to point to the root dir.
@@ -976,6 +1038,9 @@ class node_file(node_class):
     def open_data(self, cr, mode):
         stor = self.storage_id
         assert stor, "No storage for file #%s" % self.file_id
+        if not self.check_perms(4):
+            raise IOError(errno.EPERM, "Permission denied")
+
         # If storage is not set properly, we are just screwed here, don't
         # try to get it from default.
         stobj = self.context._dirobj.pool.get('document.storage')
@@ -983,6 +1048,8 @@ class node_file(node_class):
 
     def rm(self, cr):
         uid = self.context.uid
+        if not self.check_perms(8):
+            raise IOError(errno.EPERM, "Permission denied")
         document_obj = self.context._dirobj.pool.get('ir.attachment')
         if self.type in ('collection','database'):
             return False
@@ -1027,6 +1094,9 @@ class node_file(node_class):
         # this is where storage kicks in..
         stor = self.storage_id
         assert stor, "No storage for file #%s" % self.file_id
+        if not self.check_perms(4):
+            raise IOError(errno.EPERM, "Permission denied")
+
         # If storage is not set properly, we are just screwed here, don't
         # try to get it from default.
         stobj = self.context._dirobj.pool.get('document.storage')
@@ -1047,6 +1117,9 @@ class node_file(node_class):
         # this is where storage kicks in..
         stor = self.storage_id
         assert stor, "No storage for file #%s" % self.file_id
+        if not self.check_perms(2):
+            raise IOError(errno.EPERM, "Permission denied")
+
         stobj = self.context._dirobj.pool.get('document.storage')
         return stobj.set_data(cr, self.context.uid,stor, self, data, self.context.context, fil_obj)
 
@@ -1056,6 +1129,9 @@ class node_file(node_class):
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
         if ndir_node.context != self.context:
             raise NotImplementedError("Cannot move files between contexts")
+
+        if (not self.check_perms(8)) and ndir_node.check_perms(2):
+            raise IOError(errno.EPERM, "Permission denied")
 
         doc_obj = self.context._dirobj.pool.get('ir.attachment')
         if not fil_obj:
@@ -1072,9 +1148,6 @@ class node_file(node_class):
             self.parent = self.context.get_dir_node(cr, dbro.parent_id.id)
             assert self.parent
         
-        # TODO: test if parent is writable.
-
-
         ret = {}
         if self.parent != ndir_node:
             if not (isinstance(self.parent, node_dir) and isinstance(ndir_node, node_dir)):
@@ -1118,6 +1191,11 @@ class node_content(node_class):
         self.write_date = False
         self.content_length = False
         self.unixperms = 0640
+        if parent:
+            self.uidperms = parent.uidperms & 14
+            self.uuser = parent.uuser
+            self.ugroup = parent.ugroup
+        
         self.extension = cnt.extension
         self.report_id = cnt.report_id and cnt.report_id.id
         #self.mimetype = cnt.extension.
@@ -1145,6 +1223,9 @@ class node_content(node_class):
 
     def get_data(self, cr, fil_obj = None):
         cntobj = self.context._dirobj.pool.get('document.directory.content')
+        if not self.check_perms(4):
+            raise IOError(errno.EPERM, "Permission denied")
+
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         data = cntobj.process_read(cr, self.context.uid, self, ctx)
@@ -1159,6 +1240,9 @@ class node_content(node_class):
 
     def set_data(self, cr, data, fil_obj = None):
         cntobj = self.context._dirobj.pool.get('document.directory.content')
+        if not self.check_perms(2):
+            raise IOError(errno.EPERM, "Permission denied")
+
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         return cntobj.process_write(cr, self.context.uid, self, data, ctx)

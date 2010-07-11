@@ -213,7 +213,7 @@ class document_directory(osv.osv):
         if needs and not has:
             return 1  # still allow to descend into.
         else:
-            return 7
+            return 15
 
     def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
         """ try to locate the node in uri,
