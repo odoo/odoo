@@ -539,8 +539,8 @@ class abstracted_fs(object):
             perms = filemode(node.unixperms)  # permissions
             nlinks = 1
             size = node.content_length or 0L
-            uname = node.uuser
-            gname = node.ugroup
+            uname = _to_decode(node.uuser)
+            gname = _to_decode(node.ugroup)
             # stat.st_mtime could fail (-1) if last mtime is too old
             # in which case we return the local time as last mtime
             try:
@@ -637,9 +637,9 @@ class abstracted_fs(object):
             if 'unix.mode' in facts:
                 mode = 'unix.mode=%s;' %oct(node.unixperms & 0777)
             if 'unix.uid' in facts:
-                uid = 'unix.uid=%s;' % node.uuser
+                uid = 'unix.uid=%s;' % _to_decode(node.uuser)
             if 'unix.gid' in facts:
-                gid = 'unix.gid=%s;' % node.ugroup
+                gid = 'unix.gid=%s;' % _to_decode(node.ugroup)
             # We provide unique fact (see RFC-3659, chapter 7.5.2) on
             # posix platforms only; we get it by mixing st_dev and
             # st_ino values which should be enough for granting an
