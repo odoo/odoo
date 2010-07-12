@@ -749,8 +749,7 @@ class account_invoice(osv.osv):
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
                 tmp_context = {
-                    'fiscal_year_id' : obj_inv.period_id.fiscalyear_id.id,
-                    'test' : True,
+                    'fiscalyear_id' : obj_inv.period_id.fiscalyear_id.id,
                 }
                 if obj_inv.journal_id.invoice_sequence_id:
                     sid = obj_inv.journal_id.invoice_sequence_id.id
