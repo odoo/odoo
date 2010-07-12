@@ -690,7 +690,6 @@ true, it will allow you to hide the event alarm information without removing it.
                 cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
                                         where id=%s' % (model_obj._table, \
                                         alarm_id, basic_alarm.id, data.id))
-        cr.commit()
         return True
 
     def do_alarm_unlink(self, cr, uid, ids, model, context=None):
@@ -714,7 +713,6 @@ true, it will allow you to hide the event alarm information without removing it.
                 alarm_obj.unlink(cr, uid, alarm_ids)
                 cr.execute('Update %s set base_calendar_alarm_id=NULL, alarm_id=NULL\
                             where id=%s' % (model_obj._table, datas.id))
-        cr.commit()
         return True
 
 res_alarm()
