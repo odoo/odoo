@@ -20,7 +20,6 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
-                    <field name="user_id" attrs="{'readonly':[('type','!=','service')]}"/>
                     <field name="project_id" attrs="{'readonly':[('type','!=','service')]}" />
                 </field>
             </field>
