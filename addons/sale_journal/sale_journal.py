@@ -48,14 +48,14 @@ class sale_journal(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible', required=True),
         'date': fields.date('Journal date', required=True),
         'date_created': fields.date('Creation date', readonly=True, required=True),
-        'date_validation': fields.date('Validation date', readonly=True),
-        'sale_stats_ids': fields.one2many("sale.journal.report", "journal_id", 'Sale Stats', readonly=True),
+        'date_close': fields.date('Close date ', readonly=True),
+        'sale_stats_ids': fields.one2many("sale.journal.report", "journal_id", 'Sale stats', readonly=True),
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
             ('cancel','Cancel'),
             ('confirm','Confirm'),
-            ('done','Done'),
+            ('close','Close'),
         ], 'State', required=True, readonly=True),
         'note': fields.text('Note'),
     }
@@ -105,12 +105,17 @@ class sale_journal(osv.osv):
         return True
 
     def button_close(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'done', 'date_validation':time.strftime('%Y-%m-%d')})
+        self.write(cr, uid, ids, {'state':'close', 'date_close':time.strftime('%Y-%m-%d')})
         for (id,name) in self.name_get(cr, uid, ids):
                 message = _('Sale orders of Journal') + " '" + name + "' "+ _("is closed")
                 self.log(cr, uid, id, message)
         return True
-    
+    def button_reset(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'draft'})
+        for (id,name) in self.name_get(cr, uid, ids):
+                    message = _('Sale orders of Journal') + " '" + name + "' "+ _("is in draft state")
+                    self.log(cr, uid, id, message)
+        return True
     def copy(self, cr, uid, id, default=None, context=None):
         """Overrides orm copy method
         @param self: The object pointer
@@ -222,7 +227,7 @@ picking()
 class sale(osv.osv):
     _inherit = "sale.order"
     _columns = {
-        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal', domain=[('state','!=', 'done')]),
+        'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal', domain=[('state','not in', ('done', 'draft''cancel'))]),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')
     }
     def action_ship_create(self, cr, uid, ids, *args):
