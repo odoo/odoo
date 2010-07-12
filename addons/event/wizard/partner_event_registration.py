@@ -47,23 +47,29 @@ class partner_event_registration(osv.osv_memory):
     }
 
     def open_registration(self, cr, uid, ids, context=None):
+        """This Function Open Registration For Given Event id and Partner.
+        
+        """
+        
         value = {}
         res_obj = self.pool.get('res.partner')
+        job_obj = self.pool.get('res.partner.job')
+        event_obj = self.pool.get('event.event')
+        reg_obj = self.pool.get('event.registration')
+        mod_obj = self.pool.get('ir.model.data')
+        
         record_ids = context and context.get('active_ids', []) or []
         addr = res_obj.address_get(cr, uid, record_ids)
         contact_id = False
         email = False
         if addr.has_key('default'):
-                job_ids = self.pool.get('res.partner.job').search(cr, uid, [('address_id', '=', addr['default'])])
+                job_ids = job_obj.search(cr, uid, [('address_id', '=', addr['default'])])
                 if job_ids:
-                    contact = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0])
+                    contact = job_obj.browse(cr, uid, job_ids[0])
                     if contact:
                         contact_id = contact.contact_id.id
                         email = contact.email
-                         
-        event_obj = self.pool.get('event.event')
-        reg_obj = self.pool.get('event.registration')
-        mod_obj = self.pool.get('ir.model.data')
+
         result = mod_obj._get_id(cr, uid, 'event', 'view_registration_search')
         res = mod_obj.read(cr, uid, result, ['res_id'])
 
@@ -123,10 +129,11 @@ class partner_event_registration(osv.osv_memory):
         return res
     
     def onchange_event_id(self, cr, uid, ids, event_id, context={}):
-        res = {}    
+        res = {}
+        event_obj = self.pool.get('event.event')
+            
         if event_id:   
-            obj_event = self.pool.get('event.event')
-            event = obj_event.browse(cr, uid, event_id)
+            event = event_obj.browse(cr, uid, event_id)
             res['value'] = {
                           'event_type': event.type and event.type.id or False,
                           'start_date': event.date_begin,
