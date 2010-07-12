@@ -175,6 +175,11 @@ class DAVHandler(FixSendError,DAVRequestHandler):
 
         self.send_body(None, '201', 'Created', '', headers=headers)
 
+    def do_DELETE(self):
+        try:
+            DAVRequestHandler.do_DELETE(self)
+        except DAV_Error, (ec, dd):
+            return self.send_status(ec)
 
 from service.http_server import reg_http_service,OpenERPAuthProvider
 
