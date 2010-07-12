@@ -31,7 +31,7 @@ class account_common_report(osv.osv_memory):
     _columns = {
         'chart_account_id': fields.many2one('account.account', 'Chart of account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal year', help='Keep empty for all open fiscal year'),
-        'filter': fields.selection([('filter_no', 'No filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by:", required=True),
+        'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by:", required=True),
         'period_from': fields.many2one('account.period', 'Start period'),
         'period_to': fields.many2one('account.period', 'End period'),
         #not used. Do we really need it? 'period_ids': fields.many2many('account.period', 'ledger_period_rel', 'ledger_id', 'period_id', 'Periods'),
@@ -122,6 +122,7 @@ class account_common_report(osv.osv_memory):
         else:
             data['form']['periods'] = []
         return self._print_report(cr, uid, ids, data, query_line, context=context)
+
 account_common_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

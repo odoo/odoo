@@ -58,7 +58,8 @@ class journal_print(report_sxw.rml_parse, account_journal_common_default):
             'sum_credit': self._sum_credit,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
-            'get_account': self.get_account
+            'get_account': self._get_account,
+            'get_filter': self._get_filter
         })
 
     def lines(self, period_id, journal_id=[]):

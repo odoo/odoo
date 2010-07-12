@@ -71,9 +71,19 @@ class account_journal_common_default(object):
             return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr, self.uid, data['form']['period_to']).name
         return ''
 
-    def get_account(self, data):
+    def _get_account(self, data):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
             return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).name
+        return ''
+
+    def _get_filter(self, data):
+        if data.get('form', False) and data['form'].get('filter', False):
+            if data['form']['filter'] == 'filter_date':
+                return 'Date'
+            elif data['form']['filter'] == 'filter_period':
+                return 'Periods'
+            else:
+                return 'No Filter'
         return ''
 
     def _sum_debit_period(self, period_id, journal_id=None):

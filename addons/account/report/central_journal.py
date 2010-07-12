@@ -54,6 +54,7 @@ class journal_print(report_sxw.rml_parse, account_journal_common_default):
             'lines': self.lines,
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
+            'get_filter': self._get_filter
 #            'get_start_date': self.get_start_date,
 #            'get_end_date': self.get_end_date
         })
