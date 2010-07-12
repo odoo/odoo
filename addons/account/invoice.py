@@ -927,12 +927,16 @@ class account_invoice(osv.osv):
                     'fiscalyear_id': inv.period_id.fiscalyear_id.id
                 }
                 if inv.journal_id.invoice_sequence_id:
-                    sid = inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': inv.period_id.fiscalyear_id.id})
+                    sequence_id = inv.journal_id.invoice_sequence_id.id
+                    number = self.pool.get('ir.sequence').get_id(cr, uid, 
+                                                                 sequence_id,
+                                                                 'id',
+                                                                 context=tmp_context)
                 else:
-                    number = obj_seq.get_id(cr, uid,
-                                            'account.invoice.%s' % invtype,
-                                            'code=%s', context=tmp_context)
+                    number = self.pool.get('ir.sequence').get_id(cr, uid,
+                                                                 'account.invoice.%s' % invtype,
+                                                                 'code',
+                                                                 context=tmp_context)
                 if invtype in ('in_invoice', 'in_refund'):
                     ref = reference
                 else:
