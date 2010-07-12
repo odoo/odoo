@@ -55,11 +55,15 @@ class account_journal_common_default(object):
                         (tuple(period_id), tuple(journal_id)))
         return self.cr.fetchone()[0] or 0.0
 
-#    def get_start_date(self, form):
-#        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
-#
-#    def get_end_date(self, form):
-#        return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
+    def _get_start_date(self, data):
+        if data.get('form', False) and data['form'].get('date_from', False):
+            return data['form']['date_from']
+        return ''
+
+    def _get_end_date(self, data):
+        if data.get('form', False) and data['form'].get('date_to', False):
+            return data['form']['date_to']
+        return ''
 
     def get_start_period(self, data):
         if data.get('form', False) and data['form'].get('period_from', False):
