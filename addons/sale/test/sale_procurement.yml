@@ -87,4 +87,4 @@
   !python {model: procurement.order}: |
     from tools.translate import _
     proc_ids = self.search(cr, uid, [('state','=','exception'),('product_id','=',ref('sale.product_product_table0'))])
-    assert proc_ids, _('No Procurements are in exception state for the table!')
+    assert not proc_ids, _('There is no procurement in exception state!')

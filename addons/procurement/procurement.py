@@ -372,6 +372,9 @@ class procurement_order(osv.osv):
                     cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock and no minimum orderpoint rule defined.'), procurement.id))
                     message = _('Procurement ') + " '" + procurement.name + "' "+ _("has an exception.") + _('Not enough stock and no minimum orderpoint rule defined.')
                     self.log(cr, uid, procurement.id, message)
+            if procurement.state=='exception' and procurement.message=='':
+                cr.execute('update procurement_order set message=%s where id=%s', (_('Not enough stock '), procurement.id))                
+                        
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):
