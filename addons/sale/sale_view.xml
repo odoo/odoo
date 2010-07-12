@@ -165,10 +165,10 @@
                                                 <field name="state"/>
                                                 <field name="invoiced"/>
                                                 <button colspan="1"
-                                                    name="%(action_view_sale_order_line_make_invoice)d"
+                                                    name="create_sale_order_line_invoice"
                                                     states="confirmed"
-                                                    string="Make Invoice"
-                                                    type="action"
+                                                    string="Create Invoice"
+                                                    type="object"
                                                     icon="terp-document-new" />
                                             </group>
                                         </page>
@@ -398,22 +398,19 @@
                             <field name="state"/>
                             <group col="3" colspan="2">
                             	<button colspan="1"
-	                              name="call_make_invoices"
-	                              states="confirmed"
+	                              name="create_sale_order_line_invoice"
 	                              string="Create Invoice"
 	                              type="object"
 	                              icon="terp-document-new"
-	                              attrs="{'invisible': [('invoiced', '=', 1)]}" />
-                                <button name="button_done"
-                                    states="confirmed,exception"
-                                    string="Done" type="object"
-                                    icon="gtk-jump-to" 
-                                    attrs="{'invisible': [('invoiced', '=', 0)]}"/>
-                                <button name="button_cancel"
-                                    states="confirmed,exception"
+	                              attrs="{'invisible': [('invoiced', '=', 1)]}"/>
+	                            <button name="button_cancel"
+                                    states="draft,confirmed,exception"
                                     string="Cancel" type="object"
-                                    icon="gtk-cancel"
-                                    attrs="{'invisible': [('invoiced', '=', 1)]}" />
+                                    icon="gtk-cancel"/>
+                                <button name="button_done"
+                                    string="Done" type="object"
+                                    states="invoiced,exception"
+									icon="gtk-jump-to"/>
                             </group>
                         </page>
 <!--                        <page string="Properties" groups="base.group_extended">-->
