@@ -20,6 +20,7 @@
 ##############################################################################
 import time
 from datetime import datetime
+from operator import itemgetter
 
 import netsvc
 from osv import fields, osv
@@ -64,6 +65,10 @@ class account_move_line(osv.osv):
 
         if context.get('journal_ids', False):
             query += ' AND '+obj+'.journal_id in (%s)' % ','.join(map(str, context['journal_ids']))
+
+        if context.get('chart_account_id', False):
+            child_ids = self.pool.get('account.account')._get_children_and_consol(cr, uid, [context['chart_account_id']], context=context)
+            query += ' AND '+obj+'.account_id in (%s)' % ','.join(map(str, child_ids))
 
         if context.get('period_manner','') == 'created':
             #the query have to be build with no reference to periods but thanks to the creation date
@@ -801,7 +806,7 @@ class account_move_line(osv.osv):
         title = self.view_header_get(cr, uid, view_id, view_type, context)
         xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
         journal_pool = self.pool.get('account.journal')
-        
+
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
         all_journal = [None]
@@ -818,14 +823,14 @@ class account_move_line(osv.osv):
                 else:
                     fields.get(field.field).append(journal.id)
                     common_fields[field.field] = common_fields[field.field] + 1
-        
+
         fld.append(('period_id', 3))
         fld.append(('journal_id', 10))
         flds.append('period_id')
         flds.append('journal_id')
         fields['period_id'] = all_journal
         fields['journal_id'] = all_journal
-        
+
         from operator import itemgetter
         fld = sorted(fld, key=itemgetter(1))
 
@@ -839,13 +844,13 @@ class account_move_line(osv.osv):
 
         for field_it in fld:
             field = field_it[0]
-            
+
             if common_fields.get(field) == total:
                 fields.get(field).append(None)
-            
+
             if field=='state':
                 state = 'colors="red:state==\'draft\'"'
-            
+
             attrs = []
             if field == 'debit':
                 attrs.append('sum="Total debit"')
@@ -868,7 +873,7 @@ class account_move_line(osv.osv):
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
-            
+
             attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
             xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
 
