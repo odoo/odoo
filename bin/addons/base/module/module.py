@@ -419,12 +419,15 @@ class module(osv.osv):
 
     def _update_web_dependencies(self, cr, uid, id, depends=[]):
         web_module_pool = self.pool.get('ir.module.web')
+        res = False
+        
         for d in depends:
             ids = web_module_pool.search(cr, uid, [('module','=',d)])
-            cr.execute("Select id from ir_module_web_dependency where module_id=%s and web_module_id=%s and name=%s", (id, ids[0], d))
-            res = cr.fetchone()
-            if not res:
-                cr.execute('INSERT INTO ir_module_web_dependency (module_id, web_module_id, name) values (%s, %s, %s)', (id, ids[0], d))
+            if len(ids) > 0:
+                cr.execute("Select id from ir_module_web_dependency where module_id=%s and web_module_id=%s and name=%s", (id, ids[0], d))
+                res = cr.fetchone()
+                if not res:
+                    cr.execute('INSERT INTO ir_module_web_dependency (module_id, web_module_id, name) values (%s, %s, %s)', (id, ids[0], d))
 
     def _update_category(self, cr, uid, id, category='Uncategorized'):
         categs = category.split('/')
