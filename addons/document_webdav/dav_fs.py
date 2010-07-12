@@ -313,7 +313,7 @@ class openerp_dav_handler(dav_interface):
                 self.parent.log_error("GET exception: %s",str(e))
                 self.parent.log_message("Exc: %s", traceback.format_exc())
                 raise DAV_Error, 409
-            return datas
+            return str(datas) # FIXME!
         finally:
             if cr: cr.close()    
 
@@ -434,22 +434,27 @@ class openerp_dav_handler(dav_interface):
             if cr: cr.close()    
     
     def mkcol(self,uri):
-        """ create a new collection """                  
+        """ create a new collection
+            see par. 9.3 of rfc4918
+        """
         self.parent.log_message('MKCOL: %s' % uri)
-        uri = self.uri2local(uri)[1:]
-        if not uri:
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        if not uri2[-1]:
+            cr.close()
             raise DAV_Error(409, "Cannot create nameless collection")
-        if uri[-1]=='/':uri=uri[:-1]
-        parent = '/'.join(uri.split('/')[:-1])        
-        parent = self.baseuri + parent
-        uri = self.baseuri + uri        
-        cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:
+            cr.close()
             raise DAV_Error, 409
         node = self.uri2object(cr,uid,pool, uri2[:-1])
-        if node:
-            node.create_child_collection(cr, uri2[-1])  
-            cr.commit()      
+        if not node:
+            cr.close()
+            raise DAV_Error(409, "Parent path %s does not exist" % uri2[:-1])
+        nc = node.child(cr, uri2[-1])
+        if nc:
+            cr.close()
+            raise DAV_Error(405, "Path already exists")
+        self._try_function(node.create_child_collection, (cr, uri2[-1]), "create col %s" % uri2[-1], cr=cr)
+        cr.commit()
         cr.close()
         return True
 
@@ -650,7 +655,6 @@ class openerp_dav_handler(dav_interface):
         advanced systems we might also have to copy properties from
         the source to the destination.
         """
-        print " copy a collection."
         return self.mkcol(dst)
 
 
