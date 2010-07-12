@@ -75,7 +75,7 @@ class Record:
         for i in global_context_dict:
             global_context_dict[i] = global_context_dict[i] \
                     and trim_string(global_context_dict[i],i)
-        print global_context_dict
+        #print global_context_dict
         self.fields = []
         self.global_values = global_context_dict
         self.pre = {
@@ -410,12 +410,6 @@ def _create_dta(obj, cr, uid, data, context):
     amount_currency_tot = 0
 
     for pline in payment.line_ids:
-        acc_name = res_partner_bank_obj.name_get(
-                                                cr, 
-                                                uid, 
-                                                [pline.bank_id.id], 
-                                                context
-                                            )[0][1]
         if not pline.bank_id:
             raise wizard.except_wizard(
                                         _('Error'), 
@@ -433,6 +427,12 @@ def _create_dta(obj, cr, uid, data, context):
                                             pline.name
                                             )
                                     )
+        acc_name = res_partner_bank_obj.name_get(
+                                                cr, 
+                                                uid, 
+                                                [pline.bank_id.id], 
+                                                context
+                                            )[0][1]
 
         v['sequence'] = unicode(seq).rjust(5).replace(u' ', u'0')
         v['amount_to_pay']= unicode(pline.amount_currency).replace(u'.', u',')
