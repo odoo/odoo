@@ -139,6 +139,16 @@ class mailgate_thread(osv.osv):
                 }
             obj.create(cr, uid, data, context=context)
         return True
+    
+    def unlink(self, cr, uid, ids, context=None):
+        message_obj = self.pool.get('mailgate.message')
+        for thread_id in ids:
+            cr.execute("SELECT id from mailgate_message where model='%s' and res_id='%s'" % (self._name, thread_id))
+            message_ids = map(lambda x: x[0], cr.fetchall())
+            message_obj.unlink(cr, uid, message_ids, context=context)
+            super(mailgate_thread, self).unlink(cr, uid, [thread_id], context=context)
+        return True
+
 mailgate_thread()
 
 class mailgate_message(osv.osv):
