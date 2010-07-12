@@ -482,7 +482,6 @@ class account_move_line(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
-            cr.commit()
 
     def _check_no_view(self, cr, uid, ids):
         lines = self.browse(cr, uid, ids)
