@@ -171,8 +171,8 @@
 -
   !python {model: event.event}: |
      obj_event = self.browse(cr, uid, [ref('event_event_conference0')])[0]
-     assert  obj_event.register_current == '2'
-     assert obj_event.register_prospect == '1'
+     assert  obj_event.register_current == 2
+     assert obj_event.register_prospect == 1
 
 - |
   This event is finished by click on "Event Done" button of this event form.
@@ -198,7 +198,7 @@
   !python {model: event.make.invoice}: |
     self.make_invoice(cr, uid, [ref("event_make_invoice_0")], {"active_ids": [ref("event_registration_registrationzen0")]})  
 - |
-  I check  that Invoice for this partner is create or not.
+  I check  that Invoice for this partner is created or not.
 -
   !python {model: event.registration}: |
      obj_event_reg = self.pool.get('event.registration')
