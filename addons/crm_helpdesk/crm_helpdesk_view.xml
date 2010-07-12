@@ -66,8 +66,7 @@
                             </group>
 
                             <separator colspan="4" string="Notes"/>
-                            <field name="description" colspan="4"
-                                nolabel="1" widget="text_tag" readonly="1" />
+                            <field name="description" colspan="4" nolabel="1" />
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1"/>
@@ -250,7 +249,7 @@
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="section_id" select="1" widget="selection" string="Sales Team">
                         <filter icon="terp-personal+"
-                            domain="[('section_id','=',context.get('section_id',False))]"
+                            domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My section" />
                     </field>
                     <newline/>
