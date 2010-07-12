@@ -73,7 +73,6 @@ class auction_lots_make_invoice(osv.osv_memory):
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
         lots_ids = order_obj.seller_trans_create(cr, uid, context['active_ids'], context)
-        cr.commit()
         return {
             'domain': "[('id','in', ["+','.join(map(str, lots_ids))+"])]", 
             'name': 'Seller invoices', 
