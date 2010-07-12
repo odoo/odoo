@@ -306,7 +306,17 @@ class node_class(object):
         Move operations, as instructed from APIs (eg. request from DAV) could
         use this function.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
+
+    def create_child(self, cr, path, data=None):
+        """ Create a regular file under this node
+        """
+        raise NotImplementedError()
+    
+    def create_child_collection(self, cr, objname):
+        """ Create a child collection (directory) under self
+        """
+        raise NotImplementedError()
 
     def rm(self, cr):
         raise RuntimeError("Not Implemented")
