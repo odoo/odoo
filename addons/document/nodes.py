@@ -306,23 +306,23 @@ class node_class(object):
         Move operations, as instructed from APIs (eg. request from DAV) could
         use this function.
         """
-        raise NotImplementedError()
+        raise NotImplementedError(repr(self))
 
     def create_child(self, cr, path, data=None):
         """ Create a regular file under this node
         """
-        raise NotImplementedError()
+        raise NotImplementedError(repr(self))
     
     def create_child_collection(self, cr, objname):
         """ Create a child collection (directory) under self
         """
-        raise NotImplementedError()
+        raise NotImplementedError(repr(self))
 
     def rm(self, cr):
-        raise RuntimeError("Not Implemented")
+        raise NotImplementedError(repr(self))
 
     def rmcol(self, cr):
-        raise RuntimeError("Not Implemented")
+        raise NotImplementedError(repr(self))
 
     def get_domain(self, cr, filters):
         return []
@@ -545,7 +545,7 @@ class node_dir(node_database):
         return dirobj.create(cr, uid, val)
 
 
-    def create_child(self, cr, path, data):
+    def create_child(self, cr, path, data=None):
         """ API function to create a child file object and node
             Return the node_* created
         """
@@ -970,7 +970,7 @@ class node_res_obj(node_class):
 
         return dirobj.create(cr, uid, val)
 
-    def create_child(self, cr, path, data):
+    def create_child(self, cr, path, data=None):
         """ API function to create a child file object and node
             Return the node_* created
         """
