@@ -38,8 +38,7 @@
             if task.date_deadline:
            	    deadline_dt = (datetime(*time.strptime(task.date_deadline,'%Y-%m-%d')[:6])+(new_end_date-old_end_date)).strftime('%Y-%m-%d')
            	res[task.id]=[start_dt,deadline_dt]
-    self.write(cr, uid, [ref("project_project_retroplanning0")], {'date' : (datetime.datetime.now()+datetime.timedelta(1)).strftime('%Y-%m-%d')
-})
+    self.write(cr, uid, [ref("project_project_retroplanning0")], {'date' : (datetime.now()+timedelta(1)).strftime('%Y-%m-%d')})
     data_project = self.browse(cr,uid,[ref("project_project_retroplanning0")])
     prj = data_project[0]
     
