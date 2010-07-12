@@ -1,8 +1,5 @@
 -
-  In order to test account_payment in OpenERP I create a new record Type
--
--
-  Creating a payment.type record
+  In order to test account_payment in OpenERP I create a new record Type.
 -
   !record {model: payment.type, id: payment_type_t0}:
     code: T0
@@ -125,21 +122,5 @@
 -
   !assert {model: payment.order, id: payment_order_0}:
     - state == 'done'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
