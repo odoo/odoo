@@ -920,15 +920,15 @@ class account_invoice(osv.osv):
                     'FROM account_invoice ' \
                     'WHERE id IN %s',
                     (tuple(ids),))
-        obj_inv = self.browse(cr, uid, ids)[0]
+        inv = self.browse(cr, uid, ids)[0]
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
                 tmp_context = {
                     'fiscalyear_id': inv.period_id.fiscalyear_id.id
                 }
-                if obj_inv.journal_id.invoice_sequence_id:
-                    sid = obj_inv.journal_id.invoice_sequence_id.id
-                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': obj_inv.period_id.fiscalyear_id.id})
+                if inv.journal_id.invoice_sequence_id:
+                    sid = inv.journal_id.invoice_sequence_id.id
+                    number = self.pool.get('ir.sequence').get_id(cr, uid, sid, 'id', {'fiscalyear_id': inv.period_id.fiscalyear_id.id})
                 else:
                     number = obj_seq.get_id(cr, uid,
                                             'account.invoice.%s' % invtype,
