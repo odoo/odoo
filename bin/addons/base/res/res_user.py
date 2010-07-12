@@ -183,16 +183,11 @@ class users(osv.osv):
             return False
         group_obj = self.pool.get('res.groups')
         extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
-        if type(ids) in (int,long,):
-            ids = [ids]
-        if value != 'simple':
-            #To avoid insert duplication extended group
-            for user in self.browse(cr, uid, ids, context=context):
-                group_ids = map(lambda x:x.id, user.groups_id)
-                if extended_group_id not in group_ids:
-                    self.write(cr, uid, [user.id], {'groups_id': [(4, extended_group_id)]}, context=context)
-        else:
-            self.write(cr, uid, ids, {'groups_id': [(3, extended_group_id)]}, context=context)
+        # First always remove the users from the group (avoids duplication if called twice)
+        self.write(cr, uid, ids, {'groups_id': [(3, extended_group_id)]}, context=context)
+        # Then add them back if requested
+        if value == 'extended':
+            self.write(cr, uid, ids, {'groups_id': [(4, extended_group_id)]}, context=context)
         return True
 
 
