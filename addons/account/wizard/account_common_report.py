@@ -55,6 +55,13 @@ class account_common_report(osv.osv_memory):
 #        else:
 #           return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
 
+    def onchange_filter(self, cr, uid, ids, filter='filter_no', context=None):
+        res = {}
+        if filter == 'filter_no':
+            res['value'] = {'period_from': False, 'period_to': False}
+            return res
+        return {}
+
     def _get_account(self, cr, uid, context=None):
         tmp = self.pool.get('account.account').search(cr, uid, [], limit=1 )
         if not tmp:

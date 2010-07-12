@@ -20,7 +20,7 @@
                 <group colspan="2" name='Filters'>
                 <notebook tabpos="up">
                     <page string="Filters">
-                        <field name="filter"/>
+                        <field name="filter" on_change="onchange_filter(filter)" />
                         <separator string="Dates" colspan="4"/>
                         <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
                         <field name="date_to" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"  colspan="4"/>
