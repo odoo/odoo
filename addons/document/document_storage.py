@@ -98,15 +98,51 @@ class nodefd_file(nodes.node_descriptor):
     def __init__(self, parent, path, mode):
         nodes.node_descriptor.__init__(self, parent)
         self.__file = open(path, mode)
+        if mode in ('w', 'w+', 'r+'):
+            self._need_index = True
+        else:
+            self._need_index = False
         
         for attr in ('closed', 'read', 'write', 'seek', 'tell'):
             setattr(self,attr, getattr(self.__file, attr))
 
     def close(self):
         # TODO: locking in init, close()
+        fname = self.__file.name
         self.__file.close()
+        
+        if self._need_index:
+            par = self._get_parent()
+            cr = pooler.get_db(par.context.dbname).cursor()
+            icont = ''
+            mime = ''
+            filename = par.path
+            if isinstance(filename, (tuple, list)):
+                filename = '/'.join(filename)
+            
+            try:
+                mime, icont = cntIndex.doIndex(None, filename=filename,
+                        content_type=None, realfname=fname)
+            except Exception:
+                logging.getLogger('document.storage').debug('Cannot index file:', exc_info=True)
+                pass
 
-    
+            try:
+                icont_u = ustr(icont)
+            except UnicodeError:
+                icont_u = ''
+
+            try:
+                cr.execute('UPDATE ir_attachment SET index_content = %s, file_type = %s WHERE id = %s',
+                            (icont_u, mime, par.file_id))
+                par.content_length = filesize
+                par.content_type = mime
+                cr.commit()
+                cr.close()
+            except Exception:
+                logging.getLogger('document.storage').debug('Cannot save file indexed content:', exc_info=True)
+
+
 class nodefd_db(StringIO, nodes.node_descriptor):
     """ A descriptor to db data
     """
@@ -140,9 +176,30 @@ class nodefd_db(StringIO, nodes.node_descriptor):
         try:
             if self.mode in ('w', 'w+', 'r+'):
                 data = self.getvalue()
+                icont = ''
+                mime = ''
+                filename = par.path
+                if isinstance(filename, (tuple, list)):
+                    filename = '/'.join(filename)
+            
+                try:
+                    mime, icont = cntIndex.doIndex(data, filename=filename,
+                            content_type=None, realfname=None)
+                except Exception:
+                    logging.getLogger('document.storage').debug('Cannot index file:', exc_info=True)
+                    pass
+
+                try:
+                    icont_u = ustr(icont)
+                except UnicodeError:
+                    icont_u = ''
+
                 out = psycopg2.Binary(data)
-                cr.execute("UPDATE ir_attachment SET db_datas = %s, file_size=%s WHERE id = %s",
-                    (out, len(data), par.file_id))
+                cr.execute("UPDATE ir_attachment " \
+                            "SET db_datas = %s, file_size=%s, " \
+                            " index_content= %s, file_type=%s " \
+                            " WHERE id = %s",
+                    (out, len(data), icont_u, mime, par.file_id))
             elif self.mode == 'a':
                 data = self.getvalue()
                 out = psycopg2.Binary(data)
@@ -191,9 +248,29 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
         cr = pooler.get_db(par.context.dbname).cursor()
         try:
             if self.mode in ('w', 'w+', 'r+'):
-                out = self.getvalue()
-                cr.execute('UPDATE ir_attachment SET db_datas = %s::bytea, file_size=%s WHERE id = %s',
-                    (base64.encodestring(out), len(out), par.file_id))
+                data = self.getvalue()
+                icont = ''
+                mime = ''
+                filename = par.path
+                if isinstance(filename, (tuple, list)):
+                    filename = '/'.join(filename)
+            
+                try:
+                    mime, icont = cntIndex.doIndex(data, filename=filename,
+                            content_type=None, realfname=None)
+                except Exception:
+                    logging.getLogger('document.storage').debug('Cannot index file:', exc_info=True)
+                    pass
+
+                try:
+                    icont_u = ustr(icont)
+                except UnicodeError:
+                    icont_u = ''
+
+                cr.execute('UPDATE ir_attachment SET db_datas = %s::bytea, file_size=%s, ' \
+                        'index_content = %s, file_type = %s ' \
+                        'WHERE id = %s',
+                        (base64.encodestring(out), len(out), icont_u, mime, par.file_id))
             elif self.mode == 'a':
                 out = self.getvalue()
                 # Yes, we're obviously using the wrong representation for storing our
