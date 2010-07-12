@@ -124,7 +124,7 @@ class crm_case(object):
         stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
-                st = case.stage_id.id  or False
+                st =  not context.get('force_domain', False) and case.stage_id.id  or False
                 if st in s[section]:
                     data = {'stage_id': s[section][st]}
                     stage = s[section][st]
@@ -141,8 +141,12 @@ class crm_case(object):
         if not context:
             context = {}
         stage_obj = self.pool.get('crm.case.stage')
-        sid = stage_obj.search(cr, uid, \
-                            [('object_id.model', '=', self._name)], context=context)
+        tmp = self.read(cr, uid, ids, ['section_id'], context)[0]['section_id']
+        section_id = tmp and tmp[0] or False
+        domain = [('object_id.model', '=', self._name), ('section_id', '=', section_id)]
+        if 'force_domain' in context and context['force_domain']:
+            domain += context['force_domain']
+        sid = stage_obj.search(cr, uid, domain, context=context)
         s = {}
         previous = {}
         section = self._name
@@ -168,7 +172,7 @@ class crm_case(object):
         stage_pool = self.pool.get('crm.case.stage')
         for case in self.browse(cr, uid, ids, context):
             if section in s:
-                st = case.stage_id.id or False
+                st = not context.get('force_domain', False) and case.stage_id.id or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
                     data = {'stage_id': s[section][st]}
