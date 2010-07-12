@@ -70,6 +70,20 @@ class crm_opportunity(osv.osv):
             self.log(cr, uid, id, message)
         return res
 
+    def case_mark_lost(self, cr, uid, ids, *args):
+        """Mark the case as lost: state = done and probability = 0%
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = self.write(cr, uid, ids, {'probability' : 0.0, 'state': 'done'})
+        for (id, name) in self.name_get(cr, uid, ids):
+            message = _('Opportunity ') + " '" + name + "' "+ _("is Lost.")
+            self.log(cr, uid, id, message)
+        return res
+
     def case_cancel(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting probability
         @param self: The object pointer
@@ -80,9 +94,6 @@ class crm_opportunity(osv.osv):
         """
         res = super(crm_opportunity, self).case_cancel(cr, uid, ids, args)
         self.write(cr, uid, ids, {'probability' : 0.0})
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Opportunity ') + " '" + name + "' "+ _("is Lost.")
-            self.log(cr, uid, id, message)
         return res
     
     def case_open(self, cr, uid, ids, *args):
