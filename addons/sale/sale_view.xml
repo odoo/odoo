@@ -399,18 +399,21 @@
                             <group col="3" colspan="2">
                             	<button colspan="1"
 	                              name="create_sale_order_line_invoice"
+	                              states="confirmed"
 	                              string="Create Invoice"
 	                              type="object"
 	                              icon="terp-document-new"
 	                              attrs="{'invisible': [('invoiced', '=', 1)]}"/>
 	                            <button name="button_cancel"
-                                    states="draft,confirmed,exception"
+                                    states="confirmed,exception"
                                     string="Cancel" type="object"
-                                    icon="gtk-cancel"/>
+                                    icon="gtk-cancel"
+                                    attrs="{'invisible': [('invoiced', '=', 1)]}" />
                                 <button name="button_done"
+                                    states="confirmed,exception"
                                     string="Done" type="object"
-                                    states="invoiced,exception"
-									icon="gtk-jump-to"/>
+									icon="gtk-jump-to"
+									attrs="{'invisible': [('invoiced', '=', 0)]}"/>
                             </group>
                         </page>
 <!--                        <page string="Properties" groups="base.group_extended">-->
