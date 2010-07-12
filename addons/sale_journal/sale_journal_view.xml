@@ -56,7 +56,7 @@
                         <field name="user_id" select="1"/>
                         <field name="date" select="1"/>
                         <field name="date_created" select="1"/>
-                        <field name="date_validation" select="1"/>
+                        <field name="date_close" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sales">
@@ -78,10 +78,10 @@
                     <field name="state"/>
                         <group col="6" colspan="2">
                             <button name="button_open" string="Open Journal" states="draft" type="object" icon="gtk-open"/>
-                            <button name="button_close" string="Close Journal" states="open,confirm" type="object" icon="gtk-close"/>
-                            <button name="button_draft" string="Set to Draft" states="close,open,cancel" type="object" icon="gtk-convert"/>
-                            <button string="Confirm Sales" name="button_sale_confirm" states="draft,open" type="object" icon="gtk-execute"/>
-                            <button string="Cancel Sales" name="button_sale_cancel" states="draft,open,confirm" type="object" icon="gtk-cancel"/>
+                            <button string="Confirm Sales" name="button_sale_confirm" states="open" type="object" icon="gtk-execute"/>
+                            <button name="button_close" string="Close Journal" states="confirm,open" type="object" icon="gtk-close"/>
+                            <button name="button_draft" string="Set to Draft" states="cancel" type="object" icon="gtk-convert"/>
+                            <button string="Cancel Sales" name="button_sale_cancel" states="close,draft,open,confirm" type="object" icon="gtk-cancel"/>
                         </group>
                 </form>
             </field>
@@ -378,7 +378,7 @@
                         <newline/>
                         <field name="date" select="1"/>
                         <field name="date_created" select="1"/>
-                        <field name="date_validation" select="1"/>
+                        <field name="date_close" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Picking">
@@ -391,9 +391,10 @@
                     <field name="state"/>
                         <group col="6" colspan="2">
                             <button name="button_open" string="Open Journal" states="draft" type="object" icon="gtk-open"/>
-                            <button name="button_close" string="Close Journal" states="open" type="object" icon="gtk-close"/>
-                            <button name="button_draft" string="Set to Draft" states="close,open,cancel" type="object" icon="gtk-convert"/>
-                            <button string="Cancel Picking" name="button_picking_cancel" states="draft,open" type="object" icon="gtk-cancel"/>
+                            <button string="Confirm Picking" name="button_picking_confirm" states="open" type="object" icon="gtk-execute"/>
+                            <button name="button_reset" string="Set to Draft" states="cancel" type="object" icon="gtk-convert"/>
+                            <button name="button_close" string="Close Journal" states="confirm,open" type="object" icon="gtk-close"/>
+                            <button string="Cancel Picking" name="button_picking_cancel" states="close,draft,open,confirm" type="object" icon="gtk-cancel"/>
                         </group>
                 </form>
             </field>
@@ -474,5 +475,19 @@
             <field name="object" eval="True"/>
         </record>
 
+
+        <record id="view_sale_journal_search_form" model="ir.ui.view">
+            <field name="name">sale.order.journal.search</field>
+            <field name="model">sale.order</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="/search/group[@string='Group By...']/filter[@string='Salesman']" position="after">
+                   	<filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
+                    <separator orientation="vertical"/>
+                </xpath>
+            </field>
+        </record>
+        
    </data>
 </openerp>

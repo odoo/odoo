@@ -100,24 +100,10 @@
 - |
   I select start date and Perform start work on project.
 -
-  !record {model: hr.sign.in.project, id: hr_sign_in_project_francline0}:
-    emp_id: 'hr_employee_fracline1'
-    name: Francline
-    server_date: '2010-06-08 19:50:54'
-    state: absent
-
-
-- |
-  I click on "Start Working" button of this wizard to start work on Project.
--
   !python {model: hr.sign.in.project}: |
       uid = ref('res_users_user0')
-      obj_attendance = self.pool.get('hr.employee')
-      emp_id = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Francline")])
-      if emp_id:
-        employee = obj_attendance.read(cr, uid, emp_id)[0]
-        self.write(cr, uid, [ref('hr_sign_in_project_francline0')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0]})
-        #self.sign_in_result(cr, uid, [ref("hr_sign_in_project_francline0")], context)
+      new_id = self.create(cr, uid, {'emp_id': 'hr_employee_fracline1', 'name': 'Francline', 'server_date': '2010-06-08 19:50:54', 'state': 'absent'})
+      self.sign_in_result(cr, uid, [new_id], context)
 
 - |
   My work is done and I want to stop work.for that I click on  "Sign In/Sign Out" button of "Sign In/Sign Out by Project" wizard.
@@ -125,33 +111,31 @@
 -
   !python {model: hr.sign.in.project}: |
        uid = ref('res_users_user0')
-       self.check_state(cr, uid, [ref("hr_sign_in_project_francline0")], {"active_ids": [ref("hr_timesheet.menu_hr_timesheet_sign_in")]
+       ids = self.search(cr, uid, [('emp_id', '=', ref('hr_employee_fracline1')),('name', '=', 'Francline')])
+       self.check_state(cr, uid, ids, {"active_ids": [ref("hr_timesheet.menu_hr_timesheet_sign_in")]
              })
 
 - |
   This will Open "hr sign out project" form. I select analytical project2 development account.
--
-  !record {model: hr.sign.out.project, id: hr_sign_out_project_francline0}:
-    account_id: account.analytic_project_2_development
-    analytic_amount: 7.0
-    date: '2010-05-25 16:40:00'
-    date_start: '2010-06-05 16:37:00'
-    info: Create Yaml for hr module
-    name: Francline
-    server_date: '2010-06-09 16:40:15'
-    state: present
+- 
+  For that I Creating a analytic account.
+- 
+  !record {model: account.analytic.account, id: account_analytic_account_project0}:
+    company_id: base.main_company
+    name: Project2
+    parent_id: account.analytic_root
+    quantity_max: 0.0
+    state: open
 
 - |
   My work for this project is over and I stop work by click on "Stop Work" button of this wizard.
 -
   !python {model: hr.sign.out.project}: |
+       import time
+       from datetime import datetime, date, timedelta
        uid = ref('res_users_user0')
-       obj_attendance = self.pool.get('hr.employee')
-       emp_id = obj_attendance.search(cr, uid, [('user_id', '=', uid), ('name', '=', "Francline")])
-       if emp_id:
-         employee = obj_attendance.read(cr, uid, emp_id)[0]
-         self.write(cr, uid, [ref('hr_sign_out_project_francline0')], {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0]})
-         #self.sign_out_result_end(cr, uid, [ref('hr_sign_out_project_francline0')])
+       new_id = self.create(cr, uid, {'account_id': ref('account_analytic_account_project0'), 'analytic_amount': 7.0, 'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S'), 'date_start': '2010-06-05 16:37:00', 'info': 'Create Yaml for hr module', 'name': 'Francline', 'server_date': '2010-06-09 16:40:15', 'state': 'absent'})
+       self.sign_out_result_end(cr, uid, [new_id], context)
 
 - |
   I can see employee timesheet for particular month using "Employee Timesheet" report.
