@@ -382,13 +382,13 @@ class res_config_installer(osv.osv_memory):
                             self._already_installed(cr, uid, context=context)),
                         True))
 
-    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+    def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
         """ If an addon is already installed, set it to readonly as
         res.config.installer doesn't handle uninstallations of already
         installed addons
         """
         fields = super(res_config_installer, self).fields_get(
-            cr, uid, fields, context, read_access)
+            cr, uid, fields, context, write_access)
 
         for module in self._already_installed(cr, uid, context=context):
             if module.name not in fields:

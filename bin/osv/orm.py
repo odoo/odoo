@@ -1070,22 +1070,19 @@ class orm_template(object):
     def create(self, cr, user, vals, context=None):
         raise NotImplementedError(_('The create method is not implemented on this object !'))
 
-    # returns the definition of each field in the object
-    # the optional fields parameter can limit the result to some fields
-    def fields_get_keys(self, cr, user, context=None, read_access=True):
-        if context is None:
-            context = {}
+    def fields_get_keys(self, cr, user, context=None):
         res = self._columns.keys()
         for parent in self._inherits:
-            res.extend(self.pool.get(parent).fields_get_keys(cr, user, fields, context))
+            res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
         return res
 
-    def fields_get(self, cr, user, allfields=None, context=None, read_access=True):
+    # returns the definition of each field in the object
+    # the optional fields parameter can limit the result to some fields
+    def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         if context is None:
             context = {}
         res = {}
         translation_obj = self.pool.get('ir.translation')
-        model_access_obj = self.pool.get('ir.model.access')
         for parent in self._inherits:
             res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
 
@@ -1114,7 +1111,7 @@ class orm_template(object):
                         'change_default', 'translate', 'help', 'select', 'selectable'):
                     if getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
-                if not read_access:
+                if not write_access:
                     res[f]['readonly'] = True
                     res[f]['states'] = {}
                 for arg in ('digits', 'invisible','filters'):
@@ -2775,9 +2772,9 @@ class orm(orm_template):
 
         """
         ira = self.pool.get('ir.model.access')
-        read_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
-                      ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
-        return super(orm, self).fields_get(cr, user, fields, context, read_access)
+        write_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
+                       ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
+        return super(orm, self).fields_get(cr, user, fields, context, write_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """

@@ -211,7 +211,7 @@ class ir_model_grid(osv.osv):
                 acc_obj.write(cr, uid, rules, vals2, context=context)
         return True
 
-    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+    def fields_get(self, cr, uid, fields=None, context=None):
         result = super(ir_model_grid, self).fields_get(cr, uid, fields, context)
         groups = self.pool.get('res.groups').search(cr, uid, [])
         groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
