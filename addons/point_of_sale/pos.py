@@ -630,7 +630,7 @@ class pos_order(osv.osv):
                 # Create a move for the line
                 account_move_line_obj.create(cr, uid, {
                     'name': order.name,
-                    'date': order.date_order,
+                    'date': order.date_order[:10],
                     'ref': order.name,
                     'move_id': move_id,
                     'account_id': income_account,
@@ -656,7 +656,7 @@ class pos_order(osv.osv):
 
                     account_move_line_obj.create(cr, uid, {
                         'name': order.name,
-                        'date': order.date_order,
+                        'date': order.date_order[:10],
                         'ref': order.name,
                         'move_id': move_id,
                         'account_id': income_account,
@@ -675,7 +675,7 @@ class pos_order(osv.osv):
             for key, amount in group_tax.items():
                 account_move_line_obj.create(cr, uid, {
                     'name': order.name,
-                    'date': order.date_order,
+                    'date': order.date_order[:10],
                     'ref': order.name,
                     'move_id': move_id,
                     'account_id': key[account_pos],
@@ -691,7 +691,7 @@ class pos_order(osv.osv):
             # counterpart
             to_reconcile.append(account_move_line_obj.create(cr, uid, {
                 'name': order.name,
-                'date': order.date_order,
+                'date': order.date_order[:10],
                 'ref': order.name,
                 'move_id': move_id,
                 'account_id': order_account,
@@ -740,7 +740,7 @@ class pos_order(osv.osv):
                 }, context=context)
                 account_move_line_obj.create(cr, uid, {
                     'name': order.name,
-                    'date': order.date_order,
+                    'date': order.date_order[:10],
                     'ref': order.name,
                     'move_id': payment_move_id,
                     'account_id': payment_account,
@@ -752,7 +752,7 @@ class pos_order(osv.osv):
                 }, context=context)
                 to_reconcile.append(account_move_line_obj.create(cr, uid, {
                     'name': order.name,
-                    'date': order.date_order,
+                    'date': order.date_order[:10],
                     'ref': order.name,
                     'move_id': payment_move_id,
                     'account_id': order_account,
