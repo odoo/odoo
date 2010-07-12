@@ -48,11 +48,18 @@
                         <field name="template" colspan="4" nolabel="1" widget="text_wiki"/>
                     </page>
                     </notebook>
+                     <field name="menu_id"/>
                      <button
                          name="%(wiki.action_wiki_create_menu)d"
                          string="Create Menu"
                           type="action"
-                          icon="gtk-justify-fill" />
+                          icon="gtk-justify-fill"
+                          attrs="{'invisible':[('menu_id','!=',False)]}"/>
+                     <button
+                         name="open_wiki_page"
+                         string="Open Wiki Page"
+                          type="object"
+                          icon="gtk-ok" />
                 </form>
             </field>
         </record>
@@ -125,7 +132,7 @@
                     <group col="8" colspan="4">
                         <field name="name" select="1" colspan="8"/>
                         <field name="group_id" string="Topic" select="1" on_change="onchange_group_id(group_id, text_area)"/>
-                        <field name="section" invisible="not context.get('section',False)"/>
+                        <field name="section"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Content">
@@ -144,7 +151,7 @@
             </field>
         </record>
 
-<!-- wiki Search view  -->
+    <!-- wiki Search view  -->
 
         <record id="view_wiki_filter" model="ir.ui.view">
             <field name="name">wiki.wiki.search</field>

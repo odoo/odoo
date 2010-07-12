@@ -250,7 +250,7 @@
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="section_id" select="1" widget="selection" string="Sales Team">
                         <filter icon="terp-personal+"
-                            domain="[('section_id','=',context.get('section_id',False))]"
+                            domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My section" />
                     </field>
                     <newline/>
