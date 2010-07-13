@@ -408,8 +408,7 @@ property or property parameter."),
         except ImportError:
             return res
         cal = vobject.iCalendar()
-        event = cal.add('vevent')
-        event.add('uid').value = 'OpenObject-%s_%s@%s' % (event_obj._name, event_obj.id, cr.dbname)
+        event = cal.add('vevent')        
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)
