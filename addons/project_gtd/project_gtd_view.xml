@@ -96,7 +96,7 @@
         <field name="arch" type="xml">
             <field name="progress" position="after">
                 <field name="context_id" widget="selection" groups="project_gtd.group_project_getting"/>
-                <field name="timebox_id" select="1" groups="project_gtd.group_project_getting"/>
+                <field name="timebox_id" widget="selection" select="1" groups="project_gtd.group_project_getting"/>
             </field>
         </field>
     </record>
