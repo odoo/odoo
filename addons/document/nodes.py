@@ -27,6 +27,7 @@ from osv.orm import except_orm
 import pooler
 from tools.safe_eval import safe_eval
 
+import errno
 import os
 import time
 
