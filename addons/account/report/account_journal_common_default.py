@@ -107,6 +107,7 @@ class account_journal_common_default(object):
         self.cr.execute('SELECT SUM(credit) FROM account_move_line l '
                         'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +' ',
                         (period_id, tuple(journals)))
+
         return self.cr.fetchone()[0] or 0.0
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
