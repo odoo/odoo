@@ -228,6 +228,8 @@ class CalDAV(object):
 
         att_data = []
         for cal_data in child.getChildren():
+            if cal_data.name.lower() == 'organizer':           
+                self.ical_set(cal_data.name.lower(), {'name':cal_data.params['CN']}, 'value')
             if cal_data.name.lower() == 'attendee':
                 ctx = context.copy()
                 if cal_children:
@@ -307,6 +309,13 @@ class CalDAV(object):
                         ical = tz_obj.export_cal(cr, uid, None, \
                                      data[map_field], ical, context=context)
                         timezones.append(data[map_field])
+                    elif field == 'organizer' and data[map_field]:
+                        event_org = vevent.add('organizer')
+                        organizer_id = data[map_field][0]
+                        user_obj = self.pool.get('res.users')
+                        organizer = user_obj.browse(cr, uid, organizer_id, context=context)
+                        event_org.params['CN'] = [organizer.name]
+                        event_org.value = 'MAILTO:' + (organizer.user_email or organizer.name)
                     elif data[map_field]:
                         if map_type in ("char", "text"):
                             if field in ('exdate'):
@@ -528,7 +537,6 @@ class Calendar(CalDAV, osv.osv):
                                 })
                 self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower(), context=context)
                 val = self.parse_ics(cr, uid, child, cal_children=cal_children, context=context)
-                val.update({'user_id': uid})
                 vals.append(val)
                 obj = self.pool.get(cal_children[child.name.lower()])
         if hasattr(obj, 'check_import'):
