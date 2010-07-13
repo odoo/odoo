@@ -2835,14 +2835,16 @@ class orm(orm_template):
     def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
         if not context:
             context = {}
-        #ids = map(lambda x:int(x), ids)
         if not ids:
             return []
         if fields_to_read == None:
             fields_to_read = self._columns.keys()
 
-        # construct a clause for the rules :
-        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
+        # Construct a clause for the security rules.
+        # 'tables' hold the list of tables necessary for the SELECT including the ir.rule clauses,
+        # or will at least contain self._table.
+        rule_clause, rule_params, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
+
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
                            f == self.CONCURRENCY_CHECK_FIELD
@@ -2852,25 +2854,27 @@ class orm(orm_template):
         res = []
         if len(fields_pre):
             def convert_field(f):
+                f_qual = "%s.%s" % (self._table, f) # need fully-qualified references in case len(tables) > 1
                 if f in ('create_date', 'write_date'):
-                    return "date_trunc('second', %s) as %s" % (f, f)
+                    return "date_trunc('second', %s) as %s" % (f_qual, f)
                 if f == self.CONCURRENCY_CHECK_FIELD:
                     if self._log_access:
                         return "COALESCE(%s.write_date, %s.create_date, now())::timestamp AS %s" % (self._table, self._table, f,)
                     return "now()::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
-                    return 'length("%s") as "%s"' % (f, f)
-                return '"%s"' % (f,)
+                    return 'length("%s") as "%s"' % (f_qual, f)
+                return f_qual
+
             fields_pre2 = map(convert_field, fields_pre)
             order_by = self._parent_order or self._order
-            select_fields = ','.join(fields_pre2 + ['id'])
-            query = 'SELECT %s FROM "%s" WHERE id IN %%s' % (select_fields, self._table)
-            if d1:
-                query += " AND " + (' OR '.join(d1))
+            select_fields = ','.join(fields_pre2 + [self._table + '.id'])
+            query = 'SELECT %s FROM %s WHERE %s.id IN %%s' % (select_fields, ','.join(tables), self._table)
+            if rule_clause:
+                query += " AND " + (' OR '.join(rule_clause))
             query += " ORDER BY " + order_by
             for sub_ids in cr.split_for_in_conditions(ids):
-                if d1:
-                    cr.execute(query, [tuple(sub_ids)] + d2)
+                if rule_clause:
+                    cr.execute(query, [tuple(sub_ids)] + rule_params)
                     if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
@@ -2884,7 +2888,7 @@ class orm(orm_template):
             if f == self.CONCURRENCY_CHECK_FIELD:
                 continue
             if self._columns[f].translate:
-                ids = map(lambda x: x['id'], res)
+                ids = [x['id'] for x in res]
                 #TODO: optimize out of this loop
                 res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
                 for r in res:
@@ -2915,7 +2919,7 @@ class orm(orm_template):
             for r in res:
                 for f in fields_post:
                     r[f] = self._columns[f]._symbol_get(r[f])
-        ids = map(lambda x: x['id'], res)
+        ids = [x['id'] for x in res]
 
         # all non inherited fields for which the attribute whose name is in load is False
         fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields_to_read)
@@ -2940,13 +2944,6 @@ class orm(orm_template):
                             record[f] = res2[record['id']]
                         else:
                             record[f] = []
-
-#for f in fields_post:
-#    # get the value of that field for all records/ids
-#    res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
-#    for record in res:
-#        record[f] = res2[record['id']]
-
         readonly = None
         for vals in res:
             for field in vals.copy():
