@@ -170,6 +170,9 @@ class project(osv.osv):
         return res
 
     def set_done(self, cr, uid, ids, context=None):
+        task_obj = self.pool.get('project.task')
+        for task in self.read(cr, uid, ids, ['tasks'])[0]['tasks']:
+            task_obj.write(cr, uid, task, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _('Project ') + " '" + name + "' "+ _("is Closed.")
@@ -198,16 +201,37 @@ class project(osv.osv):
     def copy(self, cr, uid, id, default={}, context=None):
         if context is None:
             context = {}
+            
+        task_obj = self.pool.get('project.task')
         proj = self.browse(cr, uid, id, context=context)
         default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
         if not default.get('name', False):
-            default['name'] = proj.name+_(' (copy)')
+            default['name'] = proj.name+_(' (copy)')        
         res = super(project, self).copy(cr, uid, id, default, context)
+        
+        task_ids = task_obj.search(cr, uid, [('project_id','=', res), ('active','=',False)])
+        tasks = task_obj.browse(cr, uid, task_ids)
+        for task in tasks:
+            date_deadline = None
+            date_end = None
+            if task.date_start:
+                ds = date(*time.strptime(task.date_start,'%Y-%m-%d %H:%M:%S')[:3])
+                if task.date_deadline:
+                    dd = date(*time.strptime(task.date_deadline,'%Y-%m-%d')[:3])
+                    diff = dd-ds
+                    date_deadline = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
+                if task.date_end:
+                    de = date(*time.strptime(task.date_end,'%Y-%m-%d %H:%M:%S')[:3])
+                    diff = de-ds
+                    date_end = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
+            task_obj.write(cr, uid, task.id, {'active':True, 
+                                              'date_start':time.strftime('%Y-%m-%d %H:%M:%S'),
+                                              'date_deadline':date_deadline,
+                                              'date_end':date_end})
+        
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
-        if ids:
-            cr.execute('update project_task set active=True where project_id IN %s',(tuple(ids),))
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
@@ -320,6 +344,13 @@ class task(osv.osv):
         task = self.read(cr, uid, ids[0], ['date_start', 'date_end'])
         if task['date_start'] and task['date_end']:
              if task['date_start'] > task['date_end']:
+                 return False
+        return True
+    
+    def _check_deadline_date(self, cr, uid, ids, context=None):
+        task = self.read(cr, uid, ids[0], ['date_start', 'date_deadline'])
+        if task['date_start'] and task['date_deadline']:
+             if task['date_deadline'] < task['date_start']:
                  return False
         return True
 
@@ -597,6 +628,15 @@ class config_compute_remaining(osv.osv_memory):
     _columns = {
         'remaining_hours' : fields.float('Remaining Hours', digits=(16,2), help="Put here the remaining hours required to close the task."),
     }
+    
+    def _get_analytic_account(self, cr, uid, context={}):
+        if context.get('account_id', False):
+            return context.get('account_id')
+        return False
+    
+    _defaults = {
+              'account_id' : _get_analytic_account,
+              }
 
     _defaults = {
         'remaining_hours': _get_remaining
