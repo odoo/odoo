@@ -138,7 +138,7 @@
             <field name="arch" type="xml">
                 <field name="membership_start" position="after">
                 <newline/>
-	            <group expand="1" string="Group By" colspan="10" col="8">
+	            <group expand="0" string="Group By" colspan="10" col="8">
 	                <filter string="Associate Member" name = "associate" icon="terp-personal" domain="[]" context="{'group_by':'associate_member'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
                     <separator orientation="vertical"/>
@@ -169,7 +169,7 @@
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_membership_members"/>
         </record>
-
+        
         <menuitem name="Members" parent="menu_member" id="menu_members" sequence="2" action="action_membership_members"/>
 
         <!-- PARTNERS -->

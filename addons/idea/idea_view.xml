@@ -1,6 +1,26 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+    <!-- Idea Categories Search View-->
+    <record model="ir.ui.view" id="view_idea_category_search">
+        <field name="name">idea.category.search</field>
+        <field name="model">idea.category</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Ideas Categories">
+                <group col="10" colspan="4">
+                    <field name="name" string="Category"/>
+                    <field name="parent_id" widget="selection"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Group By..." colspan="14">
+                    <filter string="Parent Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'parent_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
 
     <!-- Idea Category Form View -->
     <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
@@ -41,6 +61,7 @@
         <field name="res_model">idea.category</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_idea_category_search"/>
     </record>
 
     <menuitem name="Configuration" parent="base.menu_tools"
