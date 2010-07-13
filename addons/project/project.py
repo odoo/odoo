@@ -21,7 +21,7 @@
 
 from lxml import etree
 import time
-
+from datetime import date, datetime
 from tools.translate import _
 from osv import fields, osv
 
@@ -171,8 +171,8 @@ class project(osv.osv):
 
     def set_done(self, cr, uid, ids, context=None):
         task_obj = self.pool.get('project.task')
-        for task in self.read(cr, uid, ids, ['tasks'])[0]['tasks']:
-            task_obj.write(cr, uid, task, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+        task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', 'not in', ('cancelled', 'done'))])
+        task_obj.write(cr, uid, task_ids, {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'close'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _('Project ') + " '" + name + "' "+ _("is Closed.")
@@ -180,6 +180,9 @@ class project(osv.osv):
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
+        task_obj = self.pool.get('project.task')
+        task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'done')])
+        task_obj.write(cr, uid, task_ids, {'state': 'cancelled', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
         return True
 
@@ -222,10 +225,6 @@ class project(osv.osv):
                     dd = date(*time.strptime(task.date_deadline,'%Y-%m-%d')[:3])
                     diff = dd-ds
                     date_deadline = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
-                if task.date_end:
-                    de = date(*time.strptime(task.date_end,'%Y-%m-%d %H:%M:%S')[:3])
-                    diff = de-ds
-                    date_end = (datetime.now()+diff).strftime('%Y-%m-%d %H:%M:%S')
             task_obj.write(cr, uid, task.id, {'active':True, 
                                               'date_start':time.strftime('%Y-%m-%d %H:%M:%S'),
                                               'date_deadline':date_deadline,
@@ -355,7 +354,7 @@ class task(osv.osv):
         return True
 
     _columns = {
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it. This is basically used for the management of templates of projects and tasks."),
         'name': fields.char('Task Summary', size=128, required=True),
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
