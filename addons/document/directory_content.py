@@ -90,12 +90,19 @@ class document_directory_content(osv.osv):
             tname = (content.prefix or '') + (content.suffix or '') + (content.extension or '')
         if tname.find('/'):
             tname=tname.replace('/', '_')
+        act_id = False
+        if 'dctx_res_id' in node.dctx:
+            act_id = node.dctx['dctx_res_id']
+        elif hasattr(node, 'res_id'):
+            act_id = node.res_id
+        else:
+            act_id = node.context.context.get('res_id',False)
         if not nodename:
-            n = nodes.node_content(tname, node, node.context,content)
+            n = nodes.node_content(tname, node, node.context,content, act_id=act_id)
             res2.append( n)
         else:
             if nodename == tname:
-                n = nodes.node_content(tname, node, node.context,content)
+                n = nodes.node_content(tname, node, node.context,content, act_id=act_id)
                 n.fill_fields(cr)
                 res2.append(n)
         return res2
@@ -110,6 +117,8 @@ class document_directory_content(osv.osv):
             raise Exception("Invalid content: %s" % node.extension)
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id)
         srv = netsvc.Service._services['report.'+report.report_name]
-        pdf,pdftype = srv.create(cr, uid, [node.context.context['res_id']], {}, {})        
+        ctx = node.context.context.copy()
+        ctx.update(node.dctx)
+        pdf,pdftype = srv.create(cr, uid, [node.act_id,], {}, context=ctx)
         return pdf
 document_directory_content()

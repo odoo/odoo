@@ -782,7 +782,7 @@ class node_res_obj(node_class):
         self.res_find_all = parent.res_find_all
         if res_bo:
             self.res_id = res_bo.id
-            dc2 = self.context.context
+            dc2 = self.context.context.copy()
             dc2.update(self.dctx)
             dc2['res_model'] = res_model
             dc2['res_id'] = res_bo.id
