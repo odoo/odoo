@@ -318,6 +318,13 @@ class Server:
     __is_started = False
     __servers = []
 
+    # we don't want blocking server calls (think select()) to
+    # wait forever and possibly prevent exiting the process,
+    # but instead we want a form of polling/busy_wait pattern, where
+    # _server_timeout should be used as the default timeout for
+    # all I/O blocking operations
+    _busywait_timeout = 0.5
+
 
     __logger = logging.getLogger('server')
 

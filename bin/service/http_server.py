@@ -120,6 +120,7 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
             self.server = ThreadedHTTPServer((interface, port), handler)
             self.server.vdirs = []
             self.server.logRequests = True
+            self.server.timeout = self._busywait_timeout
         except Exception, e:
             netsvc.Logger().notifyChannel(
                 'httpd', netsvc.LOG_CRITICAL,
