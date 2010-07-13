@@ -42,6 +42,7 @@ class general_ledger(rml_parse.rml_parse, account_journal_common_default):
         self.query = data['form']['query_line']
         if (data['model'] == 'ir.ui.menu'):
             new_ids = [data['form']['chart_account_id']]
+        self.sortby = data['form']['sortby']
         objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         super(general_ledger, self).set_context(objects, data, new_ids, report_type=report_type)
 
@@ -55,6 +56,7 @@ class general_ledger(rml_parse.rml_parse, account_journal_common_default):
         self.tot_currency = 0.0
         self.period_sql = ""
         self.sold_accounts = {}
+        self.sortby = 'sort_date'
         self.localcontext.update( {
             'time': time,
             'lines': self.lines,
@@ -197,7 +199,7 @@ class general_ledger(rml_parse.rml_parse, account_journal_common_default):
         del counterpart_res
 
         # Then select all account_move_line of this account
-        if form['sortby'] == 'sort_journal_partner':
+        if self.sortby == 'sort_journal_partner':
             sql_sort='j.code, p.name'
         else:
             sql_sort='l.date'
