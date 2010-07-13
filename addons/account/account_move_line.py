@@ -33,7 +33,6 @@ class account_move_line(osv.osv):
     _description = "Entry Lines"
 
     def _query_get(self, cr, uid, obj='l', context={}):
-        print 'dans le query_get', context
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         fiscalperiod_obj = self.pool.get('account.period')
         fiscalyear_ids = []
