@@ -657,6 +657,7 @@ class node_res_dir(node_class):
         self.uidperms = dirr.get_dir_permissions()
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
         self.resm_id = dirr.ressource_id
+        self.res_find_all = dirr.resource_find_all
         self.namefield = dirr.resource_field.name or 'name'
         self.displayname = dirr.name
         # Important: the domain is evaluated using the *parent* dctx!
@@ -771,13 +772,14 @@ class node_res_obj(node_class):
         self.write_date = parent.write_date
         self.content_length = 0
         self.unixperms = 040750
-        self.uidperms = parent.uidperms & 0x15
+        self.uidperms = parent.uidperms & 15
         self.uuser = parent.uuser
         self.ugroup = parent.ugroup
         self.res_model = res_model
         self.domain = parent.domain
         self.displayname = path
         self.dctx_dict = parent.dctx_dict
+        self.res_find_all = parent.res_find_all
         if res_bo:
             self.res_id = res_bo.id
             dc2 = self.context.context
@@ -805,6 +807,8 @@ class node_res_obj(node_class):
         if not self.res_id == other.res_id:
             return False
         if self.domain != other.domain:
+            return False
+        if self.res_find_all != other.res_find_all:
             return False
         if self.dctx != other.dctx:
             return False
@@ -919,6 +923,8 @@ class node_res_obj(node_class):
 
 
         fil_obj = dirobj.pool.get('ir.attachment')
+        if self.res_find_all:
+            where2 = where
         where3 = where2  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
         # print "where clause for dir_obj", where2
         ids = fil_obj.search(cr, uid, where3, context=ctx)
@@ -986,11 +992,12 @@ class node_res_obj(node_class):
         val = {
             'name': path,
             'datas_fname': path,
-            'parent_id': self.dir_id,
             'res_model': self.res_model,
             'res_id': self.res_id,
             # Datas are not set here
         }
+        if not self.res_find_all:
+            val['parent_id'] = self.dir_id
 
         fil_id = fil_obj.create(cr, uid, val, context=ctx)
         fil = fil_obj.browse(cr, uid, fil_id, context=ctx)
