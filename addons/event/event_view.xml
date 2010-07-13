@@ -53,21 +53,22 @@
                         <field name="product_id" on_change="onchange_product(product_id)"/>
                     </group>
                     <notebook colspan="4">
-                    <page string="General">
+                    <page string="Event Information">
+                        <separator string="Description" colspan="4"/>
                         <field name="unit_price"/>
                         <field name="currency_id"/>
-                        <separator string="Speaker Information" colspan="4"/>
-                        <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
-                        <field name="address_id"/>
-                        <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4"/>
-                        <field name="country_id" />
-                        <field name="speaker_confirmed"/>
-                        <field name="language"/>
-                        <separator string="Event description" colspan="4"/>
-                        <field name="parent_id" domain="[('parent_id','child_of','Event')]"/>
-                        <field name="active"/>
                         <field name="register_min"/>
                         <field name="register_max"/>
+                        <field name="parent_id" domain="[('parent_id','child_of','Event')]"/>
+                        <field name="active"/>
+                        <separator string="Location" colspan="4"/>
+                        <field name="country_id" />
+                        <field name="language"/>
+                        <field name="address_id"/>
+                        <separator string="Speaker Information" colspan="4"/>
+                        <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
+                        <field name="speaker_confirmed"/>
+                        <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4"/>
                         <newline/>
                         <field name="state" select="1"/>
                         <group col="4" colspan="2">

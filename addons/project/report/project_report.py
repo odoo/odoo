@@ -122,27 +122,31 @@ class report_project_task_user(osv.osv):
 report_project_task_user()
 
 #This class is generated for project deshboard purpose
-class project_vs_remaining_hours(osv.osv):
-    _name = "project.vs.remaining.hours"
-    _description = " Project vs Remaining hours"
+class project_vs_hours(osv.osv):
+    _name = "project.vs.hours"
+    _description = " Project vs  hours"
     _auto = False
     _columns = {
         'project': fields.char('Project', size=128, required=True),
         'remaining_hours': fields.float('Remaining Hours', readonly=True),
+        'planned_hours': fields.float('Planned Hours', readonly=True),
+        'total_hours': fields.float('Total Hours', readonly=True),
         'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Close'),('template', 'Template')], 'State', required=True, readonly=True)
     }
     _order = 'project desc'
 
     def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'project_vs_remaining_hours')
+        tools.sql.drop_view_if_exists(cr, 'project_vs_hours')
         cr.execute("""
-            CREATE or REPLACE view project_vs_remaining_hours as (
+            CREATE or REPLACE view project_vs_hours as (
                 select
                       min(pt.id) as id,
                       aaa.user_id as uid,
                       aaa.name as project,
                       aaa.state,
-                      sum(pt.remaining_hours) as remaining_hours
+                      sum(pt.remaining_hours) as remaining_hours,
+                      sum(pt.planned_hours) as planned_hours,
+                      sum(pt.total_hours) as total_hours
                  FROM project_project as pp,
                        account_analytic_account as aaa,
                        project_task as pt
@@ -154,7 +158,9 @@ class project_vs_remaining_hours(osv.osv):
                       pur.uid as uid,
                       aaa.name as project,
                       aaa.state,
-                      sum(pt.remaining_hours) as remaining_hours
+                      sum(pt.remaining_hours) as remaining_hours,
+                      sum(pt.planned_hours) as planned_hours,
+                      sum(pt.total_hours) as total_hours
                  FROM project_project as pp,
                       project_user_rel as pur,
                       account_analytic_account as aaa,
@@ -164,7 +170,7 @@ class project_vs_remaining_hours(osv.osv):
             )
         """)
 
-project_vs_remaining_hours()
+project_vs_hours()
 
 class task_by_days(osv.osv):
     _name = "task.by.days"

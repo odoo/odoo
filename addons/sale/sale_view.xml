@@ -165,10 +165,10 @@
                                                 <field name="state"/>
                                                 <field name="invoiced"/>
                                                 <button colspan="1"
-                                                    name="%(action_view_sale_order_line_make_invoice)d"
+                                                    name="create_sale_order_line_invoice"
                                                     states="confirmed"
-                                                    string="Make Invoice"
-                                                    type="action"
+                                                    string="Create Invoice"
+                                                    type="object"
                                                     icon="terp-document-new" />
                                             </group>
                                         </page>
@@ -396,20 +396,24 @@
                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1"/>
                             <separator colspan="4" string="States"/>
                             <field name="state"/>
-                            <button colspan="1"
-                              name="%(action_view_sale_order_line_make_invoice)d"
-                              string="Make Invoice"
-                              type="action"
-                              icon="terp-document-new" />
-                            <group col="2" colspan="2">
+                            <group col="3" colspan="2">
+                            	<button colspan="1"
+	                              name="create_sale_order_line_invoice"
+	                              states="confirmed"
+	                              string="Create Invoice"
+	                              type="object"
+	                              icon="terp-document-new"
+	                              attrs="{'invisible': [('invoiced', '=', 1)]}"/>
+	                            <button name="button_cancel"
+                                    states="confirmed,exception"
+                                    string="Cancel" type="object"
+                                    icon="gtk-cancel"
+                                    attrs="{'invisible': [('invoiced', '=', 1)]}" />
                                 <button name="button_done"
                                     states="confirmed,exception"
                                     string="Done" type="object"
-                                    icon="gtk-jump-to" />
-                                <button name="button_cancel"
-                                    states="confirmed,exception"
-                                    string="Cancel" type="object"
-                                    icon="gtk-cancel" />
+									icon="gtk-jump-to"
+									attrs="{'invisible': [('invoiced', '=', 0)]}"/>
                             </group>
                         </page>
 <!--                        <page string="Properties" groups="base.group_extended">-->
@@ -492,6 +496,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
+            <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
         </record>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 	<data noupdate="1">
-		
+
         <record model="document.directory" id="document.dir_calendars">
             <field name="name">Calendars</field>
             <field name="calendar_collection">True</field>
@@ -11,6 +11,11 @@
 
 		<record model="basic.calendar.attributes" id="field_event_comment">
 			<field name="name">comment</field>
+			<field name="type">vevent</field>
+		</record>
+
+        <record model="basic.calendar.attributes" id="field_event_organizer">
+			<field name="name">organizer</field>
 			<field name="type">vevent</field>
 		</record>
 
@@ -58,12 +63,12 @@
 			<field name="name">valarm</field>
 			<field name="type">vevent</field>
 		</record>
-		
+
 		<record model="basic.calendar.attributes" id="field_event_vtimezone">
 			<field name="name">vtimezone</field>
 			<field name="type">vevent</field>
 		</record>
-		
+
 		<record model="basic.calendar.attributes" id="field_event_priority">
 			<field name="name">priority</field>
 			<field name="type">vevent</field>
@@ -181,12 +186,12 @@
 			<field name="name">seq</field>
 			<field name="type">vtodo</field>
 		</record>
-		
+
 		<record model="basic.calendar.attributes" id="field_todo_vtimezone">
 			<field name="name">vtimezone</field>
 			<field name="type">vtodo</field>
 		</record>
-		
+
 		<record model="basic.calendar.attributes" id="field_todo_url">
 			<field name="name">url</field>
 			<field name="type">vtodo</field>

@@ -62,7 +62,7 @@
                             <separator string="Position" colspan="2"/>
                             <field name="job_id" widget="selection"/>
                             <field name="department_id" widget="selection"/>
-                            <field name="category_id" />
+                            <field name="category_id" widget="selection"/>
                             <!--<separator string="Managers" colspan="2"/>
                             <field name="parent_id" />
                             <field name="coach_id" />-->
@@ -88,6 +88,7 @@
                     <field name="work_email"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
+                    <field name="category_id"/>
                     <field name="parent_id"/>
                     <field name="coach_id" invisible="1" />
                 </tree>
@@ -102,7 +103,9 @@
                 <search string="Employees">
                     <filter icon="terp-personal-" domain="[('active','=',False)]" string="Unactive" groups="base.group_extended"/>
                     <field name="name"/>
-                    <field name="department_id" widget="selection"/>
+                    <field name="department_id" widget="selection">
+                    <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]" help="My Departments Employee"/>
+                    </field>
                     <field name="job_id" widget="selection"/>
                     <field name="parent_id"/>
                     <newline />

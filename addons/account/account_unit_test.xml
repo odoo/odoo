@@ -52,6 +52,8 @@
             <!-- writeoff_acc_id = -->        <value eval="ref('cash')"/>
             <!-- writeoff_period_id = -->    <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
             <!-- writeoff_journal_id = -->    <value eval="ref('bank_journal')"/>
+            <!-- context = -->              <value eval="{}"/>
+            <!-- name = -->                 <value eval="str('Payment from ASUStek')"/>
         </function>
         
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now paid">

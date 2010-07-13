@@ -1508,8 +1508,8 @@
                         <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Future stock moves that are ready"/>
                         <separator orientation="vertical"/>
                         <field name="product_id"/>
-                        <field name="location_id" string="Location" domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
-                        <field name="address_id" string="Partner" context="{'contact_display':'partner'}" domain="[('picking_id.address_id','ilike',self)]"/>
+                        <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
+                        <field name="address_id" string="Partner" context="{'contact_display':'partner'}" filter_domain="[('picking_id.address_id','ilike',self)]"/>
                         <field name="date_planned"/>
                     </group>
                     <newline/>
@@ -1676,7 +1676,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Extended options..." groups="base.group_extended">
-                       <field name="tracking_id"  context="{'tracking': self}" domain="[]" />
+                       <field name="tracking_id" context="{'tracking': self}" filter_domain="[]" />
                     </group>
                 </search>
             </field>

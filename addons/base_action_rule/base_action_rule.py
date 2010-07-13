@@ -105,8 +105,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
         'act_mail_to_email': fields.char('Mail to these Emails', size=128, \
         help="Email-id of the persons whom mail is to be sent"), 
         'act_mail_body': fields.text('Mail body', help="Content of mail"), 
-        'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for mathching name of the resource\
-\ne.g.: urgent.* will search for records having name starting with urgent\
+        'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for matching name of the resource\
+\ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
 \nNote: This is case sensitive search."), 
         'server_action_id': fields.many2one('ir.actions.server', 'Server Action', help="Describes the action name.\neg:on which object which action to be taken on basis of which condition"), 
         'filter_id':fields.many2one('ir.filters', 'Filter', required=False), 

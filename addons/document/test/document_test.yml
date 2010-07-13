@@ -45,8 +45,9 @@
 -
     Attach a pdf file in "My document"
 -
-    !python {model: ir.attachment}: |
+    !python {model: 'ir.attachment'}: |
         import tools
         import base64
-        file = open(tools.config['addons_path'] + '/document/test/partner.pdf')
-        id = self.write(cr, uid, [ref("document_1")], {'datas' : base64.encodestring(file.read())}, context)
+        pdf_file = open(tools.config['addons_path'] + '/document/test/partner.pdf')
+        self.write(cr, uid, [ref("document_1")], {'datas_fname': 'partner.pdf', 'datas' : base64.encodestring(pdf_file.read())}, context)
+
