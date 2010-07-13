@@ -70,6 +70,7 @@ class general_ledger(rml_parse.rml_parse, account_journal_common_default):
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
+            'get_sortby': self._get_sortby
         })
         self.context = context
 

@@ -80,6 +80,11 @@ class account_journal_common_default(object):
             return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).name
         return ''
 
+    def _get_sortby(self, data):
+        if data.get('form', False) and data['form'].get('sortby', False):
+            return data['form']['sortby']
+        return ''
+
     def _get_filter(self, data):
         if data.get('form', False) and data['form'].get('filter', False):
             if data['form']['filter'] == 'filter_date':
