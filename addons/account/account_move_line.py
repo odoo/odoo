@@ -491,7 +491,6 @@ class account_move_line(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
-            cr.commit()
 
     def _check_no_view(self, cr, uid, ids):
         lines = self.browse(cr, uid, ids)
@@ -923,7 +922,7 @@ class account_move_line(osv.osv):
                 journal = self.pool.get('account.journal').browse(cr, uid, [journal_id])[0]
                 if journal.allow_date and period_id:
                     period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
-                    if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
+                    if not time.strptime(vals['date'][:10],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'][:10],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
                         raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
         else:
             return True

@@ -53,7 +53,7 @@ class event_event(osv.osv):
         
     def copy(self, cr, uid, id, default=None, context=None):        
         """ Copy record of Given id       
-        @param id: Id of Event Registration type record.
+        @param id: Id of Event record.
         @param context: A standard dictionary for contextual values
         """
         if not default:
@@ -65,7 +65,13 @@ class event_event(osv.osv):
         return super(event_event, self).copy(cr, uid, id, default=default, context=context)
     
     def onchange_product(self, cr, uid, ids, product_id):
-        
+        """This function returns value of  product's unit price based on product id.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Event IDs
+        @param product_id: Product's id
+        """
         if not product_id:
             return {'value': {'unit_price': False}}
         else:
@@ -82,6 +88,13 @@ class event_event(osv.osv):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def button_confirm(self, cr, uid, ids, context=None):
+        """This Funtion send reminder who had already confirmed their event registration.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Event IDs
+        @param return: True
+        """
         register_pool = self.pool.get('event.registration')
         for event in self.browse(cr, uid, ids, context=context):
             if event.mail_auto_confirm:
@@ -95,14 +108,12 @@ class event_event(osv.osv):
 
 
     def _get_register(self, cr, uid, ids, fields, args, context=None):        
-        """
-        Get Confirm or uncofirm register value.       
+        """Get Confirm or uncofirm register value.
         @param ids: List of Event registration type's id
         @param fields: List of function fields(register_current and register_prospect).
         @param context: A standard dictionary for contextual values
         @return: Dictionary of function fields value. 
         """
-        
         register_pool = self.pool.get('event.registration')
         res = {}
         for event in self.browse(cr, uid, ids, context):
@@ -116,7 +127,7 @@ class event_event(osv.osv):
                 state.append('draft')
             
             reg_ids = register_pool.search(cr, uid, [
-                       ('event_id', '=', event.id), 
+                        ('event_id', '=', event.id), 
                        ('state', 'in', state)])
             
             if 'register_current' in fields:
@@ -157,7 +168,6 @@ class event_event(osv.osv):
                     register_pool.write(cr, uid, reg_ids, register_values)
         return res
 
-
     _columns = {
         'type': fields.many2one('event.type', 'Type', help="Type of Event like Seminar, Exhibition, Conference, Training."), 
         'register_max': fields.integer('Maximum Registrations', help="Provide Maximun Number of Registrations"), 
@@ -183,7 +193,6 @@ class event_event(osv.osv):
         'country_id': fields.related('address_id', 'country_id',
                     type='many2one', relation='res.country', string='Country'),
         'language': fields.char('Language',size=64),
-
         
     }
 
@@ -218,7 +227,7 @@ and users by email"),
         "badge_partner": fields.char('Badge Partner', size=128), 
         "event_product": fields.char("Product Name", size=128, required=True), 
         "tobe_invoiced": fields.boolean("To be Invoiced"), 
-        "invoice_id": fields.many2one("account.invoice", "Invoice"), 
+        "invoice_id": fields.many2one("account.invoice", "Invoice", readonly=True), 
         'date_closed': fields.datetime('Closed', readonly=True), 
         'ref': fields.reference('Reference', selection=crm._links_get, size=128), 
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
@@ -235,8 +244,8 @@ and users by email"),
 
     def _make_invoice(self, cr, uid, reg, lines, context=None):
         """ Create Invoice from Invoice lines
-        @param reg : Object of event.registration
-        @param lines: ids of Invoice lines 
+        @param reg : Model of Event Registration
+        @param lines: Ids of Invoice lines 
         """
         if context is None:
             context = {}
@@ -325,11 +334,10 @@ and users by email"),
         return new_invoice_ids
 
     def check_confirm(self, cr, uid, ids, context=None):
-        """
-        Check confirm event register on given id.
+        """This Function Open Event Registration and send email to user.
         @param ids: List of Event registration's IDs
         @param context: A standard dictionary for contextual values
-        @return: Dictionary value which open Confirm registration form.
+        @return: True
         """
         data_pool = self.pool.get('ir.model.data')
         unconfirmed_ids = []
@@ -360,13 +368,17 @@ and users by email"),
             }
         return True    
 
-    def button_reg_close(self, cr, uid, ids, *args):        
+    def button_reg_close(self, cr, uid, ids, *args):
+        """This Function Close Event Registration.  
+        """        
         registrations = self.browse(cr, uid, ids) 
         self._history(cr, uid, registrations, _('Done'))
         self.write(cr, uid, ids, {'state': 'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
     
-    def button_reg_cancel(self, cr, uid, ids, *args):        
+    def button_reg_cancel(self, cr, uid, ids, *args):
+        """This Function Cancel Event Registration.
+        """        
         registrations = self.browse(cr, uid, ids)
         self._history(cr, uid, registrations, _('Cancel'))
         self.write(cr, uid, ids, {'state': 'cancel'})
@@ -375,8 +387,8 @@ and users by email"),
     def create(self, cr, uid, values, context=None):
         """ Overrides orm create method.
         """
-        event = self.pool.get('event.event').browse(cr, uid, values['event_id'], context=context)
-        
+        event_obj = self.pool.get('event.event')
+        event = event_obj.browse(cr, uid, values['event_id'], context=context)
         values['date_deadline']= event.date_begin
         values['description']= event.mail_confirm
         values['currency_id'] =  event.currency_id.id
@@ -385,9 +397,12 @@ and users by email"),
         self._history(cr, uid, registrations, _('Created'))
         return res
 
-    def write(self, cr, uid, ids, values, context=None):    
+    def write(self, cr, uid, ids, values, context=None):
+        """ Overrides orm write method.
+        """    
+        event_obj = self.pool.get('event.event')
         if 'event_id' in values:
-            event = self.pool.get('event.event').browse(cr, uid, values['event_id'], context=context)
+            event = event_obj.browse(cr, uid, values['event_id'], context=context)
             values['date_deadline']= event.date_begin
             values['description']= event.mail_confirm
         return super(event_registration, self).write(cr, uid, ids, values, context=context)
@@ -439,6 +454,13 @@ and users by email"),
         return self.pool.get('account.invoice.line').create(cr, uid, vals)
 
     def onchange_badge_name(self, cr, uid, ids, badge_name):
+        """This function returns value of Registration Name based on Partner Badge Name.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Registration IDs
+        @param badge_name: Badge Name 
+        """
         
         data ={}
         if not badge_name:
@@ -448,44 +470,77 @@ and users by email"),
 
     def onchange_contact_id(self, cr, uid, ids, contact, partner):
         
+        """This function returns value of Badge Name , Badge Title based on Partner contact.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Registration IDs
+        @param contact: Patner Contact IDS
+        @param partner: Partner IDS 
+        """
         data ={}
         if not contact:
             return data
-
-        contact_id = self.pool.get('res.partner.contact').browse(cr, uid, contact)
+        contact_obj = self.pool.get('res.partner.contact')
+        addr_obj = self.pool.get('res.partner.address')
+        job_obj = self.pool.get('res.partner.job')
+        
+        contact_id = contact_obj.browse(cr, uid, contact)
         data['badge_name'] = contact_id.name
         data['badge_title'] = contact_id.title.name
         if partner:
-            partner_addresses = self.pool.get('res.partner.address').search(cr, uid, [('partner_id', '=', partner)])
-            job_ids = self.pool.get('res.partner.job').search(cr, uid, [('contact_id', '=', contact), ('address_id', 'in', partner_addresses)])
+            partner_addresses = addr_obj.search(cr, uid, [('partner_id', '=', partner)])
+            job_ids = job_obj.search(cr, uid, [('contact_id', '=', contact), ('address_id', 'in', partner_addresses)])
             if job_ids:
-                data['email_from'] = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0]).email
+                data['email_from'] = job_obj.browse(cr, uid, job_ids[0]).email
         d = self.onchange_badge_name(cr, uid, ids, data['badge_name'])
         data.update(d['value'])
         return {'value': data}
 
     def onchange_event(self, cr, uid, ids, event_id, partner_invoice_id):
+        """This function returns value of Product Name, Unit Price based on Event.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Registration IDs
+        @param event_id: Event ID
+        @param partner_invoice_id: Partner Invoice ID 
+        """
         context={}
         if not event_id:
             return {'value': {'unit_price': False, 'event_product': False}}
-        data_event =  self.pool.get('event.event').browse(cr, uid, event_id)
         
+        event_obj = self.pool.get('event.event')
+        prod_obj = self.pool.get('product.product')
+        res_obj = self.pool.get('res.partner')
+        
+        data_event =  event_obj.browse(cr, uid, event_id)
         context['currency_id'] = data_event.currency_id.id
         if data_event.user_id.id:
             return {'value': {'user_id':data_event.user_id.id}}
 
         if data_event.product_id:
             if not partner_invoice_id:
-                unit_price=self.pool.get('product.product').price_get(cr, uid, [data_event.product_id.id], context=context)[data_event.product_id.id]
+                unit_price=prod_obj.price_get(cr, uid, [data_event.product_id.id], context=context)[data_event.product_id.id]
                 return {'value': {'unit_price': unit_price, 'event_product': data_event.product_id.name, 'currency_id': data_event.currency_id.id}}
-            data_partner = self.pool.get('res.partner').browse(cr, uid, partner_invoice_id)
+            data_partner = res_obj.browse(cr, uid, partner_invoice_id)
             context.update({'partner_id': data_partner})
-            unit_price = self.pool.get('product.product')._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': data_partner.property_product_pricelist.id})[data_event.product_id.id]
+            unit_price = prod_obj._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': data_partner.property_product_pricelist.id})[data_event.product_id.id]
             return {'value': {'unit_price': unit_price, 'event_product': data_event.product_id.name, 'currency_id': data_event.currency_id.id}}
         
         return {'value': {'unit_price': False, 'event_product': False}}
 
     def onchange_partner_id(self, cr, uid, ids, part, event_id, email=False):
+        """This function returns value of Patner Invoice id, Unit Price, badget title based on partner and Event.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Registration IDs
+        @param event_id: Event ID
+        @param partner_invoice_id: Partner Invoice ID
+        """
+        job_obj = self.pool.get('res.partner.job')
+        res_obj = self.pool.get('res.partner')
         
         data={}
         data['badge_partner'] = data['contact_id'] = data['partner_invoice_id'] = data['email_from'] = data['badge_title'] = data['badge_name'] = False
@@ -496,35 +551,46 @@ and users by email"),
         d = self.onchange_partner_invoice_id(cr, uid, ids, event_id, part)
         # this updates the dictionary
         data.update(d['value'])
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part])
+        addr = res_obj.address_get(cr, uid, [part])
         if addr:
             if addr.has_key('default'):
-                job_ids = self.pool.get('res.partner.job').search(cr, uid, [('address_id', '=', addr['default'])])
+                job_ids = job_obj.search(cr, uid, [('address_id', '=', addr['default'])])
                 if job_ids:
-                    data['contact_id'] = self.pool.get('res.partner.job').browse(cr, uid, job_ids[0]).contact_id.id
+                    data['contact_id'] = job_obj.browse(cr, uid, job_ids[0]).contact_id.id
                     d = self.onchange_contact_id(cr, uid, ids, data['contact_id'], part)
                     data.update(d['value'])
-        partner_data = self.pool.get('res.partner').browse(cr, uid, part)
+        partner_data = res_obj.browse(cr, uid, part)
         data['badge_partner'] = partner_data.name
+        
         return {'value': data}
 
     def onchange_partner_invoice_id(self, cr, uid, ids, event_id, partner_invoice_id):
-        
+        """This function returns value of Product unit Price based on Invoiced partner.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Registration IDs
+        @param event_id: Event ID
+        @param partner_invoice_id: Partner Invoice ID
+        """
         data={}
         context={}
+        event_obj = self.pool.get('event.event')
+        prod_obj = self.pool.get('product.product')
+        res_obj = self.pool.get('res.partner')
+        
         data['unit_price']=False
         if not event_id:
             return {'value': data}
-        data_event =  self.pool.get('event.event').browse(cr, uid, event_id)
-
+        data_event =  event_obj.browse(cr, uid, event_id)
         if data_event.product_id:
             data['event_product']=data_event.product_id.name
             if not partner_invoice_id:
-                data['unit_price']=self.pool.get('product.product').price_get(cr, uid, [data_event.product_id.id], context=context)[data_event.product_id.id]
+                data['unit_price']=prod_obj.price_get(cr, uid, [data_event.product_id.id], context=context)[data_event.product_id.id]
                 return {'value': data}
-            data_partner = self.pool.get('res.partner').browse(cr, uid, partner_invoice_id)
+            data_partner = res_obj.browse(cr, uid, partner_invoice_id)
             context.update({'partner_id': data_partner})
-            data['unit_price'] = self.pool.get('product.product')._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': data_partner.property_product_pricelist.id})[data_event.product_id.id]
+            data['unit_price'] = prod_obj._product_price(cr, uid, [data_event.product_id.id], False, False, {'pricelist': data_partner.property_product_pricelist.id})[data_event.product_id.id]
             return {'value': data}
         return {'value': data}
 

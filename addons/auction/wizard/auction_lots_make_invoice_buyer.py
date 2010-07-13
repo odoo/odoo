@@ -73,7 +73,6 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
             for lot in lots:
                 up_auction = order_obj.write(cr, uid, [lot.id], {'ach_uid': data['buyer_id']})
             lots_ids = order_obj.lots_invoice(cr, uid, context['active_ids'], context, data['number'])
-            cr.commit()
             return  {
                 'domain': "[('id','in', ["+','.join(map(str, lots_ids))+"])]", 
                 'name': 'Buyer invoices', 
