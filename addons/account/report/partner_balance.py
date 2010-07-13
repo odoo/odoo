@@ -18,18 +18,19 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import pooler
 import time
 import re
 import datetime
-from report import report_sxw
 
-class partner_balance(report_sxw.rml_parse):
+import pooler
+from report import report_sxw
+from account_journal_common_default import account_journal_common_default
+
+class partner_balance(report_sxw.rml_parse, account_journal_common_default):
     def __init__(self, cr, uid, name, context):
         super(partner_balance, self).__init__(cr, uid, name, context=context)
         self.date_lst = []
-        self.account_ids = ''
+        self.account_ids = False
         self.localcontext.update( {
             'time': time,
             'lines': self.lines,
@@ -40,17 +41,16 @@ class partner_balance(report_sxw.rml_parse):
             'sum_scredit': self._sum_scredit,
             'solde_debit': self._solde_balance_debit,
             'solde_credit': self._solde_balance_credit,
-            'get_company': self._get_company,
             'get_currency': self._get_currency,
             'comma_me' : self.comma_me,
-            'get_fiscalyear': self.get_fiscalyear,
+            'get_fiscalyear': self._get_fiscalyear,
             'get_periods':self.get_periods,
         })
         ## Compute account list one time
     #
     # Date Management
     #
-    
+
     def get_periods(self, form):
             result=''
             if form.has_key('periods') and form['periods']:
@@ -71,7 +71,7 @@ class partner_balance(report_sxw.rml_parse):
                     else:
                         result+=r.name+", "
             return str(result and result[:-1]) or 'ALL'
-    
+
     def date_range(self, start, end):
         if not start or not end:
             return []
@@ -103,43 +103,9 @@ class partner_balance(report_sxw.rml_parse):
 
 
     def transform_date_into_date_array(self, data):
-        return_array = self.date_range(data['form']['date1'], data['form']['date2'])
+        return_array = self.date_range(data['form']['date_from'], data['form']['date_to'])
         self.date_lst = return_array
         self.date_lst.sort()
-
-    def transform_both_into_date_array(self, data):
-        final_date_array = []
-        date_start_date = data['form']['date1']
-        date_stop_date = data['form']['date2']
-        if not data['form']['periods']:
-            periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
-        else:
-            periods_id = data['form']['periods']
-        date_array = []
-        if periods_id:
-            for period_id in periods_id:
-                period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
-                date_array = date_array + self.date_range(period_obj.date_start, period_obj.date_stop)
-            period_start_date = date_array[0]
-            period_stop_date = date_array[-1]
-
-            if period_start_date<date_start_date:
-                start_date = period_start_date
-            else :
-                start_date = date_start_date
-
-            if date_stop_date<period_stop_date:
-                stop_date = period_stop_date
-            else :
-                stop_date = date_stop_date
-
-            final_date_array = final_date_array + self.date_range(start_date, stop_date)
-            self.date_lst = final_date_array
-            self.date_lst.sort()
-        else :
-            final_date_array = final_date_array + self.date_range(date_start_date, date_stop_date)
-            self.date_lst = final_date_array
-            self.date_lst.sort()
 
     def transform_none_into_date_array(self, data):
 
@@ -151,12 +117,10 @@ class partner_balance(report_sxw.rml_parse):
         self.cr.execute(sql)
         stop_date = self.cr.fetchone()[0]
 
-
         array = []
         array = array + self.date_range(start_date, stop_date)
         self.date_lst = array
         self.date_lst.sort()
-
 
     def comma_me(self, amount):
         if  type(amount) is float :
@@ -176,18 +140,12 @@ class partner_balance(report_sxw.rml_parse):
         # Transformation des date
         #
         #
-        if data['form']['state'] == 'none':
-
+        if data['form']['filter'] == 'filter_no':
             self.transform_none_into_date_array(data)
-        elif data['form']['state'] == 'bydate':
-
+        elif data['form']['filter'] == 'filter_date':
             self.transform_date_into_date_array(data)
-        elif data['form']['state'] == 'byperiod':
-
+        elif data['form']['filter'] == 'filter_period':
             self.transform_period_into_date_array(data)
-        elif data['form']['state'] == 'all':
-
-            self.transform_both_into_date_array(data)
 
 
         ## Compute Code
@@ -204,12 +162,12 @@ class partner_balance(report_sxw.rml_parse):
                 "FROM account_account a " \
                 "LEFT JOIN account_account_type t " \
                     "ON (a.type = t.code) " \
-                "WHERE a.company_id = %s " \
-                    "AND a.type IN %s " \
-                    "AND a.active", (data['form']['company_id'], self.ACCOUNT_TYPE))
+#                "WHERE a.company_id = %s " \
+                    "WHERE a.type IN %s " \
+                    "AND a.active", (self.ACCOUNT_TYPE,))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
 
-        super(partner_balance, self).set_context(objects, data, ids, report_type)
+        return super(partner_balance, self).set_context(objects, data, ids, report_type)
 
     def lines(self,data):
 
@@ -237,10 +195,10 @@ class partner_balance(report_sxw.rml_parse):
                 "JOIN account_account ac ON (l.account_id = ac.id)" \
                 "WHERE ac.type IN %s " \
                     "AND l.date IN %s " \
-                    "AND ac.company_id = %s " \
+#                    "AND ac.company_id = %s " \
                 "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
                 "ORDER BY l.account_id,p.name",
-                (tuple(self.date_lst), self.ACCOUNT_TYPE, tuple(self.date_lst), data['form']['company_id']))
+                (tuple(self.date_lst), self.ACCOUNT_TYPE, tuple(self.date_lst)))
             res = self.cr.dictfetchall()
             for r in res:
                 full_account.append(r)
@@ -486,15 +444,8 @@ class partner_balance(report_sxw.rml_parse):
         debit, credit = self._sum_debit(data), self._sum_credit(data)
         return credit > debit and credit - debit
 
-    def _get_company(self, form):
-        return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
-
     def _get_currency(self, form):
         return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
-
-    def get_fiscalyear(self,form):
-        print "ffffffffffffff",form
-        return pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear']).name
 
 report_sxw.report_sxw('report.account.partner.balance', 'res.partner',
     'account/report/partner_balance.rml',parser=partner_balance,
