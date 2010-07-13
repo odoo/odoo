@@ -409,6 +409,7 @@ property or property parameter."),
             return res
         cal = vobject.iCalendar()
         event = cal.add('vevent')
+        event.add('uid').value = 'OpenObject-%s_%s@%s' % (event_obj._name, event_obj.id, cr.dbname)
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)
@@ -546,13 +547,13 @@ property or property parameter."),
             context = {}
 
         for vals in self.browse(cr, uid, ids, context=context):
-            #user = vals.user_id
-            #if user:
-            #    mod_obj = self.pool.get(vals.ref._name)
-            #    if vals.ref:
-            #        if vals.ref.user_id.id != user.id:
-            #            defaults = {'user_id': user.id}
-            #            new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
+            user = vals.user_id
+            if user:
+                mod_obj = self.pool.get(vals.ref._name)
+                if vals.ref:
+                    if vals.ref.user_id.id != user.id:
+                        defaults = {'user_id': user.id}
+                        new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
 
         return True
