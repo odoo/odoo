@@ -20,6 +20,7 @@
 ##############################################################################
 
 import account_common_report
+import account_common_partner_report
 
 import account_automatic_reconcile
 import account_move_line_reconcile_select

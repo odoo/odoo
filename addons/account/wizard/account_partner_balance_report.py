@@ -27,22 +27,16 @@ class account_partner_balance(osv.osv_memory):
     """
     This wizard will provide the partner balance report by periods, between any two dates.
     """
-    _inherit = 'account.common.report'
+    _inherit = 'account.common.partner.report'
     _name = 'account.partner.balance'
     _description = 'Print Account Partner Balance'
 
     _columns = {
-        'result_selection': fields.selection([('customer','Receivable Accounts'),
-                                              ('supplier','Payable Accounts'),
-                                              ('Suppliers and Customers' ,'Receivable and Payable Accounts')],
-                                              'Partner', required=True),
         'soldeinit': fields.boolean('Include initial balances'),
-            }
-
+                }
     _defaults={
-       'result_selection' : 'Suppliers and Customers',
        'soldeinit' : True,
-               }
+                }
 
     def _check_date(self, cr, uid, data, context=None):
         sql = """
@@ -57,11 +51,11 @@ class account_partner_balance(osv.osv_memory):
         else:
             raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
 
-
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
             context = {}
-        data['form'].update(self.read(cr, uid, ids, ['company_id',  'result_selection',  'soldeinit'])[0])
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data['form'].update(self.read(cr, uid, ids, ['soldeinit'])[0])
         if data['form']['filter'] == 'filter_date':
             self._check_date(cr, uid, data, context)
         data['form']['query_line'] = query_line

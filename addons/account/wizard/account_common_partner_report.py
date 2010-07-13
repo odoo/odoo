@@ -21,26 +21,27 @@
 from osv import osv, fields
 from tools.translate import _
 
-class account_common_journal_report(osv.osv_memory):
-    _name = 'account.common.journal.report'
-    _description = 'Account Common Journal Report'
+class account_common_partner_report(osv.osv_memory):
+    _name = 'account.common.partner.report'
+    _description = 'Account Common Partner Report'
     _inherit = "account.common.report"
 
-    def _build_context(self, cr, uid, ids, data, context=None):
-        result = super(account_common_journal_report, self)._build_context(cr, uid, ids, data, context=context)
-        if data['form']['filter'] == 'filter_date':
-            cr.execute('SELECT period_id FROM account_move_line WHERE date >= %s AND date <= %s', (data['form']['date_from'], data['form']['date_to']))
-            result['periods'] = map(lambda x: x[0], cr.fetchall())
-        return result
+    _columns = {
+        'result_selection': fields.selection([('customer','Receivable Accounts'),
+                                              ('supplier','Payable Accounts'),
+                                              ('Suppliers and Customers' ,'Receivable and Payable Accounts')],
+                                              'Partner', required=True),
+                }
+    _defaults = {
+        'result_selection' : 'Suppliers and Customers',
+                 }
 
     def pre_print_report(self, cr, uid, ids, data, query_line, context=None):
-#        data['form'].update(self.read(cr, uid, ids, ['sort_selection'])[0])
-        fy_ids = data['form']['fiscalyear_id'] and [data['form']['fiscalyear_id']] or self.pool.get('account.fiscalyear').search(cr, uid, [('state', '=', 'draft')], context=context)
-        period_list = data['form']['periods'] or self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', fy_ids)], context=context)
-        data['form']['active_ids'] = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', data['form']['journal_ids']), ('period_id', 'in', period_list)], context=context)
+        data['form'].update(self.read(cr, uid, ids, ['result_selection'])[0])
+        data['form']['active_ids'] = data['form']['chart_account_id'] # Check me
         data['form']['query_line'] = query_line
         return data
 
-account_common_journal_report()
+account_common_partner_report()
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
