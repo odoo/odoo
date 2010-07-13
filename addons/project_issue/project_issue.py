@@ -298,7 +298,7 @@ class project_issue(osv.osv, crm.crm_case):
         for case in cases:
             data = {}
             if case.task_id:
-                raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+                raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThere is a task attached to it!'))
             if case.project_id.project_escalation_id:
                 data['project_id'] = case.project_id.project_escalation_id.id
                 if case.project_id.project_escalation_id.user_id:
