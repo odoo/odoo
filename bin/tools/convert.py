@@ -25,17 +25,26 @@ import logging
 import os.path
 import pickle
 import re
-import sys
+
+# for eval context:
+import time 
+import release
+try:
+    import pytz
+except:
+    logging.getLogger("init").warning('could not find pytz library, please install it')
+    class pytzclass(object):
+        all_timezones=[]
+    pytz=pytzclass()
+
 
 from datetime import datetime, timedelta
 from lxml import etree
-import ir
 import misc
 import netsvc
 import osv
 import pooler
 from config import config
-from yaml_import import convert_yaml_import
 
 # Import of XML records requires the unsafe eval as well,
 # almost everywhere, which is ok because it supposedly comes
@@ -58,15 +67,15 @@ def _obj(pool, cr, uid, model_str, context=None):
     model = pool.get(model_str)
     return lambda x: model.browse(cr, uid, x, context=context)
 
-def _eval_xml(self,node, pool, cr, uid, idref, context=None):
+def _eval_xml(self, node, pool, cr, uid, idref, context=None):
     if context is None:
         context = {}
     if node.tag in ('field','value'):
             t = node.get('type','char')
-            f_model = node.get('model', '').encode('ascii')
+            f_model = node.get('model', '').encode('utf-8')
             if node.get('search'):
                 f_search = node.get("search",'').encode('utf-8')
-                f_use = node.get("use",'id').encode('ascii')
+                f_use = node.get("use",'id').encode('utf-8')
                 f_name = node.get("name",'').encode('utf-8')
                 q = unsafe_eval(f_search, idref)
                 ids = pool.get(f_model).search(cr, uid, q)
@@ -83,30 +92,21 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                 return f_val
             a_eval = node.get('eval','')
             if a_eval:
-                import time
-                idref2 = idref.copy()
-                idref2['time'] = time
-                idref2['DateTime'] = datetime
-                idref2['timedelta'] = timedelta
-                import release
-                idref2['version'] = release.major_version
-                idref2['ref'] = lambda x: self.id_get(cr, False, x)
+                idref2 = dict(idref,
+                              time=time,
+                              DateTime=datetime,
+                              timedelta=timedelta,
+                              version=release.major_version,
+                              ref=lambda x: self.id_get(cr, False, x),
+                              pytz=pytz)
                 if len(f_model):
                     idref2['obj'] = _obj(self.pool, cr, uid, f_model, context=context)
-                try:
-                    import pytz
-                except:
-                    logger = netsvc.Logger()
-                    logger.notifyChannel("init", netsvc.LOG_WARNING, 'could not find pytz library')
-                    class pytzclass(object):
-                        all_timezones=[]
-                    pytz=pytzclass()
-                idref2['pytz'] = pytz
+
                 try:
                         return unsafe_eval(a_eval, idref2)
-                except Exception, e:
+                except Exception:
                         logger = logging.getLogger('init')
-                        logger.warning('couldn\'t eval(%s) for %s in %s, please get back and fix it!' % (a_eval,node.get('name'),context), exc_info=True)
+                        logger.warning('could not eval(%s) for %s in %s' % (a_eval, node.get('name'), context), exc_info=True)
                         return ""
             if t == 'xml':
                 def _process(s, idref):
@@ -293,7 +293,6 @@ form: module.record_id""" % (xml_id,)
         if rec.get('groups'):
             g_names = rec.get('groups','').split(',')
             groups_value = []
-            groups_obj = self.pool.get('res.groups')
             for group in g_names:
                 if group.startswith('-'):
                     group_id = self.id_get(cr, 'res.groups', group[1:])
@@ -308,7 +307,6 @@ form: module.record_id""" % (xml_id,)
 
         if not rec.get('menu') or eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
-            keys = [('action',keyword),('res_model',res['model'])]
             value = 'ir.actions.report.xml,'+str(id)
             replace = rec.get('replace', True)
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
@@ -338,7 +336,6 @@ form: module.record_id""" % (xml_id,)
         if rec.get('groups'):
             g_names = rec.get('groups','').split(',')
             groups_value = []
-            groups_obj = self.pool.get('res.groups')
             for group in g_names:
                 if group.startswith('-'):
                     group_id = self.id_get(cr, 'res.groups', group[1:])
@@ -353,7 +350,6 @@ form: module.record_id""" % (xml_id,)
         # ir_set
         if (not rec.get('menu') or eval(rec.get('menu','False'))) and id:
             keyword = str(rec.get('keyword','') or 'client_action_multi')
-            keys = [('action',keyword),('res_model',model)]
             value = 'ir.actions.wizard,'+str(id)
             replace = rec.get("replace",'') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
@@ -376,7 +372,6 @@ form: module.record_id""" % (xml_id,)
         # ir_set
         if (not rec.get('menu') or eval(rec.get('menu','False'))) and id:
             keyword = str(rec.get('keyword','') or 'client_action_multi')
-            keys = [('action',keyword)]
             value = 'ir.actions.url,'+str(id)
             replace = rec.get("replace",'') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, url, ["ir.actions.url"], value, replace=replace, isobject=True, xml_id=xml_id)
@@ -403,14 +398,14 @@ form: module.record_id""" % (xml_id,)
         usage = rec.get('usage','').encode('utf-8')
         limit = rec.get('limit','').encode('utf-8')
         auto_refresh = rec.get('auto_refresh','').encode('utf-8')
+
+        # WARNING: don't remove the unused variables and functions below as they are
+        # used by the unsafe_eval() call. 
+        # TODO: change this into an eval call with locals and globals parameters 
         uid = self.uid
-        # def ref() added because , if context has ref('id') eval wil use this ref
-
         active_id = str("active_id") # for further reference in client/bin/tools/__init__.py
-
         def ref(str_id):
             return self.id_get(cr, None, str_id)
-
         context = unsafe_eval(context)
 #        domain = eval(domain) # XXX need to test this line -> uid, active_id, active_ids, ...
 
@@ -427,13 +422,11 @@ form: module.record_id""" % (xml_id,)
             'usage': usage,
             'limit': limit,
             'auto_refresh': auto_refresh,
-#            'groups_id':groups_id,
         }
 
         if rec.get('groups'):
             g_names = rec.get('groups','').split(',')
             groups_value = []
-            groups_obj = self.pool.get('res.groups')
             for group in g_names:
                 if group.startswith('-'):
                     group_id = self.id_get(cr, 'res.groups', group[1:])
@@ -451,7 +444,6 @@ form: module.record_id""" % (xml_id,)
         if src_model:
             #keyword = 'client_action_relate'
             keyword = rec.get('key2','').encode('utf-8') or 'client_action_relate'
-            keys = [('action', keyword), ('res_model', res_model)]
             value = 'ir.actions.act_window,'+str(id)
             replace = rec.get('replace','') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
@@ -515,7 +507,7 @@ form: module.record_id""" % (xml_id,)
                     pid = res[0]
                     xml_id = idx==len(m_l)-1 and rec.get('id','').encode('utf8')
                     try:
-                        npid = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, 'ir.ui.menu', self.module, xml_id, idx==len(m_l)-1)
+                        self.pool.get('ir.model.data')._update_dummy(cr, self.uid, 'ir.ui.menu', self.module, xml_id, idx==len(m_l)-1)
                     except:
                         self.logger.notifyChannel('init', netsvc.LOG_ERROR, "module: %s xml_id: %s" % (self.module, xml_id))
                 else:
@@ -581,7 +573,6 @@ form: module.record_id""" % (xml_id,)
         if rec.get('groups'):
             g_names = rec.get('groups','').split(',')
             groups_value = []
-            groups_obj = self.pool.get('res.groups')
             for group in g_names:
                 if group.startswith('-'):
                     group_id = self.id_get(cr, 'res.groups', group[1:])
@@ -894,7 +885,7 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         etree.parse(os.path.join(config['root_path'],'import_xml.rng' )))
     try:
         relaxng.assert_(doc)
-    except Exception, e:
+    except Exception:
         logger = netsvc.Logger()
         logger.notifyChannel('init', netsvc.LOG_ERROR, 'The XML file does not fit the required schema !')
         logger.notifyChannel('init', netsvc.LOG_ERROR, misc.ustr(relaxng.error_log.last_error))
