@@ -24,6 +24,7 @@ from osv import fields, osv
 from tools.translate import _
 import crm
 import time
+from datetime import datetime, timedelta
 
 class crm_phonecall(osv.osv, crm_case):
     """ Phonecall Cases """
@@ -65,7 +66,7 @@ class crm_phonecall(osv.osv, crm_case):
                             ('object_id.model', '=', 'crm.phonecall')]"), 
         'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
-        'duration': fields.float('Duration'), 
+        'duration': fields.float('Duration', help="Duration in Minutes"), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"), 
@@ -113,9 +114,28 @@ class crm_phonecall(osv.osv, crm_case):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_phonecall, self).case_close(cr, uid, ids, args)
-        self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+        for phone in self.browse(cr, uid, ids):
+            phone_id= phone.id
+            data = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
+            if phone.duration <=0:
+                duration = datetime.now() - datetime.strptime(phone.date, '%Y-%m-%d %H:%M:%S')
+                data.update({'duration': duration.seconds/float(60)})
+            res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], args)
+            self.write(cr, uid, ids, data)
         return res
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Resets case as draft
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case Ids
+        @param *args: Tuple Value for additional Params
+        """
+        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'duration': 0.0})
+        return res
+
 
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date

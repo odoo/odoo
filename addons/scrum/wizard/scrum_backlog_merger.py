@@ -96,9 +96,8 @@ class scrum_backlog_merge(osv.osv_memory):
 
         #To assing a new product backlog to merged tasks
         task_obj.write(cr, uid, task_lines, {'product_backlog_id': id_b})
-        backlog_obj.write(cr, uid, context['active_ids'], {'state':'done'}, context=context)
+        backlog_obj.unlink(cr, uid, context['active_ids'], context=context)
         return {}
 
 scrum_backlog_merge()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
