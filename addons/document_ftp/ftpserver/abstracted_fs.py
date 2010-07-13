@@ -163,6 +163,8 @@ class abstracted_fs(object):
             ret = child.open_data(cr, mode)
             cr.commit()
             return ret
+        except EnvironmentError:
+            raise
         except Exception,e:
             self._log.exception('Cannot create item %s at node %s', objname, repr(node))
             raise OSError(1, 'Operation not permited.')
@@ -432,7 +434,7 @@ class abstracted_fs(object):
     def getsize(self, datacr):
         """Return the size of the specified file in bytes."""
         if not (datacr and datacr[1]):
-            return 0L
+            raise IOError(errno.ENOENT, "No such file or directory")
         if datacr[1].type in ('file', 'content'):
             return datacr[1].get_data_len(datacr[0]) or 0L
         return 0L
