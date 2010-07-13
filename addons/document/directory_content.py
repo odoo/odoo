@@ -122,3 +122,5 @@ class document_directory_content(osv.osv):
         pdf,pdftype = srv.create(cr, uid, [node.act_id,], {}, context=ctx)
         return pdf
 document_directory_content()
+
+#eof

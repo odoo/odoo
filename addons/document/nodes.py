@@ -31,6 +31,8 @@ import errno
 import os
 import time
 
+from StringIO import StringIO
+
 #
 # An object that represent an uri
 #   path: the uri of the object
@@ -1221,9 +1223,6 @@ class node_content(node_class):
            self.dctx.update(dctx)
         self.act_id = act_id
 
-    def open(self, cr, mode=False):
-        raise DeprecationWarning()
-
     def fill_fields(self, cr, dctx = None):
         """ Try to read the object and fill missing fields, like mimetype,
             dates etc.
@@ -1250,7 +1249,29 @@ class node_content(node_class):
             self.content_length = len(data)
         return data
 
+    def open_data(self, cr, mode):
+        if mode.endswith('b'):
+            mode = mode[:-1]
+        if mode in ('r', 'w'):
+            cperms = mode[:1]
+        elif mode in ('r+', 'w+'):
+            cperms = 'rw'
+        else:
+            raise IOError(errno.EINVAL, "Cannot open at mode %s" % mode)
+        
+        if not self.check_perms(cperms):
+            raise IOError(errno.EPERM, "Permission denied")
+
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        
+        return nodefd_content(self, cr, mode, ctx)
+
     def get_data_len(self, cr, fil_obj = None):
+        # FIXME : here, we actually generate the content twice!!
+        # we should have cached the generated content, but it is
+        # not advisable to do keep it in memory, until we have a cache
+        # expiration logic.
         if not self.content_length:
             self.get_data(cr,fil_obj)
         return self.content_length
@@ -1266,3 +1287,53 @@ class node_content(node_class):
 
     def _get_ttag(self,cr):
         return 'cnt-%d%s' % (self.cnt_id,(self.act_id and ('-' + str(self.act_id))) or '')
+
+
+class nodefd_content(StringIO, node_descriptor):
+    """ A descriptor to content nodes
+    """
+    def __init__(self, parent, cr, mode, ctx):
+        node_descriptor.__init__(self, parent)
+        self._context=ctx
+
+        if mode in ('r', 'r+'):
+            cntobj = parent.context._dirobj.pool.get('document.directory.content')
+            data = cntobj.process_read(cr, parent.context.uid, parent, ctx)
+            if data:
+                parent.content_length = len(data)
+            StringIO.__init__(self, data)
+        elif mode in ('w', 'w+'):
+            StringIO.__init__(self, None)
+            # at write, we start at 0 (= overwrite), but have the original
+            # data available, in case of a seek()
+        elif mode == 'a':
+            StringIO.__init__(self, None)
+        else:
+            logging.getLogger('document.content').error("Incorrect mode %s specified", mode)
+            raise IOError(errno.EINVAL, "Invalid file mode")
+        self.mode = mode
+
+    def close(self):
+        # we now open a *separate* cursor, to update the data.
+        # FIXME: this may be improved, for concurrency handling
+        if self.mode == 'r':
+            StringIO.close(self)
+            return
+
+        par = self._get_parent()
+        uid = par.context.uid
+        cr = pooler.get_db(par.context.dbname).cursor()
+        try:
+            if self.mode in ('w', 'w+', 'r+'):
+                data = self.getvalue()
+                cntobj = par.context._dirobj.pool.get('document.directory.content')
+                cntobj.process_write(cr, uid, parent, data, ctx)
+            elif self.mode == 'a':
+                raise NotImplementedError
+            cr.commit()
+        except Exception, e:
+            logging.getLogger('document.content').exception('Cannot update db content #%d for close:', par.cnt_id)
+            raise
+        finally:
+            cr.close()
+        StringIO.close(self)
