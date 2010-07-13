@@ -71,7 +71,6 @@ class pos_open_statement(osv.osv_memory):
                 number = sequence_obj.get(cr, uid,
                                 'account.bank.statement')
 
-
             statement_id=statement_obj.create(cr,uid,{'journal_id':journal.id,
                                                       'company_id':company_id,
                                                       'user_id':uid,

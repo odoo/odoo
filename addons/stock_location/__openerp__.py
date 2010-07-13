@@ -43,7 +43,7 @@ This module may be useful for different purposes:
     'demo_xml': [],
     'installable': True,
     'test':[
-#            'test/stock_location.yml'
+            'test/stock_location.yml'
             ],
     'active': False,
     'certificate': '0046505115101',
