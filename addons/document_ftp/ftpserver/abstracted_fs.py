@@ -169,7 +169,10 @@ class abstracted_fs(object):
             raise OSError(1, 'Operation not permited.')
         # Reading operation
         cr, node, rem = datacr
-        res = node.open_data(cr, mode)
+        try:
+            res = node.open_data(cr, mode)
+        except TypeError, e:
+            raise IOError(errno.EINVAL, "No data")
         return res
 
     # ok, but need test more
