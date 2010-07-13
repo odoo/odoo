@@ -428,15 +428,17 @@ class account_voucher_line(osv.osv):
         'type': lambda *a: 'cr'
     }
 
-    def onchange_partner(self, cr, uid, ids, partner_id, ttype ,type1):
-        vals = {}
+    def onchange_partner(self, cr, uid, ids, partner_id, ttype ,type1, currency):
+        currency_pool = self.pool.get('res.currency')
+        company = self.pool.get('res.users').browse(cr, uid, uid).company_id
+        
+        vals = {
+            'account_id': False, 
+            'type': False ,
+            'amount': False
+        }
         
         if not partner_id:
-            vals.update({
-                'account_id': False, 
-                'type': False ,
-                'amount': False
-            })
             return {
                 'value' : vals
             }
@@ -465,6 +467,9 @@ class account_voucher_line(osv.osv):
             account_id = partner.property_account_payable.id
             balance = partner.debit
             ttype = 'cr'
+        
+        if company.currency_id != currency:
+            balance = currency_pool.compute(cr, uid, company.currency_id.id, currency, balance)
         
         vals.update({
             'account_id': account_id, 
