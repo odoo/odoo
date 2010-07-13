@@ -47,7 +47,10 @@ class document_file(osv.osv):
 
     def _data_get(self, cr, uid, ids, name, arg, context):
         fbrl = self.browse(cr, uid, ids, context=context)
-        nctx = nodes.get_node_context(cr, uid, context)
+        nctx = nodes.get_node_context(cr, uid, context={})
+        # nctx will /not/ inherit the caller's context. Most of
+        # it would be useless, anyway (like active_id, active_model, 
+        # bin_size etc.)
         result = {}
         bin_size = context.get('bin_size', False)
         for fbro in fbrl:
@@ -67,7 +70,7 @@ class document_file(osv.osv):
         if not value:
             return True
         fbro = self.browse(cr, uid, id, context=context)
-        nctx = nodes.get_node_context(cr, uid, context)
+        nctx = nodes.get_node_context(cr, uid, context={})
         fnode = nodes.node_file(None, None, nctx, fbro)
         res = fnode.set_data(cr, base64.decodestring(value), fbro)
         return res
@@ -156,7 +159,7 @@ class document_file(osv.osv):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
         if ('parent_id' in vals) or ('name' in vals):
             # perhaps this file is renaming or changing directory
-            nctx = nodes.get_node_context(cr,uid,context)
+            nctx = nodes.get_node_context(cr,uid,context={})
             dirobj = self.pool.get('document.directory')
             if 'parent_id' in vals:
                 dbro = dirobj.browse(cr, uid, vals['parent_id'], context=context)
