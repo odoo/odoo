@@ -27,7 +27,7 @@ import pickle
 import re
 import sys
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from lxml import etree
 import ir
 import misc
@@ -87,6 +87,7 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                 idref2 = idref.copy()
                 idref2['time'] = time
                 idref2['DateTime'] = datetime
+                idref2['timedelta'] = timedelta
                 import release
                 idref2['version'] = release.major_version
                 idref2['ref'] = lambda x: self.id_get(cr, False, x)

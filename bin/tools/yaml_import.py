@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 import types
 import time # used to eval time.strftime expressions
+from datetime import datetime, timedelta
 import logging
 
 import pooler
@@ -116,7 +117,7 @@ class RecordDictWrapper(dict):
         if key in self.record:
             return self.record[key]
         return dict.__getitem__(self, key)
- 
+
 class YamlInterpreter(object):
     def __init__(self, cr, module, id_map, mode, filename, noupdate=False):
         self.cr = cr
@@ -130,7 +131,11 @@ class YamlInterpreter(object):
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         self.context = {} # opererp context
-        self.eval_context = {'ref': self._ref(), '_ref': self._ref(), 'time': time} # added '_ref' so that record['ref'] is possible
+        self.eval_context = {'ref': self._ref(),
+                             '_ref': self._ref(), # added '_ref' so that record['ref'] is possible
+                             'time': time,
+                             'datetime': datetime,
+                             'timedelta': timedelta}
 
     def _ref(self):
         return lambda xml_id: self.get_id(xml_id)
@@ -139,7 +144,7 @@ class YamlInterpreter(object):
         model = self.pool.get(model_name)
         assert model, "The model %s does not exist." % (model_name,)
         return model
-    
+
     def validate_xml_id(self, xml_id):
         id = xml_id
         if '.' in xml_id:
