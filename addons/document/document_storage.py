@@ -98,10 +98,9 @@ class nodefd_file(nodes.node_descriptor):
     def __init__(self, parent, path, mode):
         nodes.node_descriptor.__init__(self, parent)
         self.__file = open(path, mode)
-        if mode in ('w', 'w+', 'r+'):
-            self._need_index = True
-        else:
-            self._need_index = False
+        if mode.endswith('b'):
+            mode = mode[:-1]
+        self.mode = mode
         
         for attr in ('closed', 'read', 'write', 'seek', 'tell'):
             setattr(self,attr, getattr(self.__file, attr))
@@ -110,8 +109,8 @@ class nodefd_file(nodes.node_descriptor):
         # TODO: locking in init, close()
         fname = self.__file.name
         self.__file.close()
-        
-        if self._need_index:
+
+        if self.mode in ('w', 'w+', 'r+'):
             par = self._get_parent()
             cr = pooler.get_db(par.context.dbname).cursor()
             icont = ''
@@ -133,14 +132,34 @@ class nodefd_file(nodes.node_descriptor):
                 icont_u = ''
 
             try:
-                cr.execute('UPDATE ir_attachment SET index_content = %s, file_type = %s WHERE id = %s',
-                            (icont_u, mime, par.file_id))
-                par.content_length = filesize
+                fsize = os.stat(fname).st_size
+                cr.execute("UPDATE ir_attachment " \
+                            " SET index_content = %s, file_type = %s, " \
+                            " file_size = %s " \
+                            "  WHERE id = %s",
+                            (icont_u, mime, fsize, par.file_id))
+                par.content_length = fsize
                 par.content_type = mime
                 cr.commit()
                 cr.close()
             except Exception:
-                logging.getLogger('document.storage').debug('Cannot save file indexed content:', exc_info=True)
+                logging.getLogger('document.storage').warning('Cannot save file indexed content:', exc_info=True)
+
+        elif self.mode in ('a', 'a+' ):
+            try:
+                par = self._get_parent()
+                cr = pooler.get_db(par.context.dbname).cursor()
+                fsize = os.stat(fname).st_size
+                cr.execute("UPDATE ir_attachment SET file_size = %s " \
+                            "  WHERE id = %s",
+                            (fsize, par.file_id))
+                par.content_length = fsize
+                par.content_type = mime
+                cr.commit()
+                cr.close()
+            except Exception:
+                logging.getLogger('document.storage').warning('Cannot save file appended content:', exc_info=True)
+
 
 
 class nodefd_db(StringIO, nodes.node_descriptor):
@@ -336,6 +355,18 @@ class document_storage(osv.osv):
         ('path_uniq', 'UNIQUE(type,path)', "The storage path must be unique!")
         ]
 
+    def __get_random_fname(self, path):
+        flag = None
+        # This can be improved
+        if os.path.isdir(path):
+            for dirs in os.listdir(path):
+                if os.path.isdir(os.path.join(path, dirs)) and len(os.listdir(os.path.join(path, dirs))) < 4000:
+                    flag = dirs
+                    break
+        flag = flag or create_directory(path)
+        filename = random_name()
+        return os.path.join(flag, filename)
+
     def get_data(self, cr, uid, id, file_node, context=None, fil_obj=None):
         """ retrieve the contents of some file_node having storage_id = id
             optionally, fil_obj could point to the browse object of the file
@@ -364,10 +395,17 @@ class document_storage(osv.osv):
             if not ira.store_fname:
                 # On a migrated db, some files may have the wrong storage type
                 # try to fix their directory.
-                if ira.file_size:
-                    self._doclog.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
-                raise IOError(errno.ENOENT, 'No file can be located')
-            fpath = os.path.join(boo.path, ira.store_fname)
+                if mode in ('r','r+'):
+                    if ira.file_size:
+                        self._doclog.warning( "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
+                    raise IOError(errno.ENOENT, 'No file can be located')
+                else:
+                    store_fname = self.__get_random_fname(boo.path)
+                    cr.execute('UPDATE ir_attachment SET store_fname = %s WHERE id = %s',
+                                (store_fname, ira.id))
+                    fpath = os.path.join(boo.path, store_fname)
+            else:
+                fpath = os.path.join(boo.path, ira.store_fname)
             return nodefd_file(file_node, path=fpath, mode=mode)
 
         elif boo.type == 'db':
@@ -385,7 +423,7 @@ class document_storage(osv.osv):
                     self._doclog.warning("ir.attachment #%d does not have a filename, trying the name." %ira.id)
                 sfname = ira.name
             fpath = os.path.join(boo.path,ira.store_fname or ira.name)
-            if not os.path.exists(fpath):
+            if (not os.path.exists(fpath)) and mode in ('r','r+'):
                 raise IOError("File not found: %s" % fpath)
             return nodefd_file(file_node, path=fpath, mode=mode)
 
@@ -464,23 +502,14 @@ class document_storage(osv.osv):
         if boo.type == 'filestore':
             path = boo.path
             try:
-                flag = None
-                # This can be improved  
-                if os.path.isdir(path):
-                    for dirs in os.listdir(path):
-                        if os.path.isdir(os.path.join(path, dirs)) and len(os.listdir(os.path.join(path, dirs))) < 4000:
-                            flag = dirs
-                            break
-                flag = flag or create_directory(path)
-                filename = random_name()
-                fname = os.path.join(path, flag, filename)
+                store_fname = self.__get_random_fname(path)
+                fname = os.path.join(path, store_fname)
                 fp = file(fname, 'wb')
                 fp.write(data)
                 fp.close()
                 self._doclog.debug( "Saved data to %s" % fname)
                 filesize = len(data) # os.stat(fname).st_size
-                store_fname = os.path.join(flag, filename)
-
+                
                 # TODO Here, an old file would be left hanging.
 
             except Exception, e:
