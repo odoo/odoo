@@ -430,7 +430,7 @@ class abstracted_fs(object):
         if not (datacr and datacr[1]):
             return 0L
         if datacr[1].type in ('file', 'content'):
-            return datacr[1].content_length or 0L
+            return datacr[1].get_data_len(datacr[0]) or 0L
         return 0L
 
     # Ok
