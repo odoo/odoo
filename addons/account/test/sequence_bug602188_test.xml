@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!--
+            Make sure bug #602188 is fixed: Wrong invoice number sequence for
+            fiscal year in a certain case
+        -->
+        <!-- This file must be loaded  _after_  account_demo.xml ! -->
+
+        <!-- New invoice sequence for a fiscal year -->
+        <record id="seq_out_invoice_bug602188" model="ir.sequence">
+            <field eval="'Account Invoice Out for Fiscal Year '+time.strftime('%Y')"
+                name="name" />
+            <field name="code">account.invoice.out_invoice</field>
+            <field name="padding" eval="3" />
+            <field name="prefix">TEST-</field>
+            <field name="suffix">-bug602188</field>
+            <field name="number_next" eval="42" />
+            <field name="active" eval="True" />
+        </record>
+        <record id="seq_out_invoice_bug602188_fy" model="account.sequence.fiscalyear">
+            <field name="sequence_id" ref="seq_out_invoice_bug602188" />
+            <field name="sequence_main_id" ref="seq_out_invoice" />
+            <field name="fiscalyear_id" ref="data_fiscalyear" />
+        </record>
+
+        <!-- New invoice using the sequence -->
+        <record id="invoice_bug602188" model="account.invoice">
+            <field name="currency_id" ref="base.EUR" />
+            <field name="company_id" ref="base.main_company" />
+            <field name="address_invoice_id" ref="base.res_partner_address_tang" />
+            <field name="partner_id" ref="base.res_partner_asus" />
+            <field name="journal_id" ref="account.sales_journal" />
+            <field name="state">draft</field>
+            <field name="type">out_invoice</field>
+            <field name="account_id" ref="account.a_recv" />
+            <field name="name">lp:602188</field>
+            <field name="address_contact_id" ref="base.res_partner_address_tang" />
+            <field name="period_id" ref="period_1" />
+        </record>
+        <workflow action="invoice_open" model="account.invoice" ref="invoice_bug602188" />
+        <assert id="invoice_bug602188" model="account.invoice" severity="error"
+            string="Invoice lp:602188 got the right number">
+            <test expr="state">open</test>
+            <test expr="number">TEST-042-bug602188</test>
+        </assert>
+
+        <!-- Deactivate the sequence to not make other tests fail -->
+        <record id="seq_out_invoice_bug602188" model="ir.sequence">
+            <field name="active" eval="False" />
+        </record>
+    </data>
+</openerp>

@@ -124,6 +124,7 @@ module named account_vouchers
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'account_unit_test.xml',
+        'test/sequence_bug602188_test.xml',
         'board_account_demo.xml',
     ],
     'test': [
