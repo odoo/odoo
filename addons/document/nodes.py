@@ -631,7 +631,9 @@ class node_dir(node_database):
         if not in_write:
             # We have to update the data ourselves
             if ret:
-                dir_obj.write(cr, self.context.uid, [self.dir_id,], ret, self.context.context)
+                ctx = self.context.context.copy()
+                ctx['__from_node'] = True
+                dir_obj.write(cr, self.context.uid, [self.dir_id,], ret, ctx)
             ret = True
 
         return ret
@@ -1196,7 +1198,9 @@ class node_file(node_class):
         if not in_write:
             # We have to update the data ourselves
             if ret:
-                doc_obj.write(cr, self.context.uid, [self.file_id,], ret, self.context.context)
+                ctx = self.context.context.copy()
+                ctx['__from_node'] = True
+                doc_obj.write(cr, self.context.uid, [self.file_id,], ret, ctx )
             ret = True
 
         return ret

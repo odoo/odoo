@@ -157,7 +157,10 @@ class document_file(osv.osv):
             return False
         if not self._check_duplication(cr, uid, vals, ids, 'write'):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
-        if ('parent_id' in vals) or ('name' in vals):
+        
+        # if nodes call this write(), they must skip the code below
+        from_node = context and context.get('__from_node', False)
+        if (('parent_id' in vals) or ('name' in vals)) and not from_node:
             # perhaps this file is renaming or changing directory
             nctx = nodes.get_node_context(cr,uid,context={})
             dirobj = self.pool.get('document.directory')

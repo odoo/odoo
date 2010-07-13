@@ -154,7 +154,6 @@ class nodefd_file(nodes.node_descriptor):
                             "  WHERE id = %s",
                             (fsize, par.file_id))
                 par.content_length = fsize
-                par.content_type = mime
                 cr.commit()
                 cr.close()
             except Exception:
@@ -367,6 +366,37 @@ class document_storage(osv.osv):
         filename = random_name()
         return os.path.join(flag, filename)
 
+    def __prepare_realpath(self, cr, file_node, ira, store_path, do_create=True):
+        """ Cleanup path for realstore, create dirs if needed
+        
+            @param file_node  the node
+            @param ira    ir.attachment browse of the file_node
+            @param store_path the path of the parent storage object, list
+            @param do_create  create the directories, if needed
+            
+            @return tuple(path "/var/filestore/real/dir/", npath ['dir','fname.ext'] )
+        """
+        file_node.fix_ppath(cr, ira)
+        npath = file_node.full_path() or []
+        # npath may contain empty elements, for root directory etc.
+        npath = filter(lambda x: x is not None, npath)
+
+        # if self._debug:
+        #     self._doclog.debug('Npath: %s', npath)
+        for n in npath:
+            if n == '..':
+                raise ValueError("Invalid '..' element in path")
+            for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?',):
+                if ch in n:
+                    raise ValueError("Invalid char %s in path %s" %(ch, n))
+        dpath = [store_path,]
+        dpath += npath[:-1]
+        path = os.path.join(*dpath)
+        if not os.path.isdir(path):
+            self._doclog.debug("Create dirs: %s", path)
+            os.makedirs(path)
+        return path, npath
+
     def get_data(self, cr, uid, id, file_node, context=None, fil_obj=None):
         """ retrieve the contents of some file_node having storage_id = id
             optionally, fil_obj could point to the browse object of the file
@@ -416,15 +446,15 @@ class document_storage(osv.osv):
             return nodefd_db64(file_node, ira_browse=ira, mode=mode)
 
         elif boo.type == 'realstore':
-            if not ira.store_fname:
-                # On a migrated db, some files may have the wrong storage type
-                # try to fix their directory.
-                if ira.file_size:
-                    self._doclog.warning("ir.attachment #%d does not have a filename, trying the name." %ira.id)
-                sfname = ira.name
-            fpath = os.path.join(boo.path,ira.store_fname or ira.name)
-            if (not os.path.exists(fpath)) and mode in ('r','r+'):
+            path, npath = self.__prepare_realpath(cr, file_node, ira, boo.path,
+                            do_create = (mode[1] in ('w','a'))  )
+            fpath = os.path.join(path, npath[-1])
+            if (not os.path.exists(fpath)) and mode[1] == 'r':
                 raise IOError("File not found: %s" % fpath)
+            elif mode[1] in ('w', 'a') and not ira.store_fname:
+                store_fname = os.path.join(*npath)
+                cr.execute('UPDATE ir_attachment SET store_fname = %s WHERE id = %s',
+                                (store_fname, ira.id))
             return nodefd_file(file_node, path=fpath, mode=mode)
 
         elif boo.type == 'virtual':
@@ -529,21 +559,7 @@ class document_storage(osv.osv):
                 (out, file_node.file_id))
         elif boo.type == 'realstore':
             try:
-                file_node.fix_ppath(cr, ira)
-                npath = file_node.full_path() or []
-                # npath may contain empty elements, for root directory etc.
-                for i, n in enumerate(npath):
-                    if n == None:
-                        del npath[i]
-                for n in npath:
-                    for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?', '..'):
-                        if ch in n:
-                            raise ValueError("Invalid char %s in path %s" %(ch, n))
-                dpath = [boo.path,]
-                dpath += npath[:-1]
-                path = os.path.join(*dpath)
-                if not os.path.isdir(path):
-                    os.makedirs(path)
+                path, npath = self.__prepare_realpath(cr, file_node, ira, boo.path, do_create=True)
                 fname = os.path.join(path, npath[-1])
                 fp = file(fname,'wb')
                 fp.write(data)
@@ -644,25 +660,23 @@ class document_storage(osv.osv):
             # nothing to do for a rename, allow to change the db field
             return { 'name': new_name, 'datas_fname': new_name }
         elif sbro.type == 'realstore':
-            fname = fil_bo.store_fname
+            ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
+
+            path, npath = self.__prepare_realpath(cr, file_node, ira, sbro.path, do_create=False)
+            fname = ira.store_fname
+
             if not fname:
-                return ValueError("Tried to rename a non-stored file")
-            path = storage_bo.path
-            oldpath = os.path.join(path, fname)
-            
-            for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?', '..'):
-                if ch in new_name:
-                    raise ValueError("Invalid char %s in name %s" %(ch, new_name))
-                
-            file_node.fix_ppath(cr, ira)
-            npath = file_node.full_path() or []
-            dpath = [path,]
-            dpath.extend(npath[:-1])
-            dpath.append(new_name)
-            newpath = os.path.join(*dpath)
-            # print "old, new paths:", oldpath, newpath
+                self._doclog.warning("Trying to rename a non-stored file")
+            if fname != os.path.join(*npath):
+                self._doclog.warning("inconsistency in realstore: %s != %s" , fname, repr(npath))
+
+            oldpath = os.path.join(path, npath[-1])
+            newpath = os.path.join(path, new_name)
             os.rename(oldpath, newpath)
-            return { 'name': new_name, 'datas_fname': new_name, 'store_fname': new_name }
+            store_path = npath[:-1]
+            store_path.append(new_name)
+            store_fname = os.path.join(*store_path)
+            return { 'name': new_name, 'datas_fname': new_name, 'store_fname': store_fname }
         else:
             raise TypeError("No %s storage" % boo.type)
 
