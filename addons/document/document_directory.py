@@ -57,6 +57,9 @@ class document_directory(osv.osv):
         'ressource_type_id': fields.many2one('ir.model', 'Resource model',
             help="Select an object here and there will be one folder per record of that resource."),
         'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
+        'resource_find_all': fields.boolean('Find all resources', required=True,
+                help="If true, all attachments that match this resource will " \
+                    " be located. If false, only ones that have this as parent." ),
         'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model',
             help="If you put an object here, this directory template will appear bellow all of these objects. " \
                  "Don't put a parent directory if you select a parent model."),
@@ -103,6 +106,7 @@ class document_directory(osv.osv):
         'type': lambda *args: 'directory',
         'ressource_id': lambda *a: 0,        
         'storage_id': _get_def_storage,
+        'resource_find_all': True,
     }
     _sql_constraints = [
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),

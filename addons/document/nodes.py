@@ -31,6 +31,8 @@ import errno
 import os
 import time
 
+from StringIO import StringIO
+
 #
 # An object that represent an uri
 #   path: the uri of the object
@@ -226,7 +228,7 @@ class node_class(object):
         return False
 
     def get_data(self,cr):
-        raise IOError(errno.EINVAL, 'no data for %s' % self.type)
+        raise TypeError('no data for %s'% self.type)
 
     def open_data(self, cr, mode):
         """ Open a node_descriptor object for this node.
@@ -240,7 +242,7 @@ class node_class(object):
         For this class, there is no data, so no implementation. Each
         child class that has data should override this.
         """
-        raise IOError(errno.EINVAL, 'no data for %s' % self.type)
+        raise TypeError('no data for %s' % self.type)
 
     def _get_storage(self,cr):
         raise RuntimeError("no storage for base class")
@@ -306,13 +308,23 @@ class node_class(object):
         Move operations, as instructed from APIs (eg. request from DAV) could
         use this function.
         """
-        raise NotImplementedError
+        raise NotImplementedError(repr(self))
+
+    def create_child(self, cr, path, data=None):
+        """ Create a regular file under this node
+        """
+        raise NotImplementedError(repr(self))
+    
+    def create_child_collection(self, cr, objname):
+        """ Create a child collection (directory) under self
+        """
+        raise NotImplementedError(repr(self))
 
     def rm(self, cr):
-        raise RuntimeError("Not Implemented")
+        raise NotImplementedError(repr(self))
 
     def rmcol(self, cr):
-        raise RuntimeError("Not Implemented")
+        raise NotImplementedError(repr(self))
 
     def get_domain(self, cr, filters):
         return []
@@ -535,7 +547,7 @@ class node_dir(node_database):
         return dirobj.create(cr, uid, val)
 
 
-    def create_child(self, cr, path, data):
+    def create_child(self, cr, path, data=None):
         """ API function to create a child file object and node
             Return the node_* created
         """
@@ -647,6 +659,7 @@ class node_res_dir(node_class):
         self.uidperms = dirr.get_dir_permissions()
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
         self.resm_id = dirr.ressource_id
+        self.res_find_all = dirr.resource_find_all
         self.namefield = dirr.resource_field.name or 'name'
         self.displayname = dirr.name
         # Important: the domain is evaluated using the *parent* dctx!
@@ -761,16 +774,17 @@ class node_res_obj(node_class):
         self.write_date = parent.write_date
         self.content_length = 0
         self.unixperms = 040750
-        self.uidperms = parent.uidperms & 0x15
+        self.uidperms = parent.uidperms & 15
         self.uuser = parent.uuser
         self.ugroup = parent.ugroup
         self.res_model = res_model
         self.domain = parent.domain
         self.displayname = path
         self.dctx_dict = parent.dctx_dict
+        self.res_find_all = parent.res_find_all
         if res_bo:
             self.res_id = res_bo.id
-            dc2 = self.context.context
+            dc2 = self.context.context.copy()
             dc2.update(self.dctx)
             dc2['res_model'] = res_model
             dc2['res_id'] = res_bo.id
@@ -795,6 +809,8 @@ class node_res_obj(node_class):
         if not self.res_id == other.res_id:
             return False
         if self.domain != other.domain:
+            return False
+        if self.res_find_all != other.res_find_all:
             return False
         if self.dctx != other.dctx:
             return False
@@ -909,6 +925,8 @@ class node_res_obj(node_class):
 
 
         fil_obj = dirobj.pool.get('ir.attachment')
+        if self.res_find_all:
+            where2 = where
         where3 = where2  + [('res_model', '=', self.res_model), ('res_id','=',self.res_id)]
         # print "where clause for dir_obj", where2
         ids = fil_obj.search(cr, uid, where3, context=ctx)
@@ -960,7 +978,7 @@ class node_res_obj(node_class):
 
         return dirobj.create(cr, uid, val)
 
-    def create_child(self, cr, path, data):
+    def create_child(self, cr, path, data=None):
         """ API function to create a child file object and node
             Return the node_* created
         """
@@ -976,11 +994,12 @@ class node_res_obj(node_class):
         val = {
             'name': path,
             'datas_fname': path,
-            'parent_id': self.dir_id,
             'res_model': self.res_model,
             'res_id': self.res_id,
             # Datas are not set here
         }
+        if not self.res_find_all:
+            val['parent_id'] = self.dir_id
 
         fil_id = fil_obj.create(cr, uid, val, context=ctx)
         fil = fil_obj.browse(cr, uid, fil_id, context=ctx)
@@ -1204,9 +1223,6 @@ class node_content(node_class):
            self.dctx.update(dctx)
         self.act_id = act_id
 
-    def open(self, cr, mode=False):
-        raise DeprecationWarning()
-
     def fill_fields(self, cr, dctx = None):
         """ Try to read the object and fill missing fields, like mimetype,
             dates etc.
@@ -1233,7 +1249,29 @@ class node_content(node_class):
             self.content_length = len(data)
         return data
 
+    def open_data(self, cr, mode):
+        if mode.endswith('b'):
+            mode = mode[:-1]
+        if mode in ('r', 'w'):
+            cperms = mode[:1]
+        elif mode in ('r+', 'w+'):
+            cperms = 'rw'
+        else:
+            raise IOError(errno.EINVAL, "Cannot open at mode %s" % mode)
+        
+        if not self.check_perms(cperms):
+            raise IOError(errno.EPERM, "Permission denied")
+
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        
+        return nodefd_content(self, cr, mode, ctx)
+
     def get_data_len(self, cr, fil_obj = None):
+        # FIXME : here, we actually generate the content twice!!
+        # we should have cached the generated content, but it is
+        # not advisable to do keep it in memory, until we have a cache
+        # expiration logic.
         if not self.content_length:
             self.get_data(cr,fil_obj)
         return self.content_length
@@ -1249,3 +1287,53 @@ class node_content(node_class):
 
     def _get_ttag(self,cr):
         return 'cnt-%d%s' % (self.cnt_id,(self.act_id and ('-' + str(self.act_id))) or '')
+
+
+class nodefd_content(StringIO, node_descriptor):
+    """ A descriptor to content nodes
+    """
+    def __init__(self, parent, cr, mode, ctx):
+        node_descriptor.__init__(self, parent)
+        self._context=ctx
+
+        if mode in ('r', 'r+'):
+            cntobj = parent.context._dirobj.pool.get('document.directory.content')
+            data = cntobj.process_read(cr, parent.context.uid, parent, ctx)
+            if data:
+                parent.content_length = len(data)
+            StringIO.__init__(self, data)
+        elif mode in ('w', 'w+'):
+            StringIO.__init__(self, None)
+            # at write, we start at 0 (= overwrite), but have the original
+            # data available, in case of a seek()
+        elif mode == 'a':
+            StringIO.__init__(self, None)
+        else:
+            logging.getLogger('document.content').error("Incorrect mode %s specified", mode)
+            raise IOError(errno.EINVAL, "Invalid file mode")
+        self.mode = mode
+
+    def close(self):
+        # we now open a *separate* cursor, to update the data.
+        # FIXME: this may be improved, for concurrency handling
+        if self.mode == 'r':
+            StringIO.close(self)
+            return
+
+        par = self._get_parent()
+        uid = par.context.uid
+        cr = pooler.get_db(par.context.dbname).cursor()
+        try:
+            if self.mode in ('w', 'w+', 'r+'):
+                data = self.getvalue()
+                cntobj = par.context._dirobj.pool.get('document.directory.content')
+                cntobj.process_write(cr, uid, parent, data, ctx)
+            elif self.mode == 'a':
+                raise NotImplementedError
+            cr.commit()
+        except Exception, e:
+            logging.getLogger('document.content').exception('Cannot update db content #%d for close:', par.cnt_id)
+            raise
+        finally:
+            cr.close()
+        StringIO.close(self)

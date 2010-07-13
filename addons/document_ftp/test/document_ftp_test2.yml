@@ -5,7 +5,7 @@
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
-        ftp = te.get_plain_ftp()
+        ftp = te.get_plain_ftp(timeout=2.0)
         assert ftp.sock and (ftp.lastresp == '220'), ftp.lastresp
 -
     I read the list of databases at port 8021 and confirm our db is

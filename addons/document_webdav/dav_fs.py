@@ -46,6 +46,15 @@ CACHE_SIZE=20000
 urlparse.uses_netloc.append('webdav')
 urlparse.uses_netloc.append('webdavs')
 
+class DAV_NotFound2(DAV_NotFound):
+    """404 exception, that accepts our list uris
+    """
+    def __init__(self, *args):
+        if len(args) and isinstance(args[0], (tuple, list)):
+            path = ''.join([ '/' + x for x in args[0]])
+            args = (path, )
+        DAV_NotFound.__init__(self, *args)
+
 class openerp_dav_handler(dav_interface):
     """
     This class models a OpenERP interface for the DAV server
@@ -73,6 +82,38 @@ class openerp_dav_handler(dav_interface):
             props.update(node.get_dav_props(cr))
         cr.close()     
         return props
+
+    def _try_function(self, funct, args, opname='run function', cr=None, 
+	    default_exc=DAV_Forbidden):
+        """ Try to run a function, and properly convert exceptions to DAV ones.
+        
+            @objname the name of the operation being performed
+            @param cr if given, the cursor to close at exceptions
+        """
+        
+        try:
+            funct(*args)
+        except DAV_Error:
+            if cr: cr.close()
+            raise
+        except NotImplementedError, e:
+            if cr: cr.close()
+            import traceback
+            self.parent.log_error("Cannot %s: %s", opname, str(e))
+            self.parent.log_message("Exc: %s",traceback.format_exc())
+            # see par 9.3.1 of rfc
+            raise DAV_Error(403, str(e) or 'Not supported at this path')
+        except EnvironmentError, err:
+            if cr: cr.close()
+            import traceback
+            self.parent.log_error("Cannot %s: %s", opname, e.strerror)
+            self.parent.log_message("Exc: %s",traceback.format_exc())
+            raise default_exc(err.strerror)
+        except Exception,e:
+            import traceback
+            self.parent.log_error("Cannot create %s: %s", opname, str(e))
+            self.parent.log_message("Exc: %s",traceback.format_exc())
+            raise default_exc("Operation failed")
 
     def _get_dav_lockdiscovery(self, uri):
         raise DAV_NotFound
@@ -192,7 +233,7 @@ class openerp_dav_handler(dav_interface):
         
         if not node:
             if cr: cr.close()
-            raise DAV_NotFound(uri2)
+            raise DAV_NotFound2(uri2)
         else:
             fp = node.full_path()
             if fp and len(fp):
@@ -255,26 +296,25 @@ class openerp_dav_handler(dav_interface):
                 raise DAV_Error, 409
             node = self.uri2object(cr, uid, pool, uri2)   
             if not node:
-                raise DAV_NotFound(uri2)
+                raise DAV_NotFound2(uri2)
             try:
                 if rrange:
                     self.parent.log_error("Doc get_data cannot use range")
                     raise DAV_Error(409)
                 datas = node.get_data(cr)
             except TypeError,e:
-                import traceback                
-                self.parent.log_error("GET typeError: %s", str(e))
-                self.parent.log_message("Exc: %s",traceback.format_exc())
-                raise DAV_Forbidden
+                # for the collections that return this error, the DAV standard
+                # says we'd better just return 200 OK with empty data
+                return ''
             except IndexError,e :
                 self.parent.log_error("GET IndexError: %s", str(e))
-                raise DAV_NotFound(uri2)
+                raise DAV_NotFound2(uri2)
             except Exception,e:
                 import traceback
                 self.parent.log_error("GET exception: %s",str(e))
                 self.parent.log_message("Exc: %s", traceback.format_exc())
                 raise DAV_Error, 409
-            return datas
+            return str(datas) # FIXME!
         finally:
             if cr: cr.close()    
 
@@ -288,7 +328,7 @@ class openerp_dav_handler(dav_interface):
                 return COLLECTION
             node = self.uri2object(cr,uid,pool, uri2)
             if not node:
-                raise DAV_NotFound(uri2)
+                raise DAV_NotFound2(uri2)
             if node.type in ('collection','database'):
                 return COLLECTION
             return OBJECT
@@ -304,7 +344,7 @@ class openerp_dav_handler(dav_interface):
         node = self.uri2object(cr, uid, pool, uri2)
         if not node:
             cr.close()
-            raise DAV_NotFound(uri2)
+            raise DAV_NotFound2(uri2)
         cr.close()
         return node.displayname
 
@@ -320,7 +360,7 @@ class openerp_dav_handler(dav_interface):
         node = self.uri2object(cr, uid, pool, uri2)
         if not node:
             cr.close()
-            raise DAV_NotFound(uri2)
+            raise DAV_NotFound2(uri2)
         result = node.content_length or 0
         cr.close()
         return str(result)
@@ -337,7 +377,7 @@ class openerp_dav_handler(dav_interface):
         node = self.uri2object(cr, uid, pool, uri2)
         if not node:
             cr.close()
-            raise DAV_NotFound(uri2)
+            raise DAV_NotFound2(uri2)
         result = node.get_etag(cr)
         cr.close()
         return str(result)
@@ -352,7 +392,7 @@ class openerp_dav_handler(dav_interface):
         try:            
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
-                raise DAV_NotFound(uri2)
+                raise DAV_NotFound2(uri2)
             if node.write_date:
                 return time.mktime(time.strptime(node.write_date,'%Y-%m-%d %H:%M:%S'))
             else:
@@ -369,7 +409,7 @@ class openerp_dav_handler(dav_interface):
         try:            
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
-                raise DAV_NotFound(uri2)            
+                raise DAV_NotFound2(uri2)
             if node.create_date:
                 result = time.mktime(time.strptime(node.create_date,'%Y-%m-%d %H:%M:%S'))
             else:
@@ -387,7 +427,7 @@ class openerp_dav_handler(dav_interface):
         try:            
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
-                raise DAV_NotFound(uri2)
+                raise DAV_NotFound2(uri2)
             result = str(node.mimetype)
             return result
             #raise DAV_NotFound, 'Could not find %s' % path
@@ -395,20 +435,28 @@ class openerp_dav_handler(dav_interface):
             if cr: cr.close()    
     
     def mkcol(self,uri):
-        """ create a new collection """                  
+        """ create a new collection
+            see par. 9.3 of rfc4918
+        """
         self.parent.log_message('MKCOL: %s' % uri)
-        uri = self.uri2local(uri)[1:]
-        if uri[-1]=='/':uri=uri[:-1]
-        parent = '/'.join(uri.split('/')[:-1])        
-        parent = self.baseuri + parent
-        uri = self.baseuri + uri        
-        cr, uid, pool,dbname, uri2 = self.get_cr(uri)
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        if not uri2[-1]:
+            cr.close()
+            raise DAV_Error(409, "Cannot create nameless collection")
         if not dbname:
+            cr.close()
             raise DAV_Error, 409
         node = self.uri2object(cr,uid,pool, uri2[:-1])
-        if node:
-            node.create_child_collection(cr, uri2[-1])  
-            cr.commit()      
+        if not node:
+            cr.close()
+            raise DAV_Error(409, "Parent path %s does not exist" % uri2[:-1])
+        nc = node.child(cr, uri2[-1])
+        if nc:
+            cr.close()
+            raise DAV_Error(405, "Path already exists")
+        self._try_function(node.create_child_collection, (cr, uri2[-1]),
+                    "create col %s" % uri2[-1], cr=cr)
+        cr.commit()
         cr.close()
         return True
 
@@ -430,22 +478,13 @@ class openerp_dav_handler(dav_interface):
         if not node:
             dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
             if not dir_node:
+                cr.close()
                 raise DAV_NotFound('Parent folder not found')
-            try:
-                dir_node.create_child(cr, objname, data)
-            except Exception,e:
-                import traceback
-                self.parent.log_error("Cannot create %s: %s", objname, str(e))
-                self.parent.log_message("Exc: %s",traceback.format_exc())
-                raise DAV_Forbidden
+
+            self._try_function(dir_node.create_child, (cr, objname, data), 
+                    "create %s" % objname, cr=cr)
         else:
-            try:
-                node.set_data(cr, data)
-            except Exception,e:
-                import traceback
-                self.parent.log_error("Cannot save %s: %s", objname, str(e))
-                self.parent.log_message("Exc: %s",traceback.format_exc())
-                raise DAV_Forbidden
+            self._try_function(node.set_data, (cr, data), "save %s" % objname, cr=cr)
             
         cr.commit()
         cr.close()
@@ -618,7 +657,6 @@ class openerp_dav_handler(dav_interface):
         advanced systems we might also have to copy properties from
         the source to the destination.
         """
-        print " copy a collection."
         return self.mkcol(dst)
 
 
