@@ -34,7 +34,7 @@ class survey_print(osv.osv_memory):
                             ('horizontal','Landscape(Horizontal)')], 'Orientation'),
         'paper_size' : fields.selection([('letter','Letter (8.5" x 11")'),\
                             ('legal','Legal (8.5" x 14")'),('a4','A4 (210mm x 297mm)')], 'Paper Size'),
-        'page_number' : fields.boolean('Include Page Numvers'),
+        'page_number' : fields.boolean('Include Page Number'),
         'without_pagebreak' : fields.boolean('Print Without Page Breaks'),
     }
 
