@@ -1,6 +1,10 @@
 -
     In order to check international character functionality
 -
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_plain_ftp(timeout=1.0)
+-
     I create in the server a folder called 'Δοκιμαστικός Φάκελλος'
 -
     !record {model: document.directory, id: dir_itests }:

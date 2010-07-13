@@ -1,5 +1,9 @@
 -
     In order to check dynamic folder functionality of document + FTP
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_plain_ftp(timeout=1.0)
 - |
     I create two partners 'Partner1' and 'Partner2'.
     I create three partner categories: 'none', 'pat1' and 'all'
