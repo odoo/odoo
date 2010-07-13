@@ -571,7 +571,7 @@
          <field eval="18" name="priority"/>
          <field name="arch" type="xml">
             <page string="Current Activity" position="inside">
-                <field name="context_project_id" completion="1" context="{'user_prefence':True}" widget="selection"/>
+                <field name="context_project_id" completion="1" context="{'user_prefence':True}" widget="selection" readonly="0"/>
             </page>
        </field>
     </record>

@@ -60,7 +60,7 @@ class hr_attendance(osv.osv):
         'day': fields.function(_day_compute, method=True, type='char', string='Day', store=True, select=1, size=32),
     }
     _defaults = {
-        'name': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'name': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), #Don't remove the lambda, if you remove it then the current time will not change
         'employee_id': _employee_get,
     }
 
@@ -119,6 +119,7 @@ class hr_employee(osv.osv):
     def attendance_action_change(self, cr, uid, ids, type='action', context=None, dt=False, *args):
         id = False
         warning_sign = 'sign'
+        res = {}
 
         #Special case when button calls this method :type=context
         if isinstance(type, dict):
@@ -127,7 +128,6 @@ class hr_employee(osv.osv):
             warning_sign = "Sign In"
         elif type == 'sign_out':
             warning_sign = "Sign Out"
-
         for emp in self.read(cr, uid, ids, ['id'], context=context):
             if not self._action_check(cr, uid, emp['id'], dt, context):
                 raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
