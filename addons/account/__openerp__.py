@@ -124,10 +124,10 @@ module named account_vouchers
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'account_unit_test.xml',
-        'test/sequence_bug602188_test.xml',
         'board_account_demo.xml',
     ],
     'test': [
+        'test/account_sequence_test.yml',
         'test/account_customer_invoice.yml',
         'test/account_supplier_invoice.yml',
         'test/account_change_currency.yml',
