@@ -83,7 +83,8 @@ class openerp_dav_handler(dav_interface):
         cr.close()     
         return props
 
-    def _try_function(self, funct, args, opname='run function', cr=None, default_exc=DAV_Forbidden):
+    def _try_function(self, funct, args, opname='run function', cr=None, 
+	    default_exc=DAV_Forbidden):
         """ Try to run a function, and properly convert exceptions to DAV ones.
         
             @objname the name of the operation being performed
@@ -100,7 +101,8 @@ class openerp_dav_handler(dav_interface):
             import traceback
             self.parent.log_error("Cannot %s: %s", opname, str(e))
             self.parent.log_message("Exc: %s",traceback.format_exc())
-            raise DAV_Error(405, str(e) or 'Not supported at this path')
+            # see par 9.3.1 of rfc
+            raise DAV_Error(403, str(e) or 'Not supported at this path')
         except EnvironmentError, err:
             if cr: cr.close()
             import traceback
@@ -301,10 +303,9 @@ class openerp_dav_handler(dav_interface):
                     raise DAV_Error(409)
                 datas = node.get_data(cr)
             except TypeError,e:
-                import traceback                
-                self.parent.log_error("GET typeError: %s", str(e))
-                self.parent.log_message("Exc: %s",traceback.format_exc())
-                raise DAV_Forbidden
+                # for the collections that return this error, the DAV standard
+                # says we'd better just return 200 OK with empty data
+                return ''
             except IndexError,e :
                 self.parent.log_error("GET IndexError: %s", str(e))
                 raise DAV_NotFound2(uri2)
@@ -453,7 +454,8 @@ class openerp_dav_handler(dav_interface):
         if nc:
             cr.close()
             raise DAV_Error(405, "Path already exists")
-        self._try_function(node.create_child_collection, (cr, uri2[-1]), "create col %s" % uri2[-1], cr=cr)
+        self._try_function(node.create_child_collection, (cr, uri2[-1]),
+                    "create col %s" % uri2[-1], cr=cr)
         cr.commit()
         cr.close()
         return True
