@@ -150,6 +150,7 @@ class abstracted_fs(object):
                     raise OSError(1, 'Operation not permited.')
 
                 ret = child.open_data(cr, mode)
+                cr.commit()
                 return ret
         except EnvironmentError:
             raise
@@ -159,7 +160,9 @@ class abstracted_fs(object):
 
         try:
             child = node.create_child(cr, objname, data=None)
-            return child.open_data(cr, mode)
+            ret = child.open_data(cr, mode)
+            cr.commit()
+            return ret
         except Exception,e:
             self._log.exception('Cannot create item %s at node %s', objname, repr(node))
             raise OSError(1, 'Operation not permited.')
@@ -171,6 +174,7 @@ class abstracted_fs(object):
         cr, node, rem = datacr
         try:
             res = node.open_data(cr, mode)
+            cr.commit()
         except TypeError, e:
             raise IOError(errno.EINVAL, "No data")
         return res
