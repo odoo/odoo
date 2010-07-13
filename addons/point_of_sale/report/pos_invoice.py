@@ -48,7 +48,6 @@ class pos_invoice(report_sxw.rml_parse):
                 raise osv.except_osv(_('Error !'), _('Please create an invoice for this sale.'))
             iids.append(order.invoice_id)
             nids.append(order.invoice_id.id)
-        self.cr.commit()
         data['ids'] = nids
         self.datas = data
         self.ids = nids

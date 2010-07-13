@@ -69,6 +69,7 @@
         'wizard/change_production_qty_view.xml',
         'wizard/mrp_price_view.xml',
         'wizard/mrp_workcenter_load_view.xml',
+        'wizard/mrp_change_standard_price_view.xml',
 #        'wizard/mrp_track_prod_view.xml',
         'mrp_view.xml',
         'mrp_wizard.xml',

@@ -294,7 +294,7 @@
                            <field name="partner_id" select="1" />
                            <field name="section_id" select="1" widget="selection">
                                <filter icon="terp-personal+"
-                                   domain="[('section_id','=',context.get('section_id',False))]"
+                                   domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                    help="My Sale Team" />
                            </field>
                            <field name="user_id" select="1"/>
