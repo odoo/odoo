@@ -91,7 +91,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="crm.crm_case_tree_view_meet"/>
-            <field name="domain">[('user_id','=',uid),('state','not in',('cancel', 'done')),('date','ilike',time.strftime("%Y-%m"))]</field>
+            <field name="domain">[('user_id','=',uid),('state','not in',('cancel','done'))]</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="act_my_oppor_stage">
@@ -132,11 +132,11 @@
 						</child1>
 						<child2>
 							<action
-                                string="Planned Revenues by Stage"
+                                string="My Planned Revenues by Stage"
                                 name="%(act_my_oppor_stage)d"
                                 colspan="4"/>
                             <action
-                                string="Win/Lost Ratio for the Last Year"
+                                string="My Win/Lost Ratio for the Last Year"
                                 name="%(act_sales_pipeline)d"
                                 colspan="4"/>
                         </child2>
