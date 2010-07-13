@@ -27,7 +27,6 @@ from osv.orm import except_orm
 import pooler
 from tools.safe_eval import safe_eval
 
-import errno
 import os
 import time
 
@@ -226,7 +225,7 @@ class node_class(object):
         return False
 
     def get_data(self,cr):
-        raise IOError(errno.EINVAL, 'no data for %s' % self.type)
+        raise TypeError('no data for %s'% self.type)
 
     def open_data(self, cr, mode):
         """ Open a node_descriptor object for this node.
@@ -240,7 +239,7 @@ class node_class(object):
         For this class, there is no data, so no implementation. Each
         child class that has data should override this.
         """
-        raise IOError(errno.EINVAL, 'no data for %s' % self.type)
+        raise TypeError('no data for %s' % self.type)
 
     def _get_storage(self,cr):
         raise RuntimeError("no storage for base class")
