@@ -29,7 +29,7 @@ from account_journal_common_default import account_journal_common_default
 class account_balance(report_sxw.rml_parse, account_journal_common_default):
     _name = 'report.account.account.balance'
 
-    def set_context(self, objects, data, ids, report_type = None):
+    def set_context(self, objects, data, ids, report_type=None):
         new_ids = ids
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []

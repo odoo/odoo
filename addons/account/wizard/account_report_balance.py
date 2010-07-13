@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import time
-
 from osv import osv, fields
 from tools.translate import _
 
@@ -38,28 +36,10 @@ class account_balance_report(osv.osv_memory):
         'display_account': 'bal_all'
                 }
 
-#    def default_get(self, cr, uid, fields, context=None):
-#        """ To get default values for the object.
-#         @param self: The object pointer.
-#         @param cr: A database cursor
-#         @param uid: ID of the user currently logged in
-#         @param fields: List of fields for which we want default values
-#         @param context: A standard dictionary
-#         @return: A dictionary which of fields with values.
-#        """
-#        res = {}
-#        if 'journal_ids' in fields:# FIX me!!
-#            res['journal_ids'] = []
-#            return res
-#        else:
-#            result = super(account_balance_report, self).default_get(cr, uid, fields, context=context)
-#        result.update({'company_id':self.pool.get('account.account').read(cr, uid, result['chart_account_id'], context=context)['company_id']})
-#        return result
-
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
-        data['form'].update(self.read(cr, uid, ids, ['display_account',])[0])
+        data['form'].update(self.read(cr, uid, ids, ['display_account'])[0])
         data['form']['query_line'] = query_line
-        return {'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data, 'nodestroy':True, }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'account.account.balance', 'datas': data, 'nodestroy':True}
 
 account_balance_report()
 

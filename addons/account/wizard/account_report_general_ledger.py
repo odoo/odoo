@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
 from osv import fields, osv
 from tools.translate import _
@@ -35,21 +34,21 @@ class account_report_general_ledger(osv.osv_memory):
         'amount_currency': fields.boolean("With Currency"),
         'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort By', required=True),
                 }
-
     _defaults = {
-            'display_account' : 'bal_all',
+            'display_account': 'bal_all',
             'landscape': True,
-            'amount_currency' : True,
+            'amount_currency': True,
             'sortby': 'sort_date',
-    }
+                }
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
+        if context is None:
+            context = {}
         data['form'].update(self.read(cr, uid, ids, ['display_account',  'landscape',  'soldeinit', 'amount_currency', 'sortby'])[0])
         data['form']['query_line'] = query_line
-        if data['form']['landscape'] == True:
-            return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True, }
-        else:
-            return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data, 'nodestroy':True, }
+        if data['form']['landscape']:
+            return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True }
+        return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data, 'nodestroy':True}
 
 account_report_general_ledger()
 
