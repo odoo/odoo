@@ -19,14 +19,16 @@
 #
 ##############################################################################
 
-import pooler
 import time
 import re
-import rml_parse
 import datetime
+
+import pooler
+import rml_parse
 from report import report_sxw
 
 class third_party_ledger(rml_parse.rml_parse):
+
 	def __init__(self, cr, uid, name, context):
 		self.date_lst = []
 		self.date_lst_string = ''
@@ -38,10 +40,11 @@ class third_party_ledger(rml_parse.rml_parse):
 			'sum_credit_partner': self._sum_credit_partner,
 			'sum_debit': self._sum_debit,
 			'sum_credit': self._sum_credit,
-			'get_company': self._get_company,
+#			'get_company': self._get_company,
 			'get_currency': self._get_currency,
 			'comma_me' : self.comma_me,
 		})
+
 	def date_range(self, start, end):
 		if not start or not end:
 			return []
@@ -70,39 +73,9 @@ class third_party_ledger(rml_parse.rml_parse):
 		self.date_lst = date_array
 		self.date_lst.sort()
 
-	def transform_date_into_date_array(self,data):
-		return_array = self.date_range(data['form']['date1'], data['form']['date2'])
+	def transform_date_into_date_array(self, data):
+		return_array = self.date_range(data['form']['date_from'], data['form']['date_to'])
 		self.date_lst = return_array
-		self.date_lst.sort()
-
-	def transform_both_into_date_array(self,data):
-
-		if not data['form']['periods']:
-			periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
-		else:
-			periods_id = data['form']['periods']
-		date_array = []
-		for period_id in periods_id:
-			period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
-			date_array = date_array + self.date_range(period_obj.date_start, period_obj.date_stop)
-
-		period_start_date = date_array[0]
-		date_start_date = data['form']['date1']
-		period_stop_date = date_array[-1]
-		date_stop_date = data['form']['date2']
-
-		if period_start_date<date_start_date:
-			start_date = period_start_date
-		else :
-			start_date = date_start_date
-
-		if date_stop_date<period_stop_date:
-			stop_date = period_stop_date
-		else :
-			stop_date = date_stop_date
-		final_date_array = []
-		final_date_array = final_date_array + self.date_range(start_date, stop_date)
-		self.date_lst = final_date_array
 		self.date_lst.sort()
 
 	def transform_none_into_date_array(self, data):
@@ -116,7 +89,6 @@ class third_party_ledger(rml_parse.rml_parse):
 		array = array + self.date_range(start_date, stop_date)
 		self.date_lst = array
 		self.date_lst.sort()
-
 
 	def comma_me(self, amount):
 		if  type(amount) is float :
@@ -152,14 +124,12 @@ class third_party_ledger(rml_parse.rml_parse):
 #		else:
 #			self.transform_date_into_date_array(data)
 		##
-		if data['form']['state'] == 'none':
+		if data['form']['filter'] == 'filter_no':
 			self.transform_none_into_date_array(data)
-		elif data['form']['state'] == 'bydate':
+		elif data['form']['filter'] == 'filter_date':
 			self.transform_date_into_date_array(data)
-		elif data['form']['state'] == 'byperiod':
+		elif data['form']['filter'] == 'filter_period':
 			self.transform_period_into_date_array(data)
-		elif data['form']['state'] == 'all':
-			self.transform_both_into_date_array(data)
 
 		self.date_lst_string = ''
 		if self.date_lst:
@@ -170,7 +140,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			self.ACCOUNT_TYPE = ['payable']
 		elif data['form']['result_selection'] == 'customer':
 			self.ACCOUNT_TYPE = ['receivable']
-		elif data['form']['result_selection'] == 'all':
+		else:
 			self.ACCOUNT_TYPE = ['payable','receivable']
 
 		self.cr.execute(
@@ -178,16 +148,15 @@ class third_party_ledger(rml_parse.rml_parse):
 			"FROM account_account a " \
 			"LEFT JOIN account_account_type t " \
 				"ON (a.type=t.code) " \
-			"WHERE a.company_id = %s " \
-				'AND a.type IN %s' \
-				"AND a.active", (data['form']['company_id'],tuple(self.ACCOUNT_TYPE)))
+#			"WHERE a.company_id = %s " \
+				'WHERE a.type IN %s' \
+				"AND a.active", (tuple(self.ACCOUNT_TYPE), ))
 		self.account_ids = [a for (a,) in self.cr.fetchall()]
 
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
 
 		if self.date_lst and data['form']['soldeinit'] :
-
 			self.cr.execute(
 				"SELECT DISTINCT line.partner_id " \
 				"FROM account_move_line AS line, account_account AS account " \
@@ -198,9 +167,9 @@ class third_party_ledger(rml_parse.rml_parse):
 					"AND line.reconcile_id IS NULL " \
 					"AND line.account_id IN %s" \
 					" " + PARTNER_REQUEST + " " \
-					"AND account.company_id = %s " \
+#					"AND account.company_id = %s " \
 					"AND account.active " ,
-				(self.date_lst[0],self.date_lst[len(self.date_lst)-1],tuple(self.account_ids),data['form']['company_id'],))
+				(self.date_lst[0],self.date_lst[len(self.date_lst)-1],tuple(self.account_ids),))
 #		else:
 #
 #			self.cr.execute(
@@ -432,11 +401,10 @@ class third_party_ledger(rml_parse.rml_parse):
 				result_tmp = contemp[0] or 0.0
 			else:
 				result_tmp = result_tmp + 0.0
-
 		return result_tmp
-
-	def _get_company(self, form):
-		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
+#
+#	def _get_company(self, form):
+#		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
 
 	def _get_currency(self, form):
 		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name

@@ -28,105 +28,54 @@ class account_partner_ledger(osv.osv_memory):
     This wizard will provide the partner Ledger report by periods, between any two dates.
     """
     _name = 'account.partner.ledger'
+    _inherit = 'account.common.partner.report'
     _description = 'Account Partner Ledger'
     _columns = {
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'state': fields.selection([('bydate','By Date'),
-                                 ('byperiod','By Period'),
-                                 ('all','By Date and Period'),
-                                 ('none','No Filter')
-                                 ],'Date/Period Filter'),
-        'fiscalyear': fields.many2one('account.fiscalyear', 'Fiscal year', help='Keep empty for all open fiscal year'),
-        'periods': fields.many2many('account.period', 'period_ledger_rel', 'report_id', 'period_id', 'Periods', help='All periods if empty', states={'none':[('readonly',True)],'bydate':[('readonly',True)]}),
-        'result_selection': fields.selection([('customer','Receivable Accounts'),
-                                              ('supplier','Payable Accounts'),
-                                              ('all','Receivable and Payable Accounts')],
-                                              'Partner', required=True),
         'soldeinit': fields.boolean('Include initial balances'),
         'reconcil': fields.boolean('Include Reconciled Entries'),
         'page_split': fields.boolean('One Partner Per Page'),
-        'date1': fields.date('Start date', required=True),
-        'date2': fields.date('End date', required=True),
-            }
-
-    def _get_company(self, cr, uid, context=None):
-        user_obj = self.pool.get('res.users')
-        company_obj = self.pool.get('res.company')
-        if context is None:
-            context = {}
-        user = user_obj.browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        else:
-            return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
-
-    _defaults={
-               'state' :  'none',
-               'date1' : time.strftime('%Y-01-01'),
-               'date2' : time.strftime('%Y-%m-%d'),
-               'result_selection' : 'all',
+                }
+    _defaults = {
                'reconcile' : True,
                'soldeinit' : True,
                'page_split' : False,
-               'company_id' : _get_company,
-               'fiscalyear' : False,
                }
-
-    def check_state(self, cr, uid, ids, context=None):
-        obj_fiscalyear = self.pool.get('account.fiscalyear')
-        obj_periods = self.pool.get('account.period')
-        if context is None:
-            context = {}
-        data={}
-        data['ids'] = context.get('active_ids',[])
-        data['form'] = self.read(cr, uid, ids, [])[0]
-        data['form']['fiscalyear'] = obj_fiscalyear.find(cr, uid)
-        data['form']['periods'] = obj_periods.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
-        data['form']['display_account']='bal_all'
-        data['model'] = 'ir.ui.menu'
-        acc_id = self.pool.get('account.invoice').search(cr, uid, [('state','=','open')])
-        if not acc_id:
-                raise osv.except_osv(_('No Data Available'), _('No records found for your selection!'))
-        if data['form']['state'] == 'bydate' or data['form']['state'] == 'all':
-           data['form']['fiscalyear'] = False
-        else :
-           data['form']['fiscalyear'] = True
-           return self._check_date(cr, uid, data, context)
-        if data['form']['page_split']:
-            return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'account.third_party_ledger',
-                'datas': data,
-                'nodestroy':True,
-            }
-        else:
-            return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'account.third_party_ledger_other',
-                'datas': data,
-                'nodestroy':True,
-            }
 
     def _check_date(self, cr, uid, data, context=None):
         if context is None:
             context = {}
         sql = """
             SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql, (data['form']['date1'],))
+        cr.execute(sql, (data['form']['date_from'],))
         res = cr.dictfetchall()
         if res:
-            if (data['form']['date2'] > res[0]['date_stop'] or data['form']['date2'] < res[0]['date_start']):
-                raise  osv.except_osv(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
-            else:
-                return {
-                    'type': 'ir.actions.report.xml',
-                    'report_name': 'account.third_party_ledger',
-                    'datas': data,
-                    'nodestroy':True,
-                }
+            if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
+                raise osv.except_osv(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
         else:
             raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
+        return True
 
+    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+        if context is None:
+            context = {}
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data['form'].update(self.read(cr, uid, ids, ['soldeinit', 'reconcil', 'page_split'])[0])
+        if data['form']['filter'] == 'filter_date':
+            self._check_date(cr, uid, data, context)
+        data['form']['query_line'] = query_line
+        if data['form']['page_split']:
+            return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'account.third_party_ledger',
+                'datas': data,
+                'nodestroy':True,
+                    }
+        return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'account.third_party_ledger_other',
+                'datas': data,
+                'nodestroy':True,
+                }
 account_partner_ledger()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
