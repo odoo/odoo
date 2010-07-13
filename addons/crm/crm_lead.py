@@ -139,9 +139,7 @@ and users"),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.lead')]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage'),
         'user_id': fields.many2one('res.users', 'Salesman',help='By Default Salesman is Administrator when create New User'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
