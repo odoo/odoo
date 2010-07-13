@@ -58,7 +58,9 @@ class document_directory_content(osv.osv):
         'suffix': fields.char('Suffix', size=16),
         'report_id': fields.many2one('ir.actions.report.xml', 'Report'),
         'extension': fields.selection(_extension_get, 'Document Type', required=True, size=4),
-        'include_name': fields.boolean('Include Record Name', help="Check this field if you want that the name of the file start by the record name."),
+        'include_name': fields.boolean('Include Record Name', 
+                help="Check this field if you want that the name of the file to contain the record name." \
+                    "\nIf set, the directory will have to be a resource one."),
         'directory_id': fields.many2one('document.directory', 'Directory'),
     }
     _defaults = {
