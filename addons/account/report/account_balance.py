@@ -19,22 +19,14 @@
 #
 ##############################################################################
 
-import xml
-import copy
-from operator import itemgetter
-import datetime
-import xml.dom.minidom
 import os, time
-import re
-import sys
 
 from report import report_sxw
-import osv
-import tools
 import pooler
 from tools.translate import _
+from account_journal_common_default import account_journal_common_default
 
-class account_balance(report_sxw.rml_parse):
+class account_balance(report_sxw.rml_parse, account_journal_common_default):
     _name = 'report.account.account.balance'
 
     def set_context(self, objects, data, ids, report_type = None):
@@ -56,7 +48,7 @@ class account_balance(report_sxw.rml_parse):
             'lines': self.lines,
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
-            'get_fiscalyear':self.get_fiscalyear,
+            'get_fiscalyear':self._get_fiscalyear,
             'get_periods':self.get_periods,
         })
         self.context = context
@@ -65,16 +57,6 @@ class account_balance(report_sxw.rml_parse):
         if header==0:
             self.rml_header = ""
         return True
-
-    def get_fiscalyear(self, form):
-        res=[]
-        if form.has_key('fiscalyear_id'):
-            fisc_id = form['fiscalyear_id']
-            if not (fisc_id):
-                return ''
-            self.cr.execute("select name from account_fiscalyear where id = %s" , (int(fisc_id),))
-            res=self.cr.fetchone()
-        return res and res[0] or ''
 
     def get_periods(self, form):
         result=''

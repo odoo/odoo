@@ -29,10 +29,11 @@
 import time
 
 from report import report_sxw
+from account_journal_common_default import account_journal_common_default
 import rml_parse
 import pooler
 
-class general_ledger(rml_parse.rml_parse):
+class general_ledger(rml_parse.rml_parse, account_journal_common_default):
     _name = 'report.account.general.ledger'
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -65,8 +66,8 @@ class general_ledger(rml_parse.rml_parse):
             'sum_solde': self._sum_solde,
             'get_children_accounts': self.get_children_accounts,
             'sum_currency_amount_account': self._sum_currency_amount_account,
-            'get_fiscalyear': self.get_fiscalyear,
-            'get_account': self.get_account,
+            'get_fiscalyear': self._get_fiscalyear,
+            'get_account': self._get_account,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
         })
@@ -324,24 +325,6 @@ class general_ledger(rml_parse.rml_parse):
         else:
             currency_total = self.tot_currency = 0.0
             return currency_total
-
-    def get_fiscalyear(self,form):
-        return pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear_id']).name
-
-    def get_account(self,form):
-        return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr,self.uid,form['chart_account_id']).name
-
-    def get_start_period(self, form):
-        if form['filter'] == 'filter_period':
-            if form['period_from']:
-                return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_from']).name
-        return ''
-
-    def get_end_period(self, form):
-        if form['filter'] == 'filter_period':
-            if form['period_to']:
-                return pooler.get_pool(self.cr.dbname).get('account.period').browse(self.cr,self.uid,form['period_to']).name
-        return ''
 
 report_sxw.report_sxw('report.account.general.ledger', 'account.account', 'addons/account/report/general_ledger.rml', parser=general_ledger, header=False)
 report_sxw.report_sxw('report.account.general.ledger_landscape', 'account.account', 'addons/account/report/general_ledger_landscape.rml', parser=general_ledger, header=False)
