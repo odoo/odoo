@@ -167,6 +167,20 @@ and users"),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
     
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """This function returns value of partner email based on Partner Address
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case IDs
+        @param add: Id of Partner's address
+        @email: Partner's email ID
+        """
+        if not add:
+            return {'value': {'email_from': False, 'country_id': False}}
+        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+        return {'value': {'email_from': address.email, 'phone': address.phone, 'country_id': address.country_id.id}}
+    
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date
         @param self: The object pointer

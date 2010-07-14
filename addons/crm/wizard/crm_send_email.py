@@ -26,25 +26,18 @@ import base64
 import tools
 from crm import crm
 
-class crm_send_new_email(osv.osv_memory):
-    """ Sends new email for the case"""
-    _name = "crm.send.mail"
-
-crm_send_new_email()
-
 class crm_send_new_email_attachment(osv.osv_memory):
     _name = 'crm.send.mail.attachment'
 
     _columns = {
         'binary' : fields.binary('Attachment', required=True),
         'name' : fields.char('Name', size=128, required=True),
-
         'wizard_id' : fields.many2one('crm.send.mail', 'Wizard', required=True),
     }
 
 crm_send_new_email_attachment()
 
-class crm_send_new_email2(osv.osv_memory):
+class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
     _name = "crm.send.mail"
     _description = "Send new email"
@@ -52,12 +45,12 @@ class crm_send_new_email2(osv.osv_memory):
     _columns = {
         'email_to' : fields.char('To', size=512, required=True),
         'email_from' : fields.char('From', size=128, required=True),
+        'reply_to' : fields.char('Reply To', size=128, required=True, help="Reply-to of the Sales team defined on this case"),
         'email_cc' : fields.char('CC', size=512, help="Carbon Copy: list of recipients that will receive"\
                                     " a copy of this mail, and future communication related to this case"),
         'subject': fields.char('Subject', size=512, required=True),
         'text': fields.text('Message', required=True),
         'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),
-
         'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
     }
 
@@ -120,7 +113,7 @@ class crm_send_new_email2(osv.osv_memory):
                 body,
                 email_cc=email_cc,
                 attach=attach,
-                reply_to=case.section_id and case.section_id.reply_to,
+                reply_to=obj.reply_to,
                 openobject_id=str(case.id),
                 x_headers=x_headers
             )
@@ -156,7 +149,7 @@ class crm_send_new_email2(osv.osv_memory):
         if not context.get('model'):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
 
-        res = super(crm_send_new_email2, self).default_get(cr, uid, fields, context=context)
+        res = super(crm_send_new_email, self).default_get(cr, uid, fields, context=context)
 
         if context.get('mail') == 'reply':
             res.update(self.get_reply_defaults(cr, uid, fields, context=context))
@@ -171,9 +164,11 @@ class crm_send_new_email2(osv.osv_memory):
 
         for case in mod_obj.browse(cr, uid, res_id):
             if 'email_to' in fields:
-                res.update({'email_to': tools.ustr(case.email_from)})
+                res.update({'email_to': case.email_from and tools.ustr(case.email_from) or ''})
             if 'email_from' in fields:
-                res.update({'email_from': tools.ustr(user_mail_from)})
+                res.update({'email_from': user_mail_from and tools.ustr(user_mail_from) or ''})
+            if 'reply_to' in fields:
+                res.update({'reply_to': case.section_id.reply_to})
             if 'subject' in fields:
                 res.update({'subject': tools.ustr(context.get('subject', case.name) or '')})
             if 'email_cc' in fields:
@@ -249,5 +244,5 @@ class crm_send_new_email2(osv.osv_memory):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
         return True
 
-crm_send_new_email2()
+crm_send_new_email()
 
