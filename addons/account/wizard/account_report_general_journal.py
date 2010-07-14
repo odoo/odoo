@@ -27,7 +27,7 @@ class account_general_journal(osv.osv_memory):
     _description = 'Account General Journal'
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context)
+        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
         return {'type': 'ir.actions.report.xml', 'report_name': 'account.general.journal', 'datas': data, 'nodestroy':True, }
 
 account_general_journal()
