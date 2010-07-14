@@ -102,6 +102,15 @@ class tinythunderbird_partner(osv.osv):
         create_id = self.pool.get('res.partner.address').create(cr, user, dictcreate)
         return create_id
 
+  #  def thunderbird_createcontact1(self,cr,user,vals):
+   #     dictcreate = dict(vals)
+    #    address_obj = self.pool.get('res.partner.address')
+     #   search_id = address_obj.search(cr, user,[('name','=',dictcreate['name'])])
+      #  if search_id:
+       #     return 0
+        #create_id = address_obj.create(cr, user, dictcreate)
+        #return create_id
+
     def thunderbird_createpartner(self,cr,user,vals):
         dictcreate = dict(vals)
         address_obj = self.pool.get('res.partner')
@@ -110,6 +119,16 @@ class tinythunderbird_partner(osv.osv):
             return 0
         create_id = address_obj.create(cr, user, dictcreate)
         return create_id
+
+    def thunderbird_createnewaddress(self,cr,user,vals):
+        dictcreate = dict(vals)
+        address_obj = self.pool.get('res.partner.address')
+        search_id = address_obj.search(cr, user,[('name','=',dictcreate['name'])])
+        if search_id:
+            return 0
+        create_id = address_obj.create(cr, user, dictcreate)
+        return create_id
+
 
     def thunderbird_searchobject(self,cr,user,vals):
         dictcreate = dict(vals)
