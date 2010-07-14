@@ -366,6 +366,10 @@ class account_voucher(osv.osv):
                 'move_id': move_id,
                 'move_ids':[(6, 0,line_ids)]
             }
+            
+            message = _('Voucher ') + " '" + inv.name + "' "+ _("is confirm")
+            self.log(cr, uid, inv.id, message)
+            
             self.write(cr, uid, [inv.id], rec)
             
         return True

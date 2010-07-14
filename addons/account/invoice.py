@@ -891,7 +891,11 @@ class account_invoice(osv.osv):
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
+            message = _('Invoice ') + " '" + inv.name + "' "+ _("is confirm")
+            self.log(cr, uid, inv.id, message)
+            
         self._log_event(cr, uid, ids)
+        
         return True
 
     def line_get_convert(self, cr, uid, x, part, date, context=None):
