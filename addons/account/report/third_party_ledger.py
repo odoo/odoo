@@ -26,10 +26,11 @@ import datetime
 import pooler
 import rml_parse
 from report import report_sxw
+from account_journal_common_default import account_journal_common_default
 
-class third_party_ledger(rml_parse.rml_parse):
+class third_party_ledger(rml_parse.rml_parse, account_journal_common_default):
 
-	def __init__(self, cr, uid, name, context):
+	def __init__(self, cr, uid, name, context=None):
 		self.date_lst = []
 		self.date_lst_string = ''
 		super(third_party_ledger, self).__init__(cr, uid, name, context=context)
@@ -40,7 +41,6 @@ class third_party_ledger(rml_parse.rml_parse):
 			'sum_credit_partner': self._sum_credit_partner,
 			'sum_debit': self._sum_debit,
 			'sum_credit': self._sum_credit,
-#			'get_company': self._get_company,
 			'get_currency': self._get_currency,
 			'comma_me' : self.comma_me,
 		})
@@ -103,6 +103,7 @@ class third_party_ledger(rml_parse.rml_parse):
 			return new
 		else:
 			return self.comma_me(new)
+
 	def special_map(self):
 		string_map = ''
 		for date_string in self.date_lst:
@@ -135,7 +136,6 @@ class third_party_ledger(rml_parse.rml_parse):
 		if self.date_lst:
 			self.date_lst_string = '\'' + '\',\''.join(map(str, self.date_lst)) + '\''
 		#
-		#new_ids = [id for (id,) in self.cr.fetchall()]
 		if data['form']['result_selection'] == 'supplier':
 			self.ACCOUNT_TYPE = ['payable']
 		elif data['form']['result_selection'] == 'customer':
@@ -152,8 +152,6 @@ class third_party_ledger(rml_parse.rml_parse):
 				'WHERE a.type IN %s' \
 				"AND a.active", (tuple(self.ACCOUNT_TYPE), ))
 		self.account_ids = [a for (a,) in self.cr.fetchall()]
-
-		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
 
 		if self.date_lst and data['form']['soldeinit'] :
@@ -196,7 +194,6 @@ class third_party_ledger(rml_parse.rml_parse):
 		super(third_party_ledger, self).set_context(objects, data, new_ids, report_type)
 
 	def lines(self, partner,data):
-		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		full_account = []
 		if data['form']['reconcil'] :
 			RECONCILE_TAG = " "
@@ -241,12 +238,9 @@ class third_party_ledger(rml_parse.rml_parse):
 				sum = r['debit'] - r['credit']
 				r['progress'] = sum
 				full_account.append(r)
-
 		return full_account
 
 	def _sum_debit_partner(self, partner, data):
-
-		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		result_tmp = 0.0
 		if data['form']['reconcil'] :
 			RECONCILE_TAG = " "
@@ -285,7 +279,6 @@ class third_party_ledger(rml_parse.rml_parse):
 		return result_tmp
 
 	def _sum_credit_partner(self, partner, data):
-		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		result_tmp = 0.0
 		if data['form']['reconcil'] :
 			RECONCILE_TAG = " "
@@ -326,7 +319,6 @@ class third_party_ledger(rml_parse.rml_parse):
 	def _sum_debit(self, data):
 		if not self.ids:
 			return 0.0
-		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		result_tmp = 0.0
 		if data['form']['reconcil'] :
 			RECONCILE_TAG = " "
@@ -360,14 +352,11 @@ class third_party_ledger(rml_parse.rml_parse):
 				result_tmp = contemp[0] or 0.0
 			else:
 				result_tmp = result_tmp + 0.0
-
 		return result_tmp
-
 
 	def _sum_credit(self, data):
 		if not self.ids:
 			return 0.0
-		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		result_tmp = 0.0
 		if data['form']['reconcil'] :
 			RECONCILE_TAG = " "

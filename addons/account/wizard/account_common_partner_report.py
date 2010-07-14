@@ -18,25 +18,26 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import osv, fields
-from tools.translate import _
 
 class account_common_partner_report(osv.osv_memory):
     _name = 'account.common.partner.report'
     _description = 'Account Common Partner Report'
     _inherit = "account.common.report"
-
     _columns = {
         'result_selection': fields.selection([('customer','Receivable Accounts'),
                                               ('supplier','Payable Accounts'),
                                               ('Suppliers and Customers' ,'Receivable and Payable Accounts')],
-                                              'Partner', required=True),
+                                              "Partner's", required=True),
                 }
     _defaults = {
         'result_selection' : 'Suppliers and Customers',
-                 }
+                }
 
     def pre_print_report(self, cr, uid, ids, data, query_line, context=None):
+        if context is None:
+            context = {}
         data['form'].update(self.read(cr, uid, ids, ['result_selection'])[0])
         data['form']['active_ids'] = data['form']['chart_account_id'] # Check me
         data['form']['query_line'] = query_line

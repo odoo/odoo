@@ -18,38 +18,33 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
-from tools.translate import _
 from osv import fields, osv
 
 class account_partner_balance(osv.osv_memory):
     """
-    This wizard will provide the partner balance report by periods, between any two dates.
+        This wizard will provide the partner balance report by periods, between any two dates.
     """
     _inherit = 'account.common.partner.report'
     _name = 'account.partner.balance'
     _description = 'Print Account Partner Balance'
-
     _columns = {
-        'soldeinit': fields.boolean('Include initial balances'),
+        'soldeinit': fields.boolean('Include Initial Balances'),
                 }
-    _defaults={
-       'soldeinit' : True,
+    _defaults = {
+        'soldeinit' : True,
                 }
 
     def _check_date(self, cr, uid, data, context=None):
-        sql = """
-            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
+        sql = """ SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
         cr.execute(sql, (data['form']['date_from'],))
         res = cr.dictfetchall()
         if res:
             if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
                 raise  osv.except_osv(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
-            else:
-                return True
         else:
             raise osv.except_osv(_('UserError'),_('Date not in a defined fiscal year'))
+        return True
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:
@@ -57,8 +52,7 @@ class account_partner_balance(osv.osv_memory):
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
         data['form'].update(self.read(cr, uid, ids, ['soldeinit'])[0])
         if data['form']['filter'] == 'filter_date':
-            self._check_date(cr, uid, data, context)
-        data['form']['query_line'] = query_line
+            self._check_date(cr, uid, data, context=context)
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.partner.balance',

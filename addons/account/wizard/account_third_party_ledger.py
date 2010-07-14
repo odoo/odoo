@@ -18,9 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
-from tools.translate import _
 from osv import fields, osv
 
 class account_partner_ledger(osv.osv_memory):
@@ -36,9 +34,9 @@ class account_partner_ledger(osv.osv_memory):
         'page_split': fields.boolean('One Partner Per Page'),
                 }
     _defaults = {
-               'reconcile' : True,
-               'soldeinit' : True,
-               'page_split' : False,
+       'reconcile' : True,
+       'soldeinit' : True,
+       'page_split' : False,
                }
 
     def _check_date(self, cr, uid, data, context=None):
@@ -62,7 +60,6 @@ class account_partner_ledger(osv.osv_memory):
         data['form'].update(self.read(cr, uid, ids, ['soldeinit', 'reconcil', 'page_split'])[0])
         if data['form']['filter'] == 'filter_date':
             self._check_date(cr, uid, data, context)
-        data['form']['query_line'] = query_line
         if data['form']['page_split']:
             return {
                 'type': 'ir.actions.report.xml',
@@ -76,6 +73,7 @@ class account_partner_ledger(osv.osv_memory):
                 'datas': data,
                 'nodestroy':True,
                 }
+
 account_partner_ledger()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

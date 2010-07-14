@@ -27,10 +27,12 @@ from report import report_sxw
 from account_journal_common_default import account_journal_common_default
 
 class partner_balance(report_sxw.rml_parse, account_journal_common_default):
-    def __init__(self, cr, uid, name, context):
+    def __init__(self, cr, uid, name, context=None):
+        if context is None:
+            context = {}
         super(partner_balance, self).__init__(cr, uid, name, context=context)
         self.date_lst = []
-        self.account_ids = False
+        self.account_ids = []
         self.localcontext.update( {
             'time': time,
             'lines': self.lines,
@@ -52,7 +54,7 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
     #
 
     def get_periods(self, form):
-            result=''
+            result = ''
             if form.has_key('periods') and form['periods']:
                 period_ids = form['periods']
                 per_ids = self.pool.get('account.period').browse(self.cr, self.uid, form['periods'])
@@ -67,9 +69,9 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
                 len_res = len(res)
                 for r in res:
                     if r == res[len_res-1]:
-                        result+=r.name+". "
+                        result += r.name + ". "
                     else:
-                        result+=r.name+", "
+                        result += r.name + ", "
             return str(result and result[:-1]) or 'ALL'
 
     def date_range(self, start, end):
@@ -101,14 +103,12 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
         self.date_lst = date_array
         self.date_lst.sort()
 
-
     def transform_date_into_date_array(self, data):
         return_array = self.date_range(data['form']['date_from'], data['form']['date_to'])
         self.date_lst = return_array
         self.date_lst.sort()
 
     def transform_none_into_date_array(self, data):
-
         sql = "SELECT min(date) as start_date from account_move_line"
         self.cr.execute(sql)
         start_date = self.cr.fetchone()[0]
@@ -136,7 +136,7 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
         else:
             return self.comma_me(new)
 
-    def set_context(self, objects, data, ids, report_type = None):
+    def set_context(self, objects, data, ids, report_type=None):
         # Transformation des date
         #
         #
@@ -147,9 +147,7 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
         elif data['form']['filter'] == 'filter_period':
             self.transform_period_into_date_array(data)
 
-
         ## Compute Code
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         #
         if (data['form']['result_selection'] == 'customer' ):
             self.ACCOUNT_TYPE = ('receivable',)
@@ -166,12 +164,9 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
                     "WHERE a.type IN %s " \
                     "AND a.active", (self.ACCOUNT_TYPE,))
         self.account_ids = [a for (a,) in self.cr.fetchall()]
-
         return super(partner_balance, self).set_context(objects, data, ids, report_type)
 
     def lines(self,data):
-
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         full_account = []
         result_tmp = 0.0
         if self.date_lst:
@@ -340,14 +335,11 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
                         (tuple(self.account_ids), tuple(self.date_lst)))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
         result_tmp = result_tmp + temp_res
-
         return result_tmp
 
     def _sum_credit(self, data):
         if not self.ids:
             return 0.0
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
-
         result_tmp = 0.0
         temp_res = 0.0
         if self.date_lst:
@@ -358,14 +350,11 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
                         "AND l.date IN %s",
                         (tuple(self.account_ids), tuple(self.date_lst),))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
-        result_tmp = result_tmp + temp_res
-
-        return result_tmp
+        return result_tmp + temp_res
 
     def _sum_litige(self, data):
         if not self.ids:
             return 0.0
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         result_tmp = 0.0
         temp_res = 0.0
         if self.date_lst:
@@ -377,14 +366,11 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
                         "AND l.blocked=TRUE ",
                         (tuple(self.account_ids), tuple(self.date_lst),))
             temp_res = float(self.cr.fetchone()[0] or 0.0)
-        result_tmp = result_tmp + temp_res
-
-        return result_tmp
+        return result_tmp + temp_res
 
     def _sum_sdebit(self, data):
         if not self.ids:
             return 0.0
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         result_tmp = 0.0
         a = 0.0
         if self.date_lst:
@@ -404,15 +390,11 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
                 result_tmp = result_tmp + (a or 0.0)
             else:
                 result_tmp = 0.0
-
         return result_tmp
 
     def _sum_scredit(self, data):
-
         if not self.ids:
             return 0.0
-        account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
-
         result_tmp = 0.0
         a = 0.0
         if self.date_lst:
@@ -427,13 +409,11 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
                 "GROUP BY l.partner_id",
                 (tuple(self.account_ids), tuple(self.date_lst),))
             a = self.cr.fetchone()[0] or 0.0
-
             if self.cr.fetchone() != None:
                 result_tmp = result_tmp + (a or 0.0)
 
             else:
                 result_tmp = 0.0
-
         return result_tmp
 
     def _solde_balance_debit(self, data):
@@ -447,8 +427,6 @@ class partner_balance(report_sxw.rml_parse, account_journal_common_default):
     def _get_currency(self, form):
         return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
 
-report_sxw.report_sxw('report.account.partner.balance', 'res.partner',
-    'account/report/partner_balance.rml',parser=partner_balance,
-    header=0)
+report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'account/report/partner_balance.rml',parser=partner_balance, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

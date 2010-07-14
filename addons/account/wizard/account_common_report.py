@@ -81,17 +81,17 @@ class account_common_report(osv.osv_memory):
         return res
 
     def _get_account(self, cr, uid, context=None):
-        tmp = self.pool.get('account.account').search(cr, uid, [], limit=1 )
-        if not tmp:
+        accounts = self.pool.get('account.account').search(cr, uid, [], limit=1 )
+        if not accounts:
             return False
-        return tmp[0]
+        return accounts[0]
 
     def _get_fiscalyear(self, cr, uid, context=None):
         now = time.strftime('%Y-%m-%d')
-        tmp = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
-        if not tmp:
+        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
+        if not fiscalyears:
             return False
-        return tmp[0]
+        return fiscalyears[0]
 
     def _get_all_journal(self, cr, uid, context=None):
         return self.pool.get('account.journal').search(cr, uid ,[])
@@ -126,8 +126,6 @@ class account_common_report(osv.osv_memory):
                 raise osv.except_osv(_('Error'),_('Start period should be smaller then End period'))
             period_date_start = period_obj.read(cr, uid, data['form']['period_from'], ['date_start'])['date_start']
             period_date_stop = period_obj.read(cr, uid, data['form']['period_to'], ['date_stop'])['date_stop']
-#            result['date_from'] = period_date_start
-#            result['date_to'] = period_date_stop
             cr.execute('SELECT id FROM account_period WHERE date_start >= %s AND date_stop <= %s', (period_date_start, period_date_stop))
             result['periods'] = map(lambda x: x[0], cr.fetchall())
         return result
@@ -142,7 +140,7 @@ class account_common_report(osv.osv_memory):
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
         data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id'])[0]
-        if data['form']['filter'] == 'filter_period': # FIX Me => onchange on period from and to is not working so did this ..but correct it!
+        if data['form']['filter'] == 'filter_period': # FIX Me => on_change on period from and to is not working so did this ..but correct it!
             start_date = self.onchange_period_from(cr, uid, ids, data['form']['filter'], data['form']['period_from'])
             end_date = self.onchange_period_to(cr, uid, ids, data['form']['filter'], data['form']['period_to'])
             data['form']['date_from'] = start_date['value']['date_from']
