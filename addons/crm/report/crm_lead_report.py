@@ -76,6 +76,7 @@ class crm_lead_report(osv.osv):
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
@@ -141,6 +142,7 @@ class crm_lead_report(osv.osv):
                     c.section_id,
                     c.categ_id,
                     c.partner_id,
+                    c.country_id,
                     c.planned_revenue,
                     1 as nbr,
                     0 as avg_answers,

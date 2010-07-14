@@ -91,7 +91,7 @@
                         <field name="mobile"/>
                         <newline/>
                         <separator string="Links" colspan="4" col="3"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)"/>
                         <button
                             name="%(action_crm_lead2partner)d"
                             icon="gtk-index" type="action"
