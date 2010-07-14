@@ -27,7 +27,7 @@ import pickle
 import re
 
 # for eval context:
-import time 
+import time
 import release
 try:
     import pytz
@@ -45,6 +45,7 @@ import netsvc
 import osv
 import pooler
 from config import config
+from yaml_import import convert_yaml_import
 
 # Import of XML records requires the unsafe eval as well,
 # almost everywhere, which is ok because it supposedly comes
@@ -400,8 +401,8 @@ form: module.record_id""" % (xml_id,)
         auto_refresh = rec.get('auto_refresh','').encode('utf-8')
 
         # WARNING: don't remove the unused variables and functions below as they are
-        # used by the unsafe_eval() call. 
-        # TODO: change this into an eval call with locals and globals parameters 
+        # used by the unsafe_eval() call.
+        # TODO: change this into an eval call with locals and globals parameters
         uid = self.uid
         active_id = str("active_id") # for further reference in client/bin/tools/__init__.py
         def ref(str_id):
