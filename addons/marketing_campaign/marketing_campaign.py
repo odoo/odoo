@@ -341,7 +341,9 @@ class marketing_campaign_activity(osv.osv):
         'variable_cost': fields.float('Variable Cost'),
         'revenue': fields.float('Revenue'),
         'signal': fields.char('Signal', size=128,
-                              help='An activity with a signal can be called programmatically. Attention, that always create the workiten'),
+                              help='An activity with a signal can be called programmatically. Attention, the workitem is always created when the signal is send'),
+        'keep_if_condition_not_met': fields.boolean('Keep if condition not met',
+                                                    help="By activating this option, the workitems that aren't processed because the condition is not met are marked as cancelled instead of being deleted.")
     }
 
     _defaults = {
@@ -543,7 +545,10 @@ class marketing_campaign_workitem(osv.osv):
             campaign_mode = workitem.campaign_id.mode
             if condition:
                 if not eval(condition, eval_context):
-                    workitem.write({'state': 'cancelled'}, context=context)
+                    if activity.keep_if_condition_not_met:
+                        workitem.write({'state': 'cancelled'}, context=context)
+                    else:
+                        workitem.unlink(context=context)
                     return
             result = True
             if campaign_mode in ('manual', 'active'):
