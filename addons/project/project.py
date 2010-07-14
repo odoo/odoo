@@ -457,7 +457,7 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
-                elif project.warn_manager and cntx.get('mail_send',False):
+                elif project.warn_manager and cntx.get('mail_send',True):
                     mail_send = True
             message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
             self.log(cr, uid, task.id, message)

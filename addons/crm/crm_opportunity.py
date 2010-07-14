@@ -46,7 +46,7 @@ class crm_opportunity(osv.osv):
                                  domain="[('partner_id','=',partner_id)]"), 
 
         # Opportunity fields
-        'probability': fields.float('Probability (%)'),
+        'probability': fields.float('Probability (%)',group_operator="avg"),
         'planned_revenue': fields.float('Expected Revenue'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
