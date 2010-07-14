@@ -64,16 +64,16 @@ class account_pl_report(osv.osv_memory):
         if data['form']['filter'] == 'bydate':
            return self._check_date(cr, uid, data, context=context)
         if data['form']['display_type']:
-            return {    'type': 'ir.actions.report.xml',
-                        'report_name': 'pl.account.horizontal',
-                        'datas': data,
-                        'nodestroy':True,
-                        }
+            return {'type': 'ir.actions.report.xml',
+                    'report_name': 'pl.account.horizontal',
+                    'datas': data,
+                    'nodestroy':True,
+                    }
         else:
-            return {    'type': 'ir.actions.report.xml',
-                        'report_name': 'pl.account',
-                        'datas': data,
-                        'nodestroy':True,
+            return {'type': 'ir.actions.report.xml',
+                    'report_name': 'pl.account',
+                    'datas': data,
+                    'nodestroy':True,
                         }
 
 account_pl_report()
