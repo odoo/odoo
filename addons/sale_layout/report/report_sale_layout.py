@@ -68,9 +68,9 @@ class sale_order_1(report_sxw.rml_parse):
                 res['price_unit']="%.2f"%(entry.price_unit or 0.00)
                 res['discount']="%.2f"%(entry.discount and entry.discount or 0.00)
                 res['price_subtotal']="%.2f"%(entry.price_subtotal and  entry.price_subtotal or 0.00)
-                sub_total[i]= entry.price_subtotal and  entry.price_subtotal or 0.00
+                sub_total[i]= entry.price_subtotal and  entry.price_subtotal 
                 i=i+1
-                res['note']=entry.notes
+                res['note']=entry.notes or ''
                 res['currency']=sale_order.pricelist_id.currency_id.name
                 res['layout_type']=entry.layout_type
                 
@@ -81,7 +81,7 @@ class sale_order_1(report_sxw.rml_parse):
                 res['discount']=''
                 res['tax_id']=''
                 res['layout_type']=entry.layout_type
-                res['note']=entry.notes
+                res['note']=entry.notes or ''
                 res['product_uom']=''
 
                 if entry.layout_type=='subtotal':

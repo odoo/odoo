@@ -315,10 +315,11 @@
     <blockTable colWidths="66.0,461.0" style="Table3">
       <tr>
         <td>
-          <para style="P7"><font>[[ a['note'] and a['note']=='' and removeParentNode('blockTable') ]]</font><font>[[ repeatIn(( a['note'] and a['note'].splitlines()) or [], 'note') ]]</font></para>
+        	
+          <para style="P7"><font>[[ a['note']=='' and removeParentNode('blockTable') ]]</font><font>[[ repeatIn(( a['note'] and a['note'].splitlines()) or [], 'note') ]]</font></para>
         </td>
         <td>
-          <para style="P7">[[ note or removeParentNode('blockTable') ]]</para>
+          <para style="P7">[[ a['note'] and  note or removeParentNode('blockTable') ]]</para>
         </td>
       </tr>
     </blockTable>
