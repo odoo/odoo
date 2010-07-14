@@ -93,8 +93,8 @@ class project_phase(osv.osv):
 
     _columns = {
         'name': fields.char("Name", size=64, required=True),
-        'date_start': fields.datetime('Start Date', help="Starting Date of the phase"),
-        'date_end': fields.datetime('End Date', help="Ending Date of the phase"),
+        'date_start': fields.date('Start Date', help="Starting Date of the phase"),
+        'date_end': fields.date('End Date', help="Ending Date of the phase"),
         'constraint_date_start': fields.datetime('Start Date', help='force the phase to start after this date'),
         'constraint_date_end': fields.datetime('End Date', help='force the phase to finish before this date'),
         'project_id': fields.many2one('project.project', 'Project', required=True),
@@ -114,7 +114,7 @@ class project_phase(osv.osv):
         'responsible_id': lambda obj,cr,uid,context: uid,
         'state': 'draft',
         'sequence': 10,
-        'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', 'day')], context=c)[0]
+        'product_uom': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Day'))], context=c)[0]
     }
     _order = "name"
     _constraints = [
@@ -247,6 +247,8 @@ class project_resource_allocation(osv.osv):
     _columns = {
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', required=True),
+        'phase_id_date_start': fields.related('phase_id', 'date_start', type='date', string='Starting Date of the phase'),
+        'phase_id_date_end': fields.related('phase_id', 'date_end', type='date', string='Ending Date of the phase'),
         'useability': fields.float('Usability', help="Usability of this resource for this project phase in percentage (=50%)"),
         'date_start': fields.related('phase_id', 'date_start', type='datetime', string='Start Date'),
         'date_end': fields.related('phase_id', 'date_end', type='datetime', string='End Date'),

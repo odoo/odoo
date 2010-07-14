@@ -8,6 +8,20 @@
     # Project Resource Allocation
     # ------------------------------------------------------
 
+        <record id="view_project_resource_allocation_gantt" model="ir.ui.view">
+            <field name="name">project.resource.allocation.gantt</field>
+            <field name="model">project.resource.allocation</field>
+            <field name="type">gantt</field>
+            <field name="arch" type="xml">
+              <gantt color="phase_id" date_start="phase_id_date_start" date_stop="phase_id_date_end" string="R.A.">
+               <level object="project.resource" link="resource_id" domain="[]">
+                   <field name="useability"/>
+                </level>
+              </gantt>
+            </field>
+        </record>
+
+
         <record id="view_project_resource_allocation_form" model="ir.ui.view">
             <field name="name">project.resource.allocation.form</field>
             <field name="model">project.resource.allocation</field>

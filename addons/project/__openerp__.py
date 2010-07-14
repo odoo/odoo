@@ -56,7 +56,8 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
         'board_project_demo.xml',
     ],
     'test':[
-            'test/test_project.yml'
+            'test/test_project.yml',
+            'test/test_project_delegation.yml',
             ],
     'installable': True,
     'active': False,

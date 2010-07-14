@@ -48,6 +48,15 @@ class hr_analytic_issue(osv.osv):
     _columns = {
         'issue_id' : fields.many2one('project.issue', 'Issue'),
     }
+    
+    def _get_analytic_account(self, cr, uid, context={}):
+        if context.get('account_id', False):
+            return context.get('account_id')
+        return False
+    
+    _defaults = {
+              'account_id' : _get_analytic_account,
+              }
 
 hr_analytic_issue()
 

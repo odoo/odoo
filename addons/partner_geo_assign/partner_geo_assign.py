@@ -39,14 +39,14 @@ def geo_find(addr):
     except Exception, e:
         raise osv.except_osv(_('Network error'), 
                              _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
-    
+
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
         'partner_latitude': fields.float('Geo Latitude'),
         'partner_longitude': fields.float('Geo Longitude'),
-        'date_assign': fields.date('Assignation Date'),
+        'date_localization': fields.date('Geo Localization Date'),
         'partner_weight': fields.integer('Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
     }
@@ -64,7 +64,7 @@ class res_partner(osv.osv):
                 self.write(cr, uid, [partner.id], {
                     'partner_latitude': result[0],
                     'partner_longitude': result[1],
-                    'date_assign': time.strftime('%Y-%m-%d')
+                    'date_localization': time.strftime('%Y-%m-%d')
                 }, context=context)
         return True
 res_partner()
@@ -74,33 +74,7 @@ class crm_lead(osv.osv):
     _columns = {
         'partner_latitude': fields.float('Geo Latitude'),
         'partner_longitude': fields.float('Geo Longitude'),
-        'partner_assigned_id': fields.many2one('res.partner','Assigned Partner'),
-        'date_assign': fields.date('Assignation Date')
     }
-    def forward_to_partner(self, cr, uid, ids, context=None):
-        fobj = self.pool.get('crm.lead.forward.to.partner')
-        for lead in self.browse(cr, uid, ids, context=context):
-            context = {'active_id': lead.id, 'active_ids': [lead.id], 'active_model': 'crm.lead'}
-            if lead.partner_assigned_id:
-                email = False
-                if lead.partner_assigned_id.address:
-                    email = lead.partner_assigned_id.address[0].email
-                if not email:
-                    raise osv.except_osv(_('Error !'), _('No email on the partner assigned to this opportunity'))
-
-                values = fobj.default_get(cr, uid, ['name', 'email_from'], context=context)
-                if not values.get('email_from'):
-                    raise osv.except_osv(_('Error !'), _('Please set an email address in your user preferences'))
-                values.update({
-                    'history': 'whole',
-                    'email_to': email,
-                    'message': fobj._get_case_history(cr, uid, 'whole', lead.id, context) or False,
-                    })
-                forward = fobj.create(cr, uid, values, context)
-                fobj.action_forward(cr, uid, [forward], context)
-            else:
-                raise osv.except_osv(_('Error !'), _('No partner assigned to this opportunity'))
-        return True
 
     def assign_partner(self, cr, uid, ids, context=None):
         ok = False
