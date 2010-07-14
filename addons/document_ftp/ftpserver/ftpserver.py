@@ -1464,6 +1464,7 @@ class FTPHandler(asynchat.async_chat):
                 errno.EINVAL: 504,
                 errno.ENOENT: 550,
                 errno.EREMOTE: 450,
+                errno.EEXIST: 521,
                 }
 
         # mlsx facts attributes
