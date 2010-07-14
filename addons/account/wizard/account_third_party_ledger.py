@@ -32,6 +32,7 @@ class account_partner_ledger(osv.osv_memory):
         'soldeinit': fields.boolean('Include initial balances'),
         'reconcil': fields.boolean('Include Reconciled Entries'),
         'page_split': fields.boolean('One Partner Per Page'),
+        'amount_currency': fields.boolean("With Currency", help='Print report with currency column'),
                 }
     _defaults = {
        'reconcile' : True,
@@ -57,7 +58,7 @@ class account_partner_ledger(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['soldeinit', 'reconcil', 'page_split'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['soldeinit', 'reconcil', 'page_split', 'amount_currency'])[0])
         if data['form']['filter'] == 'filter_date':
             self._check_date(cr, uid, data, context)
         if data['form']['page_split']:
