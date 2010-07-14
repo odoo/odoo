@@ -24,9 +24,9 @@ import datetime
 
 import pooler
 from report import report_sxw
-from account_journal_common_default import account_journal_common_default
+from common_report_header import common_report_header
 
-class partner_balance(report_sxw.rml_parse, account_journal_common_default):
+class partner_balance(report_sxw.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
         if context is None:
             context = {}

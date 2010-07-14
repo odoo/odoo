@@ -21,7 +21,7 @@
 
 import pooler
 
-class account_journal_common_default(object):
+class common_report_header(object):
 
     def _sum_debit(self, period_id=False, journal_id=False):
         if journal_id and isinstance(journal_id, int):

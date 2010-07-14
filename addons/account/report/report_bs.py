@@ -25,9 +25,9 @@ import pooler
 import rml_parse
 from report import report_sxw
 from account.report import report_pl
-from account_journal_common_default import account_journal_common_default
+from common_report_header import common_report_header
 
-class report_balancesheet_horizontal(rml_parse.rml_parse, account_journal_common_default):
+class report_balancesheet_horizontal(rml_parse.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
         super(report_balancesheet_horizontal, self).__init__(cr, uid, name, context=context)
         self.obj_pl=report_pl.report_pl_account_horizontal(cr, uid, name, context=context)

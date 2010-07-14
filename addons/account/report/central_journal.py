@@ -22,12 +22,12 @@
 import time
 
 from report import report_sxw
-from account_journal_common_default import account_journal_common_default
+from common_report_header import common_report_header
 import pooler
 #
 # Use period and Journal for selection or resources
 #
-class journal_print(report_sxw.rml_parse, account_journal_common_default):
+class journal_print(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
         if context is None:

@@ -29,11 +29,11 @@
 import time
 
 from report import report_sxw
-from account_journal_common_default import account_journal_common_default
+from common_report_header import common_report_header
 import rml_parse
 import pooler
 
-class general_ledger(rml_parse.rml_parse, account_journal_common_default):
+class general_ledger(rml_parse.rml_parse, common_report_header):
     _name = 'report.account.general.ledger'
 
     def set_context(self, objects, data, ids, report_type=None):
