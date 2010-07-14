@@ -120,22 +120,21 @@ class crm_send_new_email(osv.osv_memory):
 
             if not flag:
                 raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
-            if flag:
-                case_pool.history(cr, uid, [case], _('Send'), history=True, \
-                                email=obj.email_to, details=body, \
-                                subject=obj.subject, email_from=email_from, \
-                                email_cc=email_cc, message_id=message_id, \
-                                references=ref_id or message_id, attach=attach)
-                if obj.state == 'unchanged':
-                    pass
-                elif obj.state == 'done':
-                    case_pool.case_close(cr, uid, [case.id])
-                elif obj.state == 'draft':
-                    case_pool.case_reset(cr, uid, [case.id])
-                elif obj.state in ['cancel', 'open', 'pending']:
-                    act = 'case_' + obj.state
-                    getattr(case_pool, act)(cr, uid, [case.id])
-                cr.commit()
+
+            case_pool.history(cr, uid, [case], _('Send'), history=True, \
+                            email=obj.email_to, details=body, \
+                            subject=obj.subject, email_from=email_from, \
+                            email_cc=email_cc, message_id=message_id, \
+                            references=ref_id or message_id, attach=attach)
+            if obj.state == 'unchanged':
+                pass
+            elif obj.state == 'done':
+                case_pool.case_close(cr, uid, [case.id])
+            elif obj.state == 'draft':
+                case_pool.case_reset(cr, uid, [case.id])
+            elif obj.state in ['cancel', 'open', 'pending']:
+                act = 'case_' + obj.state
+                getattr(case_pool, act)(cr, uid, [case.id])
 
         return {}
 
