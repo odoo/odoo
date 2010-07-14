@@ -47,7 +47,7 @@ class account_pl_report(osv.osv_memory):
         if context is None:
             context = {}
         sql = """ SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql,(data['form']['date_from']))
+        cr.execute(sql,(data['form']['date_from'],))
         res = cr.dictfetchall()
         if res:
             if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
@@ -61,8 +61,8 @@ class account_pl_report(osv.osv_memory):
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['display_account',  'display_type'])[0])
         data['form']['query_line'] = query_line
-        if data['form']['filter'] == 'bydate':
-           return self._check_date(cr, uid, data, context=context)
+        if data['form']['filter'] == 'filter_date':
+           self._check_date(cr, uid, data, context=context)
         if data['form']['display_type']:
             return {'type': 'ir.actions.report.xml',
                     'report_name': 'pl.account.horizontal',

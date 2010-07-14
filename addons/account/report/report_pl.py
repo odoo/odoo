@@ -28,8 +28,8 @@ from account_journal_common_default import account_journal_common_default
 
 class report_pl_account_horizontal(rml_parse.rml_parse, account_journal_common_default):
 
-    def __init__(self, cr, uid, name, context):
-        super(report_pl_account_horizontal, self).__init__(cr, uid, name, context)
+    def __init__(self, cr, uid, name, context=None):
+        super(report_pl_account_horizontal, self).__init__(cr, uid, name, context=context)
         self.result_sum_dr = 0.0
         self.result_sum_cr = 0.0
         self.res_pl = {}
@@ -75,7 +75,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, account_journal_common_d
                 ]
 
         ctx = self.context.copy()
-        ctx['state'] = form['context'].get('state','all')
+#        ctx['state'] = form['context'].get('state','all')
         ctx['fiscalyear'] = form['fiscalyear']
 
         if form['filter']=='filter_period' :

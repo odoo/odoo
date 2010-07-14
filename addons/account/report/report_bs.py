@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,45 +15,46 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import pooler
 import time
-import mx.DateTime
+
+import pooler
 import rml_parse
 from report import report_sxw
 from account.report import report_pl
+from account_journal_common_default import account_journal_common_default
 
-class report_balancesheet_horizontal(rml_parse.rml_parse):
-    def __init__(self, cr, uid, name, context):
-        super(report_balancesheet_horizontal, self).__init__(cr, uid, name, context)
-        self.obj_pl=report_pl.report_pl_account_horizontal(cr, uid, name, context)
-        self.result_sum_dr=0.0
-        self.result_sum_cr=0.0
+class report_balancesheet_horizontal(rml_parse.rml_parse, account_journal_common_default):
+    def __init__(self, cr, uid, name, context=None):
+        super(report_balancesheet_horizontal, self).__init__(cr, uid, name, context=context)
+        self.obj_pl=report_pl.report_pl_account_horizontal(cr, uid, name, context=context)
+        self.result_sum_dr = 0.0
+        self.result_sum_cr = 0.0
         self.result = {}
-        self.res_pl={}
-        self.result_temp=[]
+        self.res_pl = {}
+        self.result_temp = []
         self.localcontext.update({
             'time': time,
             'get_lines' : self.get_lines,
             'get_lines_another' : self.get_lines_another,
-            'get_company': self.get_company,
+            'get_company': self._get_company,
             'get_currency': self._get_currency,
             'sum_dr' : self.sum_dr,
             'sum_cr' : self.sum_cr,
             'get_data':self.get_data,
             'get_pl_balance':self.get_pl_balance,
-            
+
         })
         self.context = context
-        
+
     def sum_dr(self):
         if self.res_pl['type'] == 'Net Profit':
             self.result_sum_dr += self.res_pl['balance']
         return self.result_sum_dr or 0.0
-     
+
     def sum_cr(self):
         if self.res_pl['type'] == 'Net Loss':
             self.result_sum_cr += self.res_pl['balance']
@@ -61,15 +62,15 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
 
     def get_pl_balance(self):
         return self.res_pl or 0.0
-    
+
     def get_data(self,form):
         cr, uid = self.cr, self.uid
         db_pool = pooler.get_pool(self.cr.dbname)
-        
+
         #Getting Profit or Loss Balance from profit and Loss report
         result_pl=self.obj_pl.get_data(form)
         self.res_pl=self.obj_pl.final_result()
-        
+
         type_pool = db_pool.get('account.account.type')
         account_pool = db_pool.get('account.account')
         year_pool = db_pool.get('account.fiscalyear')
@@ -80,17 +81,15 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
         ]
 
         ctx = self.context.copy()
-        ctx['state'] = form['context'].get('state','all')
+#        ctx['state'] = form['context'].get('state','filter_no')
         ctx['fiscalyear'] = form['fiscalyear']
-        if form['state']=='byperiod' :
+
+        if form['filter']=='filter_period' :
             ctx['periods'] = form['periods']
-        elif form['state']== 'bydate':
+        elif form['filter']== 'filter_date':
             ctx['date_from'] = form['date_from']
             ctx['date_to'] =  form['date_to']
-        elif form['state'] == 'all' :
-            ctx['periods'] = form['periods']
-            ctx['date_from'] = form['date_from']
-            ctx['date_to'] =  form['date_to']
+
 
         cal_list={}
         pl_dict = {}
@@ -135,7 +134,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
                     if account.id == form['reserve_account_id']:
                         pl_dict['level'] = account['level'] + 1
                         accounts_temp.append(pl_dict)
-                        
+
             self.result[typ] = accounts_temp
             cal_list[typ]=self.result[typ]
 
@@ -167,7 +166,7 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
                               'balance1':cal_list['asset'][i]['balance'],
                           }
                         self.result_temp.append(temp)
-                    if  i < len(cal_list['liability']): 
+                    if  i < len(cal_list['liability']):
                         temp={
                               'code' : cal_list['liability'][i]['code'],
                               'name' : cal_list['liability'][i]['name'],
@@ -180,19 +179,15 @@ class report_balancesheet_horizontal(rml_parse.rml_parse):
                           }
                         self.result_temp.append(temp)
         return None
-    
+
     def get_lines(self):
         return self.result_temp
 
     def get_lines_another(self, group):
         return self.result.get(group, [])
-    
+
     def _get_currency(self, form):
         return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.code
-
-    def get_company(self,form):
-        comp_obj=pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr,self.uid,form['company_id'])
-        return comp_obj.name 
 
 report_sxw.report_sxw('report.account.balancesheet.horizontal', 'account.account',
     'addons/account/report/report_balance_sheet_horizontal.rml',parser=report_balancesheet_horizontal,
