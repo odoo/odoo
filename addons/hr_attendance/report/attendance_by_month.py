@@ -40,12 +40,13 @@ def hour2str(h):
 class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
+        obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
         if context is None:
             context = {}
         month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
         for employee_id in ids:
-            emp = pooler.get_pool(cr.dbname).get('hr.employee').read(cr, uid, [employee_id], ['name'])[0]
+            emp = obj_emp.read(cr, uid, [employee_id], ['name'])[0]
             stop, days_xml = False, []
             user_repr = '''
             <user>

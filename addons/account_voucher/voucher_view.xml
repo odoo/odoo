@@ -37,7 +37,7 @@
                         <page string="Journal Entries">
                             <field name="payment_ids" colspan="4" nolabel="1" height="250">
                                 <tree string="Voucher Lines" editable="top">
-                                    <field name="partner_id" on_change="onchange_partner(partner_id,type,parent.type)"/>
+                                    <field name="partner_id" on_change="onchange_partner(partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="account_id"/>
                                     <field name="name"/>
                                     <field name="type"/>

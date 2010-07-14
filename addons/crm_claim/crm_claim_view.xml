@@ -47,7 +47,7 @@
         </record>
 
          <menuitem action="crm_claim_resource_act" name="Resource Type"
-                id="menu_crm_claim_stage_act"
+                id="menu_crm_claim_type_act"
                 parent="menu_config_claim" />
 
         <!-- Claims    -->
@@ -125,7 +125,9 @@
                                     <field name="section_id" widget="selection"/>
                                     <label string="Stage: " align="1.0"/>
                                     <group colspan="1" col="3">
-                                        <field name="stage_id" select="1" nolabel="1"/>
+                                        <field name="stage_id" nolabel="1"
+                                            on_change="onchange_stage_id(stage_id)"
+                                            domain="[('section_id','=',section_id), ('object_id.model', '=', 'crm.claim')]" />
                                         <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
                                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                                     </group>
