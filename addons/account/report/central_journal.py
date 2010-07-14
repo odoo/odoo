@@ -40,9 +40,12 @@ class journal_print(report_sxw.rml_parse, account_journal_common_default):
             'lines': self.lines,
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
-            'get_filter': self._get_filter
-#            'get_start_date': self.get_start_date,
-#            'get_end_date': self.get_end_date
+            'get_filter': self._get_filter,
+            'get_fiscalyear': self._get_fiscalyear,
+            'get_account': self._get_account,
+            'get_start_period': self.get_start_period,
+            'get_end_period': self.get_end_period,
+            'get_sortby': self._get_sortby             
         })
 
     def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
