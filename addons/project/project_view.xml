@@ -131,7 +131,7 @@
                     	<filter string="Parent" name="Parent"  icon="terp-personal" domain = "[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Users" name="Users"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner"  icon="terp-personal" domain = "[]" context="{'group_by':'partner_id'}"/>
-                      </group>
+                    </group>
                </search>
             </field>
         </record>
@@ -534,7 +534,6 @@
 
         <act_window
             domain="[('project_id', '=', active_id)]"
-            context="{'set_default_template':1}"
             id="act_project_project_2_project_task_all"
             name="Tasks"
             res_model="project.task"
