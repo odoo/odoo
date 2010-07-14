@@ -228,11 +228,11 @@
       <tr>
         <td><para style="terp_default_Centre_8">[[ data['form']['date_from'] ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ data['form']['date_to'] ]]</para></td>
-        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data['form'])  or removeParentNode('para') ]]</para></td>
+        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or removeParentNode('para') ]]</para></td>
         <td><para style="terp_default_Centre_8"></para></td>
-        <td><para style="terp_default_Centre_8">[[ get_account(data['form']) or removeParentNode('para') ]]</para></td>
-        <td><para style="terp_default_Centre_8">[[ get_start_period(data['form']) or removeParentNode('para') ]]</para></td>
-        <td><para style="terp_default_Centre_8">[[ get_end_period(data['form']) or removeParentNode('para') ]]</para></td>
+        <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
+        <td><para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para></td>
+        <td><para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ data['form']['filter'] ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]] </para></td>
       </tr>
