@@ -98,6 +98,8 @@ class project_close_task(osv.osv_memory):
                     body = u'%s\n%s\n%s\n\n-- \n%s' % (header, description, footer, signature)
                     email(from_adr, [to_adr], subject, body.encode('utf-8'), email_bcc=[from_adr])
                     task_obj.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+                    message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
+                    self.log(cr, uid, task.id, message)
                 else:
                     raise osv.except_osv(_('Error'), _("Please specify the email address of partner."))
         return {}

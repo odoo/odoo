@@ -196,13 +196,33 @@
                 </search>
             </field>
         </record>
-
+        
+        <record id="view_account_list" model="ir.ui.view">
+            <field name="name">account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree string="Chart of accounts" toolbar="1" colors="blue:type in ('view');black:type not in ('view')">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="user_type" invisible="1"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance"/>
+                    <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_currency_id"/>
+                </tree>
+            </field>
+        </record>
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="view_account_search"/>
+            <field name="view_id" ref="view_account_list"/>
         </record>
         <menuitem id="account_account_menu" name="Accounts" parent="menu_finance_accounting"/>
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
@@ -216,14 +236,12 @@
                 <tree string="Chart of accounts" toolbar="1" colors="blue:type in ('view');black:type not in ('view')">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="parent_id" invisible="1"/>
-                    <field name="user_type" invisible="1"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="company_currency_id"/>
-                    <field name="type" invisible="1"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
@@ -237,10 +255,10 @@
 <!--        <menuitem action="action_account_tree" id="menu_action_account_tree" parent="account.account_account_menu"/>-->
 
         <!--
-    Journal
+        Journal
 
-    Account Journal Columns
-    -->
+        Account Journal Columns
+        -->
 
         <record id="view_journal_column_form" model="ir.ui.view">
             <field name="name">account.journal.column.form</field>
