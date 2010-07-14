@@ -211,7 +211,7 @@ class ir_model_grid(osv.osv):
                 acc_obj.write(cr, uid, rules, vals2, context=context)
         return True
 
-    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+    def fields_get(self, cr, uid, fields=None, context=None):
         result = super(ir_model_grid, self).fields_get(cr, uid, fields, context)
         groups = self.pool.get('res.groups').search(cr, uid, [])
         groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
@@ -244,7 +244,7 @@ class ir_model_fields(osv.osv):
     _description = "Fields"
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
-        'model': fields.char('Object Name', size=64, required=True),
+        'model': fields.char('Object Name', size=64, required=True, select=1),
         'relation': fields.char('Object Relation', size=64),
         'relation_field': fields.char('Relation Field', size=64),
         'model_id': fields.many2one('ir.model', 'Object ID', required=True, select=True, ondelete='cascade'),
@@ -256,7 +256,7 @@ class ir_model_fields(osv.osv):
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
         'translate': fields.boolean('Translate'),
         'size': fields.integer('Size'),
-        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manually Created', required=True, readonly=True),
+        'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manually Created', required=True, readonly=True, select=1),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
         'domain': fields.char('Domain', size=256),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
@@ -321,9 +321,9 @@ ir_model_fields()
 class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)]),
-        'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade'),
+        'name': fields.char('Name', size=64, required=True, select=True),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True),
+        'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade', select=True),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
         'perm_create': fields.boolean('Create Access'),
@@ -462,10 +462,10 @@ class ir_model_data(osv.osv):
     _name = 'ir.model.data'
     __logger = logging.getLogger('addons.base.'+_name)
     _columns = {
-        'name': fields.char('XML Identifier', required=True, size=128),
-        'model': fields.char('Object', required=True, size=64),
-        'module': fields.char('Module', required=True, size=64),
-        'res_id': fields.integer('Resource ID'),
+        'name': fields.char('XML Identifier', required=True, size=128, select=1),
+        'model': fields.char('Object', required=True, size=64, select=1),
+        'module': fields.char('Module', required=True, size=64, select=1),
+        'res_id': fields.integer('Resource ID', select=1),
         'noupdate': fields.boolean('Non Updatable'),
         'date_update': fields.datetime('Update Date'),
         'date_init': fields.datetime('Init Date')
@@ -488,11 +488,24 @@ class ir_model_data(osv.osv):
 
     @tools.cache()
     def _get_id(self, cr, uid, module, xml_id):
-        ids = self.search(cr, uid, [('module','=',module),('name','=', xml_id)])
+        """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
+        ids = self.search(cr, uid, [('module','=',module), ('name','=', xml_id)])
         if not ids:
             raise ValueError('No references to %s.%s' % (module, xml_id))
         # the sql constraints ensure us we have only one result
         return ids[0]
+
+    @tools.cache()
+    def get_object_reference(self, cr, uid, module, xml_id):
+        """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
+        data_id = self._get_id(cr, uid, module, xml_id)
+        res = self.read(cr, uid, data_id, ['model', 'res_id'])
+        return (res['model'], res['res_id'])
+
+    def get_object(self, cr, uid, module, xml_id, context=None):
+        """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
+        res_model, res_id = self.get_object_reference(cr, uid, module, xml_id)
+        return self.pool.get(res_model).browse(cr, uid, res_id, context=context)
 
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:
@@ -525,6 +538,7 @@ class ir_model_data(osv.osv):
                 result3 = cr.fetchone()
                 if not result3:
                     self._get_id.clear_cache(cr.dbname, uid, module, xml_id)
+                    self.get_object_reference.clear_cache(cr.dbname, uid, module, xml_id)
                     cr.execute('delete from ir_model_data where id=%s', (action_id2,))
                     res_id = False
                 else:

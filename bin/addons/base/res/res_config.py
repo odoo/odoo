@@ -121,7 +121,7 @@ class res_config_configurable(osv.osv_memory):
                 'res_model': action.res_model,
                 'type': action.type,
                 'target': action.target,
-                }
+            }
         self.logger.notifyChannel(
             'actions', netsvc.LOG_INFO,
             'all configuration actions have been executed')
@@ -133,6 +133,7 @@ class res_config_configurable(osv.osv_memory):
             .read(cr, uid, current_user_menu.id)
 
     def start(self, cr, uid, ids, context=None):
+        print 'Start'
         ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
         for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
             if (todo.restart=='always') or (todo.restart=='onskip' and (todo.state in ('skip','cancel'))):
@@ -381,13 +382,13 @@ class res_config_installer(osv.osv_memory):
                             self._already_installed(cr, uid, context=context)),
                         True))
 
-    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+    def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
         """ If an addon is already installed, set it to readonly as
         res.config.installer doesn't handle uninstallations of already
         installed addons
         """
         fields = super(res_config_installer, self).fields_get(
-            cr, uid, fields, context, read_access)
+            cr, uid, fields, context, write_access)
 
         for module in self._already_installed(cr, uid, context=context):
             if module.name not in fields:
@@ -410,8 +411,7 @@ class res_config_installer(osv.osv_memory):
             cr, uid,
             modules.search(cr, uid, [('name','in',to_install)]),
             'to install', ['uninstalled'], context=context)
-        cr.commit()
-
+        cr.commit() #TOFIX: after remove this statement, installation wizard is fail 
         pooler.restart_pool(cr.dbname, update_module=True)
 res_config_installer()
 

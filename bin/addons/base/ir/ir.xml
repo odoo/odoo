@@ -556,7 +556,8 @@
             <field name="res_model">res.groups</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"/>
+        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"
+            groups="base.group_extended"/>
 
         <record id="view_roles_form" model="ir.ui.view">
             <field name="name">res.roles.form</field>
@@ -655,27 +656,37 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Attachments">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="2">
                         <field name="name" select="1" />
-                        <field name="create_uid" select="2"/>
-                        <field name="create_date" select="2"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Attachment">
-                        <group col="2" colspan="2">
-                            <separator string="Data" colspan="2"/>
+                    <group col="4" colspan="4">
+                        <separator string="Data" colspan="2"/>
+                        <field name="type"/>
+                        <newline />
+                        <group col="2" colspan="4" attrs="{'invisible':[('type','=','url')]}">
                             <field name="datas" filename="datas_fname"/>
                             <field name="datas_fname" select="1"/>
                         </group>
+                        <group col="2" colspan="4" attrs="{'invisible':[('type','=','binary')]}">
+                            <field name="url" widget="url"/>
+                        </group>
+                    </group>
                         <group col="2" colspan="2">
                             <separator string="Attached To" colspan="2"/>
                             <field name="res_model" select="2"/>
                             <field name="res_id"/>
                             <field name="res_name"/>
                         </group>
+                    <group col="2" groups="base.group_extended">
+                        <separator string="Created" colspan="2"/>
+                        <field name="create_uid" select="2"/>
+                        <field name="create_date" select="2"/>
+                    </group>
                     </page>
                     <page string="Notes">
-                        <field colspan="4" name="description" nolabel="1"/>
+                        <field name="description" nolabel="1" colspan="4"/>
                     </page>
                     </notebook>
                 </form>
@@ -1471,25 +1482,20 @@
             </field>
         </record>
         <record id="act_ir_actions_todo_form" model="ir.actions.act_window">
-            <field name="name">List of Configuration Wizards</field>
+            <field name="name">Configuration Wizards</field>
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="view_type">form</field>
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
+        <wizard id="wizard_configuration" model="ir.module.module" name="module.configuration" string="Start Configuration"/>
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" 
-        		parent="base.next_id_4" groups="base.group_extended" sequence="20"/>
-
-        <record id="action_start_configurator" model="ir.actions.server">
-          <field name="name">Launch Configuration Wizards</field>
-          <field name="model_id" ref="model_res_config"/>
-          <field name="state">code</field>
-          <field name="code">action = self.start(cr, uid, [])</field>
-        </record>
+        		parent="next_id_11" groups="base.group_extended" sequence="20"/>
+       
         <menuitem
-            action="action_start_configurator" name="Start Configuration"
+            action="wizard_configuration" name="Start Configuration"
             id="menu_configurator_module" parent="next_id_11"
-            type="server"/>
+            type="wizard"/>
     </data>
 </openerp>

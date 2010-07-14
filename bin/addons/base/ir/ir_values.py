@@ -75,13 +75,7 @@ class ir_values(osv.osv):
             method=True, type='text', string='Value'),
         'object': fields.boolean('Is Object'),
         'key': fields.selection([('action','Action'),('default','Default')], 'Type', size=128),
-        'key2' : fields.selection([('client_action_multi', 'client_action_multi'),
-                                   ('client_action_relate', 'client_action_relate'),
-                                   ('tree_but_open', 'tree_but_open'),
-                                   ('tree_but_action', 'tree_but_action'),
-                                   ('client_print_multi', 'client_print_multi')],
-                                  'Event Type',
-                                  help="The kind of action or button in the client side that will trigger the action."),
+        'key2' : fields.char('Event Type',help="The kind of action or button in the client side that will trigger the action.", size=128),
         'meta': fields.text('Meta Datas'),
         'meta_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
             method=True, type='text', string='Metadata'),
@@ -100,7 +94,6 @@ class ir_values(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_values_key_model_key2_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_values_key_model_key2_index ON ir_values (key, model, key2)')
-            cr.commit()
 
     def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
         if type(value)==type(u''):

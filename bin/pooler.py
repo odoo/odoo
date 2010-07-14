@@ -21,7 +21,7 @@
 
 pool_dic = {}
 
-def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False):
+def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
     if not status:
         status={}
 
@@ -50,7 +50,8 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
 
         import report
         report.interface.register_all(db)
-        pool.get('ir.cron')._poolJobs(db.dbname)
+        if pooljobs:
+            pool.get('ir.cron')._poolJobs(db.dbname)
     return db, pool
 
 

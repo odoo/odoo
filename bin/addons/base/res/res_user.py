@@ -183,7 +183,11 @@ class users(osv.osv):
             return False
         group_obj = self.pool.get('res.groups')
         extended_group_id = group_obj.get_extended_interface_group(cr, uid, context=context)
-        self.write(cr, uid, ids, { 'groups_id': [((3 if value == 'simple' else 4), extended_group_id)]}, context=context)
+        # First always remove the users from the group (avoids duplication if called twice)
+        self.write(cr, uid, ids, {'groups_id': [(3, extended_group_id)]}, context=context)
+        # Then add them back if requested
+        if value == 'extended':
+            self.write(cr, uid, ids, {'groups_id': [(4, extended_group_id)]}, context=context)
         return True
 
 
@@ -207,9 +211,9 @@ class users(osv.osv):
         address_obj = self.pool.get('res.partner.address')
         for user in self.browse(cr, uid, ids, context=context):
             if user.address_id:
-                address_obj.write(cr, uid, user.address_id.id, {'email': value or None}, context=context)
+                address_obj.write(cr, 1, user.address_id.id, {'email': value or None}) # no context to avoid potential security issues as superuser
             else:
-                address_id = address_obj.create(cr, uid, {'name': user.name, 'email': value or None}, context=context)
+                address_id = address_obj.create(cr, 1, {'name': user.name, 'email': value or None}) # no context to avoid potential security issues as superuser
                 self.write(cr, uid, ids, {'address_id': address_id}, context)
         return True
 
@@ -265,7 +269,7 @@ class users(osv.osv):
                 result = override_password(result)
             else:
                 result = map(override_password, result)
-        
+
         if isinstance(result, list):
             for rec in result:
                 if not rec.get('action_id',True):
@@ -273,7 +277,7 @@ class users(osv.osv):
         else:
             if not result.get('action_id',True):
                 result['action_id'] = (self._get_menu(cr, uid),'Menu')
-        
+
         return result
 
 
@@ -287,6 +291,15 @@ class users(osv.osv):
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  _('You can not have two users with the same login !'))
     ]
+
+    def _get_email_from(self, cr, uid, ids, context=None):
+        if not isinstance(ids, list):
+            ids = [ids]
+        res = dict.fromkeys(ids)
+        for user in self.browse(cr, uid, ids, context=context):
+            if user.user_email:
+                res[user.id] = "%s <%s>" % (user.name, user.user_email)
+        return res
 
     def _get_admin_id(self, cr):
         if self.__admin_ids.get(cr.dbname) is None:
@@ -336,15 +349,19 @@ class users(osv.osv):
     def company_get(self, cr, uid, uid2, context=None):
         return self._get_company(cr, uid, context=context, uid2=uid2)
 
+    # User can write to a few of her own fields (but not her groups for example)
+    SELF_WRITEABLE_FIELDS = ['view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
+
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         if ids == [uid]:
             for key in values.keys():
-                if not (key in ('view', 'password','signature','action_id', 'company_id') or key.startswith('context_')):
+                if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
                     break
             else:
-                uid = 1
+                uid = 1 # safe fields only, so we write as super-user
+
         res = super(users, self).write(cr, uid, ids, values, context=context)
 
         # clear caches linked to the users

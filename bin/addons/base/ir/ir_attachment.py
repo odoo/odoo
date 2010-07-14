@@ -94,25 +94,42 @@ class ir_attachment(osv.osv):
             if model_object and res_id:
                 model_pool = self.pool.get(model_object)
                 res = model_pool.name_get(cr,uid,[res_id],context)
-                data[attachment.id] = res[0][1]
+                data[attachment.id] = (res and res[0][1]) or False
             else:
                  data[attachment.id] = False
         return data
 
     _name = 'ir.attachment'
     _columns = {
-        'name': fields.char('Attachment Name',size=64, required=True),
+        'name': fields.char('Attachment Name',size=256, required=True),
         'datas': fields.binary('Data'),
-        'datas_fname': fields.char('Filename',size=64),
+        'datas_fname': fields.char('Filename',size=256),
         'description': fields.text('Description'),
-        # Not required due to the document module !
-        'res_name': fields.function(_name_get_resname, type='char', string='Resource Name', method=True),
-        'res_model': fields.char('Resource Object',size=64, readonly=True),
-        'res_id': fields.integer('Resource ID', readonly=True),
-        'link': fields.char('Link', size=256),
+        'res_name': fields.function(_name_get_resname, type='char', 
+                string='Resource Name', method=True),
+        'res_model': fields.char('Resource Object',size=64, readonly=True,
+                help="The database object this attachment will be attached to"),
+        'res_id': fields.integer('Resource ID', readonly=True,
+                help="The record id this is attached to"),
+        'url': fields.char('Url', size=512, oldname="link"),
+        'type': fields.selection(
+                [ ('url','URL'), ('binary','Binary'), ],
+                'Type', help="Binary File or external URL", required=True),
+
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
     }
+    
+    _defaults = {
+        'type': 'binary',
+    }
+
+    def _auto_init(self, cr, context=None):
+        super(ir_attachment, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_attachment_res_idx',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_attachment_res_idx ON ir_attachment (res_model, res_id)')
+            cr.commit()
 
 ir_attachment()
 

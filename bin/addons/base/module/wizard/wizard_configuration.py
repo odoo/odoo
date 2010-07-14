@@ -19,10 +19,24 @@
 #
 ##############################################################################
 
-import module_web
-import module
 import wizard
-import report
+import pooler
 
+class wizard_configuration(wizard.interface):   
+
+    def _config(self, cr, uid, data, context=None):
+        return pooler.get_pool(cr.dbname).get('res.config')\
+            .next(cr, uid, [], context=context)
+
+    states = {        
+        'init':{
+            'result': {
+                'type': 'action',
+                'action': _config,
+                'state': 'end',
+            },
+        }
+    }
+wizard_configuration('module.configuration')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -115,8 +115,7 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
         try:
             self.running = True
             while self.running:
-                timeout = self.socket.gettimeout()
-                fd_sets = select.select([self.socket], [], [], timeout)
+                fd_sets = select.select([self.socket], [], [], self._busywait_timeout)
                 if not fd_sets[0]:
                     continue
                 (clientsocket, address) = self.socket.accept()

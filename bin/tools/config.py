@@ -75,7 +75,6 @@ class configmanager(object):
             'smtp_ssl':False,
             'smtp_password': False,
             'stop_after_init': False,   # this will stop the server after initialization
-            'price_accuracy': 2,
             'syslog' : False,
             'log_level': logging.INFO,
             'assert_exit_level': logging.ERROR, # level above which a failed assert will be raised
@@ -83,6 +82,7 @@ class configmanager(object):
             'login_message': False,
             'list_db' : True,
             'timezone' : False, # to override the default TZ
+            'test-file' : False,
             'test-disable' : False,
             'test-commit' : False,
         }
@@ -141,10 +141,10 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
-        parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='deprecated since v6.0, replaced by module decimal_precision')
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
+        group.add_option("--test-file", dest="test_file", help="Launch a YML test file.")
         group.add_option("--test-disable", action="store_true", dest="test_disable",
                          default=False, help="Disable loading test files.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
@@ -257,7 +257,7 @@ class configmanager(object):
 
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout','smtp_ssl',
-                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
+                'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
@@ -295,6 +295,7 @@ class configmanager(object):
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
+        self.options["test-file"] =  opt.test_file
         self.options["test-disable"] =  opt.test_disable
         self.options["test-commit"] =  opt.test_commit
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
@@ -469,6 +470,4 @@ config = configmanager()
 # when it starts, to allow doing 'import tools.config' from
 # other python executables without parsing *their* args.
 config.parse_config()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -85,14 +85,13 @@
                             <separator colspan="4" string="Preferences"/>
                         </page>
                          <page string="Preferences">
-                            <field name="password" password="True" readonly="0"/>
-                            <newline/>
+                            <field name="password" password="True" readonly="0" colspan="4"/>
                             <label string="" colspan="1"/>
-                            <label colspan="3" string="Please note that you will have to logout and relog if you change your password."/>
+                            <label colspan="3" string="You must logout and login again after changing your password."/>
                             <field name="context_lang" completion="1" readonly="0"/>
                             <field name="context_tz" completion="1" readonly="0"/>
-                            <newline/>
-                            <separator string="Signature" colspan="4"/>
+                            <separator string="Email &amp; Signature" colspan="4"/>
+                            <group colspan="4"><field name="user_email" widget="email"/></group>
                             <field colspan="4" name="signature" readonly="0" nolabel="1"/>
                           </page>
                     </notebook>
@@ -293,7 +292,7 @@
                 </form>
                 <xpath expr="//label[@string='description']"
                      position="attributes">
-                <attribute name="string">Choose between the simplified interface and the extended one. We suggest you use the simplified interface. It has less options and fields but is easier to understand. You will be able to switch to the extended interface later.</attribute>
+                <attribute name="string">Choose between the simplified interface and the extended one. We suggest simplified interface. It has less options and fields but is easier to start with OpenERP. You will be able to switch to the extended interface later.</attribute>
               </xpath>
               <xpath expr='//separator[@string="title"]' position='attributes'>
                     <attribute name='string'>Choose Your Interface</attribute>

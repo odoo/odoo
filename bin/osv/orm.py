@@ -1070,35 +1070,48 @@ class orm_template(object):
     def create(self, cr, user, vals, context=None):
         raise NotImplementedError(_('The create method is not implemented on this object !'))
 
-    # returns the definition of each field in the object
-    # the optional fields parameter can limit the result to some fields
-    def fields_get_keys(self, cr, user, context=None, read_access=True):
-        if context is None:
-            context = {}
+    def fields_get_keys(self, cr, user, context=None):
         res = self._columns.keys()
         for parent in self._inherits:
-            res.extend(self.pool.get(parent).fields_get_keys(cr, user, fields, context))
+            res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
         return res
 
-    def fields_get(self, cr, user, fields=None, context=None, read_access=True):
+    # returns the definition of each field in the object
+    # the optional fields parameter can limit the result to some fields
+    def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         if context is None:
             context = {}
         res = {}
         translation_obj = self.pool.get('ir.translation')
-        model_access_obj = self.pool.get('ir.model.access')
         for parent in self._inherits:
-            res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
+            res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
 
         if self._columns.keys():
             for f in self._columns.keys():
-                if fields and f not in fields:
+                if allfields and f not in allfields:
                     continue
                 res[f] = {'type': self._columns[f]._type}
+                # This additional attributes for M2M and function field is added
+                # because we need to display tooltip with this additional information
+                # when client is started in debug mode.
+                if isinstance(self._columns[f], fields.function):
+                    res[f]['function'] = self._columns[f]._fnct and self._columns[f]._fnct.func_name or False
+                    res[f]['store'] = self._columns[f].store
+                    if isinstance(self._columns[f].store, dict):
+                        res[f]['store'] = str(self._columns[f].store)
+                    res[f]['fnct_search'] = self._columns[f]._fnct_search and self._columns[f]._fnct_search.func_name or False
+                    res[f]['fnct_inv'] = self._columns[f]._fnct_inv and self._columns[f]._fnct_inv.func_name or False
+                    res[f]['fnct_inv_arg'] = self._columns[f]._fnct_inv_arg or False
+                    res[f]['func_obj'] = self._columns[f]._obj or False
+                    res[f]['func_method'] = self._columns[f]._method
+                if isinstance(self._columns[f], fields.many2many):
+                    res[f]['related_columns'] = list((self._columns[f]._id1, self._columns[f]._id2))
+                    res[f]['third_table'] = self._columns[f]._rel
                 for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
                         'change_default', 'translate', 'help', 'select', 'selectable'):
                     if getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
-                if not read_access:
+                if not write_access:
                     res[f]['readonly'] = True
                     res[f]['states'] = {}
                 for arg in ('digits', 'invisible','filters'):
@@ -1136,10 +1149,10 @@ class orm_template(object):
             #TODO : read the fields from the database
             pass
 
-        if fields:
+        if allfields:
             # filter out fields which aren't in the fields list
             for r in res.keys():
-                if r not in fields:
+                if r not in allfields:
                     del res[r]
         return res
 
@@ -1767,7 +1780,7 @@ class orm_memory(orm_template):
         for id in self.datas:
             if self.datas[id]['internal.date_access'] < max:
                 tounlink.append(id)
-        self.unlink(cr, uid, tounlink)
+        self.unlink(cr, 1, tounlink)
         if len(self.datas)>self._max_count:
             sorted = map(lambda x: (x[1]['internal.date_access'], x[0]), self.datas.items())
             sorted.sort()
@@ -1865,7 +1878,8 @@ class orm_memory(orm_template):
         self.view_init(cr, uid, fields_list, context)
         if not context:
             context = {}
-        value = {}
+        # we define default value for each field existing in the object
+        value = dict.fromkeys(fields_list, False)
         # get the default values for the inherited fields
         for f in fields_list:
             if f in self._defaults:
@@ -2122,9 +2136,6 @@ class orm(orm_template):
                    d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
                    d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
                                     (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
-                elif fget[groupby]['type'] == 'many2one':
-                    d[groupby] = d[groupby] and ((type(d[groupby])==type(1)) and d[groupby] or d[groupby][1])  or ''
-
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
@@ -2325,6 +2336,130 @@ class orm(orm_template):
                             res = res_old
                             res[0]['attname'] = k
 
+
+                    if len(res)==1:
+                        f_pg_def = res[0]
+                        f_pg_type = f_pg_def['typname']
+                        f_pg_size = f_pg_def['size']
+                        f_pg_notnull = f_pg_def['attnotnull']
+                        if isinstance(f, fields.function) and not f.store and\
+                                not getattr(f, 'nodrop', False):
+                            logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
+                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE'% (self._table, k))
+                            cr.commit()
+                            f_obj_type = None
+                        else:
+                            f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
+
+                        if f_obj_type:
+                            ok = False
+                            casts = [
+                                ('text', 'char', 'VARCHAR(%d)' % (f.size or 0,), '::VARCHAR(%d)'%(f.size or 0,)),
+                                ('varchar', 'text', 'TEXT', ''),
+                                ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
+                                ('timestamp', 'date', 'date', '::date'),
+                                ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                                ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
+                            ]
+                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
+                                logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
+                                cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
+                                cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
+                                cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                cr.commit()
+                            for c in casts:
+                                if (f_pg_type==c[0]) and (f._type==c[1]):
+                                    if f_pg_type != f_obj_type:
+                                        if f_pg_type != f_obj_type:
+                                            logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
+                                        ok = True
+                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
+                                        cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
+                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
+                                        cr.commit()
+                                    break
+
+                            if f_pg_type != f_obj_type:
+                                if not ok:
+                                    i = 0
+                                    while True:
+                                        newname = self._table + '_moved' + str(i)
+                                        cr.execute("SELECT count(1) FROM pg_class c,pg_attribute a " \
+                                            "WHERE c.relname=%s " \
+                                            "AND a.attname=%s " \
+                                            "AND c.oid=a.attrelid ", (self._table, newname))
+                                        if not cr.fetchone()[0]:
+                                            break
+                                        i+=1
+                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB=%s, def=%s), data moved to table %s !" % (k, self._table, f_pg_type, f._type, newname))
+                                    if f_pg_notnull:
+                                        cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
+                                    cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (self._table, k, newname))
+                                    cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
+                                    cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'","''")))
+
+                            # if the field is required and hasn't got a NOT NULL constraint
+                            if f.required and f_pg_notnull == 0:
+                                # set the field to the default value if any
+                                if k in self._defaults:
+                                    if callable(self._defaults[k]):
+                                        default = self._defaults[k](self, cr, 1, context)
+                                    else:
+                                        default = self._defaults[k]
+
+                                    if (default is not None):
+                                        ss = self._columns[k]._symbol_set
+                                        query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
+                                        cr.execute(query, (ss[1](default),))
+                                # add the NOT NULL constraint
+                                cr.commit()
+                                try:
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
+                                    cr.commit()
+                                except Exception:
+                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
+                                cr.commit()
+                            elif not f.required and f_pg_notnull == 1:
+                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
+                                cr.commit()
+                            indexname = '%s_%s_index' % (self._table, k)
+                            cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = %s and tablename = %s", (indexname, self._table))
+                            res2 = cr.dictfetchall()
+                            if not res2 and f.select:
+                                cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
+                                cr.commit()
+                            if res2 and not f.select:
+                                cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
+                                cr.commit()
+                            if isinstance(f, fields.many2one):
+                                ref = self.pool.get(f._obj)._table
+                                if ref != 'ir_actions':
+                                    cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
+                                                'pg_attribute as att1, pg_attribute as att2 '
+                                            'WHERE con.conrelid = cl1.oid '
+                                                'AND cl1.relname = %s '
+                                                'AND con.confrelid = cl2.oid '
+                                                'AND cl2.relname = %s '
+                                                'AND array_lower(con.conkey, 1) = 1 '
+                                                'AND con.conkey[1] = att1.attnum '
+                                                'AND att1.attrelid = cl1.oid '
+                                                'AND att1.attname = %s '
+                                                'AND array_lower(con.confkey, 1) = 1 '
+                                                'AND con.confkey[1] = att2.attnum '
+                                                'AND att2.attrelid = cl2.oid '
+                                                'AND att2.attname = %s '
+                                                "AND con.contype = 'f'", (self._table, ref, k, 'id'))
+                                    res2 = cr.dictfetchall()
+                                    if res2:
+                                        if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
+                                            cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
+                                            cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
+                                            cr.commit()
+                    elif len(res)>1:
+                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error, column %s->%s has multiple instances !"%(self._table,k))
                     if not res:
                         if not isinstance(f, fields.function) or f.store:
 
@@ -2371,115 +2506,6 @@ class orm(orm_template):
                                 except Exception:
                                     logger.notifyChannel('orm', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: openerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                             cr.commit()
-                    elif len(res)==1:
-                        f_pg_def = res[0]
-                        f_pg_type = f_pg_def['typname']
-                        f_pg_size = f_pg_def['size']
-                        f_pg_notnull = f_pg_def['attnotnull']
-                        if isinstance(f, fields.function) and not f.store and\
-                                not getattr(f, 'nodrop', False):
-                            logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
-                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE'% (self._table, k))
-                            cr.commit()
-                            f_obj_type = None
-                        else:
-                            f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
-
-                        if f_obj_type:
-                            ok = False
-                            casts = [
-                                ('text', 'char', 'VARCHAR(%d)' % (f.size or 0,), '::VARCHAR(%d)'%(f.size or 0,)),
-                                ('varchar', 'text', 'TEXT', ''),
-                                ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
-                                ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
-                                ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
-                                ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
-                            ]
-                            # !!! Avoid reduction of varchar field !!!
-                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
-                            # if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
-                                logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed size" % (k, self._table))
-                                cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
-                                cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
-                                cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
-                                cr.commit()
-                            for c in casts:
-                                if (f_pg_type==c[0]) and (f._type==c[1]):
-                                    if f_pg_type != f_obj_type:
-                                        if f_pg_type != f_obj_type:
-                                            logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
-                                        ok = True
-                                        cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
-                                        cr.execute(('UPDATE "%s" SET "%s"=temp_change_size'+c[3]) % (self._table, k))
-                                        cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
-                                        cr.commit()
-                                    break
-
-                            if f_pg_type != f_obj_type:
-                                if not ok:
-                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB = %s, def = %s) but unable to migrate this change !" % (k, self._table, f_pg_type, f._type))
-
-                            # if the field is required and hasn't got a NOT NULL constraint
-                            if f.required and f_pg_notnull == 0:
-                                # set the field to the default value if any
-                                if k in self._defaults:
-                                    if callable(self._defaults[k]):
-                                        default = self._defaults[k](self, cr, 1, context)
-                                    else:
-                                        default = self._defaults[k]
-
-                                    if (default is not None):
-                                        ss = self._columns[k]._symbol_set
-                                        query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
-                                        cr.execute(query, (ss[1](default),))
-                                # add the NOT NULL constraint
-                                cr.commit()
-                                try:
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
-                                    cr.commit()
-                                except Exception:
-                                    logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
-                                cr.commit()
-                            elif not f.required and f_pg_notnull == 1:
-                                cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
-                                cr.commit()
-                            indexname = '%s_%s_index' % (self._table, k)
-                            cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = %s and tablename = %s", (indexname, self._table))
-                            res = cr.dictfetchall()
-                            if not res and f.select:
-                                cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
-                                cr.commit()
-                            if res and not f.select:
-                                cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
-                                cr.commit()
-                            if isinstance(f, fields.many2one):
-                                ref = self.pool.get(f._obj)._table
-                                if ref != 'ir_actions':
-                                    cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
-                                                'pg_attribute as att1, pg_attribute as att2 '
-                                            'WHERE con.conrelid = cl1.oid '
-                                                'AND cl1.relname = %s '
-                                                'AND con.confrelid = cl2.oid '
-                                                'AND cl2.relname = %s '
-                                                'AND array_lower(con.conkey, 1) = 1 '
-                                                'AND con.conkey[1] = att1.attnum '
-                                                'AND att1.attrelid = cl1.oid '
-                                                'AND att1.attname = %s '
-                                                'AND array_lower(con.confkey, 1) = 1 '
-                                                'AND con.confkey[1] = att2.attnum '
-                                                'AND att2.attrelid = cl2.oid '
-                                                'AND att2.attname = %s '
-                                                "AND con.contype = 'f'", (self._table, ref, k, 'id'))
-                                    res = cr.dictfetchall()
-                                    if res:
-                                        if res[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
-                                            cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res[0]['conname'] + '"')
-                                            cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
-                                            cr.commit()
-                    else:
-                        logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error, column %s->%s has multiple instances !"%(self._table,k))
             for order,f,k in todo_update_store:
                 todo_end.append((order, self._update_store, (f, k)))
 
@@ -2707,30 +2733,30 @@ class orm(orm_template):
         self._inherit_fields = res
         self._inherits_reload_src()
 
-    def __getattr__(self, name):
-        """
-        Proxies attribute accesses to the `inherits` parent so we can call methods defined on the inherited parent
-        (though inherits doesn't use Python inheritance).
-        Handles translating between local ids and remote ids.
-        Known issue: doesn't work correctly when using python's own super(), don't involve inherit-based inheritance
-                     when you have inherits.
-        """
-        for model, field in self._inherits.iteritems():
-            proxy = self.pool.get(model)
-            if hasattr(proxy, name):
-                attribute = getattr(proxy, name)
-                if not hasattr(attribute, '__call__'):
-                    return attribute
-                break
-        else:
-            return super(orm, self).__getattr__(name)
+    #def __getattr__(self, name):
+    #    """
+    #    Proxies attribute accesses to the `inherits` parent so we can call methods defined on the inherited parent
+    #    (though inherits doesn't use Python inheritance).
+    #    Handles translating between local ids and remote ids.
+    #    Known issue: doesn't work correctly when using python's own super(), don't involve inherit-based inheritance
+    #                 when you have inherits.
+    #    """
+    #    for model, field in self._inherits.iteritems():
+    #        proxy = self.pool.get(model)
+    #        if hasattr(proxy, name):
+    #            attribute = getattr(proxy, name)
+    #            if not hasattr(attribute, '__call__'):
+    #                return attribute
+    #            break
+    #    else:
+    #        return super(orm, self).__getattr__(name)
 
-        def _proxy(cr, uid, ids, *args, **kwargs):
-            objects = self.browse(cr, uid, ids, kwargs.get('context', None))
-            lst = [obj[field].id for obj in objects if obj[field]]
-            return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
+    #    def _proxy(cr, uid, ids, *args, **kwargs):
+    #        objects = self.browse(cr, uid, ids, kwargs.get('context', None))
+    #        lst = [obj[field].id for obj in objects if obj[field]]
+    #        return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
 
-        return _proxy
+    #    return _proxy
 
 
     def fields_get(self, cr, user, fields=None, context=None):
@@ -2746,9 +2772,9 @@ class orm(orm_template):
 
         """
         ira = self.pool.get('ir.model.access')
-        read_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
-                      ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
-        return super(orm, self).fields_get(cr, user, fields, context, read_access)
+        write_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
+                       ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
+        return super(orm, self).fields_get(cr, user, fields, context, write_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """
@@ -2809,14 +2835,16 @@ class orm(orm_template):
     def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
         if not context:
             context = {}
-        #ids = map(lambda x:int(x), ids)
         if not ids:
             return []
         if fields_to_read == None:
             fields_to_read = self._columns.keys()
 
-        # construct a clause for the rules :
-        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
+        # Construct a clause for the security rules.
+        # 'tables' hold the list of tables necessary for the SELECT including the ir.rule clauses,
+        # or will at least contain self._table.
+        rule_clause, rule_params, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
+
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
                            f == self.CONCURRENCY_CHECK_FIELD
@@ -2826,25 +2854,27 @@ class orm(orm_template):
         res = []
         if len(fields_pre):
             def convert_field(f):
+                f_qual = "%s.%s" % (self._table, f) # need fully-qualified references in case len(tables) > 1
                 if f in ('create_date', 'write_date'):
-                    return "date_trunc('second', %s) as %s" % (f, f)
+                    return "date_trunc('second', %s) as %s" % (f_qual, f)
                 if f == self.CONCURRENCY_CHECK_FIELD:
                     if self._log_access:
                         return "COALESCE(%s.write_date, %s.create_date, now())::timestamp AS %s" % (self._table, self._table, f,)
                     return "now()::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
-                    return 'length("%s") as "%s"' % (f, f)
-                return '"%s"' % (f,)
+                    return 'length("%s") as "%s"' % (f_qual, f)
+                return f_qual
+
             fields_pre2 = map(convert_field, fields_pre)
             order_by = self._parent_order or self._order
-            select_fields = ','.join(fields_pre2 + ['id'])
-            query = 'SELECT %s FROM "%s" WHERE id IN %%s' % (select_fields, self._table)
-            if d1:
-                query += " AND " + d1
+            select_fields = ','.join(fields_pre2 + [self._table + '.id'])
+            query = 'SELECT %s FROM %s WHERE %s.id IN %%s' % (select_fields, ','.join(tables), self._table)
+            if rule_clause:
+                query += " AND " + (' OR '.join(rule_clause))
             query += " ORDER BY " + order_by
             for sub_ids in cr.split_for_in_conditions(ids):
-                if d1:
-                    cr.execute(query, [tuple(sub_ids)] + d2)
+                if rule_clause:
+                    cr.execute(query, [tuple(sub_ids)] + rule_params)
                     if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
@@ -2858,7 +2888,7 @@ class orm(orm_template):
             if f == self.CONCURRENCY_CHECK_FIELD:
                 continue
             if self._columns[f].translate:
-                ids = map(lambda x: x['id'], res)
+                ids = [x['id'] for x in res]
                 #TODO: optimize out of this loop
                 res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
                 for r in res:
@@ -2889,7 +2919,7 @@ class orm(orm_template):
             for r in res:
                 for f in fields_post:
                     r[f] = self._columns[f]._symbol_get(r[f])
-        ids = map(lambda x: x['id'], res)
+        ids = [x['id'] for x in res]
 
         # all non inherited fields for which the attribute whose name is in load is False
         fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields_to_read)
@@ -2914,13 +2944,6 @@ class orm(orm_template):
                             record[f] = res2[record['id']]
                         else:
                             record[f] = []
-
-#for f in fields_post:
-#    # get the value of that field for all records/ids
-#    res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
-#    for record in res:
-#        record[f] = res2[record['id']]
-
         readonly = None
         for vals in res:
             for field in vals.copy():
