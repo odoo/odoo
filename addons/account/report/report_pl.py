@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,17 +15,18 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import pooler
 import time
-import mx.DateTime
+
+import pooler
 import rml_parse
 from report import report_sxw
+from account_journal_common_default import account_journal_common_default
 
-class report_pl_account_horizontal(rml_parse.rml_parse):
+class report_pl_account_horizontal(rml_parse.rml_parse, account_journal_common_default):
     def __init__(self, cr, uid, name, context):
         super(report_pl_account_horizontal, self).__init__(cr, uid, name, context)
         self.result_sum_dr=0.0
@@ -45,15 +46,15 @@ class report_pl_account_horizontal(rml_parse.rml_parse):
             'final_result' : self.final_result,
         })
         self.context = context
-        
+
     def final_result(self):
         return self.res_pl
-    
+
     def sum_dr(self):
         if self.res_pl['type'] == 'Net Profit C.F.B.L.':
             self.result_sum_dr += self.res_pl['balance']
         return self.result_sum_dr or 0.0
-     
+
     def sum_cr(self):
         if self.res_pl['type'] == 'Net Loss C.F.B.L.':
             self.result_sum_cr += self.res_pl['balance']
@@ -62,7 +63,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse):
     def get_data(self,form):
         cr, uid = self.cr, self.uid
         db_pool = pooler.get_pool(self.cr.dbname)
-        
+
         type_pool = db_pool.get('account.account.type')
         account_pool = db_pool.get('account.account')
         year_pool = db_pool.get('account.fiscalyear')
@@ -89,7 +90,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse):
         account_id = [form['Account_list']]
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
-        
+
         for typ in types:
             accounts_temp = []
             for account in accounts:
@@ -114,7 +115,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse):
                 self.res_pl['balance'] = (self.result_sum_cr - self.result_sum_dr)
             self.result[typ] = accounts_temp
             cal_list[typ]=self.result[typ]
-        if cal_list:   
+        if cal_list:
             temp={}
             for i in range(0,max(len(cal_list['expense']),len(cal_list['income']))):
                 if i < len(cal_list['expense']) and i < len(cal_list['income']):
@@ -142,7 +143,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse):
                               'balance1':cal_list['income'][i].balance,
                               }
                         self.result_temp.append(temp)
-                    if  i < len(cal_list['expense']): 
+                    if  i < len(cal_list['expense']):
                         temp={
                               'code' : cal_list['expense'][i].code,
                               'name' : cal_list['expense'][i].name,
@@ -161,13 +162,9 @@ class report_pl_account_horizontal(rml_parse.rml_parse):
 
     def get_lines_another(self, group):
         return self.result.get(group, [])
-    
+
     def _get_currency(self, form):
         return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.code
-
-    def get_company(self,form):
-        comp_obj=pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr,self.uid,form['company_id'])
-        return comp_obj.name
 
 report_sxw.report_sxw('report.pl.account.horizontal', 'account.account',
     'addons/account/report/report_pl_account_horizontal.rml',parser=report_pl_account_horizontal, header=False)

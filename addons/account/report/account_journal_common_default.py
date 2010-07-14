@@ -115,9 +115,14 @@ class account_journal_common_default(object):
 
         return self.cr.fetchone()[0] or 0.0
 
-    def _get_fiscalyear(self,form):
+    def _get_fiscalyear(self, form):
         if data.get('form', False) and data['form'].get('fiscalyear_id', False):
             return pooler.get_pool(self.cr.dbname).get('account.fiscalyear').browse(self.cr, self.uid, data['form']['fiscalyear_id']).name
         return ''
+
+    def _get_company(self, form):
+        if data.get('form', False) and data['form'].get('company_id', False):
+            comp_obj = pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, data['form']['company_id'])
+        return comp_obj.name
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
