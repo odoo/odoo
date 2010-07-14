@@ -27,18 +27,19 @@ from report import report_sxw
 from account_journal_common_default import account_journal_common_default
 
 class report_pl_account_horizontal(rml_parse.rml_parse, account_journal_common_default):
+
     def __init__(self, cr, uid, name, context):
         super(report_pl_account_horizontal, self).__init__(cr, uid, name, context)
-        self.result_sum_dr=0.0
-        self.result_sum_cr=0.0
-        self.res_pl ={}
+        self.result_sum_dr = 0.0
+        self.result_sum_cr = 0.0
+        self.res_pl = {}
         self.result = {}
-        self.result_temp=[]
+        self.result_temp = []
         self.localcontext.update( {
             'time': time,
             'get_lines' : self.get_lines,
             'get_lines_another' : self.get_lines_another,
-            'get_company': self.get_company,
+#            'get_company': self._get_company,
             'get_currency': self._get_currency,
             'get_data': self.get_data,
             'sum_dr' : self.sum_dr,
@@ -60,7 +61,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, account_journal_common_d
             self.result_sum_cr += self.res_pl['balance']
         return self.result_sum_cr or 0.0
 
-    def get_data(self,form):
+    def get_data(self, form):
         cr, uid = self.cr, self.uid
         db_pool = pooler.get_pool(self.cr.dbname)
 
@@ -71,18 +72,15 @@ class report_pl_account_horizontal(rml_parse.rml_parse, account_journal_common_d
         types = [
             'expense',
             'income'
-        ]
+                ]
 
         ctx = self.context.copy()
         ctx['state'] = form['context'].get('state','all')
         ctx['fiscalyear'] = form['fiscalyear']
-        if form['state']=='byperiod' :
+
+        if form['filter']=='filter_period' :
             ctx['periods'] = form['periods']
-        elif form['state']== 'bydate':
-            ctx['date_from'] = form['date_from']
-            ctx['date_to'] =  form['date_to']
-        elif form['state'] == 'all' :
-            ctx['periods'] = form['periods']
+        elif form['filter']== 'filter_date':
             ctx['date_from'] = form['date_from']
             ctx['date_to'] =  form['date_to']
 
@@ -114,9 +112,9 @@ class report_pl_account_horizontal(rml_parse.rml_parse, account_journal_common_d
                 self.res_pl['type'] = 'Net Profit C.F.B.L.'
                 self.res_pl['balance'] = (self.result_sum_cr - self.result_sum_dr)
             self.result[typ] = accounts_temp
-            cal_list[typ]=self.result[typ]
+            cal_list[typ] = self.result[typ]
         if cal_list:
-            temp={}
+            temp = {}
             for i in range(0,max(len(cal_list['expense']),len(cal_list['income']))):
                 if i < len(cal_list['expense']) and i < len(cal_list['income']):
                     temp={
