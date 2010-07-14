@@ -90,8 +90,6 @@ class report_pos_order(osv.osv):
                     to_char(s.date_order, 'dd-MM-YYYY'),to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),
                     to_char(s.date_order, 'YYYY-MM-DD'), s.partner_id,s.state,
                     s.user_id,s.shop_id,s.company_id,s.sale_journal,l.product_id,s.date_validation,
-                    s.date_payment
-                )
-            """)
+                    s.date_payment)""")
 
 report_pos_order()

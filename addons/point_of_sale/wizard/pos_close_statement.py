@@ -22,7 +22,6 @@
 from osv import osv
 from tools.translate import _
 
-
 class pos_close_statement(osv.osv_memory):
     _name = 'pos.close.statement'
     _description = 'Close Statements'
@@ -41,18 +40,35 @@ class pos_close_statement(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         statement_obj = self.pool.get('account.bank.statement')
         journal_obj = self.pool.get('account.journal')
-        journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True)])
-        journal_ids = journal_obj.browse(cr, uid, journal_lst)
-        list_statement=[]
+        user_obj="""select DISTINCT journal_id from pos_journal_users where user_id=%d"""%(uid)
+        cr.execute(user_obj)
+        user_journals1= cr.fetchall()
+        lst1=map(lambda x1:x1[0],user_journals1)
+        journal_ids = journal_obj.browse(cr, uid, lst1)
+
         for journal in journal_ids:
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
-            list_statement.append(ids[0])
-            if not journal.check_dtls:
-                statement_obj.button_confirm(cr, uid, ids, context)
-#        if not list_statement:
-#            return {}
-#        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_bank_statement_tree')], context=context)
-#        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+            sql = """ select id from account_journal
+                            where auto_cash = 'True'
+                            and company_id =%d and id =%d"""%(company_id,journal.id)
+            cr.execute(sql)
+            user_journals= cr.fetchall()
+            lst=map(lambda x1:x1[0],user_journals)
+            journal_ids1 = journal_obj.browse(cr, uid, lst)
+            #list_statement=[]
+
+            for journal1 in journal_ids1:
+                ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
+                if not ids:
+                    raise osv.except_osv(_('Message'), _('Journals are allready closed'))
+                else:
+                    list_statement.append(ids[0])
+                    if not journal.check_dtls:
+                        statement_obj.button_confirm_bank(cr, uid, ids, context)
+    #        if not list_statement:
+    #            return {}
+    #        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_bank_statement_tree')], context=context)
+    #        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
 
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'account', 'view_bank_statement_tree')
@@ -61,7 +77,6 @@ class pos_close_statement(osv.osv_memory):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
         return {
                 'domain': "[('id','in'," + str(list_statement) + ")]",
                 'name': 'Close Statements',
@@ -69,10 +84,8 @@ class pos_close_statement(osv.osv_memory):
                 'view_mode': 'tree,form',
                 'res_model': 'account.bank.statement',
                 'views': [(id2, 'tree'),(id3, 'form')],
-                'type': 'ir.actions.act_window'
-}
+                'type': 'ir.actions.act_window'}
 
 pos_close_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -35,13 +35,15 @@ def get_journal(self, cr, uid, context):
     """
 
     obj = self.pool.get('account.journal')
+    statement_obj = self.pool.get('account.bank.statement')
     user = self.pool.get('res.users').browse(cr, uid, uid)
     ids = obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', user.company_id.id)])
-    res = obj.read(cr, uid, ids, ['id', 'name'], context)
-    res = [(r['id'], r['name']) for r in res]
-    res.insert(0, ('', ''))
+    obj_ids= statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', ids)])
+    res_obj = obj.read(cr, uid, ids, ['journal_id'], context)
+    res_obj = [(r1['id'])for r1 in res_obj]
+    res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context)
+    res = [(r['journal_id']) for r in res]
     return res
-
 
 class pos_box_entries(osv.osv_memory):
     _name = 'pos.box.entries'
@@ -62,7 +64,7 @@ class pos_box_entries(osv.osv_memory):
         obj = self.pool.get('product.product')
         ids = obj.search(cr, uid, [('income_pdt', '=', True)])
         res = obj.read(cr, uid, ids, ['id', 'name'], context)
-        res = [(r['id'], r['name']) for r in res]
+        res = [(r['id'],r['name']) for r in res]
         res.insert(0, ('', ''))
 
         return res

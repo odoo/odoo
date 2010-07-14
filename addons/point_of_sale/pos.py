@@ -50,9 +50,7 @@ class pos_company_discount(osv.osv):
         'company_discount': fields.float('Max Discount(%)', digits_compute= dp.get_precision('Point Of Sale')),
         'max_diff': fields.float('Max Difference for Cashboxes', digits_compute= dp.get_precision('Point Of Sale Discount')),
      }
-
 pos_company_discount()
-
 
 class pos_order(osv.osv):
 
@@ -63,7 +61,6 @@ class pos_order(osv.osv):
     _description = "Point of Sale"
     _order = "date_order, create_date desc"
     _order = "date_order desc"
-
 
     def unlink(self, cr, uid, ids, context={}):
 
@@ -111,7 +108,6 @@ class pos_order(osv.osv):
 
         # Todo need to check this function
         """ Find payment Date
-
         @param field_names: Names of fields.
         @return: Dictionary of values """
 
@@ -200,8 +196,6 @@ class pos_order(osv.osv):
                         val += c['amount']
                     res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
         return res
-
-
 
     def _sale_journal_get(self, cr, uid, context):
 
@@ -324,7 +318,6 @@ class pos_order(osv.osv):
         'journal_entry': fields.boolean('Journal Entry'),
     }
 
-
     def _select_pricelist(self, cr, uid, context):
 
         """ To get default pricelist for the order"
@@ -367,7 +360,6 @@ class pos_order(osv.osv):
         'pricelist_id': _select_pricelist,
     }
 
-
     def test_order_lines(self, cr, uid, order, context={}):
 
         """ Test  order line is created or not for the order "
@@ -400,12 +392,10 @@ class pos_order(osv.osv):
     def _get_qty_differences(self, orders, old_picking):
 
         """check if the customer changed the product quantity """
-
         order_dict = {}
         for order in orders:
             for line in order.lines:
                 order_dict[line.product_id.id] = line
-
         # check the quantity differences:
         diff_dict = {}
         for line in old_picking.move_lines:
@@ -579,7 +569,6 @@ class pos_order(osv.osv):
 #                    cr.execute("Update pos_order set date_validation='%s', state_2 ='%s' where id = %d"%(val, 'accepted', order.id))
 #        return True
 
-
     def cancel_order(self, cr, uid, ids, context=None):
 
         """ Changes order state to cancel
@@ -687,7 +676,6 @@ class pos_order(osv.osv):
                 })
             clone_list.append(clone_id)
 
-
         for clone in self.browse(cr, uid, clone_list):
             for order_line in clone.lines:
                 line_obj.write(cr, uid, [order_line.id], {
@@ -749,7 +737,6 @@ class pos_order(osv.osv):
                 inv_line['discount'] = line.discount
                 inv_line['account_id'] = acc
                 inv_line['name'] = inv_name
-
                 inv_line['invoice_line_tax_id'] = ('invoice_line_tax_id' in inv_line)\
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []
                 inv_line_ref.create(cr, uid, inv_line, context)
@@ -778,7 +765,6 @@ class pos_order(osv.osv):
             to_reconcile = []
             group_tax = {}
             account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context).id
-
             order_account = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def or curr_c.account_receivable.id
 
             # Create an entry for the sale
@@ -826,7 +812,6 @@ class pos_order(osv.osv):
                     raise osv.except_osv(_('Error !'), _('There is no income '\
                         'account defined for this product: "%s" (id:%d)') \
                         % (line.product_id.name, line.product_id.id, ))
-
 
                 # Empty the tax list as long as there is no tax code:
                 tax_code_id = False
@@ -889,7 +874,6 @@ class pos_order(osv.osv):
                         'tax_amount': tax_amount,
                     }, context=context)
 
-
             # Create a move for each tax group
             (tax_code_pos, base_code_pos, account_pos)= (0, 1, 2)
             for key, amount in group_tax.items():
@@ -925,7 +909,6 @@ class pos_order(osv.osv):
                 'journal_id': order.sale_journal.id,
                 'period_id': period,
             }, context=context))
-
 
             # search the account receivable for the payments:
             account_receivable = order.sale_journal.default_credit_account_id.id
@@ -964,7 +947,6 @@ class pos_order(osv.osv):
                                                                         'statement_id': False,
                                                                         'account_id':order_account
                                                                      })
-
             self.write(cr,uid,order.id,{'state':'done'})
         return True
 
@@ -973,7 +955,6 @@ class pos_order(osv.osv):
             for picking in order.pickings:
                 self.pool.get('stock.picking').unlink(cr, uid, [picking.id], context)
         return True
-
 
     def action_payment(self, cr, uid, ids, context=None):
         vals = {'state': 'payment'}
@@ -1073,11 +1054,10 @@ class pos_order_line(osv.osv):
             else:
                 res[line.id]=line.price_unit*line.qty
             res[line.id] = res[line.id] + tax_amount
-
         return res
+
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         res = {}
-
         for line in self.browse(cr, uid, ids):
             price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
             if line.discount!=0.0:
@@ -1108,7 +1088,8 @@ class pos_order_line(osv.osv):
     def onchange_product_id(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
         price = self.price_by_product(cr, uid, ids, pricelist, product_id, qty, partner_id)
         self.write(cr,uid,ids,{'price_unit':price})
-        return {'value': {'price_unit': price}, 'qty': 1}
+        pos_stot = (price * qty)
+        return {'value': {'price_unit': price,'price_subtotal_incl': pos_stot}}
 
     def onchange_subtotal(self, cr, uid, ids, discount, price, pricelist,qty,partner_id, product_id,*a):
         prod_obj = self.pool.get('product.product')
@@ -1121,6 +1102,11 @@ class pos_order_line(osv.osv):
             disc=100-(price/price_f*100)
             return {'value':{'discount':disc, 'price_unit':price_f}}
         return {}
+
+    def onchange_dis(self, cr, uid,ids,  qty, price_subtotal_incl, discount,*a):
+        price_sub = price_subtotal_incl
+        sub_total_discount = price_sub-(price_subtotal_incl*(discount*0.01))
+        return {'value': {'price_subtotal_incl':sub_total_discount}}
 
     def onchange_ded(self, cr, uid,ids, val_ded,price_u,*a):
         pos_order = self.pool.get('pos.order.line')
@@ -1139,6 +1125,7 @@ class pos_order_line(osv.osv):
         res_obj = self.pool.get('res.users')
         res_company = self.pool.get('res.company')
         company_disc = pos_order.browse(cr,uid,ids)
+
         if discount:
             if not company_disc:
                 comp=res_obj.browse(cr,uid,uid).company_id.company_discount or 0.0
@@ -1150,7 +1137,7 @@ class pos_order_line(osv.osv):
             else:
                 return {'value': {'notice':'Minimum Discount','price_ded':price*discount*0.01 or 0.0  }}
         else :
-            return {'value': {'notice':'No Discount', 'price_ded':price*discount*0.01 or 0.0 }}
+            return {'value': {'notice':'No Discount', 'price_ded':price*discount*0.01 or 0.0}}
     _columns = {
         'name': fields.char('Line Description', size=512),
         'company_id':fields.many2one('res.company', 'Company', required=True),
@@ -1214,7 +1201,6 @@ class pos_order_line(osv.osv):
         product = self.pool.get('product.product').read(cr, uid, product_id)
         product_name = product[0]['name']
         price = self.price_by_product(cr, uid, 0, pricelist_id[0]['pricelist_id'][0], product_id[0], 1)
-
         order_line_ids = self.search(cr, uid, [('name','=',product_name),('order_id','=',order)])
         if order_line_ids:
             new_line = False
@@ -1245,7 +1231,6 @@ class pos_order_line(osv.osv):
         return {'name': product_name, 'product_id': product_id[0], 'price': price, 'price_line': price_line ,'qty': qty }
 
 pos_order_line()
-
 
 class pos_payment(osv.osv):
     _name = 'pos.payment'
@@ -1313,7 +1298,6 @@ class account_move_line(osv.osv):
         return super(account_move_line, self).create(cr, user, vals, context)
 
 account_move_line()
-
 
 class account_move(osv.osv):
 

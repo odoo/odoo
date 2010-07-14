@@ -22,19 +22,20 @@
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275" />
-                                    <field name="qty" />
+                                    <field name="qty"/>
+                                    <!--<field name="qty" on_change="onchange_qty(qty,price_unit)"/>-->
                                     <!--field name="qty_rfd" groups="base.group_extended"/-->
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
-                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" invisible="1"/>
+                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>
                                     <field name="price_unit" readonly="1"/>
-                                    <field name="notice"/>
+                                    <field name="notice" on_change="onchange_dis(qty,price_subtotal_incl,discount)"/>
                                     <!--field name="serial_number"/-->
                                     <field name="price_subtotal" />
                                     <field name="price_subtotal_incl" sum="Subtotal"/>
                                 </tree>
                                 <form string="Order lines" >
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
-                                    <field name="qty" />
+                                    <field name="qty"/>
                                     <field name="qty_rfd" groups="base.group_extended"/>
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" />
@@ -64,7 +65,7 @@
 <!--                              </group>-->
                             <separator colspan="4" string="Actions"/>
                             <group colspan="4" col="6">
-                                <field name="state"/>
+                                <field name="state" />
                                 <button name="%(action_pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance" />
                                 <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
