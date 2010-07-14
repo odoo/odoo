@@ -63,7 +63,8 @@ class account_voucher(osv.osv):
                 'journal_id': journal.id,
                 'type' : inv.type,
                 'narration' : inv.narration and inv.narration or inv.name,
-                'date':inv.date
+                'date':inv.date,
+                'ref':inv.reference
             }
             
             if inv.period_id:

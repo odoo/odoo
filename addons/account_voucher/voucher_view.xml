@@ -35,7 +35,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Journal Entries">
-                            <field name="payment_ids" colspan="4" nolabel="1" height="250">
+                            <field name="payment_ids" colspan="4" nolabel="1" height="200">
                                 <tree string="Voucher Lines" editable="top">
                                     <field name="partner_id" on_change="onchange_partner(partner_id,type,parent.type, parent.currency_id)"/>
                                     <field name="account_id"/>
@@ -46,14 +46,21 @@
                                     <field name="ref"/>
                                 </tree>
                             </field>
-                            <separator string="Narration" colspan="4"/>
-                            <field name="narration" colspan="4" nolabel="1" height="50"/>
+                            <group col="2" colspan="3">
+                                <separator string="Narration" colspan="2"/>
+                                <field name="narration" colspan="2" nolabel="1"/>
+                            </group>
+                            <group col="2" colspan="1">
+                                <separator string="Other Informtion" colspan="2"/>
+                                <field name="reference" select="1"/>
+                                <field name="date" select="1"/>
+                                <field name="currency_id" select="1"/>
+                                
+                            </group>
                         </page>
-                        <page string="Other Info">
+                        <page string="Accounting Entries">
                             <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
-                            <field name="currency_id" select="1" />
                             <field name="period_id"/>
-                            <field name="date" select="1"/>
                             <separator string="General Entries" colspan="4"/>
                             <field name="move_ids" colspan="4" nolabel="1" readonly="1"/>
                         </page>

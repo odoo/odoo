@@ -116,10 +116,10 @@ class account_voucher(osv.osv):
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
             ],'Entry Type', select=True , size=128, readonly=True, states={'draft':[('readonly',False)]}),
-        'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}),
+        'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}, help="Effective date for accounting entries"),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','<>','view')]),
-        'payment_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=False, states={'proforma':[('readonly',True)]}),
+        'payment_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=False, states={'draft':[('readonly',True)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'posted':[('readonly',True)]}),
         'narration':fields.text('Narration', readonly=True, states={'draft':[('readonly',False)]}, required=False),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -137,9 +137,8 @@ class account_voucher(osv.osv):
                         \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
                         \n* The \'Cancelled\' state is used when user cancel voucher.'),
         'amount':fields.float('Amount', readonly=True),
-        'reference': fields.char('Voucher Reference', size=64),
-        'reference_type': fields.selection(_get_reference_type, 'Reference Type',
-            required=True),
+        'reference': fields.char('Reference', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Bank cheque number or payorder number"),
+        'reference_type': fields.selection(_get_reference_type, 'Reference Type', required=True),
         'number': fields.related('move_id', 'name', type="char", readonly=True, string='Number'),
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids':fields.many2many('account.move.line', 'voucher_id', 'account_id', 'rel_account_move', 'Real Entry'),
@@ -280,7 +279,8 @@ class account_voucher(osv.osv):
                 'journal_id': journal.id,
                 'type' : inv.type,
                 'narration' : inv.narration and inv.narration or inv.name,
-                'date':inv.date
+                'date':inv.date,
+                'ref':inv.reference
             }
             
             if inv.period_id:
