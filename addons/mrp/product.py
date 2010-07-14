@@ -63,11 +63,12 @@ class product_product(osv.osv):
         """
         res = super(product_product, self).do_change_standard_price(cr, uid, ids, datas, context=context)
         bom_obj = self.pool.get('mrp.bom')
+        change = context.get('change_parent_price', False)
         def _compute_price(bom):
             price = 0.0
-            if bom.bom_id :
-                if bom.bom_id.bom_lines :
-                    for bom_line in bom.bom_id.bom_lines :
+            if bom.bom_id and change:
+                if bom.bom_id.bom_lines:
+                    for bom_line in bom.bom_id.bom_lines:
                         prod_price = self.read(cr, uid, bom_line.product_id.id, ['standard_price'])['standard_price']
                         price += bom_line.product_qty * prod_price
 

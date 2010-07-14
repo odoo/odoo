@@ -26,7 +26,7 @@
     'category': 'Tools',
     'description': """Module for Warnings form onchange Event.""",
     'author': 'Tiny',
-    'depends': ['base', 'sale'],
+    'depends': ['base', 'sale', 'purchase'],
     'update_xml': ['warning_view.xml'],
     'demo_xml': [],
     'installable': True,

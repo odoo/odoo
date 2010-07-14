@@ -55,7 +55,7 @@
     Now I will check that the new job is assigned properly to contact or not
 -
     !assert {model: res.partner.contact, id: res_partner_contact_williams0}:
-        - len(job_ids) > 2
+        - len(job_ids) >= 2
 -   |
     In order to check contacts working at several addresses for different partners
     I will create contact with 2 different addresses

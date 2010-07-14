@@ -224,6 +224,8 @@ class mrp_production(osv.osv):
         obj = self.browse(cr, uid, ids)[0]
         for workcenter_line in obj.workcenter_lines:
             tmp = self.pool.get('mrp.production.workcenter.line').action_done(cr, uid, [workcenter_line.id])
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_done', cr)
         return super(mrp_production,self).action_production_end(cr, uid, ids)
     
     def action_in_production(self, cr, uid, ids):
@@ -234,6 +236,8 @@ class mrp_production(osv.osv):
         workcenter_line_obj = self.pool.get('mrp.production.workcenter.line')
         for workcenter_line in obj.workcenter_lines:
             workcenter_line_obj.action_start_working(cr, uid, [workcenter_line.id])
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
         return super(mrp_production,self).action_in_production(cr, uid, ids)
     
     def action_cancel(self, cr, uid, ids):
@@ -243,6 +247,8 @@ class mrp_production(osv.osv):
         obj = self.browse(cr, uid, ids)[0]
         for workcenter_line in obj.workcenter_lines:
             tmp = self.pool.get('mrp.production.workcenter.line').action_cancel(cr, uid, [workcenter_line.id])
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_cancel', cr)
         return super(mrp_production,self).action_cancel(cr,uid,ids)
 
     def _compute_planned_workcenter(self, cr, uid, ids, context={}, mini=False):

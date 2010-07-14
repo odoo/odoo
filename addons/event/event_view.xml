@@ -3,8 +3,8 @@
     <data>
         <menuitem name="Marketing" id="menu_marketing_event_main" icon="terp-calendar" sequence="9"/>
         <menuitem name="Events Organisation" id="menu_event_main" parent="menu_marketing_event_main" />
+        
     <!-- EVENTS  -->
-        <!--<menuitem name="Events Organisation" id="menu_event_main" icon="terp-calendar" />-->
 
     <!-- EVENTS/CONFIGURATION/TYPE OF EVENTS -->
         <record model="ir.ui.view" id="view_event_type_form">
@@ -36,7 +36,6 @@
         <menuitem name="Configuration" id="menu_event_config" parent="menu_marketing_event_main" sequence="30" groups="base.group_extended"/>
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="menu_event_config" groups="base.group_extended,crm.group_crm_manager"/>
 
-
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
         <record model="ir.ui.view" id="view_event_form">
@@ -54,23 +53,23 @@
                         <field name="product_id" on_change="onchange_product(product_id)"/>
                     </group>
                     <notebook colspan="4">
-                    <page string="General">
+                    <page string="Event Information">
+                        <separator string="Description" colspan="4"/>
                         <field name="unit_price"/>
                         <field name="currency_id"/>
-                        <separator string="Speaker Information" colspan="4"/>
-                        <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
-                        <field name="address_id"/>
-                        <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4"/>
-                        <field name="country_id" />
-                        <field name="speaker_confirmed"/>
-                        <field name="language"/>
-                        <separator string="Event description" colspan="4"/>
-                        <field name="parent_id" domain="[('parent_id','child_of','Event')]"/>
-                        <field name="active"/>
                         <field name="register_min"/>
                         <field name="register_max"/>
-                        <separator string="Notes" colspan="4"/>
-                        <!--field name="note" colspan="4" nolabel="1"/-->
+                        <field name="parent_id" domain="[('parent_id','child_of','Event')]"/>
+                        <field name="active"/>
+                        <separator string="Location" colspan="4"/>
+                        <field name="country_id" />
+                        <field name="language"/>
+                        <field name="address_id"/>
+                        <separator string="Speaker Information" colspan="4"/>
+                        <field name="main_speaker_id" domain="[('speaker','=',True)]"/>
+                        <field name="speaker_confirmed"/>
+                        <field name="speaker_ids" domain="[('speaker','=',True)]" colspan="4"/>
+                        <newline/>
                         <field name="state" select="1"/>
                         <group col="4" colspan="2">
                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
@@ -113,7 +112,7 @@
             </field>
         </record>
 
-        <!-- event.event tree view -->
+        <!-- Event tree view -->
         
         <record model="ir.ui.view" id="view_event_tree">
             <field name="name">event.event.tree</field>
@@ -134,6 +133,8 @@
             </field>
         </record>
         
+      <!-- Events  Calendar  View -->  
+        
         <record id="view_event_calendar" model="ir.ui.view">
             <field name="name">event.event.calendar</field>
             <field name="model">event.event</field>
@@ -142,12 +143,12 @@
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_begin" string="Event Organization">
                     <field name="name"/>
-                    <field name="partner_id"/>
                     <field name="type" widget="selection"/>
                 </calendar>
             </field>
         </record>
         
+        <!-- Event Graph view -->
         
         <record model="ir.ui.view" id="view_event_graph">
             <field name="name">Event Graph</field>
@@ -162,6 +163,8 @@
             </field>
         </record>
 
+    <!-- Event Search View -->
+
         <record model="ir.ui.view" id="view_event_search">
             <field name="name">Events</field>
             <field name="model">event.event</field>
@@ -169,8 +172,8 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group col="10" colspan="4">
-                        <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Events"/>
-                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed Events"/>
+                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Current Events"/>
+                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','confirm')]" help="Open Events"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Event" select="1"/>
                         <field name="state" select="1"/>
@@ -294,15 +297,17 @@
                         </page>
                         <page string="Emails" groups="base.group_extended">
                             <group colspan="4">
-                                <field colspan="4" name="email_cc" string="CC"/>
+                                 <field colspan="4" name="email_cc" string="CC" widget="char" size="512"/>
                             </group>
                             <field name="message_ids" colspan="4" nolabel="1" mode="form,tree">
                                 <form string="Communication history">
-                                    <group col="6" colspan="4">
-                                        <field name="date"/>
-                                        <field name="email_to"/>
-                                        <field name="email_from"/>
-                                    </group>
+		                            <group col="4" colspan="4">
+		                                <field name="email_from"/>
+		                                <field name="date"/>
+		                                <field name="email_to" widget="char" size="512"/>
+		                                <field name="email_cc" widget="char" size="512"/>
+		                                <field name="name" colspan="4" widget="char" size="512"/>
+		                            </group>
                                     <notebook colspan="4">
                                         <page string="Details">
                                             <field name="description" colspan="4" nolabel="1"/>

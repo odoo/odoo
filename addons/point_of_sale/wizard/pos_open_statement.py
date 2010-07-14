@@ -70,7 +70,6 @@ class pos_open_statement(osv.osv_memory):
     #                                                  })
             period = statement_obj._get_period(cr, uid, context) or None
             cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')"%(journal.id, company_id, uid, number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
-            cr.commit()
             cr.execute("select id from account_bank_statement where journal_id=%d and company_id=%d and user_id=%d and state='open' and name='%s'"%(journal.id, company_id, uid, number))
             statement_id = cr.fetchone()[0]
             if st_id:
