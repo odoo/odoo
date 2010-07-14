@@ -891,9 +891,6 @@ class account_invoice(osv.osv):
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             self.pool.get('account.move').post(cr, uid, [move_id])
-            message = _('Invoice ') + " '" + inv.name + "' "+ _("is confirm")
-            self.log(cr, uid, inv.id, message)
-            
         self._log_event(cr, uid, ids)
         
         return True
@@ -920,12 +917,12 @@ class account_invoice(osv.osv):
         }
 
     def action_number(self, cr, uid, ids, *args):
-        cr.execute('SELECT id, type, number, move_id, reference ' \
-                    'FROM account_invoice ' \
-                    'WHERE id IN %s',
-                    (tuple(ids),))
-        obj_inv = self.browse(cr, uid, ids)[0]
-        for (id, invtype, number, move_id, reference) in cr.fetchall():
+        for obj_inv in self.browse(cr, uid, ids):
+            id = obj_inv.id
+            invtype = obj_inv.type
+            number = obj_inv.number
+            move_id = obj_inv.move_id and obj_inv.move_id.id or False
+            reference = obj_inv.reference
             if not number:
                 if obj_inv.journal_id.invoice_sequence_id:
                     sid = obj_inv.journal_id.invoice_sequence_id.id
@@ -950,6 +947,8 @@ class account_invoice(osv.osv):
                         'WHERE account_move_line.move_id = %s ' \
                             'AND account_analytic_line.move_id = account_move_line.id',
                             (ref, move_id))
+            message = _('Invoice ') + " '" + number + "' "+ _("is confirm")
+            self.log(cr, uid, id, message)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
