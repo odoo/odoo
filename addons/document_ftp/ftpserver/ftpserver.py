@@ -2565,9 +2565,12 @@ class FTPHandler(asynchat.async_chat):
             #    return
             size = self.run_as_current_user(self.fs.getsize, datacr)
         except EnvironmentError, err:
-            why = _strerror(err)
+            why = err.strerror
             self.log('FAIL SIZE "%s". %s.' %(line, why))
-            self.respond('550 %s.' %why)
+            if err.errno == errno.ENOENT:
+                self.respond("404 %s." % why)
+            else:
+                self.respond('550 %s.' % why)
         else:
             self.respond("213 %s" %size)
             self.log('OK SIZE "%s".' %line)
@@ -2640,10 +2643,13 @@ class FTPHandler(asynchat.async_chat):
         try:
             datacr = self.fs.get_crdata(line, mode='delete')
             self.run_as_current_user(self.fs.remove, datacr)
-        except OSError, err:
-            why = _strerror(err)
+        except EnvironmentError, err:
+            why = err.strerror
             self.log('FAIL DELE "%s". %s.' %(line, why))
-            self.respond('550 %s.' %why)
+            if err.errno == errno.ENOENT:
+                self.respond('404 %s.' % why)
+            else:
+                self.respond('550 %s.' %why)
         else:
             self.log('OK DELE "%s".' %line)
             self.respond("250 File removed.")
