@@ -48,9 +48,9 @@ class report_tasks(report_int):
         canv = canvas.init(fname=io, format='pdf')
         canv.set_author("Open ERP")
 
-        cr.execute('select id,date_start,date_stop from scrum_sprint where id=%s', (datas['id'],))
+        cr.execute('select id,date_start,date_stop from project_scrum_sprint where id=%s', (datas['id'],))
         for (id,date_start,date_stop) in cr.fetchall():
-            cr.execute('select id from project_task where product_backlog_id in(select id from scrum_product_backlog where sprint_id=%s)', (id,))
+            cr.execute('select id from project_task where product_backlog_id in(select id from project_scrum_product_backlog where sprint_id=%s)', (id,))
 
             ids = map(lambda x: x[0], cr.fetchall())
             datas = _burndown.compute_burndown(cr, uid, ids, date_start, date_stop)

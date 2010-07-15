@@ -29,8 +29,8 @@
        -->
 
         <record id="view_scrum_product_backlog_tree" model="ir.ui.view">
-            <field name="name">scrum.product.backlog.tree</field>
-            <field name="model">scrum.product.backlog</field>
+            <field name="name">project.scrum.product.backlog.tree</field>
+            <field name="model">project.scrum.product.backlog</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancel','done');blue:state in ('pending')" string="Product Backlog">
@@ -52,8 +52,8 @@
         </record>
 
         <record id="view_scrum_product_backlog_form" model="ir.ui.view">
-            <field name="name">scrum.product.backlog.form</field>
-            <field name="model">scrum.product.backlog</field>
+            <field name="name">project.scrum.product.backlog.form</field>
+            <field name="model">project.scrum.product.backlog</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product backlog">
@@ -124,8 +124,8 @@
         </record>
 
         <record model="ir.ui.view" id="view_scrum_product_backlog_search">
-            <field name="name">scrum.product.backlog.search</field>
-            <field name="model">scrum.product.backlog</field>
+            <field name="name">project.scrum.product.backlog.search</field>
+            <field name="model">project.scrum.product.backlog</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product Backlogs">
@@ -177,7 +177,7 @@
 
         <record id="action_product_backlog_form" model="ir.actions.act_window">
             <field name="name">Product Backlogs</field>
-            <field name="res_model">scrum.product.backlog</field>
+            <field name="res_model">project.scrum.product.backlog</field>
             <field name="view_type">form</field>
             <field name="context">{'search_default_current': 1}</field>
             <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
@@ -193,8 +193,8 @@
        -->
 
         <record id="view_scrum_sprint_tree" model="ir.ui.view">
-            <field name="name">scrum.sprint.tree</field>
-            <field name="model">scrum.sprint</field>
+            <field name="name">project.scrum.sprint.tree</field>
+            <field name="model">project.scrum.sprint</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('pending');grey:state in ('cancel','done')" string="Scrum Sprint">
@@ -215,8 +215,8 @@
             </field>
         </record>
         <record id="view_scrum_sprint_form" model="ir.ui.view">
-            <field name="name">scrum.sprint.form</field>
-            <field name="model">scrum.sprint</field>
+            <field name="name">project.scrum.sprint.form</field>
+            <field name="model">project.scrum.sprint</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scrum Sprint">
@@ -265,8 +265,8 @@
         </record>
 
         <record model="ir.ui.view" id="view_scrum_sprint_search">
-            <field name="name">scrum.sprint.search</field>
-            <field name="model">scrum.sprint</field>
+            <field name="name">project.scrum.sprint.search</field>
+            <field name="model">project.scrum.sprint</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sprints">
@@ -296,7 +296,7 @@
 
         <record id="action_sprint_all_tree" model="ir.actions.act_window">
             <field name="name">Sprints</field>
-            <field name="res_model">scrum.sprint</field>
+            <field name="res_model">project.scrum.sprint</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_scrum_sprint_tree"/>
@@ -312,8 +312,8 @@
        -->
 
         <record id="view_scrum_meeting_tree" model="ir.ui.view">
-            <field name="name">scrum.meeting.tree</field>
-            <field name="model">scrum.meeting</field>
+            <field name="name">project.scrum.meeting.tree</field>
+            <field name="model">project.scrum.meeting</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Scrum Sprint">
@@ -324,7 +324,7 @@
         </record>
         <record id="view_scrum_meeting_form" model="ir.ui.view">
             <field name="name">Scrum Meeting</field>
-            <field name="model">scrum.meeting</field>
+            <field name="model">project.scrum.meeting</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scrum Sprint">
@@ -358,8 +358,8 @@
         </record>
 
         <record id="view_scrum_meeting_search" model="ir.ui.view">
-            <field name="name">scrum.meeting.search</field>
-            <field name="model">scrum.meeting</field>
+            <field name="name">project_scrum.meeting.search</field>
+            <field name="model">project.scrum.meeting</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Scrum Sprint">
@@ -383,7 +383,7 @@
 
         <record id="action_meeting_form" model="ir.actions.act_window">
             <field name="name">Scrum Meetings</field>
-            <field name="res_model">scrum.meeting</field>
+            <field name="res_model">project.scrum.meeting</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_scrum_daily':1}</field>
@@ -405,14 +405,14 @@
         </record>
         <record id="ir_scrum_sprint_open_task" model="ir.values">
             <field eval=" 'tree_but_open'" name="key2"/>
-            <field eval="'scrum.sprint'" name="model"/>
+            <field eval="'project.scrum.sprint'" name="model"/>
             <field name="name">View sprint tasks</field>
             <field eval="'ir.actions.act_window,'+str(action_sprint_task_open)" name="value"/>
             <field eval="True" name="object"/>
         </record>
 
         <record id="action_sprint_backlog_open" model="ir.actions.act_window">
-            <field name="res_model">scrum.product.backlog</field>
+            <field name="res_model">project.scrum.product.backlog</field>
             <field name="name">View sprint backlog</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -420,7 +420,7 @@
         </record>
         <record id="ir_scrum_sprint_open_sprint" model="ir.values">
             <field eval=" 'tree_but_open'" name="key2"/>
-            <field eval="'scrum.sprint'" name="model"/>
+            <field eval="'project.scrum.sprint'" name="model"/>
             <field name="name">View sprint backlog</field>
             <field eval="'ir.actions.act_window,'+str(action_sprint_backlog_open)" name="value"/>
             <field eval="True" name="object"/>
@@ -431,7 +431,7 @@
        -->
 
         <record id="dblc_proj" model="ir.actions.act_window">
-            <field name="res_model">scrum.product.backlog</field>
+            <field name="res_model">project.scrum.product.backlog</field>
             <field name="name">View project's backlog</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -439,7 +439,7 @@
         </record>
         <record id="ir_scrum_project_backlog" model="ir.values">
             <field eval=" 'tree_but_open'" name="key2"/>
-            <field eval="'scrum.project'" name="model"/>
+            <field eval="'project.scrum.project'" name="model"/>
             <field name="name">View project's backlog</field>
             <field eval="'ir.actions.act_window,'+str(dblc_proj)" name="value"/>
             <field eval="True" name="object"/>
@@ -453,7 +453,7 @@
         </record>
         <record id="ir_scrum_project_task" model="ir.values">
             <field eval=" 'tree_but_open'" name="key2"/>
-            <field eval="'scrum.project'" name="model"/>
+            <field eval="'project.scrum.project'" name="model"/>
             <field name="name">View project's tasks</field>
             <field eval="'ir.actions.act_window,'+str(dblc_proj2)" name="value"/>
             <field eval="True" name="object"/>
@@ -509,6 +509,7 @@
                 <field name="project_id" position="after">
                     <field name="sprint_id" context="{'sprint_invisible':False}">
                         <filter icon="terp-check" string="Current" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
+                        <filter icon="terp-check" string="Current" context="{'sprint_invisible':False}" domain="[]" help="View Sprints"/>
                     </field>
                 </field>
             </field>
@@ -532,8 +533,8 @@
             domain="[('sprint_id', '=', active_id)]"
             id="act_scrum_sprint_2_product_backlog"
             name="Backlogs"
-            res_model="scrum.product.backlog"
-            src_model="scrum.sprint"
+            res_model="project.scrum.product.backlog"
+            src_model="project.scrum.sprint"
             view_mode="tree,form"
             view_type="form"/>
 
@@ -542,7 +543,7 @@
             id="act_scrum_sprint_2_project_task"
             name="Tasks"
             res_model="project.task"
-            src_model="scrum.sprint"
+            src_model="project.scrum.sprint"
             view_mode="tree,form"
             view_type="form"/>
 
