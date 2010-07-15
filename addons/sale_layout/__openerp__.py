@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,22 +18,31 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'Partner Geo-Localisation',
-    'version': '1.0',
-    'category': 'Generic Modules/Production',
-    'description': """
-This is the module used by OpenERP SA to redirect customers to his partners,
-based on geolocalization.
+    "name" : "Sale Order Layout Improvement",
+    "version" : "1.0",
+    "depends" : ["base", "sale"],
+    "author" : "Tiny",
+    "description": """
+    This module provides some features to improve the layout of the Sale Order.
+
+    It gives you the possibility to
+        * order all the lines of an sale order
+        * add titles, comment lines, sub total lines
+        * draw horizontal lines and put page breaks    
+
     """,
-    'author': 'OpenERP SA',
-    'depends': ['crm'],
-    'data': [
-        'res_partner_view.xml',
-        'crm_lead_view.xml',
-        ],
-    'installable': True,
-    'active': False,
-    'certificate': False,
+    "website" : "http://www.openerp.com",
+    "category" : "Generic Modules/Sales & Purchases",
+    "init_xml" : [],
+    "demo_xml" : [],
+    "update_xml" : [
+#        "security/ir.model.access.csv",
+        "sale_layout_view.xml",
+        "sale_layout_report.xml",
+    ],
+    "active": False,
+    "installable": True
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

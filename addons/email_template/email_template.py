@@ -62,6 +62,7 @@ import email_template_engines
 import tools
 import report
 import pooler
+import logging
 
 def get_value(cursor, user, recid, message=None, template=None, context=None):
     """
@@ -99,6 +100,7 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
                 reply = templ.render(Context(env))
             return reply or False
         except Exception:
+            logging.exception("can't render %r", message)
             return u""
     else:
         return message
@@ -543,7 +545,7 @@ class email_template(osv.osv):
         if lang:
             ctx = context.copy()
             ctx.update({'lang':lang})
-            template = self.browse(cursor, user, template_id, context=ctx)
+            template = self.browse(cursor, user, template.id, context=ctx)
         mailbox_values = {
             'email_from': tools.ustr(from_account['name']) + \
                         "<" + tools.ustr(from_account['email_id']) + ">",
@@ -641,7 +643,7 @@ class email_template(osv.osv):
                                                         context=context
                                                               )
             if template.report_template:
-                self._generate_attach_reports(
+                self.generate_attach_reports(
                                               cursor,
                                               user,
                                               template,

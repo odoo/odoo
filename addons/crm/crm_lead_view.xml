@@ -91,7 +91,7 @@
                         <field name="mobile"/>
                         <newline/>
                         <separator string="Links" colspan="4" col="3"/>
-                        <field name="partner_id"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)"/>
                         <button
                             name="%(action_crm_lead2partner)d"
                             icon="gtk-index" type="action"
@@ -193,11 +193,10 @@
                         name="%(crm.action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
                         icon="gtk-go-forward" type="action" />
-                    <button colspan="2" string="Forward to Partner"
+                    <button colspan="2" string="Forward"
                         name="%(crm_lead_forward_to_partner_act)d"
                         icon="gtk-go-forward" type="action" />
                  </page>
-
                 </notebook>
             </form>
         </field>

@@ -30,7 +30,7 @@
 	      	<form string="Create a Partner">
 	      		<field name="action"/>
 	      		<group attrs="{'invisible':[('action','!=','exist')]}">
-		            <field name="partner_id"/>
+		            <field name="partner_id" attrs="{'required':[('action','=','exist')]}" />
 		        </group>
 		        <separator string="" colspan="4" />
 	      		<group col="4" colspan="4">

@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,22 +18,8 @@
 #
 ##############################################################################
 
+import sale_layout
+import report
 
-{
-    'name': 'Partner Geo-Localisation',
-    'version': '1.0',
-    'category': 'Generic Modules/Production',
-    'description': """
-This is the module used by OpenERP SA to redirect customers to his partners,
-based on geolocalization.
-    """,
-    'author': 'OpenERP SA',
-    'depends': ['crm'],
-    'data': [
-        'res_partner_view.xml',
-        'crm_lead_view.xml',
-        ],
-    'installable': True,
-    'active': False,
-    'certificate': False,
-}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
