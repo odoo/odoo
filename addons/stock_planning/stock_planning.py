@@ -27,7 +27,7 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 from osv import osv, fields
 import netsvc
 from tools.translate import _
-from tools import config
+#from tools import config
 
 
 def rounding(fl, round_value):
@@ -63,7 +63,7 @@ class stock_period_createlines(osv.osv_memory):
     }
 
     def create_period_weekly(self, cr, uid, ids, context=None):
-        res = self.create_period(cr, uid, ids, context, 6, 'Weekly')
+        res = self.create_period(cr, uid, ids, context=context)
         return {
                 'view_type': 'form',
                 "view_mode": 'tree',
@@ -71,7 +71,8 @@ class stock_period_createlines(osv.osv_memory):
                 'type': 'ir.actions.act_window',
             }
 
-    def create_period_monthly(self,cr, uid, ids, interval=1, context=None):
+    def create_period_monthly(self, cr, uid, ids, context=None):
+        interval = context.get('interval',1)
         for p in self.browse(cr, uid, ids, context=context):
             dt = p.date_start
             ds = mx.DateTime.strptime(p.date_start, '%Y-%m-%d')
@@ -90,7 +91,9 @@ class stock_period_createlines(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 }
 
-    def create_period(self, cr, uid, ids, interval=0, name='Daily', context=None):
+    def create_period(self, cr, uid, ids, context=None):
+        interval = context.get('interval',0)
+        name = context.get('name','Daily')
         for p in self.browse(cr, uid, ids, context=context):
             dt = p.date_start
             ds = mx.DateTime.strptime(p.date_start, '%Y-%m-%d')
