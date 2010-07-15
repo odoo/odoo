@@ -50,6 +50,9 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             'sum_credit': self._sum_credit,
             'get_fiscalyear':self._get_fiscalyear,
             'get_periods':self.get_periods,
+            'get_filter': self._get_filter,
+            'get_start_period': self.get_start_period,
+            'get_end_period': self.get_end_period                               
         })
         self.context = context
 

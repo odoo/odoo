@@ -56,6 +56,38 @@
       <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="Table2_header">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="7,0" stop="7,0"/>     
+    </blockTableStyle>    
     <blockTableStyle id="Table2">
       <blockValign value="TOP"/>
       <blockAlignment value="RIGHT"/>
@@ -64,6 +96,7 @@
     </blockTableStyle>
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
+  		<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>      
       <blockValign value="TOP"/>
     </blockTableStyle>
         <blockTableStyle id="Table3a">
@@ -132,7 +165,7 @@
     <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
-
+	<paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <blockTableStyle id="TrLevel">
       <blockLeftPadding length="0" start="1,0" stop="1,0"/>
     </blockTableStyle>
@@ -187,51 +220,41 @@
     <para style="P2">
         <font color="white"> </font>
     </para>
-    <blockTable colWidths="89.0,89.0,89.0,90.0,90.0,90.0" style="Table3a">
+    <blockTable colWidths="100.0,150.0,150.0,100.0" style="Table2_header">
       <tr>
-        <td>
-          <para style="terp_tblheader_General_Centre">Fiscal Year</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Start Date</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">End Date</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Display Account</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Periods</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Printing Date</para>
-        </td>
+        <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
+		<td><para style="terp_tblheader_General_Centre">Display Account</para></td>        
+        <td><para style="terp_tblheader_General_Centre">Filters By <font color="white">[[ get_filter(data)!='No Filter' and '' or removeParentNode('font') ]]</font><font>[[ get_filter(data) ]]</font></para></td>
+        <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>
-    </blockTable>
-    <blockTable colWidths="89.0,89.0,89.0,90.0,90.0,90.0" style="Table3a">
-      <tr>
-        <td>
-          <para style="terp_default_Centre_9">[[ get_fiscalyear(data) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_9">[[ data['form']['date_from'] ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_9">[[ data['form']['date_to'] ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_9">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='bal_mouvement' and 'With movements') or 'With balance is not equal to 0']]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_9"> [[data['form']['periods'] and get_periods(data['form']) or '']]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_9"> [[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time=True) ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-
+	<tr>
+       <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or removeParentNode('para') ]]</para></td>
+		<td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='bal_mouvement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
+        <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
+        	<blockTable colWidths="70.0,70.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+				<tr>
+	               <td><para style="terp_tblheader_Details_Centre">Start Date</para></td>
+	        		<td><para style="terp_tblheader_Details_Centre">End Date</para></td>        	
+	        	</tr>        	
+	        	<tr>
+	        		<td><para style="terp_default_Centre_8">[[ data['form']['date_from'] ]]</para></td>
+	        		<td><para style="terp_default_Centre_8">[[ data['form']['date_to'] ]]</para></td>        	
+	        	</tr>
+        	</blockTable>
+        	<blockTable colWidths="70.0,70.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+				<tr>
+			        <td><para style="terp_tblheader_Details_Centre">Start Period</para></td>
+			        <td><para style="terp_tblheader_Details_Centre">End Period</para></td>      	
+	        	</tr>        	
+	        	<tr>
+			        <td><para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para></td>
+			        <td><para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para></td>
+	        	</tr>
+        	 </blockTable>        	 
+        	</td>
+	<td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
+	</tr>
+	</blockTable>
 
 <para style="P2">
 <font color="white"> </font>
