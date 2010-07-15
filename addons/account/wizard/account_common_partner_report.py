@@ -39,7 +39,6 @@ class account_common_partner_report(osv.osv_memory):
         if context is None:
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['result_selection'])[0])
-        data['form']['active_ids'] = data['form']['chart_account_id'] # Check me
         return data
 
 account_common_partner_report()
