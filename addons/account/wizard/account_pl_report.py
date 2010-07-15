@@ -31,10 +31,9 @@ class account_pl_report(osv.osv_memory):
     _description = "Account Profit And Loss Report"
     _columns = {
 #       'company_id': fields.many2one('res.company', 'Company', required=True),
-        'display_account': fields.selection([('bal_movement','With movements'),
-                                             ('bal_solde','With balance is not equal to 0'),
-                                             ('bal_all','All'),
-                                             ],'Display accounts'),
+        'display_account': fields.selection([('bal_all','All'), ('bal_mouvement','With movements'),
+                         ('bal_solde','With balance is not equal to 0'),
+                         ],'Display accounts', required=True),
         'display_type': fields.boolean("Landscape Mode"),
                 }
 

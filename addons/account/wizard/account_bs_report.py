@@ -31,10 +31,9 @@ class account_bs_report(osv.osv_memory):
     _description = 'Account Balance Sheet Report'
 
     _columns = {
-        'display_account': fields.selection([('bal_movement','With movements'),
-                                             ('bal_solde','With balance is not equal to 0'),
-                                             ('bal_all','All'),
-                                             ],'Display accounts'),
+        'display_account': fields.selection([('bal_all','All'), ('bal_mouvement','With movements'),
+                 ('bal_solde','With balance is not equal to 0'),
+                 ],'Display accounts', required=True),
         'display_type': fields.boolean("Landscape Mode"),
         'reserve_account_id': fields.many2one('account.account', 'Reserve & Surplus Account',required = True,
                                       help='This Account is used for trasfering Profit/Loss(If It is Profit : Amount will be added, Loss : Amount will be duducted.), Which is calculated from Profilt & Loss Report', domain = [('type','=','payable')]),
