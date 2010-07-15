@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* auction
+#	* auction
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-06-04 12:37+0000\n"
-"Last-Translator: Eleanor Chen <chenyueg@gmail.com>\n"
+"PO-Revision-Date: 2010-07-15 03:34+0000\n"
+"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-22 04:13+0000\n"
+"X-Launchpad-Export-Date: 2010-07-15 03:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -24,7 +24,7 @@ msgstr "总利润"
 #. module: auction
 #: wizard_view:auction.lots.sms_send,init:0
 msgid "SMS - Gateway: clickatell"
-msgstr "SMS网关"
+msgstr "短信网关：clickatell"
 
 #. module: auction
 #: view:auction.lots:0
@@ -32,22 +32,24 @@ msgid "Set to draft"
 msgstr "设为草稿"
 
 #. module: auction
-#: field:auction.deposit,partner_id:0 view:auction.lots:0
-#: xsl:report.auction.seller.list:0 field:report.deposit.border,seller:0
-#: field:report.seller.auction,seller:0 field:report.seller.auction2,seller:0
+#: field:auction.deposit,partner_id:0
+#: view:auction.lots:0
+#: field:report.deposit.border,seller:0
+#: field:report.seller.auction,seller:0
+#: field:report.seller.auction2,seller:0
 msgid "Seller"
 msgstr "卖方"
 
 #. module: auction
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在这动作定义中无效的模块名"
+msgstr "在动作定义使用了无效的模块名。"
 
 #. module: auction
 #: selection:auction.lots.send.aie,date_ask,numerotation:0
 #: selection:auction.lots.send.aie,init,numerotation:0
 msgid "Provisoire"
-msgstr ""
+msgstr "暂时的"
 
 #. module: auction
 #: selection:auction.lots.send.aie,date_ask,numerotation:0
@@ -58,7 +60,7 @@ msgstr "确定的(订单目录)"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_report_auction_object_date_tree1_my
 msgid "My Encoded Objects Per Day"
-msgstr "每天我编码的物品"
+msgstr "我每天编号的物品"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_history
@@ -79,26 +81,31 @@ msgstr "物品#"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_action_bids_form
 msgid "Bids line"
-msgstr "出价线"
+msgstr "投标线"
 
 #. module: auction
 #: xsl:report.auction.deposit:0
 msgid "Deposit Form"
-msgstr "押金方式"
+msgstr "押金单"
 
 #. module: auction
-#: rml:auction.bids:0 view:auction.lots:0 field:auction.lots,ach_uid:0
+#: rml:auction.bids:0
+#: view:auction.lots:0
+#: field:auction.lots,ach_uid:0
 #: wizard_field:auction.lots.buyer_map,check,ach_uid:0
 #: wizard_field:auction.lots.make_invoice_buyer,init,buyer_id:0
-#: wizard_field:auction.pay.buy,init,buyer_id:0 rml:buyer.list:0
+#: wizard_field:auction.pay.buy,init,buyer_id:0
+#: rml:buyer.list:0
 #: model:ir.ui.menu,name:auction.auction_report_buyer_menu
-#: rml:report.auction.buyer.result:0 field:report.buyer.auction,buyer:0
+#: rml:report.auction.buyer.result:0
+#: field:report.buyer.auction,buyer:0
 #: field:report.buyer.auction2,buyer:0
 msgid "Buyer"
 msgstr "买家"
 
 #. module: auction
-#: field:report.auction.view,nobjects:0 field:report.buyer.auction,object:0
+#: field:report.auction.view,nobjects:0
+#: field:report.buyer.auction,object:0
 msgid "No of objects"
 msgstr "没有物品"
 
@@ -110,7 +117,7 @@ msgstr "拍卖最终结果"
 #. module: auction
 #: rml:auction.total.rml:0
 msgid "# of paid items (based on invoices):"
-msgstr "(根据发票)支付项目:"
+msgstr "支付项目(根据发票):"
 
 #. module: auction
 #: model:ir.actions.wizard,name:auction.wizard_numerotate_lot
@@ -123,7 +130,8 @@ msgid "Antique/Books, manuscripts, eso."
 msgstr "古董/书籍/手稿"
 
 #. module: auction
-#: view:auction.deposit:0 model:ir.model,name:auction.model_auction_deposit
+#: view:auction.deposit:0
+#: model:ir.model,name:auction.model_auction_deposit
 msgid "Deposit Border"
 msgstr "押金最少"
 
@@ -131,7 +139,7 @@ msgstr "押金最少"
 #: wizard_field:auction.lots.make_invoice,init,amount:0
 #: wizard_field:auction.lots.make_invoice_buyer,init,amount:0
 msgid "Invoiced Amount"
-msgstr "发票金额"
+msgstr "已开票金额"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
@@ -141,7 +149,7 @@ msgstr "古董/锡/铜制品"
 #. module: auction
 #: field:auction.lots,paid_ach:0
 msgid "Buyer invoice reconciled"
-msgstr "买家发票对账"
+msgstr "买家发票已核销"
 
 #. module: auction
 #: model:ir.actions.wizard,name:auction.auction_wizard_able_taken
@@ -151,7 +159,7 @@ msgstr "标记为带走"
 #. module: auction
 #: xsl:report.auction.seller.list:0
 msgid "Inv."
-msgstr ""
+msgstr "发票"
 
 #. module: auction
 #: field:auction.deposit.cost,amount:0
@@ -195,7 +203,8 @@ msgid "Objects by Auction"
 msgstr "拍卖物品"
 
 #. module: auction
-#: field:auction.lots,lot_num:0 field:report.unclassified.objects,lot_num:0
+#: field:auction.lots,lot_num:0
+#: field:report.unclassified.objects,lot_num:0
 msgid "List Number"
 msgstr "表编号"
 
@@ -230,7 +239,8 @@ msgid "Contemporary Art"
 msgstr "当代艺术"
 
 #. module: auction
-#: view:auction.lots:0 view:report.unclassified.objects:0
+#: view:auction.lots:0
+#: view:report.unclassified.objects:0
 msgid "Ref"
 msgstr "参考"
 
@@ -250,9 +260,10 @@ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr "错误:登入必须要先登出"
 
 #. module: auction
-#: view:auction.lots:0 field:report.buyer.auction,total_price:0
+#: view:auction.lots:0
+#: field:report.buyer.auction,total_price:0
 msgid "Total Adj."
-msgstr ""
+msgstr "合计"
 
 #. module: auction
 #: field:report.auction.view2,obj_margin_procent:0
@@ -260,7 +271,8 @@ msgid "Net margin (%)"
 msgstr "净利润(%)"
 
 #. module: auction
-#: selection:auction.lots,state:0 selection:report.object.encoded,state:0
+#: selection:auction.lots,state:0
+#: selection:report.object.encoded,state:0
 #: selection:report.seller.auction,state:0
 #: selection:report.unclassified.objects,state:0
 msgid "Unsold"
@@ -274,7 +286,7 @@ msgstr "日期"
 #. module: auction
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "错误:销售单位必须要和计量单位不同类型"
+msgstr "错误:销售单位必须和计量单位在不同的分类."
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -288,7 +300,9 @@ msgid "Seller Costs"
 msgstr "卖家费用"
 
 #. module: auction
-#: view:auction.bid:0 view:auction.bid_line:0 view:auction.lots:0
+#: view:auction.bid:0
+#: view:auction.bid_line:0
+#: view:auction.lots:0
 #: field:auction.lots,bid_lines:0
 #: model:ir.actions.report.xml,name:auction.bid_auction
 #: model:ir.ui.menu,name:auction.menu_action_bid_open
@@ -311,7 +325,8 @@ msgid "Contact"
 msgstr "联系"
 
 #. module: auction
-#: field:report.auction.view,obj_ret:0 field:report.object.encoded,obj_ret:0
+#: field:report.auction.view,obj_ret:0
+#: field:report.object.encoded,obj_ret:0
 #: field:report.object.encoded.manager,obj_ret:0
 msgid "# obj ret"
 msgstr "物品#"
@@ -339,7 +354,7 @@ msgstr "佣金"
 #. module: auction
 #: wizard_button:auction.lots.numerotate,search,init:0
 msgid "Back"
-msgstr "后面"
+msgstr "后退"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_all_objects_unsold
@@ -352,17 +367,20 @@ msgid "Sold Objects"
 msgstr "已卖出的物品"
 
 #. module: auction
-#: view:report.buyer.auction2:0 view:report.seller.auction2:0
+#: view:report.buyer.auction2:0
+#: view:report.seller.auction2:0
 msgid "Sum net margin"
 msgstr "合计净利润"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Border Form"
-msgstr "押金最少方式"
+msgstr "最少押金单"
 
 #. module: auction
-#: field:auction.bid,bid_lines:0 rml:auction.bids:0 rml:bids.lots:0
+#: field:auction.bid,bid_lines:0
+#: rml:auction.bids:0
+#: rml:bids.lots:0
 #: model:ir.model,name:auction.model_auction_bid_line
 msgid "Bid"
 msgstr "出价"
@@ -373,15 +391,17 @@ msgid "Langage"
 msgstr ""
 
 #. module: auction
-#: field:auction.bid_line,lot_id:0 field:auction.lot.history,lot_id:0
-#: view:auction.lots:0 model:ir.model,name:auction.model_auction_lots
+#: field:auction.bid_line,lot_id:0
+#: field:auction.lot.history,lot_id:0
+#: view:auction.lots:0
+#: model:ir.model,name:auction.model_auction_lots
 msgid "Object"
 msgstr "物品"
 
 #. module: auction
 #: model:ir.actions.wizard,name:auction.wizard_map_user
 msgid "Map buyer username to Partners"
-msgstr "从买家用户到业务伙伴"
+msgstr "从买家到业务伙伴"
 
 #. module: auction
 #: wizard_field:auction.lots.numerotate,search,lot_num:0
@@ -407,9 +427,11 @@ msgid "Auction buyer reporting form view"
 msgstr "拍卖买方报表"
 
 #. module: auction
-#: field:auction.dates,state:0 field:auction.lots,state:0
+#: field:auction.dates,state:0
+#: field:auction.lots,state:0
 #: field:report.auction.adjudication,state:0
-#: field:report.object.encoded,state:0 field:report.seller.auction,state:0
+#: field:report.object.encoded,state:0
+#: field:report.seller.auction,state:0
 #: field:report.unclassified.objects,state:0
 msgid "Status"
 msgstr "状态"
@@ -425,7 +447,8 @@ msgid "Antique/Cartoons"
 msgstr "古董/卡通"
 
 #. module: auction
-#: view:auction.lots:0 selection:auction.lots,state:0
+#: view:auction.lots:0
+#: selection:auction.lots,state:0
 #: selection:report.seller.auction,state:0
 #: selection:report.unclassified.objects,state:0
 msgid "Sold"
@@ -449,7 +472,7 @@ msgstr "费用科目"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_wizard_emporte
 msgid "Deliveries Management"
-msgstr "发货管理"
+msgstr "交付管理"
 
 #. module: auction
 #: field:auction.lots,obj_desc:0
@@ -482,47 +505,48 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.wizard,name:auction.wizard_pay
 msgid "Pay objects of the buyer"
-msgstr ""
+msgstr "买家支付的物品"
 
 #. module: auction
 #: view:report.deposit.border:0
 msgid "Depositer's statistics"
-msgstr ""
+msgstr "押金统计"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Buyer information"
-msgstr ""
+msgstr "买家信息"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_seller_auction
 msgid "Auction Reporting on seller view"
-msgstr ""
+msgstr "拍卖报表卖家视图"
 
 #. module: auction
 #: field:auction.lots,name2:0
 msgid "Short Description (2)"
-msgstr ""
+msgstr "简短描述(2)"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_dates
 msgid "auction.dates"
-msgstr ""
+msgstr "拍卖.日期"
 
 #. module: auction
-#: rml:auction.total.rml:0 model:ir.ui.menu,name:auction.auction_buyers_menu
+#: rml:auction.total.rml:0
+#: model:ir.ui.menu,name:auction.auction_buyers_menu
 msgid "Buyers"
-msgstr ""
+msgstr "买家"
 
 #. module: auction
 #: wizard_field:auction.pay.buy,init,amount:0
 #: wizard_field:auction.pay.buy,init,amount2:0
 #: wizard_field:auction.pay.buy,init,amount3:0
 msgid "Amount paid"
-msgstr ""
+msgstr "已付款金额"
 
 #. module: auction
-#: view:board.board:0
+#: model:ir.ui.menu,name:auction.menu_report_latest_doposit_tree
 msgid "My Latest Deposits"
 msgstr "我最近的押金"
 
@@ -533,27 +557,27 @@ msgstr "我最近的押金"
 #: field:report.auction.view,min_est:0
 #: field:report.unclassified.objects,lot_est1:0
 msgid "Minimum Estimation"
-msgstr ""
+msgstr "最低估价"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Accounting"
-msgstr ""
+msgstr "会计"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view2
 msgid "Buyer's Revenues"
-msgstr ""
+msgstr "买家收入"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_adjudication
 msgid "report_auction_adjudication"
-msgstr ""
+msgstr "拍卖最终结果报表"
 
 #. module: auction
 #: field:auction.bid_line,price:0
 msgid "Maximum Price"
-msgstr ""
+msgstr "最高价格"
 
 #. module: auction
 #: selection:auction.lots.send.aie,date_ask,lang:0
@@ -563,22 +587,22 @@ msgstr ""
 #. module: auction
 #: view:report.buyer.auction2:0
 msgid "Auction buyer reporting tree view2"
-msgstr ""
+msgstr "拍卖买家报表树视图2"
 
 #. module: auction
 #: wizard_view:auction.lots.sms_send,init:0
 msgid "Bulk SMS send"
-msgstr ""
+msgstr "批量发送SMS"
 
 #. module: auction
 #: wizard_view:auction.taken,init:0
 msgid "Select lots which are Sold"
-msgstr ""
+msgstr "选择已售出的批"
 
 #. module: auction
 #: field:auction.lots,statement_id:0
 msgid "Payment"
-msgstr ""
+msgstr "付款"
 
 #. module: auction
 #: selection:auction.lots.send.aie,date_ask,lang:0
@@ -588,50 +612,50 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Old weapons and militaria"
-msgstr ""
+msgstr "古董/旧武器和军备"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Oriental Arts/Chineese furnitures"
-msgstr ""
+msgstr "古董/东方艺术品/中国家具"
 
 #. module: auction
 #: selection:auction.deposit,method:0
 msgid "Keep until sold"
-msgstr ""
+msgstr "保留直到售出"
 
 #. module: auction
 #: wizard_button:auction.lots.numerotate,init,choice:0
 #: wizard_button:auction.lots.send.aie,init,date_ask:0
 #: wizard_button:auction.lots.send.aie.results,init,date_ask:0
 msgid "Continue"
-msgstr ""
+msgstr "继续"
 
 #. module: auction
 #: field:report.object.encoded,obj_num:0
 #: field:report.object.encoded.manager,obj_num:0
 msgid "# of Encoded obj."
-msgstr ""
+msgstr "# 物品编码"
 
 #. module: auction
 #: xsl:report.auction.vnd_bordereau:0
 msgid "List N."
-msgstr ""
+msgstr "列表 N"
 
 #. module: auction
 #: field:report.deposit.border,moy_est:0
 msgid "Avg. Est"
-msgstr ""
+msgstr "平均值"
 
 #. module: auction
 #: rml:auction.total.rml:0
 msgid "# of sellers:"
-msgstr ""
+msgstr "# 卖家"
 
 #. module: auction
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "错误:无效EAN编码"
 
 #. module: auction
 #: model:ir.module.module,description:auction.module_meta_information
@@ -642,26 +666,31 @@ msgid ""
 "     Delivery Management. \n"
 "    "
 msgstr ""
+"这模块提供以下功能\n"
+"    管理艺术家, 作品, 买家, 卖家和拍卖\n"
+"    管理出价, 售出跟踪, 支付和未售出物品\n"
+"    交付管理 \n"
+"    "
 
 #. module: auction
 #: rml:auction.total.rml:0
 msgid "# of items taken away:"
-msgstr ""
+msgstr "# 带走的物品:"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_auction_allmonth_view1
 msgid "Auction's Summary"
-msgstr ""
+msgstr "拍卖合计:"
 
 #. module: auction
 #: rml:buyer.list:0
 msgid "%)"
-msgstr ""
+msgstr "%)"
 
 #. module: auction
 #: wizard_view:auction.lots.able,init:0
 msgid "Confirmation set taken away"
-msgstr ""
+msgstr "确认设为带走"
 
 #. module: auction
 #: wizard_field:auction.lots.make_invoice,init,objects:0
@@ -670,7 +699,7 @@ msgstr ""
 #: wizard_field:auction.lots.send.aie.results,date_ask,objects:0
 #: field:report.deposit.border,nb_obj:0
 msgid "# of objects"
-msgstr ""
+msgstr "# 物品"
 
 #. module: auction
 #: field:auction.lots,lot_est2:0
@@ -679,82 +708,83 @@ msgstr ""
 #: field:report.auction.view,max_est:0
 #: field:report.unclassified.objects,lot_est2:0
 msgid "Maximum Estimation"
-msgstr ""
+msgstr "最高估价"
 
 #. module: auction
 #: field:auction.lots,buyer_price:0
 msgid "Buyer price"
-msgstr ""
+msgstr "买家价格"
 
 #. module: auction
 #: model:ir.actions.wizard,name:auction.auction_wizard_payer_sel
 msgid "Mark as paid for seller"
-msgstr ""
+msgstr "标记为卖家支付"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.seller_form_id
 msgid "Seller List"
-msgstr ""
+msgstr "卖家列表"
 
 #. module: auction
 #: field:auction.lots,is_ok:0
 msgid "Buyer's payment"
-msgstr ""
+msgstr "买家付款"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Close + Create all invoices"
-msgstr ""
+msgstr "费用 + 创建所有发票"
 
 #. module: auction
 #: model:ir.actions.wizard,name:auction.auction_catalog_flagy
 msgid "Auction Catalog Flagey"
-msgstr ""
+msgstr "拍卖目录Flagey"
 
 #. module: auction
 #: field:auction.lot.history,price:0
 msgid "Withdrawn price"
-msgstr ""
+msgstr "撤销价格"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax4
 msgid "Seller Costs1"
-msgstr ""
+msgstr "卖家成本1"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Verreries"
-msgstr ""
+msgstr "古董/玻璃器皿"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Toys"
-msgstr ""
+msgstr "古董/玩具"
 
 #. module: auction
-#: field:auction.deposit,create_uid:0 field:auction.lots,create_uid:0
+#: field:auction.deposit,create_uid:0
+#: field:auction.lots,create_uid:0
 msgid "Created by"
-msgstr ""
+msgstr "创建者"
 
 #. module: auction
 #: xsl:report.auction.ach_bordereau:0
 msgid "Buyer form"
-msgstr ""
+msgstr "买家"
 
 #. module: auction
 #: xsl:report.auction.deposit:0
 msgid "Estimate"
-msgstr ""
+msgstr "预计"
 
 #. module: auction
 #: rml:auction.total.rml:0
 msgid "# of buyers:"
-msgstr ""
+msgstr "# 买家:"
 
 #. module: auction
 #: field:auction.lots,costs:0
 msgid "Indirect costs"
-msgstr ""
+msgstr "间接成本"
 
 #. module: auction
 #: xsl:report.auction.ach_bordereau:0
@@ -764,53 +794,53 @@ msgstr ""
 #. module: auction
 #: constraint:account.tax.code:0
 msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "错误!你不能创建递归的科目"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_menu_root
 msgid "Auction Management"
-msgstr ""
+msgstr "拍卖管理"
 
 #. module: auction
 #: field:auction.dates,journal_seller_id:0
 msgid "Seller Journal"
-msgstr ""
+msgstr "卖家记录集合"
 
 #. module: auction
 #: view:report.buyer.auction:0
 msgid "Auction buyer reporting tree view"
-msgstr ""
+msgstr "拍卖买家报表树视图"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_auction_artist
 msgid "Define Artists"
-msgstr ""
+msgstr "定义艺术家"
 
 #. module: auction
 #: field:auction.lot.category,name:0
 msgid "Category Name"
-msgstr ""
+msgstr "类别名称"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_report_auction_estimation_adj_category_manager
 #: model:ir.ui.menu,name:auction.menu_report_auction_estimation_adj_category_member
 msgid "Comparison of estimations"
-msgstr ""
+msgstr "估价比较"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.v_report_barcode_lot
 msgid "Code barres du lot"
-msgstr ""
+msgstr "条码批"
 
 #. module: auction
 #: wizard_button:auction.lots.numerotate,not_exist,init:0
 msgid "Retry"
-msgstr ""
+msgstr "重试"
 
 #. module: auction
 #: field:auction.artists,birth_death_dates:0
 msgid "Birth / Death dates"
-msgstr ""
+msgstr "出生/ 死亡日期"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
@@ -820,7 +850,7 @@ msgstr ""
 #. module: auction
 #: model:ir.model,name:auction.model_report_unclassified_objects
 msgid "Unclassified objects "
-msgstr ""
+msgstr "无类别物品 "
 
 #. module: auction
 #: wizard_button:auction.lots.numerotate_cont,init,set_number:0
@@ -837,22 +867,22 @@ msgstr ""
 #. module: auction
 #: xsl:report.auction.deposit:0
 msgid "Document type"
-msgstr ""
+msgstr "文档类型"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_estimation_adj_category
 msgid "comparaison estimate/adjudication "
-msgstr ""
+msgstr "估价比价/ 最终结果 "
 
 #. module: auction
 #: rml:buyer.list:0
 msgid "Adj(EUR)"
-msgstr ""
+msgstr "最终结果(EUR)"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Cont. Art/Other Media"
-msgstr ""
+msgstr "艺术品/ 其它媒体"
 
 #. module: auction
 #: model:ir.actions.wizard,name:auction.wizard_emporte
@@ -860,42 +890,44 @@ msgid "Gestion emporte"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.lots.list.landscape:0 xsl:report.auction.vnd_bordereau:0
+#: xsl:report.auction.lots.list.landscape:0
+#: xsl:report.auction.vnd_bordereau:0
 msgid "Cat. N."
 msgstr ""
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_auction_object_cat
 msgid "Object Categories"
-msgstr ""
+msgstr "物品类别"
 
 #. module: auction
 #: wizard_field:auction.lots.send.aie,date_ask,img_send:0
 msgid "Send Image also ?"
-msgstr ""
+msgstr "也传送图像?"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "General Informations"
-msgstr ""
+msgstr "一般信息"
 
 #. module: auction
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "在这动作定义中无效的模块名"
+msgstr "无效XML视图结构!"
 
 #. module: auction
 #: view:report.auction.view:0
 msgid "Auctions results"
-msgstr ""
+msgstr "拍卖结果"
 
 #. module: auction
 #: wizard_field:auction.lots.sms_send,init,app_id:0
 msgid "API ID"
-msgstr ""
+msgstr "API ID"
 
 #. module: auction
-#: field:auction.bid,name:0 field:auction.bid_line,bid_id:0
+#: field:auction.bid,name:0
+#: field:auction.bid_line,bid_id:0
 msgid "Bid ID"
 msgstr ""
 
@@ -907,40 +939,40 @@ msgstr ""
 #. module: auction
 #: field:report.buyer.auction2,net_margin:0
 msgid "Net Margin"
-msgstr ""
+msgstr "净利润"
 
 #. module: auction
 #: field:auction.lots,vnd_lim_net:0
 msgid "Net limit ?"
-msgstr ""
+msgstr "净限额?"
 
 #. module: auction
 #: rml:auction.total.rml:0
 msgid "# of commissions:"
-msgstr ""
+msgstr "# 佣金:"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_unclassified_objects
 #: model:ir.ui.menu,name:auction.menu_all_objects_unclassified
 #: view:report.unclassified.objects:0
 msgid "Unclassified objects"
-msgstr ""
+msgstr "无类别物品"
 
 #. module: auction
 #: wizard_view:auction.lots.make_invoice_buyer,init:0
 msgid "(Keep empty for automatic number)"
-msgstr ""
+msgstr "(空为自动编号)"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_object_date
 #: view:report.auction.object.date:0
 msgid "Objects per day"
-msgstr ""
+msgstr "每天物品"
 
 #. module: auction
 #: model:product.template,name:auction.monproduit_product_template
 msgid "Oeuvres a 21%"
-msgstr ""
+msgstr "全部 21%"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
@@ -948,97 +980,99 @@ msgid "Antique/Carpet and textilles"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.seller.list:0 field:report.object.encoded.manager,adj:0
+#: field:report.object.encoded.manager,adj:0
 msgid "Adj."
-msgstr ""
+msgstr "最终结果"
 
 #. module: auction
-#: field:auction.lot.history,name:0 field:report.attendance,name:0
-#: field:report.auction.adjudication,date:0 xsl:report.auction.deposit:0
+#: field:auction.lot.history,name:0
+#: field:report.attendance,name:0
+#: field:report.auction.adjudication,date:0
 #: field:report.auction.estimation.adj.category,date:0
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #. module: auction
 #: field:auction.lots,obj_ret:0
 msgid "Price retired"
-msgstr ""
+msgstr "价格撤回"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "Extra Costs"
-msgstr ""
+msgstr "额外费用"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_auction_dates_new
 msgid "New Auction Dates"
-msgstr ""
+msgstr "新拍卖日期"
 
 #. module: auction
 #: field:auction.lots,paid_vnd:0
 msgid "Seller Paid"
-msgstr ""
+msgstr "卖家支付"
 
 #. module: auction
 #: field:auction.deposit,date_dep:0
 msgid "Deposit date"
-msgstr ""
+msgstr "押金日期"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.id_deposit
 msgid "Deposits"
-msgstr ""
+msgstr "押金"
 
 #. module: auction
 #: field:auction.deposit,specific_cost_ids:0
 msgid "Specific Costs"
-msgstr ""
+msgstr "特别费用"
 
 #. module: auction
-#: view:report.buyer.auction2:0 view:report.seller.auction2:0
+#: view:report.buyer.auction2:0
+#: view:report.seller.auction2:0
 msgid "Sum adj"
-msgstr ""
+msgstr "最终结果合计"
 
 #. module: auction
-#: view:auction.dates:0 view:report.auction.view2:0
+#: view:auction.dates:0
+#: view:report.auction.view2:0
 msgid "Auctions"
-msgstr ""
+msgstr "拍卖"
 
 #. module: auction
 #: field:report.seller.auction,object_number:0
 msgid "No of Objects"
-msgstr ""
+msgstr "没物品"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "History"
-msgstr ""
+msgstr "日志"
 
 #. module: auction
 #: field:auction.lot.category,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "优先级"
 
 #. module: auction
 #: rml:auction.code_bar_lot:0
 msgid "Nr."
-msgstr ""
+msgstr "Nr."
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Painting"
-msgstr ""
+msgstr "古董/ 绘画"
 
 #. module: auction
 #: field:auction.lot.category,aie_categ:0
 msgid "Aie Category"
-msgstr ""
+msgstr "Aie类别"
 
 #. module: auction
-#: xsl:flagey.huissier:0 rml:report.auction.buyer.result:0
-#: xsl:report.auction.deposit:0
+#: rml:report.auction.buyer.result:0
 msgid "Num"
-msgstr ""
+msgstr "编号"
 
 #. module: auction
 #: wizard_button:auction.lots.able,init,end:0
@@ -1055,94 +1089,97 @@ msgstr ""
 #: wizard_button:auction.pay.buy,init,end:0
 #: wizard_button:auction.payer.sel,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Beginning of the auction"
-msgstr ""
+msgstr "开始拍卖"
 
 #. module: auction
 #: field:auction.artists,biography:0
 msgid "Biography"
-msgstr ""
+msgstr "传记"
 
 #. module: auction
 #: field:auction.lots,lot_local:0
 msgid "Location"
-msgstr ""
+msgstr "位置"
 
 #. module: auction
 #: wizard_view:auction.payer.sel,init:0
 msgid "Check payment for seller"
-msgstr ""
+msgstr "检查卖家付款"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.view_report_object_by_auction
 msgid "Detailed lots"
-msgstr ""
+msgstr "详细"
 
 #. module: auction
-#: view:board.board:0
+#: view:report.object.encoded:0
+#: view:report.object.encoded.manager:0
 msgid "Objects statistics"
 msgstr "物品统计"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Analytic"
-msgstr ""
+msgstr "分析"
 
 #. module: auction
 #: model:ir.actions.wizard,name:auction.wizard_results
 msgid "Send results to Auction-in-europe.com"
-msgstr ""
+msgstr "发送结果到europe.com"
 
 #. module: auction
-#: rml:bids.lots:0 rml:bids.phones.details:0
+#: rml:bids.lots:0
+#: rml:bids.phones.details:0
 msgid "Cat.N"
 msgstr ""
 
 #. module: auction
 #: selection:auction.deposit,method:0
 msgid "Decrease limit of 10%"
-msgstr ""
+msgstr "减少10%限制"
 
 #. module: auction
 #: field:auction.dates,adj_total:0
 #: field:report.auction.adjudication,adj_total:0
 #: field:report.auction.estimation.adj.category,adj_total:0
 msgid "Total Adjudication"
-msgstr ""
+msgstr "最终结果合计"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_reporting1
 #: model:ir.actions.act_window,name:auction.action_auction_reporting_all1
 #: model:ir.actions.act_window,name:auction.action_auction_reporting_all2
 msgid "Seller's auction"
-msgstr ""
+msgstr "卖家拍卖"
 
 #. module: auction
 #: model:ir.actions.wizard,name:auction.wizard_invoice_buyer1
 msgid "Invoice Buyer objects"
-msgstr ""
+msgstr "买家物品发票"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_seller_allmonth_view2
 msgid "Seller's Revenues"
-msgstr ""
+msgstr "卖家收入"
 
 #. module: auction
 #: xsl:flagey.huissier:0
 msgid "Price"
-msgstr ""
+msgstr "价格"
 
 #. module: auction
 #: rml:bids.phones.details:0
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0 xsl:report.auction.vnd_bordereau:0
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.vnd_bordereau:0
 msgid "Subtotal:"
 msgstr ""
 
@@ -1158,7 +1195,8 @@ msgid "Invoice Number"
 msgstr ""
 
 #. module: auction
-#: field:report.buyer.auction,date:0 field:report.buyer.auction2,date:0
+#: field:report.buyer.auction,date:0
+#: field:report.buyer.auction2,date:0
 #: field:report.object.encoded,date:0
 #: field:report.object.encoded.manager,date:0
 #: field:report.seller.auction,date:0
@@ -1181,7 +1219,8 @@ msgid "Name"
 msgstr ""
 
 #. module: auction
-#: field:auction.deposit,name:0 field:auction.lots,bord_vnd_id:0
+#: field:auction.deposit,name:0
+#: field:auction.lots,bord_vnd_id:0
 #: wizard_field:auction.lots.numerotate,init,bord_vnd_id:0
 #: field:report.deposit.border,bord:0
 #: field:report.unclassified.objects,bord_vnd_id:0
@@ -1209,7 +1248,7 @@ msgid "Login"
 msgstr ""
 
 #. module: auction
-#: rml:buyer.list:0 xsl:report.auction.seller.list:0
+#: rml:buyer.list:0
 msgid "To pay"
 msgstr ""
 
@@ -1229,7 +1268,8 @@ msgid "Seller Form"
 msgstr ""
 
 #. module: auction
-#: field:auction.lots,lot_type:0 field:report.unclassified.objects,lot_type:0
+#: field:auction.lots,lot_type:0
+#: field:report.unclassified.objects,lot_type:0
 msgid "Object category"
 msgstr ""
 
@@ -1298,7 +1338,8 @@ msgid "Payment's history"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0 xsl:report.auction.vnd_bordereau:0
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.vnd_bordereau:0
 msgid "Document"
 msgstr ""
 
@@ -1370,7 +1411,8 @@ msgid "Cont. Art/Curiosa"
 msgstr ""
 
 #. module: auction
-#: field:auction.bid,auction_id:0 field:auction.lots,auction_id:0
+#: field:auction.bid,auction_id:0
+#: field:auction.lots,auction_id:0
 #: wizard_field:auction.lots.auction_move,init,auction_id:0
 #: wizard_field:auction.lots.send.aie,date_ask,dates:0
 #: wizard_field:auction.lots.send.aie,init,dates:0
@@ -1418,7 +1460,8 @@ msgid "Cont. Art/Jewelry"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.deposit:0 xsl:report.auction.vnd_bordereau:0
+#: xsl:report.auction.deposit:0
+#: xsl:report.auction.vnd_bordereau:0
 msgid "Inventory"
 msgstr ""
 
@@ -1428,7 +1471,7 @@ msgid "Next Auctions"
 msgstr ""
 
 #. module: auction
-#: rml:buyer.list:0 xsl:report.auction.seller.list:0
+#: rml:buyer.list:0
 msgid "#"
 msgstr ""
 
@@ -1530,7 +1573,7 @@ msgstr ""
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgstr "错误:默认的计量单位和这货物的计量单位必须是同一类型."
 
 #. module: auction
 #: xsl:report.auction.vnd_bordereau:0
@@ -1558,14 +1601,15 @@ msgid "Buyer Journal"
 msgstr ""
 
 #. module: auction
-#: selection:auction.lots,state:0 xsl:report.auction.ach_bordereau:0
+#: selection:auction.lots,state:0
 #: selection:report.object.encoded,state:0
 #: selection:report.unclassified.objects,state:0
 msgid "Paid"
 msgstr ""
 
 #. module: auction
-#: rml:bids.lots:0 rml:bids.phones.details:0
+#: rml:bids.lots:0
+#: rml:bids.phones.details:0
 msgid "Phone"
 msgstr ""
 
@@ -1596,8 +1640,7 @@ msgid "Antique/Sculpture, bronze, eso."
 msgstr ""
 
 #. module: auction
-#: rml:buyer.list:0 xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.seller.list:0 xsl:report.auction.vnd_bordereau:0
+#: rml:buyer.list:0
 msgid "Total:"
 msgstr ""
 
@@ -1661,7 +1704,7 @@ msgstr ""
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: auction
 #: field:auction.deposit,transfer:0
@@ -1741,7 +1784,8 @@ msgid "Plate Number:"
 msgstr ""
 
 #. module: auction
-#: view:auction.deposit:0 field:auction.deposit,lot_id:0
+#: view:auction.deposit:0
+#: field:auction.deposit,lot_id:0
 #: model:ir.ui.menu,name:auction.auction_objects_menu
 msgid "Objects"
 msgstr "对象"
@@ -1763,9 +1807,10 @@ msgid "Allow Negative Amount"
 msgstr ""
 
 #. module: auction
-#: rml:auction.bids:0 view:auction.lots:0 rml:auction.total.rml:0
+#: rml:auction.bids:0
+#: view:auction.lots:0
+#: rml:auction.total.rml:0
 #: model:ir.ui.menu,name:auction.auction_report_auction_menu
-#: xsl:report.auction.ach_bordereau:0 xsl:report.auction.deposit:0
 msgid "Auction"
 msgstr ""
 
@@ -1775,12 +1820,17 @@ msgid "Cont. Art/Shows"
 msgstr ""
 
 #. module: auction
-#: field:auction.dates,name:0 field:auction.lot.history,auction_id:0
+#: field:auction.dates,name:0
+#: field:auction.lot.history,auction_id:0
 #: field:report.auction.adjudication,name:0
-#: field:report.auction.view,auction_id:0 field:report.auction.view2,auction:0
-#: field:report.auction.view2,date:0 field:report.buyer.auction,auction:0
-#: field:report.buyer.auction2,auction:0 field:report.seller.auction,auction:0
-#: field:report.seller.auction2,auction:0 field:report.seller.auction2,date:0
+#: field:report.auction.view,auction_id:0
+#: field:report.auction.view2,auction:0
+#: field:report.auction.view2,date:0
+#: field:report.buyer.auction,auction:0
+#: field:report.buyer.auction2,auction:0
+#: field:report.seller.auction,auction:0
+#: field:report.seller.auction2,auction:0
+#: field:report.seller.auction2,date:0
 #: field:report.unclassified.objects,auction:0
 msgid "Auction date"
 msgstr ""
@@ -1842,7 +1892,6 @@ msgstr ""
 
 #. module: auction
 #: field:report.attendance,total_attendance:0
-#: xsl:report.auction.ach_bordereau:0
 msgid "Total"
 msgstr ""
 
@@ -1932,7 +1981,8 @@ msgstr ""
 
 #. module: auction
 #: wizard_view:auction.lots.auction_move,init:0
-msgid "Warning, this will erase the object adjudication price and its buyer !"
+msgid ""
+"Warning, this will erase the object adjudication price and its buyer !"
 msgstr ""
 
 #. module: auction
@@ -1956,14 +2006,16 @@ msgid "Income Account"
 msgstr ""
 
 #. module: auction
-#: field:auction.lots,net_revenue:0 field:report.auction.view2,net_revenue:0
+#: field:auction.lots,net_revenue:0
+#: field:report.auction.view2,net_revenue:0
 #: field:report.object.encoded.manager,net_revenue:0
 #: field:report.seller.auction2,net_revenue:0
 msgid "Net revenue"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.deposit:0 xsl:report.auction.lots.list.landscape:0
+#: xsl:report.auction.deposit:0
+#: xsl:report.auction.lots.list.landscape:0
 msgid "Limit"
 msgstr ""
 
@@ -2035,7 +2087,8 @@ msgid "Closed"
 msgstr ""
 
 #. module: auction
-#: field:auction.lots,obj_comm:0 field:report.unclassified.objects,obj_comm:0
+#: field:auction.lots,obj_comm:0
+#: field:report.unclassified.objects,obj_comm:0
 msgid "Commission"
 msgstr ""
 
@@ -2047,7 +2100,7 @@ msgstr ""
 #. module: auction
 #: constraint:res.partner:0
 msgid "The VAT doesn't seem to be correct."
-msgstr ""
+msgstr "这增值税似乎不正确"
 
 #. module: auction
 #: field:report.attendance,employee_id:0
@@ -2055,7 +2108,8 @@ msgid "Employee"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0 xsl:report.auction.vnd_bordereau:0
+#: xsl:report.auction.ach_bordereau:0
+#: xsl:report.auction.vnd_bordereau:0
 msgid "Adj.(EUR)"
 msgstr ""
 
@@ -2067,7 +2121,7 @@ msgstr ""
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
 msgid "Reporting"
-msgstr "报表"
+msgstr "内部报表"
 
 #. module: auction
 #: view:auction.lots:0
@@ -2132,7 +2186,8 @@ msgid "Invoiced"
 msgstr ""
 
 #. module: auction
-#: view:auction.lots:0 selection:auction.lots,state:0
+#: view:auction.lots:0
+#: selection:auction.lots,state:0
 msgid "Taken away"
 msgstr ""
 
@@ -2166,10 +2221,11 @@ msgstr ""
 #. module: auction
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "错误！您不能创建递归的相关成员。"
 
 #. module: auction
-#: selection:auction.dates,state:0 selection:auction.lots,state:0
+#: selection:auction.dates,state:0
+#: selection:auction.lots,state:0
 #: selection:report.auction.adjudication,state:0
 #: selection:report.object.encoded,state:0
 #: selection:report.seller.auction,state:0
@@ -2198,7 +2254,8 @@ msgid "Adj"
 msgstr ""
 
 #. module: auction
-#: view:auction.dates:0 model:ir.ui.menu,name:auction.auction_date_menu
+#: view:auction.dates:0
+#: model:ir.ui.menu,name:auction.auction_date_menu
 msgid "Auction Dates"
 msgstr ""
 
@@ -2344,11 +2401,11 @@ msgid "Report Sign In/Out"
 msgstr ""
 
 #. module: auction
-#: view:auction.deposit:0 field:auction.deposit,info:0 view:auction.lots:0
+#: view:auction.deposit:0
+#: field:auction.deposit,info:0
+#: view:auction.lots:0
 #: wizard_field:auction.lots.numerotate,search,obj_desc:0
-#: rml:bids.phones.details:0 xsl:flagey.huissier:0
-#: xsl:report.auction.ach_bordereau:0 xsl:report.auction.deposit:0
-#: xsl:report.auction.lots.list.landscape:0 xsl:report.auction.vnd_bordereau:0
+#: rml:bids.phones.details:0
 msgid "Description"
 msgstr ""
 
@@ -2358,7 +2415,8 @@ msgid "Cont. Art/Arts"
 msgstr ""
 
 #. module: auction
-#: field:auction.lots,obj_price:0 field:report.auction.view,adj_price:0
+#: field:auction.lots,obj_price:0
+#: field:report.auction.view,adj_price:0
 #: field:report.unclassified.objects,obj_price:0
 msgid "Adjudication price"
 msgstr ""
@@ -2420,7 +2478,8 @@ msgid "Pay objects"
 msgstr ""
 
 #. module: auction
-#: view:report.object.encoded:0 view:report.object.encoded.manager:0
+#: view:report.object.encoded:0
+#: view:report.object.encoded.manager:0
 msgid "# objects"
 msgstr ""
 
@@ -2488,84 +2547,88 @@ msgstr ""
 #. module: auction
 #: view:board.board:0
 msgid "Objects by day"
-msgstr "天物品"
+msgstr ""
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction_manager
 msgid "Auction Manager"
-msgstr "拍卖管理"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "Summary pointing by user"
-msgstr "每用户摘要指示"
+msgstr ""
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction
 msgid "Auction Member"
-msgstr "拍卖会员"
+msgstr ""
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.open_board_auction
 msgid "Auction member board"
-msgstr "拍卖会员控制台"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "Auction manager "
-msgstr "拍卖管理 "
+msgstr ""
 
 #. module: auction
 #: model:ir.module.module,shortdesc:auction.module_meta_information
 msgid "Board for Auction"
-msgstr "拍卖控制台"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "Estimations/Adjudication"
-msgstr "评价/最终结果"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "Total Adjudications"
-msgstr "最终结果合计"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "Latest objects"
-msgstr "最新的物品"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "Latest deposits"
-msgstr "最近的押金"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "Menu"
-msgstr "菜单"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "My objects By Day"
-msgstr "每天我的物品"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "My board"
-msgstr "我的控制台"
+msgstr ""
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.open_board_auction_manager
 msgid "Auction manager board"
-msgstr "拍卖管理控制台"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "Min/Adj/Max"
-msgstr "最少/邻近/最大"
+msgstr ""
 
 #. module: auction
 #: view:board.board:0
 msgid "My Latest Objects"
-msgstr "我最后的物品"
+msgstr ""
+
+#, python-format
+#~ msgid "The Buyer \"%s\" has no Invoice Address."
+#~ msgstr "نىڭ رۇخسەت ئادېرىسى يوق \"%s\" ساتقۇچى تەرەپ"
