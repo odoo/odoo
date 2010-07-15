@@ -529,7 +529,7 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
                     project_task
                 WHERE
                 ''' + where + '''
-                    project_id IN (select id from project_project where category_id=%s) AND
+                    project_id IN (select id from project_project where analytic_account_id=%s) AND
                     date_end>=%s AND
                     date_end<=%s''', (
                 line.account_id.id,

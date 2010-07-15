@@ -150,7 +150,7 @@ class project_vs_hours(osv.osv):
                  FROM project_project as pp,
                        account_analytic_account as aaa,
                        project_task as pt
-                 WHERE aaa.id=pp.category_id and pt.project_id=pp.id and pp.category_id=aaa.id
+                 WHERE aaa.id=pp.analytic_account_id and pt.project_id=pp.id and pp.analytic_account_id=aaa.id
                  GROUP BY aaa.user_id,aaa.state,aaa.name
                  UNION All
                  SELECT
@@ -165,7 +165,7 @@ class project_vs_hours(osv.osv):
                       project_user_rel as pur,
                       account_analytic_account as aaa,
                       project_task as pt
-                 WHERE pur.project_id=pp.id and pt.project_id=pp.id and pp.category_id=aaa.id AND pur.uid != aaa.user_id
+                 WHERE pur.project_id=pp.id and pt.project_id=pp.id and pp.analytic_account_id=aaa.id AND pur.uid != aaa.user_id
                  GROUP BY pur.uid,aaa.state,aaa.name
             )
         """)
