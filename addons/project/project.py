@@ -345,13 +345,6 @@ class task(osv.osv):
              if task['date_start'] > task['date_end']:
                  return False
         return True
-    
-    def _check_deadline_date(self, cr, uid, ids, context=None):
-        task = self.read(cr, uid, ids[0], ['date_start', 'date_deadline'])
-        if task['date_start'] and task['date_deadline']:
-             if task['date_deadline'] < task['date_start']:
-                 return False
-        return True
 
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it. This is basically used for the management of templates of projects and tasks."),
@@ -363,6 +356,7 @@ class task(osv.osv):
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
+        'create_date': fields.datetime('Create Date', readonly=True),
         'date_start': fields.datetime('Starting Date'),
         'date_end': fields.datetime('Ending Date'),
         'date_deadline': fields.date('Deadline'),
@@ -392,7 +386,6 @@ class task(osv.osv):
         'progress': 0,
         'sequence': 10,
         'active': True,
-        'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
         'project_id': _default_project,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
@@ -461,7 +454,7 @@ class task(osv.osv):
                     mail_send = True
             message = _('Task ') + " '" + task.name + "' "+ _("is Done.")
             self.log(cr, uid, task.id, message)
-            self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
                     reopen = True
@@ -531,7 +524,7 @@ class task(osv.osv):
     def do_open(self, cr, uid, ids, *args):
         tasks= self.browse(cr,uid,ids)
         for t in tasks:
-            self.write(cr, uid, [t.id], {'state': 'open'})
+            self.write(cr, uid, [t.id], {'state': 'open',  'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),})
             message = _('Task ') + " '" + t.name + "' "+ _("is Open.")
             self.log(cr, uid, t.id, message)
         return True
