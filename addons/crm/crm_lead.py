@@ -113,8 +113,7 @@ class crm_lead(osv.osv, crm_case):
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'email_from': fields.char('Email', size=128, help="E-mail address of the contact"),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which this case belongs to.\
-                             Defines responsible user and e-mail address for the mail gateway.'),
+                        select=True, help='Sales team to which this case belongs to. Defines responsible user and e-mail address for the mail gateway.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'email_cc': fields.text('Watchers Emails', size=252 , help="These \
 addresses(Comma-separated) will receive a copy of the future e-mail communication between partner \
