@@ -855,6 +855,17 @@ class mrp_procurement(osv.osv):
                 return True
         return False
 
+    def get_phantom_bom_id(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            if procurement.move_id and procurement.move_id.product_id.supply_method=='produce' \
+                 and procurement.move_id.product_id.procure_method=='make_to_order':
+                    phantom_bom_id = self.pool.get('mrp.bom').search(cr, uid, [
+                        ('product_id', '=', procurement.move_id.product_id.id),
+                        ('bom_id', '=', False),
+                        ('type', '=', 'phantom')]) 
+                    return phantom_bom_id 
+        return False
+
     def check_move_cancel(self, cr, uid, ids, context={}):
         res = True
         ok = False
@@ -1244,7 +1255,6 @@ class StockMove(osv.osv):
                 factor = move.product_qty
                 bom_point = self.pool.get('mrp.bom').browse(cr, uid, bis[0])
                 res = self.pool.get('mrp.bom')._bom_explode(cr, uid, bom_point, factor, [])
-                dest = move.product_id.product_tmpl_id.property_stock_production.id
                 state = 'confirmed'
                 if move.state=='assigned':
                     state='assigned'
@@ -1256,10 +1266,8 @@ class StockMove(osv.osv):
                         'product_qty': line['product_qty'],
                         'product_uos': line['product_uos'],
                         'product_uos_qty': line['product_uos_qty'],
-                        'move_dest_id': move.id,
                         'state': state,
                         'name': line['name'],
-                        'location_dest_id': dest,
                         'move_history_ids': [(6,0,[move.id])],
                         'move_history_ids2': [(6,0,[])],
                         'procurements': []
@@ -1282,10 +1290,9 @@ class StockMove(osv.osv):
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
                 self.pool.get('stock.move').write(cr, uid, [move.id], {
-                    'location_id': move.location_dest_id.id,
+                    'location_id': move.location_dest_id.id, # src and dest locations identical to have correct inventory, dummy move
                     'auto_validate': True,
                     'picking_id': False,
-                    'location_id': dest,
                     'state': 'waiting'
                 })
                 for m in self.pool.get('mrp.procurement').search(cr, uid, [('move_id','=',move.id)], context):
