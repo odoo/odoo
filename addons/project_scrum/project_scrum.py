@@ -27,7 +27,7 @@ import re
 import tools
 from tools.translate import _
 
-class scrum_project(osv.osv):
+class project_scrum_project(osv.osv):
     _inherit = 'project.project'
     _columns = {
         'product_owner_id': fields.many2one('res.users', 'Product Owner', help="The person who is responsible for the product"),
@@ -39,11 +39,11 @@ class scrum_project(osv.osv):
         'sprint_size': 15,
         'scrum': 1
     }
-scrum_project()
+project_scrum_project()
 
-class scrum_sprint(osv.osv):
-    _name = 'scrum.sprint'
-    _description = 'Scrum Sprint'
+class project_scrum_sprint(osv.osv):
+    _name = 'project.scrum.sprint'
+    _description = 'Project Scrum Sprint'
 
     def _calc_progress(self, cr, uid, ids, name, args, context):
         res = {}
@@ -115,10 +115,10 @@ class scrum_sprint(osv.osv):
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True,help="The person who is responsible for the product"),
         'scrum_master_id': fields.many2one('res.users', 'Scrum Master', required=True,help="The person who is maintains the processes for the product"),
-        'meeting_ids': fields.one2many('scrum.meeting', 'sprint_id', 'Daily Scrum'),
+        'meeting_ids': fields.one2many('project.scrum.meeting', 'sprint_id', 'Daily Scrum'),
         'review': fields.text('Sprint Review'),
         'retrospective': fields.text('Sprint Retrospective'),
-        'backlog_ids': fields.one2many('scrum.product.backlog', 'sprint_id', 'Sprint Backlog'),
+        'backlog_ids': fields.one2many('project.scrum.product.backlog', 'sprint_id', 'Sprint Backlog'),
         'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours', help="Computed using the sum of the task work done."),
         'expected_hours': fields.function(_calc_expected, method=True, string='Planned Hours', help='Estimated time to do the task.'),
@@ -153,10 +153,10 @@ class scrum_sprint(osv.osv):
             v['date_stop'] = (DateTime.now() + DateTime.RelativeDateTime(days=int(proj.sprint_size or 14))).strftime('%Y-%m-%d')
         return {'value':v}
 
-scrum_sprint()
+project_scrum_sprint()
 
-class scrum_product_backlog(osv.osv):
-    _name = 'scrum.product.backlog'
+class project_scrum_product_backlog(osv.osv):
+    _name = 'project.scrum.product.backlog'
     _description = 'Product Backlog'
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
@@ -200,9 +200,10 @@ class scrum_product_backlog(osv.osv):
         return res
 
     def button_cancel(self, cr, uid, ids, context={}):
+        obj_project_task = self.pool.get('project.task')
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
-            self.pool.get('project.task').write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'cancelled'})
+            obj_project_task.write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'cancelled'})
         return True
 
     def button_draft(self, cr, uid, ids, context={}):
@@ -217,9 +218,10 @@ class scrum_product_backlog(osv.osv):
         return True
 
     def button_close(self, cr, uid, ids, context={}):
+        obj_project_task = self.pool.get('project.task')
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
-            self.pool.get('project.task').write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
+            obj_project_task.write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
             message = _('Product Backlog ') + " '" + backlog.name + "' "+ _("is Closed.")
             self.log(cr, uid, backlog.id, message)
         return True
@@ -249,7 +251,7 @@ class scrum_product_backlog(osv.osv):
         'active' : fields.boolean('Active', help="If Active field is set to true, it will allow you to hide the product backlog without removing it."),
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'user_id': fields.many2one('res.users', 'Author'),
-        'sprint_id': fields.many2one('scrum.sprint', 'Sprint'),
+        'sprint_id': fields.many2one('project.scrum.sprint', 'Sprint'),
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
@@ -265,42 +267,42 @@ class scrum_product_backlog(osv.osv):
         'user_id': lambda self, cr, uid, context: uid,
     }
     _order = "sequence"
-scrum_product_backlog()
+project_scrum_product_backlog()
 
-class scrum_task(osv.osv):
+class project_scrum_task(osv.osv):
     _name = 'project.task'
     _inherit = 'project.task'
 
     def _get_task(self, cr, uid, ids, context={}):
         result = {}
-        for line in self.pool.get('scrum.product.backlog').browse(cr, uid, ids, context=context):
+        for line in self.pool.get('project.scrum.product.backlog').browse(cr, uid, ids, context=context):
             for task in line.tasks_id:
                 result[task.id] = True
         return result.keys()
     _columns = {
-        'product_backlog_id': fields.many2one('scrum.product.backlog', 'Product Backlog',help="Related product backlog that contains this task. Used in SCRUM methodology"),
-        'sprint_id': fields.related('product_backlog_id','sprint_id', type='many2one', relation='scrum.sprint', string='Sprint',
+        'product_backlog_id': fields.many2one('project.scrum.product.backlog', 'Product Backlog',help="Related product backlog that contains this task. Used in SCRUM methodology"),
+        'sprint_id': fields.related('product_backlog_id','sprint_id', type='many2one', relation='project.scrum.sprint', string='Sprint',
             store={
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['product_backlog_id'], 10),
-                'scrum.product.backlog': (_get_task, ['sprint_id'], 10)
+                'project.scrum.product.backlog': (_get_task, ['sprint_id'], 10)
             }),
     }
 
     def onchange_backlog_id(self, cr, uid, backlog_id):
         if not backlog_id:
             return {}
-        project_id = self.pool.get('scrum.product.backlog').browse(cr, uid, backlog_id).project_id.id
+        project_id = self.pool.get('project.scrum.product.backlog').browse(cr, uid, backlog_id).project_id.id
         return {'value': {'project_id': project_id}}
-scrum_task()
+project_scrum_task()
 
-class scrum_meeting(osv.osv):
-    _name = 'scrum.meeting'
+class project_scrum_meeting(osv.osv):
+    _name = 'project.scrum.meeting'
     _description = 'Scrum Meeting'
     _order = 'date desc'
     _columns = {
         'name' : fields.char('Meeting Name', size=64),
         'date': fields.date('Meeting Date', required=True),
-        'sprint_id': fields.many2one('scrum.sprint', 'Sprint', required=True),
+        'sprint_id': fields.many2one('project.scrum.sprint', 'Sprint', required=True),
         'project_id': fields.many2one('project.project', 'Project'),
         'question_yesterday': fields.text('Tasks since yesterday'),
         'question_today': fields.text('Tasks for today'),
@@ -357,5 +359,5 @@ class scrum_meeting(osv.osv):
             return False
         return True
 
-scrum_meeting()
+project_scrum_meeting()
 
