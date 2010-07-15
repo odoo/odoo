@@ -8,11 +8,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.account_common_report_view" />
             <field name="arch" type="xml">
-               <field name="chart_account_id" position="after">
-               		<newline/>
+               <field name="fiscalyear_id" position="after">
                		<field name="reserve_account_id"/>
-               		<field name="display_type"/>
+               		<newline/>
                    <field name="display_account"/>
+                   <field name="display_type"/>
+                   <newline/>
                </field>
             </field>
         </record>
