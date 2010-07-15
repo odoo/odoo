@@ -561,12 +561,14 @@ class mrp_production(osv.osv):
         if not product:
             return {'value': {
                 'product_uom': False,
-                'bom_id': False
+                'bom_id': False,
+                'routing_id': False
             }}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
         result = {
             'product_uom': res.uom_id and res.uom_id.id or False,
-            'bom_id': res.bom_ids and res.bom_ids[0].id or False
+            'bom_id': res.bom_ids and res.bom_ids[0].id or False,
+            'routing_id': res.bom_ids and res.bom_ids[0].routing_id.id or False
         }
         return {'value': result}
 
