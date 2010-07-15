@@ -237,7 +237,7 @@
       	<td><para style="terp_tblheader_General_Centre">Chat Account</para></td>        
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
 		<td><para style="terp_tblheader_General_Centre">Journal</para></td>        
-        <td><para style="terp_tblheader_General_Centre">Filters By <font>[[ get_filter(data)!='No Filter' and '' or removeParentNode('font') ]]</font></para></td>
+        <td><para style="terp_tblheader_General_Centre">Filters By <font color="white">[[ get_filter(data)!='No Filter' and '' or removeParentNode('font') ]]</font><font>[[get_filter(data)]]</font></para></td>
          <td><para style="terp_tblheader_General_Centre">Entries Sorted By</para></td>
         <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
       </tr>
@@ -277,7 +277,7 @@
      <para style="P9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="50.0,62.0,58.0,62.0,174.0,57.0,61.0,40.0" style="Table1" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+    <blockTable colWidths="50.0,72.0,58.0,62.0,174.0,57.0,61.0,40.0" style="Table1" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
       <tr>
         <td><para style="P10a">Date</para></td>
         <td><para style="P10">Voucher No</para></td>
