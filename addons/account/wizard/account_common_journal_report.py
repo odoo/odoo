@@ -40,7 +40,6 @@ class account_common_journal_report(osv.osv_memory):
         fy_ids = data['form']['fiscalyear_id'] and [data['form']['fiscalyear_id']] or self.pool.get('account.fiscalyear').search(cr, uid, [('state', '=', 'draft')], context=context)
         period_list = data['form']['periods'] or self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', fy_ids)], context=context)
         data['form']['active_ids'] = self.pool.get('account.journal.period').search(cr, uid, [('journal_id', 'in', data['form']['journal_ids']), ('period_id', 'in', period_list)], context=context)
-        data['form']['query_line'] = query_line
         return data
 
 account_common_journal_report()

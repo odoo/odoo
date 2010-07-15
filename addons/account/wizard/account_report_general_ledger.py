@@ -45,7 +45,6 @@ class account_report_general_ledger(osv.osv_memory):
         if context is None:
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['display_account',  'landscape',  'soldeinit', 'amount_currency', 'sortby'])[0])
-        data['form']['query_line'] = query_line
         if data['form']['landscape']:
             return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger_landscape', 'datas': data, 'nodestroy':True }
         return { 'type': 'ir.actions.report.xml', 'report_name': 'account.general.ledger', 'datas': data, 'nodestroy':True}

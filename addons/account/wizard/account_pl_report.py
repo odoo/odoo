@@ -47,7 +47,6 @@ class account_pl_report(osv.osv_memory):
         if context is None:
             context = {}
         data['form'].update(self.read(cr, uid, ids, ['display_account',  'display_type'])[0])
-        data['form']['query_line'] = query_line
         if data['form']['display_type']:
             return {
                     'type': 'ir.actions.report.xml',

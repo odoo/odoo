@@ -165,6 +165,7 @@ class account_common_report(osv.osv_memory):
             data['form']['periods'] = used_context['periods']
         else:
             data['form']['periods'] = []
+        data['form']['query_line'] = query_line
         return self._print_report(cr, uid, ids, data, query_line, context=context)
 
 account_common_report()
