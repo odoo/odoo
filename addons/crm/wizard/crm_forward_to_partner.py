@@ -21,7 +21,6 @@
 ##############################################################################
 
 import base64
-import itertools
 import time
 import re
 from osv import osv, fields
@@ -165,63 +164,25 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             email = self.pool.get('res.partner.address').browse(cr, uid, address_id).email
         return {'value': {'email_to' : email}}
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        return {'type' : 'ir.actions.act_window_close'}
-
     def action_forward(self, cr, uid, ids, context=None):
         """
         Forward the lead to a partner
         """
-        if context is None:
-            context = {}
-
-        res_id = context.get('active_id', False)
-
-        model = context.get('active_model', False)
-        if not res_id or not model:
-            return {}
-
-        email_re = r'([^ ,<@]+@[^> ,]+)'
+        
         this = self.browse(cr, uid, ids[0], context=context)
-
-        case_pool = self.pool.get(model)
+        case_pool = self.pool.get(context.get('active_model'))
+        res_id = context and context.get('active_id', False) or False
         case = case_pool.browse(cr, uid, res_id, context=context)
 
-        emails = [this.email_to]
-        body = case_pool.format_body(this.body)
-        email_from = this.email_from or False
+        context.update({'mail': 'forward'})
+        super(crm_lead_forward_to_partner, self).action_send(cr, uid, ids, context=context)
 
-        # extract attachements from case and emails according to mode
-        attachments = []
-        attach_pool = self.pool.get('ir.attachment')
-        direct_attachments = attach_pool.search(cr, uid, [('res_model', '=', 'crm.lead'), ('res_id', '=', res_id)], context=context)
-        attachments += attach_pool.browse(cr, uid, direct_attachments, context=context)
-        if this.history in ['latest', 'whole'] and case.message_ids:
-            msgs = case.message_ids
-            if this.history == 'latest':
-                msgs = msgs[:1]
-            attachments.extend(itertools.chain(*[m.attachment_ids for m in msgs]))
-        attach = [(a.datas_fname or a.name, base64.decodestring(a.datas)) for a in attachments if a.datas]
+        to_write = {'date_assign': time.strftime('%Y-%m-%d')}
+        if (this.name == 'partner' and this.partner_id):
+            to_write['partner_assigned_id'] = this.partner_id.id
+        case_pool.write(cr, uid, case.id, to_write)
 
-        result = tools.email_send(
-            email_from,
-            emails,
-            this.subject,
-            body,
-            openobject_id=str(case.id),
-            attach=attach,
-            reply_to=case.section_id.reply_to,
-        )
-
-        if result:
-            case_pool.history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, subject=this.subject, details=body, email_from=email_from, attach=attach)
-            to_write = {'date_assign': time.strftime('%Y-%m-%d')}
-            if (this.name == 'partner' and this.partner_id):
-                to_write['partner_assigned_id'] = this.partner_id.id
-            case_pool.write(cr, uid, case.id, to_write)
-        else:
-            raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
-
+        email_re = r'([^ ,<@]+@[^> ,]+)'
         email_cc = re.findall(email_re, case.email_cc or '')
         new_cc = ''
         for to in this.email_to.split(','):

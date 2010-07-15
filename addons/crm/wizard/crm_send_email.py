@@ -20,11 +20,12 @@
 #
 ##############################################################################
 
+from crm import crm
 from osv import osv, fields
 from tools.translate import _
 import base64
+import itertools
 import tools
-from crm import crm
 
 class crm_send_new_email_attachment(osv.osv_memory):
     _name = 'crm.send.mail.attachment'
@@ -54,15 +55,9 @@ class crm_send_new_email(osv.osv_memory):
         'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
     }
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        """ Closes Phonecall to Opportunity form
-        """
-        return {'type':'ir.actions.act_window_close'}
-
     def action_send(self, cr, uid, ids, context=None):
         """ This sends an email to ALL the addresses of the selected partners.
         """
-
         hist_obj = self.pool.get('mailgate.message')
 
         if not context:
@@ -83,18 +78,32 @@ class crm_send_new_email(osv.osv_memory):
             message_id = None
             ref_id = None
 
-            case = case_pool.browse(cr, uid, res_id)
+            case = case_pool.browse(cr, uid, res_id, context=context)
             if context.get('mail', 'new') == 'new':
                 if case.message_ids:
                     message_id = case.message_ids[0].message_id
+            elif context.get('mail') == 'forward':
+                # extract attachements from case and emails according to mode
+                attachments = []
+                attach_pool = self.pool.get('ir.attachment')
+                direct_attachments = attach_pool.search(cr, uid, [('res_model', '=', 'crm.lead'), ('res_id', '=', res_id)], context=context)
+                attachments += attach_pool.browse(cr, uid, direct_attachments, context=context)
+                if obj.history in ['latest', 'whole'] and case.message_ids:
+                    msgs = case.message_ids
+                    if obj.history == 'latest':
+                        msgs = msgs[:1]
+                    attachments.extend(itertools.chain(*[m.attachment_ids for m in msgs]))
+                attach_all = [(a.datas_fname or a.name, base64.decodestring(a.datas)) for a in attachments if a.datas]
+                attach += attach_all
+
             else:
-                hist = hist_obj.browse(cr, uid, res_id)
+                hist = hist_obj.browse(cr, uid, res_id, context=context)
                 message_id = hist.message_id
                 model = hist.model
                 case_pool = self.pool.get(model)
                 res_id = hist.res_id
                 ref_id = hist.ref_id
-                case = case_pool.browse(cr, uid, res_id)
+                case = case_pool.browse(cr, uid, res_id, context=context)
             emails = [obj.email_to]
             email_cc = obj.email_cc and  obj.email_cc.split(',') or ''
             emails = filter(None, emails)
@@ -121,7 +130,8 @@ class crm_send_new_email(osv.osv_memory):
             if not flag:
                 raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
 
-            case_pool.history(cr, uid, [case], _('Send'), history=True, \
+            msg_dict = {'new': 'Send', 'reply': 'Reply', 'forward': 'Forward'}
+            case_pool.history(cr, uid, [case], _(msg_dict[context.get('mail', 'new')]), history=True, \
                             email=obj.email_to, details=body, \
                             subject=obj.subject, email_from=email_from, \
                             email_cc=', '.join(email_cc), message_id=message_id, \
