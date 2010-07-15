@@ -32,7 +32,7 @@ class account_common_partner_report(osv.osv_memory):
                                               "Partner's", required=True),
                 }
     _defaults = {
-        'result_selection': 'customer_supplier',
+        'result_selection': 'customer',
                 }
 
     def pre_print_report(self, cr, uid, ids, data, query_line, context=None):

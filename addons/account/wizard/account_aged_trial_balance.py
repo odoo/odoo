@@ -58,7 +58,7 @@ class account_aged_trial_balance(osv.osv_memory):
         'company_id': _get_company,
         'period_length': 30,
         'date1' : time.strftime('%Y-%m-%d'),
-        'result_selection': 'all',
+        'result_selection': 'customer',
         'direction_selection': 'past',
                  }
 
