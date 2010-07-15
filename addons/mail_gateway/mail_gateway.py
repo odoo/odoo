@@ -41,8 +41,8 @@ class mailgate_thread(osv.osv):
     _description = 'Mailgateway Thread'
 
     _columns = {
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True)]),
-        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False)]),
+        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True)], readonly=True),
+        'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False)], readonly=True),
     }
 
     def message_new(self, cr, uid, msg, context):
@@ -149,23 +149,23 @@ class mailgate_message(osv.osv):
     _description = 'Mailgateway Message'
     _order = 'id desc'
     _columns = {
-        'name':fields.text('Subject'),
-        'model': fields.char('Object Name', size=128, select=1),
-        'res_id': fields.integer('Resource ID', select=1),
+        'name':fields.text('Subject', readonly=True),
+        'model': fields.char('Object Name', size=128, select=1, readonly=True),
+        'res_id': fields.integer('Resource ID', select=1, readonly=True),
         'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
-        'date': fields.datetime('Date'),
-        'history': fields.boolean('Is History?'),
+        'date': fields.datetime('Date', readonly=True),
+        'history': fields.boolean('Is History?', readonly=True),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'message': fields.text('Description'),
-        'email_from': fields.char('From', size=128, help="Email From"),
-        'email_to': fields.char('To', help="Email Recipients", size=256),
-        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256),
-        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256),
+        'message': fields.text('Description', readonly=True),
+        'email_from': fields.char('From', size=128, help="Email From", readonly=True),
+        'email_to': fields.char('To', help="Email Recipients", size=256, readonly=True),
+        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256, readonly=True),
+        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256, readonly=True),
         'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email.", select=True),
         'references': fields.text('References', readonly=True, help="References emails."),
-        'description': fields.text('Description'),
+        'description': fields.text('Description', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
     }
 
     def init(self, cr):

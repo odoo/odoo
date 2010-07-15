@@ -785,8 +785,8 @@ class sale_order_line(osv.osv):
         res = {}
         context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
-            price = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
-            taxes = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty)
+            price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
@@ -851,17 +851,18 @@ class sale_order_line(osv.osv):
         'type': 'make_to_stock',
         'product_packaging': False
     }
-    
-    def create_sale_order_line_invoice(self, cr, uid, ids, context):
-        line_make_invoice_obj = self.pool.get("sale.order.line.make.invoice")
+
+    def create_sale_order_line_invoice(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         context.update({'active_ids' : ids,'active_id' : ids})
-        invoice_id = line_make_invoice_obj.make_invoices(cr, uid, ids, context)
+        self.pool.get('sale.order.line.make.invoice').make_invoices(cr, uid, ids, context=context)
         return True
-    
+
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-       
+
         def _get_line_qty(line):
             if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
                 if line.product_uos:
@@ -931,17 +932,17 @@ class sale_order_line(osv.osv):
         for sid in sales.keys():
             wf_service.trg_write(uid, 'sale.order', sid, cr)
         return create_ids
-        
+
     def button_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
                 raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced !'))
-            if line.order_id.picking_ids: 
-                raise osv.except_osv(
-                        _('Could not cancel sale order line!'),
-                        _('You must first cancel stock move attached to this sale order line.'))
+#            if line.order_id.picking_ids:
+#                raise osv.except_osv(
+#                        _('Could not cancel sale order line!'),
+#                        _('You must first cancel stock move attached to this sale order line.'))
         message = _('Sale order line') + " '" + line.name + "' "+_("is cancelled")
         self.log(cr, uid, id, message)
         return self.write(cr, uid, ids, {'state': 'cancel'})

@@ -22,6 +22,7 @@
 
 import base64
 import itertools
+import time
 
 from osv import osv, fields
 import tools
@@ -218,6 +219,10 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         if result:
             case_pool.history(cr, uid, [case], _('Forward'), history=True, email=this.email_to, subject=this.subject, details=body, email_from=email_from, attach=attach)
+            to_write = {'date_assign': time.strftime('%Y-%m-%d')}
+            if (this.name == 'partner' and this.partner_id):
+                to_write['partner_assigned_id'] = this.partner_id.id
+            case_pool.write(cr, uid, case.id, to_write)
         else:
             raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
 

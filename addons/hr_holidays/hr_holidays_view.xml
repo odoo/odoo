@@ -10,7 +10,7 @@
                 <search string="Search Leave">
                     <group col='8' colspan='4'>
                         <filter icon="terp-gtk-go-back-rtl" domain="[('state','=','draft')]" string="To Confirm"/>
-                        <filter icon="terp-gtk-go-back-rtl" domain="[('state','=','confirm')]" string="To Validate"/>
+                        <filter icon="terp-gtk-go-back-rtl" domain="[('state','=','confirm')]" string="To Approve"/>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"
                             default="context.get('report', False)"/>
                         <separator orientation="vertical"/>
@@ -69,8 +69,8 @@
                             <field name="state" colspan="2"/>
                             <group colspan="2">
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
-                                <button string="Validate" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
-                                <button string="Approve" name="second_validate" states="validate1" type="workflow" icon="gtk-apply"/>
+                                <button string="To Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
+                                <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply"/>
                                 <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no"/>
                                 <button string="Cancel" name="cancel" states="validate,refuse" type="workflow" icon="gtk-cancel"/>
                                 <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert"/>
@@ -113,8 +113,8 @@
                         <field name="state" colspan="2"/>
                         <group colspan="2">
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
-                            <button string="Validate" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
-                            <button string="Approve" name="second_validate" states="validate1" type="workflow" icon="gtk-apply"/>
+                            <button string="To Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
+                            <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply"/>
                             <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no"/>
                             <button string="Cancel" name="cancel" states="validate,refuse" type="workflow" icon="gtk-cancel"/>
                             <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert"/>
@@ -168,7 +168,7 @@
                             <field name="state" colspan="2"/>
                             <group colspan="2">
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
-                                <button string="Validate" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
+                                <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply"/>
                                 <button string="Refuse" name="refuse" states="confirm" type="workflow" icon="gtk-no"/>
                                 <button string="Cancel" name="cancel" states="validate,refuse,validate1" type="workflow" icon="gtk-cancel"/>
                                 <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert"/>

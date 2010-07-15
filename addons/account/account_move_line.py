@@ -482,7 +482,6 @@ class account_move_line(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
-            cr.commit()
 
     def _check_no_view(self, cr, uid, ids):
         lines = self.browse(cr, uid, ids)
@@ -675,6 +674,7 @@ class account_move_line(osv.osv):
             account_id = line['account_id']['id']
             partner_id = (line['partner_id'] and line['partner_id']['id']) or False
         writeoff = debit - credit
+        
         # Ifdate_p in context => take this date
         if context.has_key('date_p') and context['date_p']:
             date=context['date_p']
@@ -797,7 +797,7 @@ class account_move_line(osv.osv):
         title = self.view_header_get(cr, uid, view_id, view_type, context)
         xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write">\n\t''' % (title)
         journal_pool = self.pool.get('account.journal')
-        
+
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids)
         all_journal = [None]
@@ -814,14 +814,14 @@ class account_move_line(osv.osv):
                 else:
                     fields.get(field.field).append(journal.id)
                     common_fields[field.field] = common_fields[field.field] + 1
-        
+
         fld.append(('period_id', 3))
         fld.append(('journal_id', 10))
         flds.append('period_id')
         flds.append('journal_id')
         fields['period_id'] = all_journal
         fields['journal_id'] = all_journal
-        
+
         from operator import itemgetter
         fld = sorted(fld, key=itemgetter(1))
 
@@ -835,13 +835,13 @@ class account_move_line(osv.osv):
 
         for field_it in fld:
             field = field_it[0]
-            
+
             if common_fields.get(field) == total:
                 fields.get(field).append(None)
-            
+
             if field=='state':
                 state = 'colors="red:state==\'draft\'"'
-            
+
             attrs = []
             if field == 'debit':
                 attrs.append('sum="Total debit"')
@@ -864,7 +864,7 @@ class account_move_line(osv.osv):
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
-            
+
             attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
             xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
 
@@ -914,7 +914,7 @@ class account_move_line(osv.osv):
                 journal = self.pool.get('account.journal').browse(cr, uid, [journal_id])[0]
                 if journal.allow_date and period_id:
                     period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
-                    if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
+                    if not time.strptime(vals['date'][:10],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') or not time.strptime(vals['date'][:10],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
                         raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
         else:
             return True
