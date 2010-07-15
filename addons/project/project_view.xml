@@ -419,7 +419,7 @@
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
 						<filter name="edit"  
-	                        string="Edit" context="{'set_editable':'True','seq_visible': True}"
+	                        string="Edit" context="{'set_editable':True,'seq_visible': True}"
 	                        icon="gtk-execute"
 	                        groups="base.group_extended"/>
                         <separator orientation="vertical"/>
