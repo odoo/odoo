@@ -47,7 +47,8 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
-            'get_sortby': self._get_sortby
+            'get_sortby': self._get_sortby,
+            'sum_currency_amount_account': self._sum_currency_amount_account,                           
         })
 
     def set_context(self, objects, data, ids, report_type=None): # Improve move to common default?
@@ -79,16 +80,37 @@ class journal_print(report_sxw.rml_parse, common_report_header):
     def lines(self, period_id, journal_id=[]):
         if not self.journal_ids:
             return []
-        self.cr.execute('SELECT j.code, j.name, '
+        self.cr.execute('SELECT j.code, j.name, l.amount_currency,c.code AS currency_code, '
                         'SUM(l.debit) AS debit, SUM(l.credit) AS credit '
                         'FROM account_move_line l '
                         'LEFT JOIN account_journal j ON (l.journal_id=j.id) '
+                        'LEFT JOIN res_currency c on (l.currency_id=c.id)'
                         'WHERE period_id=%s AND journal_id IN %s '+self.query_get_clause +''
-                        'GROUP BY j.id, j.code, j.name',
+                        'GROUP BY j.id, j.code, j.name, l.amount_currency,c.code ',
                         (period_id, tuple(self.journal_ids)))
 
         return self.cr.dictfetchall()
+    def _set_get_account_currency_code(self, account_id):
+        self.cr.execute("SELECT c.code as code "\
+                "FROM res_currency c,account_account as ac "\
+                "WHERE ac.id = %s AND ac.currency_id = c.id"%(account_id))
+        result = self.cr.fetchone()
+        if result:
+            self.account_currency = result[0]
+        else:
+            self.account_currency = False
 
+    def _sum_currency_amount_account(self, account, form):
+        self._set_get_account_currency_code(account.id)
+        self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
+        total = self.cr.fetchone()
+
+        if self.account_currency:
+            return_field = str(total[0]) + self.account_currency
+            return return_field
+        else:
+            currency_total = self.tot_currency = 0.0
+            return currency_total  
 report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml', parser=journal_print, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
