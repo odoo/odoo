@@ -4,35 +4,7 @@
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
       	<header>
-			<pageGraphics>
-				<!--logo-->
-				<!--<fill color="darkblue"/>-->
-				<!--<stroke color="darkblue"/>-->
 
-				<!--TITLE COMPANY-->
-				<!-- <drawString x="4.6cm" y="28.7cm">[[ company.partner_id.name ]]</drawString> -->
-
-				<setFont name="Helvetica-Bold" size="9"/>
-
-
-				<!--COL 1-->
-				<drawString x="1.0cm" y="28.1cm">[[ company.name ]]</drawString>
-				<drawRightString x="20cm" y="28.1cm">Print Journal - [[ company.currency_id.name ]]</drawRightString>
-
-
-				<!-- Header -->
-
-
-				<setFont name="Helvetica" size="9"/>
-				<drawString x="1.0cm" y="1cm"> [[ formatLang(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),date_time = True) ]]</drawString>
-				<drawString x="19.0cm" y="1cm">Page <pageNumber/></drawString>
-				<!--<drawRightString x="19.8cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>-->
-
-
-			    <lineMode width="0.7"/>
-				<lines>1cm 27.7cm 20cm 27.7cm</lines>
-				<setFont name="Helvetica" size="8"/>
-			</pageGraphics>
 		</header>
     </pageTemplate>
   </template>
