@@ -23,7 +23,7 @@
 import base64
 import itertools
 import time
-
+import re
 from osv import osv, fields
 import tools
 from tools.translate import _
@@ -31,6 +31,7 @@ from tools.translate import _
 class crm_lead_forward_to_partner(osv.osv_memory):
     """Forwards lead history"""
     _name = 'crm.lead.forward.to.partner'
+    _inherit = "crm.send.mail"
 
     _columns = {
         'name': fields.selection([('user', 'User'), ('partner', 'Partner'), \
@@ -38,19 +39,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         'user_id': fields.many2one('res.users', "User"),
         'partner_id' : fields.many2one('res.partner', 'Partner'),
         'address_id' : fields.many2one('res.partner.address', 'Address'),
-        'email_from' : fields.char('From', required=True, size=128),
-        'email_to' : fields.char('To', required=True, size=128),
-        'subject' : fields.char('Subject', required=True, size=128),
-        'message' : fields.text('Message', required=True),
-        'history': fields.selection([('latest', 'Latest email'), ('whole', 'Whole Story'), ('info', 'Case Information')], 'Send history', required=True),
-        'add_cc': fields.boolean('Add as CC', required=False, help="Check this box if you want this address to be added in the CC list"\
-            " for this case, in order to receive all future conversations"),
+        'history': fields.selection([('info', 'Case Information'), ('latest', 'Latest email'), ('whole', 'Whole Story')], 'Send history', required=True),
     }
 
     _defaults = {
         'name' : 'email',
-        'history': 'info',
-        'add_cc': True,
+        'history': 'latest',
         'email_from': lambda self, cr, uid, *a: self.pool.get('res.users')._get_email_from(cr, uid, uid)[uid]
     }
 
@@ -117,7 +111,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         res_id = context.get('active_id')
         msg_val = self._get_case_history(cr, uid, history_type, res_id, context=context)
         if msg_val:
-            res = {'value': {'message' : '\n\n' + msg_val}}
+            res = {'value': {'body' : '\n\n' + msg_val}}
         return res
 
     def _get_case_history(self, cr, uid, history_type, res_id, context=None):
@@ -125,22 +119,23 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             return
 
         msg_val = ''
+        case_info = self.get_lead_details(cr, uid, res_id, context=context)
         model_pool = self.pool.get('crm.lead')
+
         if history_type == 'info':
-            msg_val = self.get_lead_details(cr, uid, res_id, context=context)
+            msg_val = case_info
 
         elif history_type == 'whole':
             log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
             log_ids = [x.id for x in log_ids]
-            if not log_ids:
-                raise osv.except_osv('Warning!', 'There is no history to send')
-            msg_val = self.get_whole_history(cr, uid, log_ids, context=context)
+            msg_val = case_info + '\n\n' + self.get_whole_history(cr, uid, log_ids, context=context)
 
         elif history_type == 'latest':
             log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
             if not log_ids:
-                raise osv.except_osv('Warning!', 'There is no history to send')
-            msg_val = self.get_latest_history(cr, uid, log_ids[0].id, context=context)
+                msg_val = case_info
+            else:
+                msg_val = case_info + '\n\n' + self.get_latest_history(cr, uid, log_ids[0].id, context=context)
 
         return msg_val
 
@@ -186,13 +181,14 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         if not res_id or not model:
             return {}
 
+        email_re = r'([^ ,<@]+@[^> ,]+)'
         this = self.browse(cr, uid, ids[0], context=context)
 
         case_pool = self.pool.get(model)
         case = case_pool.browse(cr, uid, res_id, context=context)
 
         emails = [this.email_to]
-        body = case_pool.format_body(this.message)
+        body = case_pool.format_body(this.body)
         email_from = this.email_from or False
 
         # extract attachements from case and emails according to mode
@@ -226,13 +222,19 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         else:
             raise osv.except_osv(_('Error!'), _('Unable to send mail. Please check SMTP is configured properly.'))
 
-        if this.add_cc and (not case.email_cc or not this.email_to in case.email_cc):
-            case_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc + ', ' + this.email_to or this.email_to})
+        email_cc = re.findall(email_re, case.email_cc or '')
+        new_cc = ''
+        for to in this.email_to.split(','):
+            email_to = re.findall(email_re, to)
+            email_to = email_to and email_to[0] or ''
+            if email_to not in email_cc:
+                new_cc += ', ' + to
+        case_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc + new_cc})
 
         return {}
 
     def get_lead_details(self, cr, uid, lead_id, context=None):
-        message = []
+        body = []
         lead_proxy = self.pool.get('crm.lead')
         lead = lead_proxy.browse(cr, uid, lead_id, context=context)
         if not lead.type or lead.type == 'lead':
@@ -258,10 +260,10 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                     else:
                         value = lead[field_name]
 
-                    message.append("%s: %s" % (field_definition.string, value or ''))
+                    body.append("%s: %s" % (field_definition.string, value or ''))
         elif lead.type == 'opportunity':
             pa = lead.partner_address_id
-            message = [
+            body = [
             "Partner: %s" % (lead.partner_id.name_get()[0][1]), 
             "Contact: %s" % (pa.name or ''), 
             "Title: %s" % (pa.title or ''), 
@@ -277,7 +279,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             "Fax: %s" % (pa.fax or ''), 
             "Mobile: %s" % (pa.mobile or ''), 
             ]
-        return "\n".join(message + ['---'])
+        return "\n".join(body + ['---'])
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -295,10 +297,10 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         lead_proxy = self.pool.get('crm.lead')
         lead = lead_proxy.browse(cr, uid, active_id, context=context)
 
-        message = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
+        body = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
         defaults.update({
             'subject' : '%s: %s' % (_('Fwd'), lead.name),
-            'message' : message,
+            'body' : body,
         })
         return defaults
 

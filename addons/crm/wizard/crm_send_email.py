@@ -49,7 +49,7 @@ class crm_send_new_email(osv.osv_memory):
         'email_cc' : fields.char('CC', size=512, help="Carbon Copy: list of recipients that will receive"\
                                     " a copy of this mail, and future communication related to this case"),
         'subject': fields.char('Subject', size=512, required=True),
-        'text': fields.text('Message', required=True),
+        'body': fields.text('Message Body', required=True),
         'state': fields.selection(crm.AVAILABLE_STATES, string='Set New State To', required=True),
         'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
     }
@@ -68,10 +68,10 @@ class crm_send_new_email(osv.osv_memory):
         if not context:
             context = {}
 
-        if not context.get('model'):
+        if not context.get('active_model'):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
 
-        model = context.get('model')
+        model = context.get('active_model')
         case_pool = self.pool.get(model)
         res_id = context and context.get('active_id', False) or False
 
@@ -91,16 +91,16 @@ class crm_send_new_email(osv.osv_memory):
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id
                 model = hist.model
-                model_pool = self.pool.get(model)
+                case_pool = self.pool.get(model)
                 res_id = hist.res_id
                 ref_id = hist.ref_id
-                case = model_pool.browse(cr, uid, res_id)
+                case = case_pool.browse(cr, uid, res_id)
             emails = [obj.email_to]
             email_cc = obj.email_cc and  obj.email_cc.split(',') or ''
             emails = filter(None, emails)
-            body = obj.text
+            body = obj.body
 
-            body = case_pool.format_body(body)
+            body = body and tools.ustr(body) or ''
             email_from = getattr(obj, 'email_from', False)
             x_headers = {}
             if message_id:
@@ -124,7 +124,7 @@ class crm_send_new_email(osv.osv_memory):
             case_pool.history(cr, uid, [case], _('Send'), history=True, \
                             email=obj.email_to, details=body, \
                             subject=obj.subject, email_from=email_from, \
-                            email_cc=email_cc, message_id=message_id, \
+                            email_cc=', '.join(email_cc), message_id=message_id, \
                             references=ref_id or message_id, attach=attach)
             if obj.state == 'unchanged':
                 pass
@@ -145,7 +145,7 @@ class crm_send_new_email(osv.osv_memory):
         if not context:
             context = {}
 
-        if not context.get('model'):
+        if not context.get('active_model'):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
 
         res = super(crm_send_new_email, self).default_get(cr, uid, fields, context=context)
@@ -154,7 +154,7 @@ class crm_send_new_email(osv.osv_memory):
             res.update(self.get_reply_defaults(cr, uid, fields, context=context))
             return res
 
-        model = context.get('model')
+        model = context.get('active_model')
         mod_obj = self.pool.get(model)
         res_id = context and context.get('active_ids', []) or []
 
@@ -172,8 +172,8 @@ class crm_send_new_email(osv.osv_memory):
                 res.update({'subject': tools.ustr(context.get('subject', case.name) or '')})
             if 'email_cc' in fields:
                 res.update({'email_cc': tools.ustr(case.email_cc or '')})
-            if 'text' in fields:
-                res.update({'text': u'\n'+(tools.ustr(case.user_id.signature or ''))})
+            if 'body' in fields:
+                res.update({'body': u'\n'+(tools.ustr(case.user_id.signature or ''))})
             if 'state' in fields:
                 res.update({'state': u'pending'})
 
@@ -209,7 +209,7 @@ class crm_send_new_email(osv.osv_memory):
             signature = u'\n' + (tools.ustr(case.user_id.signature or '')) + u'\n'
             original = [signature]
 
-            if include_original == True and 'text' in fields:
+            if include_original == True and 'body' in fields:
                 header = u'-------- Original Message --------'
                 sender = u'From: %s' %(tools.ustr(hist.email_from or ''))
                 to = u'To: %s' % (tools.ustr(hist.email_to or ''))
@@ -218,10 +218,14 @@ class crm_send_new_email(osv.osv_memory):
 
                 original = [signature, header, sender, to, sentdate, desc]
 
-            res['text']= u'\n' + u'\n'.join(original)
+            res['body']= u'\n' + u'\n'.join(original)
 
             if 'subject' in fields:
                 res.update({u'subject': u'Re: %s' %(tools.ustr(hist.name or ''))})
+            if 'email_cc' in fields:
+                 res.update({'email_cc': case.email_cc and tools.ustr(case.email_cc) or False})
+            if 'reply_to' in fields:
+                res.update({'reply_to': case.section_id.reply_to})
             if 'state' in fields:
                 res['state'] = u'pending'
         return res
@@ -239,7 +243,7 @@ class crm_send_new_email(osv.osv_memory):
         if not context:
             context = {}
 
-        if not context.get('model'):
+        if not context.get('active_model'):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
         return True
 
