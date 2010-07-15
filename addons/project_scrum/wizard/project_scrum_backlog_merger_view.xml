@@ -3,7 +3,7 @@
     <data>
         <record id="scrum_backlog_merge_view" model="ir.ui.view">
             <field name="name">Merge Backlogs</field>
-            <field name="model">scrum.backlog.merge</field>
+            <field name="model">project.scrum.backlog.merge</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="Merge Backlogs">
@@ -19,7 +19,7 @@
         <record id="action_scrum_backlog_merge" model="ir.actions.act_window">
             <field name="name">Merge Backlogs</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">scrum.backlog.merge</field>
+            <field name="res_model">project.scrum.backlog.merge</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -27,18 +27,18 @@
         </record>
 
         <record model="ir.values" id="scrum_backlog_merge_values">
-            <field name="model_id" ref="model_scrum_product_backlog" />
+            <field name="model_id" ref="model_project_scrum_product_backlog" />
             <field name="object" eval="1" />
             <field name="name">Merge Backlogs</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_scrum_backlog_merge'))" />
             <field name="key">action</field>
-            <field name="model">scrum.product.backlog</field>
+            <field name="model">project.scrum.product.backlog</field>
         </record>
 
         <record id="scrum_merge_project_id_view" model="ir.ui.view">
             <field name="name">Merge Backlogs</field>
-            <field name="model">scrum.backlog.merge</field>
+            <field name="model">project.scrum.backlog.merge</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="Merge Backlogs">

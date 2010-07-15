@@ -3,8 +3,8 @@
     <data>
 
 		<record id="view_scrum_backlog_to_sprint" model="ir.ui.view">
-			<field name="name">backlog.assign.sprint.form</field>
-			<field name="model">backlog.assign.sprint</field>
+			<field name="name">project.scrum.backlog.assign.sprint.form</field>
+			<field name="model">project.scrum.backlog.assign.sprint</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Assign Sprint">
@@ -30,20 +30,20 @@
         <record id="action_scrum_backlog_to_sprint" model="ir.actions.act_window">
             <field name="name">Assign Sprint</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">backlog.assign.sprint</field>
+            <field name="res_model">project.scrum.backlog.assign.sprint</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
 
 		<record model="ir.values" id="scrum_backlog_to_sprint_values">
-            <field name="model_id" ref="model_scrum_product_backlog" />
+            <field name="model_id" ref="model_project_scrum_product_backlog" />
             <field name="object" eval="1" />
             <field name="name">Assign Sprint</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_scrum_backlog_to_sprint'))" />
             <field name="key">action</field>
-            <field name="model">scrum.product.backlog</field>
+            <field name="model">project.scrum.product.backlog</field>
         </record>
 
 	</data>
