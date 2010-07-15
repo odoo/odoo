@@ -154,6 +154,8 @@ and users"),
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('history', '=', True),('model','=',_name)], readonly=True),
         'log_ids': fields.one2many('mailgate.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)], readonly=True),
+        'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
+        'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
 
     _defaults = {
