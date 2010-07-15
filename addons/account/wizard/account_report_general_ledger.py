@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-from lxml import etree
-
 from osv import fields, osv
 from tools.translate import _
 
@@ -42,18 +40,6 @@ class account_report_general_ledger(osv.osv_memory):
             'amount_currency': True,
             'sortby': 'sort_date',
                 }
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        mod_obj = self.pool.get('ir.model.data')
-        res = super(account_report_general_ledger, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        if context.get('active_model', False) == 'account.account' and view_id:
-            doc = etree.XML(res['arch'])
-            nodes = doc.xpath("//field[@name='chart_account_id']")
-            for node in nodes:
-                node.set('readonly', '1')
-                node.set('help', 'If you print the report from Account list/form view it will not consider Charts of account')
-            res['arch'] = etree.tostring(doc)
-        return res
 
     def _print_report(self, cr, uid, ids, data, query_line, context=None):
         if context is None:

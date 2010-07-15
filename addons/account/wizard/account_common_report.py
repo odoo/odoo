@@ -18,7 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
+from lxml import etree
 
 from osv import fields, osv
 from tools.translate import _
@@ -54,6 +56,18 @@ class account_common_report(osv.osv_memory):
 #           return user.company_id.id
 #        else:
 #           return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        mod_obj = self.pool.get('ir.model.data')
+        res = super(account_common_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
+        if context.get('active_model', False) == 'account.account' and view_id:
+            doc = etree.XML(res['arch'])
+            nodes = doc.xpath("//field[@name='chart_account_id']")
+            for node in nodes:
+                node.set('readonly', '1')
+                node.set('help', 'If you print the report from Account list/form view it will not consider Charts of account')
+            res['arch'] = etree.tostring(doc)
+        return res
 
     def onchange_filter(self, cr, uid, ids, filter='filter_no', context=None):
         res = {}
