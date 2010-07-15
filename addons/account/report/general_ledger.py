@@ -72,7 +72,8 @@ class general_ledger(rml_parse.rml_parse, common_report_header):
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
-            'get_sortby': self._get_sortby
+            'get_sortby': self._get_sortby,
+            'get_filter': self._get_filter,
         })
         self.context = context
 

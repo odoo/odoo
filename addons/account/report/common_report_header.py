@@ -82,7 +82,10 @@ class common_report_header(object):
 
     def _get_sortby(self, data):
         if data.get('form', False) and data['form'].get('sortby', False):
-            return data['form']['sortby']
+            if data['form']['sortby']=='sort_date':
+                return 'Date'
+            elif data['form']['sortby'] == 'sort_journal_partner':
+                return 'Journal & Partner'
         return ''
 
     def _get_filter(self, data):
