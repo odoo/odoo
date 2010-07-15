@@ -104,6 +104,7 @@
                         <filter string="User" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                        <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}" />
+                       <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Section" icon="terp-personal+"
                             domain="[]"
@@ -159,6 +160,7 @@
                 <field name="section_id" invisible="1" groups="base.group_extended"/>
                 <field name="user_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
+                <field name="country_id" invisible="1"/>
                 <field name="day" invisible="1"/>
                 <field name="state"  invisible="1"/>
                 <field name="stage_id"  invisible="1"/>
