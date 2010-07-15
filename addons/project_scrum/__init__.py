@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-import scrum_backlog_create_task
-import scrum_backlog_sprint
-import scrum_backlog_merger
+import project_scrum
+import report
+import wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
